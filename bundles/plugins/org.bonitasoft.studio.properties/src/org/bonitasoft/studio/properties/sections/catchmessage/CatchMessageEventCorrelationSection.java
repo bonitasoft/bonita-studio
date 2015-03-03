@@ -56,7 +56,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Aurelien Pupier
@@ -66,27 +65,19 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 public class CatchMessageEventCorrelationSection extends
 AbstractBonitaDescriptionSection {
 
-    private TabbedPropertySheetPage aTabbedPropertySheetPage;
     private ExpressionCollectionViewer ecv;
 
-    @Override
-    public void createControls(final Composite parent,
-            final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
-        this.aTabbedPropertySheetPage = aTabbedPropertySheetPage;
-        doCreateControls(parent);
-    }
 
     private void doCreateControls(final Composite parent) {
 
-        final Composite mainComposite = aTabbedPropertySheetPage.getWidgetFactory()
+        final Composite mainComposite = getWidgetFactory()
                 .createComposite(parent);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1)
                 .extendedMargins(15, 5, 15, 10).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         createAutoFillButton(mainComposite);
         ecv = new ExpressionCollectionViewer(mainComposite, 5, false, 2, true,
-                null, aTabbedPropertySheetPage.getWidgetFactory(),
+                null, getWidgetFactory(),
                 getEditingDomain(), false, false);
         ecv.setLayoutData(GridDataFactory.fillDefaults().grab(true, true)
                 .hint(100, SWT.DEFAULT).create());
@@ -117,8 +108,7 @@ AbstractBonitaDescriptionSection {
     }
 
     private void createAutoFillButton(final Composite parent) {
-        final Button autoFillButton = aTabbedPropertySheetPage
-                .getWidgetFactory()
+        final Button autoFillButton = getWidgetFactory()
                 .createButton(parent, Messages.autoFillMessageContent, SWT.FLAT);
         autoFillButton.setLayoutData(GridDataFactory.swtDefaults().indent(65, 0).create());
         autoFillButton.addSelectionListener(new SelectionAdapter() {
@@ -245,6 +235,11 @@ AbstractBonitaDescriptionSection {
     @Override
     public String getSectionDescription() {
         return Messages.catchMessageEventCorrelationSectionDescription;
+    }
+
+    @Override
+    protected void createContent(final Composite parent) {
+        doCreateControls(parent);
     }
 
 }

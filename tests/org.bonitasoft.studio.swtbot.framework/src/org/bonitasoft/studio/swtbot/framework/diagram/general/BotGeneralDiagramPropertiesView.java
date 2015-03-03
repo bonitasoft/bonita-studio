@@ -13,6 +13,7 @@ import org.bonitasoft.studio.swtbot.framework.BotQAUtil;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorAssignementPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorDefinitionPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.connectors.BotConnectorsPropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotDocumentsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotDiagramPropertySection;
@@ -117,6 +118,11 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
     public BotOperationsPropertySection selectOperationTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Operations");
         return new BotOperationsPropertySection(bot);
+    }
+
+    public BotContractPropertySection selectContractTab() {
+        BotQAUtil.selectTabbedPropertyView(bot, "Contract");
+        return new BotContractPropertySection(bot);
     }
 
 }

@@ -18,7 +18,6 @@ import static com.google.common.collect.Iterables.filter;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -36,12 +35,12 @@ public class FormMappingCustomMigration extends CustomMigration {
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
         for (final Instance instance : filter(model.getAllInstances("process.PageFlow"), withoutFormMapping(ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING))) {
-            instantiateFormMapping(instance, model, ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
+            instantiateFormMapping(instance, model, "formMapping");
         }
 
         for (final Instance instance : filter(model.getAllInstances("process.RecapFlow"),
                 withoutFormMapping(ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING))) {
-            instantiateFormMapping(instance, model, ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING);
+            instantiateFormMapping(instance, model, "overviewFormMapping");
         }
     }
 
@@ -55,11 +54,11 @@ public class FormMappingCustomMigration extends CustomMigration {
         };
     }
 
-    private void instantiateFormMapping(final Instance input, final Model model, final EReference pageFlowFormMapping) {
+    private void instantiateFormMapping(final Instance input, final Model model, final String featureName) {
         final Instance newInstance = model.newInstance("process.FormMapping");
         final Instance targetFormExpression = newTargetFormExpressionInstance(model);
         newInstance.set("targetForm", targetFormExpression);
-        input.set(pageFlowFormMapping, newInstance);
+        input.set(featureName, newInstance);
     }
 
     private Instance newTargetFormExpressionInstance(final Model model) {

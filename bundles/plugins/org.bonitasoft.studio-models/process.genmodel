@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (C) 2009-2013 BonitaSoft S.A.&#xA;BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble&#xA;&#xA;This program is free software: you can redistribute it and/or modify&#xA;it under the terms of the GNU General Public License as published by&#xA;the Free Software Foundation, either version 2.0 of the License, or&#xA;(at your option) any later version.&#xA;&#xA;This program is distributed in the hope that it will be useful,&#xA;but WITHOUT ANY WARRANTY; without even the implied warranty of&#xA;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xA;GNU General Public License for more details.&#xA;&#xA;You should have received a copy of the GNU General Public License&#xA;along with this program.  If not, see &lt;http://www.gnu.org/licenses/>."
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (C) 2009-2015 BonitaSoft S.A.&#xD;&#xA;BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble&#xD;&#xA;&#xD;&#xA;This program is free software: you can redistribute it and/or modify&#xD;&#xA;it under the terms of the GNU General Public License as published by&#xD;&#xA;the Free Software Foundation, either version 2.0 of the License, or&#xD;&#xA;(at your option) any later version.&#xD;&#xA;&#xD;&#xA;This program is distributed in the hope that it will be useful,&#xD;&#xA;but WITHOUT ANY WARRANTY; without even the implied warranty of&#xD;&#xA;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xD;&#xA;GNU General Public License for more details.&#xD;&#xA;&#xD;&#xA;You should have received a copy of the GNU General Public License&#xD;&#xA;along with this program.  If not, see &lt;http://www.gnu.org/licenses/>."
     modelDirectory="/org.bonitasoft.studio.model/src" editDirectory="/org.bonitasoft.studio.model.edit/src"
     modelPluginID="org.bonitasoft.studio.model" templateDirectory="org.bonitasoft.studio-models/EMFTemplates/"
     dynamicTemplates="true" redirection="" forceOverwrite="true" modelName="Process"
@@ -19,11 +19,11 @@
   <genPackages prefix="ActorMapping" basePackage="org.bonitasoft.studio.model" resource="XML"
       disposableProviderFactory="true" ecorePackage="ActorMapping.ecore#/">
     <genClasses ecoreClass="ActorMapping.ecore#//ActorMapping">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ActorMapping.ecore#//ActorMapping/users"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ActorMapping.ecore#//ActorMapping/groups"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ActorMapping.ecore#//ActorMapping/roles"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ActorMapping.ecore#//ActorMapping/memberships"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ActorMapping.ecore#//ActorMapping/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ActorMapping.ecore#//ActorMapping/groups"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ActorMapping.ecore#//ActorMapping/memberships"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ActorMapping.ecore#//ActorMapping/roles"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ActorMapping.ecore#//ActorMapping/users"/>
     </genClasses>
     <genClasses ecoreClass="ActorMapping.ecore#//ActorMappingsType">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ActorMapping.ecore#//ActorMappingsType/actorMapping"/>
@@ -56,16 +56,16 @@
     <genClasses ecoreClass="configuration.ecore#//Configuration">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/description"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/processDependencies"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/actorMappings"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/parameters"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/definitionMappings"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/username"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/password"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/applicationDependencies"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/version"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/anonymousUserName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/anonymousPassword"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/definitionMappings"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/processDependencies"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/applicationDependencies"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/username"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/password"/>
     </genClasses>
     <genClasses ecoreClass="configuration.ecore#//Fragment">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Fragment/key"/>
@@ -81,8 +81,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//DefinitionMapping/implementationVersion"/>
     </genClasses>
     <genClasses ecoreClass="configuration.ecore#//FragmentContainer">
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference configuration.ecore#//FragmentContainer/parent"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//FragmentContainer/children"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference configuration.ecore#//FragmentContainer/parent"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//FragmentContainer/fragments"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//FragmentContainer/id"/>
     </genClasses>
@@ -90,10 +90,10 @@
   <genPackages prefix="ConnectorConfiguration" basePackage="org.bonitasoft.studio.model"
       resource="XML" fileExtensions="connectorconfig" ecorePackage="connector-configuration.ecore#/">
     <genClasses ecoreClass="connector-configuration.ecore#//ConnectorConfiguration">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference connector-configuration.ecore#//ConnectorConfiguration/parameters"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute connector-configuration.ecore#//ConnectorConfiguration/definitionId"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute connector-configuration.ecore#//ConnectorConfiguration/version"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute connector-configuration.ecore#//ConnectorConfiguration/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference connector-configuration.ecore#//ConnectorConfiguration/parameters"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute connector-configuration.ecore#//ConnectorConfiguration/modelVersion"/>
     </genClasses>
     <genClasses ecoreClass="connector-configuration.ecore#//ConnectorParameter">
@@ -126,9 +126,9 @@
     </genClasses>
     <genClasses ecoreClass="expression.ecore#//Operation">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference expression.ecore#//Operation/leftOperand"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference expression.ecore#//Operation/operator"/>
       <genFeatures notify="false" children="true" createChild="false" propertyCategory=""
           propertyDescription="" propertySortChoices="true" ecoreFeature="ecore:EReference expression.ecore#//Operation/rightOperand"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference expression.ecore#//Operation/operator"/>
     </genClasses>
     <genClasses ecoreClass="expression.ecore#//Operator">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute expression.ecore#//Operator/type"/>
@@ -160,18 +160,68 @@
       <genEnumLiterals ecoreEnumLiteral="form.ecore#//FileWidgetDownloadType/URL"/>
       <genEnumLiterals ecoreEnumLiteral="form.ecore#//FileWidgetDownloadType/Browse"/>
     </genEnums>
+    <genClasses ecoreClass="form.ecore#//WidgetDependency">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//WidgetDependency/triggerRefreshOnModification"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//WidgetDependency/eventTypes"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference form.ecore#//WidgetDependency/widget"/>
+    </genClasses>
+    <genClasses ecoreClass="form.ecore#//Validator">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Validator/validatorClass"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Validator/htmlClass"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Validator/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Validator/belowField"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Validator/parameter"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Validator/displayName"/>
+    </genClasses>
+    <genClasses ecoreClass="form.ecore#//Validable">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Validable/validators"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Validable/useDefaultValidator"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Validable/below"/>
+    </genClasses>
     <genClasses ecoreClass="form.ecore#//Form">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Form/widgets"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Form/nColumn"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Form/stringAttributes"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Form/nLine"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Form/columns"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Form/lines"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Form/showPageLabel"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Form/allowHTMLInPageLabel"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Form/version"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Form/actions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Form/columns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Form/lines"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Form/widgets"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Form/pageLabel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Form/actions"/>
+    </genClasses>
+    <genClasses ecoreClass="form.ecore#//WidgetLayoutInfo">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//WidgetLayoutInfo/line"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//WidgetLayoutInfo/column"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//WidgetLayoutInfo/verticalSpan"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//WidgetLayoutInfo/horizontalSpan"/>
+    </genClasses>
+    <genClasses ecoreClass="form.ecore#//Column">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Column/width"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Column/number"/>
+    </genClasses>
+    <genClasses ecoreClass="form.ecore#//Line">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Line/height"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Line/number"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="form.ecore#//ItemContainer">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//ItemContainer/itemClass"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="form.ecore#//Duplicable">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Duplicable/duplicate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Duplicable/limitNumberOfDuplication"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Duplicable/limitMinNumberOfDuplication"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Duplicable/maxNumberOfDuplication"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Duplicable/minNumberOfDuplication"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Duplicable/displayLabelForAdd"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Duplicable/tooltipForAdd"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Duplicable/displayLabelForRemove"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Duplicable/tooltipForRemove"/>
+    </genClasses>
+    <genClasses ecoreClass="form.ecore#//ViewForm"/>
+    <genClasses image="false" ecoreClass="form.ecore#//CSSCustomizable">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//CSSCustomizable/htmlAttributes"/>
     </genClasses>
     <genClasses image="false" ecoreClass="form.ecore#//Widget">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference form.ecore#//Widget/widgetLayoutInfo"/>
@@ -179,8 +229,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Widget/allowHTMLForDisplayLabel"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference form.ecore#//Widget/dependOn"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Widget/displayDependentWidgetOnlyOnEventTriggered"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference form.ecore#//Widget/parentOf"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Widget/mandatory"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Widget/readOnly"/>
@@ -188,19 +236,16 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute form.ecore#//Widget/realHtmlAttributes"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Widget/injectWidgetCondition"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Widget/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Widget/returnTypeModifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Widget/inputExpression"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Widget/afterEventExpression"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Widget/action"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Widget/tooltip"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Widget/helpMessage"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Widget/displayLabel"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Widget/injectWidgetScript"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Widget/returnTypeModifier"/>
-    </genClasses>
-    <genClasses ecoreClass="form.ecore#//WidgetDependency">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference form.ecore#//WidgetDependency/widget"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//WidgetDependency/eventTypes"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//WidgetDependency/triggerRefreshOnModification"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Widget/action"/>
     </genClasses>
     <genClasses ecoreClass="form.ecore#//Group">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Group/widgets"/>
@@ -254,44 +299,17 @@
     <genClasses ecoreClass="form.ecore#//TextInfo"/>
     <genClasses ecoreClass="form.ecore#//MessageInfo"/>
     <genClasses ecoreClass="form.ecore#//CheckBoxSingleFormField"/>
-    <genClasses ecoreClass="form.ecore#//Validator">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Validator/validatorClass"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Validator/htmlClass"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Validator/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Validator/belowField"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Validator/parameter"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Validator/displayName"/>
-    </genClasses>
-    <genClasses ecoreClass="form.ecore#//Validable">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Validable/validators"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Validable/useDefaultValidator"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Validable/below"/>
-    </genClasses>
-    <genClasses ecoreClass="form.ecore#//WidgetLayoutInfo">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//WidgetLayoutInfo/line"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//WidgetLayoutInfo/column"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//WidgetLayoutInfo/verticalSpan"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//WidgetLayoutInfo/horizontalSpan"/>
-    </genClasses>
     <genClasses ecoreClass="form.ecore#//FileWidget">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//FileWidget/downloadOnly"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//FileWidget/usePreview"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference form.ecore#//FileWidget/document"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//FileWidget/initialResourcePath"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//FileWidget/inputType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//FileWidget/outputDocumentName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//FileWidget/updateDocument"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//FileWidget/outputDocumentListExpression"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//FileWidget/intialResourceList"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//FileWidget/inputType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//FileWidget/outputDocumentListExpression"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//FileWidget/downloadType"/>
-    </genClasses>
-    <genClasses ecoreClass="form.ecore#//Column">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Column/width"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Column/number"/>
-    </genClasses>
-    <genClasses ecoreClass="form.ecore#//Line">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Line/height"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Line/number"/>
     </genClasses>
     <genClasses ecoreClass="form.ecore#//ImageWidget">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//ImageWidget/isADocument"/>
@@ -305,29 +323,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//DurationFormField/min"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//DurationFormField/sec"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="form.ecore#//ItemContainer">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//ItemContainer/itemClass"/>
-    </genClasses>
-    <genClasses image="false" ecoreClass="form.ecore#//Duplicable">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Duplicable/duplicate"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Duplicable/limitNumberOfDuplication"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Duplicable/limitMinNumberOfDuplication"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Duplicable/maxNumberOfDuplication"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Duplicable/minNumberOfDuplication"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Duplicable/displayLabelForAdd"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Duplicable/tooltipForAdd"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Duplicable/displayLabelForRemove"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Duplicable/tooltipForRemove"/>
-    </genClasses>
-    <genClasses ecoreClass="form.ecore#//Table">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Table/usePagination"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Table/allowSelection"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Table/selectionModeIsMultiple"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Table/maxRowForPagination"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Table/columnForInitialSelectionIndex"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Table/selectedValues"/>
-    </genClasses>
-    <genClasses ecoreClass="form.ecore#//ViewForm"/>
     <genClasses image="false" ecoreClass="form.ecore#//AbstractTable">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//AbstractTable/leftColumnIsHeader"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//AbstractTable/rightColumnIsHeader"/>
@@ -339,6 +334,14 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference form.ecore#//AbstractTable/horizontalHeaderExpression"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference form.ecore#//AbstractTable/verticalHeaderExpression"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference form.ecore#//AbstractTable/tableExpression"/>
+    </genClasses>
+    <genClasses ecoreClass="form.ecore#//Table">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Table/usePagination"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Table/allowSelection"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Table/selectionModeIsMultiple"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Table/maxRowForPagination"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Table/columnForInitialSelectionIndex"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Table/selectedValues"/>
     </genClasses>
     <genClasses ecoreClass="form.ecore#//DynamicTable">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//DynamicTable/limitMinNumberOfColumn"/>
@@ -357,9 +360,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//MandatoryFieldsCustomization/mandatorySymbol"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//MandatoryFieldsCustomization/mandatoryLabel"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="form.ecore#//CSSCustomizable">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//CSSCustomizable/htmlAttributes"/>
-    </genClasses>
     <genClasses ecoreClass="form.ecore#//HtmlWidget"/>
     <genClasses ecoreClass="form.ecore#//SuggestBox">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//SuggestBox/maxItems"/>
@@ -373,16 +373,16 @@
   </genPackages>
   <genPackages prefix="Kpi" basePackage="org.bonitasoft.studio.model" ecorePackage="kpi.ecore#/">
     <genClasses image="false" ecoreClass="kpi.ecore#//AbstractKPIDefinition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference kpi.ecore#//AbstractKPIDefinition/fields"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute kpi.ecore#//AbstractKPIDefinition/version"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference kpi.ecore#//AbstractKPIDefinition/fields"/>
     </genClasses>
     <genClasses image="false" ecoreClass="kpi.ecore#//AbstractKPIBinding">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute kpi.ecore#//AbstractKPIBinding/kpiDefinitionName"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference kpi.ecore#//AbstractKPIBinding/parameters"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute kpi.ecore#//AbstractKPIBinding/event"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute kpi.ecore#//AbstractKPIBinding/ignoreError"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute kpi.ecore#//AbstractKPIBinding/useGraphicalEditor"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference kpi.ecore#//AbstractKPIBinding/request"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference kpi.ecore#//AbstractKPIBinding/parameters"/>
     </genClasses>
     <genClasses ecoreClass="kpi.ecore#//KPIParameterMapping">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute kpi.ecore#//KPIParameterMapping/kpiFieldName"/>
@@ -427,14 +427,27 @@
   </genPackages>
   <genPackages prefix="Process" basePackage="org.bonitasoft.studio.model" disposableProviderFactory="true"
       ecorePackage="process.ecore#/">
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//ConsultationPageFlowType">
-      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ConsultationPageFlowType/PAGEFLOW"/>
-      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ConsultationPageFlowType/REDIRECTION"/>
-    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//CorrelationTypeActive">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//CorrelationTypeActive/INACTIVE"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//CorrelationTypeActive/KEYS"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//CorrelationTypeActive/PREDICATES"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//ConsultationPageFlowType">
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ConsultationPageFlowType/PAGEFLOW"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ConsultationPageFlowType/REDIRECTION"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//ContractInputType">
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/TEXT"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/INTEGER"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/DECIMAL"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/BOOLEAN"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/DATE"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/COMPLEX"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//DocumentType">
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/NONE"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/INTERNAL"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/EXTERNAL"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//EntryPageFlowType">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//EntryPageFlowType/PAGEFLOW"/>
@@ -472,11 +485,6 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//StartTimerScriptType/MINUTELY"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//StartTimerScriptType/CONSTANT"/>
     </genEnums>
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//DocumentType">
-      <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/NONE"/>
-      <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/INTERNAL"/>
-      <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/EXTERNAL"/>
-    </genEnums>
     <genClasses image="false" ecoreClass="process.ecore#//AbstractCatchMessageEvent">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//AbstractCatchMessageEvent/event"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//AbstractCatchMessageEvent/incomingMessag"/>
@@ -495,9 +503,9 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//AbstractProcess/datatypes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//AbstractProcess/connections"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//AbstractProcess/categories"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//AbstractProcess/parameters"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//AbstractProcess/actors"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//AbstractProcess/configurations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//AbstractProcess/parameters"/>
     </genClasses>
     <genClasses image="false" ecoreClass="process.ecore#//AbstractTimerEvent">
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//AbstractTimerEvent/condition"/>
@@ -510,9 +518,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Actor/initiator"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ActorFilter"/>
+    <genClasses ecoreClass="process.ecore#//ANDGateway"/>
     <genClasses image="false" ecoreClass="process.ecore#//Assignable">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Assignable/filters"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Assignable/actor"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Assignable/filters"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//AssociatedFile">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//AssociatedFile/path"/>
@@ -521,7 +530,6 @@
     <genClasses ecoreClass="process.ecore#//Association">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Association/isDirected"/>
     </genClasses>
-    <genClasses ecoreClass="process.ecore#//ANDGateway"/>
     <genClasses ecoreClass="process.ecore#//BooleanType"/>
     <genClasses ecoreClass="process.ecore#//BoundaryEvent"/>
     <genClasses ecoreClass="process.ecore#//BoundaryMessageEvent"/>
@@ -542,15 +550,11 @@
     <genClasses ecoreClass="process.ecore#//CatchLinkEvent">
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//CatchLinkEvent/from"/>
     </genClasses>
-    <genClasses ecoreClass="process.ecore#//CatchSignalEvent"/>
     <genClasses ecoreClass="process.ecore#//CatchMessageEvent"/>
+    <genClasses ecoreClass="process.ecore#//CatchSignalEvent"/>
     <genClasses ecoreClass="process.ecore#//ConnectableElement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ConnectableElement/connectors"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ConnectableElement/kpis"/>
-    </genClasses>
-    <genClasses ecoreClass="process.ecore#//Connection">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Connection/source"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Connection/target"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Connector">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Connector/definitionId"/>
@@ -558,12 +562,40 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Connector/ignoreErrors"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Connector/throwErrorEvent"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Connector/namedError"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Connector/outputs"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Connector/configuration"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Connector/definitionVersion"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Connector/configuration"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Connector/outputs"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Container">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Container/elements"/>
+    </genClasses>
+    <genClasses ecoreClass="process.ecore#//Contract">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Contract/inputs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Contract/constraints"/>
+    </genClasses>
+    <genClasses ecoreClass="process.ecore#//ContractInputMapping">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//ContractInputMapping/data"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInputMapping/setterName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInputMapping/setterParamType"/>
+    </genClasses>
+    <genClasses ecoreClass="process.ecore#//ContractInput">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/multiple"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/mandatory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractInput/mapping"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractInput/inputs"/>
+    </genClasses>
+    <genClasses ecoreClass="process.ecore#//ContractConstraint">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/expression"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/errorMessage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/inputNames"/>
+    </genClasses>
+    <genClasses ecoreClass="process.ecore#//Connection">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Connection/target"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Connection/source"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Correlation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Correlation/correlationType"/>
@@ -574,44 +606,44 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//CorrelationAssociation/correlationKey"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Data">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Data/dataType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Data/generated"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Data/multiple"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Data/transient"/>
-      <genFeatures children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Data/defaultValue"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Data/datasourceId"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Data/dataType"/>
+      <genFeatures children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Data/defaultValue"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//DataAware">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//DataAware/data"/>
     </genClasses>
-    <genClasses ecoreClass="process.ecore#//DataType"/>
     <genClasses ecoreClass="process.ecore#//DateType"/>
+    <genClasses ecoreClass="process.ecore#//DataType"/>
     <genClasses ecoreClass="process.ecore#//Document">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/defaultValueIdOfDocumentStore"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Document/mimeType"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Document/url"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/defaultValueIdOfDocumentStore"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/documentType"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/multiple"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Document/initialMultipleContent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/multiple"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//DoubleType"/>
-    <genClasses ecoreClass="process.ecore#//EndErrorEvent"/>
-    <genClasses ecoreClass="process.ecore#//EndEvent"/>
-    <genClasses ecoreClass="process.ecore#//EndMessageEvent"/>
-    <genClasses ecoreClass="process.ecore#//EndSignalEvent"/>
-    <genClasses ecoreClass="process.ecore#//EndTerminatedEvent"/>
     <genClasses ecoreClass="process.ecore#//Element">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Element/documentation"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Element/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Element/textAnnotationAttachment"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="process.ecore#//Event"/>
+    <genClasses ecoreClass="process.ecore#//EndErrorEvent"/>
+    <genClasses ecoreClass="process.ecore#//EndEvent"/>
+    <genClasses ecoreClass="process.ecore#//EndMessageEvent"/>
+    <genClasses ecoreClass="process.ecore#//EndSignalEvent"/>
+    <genClasses ecoreClass="process.ecore#//EndTerminatedEvent"/>
     <genClasses image="false" ecoreClass="process.ecore#//ErrorEvent">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ErrorEvent/errorCode"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//EnumType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//EnumType/literals"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="process.ecore#//Event"/>
     <genClasses ecoreClass="process.ecore#//FloatType"/>
     <genClasses ecoreClass="process.ecore#//FlowElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//FlowElement/dynamicLabel"/>
@@ -619,9 +651,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//FlowElement/stepSummary"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//FormMapping">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//FormMapping/targetForm"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//FormMapping/external"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//FormMapping/url"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//FormMapping/targetForm"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Gateway">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Gateway/gatewayType"/>
@@ -632,12 +664,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//InputMapping/subprocessTarget"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//IntegerType"/>
-    <genClasses ecoreClass="process.ecore#//IntermediateCatchMessageEvent"/>
-    <genClasses ecoreClass="process.ecore#//IntermediateCatchSignalEvent"/>
-    <genClasses ecoreClass="process.ecore#//IntermediateCatchTimerEvent"/>
     <genClasses ecoreClass="process.ecore#//IntermediateErrorCatchEvent"/>
-    <genClasses ecoreClass="process.ecore#//IntermediateThrowMessageEvent"/>
+    <genClasses ecoreClass="process.ecore#//IntermediateCatchSignalEvent"/>
     <genClasses ecoreClass="process.ecore#//IntermediateThrowSignalEvent"/>
+    <genClasses ecoreClass="process.ecore#//IntermediateCatchMessageEvent"/>
+    <genClasses ecoreClass="process.ecore#//IntermediateThrowMessageEvent"/>
+    <genClasses ecoreClass="process.ecore#//IntermediateCatchTimerEvent"/>
     <genClasses ecoreClass="process.ecore#//JavaObjectData">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//JavaObjectData/className"/>
     </genClasses>
@@ -656,18 +688,18 @@
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Message">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Message/throwEvent"/>
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference process.ecore#//Message/source"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Message/ttl"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Message/correlation"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Message/messageContent"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference process.ecore#//Message/source"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Message/targetProcessExpression"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Message/targetElementExpression"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Message/messageContent"/>
+    </genClasses>
+    <genClasses ecoreClass="process.ecore#//MessageFlow">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//MessageFlow/target"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//MessageFlow/source"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//MessageEvent"/>
-    <genClasses ecoreClass="process.ecore#//MessageFlow">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//MessageFlow/source"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//MessageFlow/target"/>
-    </genClasses>
     <genClasses image="false" ecoreClass="process.ecore#//MultiInstantiable">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//MultiInstantiable/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//MultiInstantiable/testBefore"/>
@@ -691,23 +723,18 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//OutputMapping/processTarget"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//PageFlow">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/form"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//PageFlow/byPassFormsGeneration"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//PageFlow/confirmationTemplate"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/pageFlowTransitions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/transientData"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/pageFlowConnectors"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//PageFlow/entryRedirectionURL"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//PageFlow/entryPageFlowType"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/entryRedirectionActions"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//PageFlow/transmitURLAsParameter"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/pageFlowTransitions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/form"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//PageFlow/entryRedirectionURL"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//PageFlow/confirmationMessage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/entryRedirectionActions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/formMapping"/>
-    </genClasses>
-    <genClasses ecoreClass="process.ecore#//PageFlowTransition">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//PageFlowTransition/from"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//PageFlowTransition/to"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//PageFlowTransition/condition"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Pool">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Pool/documents"/>
@@ -726,33 +753,32 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ProcessApplication/hostPage"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ProcessApplication/basedOnLookAndFeel"/>
     </genClasses>
+    <genClasses ecoreClass="process.ecore#//PageFlowTransition">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//PageFlowTransition/from"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//PageFlowTransition/to"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//PageFlowTransition/condition"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="process.ecore#//RecapFlow">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/recapForms"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/recapPageFlowTransitions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/recapTransientData"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/recapFlowConnectors"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//RecapFlow/recapPageFlowType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/recapForms"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/recapPageFlowRedirectionURL"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/overviewFormMapping"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ReceiveTask"/>
     <genClasses ecoreClass="process.ecore#//ResourceContainer">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ResourceContainer/resourceFolders"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ResourceContainer/htmlTemplate"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//ResourceContainer/resourceFiles"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ResourceContainer/resourceJars"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ResourceContainer/resourceValidators"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//ResourceContainer/resourceFiles"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ResourceContainer/resourceFolders"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ResourceFile"/>
     <genClasses ecoreClass="process.ecore#//ResourceFolder">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ResourceFolder/resourceFiles"/>
     </genClasses>
-    <genClasses ecoreClass="process.ecore#//ScriptTask"/>
-    <genClasses ecoreClass="process.ecore#//SearchIndex">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//SearchIndex/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//SearchIndex/value"/>
-    </genClasses>
-    <genClasses ecoreClass="process.ecore#//SendTask"/>
     <genClasses ecoreClass="process.ecore#//SequenceFlow">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//SequenceFlow/isDefault"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//SequenceFlow/conditionType"/>
@@ -760,13 +786,20 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//SequenceFlow/condition"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//SequenceFlow/pathToken"/>
     </genClasses>
-    <genClasses ecoreClass="process.ecore#//ServiceTask"/>
     <genClasses ecoreClass="process.ecore#//SignalEvent">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//SignalEvent/signalCode"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//SourceElement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//SourceElement/outgoing"/>
     </genClasses>
+    <genClasses ecoreClass="process.ecore#//StringType"/>
+    <genClasses ecoreClass="process.ecore#//ScriptTask"/>
+    <genClasses ecoreClass="process.ecore#//SearchIndex">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//SearchIndex/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//SearchIndex/value"/>
+    </genClasses>
+    <genClasses ecoreClass="process.ecore#//SendTask"/>
+    <genClasses ecoreClass="process.ecore#//ServiceTask"/>
     <genClasses ecoreClass="process.ecore#//StartErrorEvent"/>
     <genClasses ecoreClass="process.ecore#//StartEvent"/>
     <genClasses ecoreClass="process.ecore#//StartMessageEvent"/>
@@ -782,14 +815,14 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//StartTimerEvent/seconds"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//StartTimerEvent/scriptType"/>
     </genClasses>
-    <genClasses ecoreClass="process.ecore#//StringType"/>
     <genClasses ecoreClass="process.ecore#//SubProcessEvent"/>
-    <genClasses ecoreClass="process.ecore#//TargetElement">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//TargetElement/incoming"/>
-    </genClasses>
     <genClasses ecoreClass="process.ecore#//Task">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Task/overrideActorsOfTheLane"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Task/priority"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Task/contract"/>
+    </genClasses>
+    <genClasses ecoreClass="process.ecore#//TargetElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//TargetElement/incoming"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//TextAnnotation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//TextAnnotation/text"/>
@@ -798,6 +831,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//TextAnnotationAttachment/source"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//TextAnnotationAttachment/target"/>
     </genClasses>
+    <genClasses ecoreClass="process.ecore#//ThrowSignalEvent"/>
     <genClasses ecoreClass="process.ecore#//ThrowLinkEvent">
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//ThrowLinkEvent/to"/>
     </genClasses>
@@ -805,14 +839,13 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ThrowMessageEvent/events"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//ThrowMessageEvent/outgoingMessages"/>
     </genClasses>
-    <genClasses ecoreClass="process.ecore#//ThrowSignalEvent"/>
     <genClasses ecoreClass="process.ecore#//TimerEvent"/>
     <genClasses image="false" ecoreClass="process.ecore#//ViewPageFlow">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ViewPageFlow/viewForm"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ViewPageFlow/viewPageFlowTransitions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ViewPageFlow/viewTransientData"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ViewPageFlow/viewPageFlowConnectors"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ViewPageFlow/viewPageFlowType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ViewPageFlow/viewForm"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//XMLData">
@@ -822,10 +855,9 @@
     <genClasses ecoreClass="process.ecore#//XMLType"/>
     <genClasses ecoreClass="process.ecore#//XORGateway"/>
     <nestedGenPackages prefix="Decision" basePackage="org.bonitasoft.studio.model.process"
-        disposableProviderFactory="true" ecorePackage="process.ecore#//decision">
+        resource="XML" disposableProviderFactory="true" ecorePackage="process.ecore#//decision">
       <genClasses ecoreClass="process.ecore#//decision/DecisionTable">
-        <genFeatures children="true" createChild="true" propertyDescription="" propertySortChoices="true"
-            ecoreFeature="ecore:EReference process.ecore#//decision/DecisionTable/lines"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//decision/DecisionTable/lines"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//decision/DecisionTable/defaultAction"/>
       </genClasses>
       <genClasses ecoreClass="process.ecore#//decision/DecisionTableLine">
@@ -834,7 +866,7 @@
       </genClasses>
       <genClasses image="false" ecoreClass="process.ecore#//decision/DecisionTableAction"/>
       <nestedGenPackages prefix="Transitions" basePackage="org.bonitasoft.studio.model.process.decision"
-          disposableProviderFactory="true" ecorePackage="process.ecore#//decision/transitions">
+          resource="XML" disposableProviderFactory="true" ecorePackage="process.ecore#//decision/transitions">
         <genClasses ecoreClass="process.ecore#//decision/transitions/TakeTransitionAction">
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//decision/transitions/TakeTransitionAction/takeTransition"/>
         </genClasses>
@@ -858,39 +890,21 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationElement/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationElement/description"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="simulation.ecore#//SimulationAbstractProcess">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationAbstractProcess/loadProfileID"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationAbstractProcess/maximumTime"/>
-    </genClasses>
     <genClasses image="false" ecoreClass="simulation.ecore#//SimulationData">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationData/expressionBased"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference simulation.ecore#//SimulationData/expression"/>
-    </genClasses>
-    <genClasses image="false" ecoreClass="simulation.ecore#//SimulationActivity">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//SimulationActivity/resourcesUsages"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationActivity/executionTime"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationActivity/estimatedTime"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationActivity/maximumTime"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationActivity/contigous"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationActivity/exclusiveOutgoingTransition"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//SimulationActivity/dataChange"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//SimulationActivity/loopTransition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//SimulationData/expression"/>
     </genClasses>
     <genClasses ecoreClass="simulation.ecore#//SimulationTransition">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationTransition/probability"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationTransition/dataBased"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationTransition/useExpression"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference simulation.ecore#//SimulationTransition/expression"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//SimulationTransition/expression"/>
     </genClasses>
     <genClasses ecoreClass="simulation.ecore#//ResourceUsage">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//ResourceUsage/duration"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//ResourceUsage/resourceID"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//ResourceUsage/quantity"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//ResourceUsage/useActivityDuration"/>
-    </genClasses>
-    <genClasses ecoreClass="simulation.ecore#//LoadProfile">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//LoadProfile/calendar"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//LoadProfile/injectionPeriods"/>
     </genClasses>
     <genClasses ecoreClass="simulation.ecore#//InjectionPeriod">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//InjectionPeriod/begin"/>
@@ -920,12 +934,40 @@
     <genClasses image="false" ecoreClass="simulation.ecore#//SimulationDataContainer">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//SimulationDataContainer/simulationData"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="simulation.ecore#//SimulationAbstractProcess">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationAbstractProcess/loadProfileID"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationAbstractProcess/maximumTime"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="simulation.ecore#//SimulationActivity">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//SimulationActivity/resourcesUsages"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationActivity/executionTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationActivity/estimatedTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationActivity/maximumTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationActivity/contigous"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//SimulationActivity/exclusiveOutgoingTransition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//SimulationActivity/loopTransition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//SimulationActivity/dataChange"/>
+    </genClasses>
     <genClasses ecoreClass="simulation.ecore#//DataChange">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference simulation.ecore#//DataChange/data"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference simulation.ecore#//DataChange/value"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//DataChange/value"/>
     </genClasses>
     <genClasses ecoreClass="simulation.ecore#//SimulationCalendar">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//SimulationCalendar/daysOfWeek"/>
+    </genClasses>
+    <genClasses ecoreClass="simulation.ecore#//DayPeriod">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//DayPeriod/day"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//DayPeriod/startHour"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//DayPeriod/endHour"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//DayPeriod/startMinute"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//DayPeriod/endMinute"/>
+    </genClasses>
+    <genClasses ecoreClass="simulation.ecore#//ModelVersion">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//ModelVersion/version"/>
+    </genClasses>
+    <genClasses ecoreClass="simulation.ecore#//LoadProfile">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//LoadProfile/calendar"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//LoadProfile/injectionPeriods"/>
     </genClasses>
     <genClasses ecoreClass="simulation.ecore#//Resource">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//Resource/type"/>
@@ -937,16 +979,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//Resource/timeCost"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference simulation.ecore#//Resource/calendar"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//Resource/unlimited"/>
-    </genClasses>
-    <genClasses ecoreClass="simulation.ecore#//DayPeriod">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//DayPeriod/day"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//DayPeriod/startHour"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//DayPeriod/endHour"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//DayPeriod/startMinute"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//DayPeriod/endMinute"/>
-    </genClasses>
-    <genClasses ecoreClass="simulation.ecore#//ModelVersion">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute simulation.ecore#//ModelVersion/version"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

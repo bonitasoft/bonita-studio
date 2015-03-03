@@ -37,11 +37,11 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  */
 public abstract class TabbedExtensibleGridPropertySection extends ExtensibleGridPropertySection {
 
-	private Map<IExtensibleGridPropertySectionContribution, String> tabMap = new HashMap<IExtensibleGridPropertySectionContribution, String>();
-	private List<CTabItem> tabItems = new ArrayList<CTabItem>();
-	private List<String> tabNames = new ArrayList<String>();
-	private Map<String, Composite> composites = new HashMap<String, Composite>();
-	private Map<String, Integer> positions = new HashMap<String, Integer>();
+	private final Map<IExtensibleGridPropertySectionContribution, String> tabMap = new HashMap<IExtensibleGridPropertySectionContribution, String>();
+	private final List<CTabItem> tabItems = new ArrayList<CTabItem>();
+	private final List<String> tabNames = new ArrayList<String>();
+	private final Map<String, Composite> composites = new HashMap<String, Composite>();
+	private final Map<String, Integer> positions = new HashMap<String, Integer>();
 
 	/*
 	 * (non-Javadoc)
@@ -51,7 +51,7 @@ public abstract class TabbedExtensibleGridPropertySection extends ExtensibleGrid
 	 * #addContribution(org.bonitasoft.studio.common.properties.
 	 * IExtensibleGridPropertySectionContribution)
 	 */
-	protected void addContribution(IExtensibleGridPropertySectionContribution contrib, String tabName) {
+	protected void addContribution(final IExtensibleGridPropertySectionContribution contrib, final String tabName) {
 		tabMap.put(contrib, tabName);
 		addContribution(contrib);
 	}
@@ -65,10 +65,8 @@ public abstract class TabbedExtensibleGridPropertySection extends ExtensibleGrid
 	 * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
 	 */
 	@Override
-	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
-
-		this.tabbedPropertySheetPage = aTabbedPropertySheetPage;
-		this.widgetFactory = aTabbedPropertySheetPage.getWidgetFactory();
+	public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
+		widgetFactory = aTabbedPropertySheetPage.getWidgetFactory();
 		addContributions();
 		mainComposite = widgetFactory.createTabFolder(parent, SWT.NONE);
 		mainComposite.setLayout(new FillLayout());
@@ -84,14 +82,14 @@ public abstract class TabbedExtensibleGridPropertySection extends ExtensibleGrid
 	 */
 	@Override
 	public void refreshUI() {
-		for (Entry<IExtensibleGridPropertySectionContribution, String> entry : tabMap.entrySet()) {
-			IExtensibleGridPropertySectionContribution contrib = entry.getKey();
+		for (final Entry<IExtensibleGridPropertySectionContribution, String> entry : tabMap.entrySet()) {
+			final IExtensibleGridPropertySectionContribution contrib = entry.getKey();
 			contrib.dispose();
 		}
-		for (Control c : mainComposite.getChildren()) {
+		for (final Control c : mainComposite.getChildren()) {
 			c.dispose();
 		}
-		for (CTabItem tabItem : tabItems) {
+		for (final CTabItem tabItem : tabItems) {
 			if (!tabItem.isDisposed()) {
 				tabItem.dispose();
 			}
@@ -99,40 +97,40 @@ public abstract class TabbedExtensibleGridPropertySection extends ExtensibleGrid
 		tabItems.clear();
 		tabNames.clear();
 
-		for (Entry<IExtensibleGridPropertySectionContribution, String> entry : tabMap.entrySet()) {
-			IExtensibleGridPropertySectionContribution contrib = entry.getKey();
+		for (final Entry<IExtensibleGridPropertySectionContribution, String> entry : tabMap.entrySet()) {
+			final IExtensibleGridPropertySectionContribution contrib = entry.getKey();
 			if (contrib.isRelevantFor(getEObject())) {
 				if (!tabNames.contains(entry.getValue())) {
 					tabNames.add(entry.getValue());
 				}
 			}
 		}
-		String[] array = tabNames.toArray(new String[tabNames.size()]);
+		final String[] array = tabNames.toArray(new String[tabNames.size()]);
 		tabNames.clear();
-		for (String name : array) {
+		for (final String name : array) {
 			if(positions.containsKey(name)){
 				tabNames.add(Math.min(positions.get(name),tabNames.size()), name);
 			}else{
 				tabNames.add(name);
 			}
 		}
-		for (String name : tabNames) {
-				CTabItem tabItem = widgetFactory.createTabItem((CTabFolder) mainComposite, SWT.NONE);
+		for (final String name : tabNames) {
+				final CTabItem tabItem = widgetFactory.createTabItem((CTabFolder) mainComposite, SWT.NONE);
 				tabItem.setText(name);
 				tabItems.add(tabItem);
-				Composite composite = widgetFactory.createComposite(mainComposite);
+				final Composite composite = widgetFactory.createComposite(mainComposite);
 				composite.setLayout(getLayout());
 				tabItem.setControl(composite);
 				composites.put(name, composite);
 		}
-		for (IExtensibleGridPropertySectionContribution contrib :getContributions()){
+		for (final IExtensibleGridPropertySectionContribution contrib :getContributions()){
 			if (contrib.isRelevantFor(getEObject())) {
-				String tabName = tabMap.get(contrib);
-				Composite parent = composites.get(tabName);
+				final String tabName = tabMap.get(contrib);
+				final Composite parent = composites.get(tabName);
 				if (contrib.getLabel().length() != 0) {
 					widgetFactory.createCLabel(parent, contrib.getLabel());
 				}
-				Composite composite = widgetFactory.createComposite(parent);
+				final Composite composite = widgetFactory.createComposite(parent);
 				contrib.createControl(composite, widgetFactory, this);
 			}
 
@@ -148,7 +146,7 @@ public abstract class TabbedExtensibleGridPropertySection extends ExtensibleGrid
 	 * @param tabName
 	 * @param i
 	 */
-	protected void setTabPosition(String tabName, int i) {
+	protected void setTabPosition(final String tabName, final int i) {
 		positions.put(tabName,i);
 	}
 

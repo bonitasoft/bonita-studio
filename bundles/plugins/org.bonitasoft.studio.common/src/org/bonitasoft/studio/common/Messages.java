@@ -276,8 +276,12 @@ public class Messages extends NLS {
     public static String errorValidationContinueAnywayMessage;
     public static String validationFailedTitle;
     public static String endWarningMessage;
+    public static String showHelp;
     public static String createAndNewButton;
     public static String Next_desc;
     public static String Image_desc;
+    public static String hideHelp;
+    public static String toggleHelp;
+
 
 }

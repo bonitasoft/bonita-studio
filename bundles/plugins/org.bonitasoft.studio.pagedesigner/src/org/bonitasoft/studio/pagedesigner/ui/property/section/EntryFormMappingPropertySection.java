@@ -31,7 +31,6 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Romain Bioteau
@@ -55,14 +54,14 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
     private FormReferenceExpressionValidator formReferenceExpressionValidator;
 
     @Override
-    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
+    protected void createContent(final Composite parent) {
         context = new EMFDataBindingContext();
-        final FormMappingRadioGroup formMappingRadioGroup = new FormMappingRadioGroup(parent, aTabbedPropertySheetPage.getWidgetFactory(), preferenceStore,
+        final FormMappingRadioGroup formMappingRadioGroup = new FormMappingRadioGroup(parent, getWidgetFactory(), preferenceStore,
                 repositoryAccessor, formReferenceExpressionValidator);
         formMappingRadioGroup.doBindControl(context, CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(selectionProvider),
                 getFormMappingFeature()));
+
     }
 
     protected EReference getFormMappingFeature() {

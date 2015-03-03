@@ -16,8 +16,6 @@
  */
 package org.bonitasoft.studio.data.ui.property.section;
 
-import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -101,7 +99,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  *
@@ -135,16 +132,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     private Composite businessDataComposite;
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.bonitasoft.studio.properties.sections.data.DataSection#createControls
-     * (org.eclipse.swt.widgets.Composite,
-     * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
-     */
     @Override
-    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
+    protected void createContent(final Composite parent) {
         mainComposite = getWidgetFactory().createComposite(parent);
         mainComposite.setLayout(createMainCompositeLayout());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -404,7 +393,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     protected void removeData(final IStructuredSelection structuredSelection) {
         final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
-        final OutlineDialog dialog = new OutlineDialog(Display.getDefault().getActiveShell(), removalConfirmationDialogTitle, Display.getCurrent().getSystemImage(
+        final OutlineDialog dialog = new OutlineDialog(Display.getDefault().getActiveShell(),
+                org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle, Display.getCurrent().getSystemImage(
                 SWT.ICON_WARNING), createMessage(structuredSelection), MessageDialog.CONFIRM, buttonList, 1, structuredSelection.toList());
         if (dialog.open() == Dialog.OK) {
             final IProgressService service = PlatformUI.getWorkbench().getProgressService();

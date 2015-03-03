@@ -54,6 +54,8 @@ public interface ExpressionConstants {
 
     String BUSINESS_DATA_TYPE = ExpressionType.TYPE_BUSINESS_DATA.name();
 
+    String CONTRACT_INPUT_TYPE = ExpressionType.TYPE_CONTRACT_INPUT.name();
+
     String URL_ATTRIBUTE_TYPE = "URL_ATTRIBUTE_TYPE";
 
     String CONNECTOR_TYPE = "CONNECTOR_TYPE";

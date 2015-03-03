@@ -1,11 +1,17 @@
-/*******************************************************************************
- * Copyright (C) 2013 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- * BonitaSoft, 32 rue Gustave Eiffel a 38000 Grenoble
- * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.parameters.wizard.page;
 
 import java.util.Set;
@@ -40,7 +46,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Maxence Raoux
- * 
+ *
  */
 public class ParametersWizardPage extends WizardPage {
 
@@ -50,13 +56,13 @@ public class ParametersWizardPage extends WizardPage {
 
     private ComboViewer typeCombo;
 
-    private Parameter parameterWorkingCopy;
+    private final Parameter parameterWorkingCopy;
 
     private EMFDataBindingContext dataBindingContext;
 
-    private Set<String> existingParameterNames;
+    private final Set<String> existingParameterNames;
 
-    public ParametersWizardPage(Parameter parameterWorkingCopy, Set<String> existingParameterNames) {
+    public ParametersWizardPage(final Parameter parameterWorkingCopy, final Set<String> existingParameterNames) {
         super(ParametersWizardPage.class.getName());
         Assert.isNotNull(parameterWorkingCopy);
         Assert.isNotNull(existingParameterNames);
@@ -72,7 +78,7 @@ public class ParametersWizardPage extends WizardPage {
         return descriptionText.getText();
     }
 
-    public String getParameterType(String type) {
+    public String getParameterType(final String type) {
         if (type != null) {
             if (type.equals("Double")) {
                 return Double.class.getName();
@@ -90,9 +96,9 @@ public class ParametersWizardPage extends WizardPage {
     }
 
     @Override
-    public void createControl(Composite parent) {
+    public void createControl(final Composite parent) {
         dataBindingContext = new EMFDataBindingContext();
-        Composite mainComposite = new Composite(parent, SWT.NONE);
+        final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2)
@@ -104,12 +110,12 @@ public class ParametersWizardPage extends WizardPage {
 
     }
 
-    protected void createParameterComposite(Composite parent) {
+    protected void createParameterComposite(final Composite parent) {
         createName(parent);
         createDescription(parent);
         createTypeChooser(parent);
         new Composite(parent, SWT.NONE);
-        Label additionalInformation = new Label(parent, SWT.NONE);
+        final Label additionalInformation = new Label(parent, SWT.NONE);
         additionalInformation.setText(Messages.additionalInformationText);
         additionalInformation.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
     }
@@ -123,12 +129,12 @@ public class ParametersWizardPage extends WizardPage {
         nameText = new Text(parent, SWT.BORDER);
         nameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
                 .create());
-        UpdateValueStrategy nameStrategy = new UpdateValueStrategy();
+        final UpdateValueStrategy nameStrategy = new UpdateValueStrategy();
         nameStrategy.setBeforeSetValidator(new IValidator() {
 
             @Override
-            public IStatus validate(Object value) {
-                String errorMessage = isNameValid((String) value);
+            public IStatus validate(final Object value) {
+                final String errorMessage = isNameValid((String) value);
                 if (errorMessage != null) {
                     return ValidationStatus.error(errorMessage);
                 }
@@ -169,7 +175,7 @@ public class ParametersWizardPage extends WizardPage {
                 EMFObservables.observeValue(parameterWorkingCopy, ParameterPackage.Literals.PARAMETER__TYPE_CLASSNAME));
     }
 
-    protected String isNameValid(String value) {
+    protected String isNameValid(final String value) {
         final IStatus javaConventionNameStatus = new GroovyReferenceValidator(
                 Messages.name).validate(value);
         if (!javaConventionNameStatus.isOK()) {

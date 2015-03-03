@@ -129,7 +129,7 @@
                label="%tab.operations.label">
          </propertyTab>
          <propertyTab
-               afterTab="tab.userxp"
+               afterTab="tab.data"
                category="domain"
                id="tab.loop"
                label="%tab.loop.label">

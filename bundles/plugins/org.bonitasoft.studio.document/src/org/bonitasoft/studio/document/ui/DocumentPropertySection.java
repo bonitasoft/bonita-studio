@@ -66,7 +66,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchMessages;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Aurelien Pupier
@@ -80,16 +79,6 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
 
     public DocumentPropertySection() {
         // keep it for reflective instantiation by Eclipse
-    }
-
-    @Override
-    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
-        final Composite mainComposite = getWidgetFactory().createComposite(parent);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        createMainComposite(mainComposite);
-        documentListViewer.getList().setFocus();
     }
 
     protected void createMainComposite(final Composite mainComposite) {
@@ -302,5 +291,14 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
                 .getCurrent().getSystemImage(SWT.ICON_WARNING), NLS.bind(Messages.areYouSureMessage, sb.toString()), MessageDialog.CONFIRM, buttonList,
                 1, selectionList);
         return dialog.open();
+    }
+
+    @Override
+    protected void createContent(final Composite parent) {
+        final Composite mainComposite = getWidgetFactory().createComposite(parent);
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        createMainComposite(mainComposite);
+        documentListViewer.getList().setFocus();
     }
 }

@@ -24,11 +24,7 @@ import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.SuggestBox;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.properties.form.sections.actions.DataPropertySection;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.observable.ChangeEvent;
-import org.eclipse.core.databinding.observable.IChangeListener;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
@@ -42,7 +38,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.views.properties.tabbed.ISection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
@@ -58,7 +53,7 @@ public class AsynchronousSuggestBoxContribution implements IExtensibleGridProper
 	private EMFDataBindingContext dataBindingContext;
 	private ExtensibleGridPropertySection section;
 
-	public boolean isRelevantFor(EObject eObject) {
+	public boolean isRelevantFor(final EObject eObject) {
 		return eObject instanceof SuggestBox;
 	}
 
@@ -68,10 +63,10 @@ public class AsynchronousSuggestBoxContribution implements IExtensibleGridProper
 		return Messages.asynchronousLabel;
 	}
 
-	public void createControl(Composite composite,
-			TabbedPropertySheetWidgetFactory widgetFactory,
-			ExtensibleGridPropertySection extensibleGridPropertySection) {
-		this.section = extensibleGridPropertySection ;
+	public void createControl(final Composite composite,
+			final TabbedPropertySheetWidgetFactory widgetFactory,
+			final ExtensibleGridPropertySection extensibleGridPropertySection) {
+		section = extensibleGridPropertySection ;
 		composite.setLayout(new GridLayout(4, false)) ;
 		isAsynchronousCheckbox = widgetFactory.createButton(composite,"", SWT.CHECK) ;
 		widgetFactory.createLabel(composite, Messages.refreshDelay) ;
@@ -79,7 +74,7 @@ public class AsynchronousSuggestBoxContribution implements IExtensibleGridProper
 		delayText.setLayoutData(GridDataFactory.fillDefaults().hint(50, SWT.DEFAULT).create()) ;
 		widgetFactory.createLabel(composite, Messages.ms) ;
 
-		ControlDecoration asyncHint = new ControlDecoration(isAsynchronousCheckbox, SWT.LEFT | SWT.TOP) ;
+		final ControlDecoration asyncHint = new ControlDecoration(isAsynchronousCheckbox, SWT.LEFT | SWT.TOP) ;
 		asyncHint.setImage(Pics.getImage(PicsConstants.hint)) ;
 		asyncHint.setDescriptionText(Messages.asynchronousHint) ;
 		
@@ -92,37 +87,21 @@ public class AsynchronousSuggestBoxContribution implements IExtensibleGridProper
 			dataBindingContext.dispose();
 		}
 		dataBindingContext = new EMFDataBindingContext();
-
-		IObservableValue value = EMFEditObservables.observeValue(editingDomain, suggestBox, FormPackage.Literals.SUGGEST_BOX__ASYNCHRONOUS) ;
-		value.addChangeListener(new IChangeListener() {
-
-			public void handleChange(ChangeEvent event) {
-				ISection extensibleGridPropertySection = section.getTabbedPropertySheetPage().getCurrentTab().getSections()[0];
-				if(extensibleGridPropertySection instanceof DataPropertySection){
-					for(IExtensibleGridPropertySectionContribution contib : ((DataPropertySection) extensibleGridPropertySection).getContributions()){
-						if(contib instanceof AvailableValueContribution){
-							//((MultipleValuatedFieldContribution)contib).resetCombo() ;
-						}
-					}
-				}
-			}
-		}) ;
-		;
 		dataBindingContext.bindValue(SWTObservables.observeSelection(isAsynchronousCheckbox),EMFEditObservables.observeValue(editingDomain, suggestBox, FormPackage.Literals.SUGGEST_BOX__ASYNCHRONOUS) );
 		dataBindingContext.bindValue(EMFEditObservables.observeValue(editingDomain, suggestBox, FormPackage.Literals.SUGGEST_BOX__ASYNCHRONOUS), SWTObservables.observeEnabled(delayText),null,new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
 		dataBindingContext.bindValue(SWTObservables.observeText(delayText, SWT.Modify), EMFEditObservables.observeValue(editingDomain, suggestBox, FormPackage.Literals.SUGGEST_BOX__DELAY));
 
 	}
 
-	public void setEObject(EObject object) {
-		this.suggestBox = (SuggestBox) object ;
+	public void setEObject(final EObject object) {
+		suggestBox = (SuggestBox) object ;
 	}
 
-	public void setSelection(ISelection selection) {
+	public void setSelection(final ISelection selection) {
 
 	}
 
-	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+	public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
 		this.editingDomain = editingDomain ;
 
 	}

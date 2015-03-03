@@ -52,7 +52,7 @@ public class EntryFormMappingPropertySectionTest {
     private PageFlowAdaptableSelectionProvider selectionProvider;
 
     @Mock
-    private TabbedPropertySheetPage sheetPage;
+    private TabbedPropertySheetPage tabbedPropertySheetPage;
 
     @InjectMocks
     private EntryFormMappingPropertySection section;
@@ -63,12 +63,12 @@ public class EntryFormMappingPropertySectionTest {
     @Test
     public void should_create_a_FormMappingGroup() throws Exception {
         final Composite parent = realmWithDisplay.createComposite();
-        doReturn(new TabbedPropertySheetWidgetFactory()).when(sheetPage).getWidgetFactory();
+        doReturn(new TabbedPropertySheetWidgetFactory()).when(tabbedPropertySheetPage).getWidgetFactory();
 
-        section.createControls(parent, sheetPage);
+        section.createContent(parent);
 
-        assertThat(parent.getChildren()).hasSize(2);
-        assertThat(parent.getChildren()[1]).isInstanceOf(FormMappingRadioGroup.class);
+        assertThat(parent.getChildren()).hasSize(1);
+        assertThat(parent.getChildren()[0]).isInstanceOf(FormMappingRadioGroup.class);
 
         section.dispose();
     }

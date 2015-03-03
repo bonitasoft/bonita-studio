@@ -1,11 +1,17 @@
-/*******************************************************************************
- * Copyright (C) 2009, 2013 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- *      BonitaSoft, 32 rue Gustave Eiffel – 38000 Grenoble
- *      or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.parameters.action;
 
 import java.io.File;
@@ -41,7 +47,7 @@ public class ExportParametersAction extends Action implements IConfigurationExpo
     @Override
     public void run() {
         if(path == null){
-            FileDialog fd = new FileDialog(Display.getDefault().getActiveShell(), SWT.SAVE) ;
+            final FileDialog fd = new FileDialog(Display.getDefault().getActiveShell(), SWT.SAVE) ;
             fd.setFileName(process.getName()+"_"+process.getVersion()+"_"+Messages.parameters+".properties") ;
             fd.setFilterExtensions(new String[]{"*.properties"}) ;
             path = fd.open() ;
@@ -53,7 +59,7 @@ public class ExportParametersAction extends Action implements IConfigurationExpo
     }
 
     protected void exportParameters() {
-        File file = new File(path);
+        final File file = new File(path);
         if(file.exists()){
             if(!FileActionDialog.overwriteQuestion(file.getName())){
                 return ;
@@ -62,8 +68,8 @@ public class ExportParametersAction extends Action implements IConfigurationExpo
             }
         }
 
-        Properties properties = new Properties();
-        for(Parameter p : configuration.getParameters()){
+        final Properties properties = new Properties();
+        for(final Parameter p : configuration.getParameters()){
             final String paramValue = p.getValue();
 			properties.put(p.getName(), paramValue != null ? paramValue : "") ;
         }
@@ -73,13 +79,13 @@ public class ExportParametersAction extends Action implements IConfigurationExpo
         try {
             fos = new FileOutputStream(file) ;
             properties.store(fos, "") ;
-        } catch (IOException e1) {
+        } catch (final IOException e1) {
             BonitaStudioLog.error(e1) ;
         }finally{
             if(fos != null){
                 try {
                     fos.close() ;
-                } catch (IOException e1) {
+                } catch (final IOException e1) {
 
                 }
             }
@@ -87,17 +93,17 @@ public class ExportParametersAction extends Action implements IConfigurationExpo
     }
 
     @Override
-    public void setConfiguration(Configuration configuration) {
+    public void setConfiguration(final Configuration configuration) {
         this.configuration = configuration ;
     }
 
     @Override
-    public void setProcess(AbstractProcess process) {
+    public void setProcess(final AbstractProcess process) {
         this.process = process ;
     }
 
     @Override
-    public void setTargetPath(String path) {
+    public void setTargetPath(final String path) {
         this.path = path ;
     }
 

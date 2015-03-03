@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009-2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.common.emf.tools;
@@ -47,7 +44,9 @@ import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractPageFlow;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
+import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
+import org.bonitasoft.studio.model.process.BusinessObjectType;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.model.process.ConnectableElement;
@@ -57,11 +56,16 @@ import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.DataType;
+import org.bonitasoft.studio.model.process.DateType;
 import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.studio.model.process.DoubleType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.FlowElement;
+import org.bonitasoft.studio.model.process.IntegerType;
+import org.bonitasoft.studio.model.process.JavaType;
 import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
@@ -75,11 +79,13 @@ import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.SendTask;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.ServiceTask;
+import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.ThrowLinkEvent;
 import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.ViewPageFlow;
+import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.model.simulation.SimulationData;
 import org.bonitasoft.studio.model.simulation.SimulationDataContainer;
 import org.bonitasoft.studio.model.simulation.SimulationTransition;
@@ -100,7 +106,6 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 /**
  * @author Romain Bioteau
  * @author Baptiste Mesta
- *
  */
 public class ModelHelper {
 
@@ -120,7 +125,7 @@ public class ModelHelper {
      * To be used when dealing with scopes (for groups or datatypes)
      *
      * @param a
-     *            model object
+     *        model object
      * @return the list of parent processes for this object. Includes object if
      *         object is a process. This basically contains: * Only the Main
      *         process in case of a top level node which is contained in main
@@ -438,7 +443,7 @@ public class ModelHelper {
      */
     public static AbstractProcess getParentProcess(final EObject object) {
         EObject process = object;
-        while (process != null &&  !(process instanceof AbstractProcess && !(process instanceof SubProcessEvent))) {
+        while (process != null && !(process instanceof AbstractProcess && !(process instanceof SubProcessEvent))) {
             if (process.eContainer() != null) {
                 process = process.eContainer();
             } else {
@@ -470,7 +475,7 @@ public class ModelHelper {
 
     public static Container getParentContainer(final EObject object) {
         EObject container = object;
-        while (container != null &&  !(container instanceof Container)) {
+        while (container != null && !(container instanceof Container)) {
             if (container.eContainer() != null) {
                 container = container.eContainer();
             } else {
@@ -649,52 +654,69 @@ public class ModelHelper {
      * @param proc
      */
     public static void addDataTypes(final MainProcess proc) {
-        // bool
-        final DataType boolDataType = ProcessFactory.eINSTANCE.createBooleanType();
-        boolDataType.setName(DataTypeLabels.booleanDataType);
-        proc.getDatatypes().add(boolDataType);
-        // date
-        final DataType dateDataType = ProcessFactory.eINSTANCE.createDateType();
-        dateDataType.setName(DataTypeLabels.dateDataType);
-        proc.getDatatypes().add(dateDataType);
-        // int
-        final DataType intDataType = ProcessFactory.eINSTANCE.createIntegerType();
-        intDataType.setName(DataTypeLabels.integerDataType);
-        proc.getDatatypes().add(intDataType);
-        // long
-        final DataType longDataType = ProcessFactory.eINSTANCE.createLongType();
-        longDataType.setName(DataTypeLabels.longDataType);
-        proc.getDatatypes().add(longDataType);
-        // long
-        final DataType doubleDataType = ProcessFactory.eINSTANCE.createDoubleType();
-        doubleDataType.setName(DataTypeLabels.doubleDataType);
-        proc.getDatatypes().add(doubleDataType);
-        // float NOT SUPORTED IN ENGINE YET
-        //        DataType floatDataType = ProcessFactory.eINSTANCE.createFloatType();
-        //        floatDataType.setName(DataTypeLabels.floatDataType);
-        //        proc.getDatatypes().add(floatDataType);
-        // string
-        final DataType stringDataType = ProcessFactory.eINSTANCE.createStringType();
-        stringDataType.setName(DataTypeLabels.stringDataType);
-        proc.getDatatypes().add(stringDataType);
-        //        // attachement
-        //        DataType attachedDocDataType = ProcessFactory.eINSTANCE.createAttachmentType();
-        //        attachedDocDataType.setName(DataTypeLabels.attachedDocDataType);
-        //
-        //        proc.getDatatypes().add(attachedDocDataType);
-        // java
-        final DataType javaDataType = ProcessFactory.eINSTANCE.createJavaType();
-        javaDataType.setName(NamingUtils.convertToId(DataTypeLabels.javaDataType, javaDataType));
-        proc.getDatatypes().add(javaDataType);
-        // xml
-        final DataType xmlDataType = ProcessFactory.eINSTANCE.createXMLType();
-        xmlDataType.setName(DataTypeLabels.xmlDataType);
-        proc.getDatatypes().add(xmlDataType);
+        proc.getDatatypes().add(createBooleanDataType());
+        proc.getDatatypes().add(createDateDataType());
+        proc.getDatatypes().add(createIntegerDataType());
+        proc.getDatatypes().add(createLongDataType());
+        proc.getDatatypes().add(createDoubleDataType());
+        proc.getDatatypes().add(createStringDataType());
+        proc.getDatatypes().add(createJavaDataType());
+        proc.getDatatypes().add(createXMLDataType());
+        proc.getDatatypes().add(createBusinessObjectType());
+    }
 
-        // xml
-        final DataType businessObjectType = ProcessFactory.eINSTANCE.createBusinessObjectType();
+    public static BusinessObjectType createBusinessObjectType() {
+        final BusinessObjectType businessObjectType = ProcessFactory.eINSTANCE.createBusinessObjectType();
         businessObjectType.setName(NamingUtils.convertToId(DataTypeLabels.businessObjectType));
-        proc.getDatatypes().add(businessObjectType);
+        return businessObjectType;
+    }
+
+    public static XMLType createXMLDataType() {
+        final XMLType xmlDataType = ProcessFactory.eINSTANCE.createXMLType();
+        xmlDataType.setName(DataTypeLabels.xmlDataType);
+        return xmlDataType;
+    }
+
+    public static JavaType createJavaDataType() {
+        final JavaType javaDataType = ProcessFactory.eINSTANCE.createJavaType();
+        javaDataType.setName(NamingUtils.convertToId(DataTypeLabels.javaDataType, javaDataType));
+        return javaDataType;
+    }
+
+    public static StringType createStringDataType() {
+        final StringType stringDataType = ProcessFactory.eINSTANCE.createStringType();
+        stringDataType.setName(DataTypeLabels.stringDataType);
+        return stringDataType;
+    }
+
+    public static DoubleType createDoubleDataType() {
+        final DoubleType doubleDataType = ProcessFactory.eINSTANCE.createDoubleType();
+        doubleDataType.setName(DataTypeLabels.doubleDataType);
+        return doubleDataType;
+    }
+
+    public static LongType createLongDataType() {
+        final LongType longDataType = ProcessFactory.eINSTANCE.createLongType();
+        longDataType.setName(DataTypeLabels.longDataType);
+        return longDataType;
+    }
+
+    public static IntegerType createIntegerDataType() {
+        final IntegerType intDataType = ProcessFactory.eINSTANCE.createIntegerType();
+        intDataType.setName(DataTypeLabels.integerDataType);
+        return intDataType;
+    }
+
+    public static DateType createDateDataType() {
+        final DateType dateDataType = ProcessFactory.eINSTANCE.createDateType();
+        dateDataType.setName(DataTypeLabels.dateDataType);
+        return dateDataType;
+    }
+
+    public static BooleanType createBooleanDataType() {
+        final BooleanType boolDataType = ProcessFactory.eINSTANCE.createBooleanType();
+        boolDataType.setName(DataTypeLabels.booleanDataType);
+        return boolDataType;
     }
 
     public static DataType getDataTypeForID(final EObject elem, final String name) {
@@ -966,11 +988,12 @@ public class ModelHelper {
     /**
      * @param subProcessName
      * @param version
-     *            : this is not use by now
+     *        : this is not use by now
      * @param elements
      * @param processes
      */
-    private static void findProcessRecursivly(final String subProcessName, final String version, final List<? extends Element> elements, final List<AbstractProcess> processes) {
+    private static void findProcessRecursivly(final String subProcessName, final String version, final List<? extends Element> elements,
+            final List<AbstractProcess> processes) {
         // TODO : use the version argument
         for (final Element item : elements) {
             if (item instanceof AbstractProcess) {
@@ -1040,7 +1063,6 @@ public class ModelHelper {
     }
 
     /**
-     *
      * @param element
      * @param x
      * @param y
@@ -1125,7 +1147,6 @@ public class ModelHelper {
     }
 
     /**
-     *
      * return the neareast empty widget slot available
      *
      * @param near
@@ -1135,7 +1156,6 @@ public class ModelHelper {
     }
 
     /**
-     *
      * return the neareast empty widget slot available
      *
      * @param near
@@ -1267,8 +1287,7 @@ public class ModelHelper {
     public static List<Widget> getAllWidgetInsidePageFlow(final Element pageFlow, final EReference eContainmentFeature) {
         final List<Widget> res = new ArrayList<Widget>();
         @SuppressWarnings("unchecked")
-        final
-        List<Form> forms = (List<Form>) pageFlow.eGet(eContainmentFeature);
+        final List<Form> forms = (List<Form>) pageFlow.eGet(eContainmentFeature);
         for (final Form form : forms) {
             final List<Widget> widgets = getAllWidgetInsideForm(form);
             for (final Widget element : widgets) {
@@ -1484,7 +1503,6 @@ public class ModelHelper {
 
     /**
      * @return
-     *
      */
     public static String getEObjectID(final EObject eObject) {
         if (eObject == null) {
@@ -1561,7 +1579,6 @@ public class ModelHelper {
     }
 
     /**
-     *
      * remove all element that are referenced outside the object and remove
      * element that are missing required fields
      *
@@ -1633,7 +1650,6 @@ public class ModelHelper {
     }
 
     /**
-     *
      * remove all element that are referenced outside the object and remove
      * element that are missing required fields
      *
@@ -1852,7 +1868,6 @@ public class ModelHelper {
     }
 
     /**
-     *
      * Check if the form have a custome page template set
      *
      * @param element
@@ -1861,7 +1876,6 @@ public class ModelHelper {
     public static boolean formIsCustomized(final Form form) {
         return form.getHtmlTemplate() != null && form.getHtmlTemplate().getPath() != null && !form.getHtmlTemplate().getPath().isEmpty();
     }
-
 
     public static Document getDocumentReferencedInExpression(final Expression expr) {
         final List<EObject> refs = expr.getReferencedElements();
@@ -1951,7 +1965,7 @@ public class ModelHelper {
         return (Element) element;
     }
 
-    public static  List<Widget> getAllAccessibleWidgetInsideForm(final Form form) {
+    public static List<Widget> getAllAccessibleWidgetInsideForm(final Form form) {
         final List<Widget> res = new ArrayList<Widget>();
         for (final Widget w : form.getWidgets()) {
             res.addAll(getAccessibleWidgets(w));
@@ -1977,11 +1991,11 @@ public class ModelHelper {
     public static Group getParentGroup(final EObject context) {
         Widget widget = getParentWidget(context);
 
-        if(context.equals(widget) && widget instanceof Group && widget.eContainer() instanceof Group){
+        if (context.equals(widget) && widget instanceof Group && widget.eContainer() instanceof Group) {
             widget = (Widget) widget.eContainer();
         }
 
-        if(widget != null){
+        if (widget != null) {
             Widget parentGroup = widget;
             while (parentGroup != null && !(parentGroup instanceof Group)) {
                 final EObject parent = parentGroup.eContainer();
@@ -1998,14 +2012,15 @@ public class ModelHelper {
         return null;
     }
 
-
     public static boolean isObjectIsReferencedInExpression(final Expression expr, final Object elementToDisplay) {
-        for (final EObject referencedElement:expr.getReferencedElements()){
-            if (referencedElement instanceof Parameter && elementToDisplay instanceof Parameter && ((Parameter)referencedElement).getName().equals(((Parameter)elementToDisplay).getName())){
+        for (final EObject referencedElement : expr.getReferencedElements()) {
+            if (referencedElement instanceof Parameter && elementToDisplay instanceof Parameter
+                    && ((Parameter) referencedElement).getName().equals(((Parameter) elementToDisplay).getName())) {
                 return true;
             }
 
-            if (referencedElement instanceof SearchIndex && elementToDisplay instanceof SearchIndex && ((SearchIndex)referencedElement).getName().getName().equals(((SearchIndex)elementToDisplay).getName().getName())){
+            if (referencedElement instanceof SearchIndex && elementToDisplay instanceof SearchIndex
+                    && ((SearchIndex) referencedElement).getName().getName().equals(((SearchIndex) elementToDisplay).getName().getName())) {
                 return true;
             }
 
@@ -2069,7 +2084,7 @@ public class ModelHelper {
     protected static boolean isSameContainer(final EObject referencedElement, final EObject element) {
         if (referencedElement instanceof Data) {
             final Activity stepContainer = getReferencedDataActivityContainer((Data) referencedElement);
-            if (stepContainer!=null){
+            if (stepContainer != null) {
                 return stepContainer.equals(element.eContainer());
             }
             final Pool poolContainer = getReferencedDataPoolContainer((Data) referencedElement);
@@ -2095,9 +2110,9 @@ public class ModelHelper {
         }
     }
 
-    public static Pool getParentPool(EObject semanticElement) {
+    public static Pool getParentPool(final EObject semanticElement) {
         EObject process = semanticElement;
-        while (process != null &&  !(process instanceof Pool)) {
+        while (process != null && !(process instanceof Pool)) {
             if (process.eContainer() != null) {
                 process = process.eContainer();
             } else {
@@ -2111,4 +2126,12 @@ public class ModelHelper {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T extends EObject> T getFirstContainerOfType(final EObject element, final Class<T> type) {
+        EObject current = element;
+        while (current != null && !type.isAssignableFrom(current.getClass())) {
+            current = current.eContainer();
+        }
+        return (T) current;
+    }
 }

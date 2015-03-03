@@ -463,6 +463,13 @@
          unpack="false"/>
 
    <plugin
+         id="org.bonitasoft.studio.contract"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.osgi.compatibility.state"
          download-size="0"
          install-size="0"

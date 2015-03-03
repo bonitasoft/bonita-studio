@@ -157,11 +157,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
     }
 
     public void setProposalEnabled(final boolean proposalEnabled) {
-        if (!proposalEnabled) {
-            tb.setEnabled(false);
-        } else {
-            tb.setEnabled(true);
-        }
+        tb.setEnabled(proposalEnabled);
     }
 
     protected void fireOpenProposalEvent() {

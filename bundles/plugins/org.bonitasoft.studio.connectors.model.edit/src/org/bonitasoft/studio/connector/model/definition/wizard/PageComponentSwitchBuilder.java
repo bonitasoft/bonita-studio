@@ -422,7 +422,7 @@ public class PageComponentSwitchBuilder {
                 viewer.setHint(desc);
             }
             viewer.setContextInput(container);
-
+            viewer.setInput(parameter);
             final UpdateValueStrategy startegy = new UpdateValueStrategy();
             if (input.isMandatory()) {
                 startegy.setAfterConvertValidator(new EmptyInputValidator(getLabel(object.getId())));

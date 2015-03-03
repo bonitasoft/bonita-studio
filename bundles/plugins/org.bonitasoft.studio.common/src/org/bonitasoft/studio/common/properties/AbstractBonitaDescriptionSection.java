@@ -17,14 +17,13 @@
  */
 package org.bonitasoft.studio.common.properties;
 
-import org.bonitasoft.studio.common.Messages;
 import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.IMessageManager;
+import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.views.properties.tabbed.ITabDescriptor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
@@ -32,64 +31,52 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
  * @author aurelie Zara
- *
+ * @author Romain Bioteau
  */
-public abstract class AbstractBonitaDescriptionSection extends
-AbstractModelerPropertySection {
+public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPropertySection {
 
     private Section section;
-    protected Composite composite;
+    protected Form form;
     private TabbedPropertySheetPage tabbedPropertySheetPage;
-    private TabbedPropertySheetWidgetFactory widgetFactory;
 
 
     @Override
     public void refresh(){
         super.refresh();
-
-        final String description = getSectionDescription();
-        if(tabbedPropertySheetPage != null){
-            final ITabDescriptor tab = tabbedPropertySheetPage.getSelectedTab();
-            if(tab != null && section != null){
-                section.setText(tab.getLabel() + " "+Messages.descriptionTitle);
-            }
-        }
-        if (description !=null  && section != null){
-            section.setDescription(description);
+        if (form != null) {
+            form.setText(getSectionTitle());
         }
     }
-
-
 
     @Override
-    public void createControls(final Composite parent,final TabbedPropertySheetPage aTabbedPropertySheetPage){
+    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
-        parent.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
-        tabbedPropertySheetPage=aTabbedPropertySheetPage;
-        composite = aTabbedPropertySheetPage.getWidgetFactory().createPlainComposite(parent, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5,5).extendedMargins(0, 20, 0, 0).create());
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        widgetFactory = tabbedPropertySheetPage.getWidgetFactory();
-        section =widgetFactory.createSection(composite, Section.DESCRIPTION | Section.TITLE_BAR |Section.TWISTIE | Section.NO_TITLE_FOCUS_BOX);
-        section.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).create());
-        final Composite client = widgetFactory.createComposite(section, SWT.NONE);
-        client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0,0).create());
-        client.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).create());
-        final Label c = new Label(client, SWT.SEPARATOR | SWT.HORIZONTAL);
-        c.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(0,0).create());
-        c.setVisible(false);
-        c.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
-        section.setClient(client);
+        parent.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 
-        final String description = getSectionDescription();
-        final ITabDescriptor tab = tabbedPropertySheetPage.getSelectedTab();
-        if(tab != null){
-            section.setText(tab.getLabel() + " "+Messages.descriptionTitle);
-        }
-        if (description !=null){
-            section.setDescription(description);
-        }
+        tabbedPropertySheetPage=aTabbedPropertySheetPage;
+        final TabbedPropertySheetWidgetFactory widgetFactory = tabbedPropertySheetPage.getWidgetFactory();
+        form = widgetFactory.createForm(parent);
+        form.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+        form.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        final Composite formBodyComposite = form.getBody();
+        formBodyComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+        formBodyComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        form.setToolBarVerticalAlignment(SWT.CENTER);
+        final TogglePropertyHelpContributionItem togglePropertyHelpContributionItem = new TogglePropertyHelpContributionItem(widgetFactory, form,
+                getSectionDescription());
+        form.getToolBarManager().add(togglePropertyHelpContributionItem);
+        form.getToolBarManager().update(true);
+        form.setText(getSectionTitle());
+        form.getMenuManager().add(togglePropertyHelpContributionItem);
+
+        createContent(formBodyComposite);
+        form.update();
+        form.setFocus();
     }
+
+    protected abstract void createContent(final Composite parent);
 
     @Override
     public void dispose(){
@@ -99,7 +86,25 @@ AbstractModelerPropertySection {
         }
     }
 
+    protected IMessageManager getMessageManager() {
+        if (form != null) {
+            return form.getMessageManager();
+        }
+        return null;
+    }
 
+
+    public TabbedPropertySheetPage getTabbedPropertySheetPage() {
+        return tabbedPropertySheetPage;
+    }
+
+    public String getSectionTitle() {
+        final ITabDescriptor tab = tabbedPropertySheetPage.getSelectedTab();
+        if (tab != null) {
+            return tab.getLabel();
+        }
+        return "";
+    }
 
     public abstract String getSectionDescription();
 

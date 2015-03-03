@@ -1,11 +1,17 @@
-/*******************************************************************************
- * Copyright (C) 2009, 2013 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- *      BonitaSoft, 32 rue Gustave Eiffel – 38000 Grenoble
- *      or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.parameters.property.section.editingsupport;
 
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -36,15 +42,15 @@ public class ParameterTypeEditingSupport extends EditingSupport {
     }
 
     @Override
-    protected void initializeCellEditorValue(CellEditor cellEditor,
-            ViewerCell cell) {
+    protected void initializeCellEditorValue(final CellEditor cellEditor,
+            final ViewerCell cell) {
         super.initializeCellEditorValue(cellEditor, cell);
     }
 
 
 
 
-    public ParameterTypeEditingSupport(ColumnViewer viewer, TransactionalEditingDomain transactionalEditingDomain) {
+    public ParameterTypeEditingSupport(final ColumnViewer viewer, final TransactionalEditingDomain transactionalEditingDomain) {
         super(viewer);
         this.transactionalEditingDomain = transactionalEditingDomain ;
     }
@@ -53,7 +59,7 @@ public class ParameterTypeEditingSupport extends EditingSupport {
      * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
      */
     @Override
-    protected boolean canEdit(Object element) {
+    protected boolean canEdit(final Object element) {
         return element != null;
     }
 
@@ -61,8 +67,8 @@ public class ParameterTypeEditingSupport extends EditingSupport {
      * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
      */
     @Override
-    protected CellEditor getCellEditor(Object element) {
-        ComboBoxViewerCellEditor editor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(), SWT.READ_ONLY) ;
+    protected CellEditor getCellEditor(final Object element) {
+        final ComboBoxViewerCellEditor editor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(), SWT.READ_ONLY) ;
         editor.setContentProvider(new ArrayContentProvider()) ;
         editor.setLabelProvider(new ParameterTypeLabelProvider()) ;
         editor.setInput(types) ;
@@ -73,7 +79,7 @@ public class ParameterTypeEditingSupport extends EditingSupport {
      * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
      */
     @Override
-    protected Object getValue(Object element) {
+    protected Object getValue(final Object element) {
         if(element instanceof Parameter){
             return ((Parameter) element).getTypeClassname() ;
         }
@@ -84,9 +90,9 @@ public class ParameterTypeEditingSupport extends EditingSupport {
      * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object, java.lang.Object)
      */
     @Override
-    protected void setValue(Object element, Object value) {
+    protected void setValue(final Object element, final Object value) {
         if(element != null && value != null && transactionalEditingDomain != null){
-            CompoundCommand cc = new CompoundCommand() ;
+            final CompoundCommand cc = new CompoundCommand() ;
             cc.append(SetCommand.create(transactionalEditingDomain, element, ParameterPackage.Literals.PARAMETER__TYPE_CLASSNAME, value)) ;
             transactionalEditingDomain.getCommandStack().execute(cc) ;
             getViewer().refresh() ;
@@ -94,7 +100,7 @@ public class ParameterTypeEditingSupport extends EditingSupport {
     }
 
 
-    public void setTransactionalEditingDomain(TransactionalEditingDomain transactionalEditingDomain) {
+    public void setTransactionalEditingDomain(final TransactionalEditingDomain transactionalEditingDomain) {
         this.transactionalEditingDomain = transactionalEditingDomain;
     }
 
