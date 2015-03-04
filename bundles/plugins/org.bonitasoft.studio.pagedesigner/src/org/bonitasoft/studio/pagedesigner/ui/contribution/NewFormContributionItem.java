@@ -25,8 +25,8 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.provider.ExpressionItemProvider;
 import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory;
 import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.provider.FormMappingItemProvider;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
@@ -36,7 +36,6 @@ import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.e4.core.di.annotations.Creatable;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -66,29 +65,33 @@ public class NewFormContributionItem extends ContributionItem {
     @Override
     public void update() {
         if (toolItem != null) {
-            toolItem.setEnabled(isEnabled());
+            toolItem.setEnabled(canCreateNewForm());
         }
     }
 
     @Override
     public boolean isEnabled() {
-        final Task task = (Task) unwrap(selectionProvider.getSelection());
-        if (task != null) {
-            final FormMapping formMapping = task.getFormMapping();
+        return toolItem != null ? toolItem.isEnabled() : false;
+    }
+
+    protected boolean canCreateNewForm() {
+        final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
+        if (pageFlow != null) {
+            final FormMapping formMapping = pageFlow.getFormMapping();
             return formMapping.isExternal() ? isNullOrEmpty(formMapping.getUrl()) : !formMapping.getTargetForm().hasName();
         }
         return false;
     }
 
-    private EObject unwrap(final ISelection selection) {
+    private PageFlow unwrap(final ISelection selection) {
         if (selection instanceof IStructuredSelection) {
-            return (EObject) ((IStructuredSelection) selection).getFirstElement();
+            return (PageFlow) ((IStructuredSelection) selection).getFirstElement();
         }
         return null;
     }
 
     @Override
-    public void fill(final ToolBar toolbar, final int arg1) {
+    public void fill(final ToolBar toolbar, final int style) {
         toolItem = new ToolItem(toolbar, SWT.LEFT | SWT.PUSH | SWT.NO_FOCUS);
         toolItem.setEnabled(false);
         toolItem.setToolTipText(Messages.newFormTooltip);
@@ -103,15 +106,16 @@ public class NewFormContributionItem extends ContributionItem {
     }
 
     protected void createNewForm() {
-        final Task task = (Task) unwrap(selectionProvider.getSelection());
-        final String newPageId = createNewFormListener.handleEvent(task.getFormMapping(), null);
+        final PageFlow pageflow = unwrap(selectionProvider.getSelection());
+        final String newPageId = createNewFormListener.handleEvent(pageflow.getFormMapping(), null);
 
-        final ExpressionItemProvider expressionItemProvider = new ExpressionItemProvider(new ExpressionItemProviderAdapterFactory());
         final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
         repositoryStore.refresh();
         final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId + ".json");
         if (webPageFileStore != null) {
-            final Expression targetForm = task.getFormMapping().getTargetForm();
+            final FormMappingItemProvider formMappingItemProvider = new FormMappingItemProvider(new ProcessItemProviderAdapterFactory());
+            final ExpressionItemProvider expressionItemProvider = new ExpressionItemProvider(new ExpressionItemProviderAdapterFactory());
+            final Expression targetForm = pageflow.getFormMapping().getTargetForm();
             expressionItemProvider.setPropertyValue(targetForm,
                     ExpressionPackage.Literals.EXPRESSION__NAME.getName(), webPageFileStore.getDisplayName());
             expressionItemProvider.setPropertyValue(targetForm,
@@ -122,8 +126,7 @@ public class NewFormContributionItem extends ContributionItem {
                     ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE.getName(), String.class.getName());
             expressionItemProvider.setPropertyValue(targetForm,
                     ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE_FIXED.getName(), true);
-            final FormMappingItemProvider formMappingItemProvider = new FormMappingItemProvider(new ProcessItemProviderAdapterFactory());
-            formMappingItemProvider.setPropertyValue(task.getFormMapping(), ProcessPackage.Literals.FORM_MAPPING__EXTERNAL.getName(), false);
+            formMappingItemProvider.setPropertyValue(pageflow.getFormMapping(), ProcessPackage.Literals.FORM_MAPPING__EXTERNAL.getName(), false);
             toolItem.setEnabled(false);
         }
     }
