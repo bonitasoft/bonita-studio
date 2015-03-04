@@ -52,7 +52,7 @@ public class TestDebugFeature extends SWTBotGefTestCase {
 
 	@Test
 	public void testDebugWithConnectorOnCallActivity() throws Exception{
-		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "DiagramToTestDebugWitghCallActivityWithConnector-1.0.bos", BOS Archive, "DiagramToTestDebugWitghCallActivityWithConnector", TestDebugFeature.class, false);
+		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "DiagramToTestDebugWitghCallActivityWithConnector-1.0.bos", "Bonita 6.x", "DiagramToTestDebugWitghCallActivityWithConnector", TestDebugFeature.class, false);
 		final long previousNbProc = getNBProcessDefinitions();
 		launchDebugWizard();
 		bot.button(Messages.DebugProcessButtonLabel).click();
