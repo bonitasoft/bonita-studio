@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -57,8 +55,6 @@ import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceC
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
-import org.codehaus.groovy.eclipse.core.compiler.CompilerUtils;
-import org.codehaus.groovy.frameworkadapter.util.SpecifiedVersion;
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.ICommand;
@@ -94,7 +90,6 @@ import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.osgi.internal.loader.EquinoxClassLoader;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -104,7 +99,6 @@ import org.xml.sax.InputSource;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class Repository implements IRepository {
 
@@ -285,7 +279,8 @@ public class Repository implements IRepository {
                 }
 
             });
-            final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(REPOSITORY_STORE_EXTENSION_POINT_ID);
+            final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
+                    REPOSITORY_STORE_EXTENSION_POINT_ID);
             for (final IConfigurationElement configuration : elements) {
                 try {
                     final IRepositoryStore<? extends IRepositoryFileStore> store = createRepositoryStore(configuration);
@@ -358,7 +353,6 @@ public class Repository implements IRepository {
         javaProject.setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
         javaProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
         javaProject.setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
-        CompilerUtils.setCompilerLevel(project, SpecifiedVersion._18);
         monitorWorked(1);
     }
 
@@ -372,8 +366,7 @@ public class Repository implements IRepository {
         for (final String natureId : additionalNatures) {
             BonitaStudioLog.log("Plan to add Project Nature " + natureId);
             @SuppressWarnings("restriction")
-            final
-            Object naturDesc = ((Workspace) ResourcesPlugin.getWorkspace()).getNatureManager().getNatureDescriptor(natureId);
+            final Object naturDesc = ((Workspace) ResourcesPlugin.getWorkspace()).getNatureManager().getNatureDescriptor(natureId);
             if (naturDesc == null) {
                 notExistingNature.add(natureId);
                 BonitaStudioLog.log("Project nature " + natureId + " not found");
