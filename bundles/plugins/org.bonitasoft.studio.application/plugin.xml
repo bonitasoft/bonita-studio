@@ -830,7 +830,17 @@
       </key>
       <key
             commandId="org.eclipse.ui.views.showView"
-            contextId="org.eclipse.ui.contexts.dialogAndWindow"
+            contextId="org.bonitasoft.studio.model.process.diagram.ui.diagramContext"
+            schemeId="org.bonitasoft.studio.application.scheme"
+            sequence="M1+F">
+         <parameter
+               id="org.eclipse.ui.views.showView.viewId"
+               value="org.bonitasoft.studio.views.overview.tree">
+         </parameter>
+      </key>
+      <key
+            commandId="org.eclipse.ui.views.showView"
+            contextId="org.bonitasoft.studio.model.process.diagram.form.ui.diagramContext"
             schemeId="org.bonitasoft.studio.application.scheme"
             sequence="M1+F">
          <parameter
