@@ -108,7 +108,7 @@ public class BPMNExportImportMessageDataTest extends SWTBotGefTestCase {
 	}
 	
 	protected void prepareTest() throws IOException {
-		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "MessageDataTestValue-1.0.bos", "Bonita 6.x", "MessageDataTestValue", BPMNExportImportMessageDataTest.class, false);
+		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "MessageDataTestValue-1.0.bos", BOS Archive, "MessageDataTestValue", BPMNExportImportMessageDataTest.class, false);
 		SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
 		SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();	
 		MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);

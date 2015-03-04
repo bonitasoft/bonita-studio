@@ -45,7 +45,7 @@ public class TestDecisionTable extends SWTBotGefTestCase {
     @Test
     public void testConditionExpressions() throws IOException, InterruptedException{
 
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestDecisionTable-1.0.bos", "Bonita 6.x", "TestDecisionTable", getClass(), false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestDecisionTable-1.0.bos", BOS Archive, "TestDecisionTable", getClass(), false);
 
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());

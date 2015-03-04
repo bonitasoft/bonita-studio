@@ -83,7 +83,7 @@ public class TestTimer extends SWTBotGefTestCase implements SWTBotConstants{
 
 	public void testEditTimerCondition() throws IOException{
 		/*Import process*/
-		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestTimer_1_0.bos", "Bonita 6.x", "TestTimer", this.getClass(), false);
+		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestTimer_1_0.bos", BOS Archive, "TestTimer", this.getClass(), false);
 		SWTBotGefEditor gefEditor = bot.gefEditor(bot.activeEditor().getTitle());
 		/*Select step on which there is the connector to test*/
 
