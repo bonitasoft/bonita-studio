@@ -45,7 +45,11 @@ public class BotExpressionEditorDialog extends BotDialog {
         bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(Text.class)));
         return new BotConstantExpressionEditor(bot, this);
     }
-
+    public BotConditionExpressionEditor selectConditionExpressionType(){
+    	bot.tableWithLabel(Messages.expressionTypeLabel).select("Comparison");
+    	bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(StyledText.class)));
+    	return new BotConditionExpressionEditor(bot,this);
+    }
     public BotFormFieldExpressionEditor selectFormFieldType() {
         bot.tableWithLabel(Messages.expressionTypeLabel).select("Form field");
         bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(Table.class)));
