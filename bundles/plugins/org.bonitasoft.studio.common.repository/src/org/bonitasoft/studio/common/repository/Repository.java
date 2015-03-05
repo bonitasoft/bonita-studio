@@ -55,6 +55,8 @@ import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceC
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
+import org.codehaus.groovy.eclipse.core.compiler.CompilerUtils;
+import org.codehaus.groovy.frameworkadapter.util.SpecifiedVersion;
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.ICommand;
@@ -353,6 +355,7 @@ public class Repository implements IRepository {
         javaProject.setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
         javaProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
         javaProject.setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
+        CompilerUtils.setCompilerLevel(project, SpecifiedVersion._18);
         monitorWorked(1);
     }
 
