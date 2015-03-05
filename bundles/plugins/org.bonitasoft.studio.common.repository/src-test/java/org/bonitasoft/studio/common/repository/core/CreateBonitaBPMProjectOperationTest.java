@@ -15,13 +15,28 @@
 package org.bonitasoft.studio.common.repository.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
+import java.io.InputStream;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -37,21 +52,49 @@ public class CreateBonitaBPMProjectOperationTest {
 
     @Mock
     private IWorkspace workspace;
+    @Mock
+    private IWorkspaceRoot root;
+
+    @Mock
+    private IProject project;
+    @Mock
+    private IJavaProject javaProject;
+    @Mock
+    private IFolder metaInfFolder;
+    @Mock
+    private IFile manifestFile;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        createBonitaBPMProjectOperation = new CreateBonitaBPMProjectOperation(workspace, "my project");
+        createBonitaBPMProjectOperation = spy(new CreateBonitaBPMProjectOperation(workspace, "my project"));
+        doReturn(root).when(workspace).getRoot();
+        doReturn(javaProject).when(createBonitaBPMProjectOperation).asJavaProject();
+        doReturn(metaInfFolder).when(project).getFolder("META-INF");
+        doReturn(manifestFile).when(metaInfFolder).getFile("MANIFEST.MF");
+        doReturn("org.bonitasoft.studio.console.libs").when(createBonitaBPMProjectOperation).engineBundleSymbolicName();
     }
 
     @Test
     public void should_create_a_new_eclipse_project() throws Exception {
-        createBonitaBPMProjectOperation.run(monitor);
+        doReturn(project).when(root).getProject("my project");
+
+        createBonitaBPMProjectOperation.addNature("myCustomNature").addBuilder("aBuilderId").run(monitor);
 
         final IProject project = createBonitaBPMProjectOperation.getProject();
         assertThat(project).isNotNull();
-        assertThat(project.exists()).isTrue();
+        final InOrder orderedProjectCreation = inOrder(project);
+        orderedProjectCreation.verify(project).create(monitor);
+        orderedProjectCreation.verify(project).open(monitor);
+        orderedProjectCreation.verify(project).setDescription(any(IProjectDescription.class), eq(monitor));
+
+        verify(javaProject).setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
+        verify(javaProject).setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
+        verify(javaProject).setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
+        verify(javaProject).setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
+
+        verify(manifestFile).create(any(InputStream.class), eq(false), eq(monitor));
     }
 }

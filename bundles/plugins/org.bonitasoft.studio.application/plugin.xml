@@ -786,9 +786,6 @@
    <extension
          point="org.bonitasoft.studio.common.poststartup">
       <contribution
-            class="org.bonitasoft.studio.application.contribution.StartEnginePostStartupContribution">
-      </contribution>
-      <contribution
             class="org.bonitasoft.studio.application.contribution.StudioPropertiesContributor"
             priority="0">
       </contribution>

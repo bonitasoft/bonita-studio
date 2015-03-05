@@ -18,33 +18,26 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.apache.xbean.classloader.NonLockingJarFileClassLoader;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
-import org.bonitasoft.engine.connector.AbstractConnector;
-import org.bonitasoft.forms.client.model.FormFieldValue;
-import org.bonitasoft.forms.server.validator.IFormFieldValidator;
 import org.bonitasoft.studio.common.DateUtil;
-import org.bonitasoft.studio.common.FileUtil;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectClasspath;
+import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
+import org.bonitasoft.studio.common.repository.core.CreateBonitaBPMProjectOperation;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -53,13 +46,8 @@ import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperati
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
-import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
-import org.codehaus.groovy.eclipse.core.compiler.CompilerUtils;
-import org.codehaus.groovy.frameworkadapter.util.SpecifiedVersion;
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;
-import org.eclipse.core.internal.resources.Workspace;
-import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -72,31 +60,22 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.ClasspathValidation;
-import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.JavaProject;
-import org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock;
-import org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement;
-import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.osgi.framework.BundleReference;
 import org.xml.sax.InputSource;
 
 /**
@@ -118,35 +97,34 @@ public class Repository implements IRepository {
 
     private IProgressMonitor monitor;
 
+    private final IWorkspace workspace;
+
     public Repository() {
+        workspace = ResourcesPlugin.getWorkspace();
     }
 
     @Override
     public void createRepository(final String repositoryName) {
         name = repositoryName;
-        project = ResourcesPlugin.getWorkspace().getRoot().getProject(repositoryName);
+        project = workspace.getRoot().getProject(repositoryName);
     }
 
     @Override
     public void create(final boolean migrateStoreIfNeeded) {
+        final long init = System.currentTimeMillis();
+        if (BonitaStudioLog.isLoggable(IStatus.OK)) {
+            BonitaStudioLog.debug("Creating repository " + project.getName() + "...", CommonRepositoryPlugin.PLUGIN_ID);
+        }
         try {
-            final long init = System.currentTimeMillis();
-            if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                BonitaStudioLog.debug("Creating repository " + project.getName() + "...", CommonRepositoryPlugin.PLUGIN_ID);
-            }
-            final boolean projectExists = project.exists();
-            if (!projectExists) {
-                project.create(NULL_PROGRESS_MONITOR);
-            }
             disableBuild();
-            open();
-            if (!projectExists) {
-                initializeProject(project);
+            if (!project.exists()) {
+                workspace.run(newProjectWorkspaceOperation(name, workspace), monitor);
             }
-
             initRepositoryStores(migrateStoreIfNeeded);
-            refreshClasspath(project);
-
+            new BonitaBPMProjectClasspath(project, this).create(monitor);
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        } finally {
             enableBuild();
             try {
                 getProject().build(IncrementalProjectBuilder.FULL_BUILD, NULL_PROGRESS_MONITOR);
@@ -158,9 +136,20 @@ public class Repository implements IRepository {
                 BonitaStudioLog.debug("Repository " + project.getName() + " created in " + DateUtil.getDisplayDuration(duration),
                         CommonRepositoryPlugin.PLUGIN_ID);
             }
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
         }
+    }
+
+    protected CreateBonitaBPMProjectOperation newProjectWorkspaceOperation(final String projectName, final IWorkspace workspace) {
+        return new CreateBonitaBPMProjectOperation(workspace, projectName).
+                addNature("org.eclipse.xtext.ui.shared.xtextNature").
+                addNature("org.bonitasoft.studio.common.repository.bonitaNature").
+                addNature(JavaCore.NATURE_ID).
+                addNature("org.eclipse.pde.PluginNature").
+                addNature("org.eclipse.jdt.groovy.core.groovyNature").
+                addBuilder("org.eclipse.jdt.core.javabuilder").
+                addBuilder("org.eclipse.xtext.ui.shared.xtextBuilder").
+                addBuilder("org.eclipse.pde.ManifestBuilder").
+                addBuilder("org.eclipse.pde.SchemaBuilder");
     }
 
     @Override
@@ -199,7 +188,6 @@ public class Repository implements IRepository {
      * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.IRepository#open()
      */
-    @SuppressWarnings("restriction")
     @Override
     public void open() {
         try {
@@ -281,9 +269,9 @@ public class Repository implements IRepository {
                 }
 
             });
-            final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
+            final IConfigurationElement[] repositoryStoreConfigurationElements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
                     REPOSITORY_STORE_EXTENSION_POINT_ID);
-            for (final IConfigurationElement configuration : elements) {
+            for (final IConfigurationElement configuration : repositoryStoreConfigurationElements) {
                 try {
                     final IRepositoryStore<? extends IRepositoryFileStore> store = createRepositoryStore(configuration);
                     if (migrateStoreIfNeeded) {
@@ -313,7 +301,6 @@ public class Repository implements IRepository {
     @Override
     public void enableBuild() {
         Job.getJobManager().wakeUp(ResourcesPlugin.FAMILY_AUTO_BUILD);
-        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IWorkspaceDescription desc = workspace.getDescription();
         if (!desc.isAutoBuilding()) {
             final boolean enableAutobuild = PlatformUI.isWorkbenchRunning();
@@ -329,7 +316,6 @@ public class Repository implements IRepository {
 
     @Override
     public void disableBuild() {
-        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IWorkspaceDescription desc = workspace.getDescription();
         if (desc.isAutoBuilding()) {
             desc.setAutoBuilding(false);
@@ -339,193 +325,6 @@ public class Repository implements IRepository {
                 BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
             }
             RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE, false);
-        }
-    }
-
-    protected void initializeProject(final IProject project) throws CoreException, JavaModelException {
-        /* create the project only one time, it is called by each repository which is part of it */
-        createProjectDescriptor(project);
-        createJavaProject(project);
-    }
-
-    protected void createJavaProject(final IProject project) {
-        monitorSubtask(Messages.initializingJavaProject);
-        final IJavaProject javaProject = JavaCore.create(project);
-        javaProject.setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
-        javaProject.setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
-        javaProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
-        javaProject.setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
-        CompilerUtils.setCompilerLevel(project, SpecifiedVersion._18);
-        monitorWorked(1);
-    }
-
-    protected void createProjectDescriptor(final IProject project) throws CoreException {
-        final IProjectDescription descriptor = project.getDescription();
-        descriptor.setComment(ProductVersion.CURRENT_VERSION);
-        final String[] natures = descriptor.getNatureIds();
-        final List<String> existingNatures = Arrays.asList(natures);
-        final Set<String> additionalNatures = getNatures();
-        final Set<String> notExistingNature = new HashSet<String>();
-        for (final String natureId : additionalNatures) {
-            BonitaStudioLog.log("Plan to add Project Nature " + natureId);
-            @SuppressWarnings("restriction")
-            final Object naturDesc = ((Workspace) ResourcesPlugin.getWorkspace()).getNatureManager().getNatureDescriptor(natureId);
-            if (naturDesc == null) {
-                notExistingNature.add(natureId);
-                BonitaStudioLog.log("Project nature " + natureId + " not found");
-            }
-            if (existingNatures.contains(natureId)) {
-                notExistingNature.add(natureId);
-                BonitaStudioLog.log("Project nature " + natureId + " already exists");
-            }
-        }
-        additionalNatures.removeAll(notExistingNature);
-
-        final String[] arryOfNatures = additionalNatures.toArray(new String[] {});
-        final String[] newNatures = new String[natures.length + arryOfNatures.length];
-        System.arraycopy(natures, 0, newNatures, 0, natures.length);
-        for (int i = natures.length; i < natures.length + arryOfNatures.length; i++) {
-            newNatures[i] = arryOfNatures[i - natures.length];
-        }
-        descriptor.setNatureIds(newNatures);
-        addBuilders(descriptor);
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    BonitaStudioLog.log("Setting Project Descritor with natures:" + descriptor.getNatureIds());
-                    project.setDescription(descriptor, null);
-                } catch (final CoreException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-
-    }
-
-    protected void addBuilders(final IProjectDescription desc) {
-        final ICommand[] existingCommands = desc.getBuildSpec();
-        final Map<String, ICommand> existingBuilders = new HashMap<String, ICommand>();
-        for (final ICommand builder : existingCommands) {
-            existingBuilders.put(builder.getBuilderName(), builder);
-        }
-        for (final String builderId : getBuilders()) {
-            if (!existingBuilders.containsKey(builderId)) {
-                // add builder to project
-                final ICommand command = desc.newCommand();
-                command.setBuilderName(builderId);
-                existingBuilders.put(builderId, command);
-            }
-        }
-        desc.setBuildSpec(existingBuilders.values().toArray(new ICommand[existingBuilders.values().size()]));
-    }
-
-    protected List<String> getBuilders() {
-        return new ArrayList<String>();
-    }
-
-    protected Set<String> getNatures() {
-        final Set<String> result = new HashSet<String>();
-        result.add("org.eclipse.xtext.ui.shared.xtextNature");
-        result.add("org.bonitasoft.studio.common.repository.bonitaNature");
-        result.add(JavaCore.NATURE_ID);
-        result.add("org.eclipse.pde.PluginNature");
-        result.add("org.eclipse.jdt.groovy.core.groovyNature");
-        return result;
-    }
-
-    private boolean classpathExists() {
-        return project.findMember(".classpath") != null;
-    }
-
-    protected void refreshClasspath(final IProject extensionsProject) throws CoreException {
-        monitorSubtask(Messages.initializingProjectClasspath);
-        createProjectManifest(extensionsProject);
-
-        final IJavaProject javaProject = getJavaProject();
-        final List<IClasspathEntry> entries = addClasspathEntries();
-
-        try {
-            addSpecificEntriesForDevMode(entries);
-        } catch (final MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-        BonitaStudioLog.debug("Updating build path...", CommonRepositoryPlugin.PLUGIN_ID);
-        javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), true, Repository.NULL_PROGRESS_MONITOR);
-        monitorWorked(1);
-    }
-
-    protected void addSpecificEntriesForDevMode(final List<IClasspathEntry> entries) throws IOException, MalformedURLException {
-        /* Workaround for dev mode */
-        if (Platform.inDevelopmentMode()) { // WORKAROUND FOR DEV MODE: see Eclipse Bug 111238
-            // BOS Common
-            final String bosCommonResource = AbstractConnector.class.getCanonicalName().replace('.', '/') + ".class";
-            final URL bosBundleResource = AbstractConnector.class.getClassLoader().getResource(bosCommonResource);
-            URL serverResource = FileLocator.resolve(bosBundleResource);
-            if (serverResource.toString().startsWith("jar:file")) {
-                serverResource = new URL(serverResource.toString().substring("jar:".length(), serverResource.toString().lastIndexOf('!')));
-            }
-            entries.add(JavaCore.newLibraryEntry(Path.fromOSString(serverResource.getFile()), null, null));
-
-            // Forms client
-            final String formsClientResource = FormFieldValue.class.getCanonicalName().replace('.', '/') + ".class";
-            final URL formsClientBundleResource = FormFieldValue.class.getClassLoader().getResource(formsClientResource);
-            URL formsResource = FileLocator.resolve(formsClientBundleResource);
-            if (formsResource.toString().startsWith("jar:file")) {
-                formsResource = new URL(formsResource.toString().substring("jar:".length(), formsResource.toString().lastIndexOf('!')));
-            }
-            entries.add(JavaCore.newLibraryEntry(Path.fromOSString(formsResource.getFile()), null, null));
-
-            // Forms server
-            final String formsServerResourcePath = IFormFieldValidator.class.getCanonicalName().replace('.', '/') + ".class";
-            final URL formsServerBundleResource = FormFieldValue.class.getClassLoader().getResource(formsServerResourcePath);
-            URL formsServerResource = FileLocator.resolve(formsServerBundleResource);
-            if (formsServerResource.toString().startsWith("jar:file")) {
-                formsServerResource = new URL(formsServerResource.toString().substring("jar:".length(), formsServerResource.toString().lastIndexOf('!')));
-            }
-            entries.add(JavaCore.newLibraryEntry(Path.fromOSString(formsServerResource.getFile()), null, null));
-
-        }
-    }
-
-    @SuppressWarnings("rawtypes")
-    protected List<IClasspathEntry> addClasspathEntries() {
-        final List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>();
-        // SET Java container
-        entries.add(JavaCore.newContainerEntry(new Path("repositoryDependencies"), true)); //$NON-NLS-1$
-        entries.add(JavaCore.newContainerEntry(JavaRuntime.newJREContainerPath(JavaRuntime.getExecutionEnvironmentsManager().getEnvironment("JavaSE-1.6"))));
-        entries.add(JavaCore.newContainerEntry(new Path("org.eclipse.pde.core.requiredPlugins"))); //$NON-NLS-1$
-        entries.add(JavaCore.newContainerEntry(new Path("GROOVY_SUPPORT"), true)); //$NON-NLS-1$
-
-        // Add src folders in classpath
-        for (final IRepositoryStore repository : getAllStores()) {
-            if (repository instanceof SourceRepositoryStore) {
-                final IClasspathEntry newSourceEntry = JavaCore.newSourceEntry(repository.getResource().getFullPath());
-                if (!entries.contains(newSourceEntry)) {
-                    entries.add(newSourceEntry);
-                }
-            }
-        }
-        return entries;
-    }
-
-    @SuppressWarnings("restriction")
-    protected void createProjectManifest(final IProject extensionsProject) throws CoreException {
-        final IFolder metaInf = project.getFolder("META-INF"); //$NON-NLS-1$
-        if (!metaInf.exists()) {
-            metaInf.create(false, true, null);
-        }
-        final IFile projectManifest = extensionsProject.getFolder("META-INF").getFile("MANIFEST.MF"); //$NON-NLS-1$
-        final InputStream is = Repository.class.getResourceAsStream("MANIFEST.MF.template");
-        final BundleReference cl = (BundleReference) BusinessArchive.class.getClassLoader();
-        final InputStream is2 = FileUtil.replaceStringInFile(is, "XXX_ENGINE_BUNDLE_XXX", cl.getBundle().getSymbolicName());
-        if (!projectManifest.exists()) {
-            projectManifest.create(is2, false, null);
-        } else {
-            projectManifest.setContents(is2, IResource.FORCE, null);
         }
     }
 
@@ -539,27 +338,12 @@ public class Repository implements IRepository {
                 if (!getProject().isSynchronized(IResource.DEPTH_INFINITE)) {
                     getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
                 }
-                final IJavaProject javaProject = getJavaProject();
-                if (javaProject != null) {
-                    refreshClasspath(javaProject, null, monitor);
-                    getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
-
-                }
+                new BonitaBPMProjectClasspath(project, this).refresh(monitor);
+                project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
             } catch (final Exception ex) {
                 BonitaStudioLog.error(ex);
             }
         }
-    }
-
-    protected void refreshClasspath(final IJavaProject javaProject, List<CPListElement> classPathElementList,
-            final IProgressMonitor monitor) throws JavaModelException, CoreException {
-        final JavaModelManager manager = JavaModelManager.getJavaModelManager();
-        manager.getJavaModel().refreshExternalArchives(null, Repository.NULL_PROGRESS_MONITOR);
-        if (classPathElementList == null) {
-            final CPListElement[] existingCPElement = CPListElement.createFromExisting(javaProject);
-            classPathElementList = Arrays.asList(existingCPElement);
-        }
-        BuildPathsBlock.flush(classPathElementList, javaProject.getOutputLocation(), javaProject, null, monitor);
     }
 
     @Override
@@ -607,7 +391,6 @@ public class Repository implements IRepository {
         return repositoryStoreClass.cast(stores.get(repositoryStoreClass));
     }
 
-    @SuppressWarnings("restriction")
     @Override
     public String getVersion() {
         if (project.isOpen()) {
@@ -770,8 +553,9 @@ public class Repository implements IRepository {
     public URLClassLoader createProjectClassloader() {
         final List<URL> jars = new ArrayList<URL>();
         try {
-            if (!classpathExists()) {
-                refreshClasspath(getProject());
+            final BonitaBPMProjectClasspath bonitaBPMProjectClasspath = new BonitaBPMProjectClasspath(project, this);
+            if (!bonitaBPMProjectClasspath.classpathExists()) {
+                bonitaBPMProjectClasspath.create(monitor);
             }
 
             // Synchronize with build jobs
@@ -852,12 +636,7 @@ public class Repository implements IRepository {
         for (final IRepositoryStore<?> store : getAllStores()) {
             store.migrate();
         }
-        createProjectDescriptor(project);
-        final IFile classpathFile = project.getFile(".classpath");
-        if (classpathFile.exists()) {
-            classpathFile.delete(true, false, NULL_PROGRESS_MONITOR);
-        }
-        refreshClasspath(project);
+        workspace.run(new BonitaBPMProjectMigrationOperation(project, this), monitor);
     }
 
     public void setProgressMonitor(final IProgressMonitor monitor) {

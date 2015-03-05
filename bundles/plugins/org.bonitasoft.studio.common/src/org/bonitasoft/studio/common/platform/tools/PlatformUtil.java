@@ -91,7 +91,7 @@ public class PlatformUtil {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         if (workbench != null) {
             final Display display = workbench.getDisplay();
-            display.syncExec(new Runnable() {
+            display.asyncExec(new Runnable() {
 
                 @Override
                 public void run() {
@@ -158,9 +158,8 @@ public class PlatformUtil {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         if (workbench != null) {
             final Display display = workbench.getDisplay();
-            display.syncExec(new Runnable() {
+            display.asyncExec(new Runnable() {
 
-                @SuppressWarnings("restriction")
                 @Override
                 public void run() {
                     final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();

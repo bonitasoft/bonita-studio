@@ -46,6 +46,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -497,18 +498,21 @@ public class BOSWebServerManager {
     }
 
     protected IProject createServerConfigurationProject(final IProgressMonitor monitor) throws CoreException {
-        final IProject confProject = ResourcesPlugin.getWorkspace().getRoot().getProject(SERVER_CONFIGURATION_PROJECT);
+        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        final IProject confProject = workspace.getRoot().getProject(SERVER_CONFIGURATION_PROJECT);
         if (!confProject.exists()) {
-            confProject.create(Repository.NULL_PROGRESS_MONITOR);
-            confProject.open(Repository.NULL_PROGRESS_MONITOR);
-            final ProjectProperties projectProperties = new ProjectProperties(confProject);
-            confProject.getWorkspace().run(new IWorkspaceRunnable() {
+            workspace.run(new IWorkspaceRunnable() {
 
                 @Override
                 public void run(final IProgressMonitor monitor) throws CoreException {
+                    confProject.create(Repository.NULL_PROGRESS_MONITOR);
+                    confProject.open(Repository.NULL_PROGRESS_MONITOR);
+                    final ProjectProperties projectProperties = new ProjectProperties(confProject);
                     projectProperties.setServerProject(true, monitor);
                 }
+
             }, monitor);
+
         }
         return confProject;
     }
