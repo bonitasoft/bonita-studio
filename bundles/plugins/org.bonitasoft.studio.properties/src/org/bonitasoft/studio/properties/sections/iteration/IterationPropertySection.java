@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.properties.sections.iteration;
 
-import static com.google.common.collect.Iterables.find;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.groovyReferenceValidator;
 
@@ -37,7 +36,6 @@ import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.groovy.DisplayEngineExpressionWithName;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
@@ -94,7 +92,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -113,37 +110,10 @@ import org.eclipse.ui.internal.progress.ProgressManager;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
-import com.google.common.base.Predicate;
-
 /**
  * @author Romain Bioteau
  */
 public class IterationPropertySection extends EObjectSelectionProviderSection implements ISelectionProvider {
-
-    /**
-     * @author Aurelien
-     *         Display only Process data, it filters out step data. The step requires to be the context of the expressionviewer
-     */
-    private final class StepDataViewerFilter extends ViewerFilter {
-
-        @Override
-        public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-            if (parentElement instanceof Activity
-                    && element instanceof Expression
-                    && ExpressionConstants.VARIABLE_TYPE.equals(((Expression) element).getType())) {
-                final String expressionName = ((Expression) element).getName();
-                final Data foundData = find(((Activity) parentElement).getData(), new Predicate<Data>() {
-
-                    @Override
-                    public boolean apply(final Data data) {
-                        return expressionName.equals(data.getName());
-                    }
-                });
-                return foundData == null;
-            }
-            return true;
-        }
-    }
 
     private EMFDataBindingContext context;
 
@@ -240,7 +210,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         loopConditionExpressionViewer.addFilter(new DisplayEngineExpressionWithName(
                 new String[] { org.bonitasoft.engine.expression.ExpressionConstants.LOOP_COUNTER
                         .getEngineConstantName() }));
-        loopConditionExpressionViewer.addFilter(new StepDataViewerFilter());
+        loopConditionExpressionViewer.addFilter(new OnlyProcessDataViewerFilter());
 
         context.bindValue(ViewersObservables.observeInput(loopConditionExpressionViewer), getEObjectObservable());
         context.bindValue(ViewersObservables.observeSingleSelection(loopConditionExpressionViewer), CustomEMFEditObservables.observeDetailValue(
@@ -256,7 +226,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
                 ExpressionConstants.PARAMETER_TYPE,
                 ExpressionConstants.SCRIPT_TYPE }));
         maximumLoopExpressionViewer.setMessage(Messages.optionalLabel, IStatus.INFO);
-        maximumLoopExpressionViewer.addFilter(new StepDataViewerFilter());
+        maximumLoopExpressionViewer.addFilter(new OnlyProcessDataViewerFilter());
 
         context.bindValue(ViewersObservables.observeInput(maximumLoopExpressionViewer), getEObjectObservable());
         context.bindValue(ViewersObservables.observeSingleSelection(maximumLoopExpressionViewer), CustomEMFEditObservables.observeDetailValue(
