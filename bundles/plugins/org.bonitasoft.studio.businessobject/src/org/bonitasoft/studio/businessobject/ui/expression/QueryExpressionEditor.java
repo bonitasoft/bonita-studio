@@ -224,10 +224,12 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
             }
         });
         editingSupport = new ReferencedExpressionEditingSupport(valueColumnViewer.getViewer());
-        editingSupport.setFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
+        editingSupport.setFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE,
+                ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.PARAMETER_TYPE,
                 ExpressionConstants.FORM_FIELD_TYPE,
-                ExpressionConstants.SCRIPT_TYPE }));
+                ExpressionConstants.SCRIPT_TYPE,
+                ExpressionConstants.CONTRACT_INPUT_TYPE }));
         valueColumnViewer.setEditingSupport(editingSupport);
     }
 
