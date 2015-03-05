@@ -19,12 +19,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.bonitasoft.engine.bdm.dao.BusinessObjectDAO;
 import org.bonitasoft.engine.expression.ExpressionConstants;
 import org.bonitasoft.engine.expression.ExpressionConstantsResolver;
 import org.bonitasoft.forms.server.api.IFormExpressionsAPI;
 import org.bonitasoft.forms.server.validator.AbstractFormValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.codehaus.groovy.eclipse.editor.highlighting.IHighlightingExtender;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.IRegion;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeHierarchy;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.rules.IRule;
 
 /**
@@ -57,7 +69,32 @@ public class BonitaSyntaxHighlighting implements IHighlightingExtender {
 
     @Override
     public List<String> getAdditionalGJDKKeywords() {
-        return BONITA_KEYWORDS;
+        final ArrayList<String> keyWords = new ArrayList<String>(BONITA_KEYWORDS);
+        final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        IType daoType;
+        try {
+            daoType = javaProject.findType(BusinessObjectDAO.class.getName());
+            final IRegion newRegion = JavaCore.newRegion();
+            final IClasspathEntry[] referencedClasspathEntries = javaProject.getRawClasspath();
+            for (final IClasspathEntry iClasspathEntry : referencedClasspathEntries) {
+                if (iClasspathEntry.getPath().equals(new Path("repositoryDependencies"))) {
+                    final IPackageFragmentRoot[] findPackageFragmentRoots = javaProject.findPackageFragmentRoots(iClasspathEntry);
+                    for (final IPackageFragmentRoot r : findPackageFragmentRoots) {
+                        if (r.getElementName().equals("bdm-client-pojo.jar")) {
+                            newRegion.add(r);
+                        }
+                    }
+                }
+            }
+            final ITypeHierarchy newTypeHierarchy = javaProject.newTypeHierarchy(daoType, newRegion, Repository.NULL_PROGRESS_MONITOR);
+            for (final IType t : newTypeHierarchy.getAllSubtypes(daoType)) {
+                final String elementName = t.getElementName();
+                keyWords.add(Character.toLowerCase(elementName.charAt(0)) + elementName.substring(1, elementName.length()));
+            }
+        } catch (final JavaModelException e) {
+            BonitaStudioLog.error(e);
+        }
+        return keyWords;
     }
 
     @Override
