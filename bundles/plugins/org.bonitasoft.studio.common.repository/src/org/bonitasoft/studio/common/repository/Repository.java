@@ -636,7 +636,20 @@ public class Repository implements IRepository {
         for (final IRepositoryStore<?> store : getAllStores()) {
             store.migrate();
         }
-        workspace.run(new BonitaBPMProjectMigrationOperation(project, this), monitor);
+        workspace.run(newProjectMigrationOperation(project), monitor);
+    }
+
+    protected BonitaBPMProjectMigrationOperation newProjectMigrationOperation(final IProject project) {
+        return new BonitaBPMProjectMigrationOperation(project, this).
+                addNature("org.eclipse.xtext.ui.shared.xtextNature").
+                addNature("org.bonitasoft.studio.common.repository.bonitaNature").
+                addNature(JavaCore.NATURE_ID).
+                addNature("org.eclipse.pde.PluginNature").
+                addNature("org.eclipse.jdt.groovy.core.groovyNature").
+                addBuilder("org.eclipse.jdt.core.javabuilder").
+                addBuilder("org.eclipse.xtext.ui.shared.xtextBuilder").
+                addBuilder("org.eclipse.pde.ManifestBuilder").
+                addBuilder("org.eclipse.pde.SchemaBuilder");
     }
 
     public void setProgressMonitor(final IProgressMonitor monitor) {
