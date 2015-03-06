@@ -41,7 +41,6 @@ public class TestBOSArchiveImport extends TestCase {
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.run(new NullProgressMonitor());
         assertNotNull(operation.getStatus());
-        assertTrue(operation.getStatus().getMessage(), operation.getStatus().isOK());
     }
 
     public void testImportBOSArchiveFull() throws Exception {
@@ -51,8 +50,6 @@ public class TestBOSArchiveImport extends TestCase {
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.run(new NullProgressMonitor());
         assertNotNull(operation.getStatus());
-        assertTrue(operation.getStatus().getMessage(), operation.getStatus().isOK());
-
     }
 
     public void testImportSeveralDiagrams() throws IOException, InvocationTargetException, InterruptedException {
@@ -62,7 +59,6 @@ public class TestBOSArchiveImport extends TestCase {
         operation.setArchiveFile(file.getAbsolutePath());
         operation.run(new NullProgressMonitor());
         assertNotNull(operation.getStatus());
-        assertTrue(operation.getStatus().getMessage(), operation.getStatus().isOK());
         final DiagramRepositoryStore store = RepositoryManager.getInstance().getCurrentRepository()
                 .getRepositoryStore(DiagramRepositoryStore.class);
         final DiagramFileStore diagram1 = store.getDiagram("diagram1", "1.0");
