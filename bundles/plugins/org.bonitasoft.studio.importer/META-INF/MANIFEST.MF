@@ -26,7 +26,9 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.data;bundle-version="1.0.0",
  org.bonitasoft.studio.common.repository;bundle-version="6.2.0",
  org.bonitasoft.studio.diagram.custom;bundle-version="6.2.0",
- org.bonitasoft.studio.connectors.model;bundle-version="6.5.0"
+ org.bonitasoft.studio.connectors.model;bundle-version="6.5.0",
+ org.junit;resolution:=optional,
+ org.mockito;bundle-version="1.9.5";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.importer,org.bonitasoft.studio.i

@@ -22,12 +22,23 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 
 
+/**
+ * @author Romain Bioteau
+ */
 public class SpecialCharactersValidator implements IValidator{
 
+    private final String inputName;
+    private final char[] forbiddenCharacters;
+
+    public SpecialCharactersValidator(final String inputName, final char... forbiddenCharacters) {
+        this.inputName = inputName;
+        this.forbiddenCharacters = forbiddenCharacters;
+    }
+
 	@Override
-	public IStatus validate(Object value) {
+	public IStatus validate(final Object value) {
 		if (value!=null && value instanceof String){
-			String s = (String)value;
+			final String s = (String)value;
 			if (s.contains("%") || s.contains("#") || s.contains("$")){
 				return  ValidationStatus.error(Messages.InvalidCharacterError);
 			}
