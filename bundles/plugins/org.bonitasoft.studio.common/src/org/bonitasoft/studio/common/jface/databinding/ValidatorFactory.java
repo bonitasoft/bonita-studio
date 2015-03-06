@@ -15,13 +15,14 @@
 package org.bonitasoft.studio.common.jface.databinding;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.ForbiddenCharactersValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.RegExpValidator;
+import org.eclipse.core.databinding.validation.IValidator;
+//github.com/bonitasoft/bonita-studio.git
+import org.bonitasoft.studio.common.jface.databinding.validator.ForbiddenCharactersValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
-import org.eclipse.core.databinding.validation.IValidator;
 
 /**
  * @author Romain Bioteau
@@ -63,5 +64,6 @@ public class ValidatorFactory {
     public static IValidator groovyReferenceValidator(final String inputName, final boolean checkEmptyField, final boolean checkLowerCaseForFirstChar) {
         return new GroovyReferenceValidator(inputName, checkEmptyField, checkLowerCaseForFirstChar);
     }
+
 
 }

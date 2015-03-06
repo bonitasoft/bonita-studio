@@ -70,7 +70,7 @@ public interface IProcBuilder {
 
     /**
      * Entry point of the builder to create a Diagram.
-     * 
+     *
      * @param id
      * @param name
      * @param version
@@ -179,7 +179,7 @@ public interface IProcBuilder {
      * @param location
      * @param size
      * @param gatewayType
-     * @param displayLabel 
+     * @param displayLabel
      * @throws ProcBuilderException
      */
     public void addGateway(String id,String name,Point location, Dimension size,GatewayType gatewayType, boolean displayLabel) throws ProcBuilderException;
@@ -349,7 +349,7 @@ public interface IProcBuilder {
 
     /**
      * @param name
-     * @param documentation 
+     * @param documentation
      */
     public void addActor(String name, String documentation);
 
@@ -392,4 +392,10 @@ public interface IProcBuilder {
 
 	public void setFontStyle(String name, int height, boolean isBold,boolean isItalic) throws ProcBuilderException;
 
+
+    /**
+     * @param location
+     * @throws ProcBuilderException
+     */
+    void setLabelPositionOnSequenceFlowOrEvent(Point location) throws ProcBuilderException;
 }

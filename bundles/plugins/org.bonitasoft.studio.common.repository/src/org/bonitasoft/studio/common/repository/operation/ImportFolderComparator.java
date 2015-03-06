@@ -17,6 +17,8 @@
 package org.bonitasoft.studio.common.repository.operation;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
 
@@ -26,11 +28,18 @@ import org.eclipse.core.resources.IResource;
  */
 public class ImportFolderComparator implements Comparator<IResource> {
 
-    private static final String SRC_FOLDER_NAME = "src";
+    private static final String SRC_FOLDER_NAME_PREFIX = "src";
 
     private static final String LIB_FOLDER_NAME = "lib";
 
     private static final String DIAGRAMS_FOLDER_NAME = "diagrams";
+
+    private static Map<String, Integer> weight = new HashMap<String, Integer>();
+    static{
+        weight.put(LIB_FOLDER_NAME, 100);
+        weight.put(SRC_FOLDER_NAME_PREFIX, 90);
+        weight.put(DIAGRAMS_FOLDER_NAME, 80);
+    }
 
     /*
      * (non-Javadoc)
@@ -40,42 +49,21 @@ public class ImportFolderComparator implements Comparator<IResource> {
     public int compare(IResource res0, IResource res1) {
         String firstResourceName = res0.getName();
         String secondResourceName = res1.getName();
-        if (firstResourceName.equals(DIAGRAMS_FOLDER_NAME)) { // diagram folder first
-            return -1;
-        }
-        if (secondResourceName.equals(DIAGRAMS_FOLDER_NAME)) {
-            return 1;
-        }
+        return compare(firstResourceName,secondResourceName);
+    }
 
-        if (firstResourceName.equals(LIB_FOLDER_NAME)) { // Then lib folder
-            if (secondResourceName.equals(DIAGRAMS_FOLDER_NAME)) {
-                return 1;
-            } else {
-                return -1;
-            }
-        }
-        if (secondResourceName.equals(LIB_FOLDER_NAME)) {
-            if (firstResourceName.equals(DIAGRAMS_FOLDER_NAME)) {
-                return -1;
-            } else {
-                return 1;
-            }
-        }
+    private int compare(String firstResourceName, String secondResourceName) {
+        return weight(firstResourceName) > weight(secondResourceName) ? 1 : -1 ;
+    }
 
-        if (firstResourceName.contains(SRC_FOLDER_NAME)) { // Then all src folder
-            if (secondResourceName.equals(DIAGRAMS_FOLDER_NAME) || secondResourceName.equals(LIB_FOLDER_NAME)) {
-                return 1;
-            } else {
-                return -1;
-            }
+    private int weight(String resourceName) {
+        if(resourceName.startsWith(SRC_FOLDER_NAME_PREFIX)){
+            resourceName = SRC_FOLDER_NAME_PREFIX;
         }
-        if (secondResourceName.contains(SRC_FOLDER_NAME)) {
-            if (firstResourceName.equals(DIAGRAMS_FOLDER_NAME) || firstResourceName.equals(LIB_FOLDER_NAME)) {
-                return -1;
-            } else {
-                return 1;
-            }
+        Integer weigth = weight.get(resourceName);
+        if(weigth == null){
+            return 0;
         }
-        return 0;
+        return weigth.intValue();
     }
 }

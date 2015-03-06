@@ -60,44 +60,39 @@ public class ImportFolderComparatorTest {
         when(srcResource.getName()).thenReturn("src-filter");
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
-    public void shoud_diagram_folder_be_in_first_position() throws Exception {
-        assertThat(comparator.compare(diagramResource, otherResource)).isEqualTo(-1);
-        assertThat(comparator.compare(otherResource, diagramResource)).isEqualTo(1);
-        assertThat(comparator.compare(diagramResource, libResource)).isEqualTo(-1);
-        assertThat(comparator.compare(libResource, diagramResource)).isEqualTo(1);
-        assertThat(comparator.compare(diagramResource, srcResource)).isEqualTo(-1);
-        assertThat(comparator.compare(srcResource, diagramResource)).isEqualTo(1);
-    }
-
-    @Test
-    public void shoud_lib_folder_be_in_second_position() throws Exception {
-        assertThat(comparator.compare(libResource, otherResource)).isEqualTo(-1);
-        assertThat(comparator.compare(otherResource, libResource)).isEqualTo(1);
+    public void shoud_lib_folder_be_in_first_position() throws Exception {
+        assertThat(comparator.compare(libResource, otherResource)).isEqualTo(1);
+        assertThat(comparator.compare(otherResource, libResource)).isEqualTo(-1);
 
         assertThat(comparator.compare(diagramResource, libResource)).isEqualTo(-1);
         assertThat(comparator.compare(libResource, diagramResource)).isEqualTo(1);
 
-        assertThat(comparator.compare(libResource, srcResource)).isEqualTo(-1);
-        assertThat(comparator.compare(srcResource, libResource)).isEqualTo(1);
+        assertThat(comparator.compare(libResource, srcResource)).isEqualTo(1);
+        assertThat(comparator.compare(srcResource, libResource)).isEqualTo(-1);
     }
 
     @Test
-    public void shoud_folder_containg_src_be_in_third_position() throws Exception {
-        assertThat(comparator.compare(srcResource, otherResource)).isEqualTo(-1);
-        assertThat(comparator.compare(otherResource, srcResource)).isEqualTo(1);
+    public void shoud_folder_containg_src_be_in_second_position() throws Exception {
+        assertThat(comparator.compare(srcResource, otherResource)).isEqualTo(1);
+        assertThat(comparator.compare(otherResource, srcResource)).isEqualTo(-1);
 
         assertThat(comparator.compare(diagramResource, srcResource)).isEqualTo(-1);
         assertThat(comparator.compare(srcResource, diagramResource)).isEqualTo(1);
 
-        assertThat(comparator.compare(libResource, srcResource)).isEqualTo(-1);
-        assertThat(comparator.compare(srcResource, libResource)).isEqualTo(1);
+        assertThat(comparator.compare(libResource, srcResource)).isEqualTo(1);
+        assertThat(comparator.compare(srcResource, libResource)).isEqualTo(-1);
     }
+
+    @Test
+    public void shoud_diagram_folder_be_in_third_position() throws Exception {
+        assertThat(comparator.compare(diagramResource, otherResource)).isEqualTo(1);
+        assertThat(comparator.compare(diagramResource, libResource)).isEqualTo(-1);
+        assertThat(comparator.compare(diagramResource, srcResource)).isEqualTo(-1);
+        assertThat(comparator.compare(srcResource, diagramResource)).isEqualTo(1);
+    }
+
+
+
+
 }

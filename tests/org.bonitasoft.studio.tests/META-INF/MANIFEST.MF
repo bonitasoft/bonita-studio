@@ -66,7 +66,9 @@ Require-Bundle: org.eclipse.ui.workbench,
  org.bonitasoft.studio.businessobject,
  org.eclipse.jdt.core,
  org.bonitasoft.studio.parameters,
- org.bonitasoft.studio.configuration
+ org.bonitasoft.studio.configuration,
+ org.bonitasoft.studio.validation.test,
+ assertj-core;bundle-version="1.5.0"
 Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.api,
  org.bonitasoft.studio.tests.bug,
