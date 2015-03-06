@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2011 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.tests.dialog;
 
@@ -40,30 +37,30 @@ import org.junit.runner.RunWith;
 
 /**
  * @author Aurelien Pupier
- *
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCase {
 
     @Before
     public void openDialog() {
+        Display.getDefault().syncExec(new Runnable() {
 
-        Display.getDefault().asyncExec(new Runnable() {
-
+            @Override
             public void run() {
-                Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-                MainProcess mp = ProcessFactory.eINSTANCE.createMainProcess();
+                final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+                final MainProcess mp = ProcessFactory.eINSTANCE.createMainProcess();
                 mp.setName("TestName");
                 mp.setVersion("test.version");
-                Pool pool = ProcessFactory.eINSTANCE.createPool();
+                final Pool pool = ProcessFactory.eINSTANCE.createPool();
                 pool.setName("Pool");
                 pool.setVersion("1.0");
                 mp.getElements().add(pool);
 
-                DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-                IRepositoryFileStore fileStore = store.createRepositoryFileStore(NamingUtils.toDiagramFilename(mp));
+                final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+                final IRepositoryFileStore fileStore = store.createRepositoryFileStore(NamingUtils.toDiagramFilename(mp));
                 fileStore.save(mp);
-                OpenNameAndVersionDialog dialog = new OpenNameAndVersionForDiagramDialog(shell, mp,RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class)) ;
+                final OpenNameAndVersionDialog dialog = new OpenNameAndVersionForDiagramDialog(shell, mp, RepositoryManager.getInstance().getRepositoryStore(
+                        DiagramRepositoryStore.class));
                 dialog.open();
             }
         });
@@ -71,7 +68,7 @@ public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCas
     }
 
     @Test
-    public void testForbiddenSameNameDifferentCaseForDiagram(){
+    public void testForbiddenSameNameDifferentCaseForDiagram() {
         bot.text("TestName").setText("testname");
         bot.sleep(500);
         assertFalse("We allow to duplicate a diagram with just different case although it doesn't work on windows",
@@ -80,7 +77,7 @@ public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCas
     }
 
     @Test
-    public void testForbiddenSameVersionDifferentCaseForDiagram(){
+    public void testForbiddenSameVersionDifferentCaseForDiagram() {
         bot.text("test.version").setText("Test.version");
         bot.sleep(500);
         assertFalse("We allow to duplicate a diagram with just different case although it doesn't work on windows",
@@ -89,7 +86,7 @@ public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCas
     }
 
     @Test
-    public void testAllowDifferentVersionForDiagram(){
+    public void testAllowDifferentVersionForDiagram() {
         bot.text("test.version").setText("wouhou.version");
         bot.sleep(500);
         assertTrue("We forbid to duplicate a diagram with different version",
@@ -98,7 +95,7 @@ public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCas
     }
 
     @Test
-    public void testAllowDifferentNameForDiagram(){
+    public void testAllowDifferentNameForDiagram() {
         bot.text("TestName").setText("wouhouname");
         bot.sleep(500);
         assertTrue("We forbid to duplicate a diagram with different name",
@@ -107,7 +104,7 @@ public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCas
     }
 
     @Test
-    public void testForbiddenInvalidCharacterInNameForPool(){
+    public void testForbiddenInvalidCharacterInNameForPool() {
         setDiagramOk();
         bot.text("Pool").setText("test:name/invalid");
         bot.sleep(500);
@@ -117,7 +114,7 @@ public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCas
     }
 
     @Test
-    public void testForbiddenInvalidCharacterInVersionForPool(){
+    public void testForbiddenInvalidCharacterInVersionForPool() {
         setDiagramOk();
         bot.text("1.0").setText("1.0?beta");
         bot.sleep(500);
@@ -127,7 +124,7 @@ public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCas
     }
 
     @Test
-    public void testAllowDifferentVersionForPool(){
+    public void testAllowDifferentVersionForPool() {
         setDiagramOk();
         bot.text("1.0").setText("wouhou.version");
         bot.sleep(500);
@@ -143,7 +140,7 @@ public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCas
     }
 
     @Test
-    public void testAllowDifferentNameForPool(){
+    public void testAllowDifferentNameForPool() {
         setDiagramOk();
         bot.text("Pool").setText("wouhouname");
         bot.sleep(500);
