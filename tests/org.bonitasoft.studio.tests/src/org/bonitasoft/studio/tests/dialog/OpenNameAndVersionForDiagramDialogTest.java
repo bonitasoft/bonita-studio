@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 
 /**
  * @author Aurelien Pupier
+ *         Replace me with unit test
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCase {
