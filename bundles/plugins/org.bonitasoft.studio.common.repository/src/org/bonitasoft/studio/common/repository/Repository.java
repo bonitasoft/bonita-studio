@@ -94,16 +94,14 @@ public class Repository implements IRepository {
 
     private SortedMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>> stores;
 
-    private final IWorkspace workspace;
-
     public Repository() {
-        workspace = ResourcesPlugin.getWorkspace();
+
     }
 
     @Override
     public void createRepository(final String repositoryName) {
         name = repositoryName;
-        project = workspace.getRoot().getProject(repositoryName);
+        project = ResourcesPlugin.getWorkspace().getRoot().getProject(repositoryName);
     }
 
     @Override
@@ -112,6 +110,7 @@ public class Repository implements IRepository {
         if (BonitaStudioLog.isLoggable(IStatus.OK)) {
             BonitaStudioLog.debug("Creating repository " + project.getName() + "...", CommonRepositoryPlugin.PLUGIN_ID);
         }
+        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         try {
             disableBuild();
             if (!project.exists()) {
@@ -298,6 +297,7 @@ public class Repository implements IRepository {
 
     @Override
     public void enableBuild() {
+        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         Job.getJobManager().wakeUp(ResourcesPlugin.FAMILY_AUTO_BUILD);
         final IWorkspaceDescription desc = workspace.getDescription();
         if (!desc.isAutoBuilding()) {
@@ -314,6 +314,7 @@ public class Repository implements IRepository {
 
     @Override
     public void disableBuild() {
+        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IWorkspaceDescription desc = workspace.getDescription();
         if (desc.isAutoBuilding()) {
             desc.setAutoBuilding(false);
@@ -634,7 +635,7 @@ public class Repository implements IRepository {
         for (final IRepositoryStore<?> store : getAllStores()) {
             store.migrate(monitor);
         }
-        workspace.run(newProjectMigrationOperation(project), monitor);
+        ResourcesPlugin.getWorkspace().run(newProjectMigrationOperation(project), monitor);
     }
 
     protected BonitaBPMProjectMigrationOperation newProjectMigrationOperation(final IProject project) {
