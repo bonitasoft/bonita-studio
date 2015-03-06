@@ -18,6 +18,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -33,6 +34,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.internal.core.JavaModel;
 import org.eclipse.jdt.launching.environments.IExecutionEnvironment;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,6 +62,8 @@ public class BonitaBPMProjectClasspathTest {
     private IExecutionEnvironment executionEnvironment;
     @Mock
     private IJavaProject javaProject;
+    @Mock
+    private JavaModel javaModel;
 
     /**
      * @throws java.lang.Exception
@@ -103,6 +107,18 @@ public class BonitaBPMProjectClasspathTest {
         bonitaBPMProjectClasspath.create(monitor);
 
         verify(javaProject, never()).setRawClasspath(notNull(IClasspathEntry[].class), eq(true), eq(monitor));
+    }
+
+    @Test
+    public void should_refreshExternalArchives_and_flush_build_path() throws Exception {
+        doReturn(javaModel).when(bonitaBPMProjectClasspath).javaModel();
+        doNothing().when(bonitaBPMProjectClasspath).flushBuildPath(monitor);
+        doReturn(true).when(bonitaBPMProjectClasspath).classpathExists();
+
+        bonitaBPMProjectClasspath.refresh(monitor);
+
+        verify(javaModel).refreshExternalArchives(null, monitor);
+        verify(bonitaBPMProjectClasspath).flushBuildPath(monitor);
     }
 
 }

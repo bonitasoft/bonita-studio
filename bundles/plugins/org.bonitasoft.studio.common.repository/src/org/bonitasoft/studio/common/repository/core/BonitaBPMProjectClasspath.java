@@ -127,8 +127,7 @@ public class BonitaBPMProjectClasspath {
     }
 
     public IClasspathEntry[] getEntries() throws CoreException {
-        final IJavaProject javaProject = asJavaProject();
-        return javaProject.getRawClasspath();
+        return asJavaProject().getRawClasspath();
     }
 
 }
