@@ -157,7 +157,11 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         sortConfigurationElementsByPriority(sortedConfigElems);
         executeConfigurationElement(sortedConfigElems);
 
-        initializeBonitaRepositories();
+        try {
+            ResourcesPlugin.getWorkspace().run(initRepositoryRunnable(), monitor);
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e);
+        }
         doStartEngine();
 
         executeContributions();
@@ -249,8 +253,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         });
     }
 
-    private void initializeBonitaRepositories() {
-        final IWorkspaceRunnable workspaceOperation = new IWorkspaceRunnable() {
+    private IWorkspaceRunnable initRepositoryRunnable() {
+        return new IWorkspaceRunnable() {
 
             @Override
             public void run(final IProgressMonitor monitor) throws CoreException {
@@ -266,11 +270,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 repository.getAllStores();
             }
         };
-        try {
-            workspaceOperation.run(monitor);
-        } catch (final CoreException e3) {
-            BonitaStudioLog.error(e3);
-        }
     }
 
     private void executeContributions() {

@@ -17,9 +17,6 @@ package org.bonitasoft.studio.common.repository.core;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.eclipse.jdt.core.JavaCore.newContainerEntry;
-import static org.eclipse.jdt.core.JavaCore.newSourceEntry;
-import static org.eclipse.jdt.launching.JavaRuntime.newJREContainerPath;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -33,15 +30,19 @@ import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.core.JavaModel;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jdt.launching.environments.IExecutionEnvironment;
 
 /**
  * @author Romain Bioteau
@@ -67,18 +68,25 @@ public class BonitaBPMProjectClasspath {
     }
 
     public void refresh(final IProgressMonitor monitor) throws CoreException {
-        final JavaModelManager manager = JavaModelManager.getJavaModelManager();
-        manager.getJavaModel().refreshExternalArchives(null, monitor);
+        javaModel().refreshExternalArchives(null, monitor);
+        flushBuildPath(monitor);
+    }
+
+    protected void flushBuildPath(final IProgressMonitor monitor) throws CoreException, JavaModelException {
         final IJavaProject javaProject = asJavaProject();
         BuildPathsBlock.flush(Arrays.asList(CPListElement.createFromExisting(javaProject)), javaProject.getOutputLocation(), javaProject, null, monitor);
+    }
+
+    protected JavaModel javaModel() {
+        return JavaModelManager.getJavaModelManager().getJavaModel();
     }
 
     @SuppressWarnings("rawtypes")
     protected Set<IClasspathEntry> addClasspathEntries() {
         final Set<IClasspathEntry> entries = newHashSet(
                 newContainerEntry(new Path("repositoryDependencies"), true),
-                newContainerEntry(newJREContainerPath(JavaRuntime.getExecutionEnvironmentsManager().getEnvironment("JavaSE-1.7"))),
-                newContainerEntry(new Path("org.eclipse.pde.core.requiredPlugins")),
+                newContainerEntry(newJREContainerPath(javaRuntimeEnvironment()), false),
+                newContainerEntry(new Path("org.eclipse.pde.core.requiredPlugins"), false),
                 newContainerEntry(new Path("GROOVY_SUPPORT"), true));
         // Add src folders in classpath
         for (final IRepositoryStore sourceRepositoryStore : filter(repository.getAllStores(), instanceOf(SourceRepositoryStore.class))) {
@@ -87,7 +95,23 @@ public class BonitaBPMProjectClasspath {
         return entries;
     }
 
-    private IJavaProject asJavaProject() throws CoreException {
+    protected IPath newJREContainerPath(final IExecutionEnvironment executionEnvironment) {
+        return JavaRuntime.newJREContainerPath(executionEnvironment);
+    }
+
+    protected IExecutionEnvironment javaRuntimeEnvironment() {
+        return JavaRuntime.getExecutionEnvironmentsManager().getEnvironment("JavaSE-1.7");
+    }
+
+    protected IClasspathEntry newContainerEntry(final IPath path, final boolean isExported) {
+        return JavaCore.newContainerEntry(path, isExported);
+    }
+
+    protected IClasspathEntry newSourceEntry(final IPath path) {
+        return JavaCore.newSourceEntry(path);
+    }
+
+    protected IJavaProject asJavaProject() throws CoreException {
         return (IJavaProject) project.getNature(JavaCore.NATURE_ID);
     }
 
