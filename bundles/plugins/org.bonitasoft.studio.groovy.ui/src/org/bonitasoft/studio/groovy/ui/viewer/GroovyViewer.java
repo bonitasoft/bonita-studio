@@ -334,11 +334,7 @@ public class GroovyViewer implements IDocumentListener {
         if (tmpGroovyFileStore != null) {
             tmpGroovyFileStore.delete();
         }
-
         disableContextAssitShortcut();
-        if (editor.getViewer() != null && editor.getViewer().getTextWidget() != null) {
-            editor.dispose();
-        }
     }
 
     public GroovyCompilationUnit getGroovyCompilationUnit() {
