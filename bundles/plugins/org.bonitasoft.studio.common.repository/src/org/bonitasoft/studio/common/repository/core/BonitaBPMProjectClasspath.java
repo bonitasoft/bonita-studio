@@ -14,15 +14,16 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Sets.newHashSet;
+import static org.eclipse.jdt.core.JavaCore.newContainerEntry;
+import static org.eclipse.jdt.core.JavaCore.newSourceEntry;
+import static org.eclipse.jdt.launching.JavaRuntime.newJREContainerPath;
 
-import org.bonitasoft.engine.connector.AbstractConnector;
-import org.bonitasoft.forms.client.model.FormFieldValue;
-import org.bonitasoft.forms.server.validator.IFormFieldValidator;
+import java.util.Arrays;
+import java.util.Set;
+
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
@@ -32,10 +33,8 @@ import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -43,8 +42,6 @@ import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.jdt.launching.JavaRuntime;
-
-import com.google.common.collect.Lists;
 
 /**
  * @author Romain Bioteau
@@ -62,17 +59,8 @@ public class BonitaBPMProjectClasspath {
     public void create(final IProgressMonitor monitor) throws CoreException {
         if (!classpathExists()) {
             monitor.subTask(Messages.initializingProjectClasspath);
-
             final IJavaProject javaProject = asJavaProject();
-            final List<IClasspathEntry> entries = addClasspathEntries();
-
-            try {
-                addSpecificEntriesForDevMode(entries);
-            } catch (final MalformedURLException e) {
-                throw new RuntimeException(e);
-            } catch (final IOException e) {
-                throw new RuntimeException(e);
-            }
+            final Set<IClasspathEntry> entries = addClasspathEntries();
             BonitaStudioLog.debug("Updating build path...", CommonRepositoryPlugin.PLUGIN_ID);
             javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), true, monitor);
         }
@@ -85,55 +73,16 @@ public class BonitaBPMProjectClasspath {
         BuildPathsBlock.flush(Arrays.asList(CPListElement.createFromExisting(javaProject)), javaProject.getOutputLocation(), javaProject, null, monitor);
     }
 
-    protected void addSpecificEntriesForDevMode(final List<IClasspathEntry> entries) throws IOException, MalformedURLException {
-        /* Workaround for dev mode */
-        if (Platform.inDevelopmentMode()) { // WORKAROUND FOR DEV MODE: see Eclipse Bug 111238
-            // BOS Common
-            final String bosCommonResource = AbstractConnector.class.getCanonicalName().replace('.', '/') + ".class";
-            final URL bosBundleResource = AbstractConnector.class.getClassLoader().getResource(bosCommonResource);
-            URL serverResource = FileLocator.resolve(bosBundleResource);
-            if (serverResource.toString().startsWith("jar:file")) {
-                serverResource = new URL(serverResource.toString().substring("jar:".length(), serverResource.toString().lastIndexOf('!')));
-            }
-            entries.add(JavaCore.newLibraryEntry(Path.fromOSString(serverResource.getFile()), null, null));
-
-            // Forms client
-            final String formsClientResource = FormFieldValue.class.getCanonicalName().replace('.', '/') + ".class";
-            final URL formsClientBundleResource = FormFieldValue.class.getClassLoader().getResource(formsClientResource);
-            URL formsResource = FileLocator.resolve(formsClientBundleResource);
-            if (formsResource.toString().startsWith("jar:file")) {
-                formsResource = new URL(formsResource.toString().substring("jar:".length(), formsResource.toString().lastIndexOf('!')));
-            }
-            entries.add(JavaCore.newLibraryEntry(Path.fromOSString(formsResource.getFile()), null, null));
-
-            // Forms server
-            final String formsServerResourcePath = IFormFieldValidator.class.getCanonicalName().replace('.', '/') + ".class";
-            final URL formsServerBundleResource = FormFieldValue.class.getClassLoader().getResource(formsServerResourcePath);
-            URL formsServerResource = FileLocator.resolve(formsServerBundleResource);
-            if (formsServerResource.toString().startsWith("jar:file")) {
-                formsServerResource = new URL(formsServerResource.toString().substring("jar:".length(), formsServerResource.toString().lastIndexOf('!')));
-            }
-            entries.add(JavaCore.newLibraryEntry(Path.fromOSString(formsServerResource.getFile()), null, null));
-
-        }
-    }
-
     @SuppressWarnings("rawtypes")
-    protected List<IClasspathEntry> addClasspathEntries() {
-        final List<IClasspathEntry> entries = Lists.newArrayList(
-                JavaCore.newContainerEntry(new Path("repositoryDependencies"), true),
-                JavaCore.newContainerEntry(JavaRuntime.newJREContainerPath(JavaRuntime.getExecutionEnvironmentsManager().getEnvironment("JavaSE-1.7"))),
-                JavaCore.newContainerEntry(new Path("org.eclipse.pde.core.requiredPlugins")),
-                JavaCore.newContainerEntry(new Path("GROOVY_SUPPORT"), true));
-
+    protected Set<IClasspathEntry> addClasspathEntries() {
+        final Set<IClasspathEntry> entries = newHashSet(
+                newContainerEntry(new Path("repositoryDependencies"), true),
+                newContainerEntry(newJREContainerPath(JavaRuntime.getExecutionEnvironmentsManager().getEnvironment("JavaSE-1.7"))),
+                newContainerEntry(new Path("org.eclipse.pde.core.requiredPlugins")),
+                newContainerEntry(new Path("GROOVY_SUPPORT"), true));
         // Add src folders in classpath
-        for (final IRepositoryStore store : repository.getAllStores()) {
-            if (store instanceof SourceRepositoryStore) {
-                final IClasspathEntry newSourceEntry = JavaCore.newSourceEntry(store.getResource().getFullPath());
-                if (!entries.contains(newSourceEntry)) {
-                    entries.add(newSourceEntry);
-                }
-            }
+        for (final IRepositoryStore sourceRepositoryStore : filter(repository.getAllStores(), instanceOf(SourceRepositoryStore.class))) {
+            entries.add(newSourceEntry(sourceRepositoryStore.getResource().getFullPath()));
         }
         return entries;
     }
@@ -151,6 +100,11 @@ public class BonitaBPMProjectClasspath {
         if (classpathFile.exists()) {
             classpathFile.delete(true, false, monitor);
         }
+    }
+
+    public IClasspathEntry[] getEntries() throws CoreException {
+        final IJavaProject javaProject = asJavaProject();
+        return javaProject.getRawClasspath();
     }
 
 }

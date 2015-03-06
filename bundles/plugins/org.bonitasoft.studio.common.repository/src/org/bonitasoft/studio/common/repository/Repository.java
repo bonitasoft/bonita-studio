@@ -19,7 +19,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -95,8 +94,6 @@ public class Repository implements IRepository {
 
     private SortedMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>> stores;
 
-    private IProgressMonitor monitor;
-
     private final IWorkspace workspace;
 
     public Repository() {
@@ -110,7 +107,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void create(final boolean migrateStoreIfNeeded) {
+    public void create(final boolean migrateStoreIfNeeded, final IProgressMonitor monitor) {
         final long init = System.currentTimeMillis();
         if (BonitaStudioLog.isLoggable(IStatus.OK)) {
             BonitaStudioLog.debug("Creating repository " + project.getName() + "...", CommonRepositoryPlugin.PLUGIN_ID);
@@ -120,14 +117,15 @@ public class Repository implements IRepository {
             if (!project.exists()) {
                 workspace.run(newProjectWorkspaceOperation(name, workspace), monitor);
             }
-            initRepositoryStores(migrateStoreIfNeeded);
+            open();
+            initRepositoryStores(migrateStoreIfNeeded, monitor);
             new BonitaBPMProjectClasspath(project, this).create(monitor);
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         } finally {
             enableBuild();
             try {
-                getProject().build(IncrementalProjectBuilder.FULL_BUILD, NULL_PROGRESS_MONITOR);
+                getProject().build(IncrementalProjectBuilder.FULL_BUILD, monitor);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
             }
@@ -153,8 +151,8 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void create() {
-        create(false);
+    public void create(final IProgressMonitor monitor) {
+        create(false, monitor);
     }
 
     /*
@@ -258,7 +256,7 @@ public class Repository implements IRepository {
         }
     }
 
-    protected synchronized void initRepositoryStores(final boolean migrateStoreIfNeeded) {
+    protected synchronized void initRepositoryStores(final boolean migrateStoreIfNeeded, final IProgressMonitor monitor) {
         if (stores == null || stores.isEmpty()) {
             disableBuild();
             stores = new TreeMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>>(new Comparator<Class<?>>() {
@@ -273,10 +271,10 @@ public class Repository implements IRepository {
                     REPOSITORY_STORE_EXTENSION_POINT_ID);
             for (final IConfigurationElement configuration : repositoryStoreConfigurationElements) {
                 try {
-                    final IRepositoryStore<? extends IRepositoryFileStore> store = createRepositoryStore(configuration);
+                    final IRepositoryStore<? extends IRepositoryFileStore> store = createRepositoryStore(configuration, monitor);
                     if (migrateStoreIfNeeded) {
                         try {
-                            store.migrate();
+                            store.migrate(monitor);
                         } catch (final MigrationException e) {
                             BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
                         }
@@ -290,11 +288,11 @@ public class Repository implements IRepository {
     }
 
     protected IRepositoryStore<? extends IRepositoryFileStore> createRepositoryStore(
-            final IConfigurationElement configuration) throws CoreException {
+            final IConfigurationElement configuration, final IProgressMonitor monitor) throws CoreException {
         final IRepositoryStore<? extends IRepositoryFileStore> store = (IRepositoryStore<?>) configuration.createExecutableExtension(CLASS);
-        monitorSubtask(Messages.bind(Messages.creatingStore, store.getDisplayName()));
+        monitor.subTask(Messages.bind(Messages.creatingStore, store.getDisplayName()));
         store.createRepositoryStore(this);
-        monitorWorked(1);
+        monitor.worked(1);
         return store;
     }
 
@@ -366,7 +364,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void delete() {
+    public void delete(final IProgressMonitor monitor) {
         BonitaStudioLog.debug("Deleting repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
         refresh(NULL_PROGRESS_MONITOR);
         try {
@@ -375,7 +373,7 @@ public class Repository implements IRepository {
             }
             project.delete(true, true, NULL_PROGRESS_MONITOR);
             if (CommonRepositoryPlugin.getCurrentRepository().equals(getName())) {
-                RepositoryManager.getInstance().setRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME);
+                RepositoryManager.getInstance().setRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME, monitor);
             }
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
@@ -385,7 +383,7 @@ public class Repository implements IRepository {
     @Override
     public <T> T getRepositoryStore(final Class<T> repositoryStoreClass) {
         if (stores == null || stores.isEmpty()) {
-            initRepositoryStores(false);
+            initRepositoryStores(false, NULL_PROGRESS_MONITOR);
             enableBuild();
         }
         return repositoryStoreClass.cast(stores.get(repositoryStoreClass));
@@ -428,7 +426,7 @@ public class Repository implements IRepository {
     @Override
     public synchronized List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() {
         if (stores == null) {
-            initRepositoryStores(false);
+            initRepositoryStores(false, NULL_PROGRESS_MONITOR);
             enableBuild();
         }
         final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>(stores.values());
@@ -550,7 +548,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public URLClassLoader createProjectClassloader() {
+    public ClassLoader createProjectClassloader(final IProgressMonitor monitor) {
         final List<URL> jars = new ArrayList<URL>();
         try {
             final BonitaBPMProjectClasspath bonitaBPMProjectClasspath = new BonitaBPMProjectClasspath(project, this);
@@ -631,10 +629,10 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void migrate() throws CoreException, MigrationException {
+    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
         Assert.isNotNull(project);
         for (final IRepositoryStore<?> store : getAllStores()) {
-            store.migrate();
+            store.migrate(monitor);
         }
         workspace.run(newProjectMigrationOperation(project), monitor);
     }
@@ -652,21 +650,22 @@ public class Repository implements IRepository {
                 addBuilder("org.eclipse.pde.SchemaBuilder");
     }
 
-    public void setProgressMonitor(final IProgressMonitor monitor) {
-        this.monitor = monitor;
-    }
-
-    protected void monitorWorked(final int work) {
-        if (monitor != null) {
-            monitor.worked(work);
-        }
-    }
-
-    protected void monitorSubtask(final String subtask) {
-        if (monitor != null && subtask != null) {
-            monitor.subTask(subtask);
-        }
-    }
+    //
+    //    public void setProgressMonitor(final IProgressMonitor monitor) {
+    //        this.monitor = monitor;
+    //    }
+    //
+    //    protected void monitorWorked(final int work) {
+    //        if (monitor != null) {
+    //            monitor.worked(work);
+    //        }
+    //    }
+    //
+    //    protected void monitorSubtask(final String subtask) {
+    //        if (monitor != null && subtask != null) {
+    //            monitor.subTask(subtask);
+    //        }
+    //    }
 
     @Override
     public boolean isOnline() {

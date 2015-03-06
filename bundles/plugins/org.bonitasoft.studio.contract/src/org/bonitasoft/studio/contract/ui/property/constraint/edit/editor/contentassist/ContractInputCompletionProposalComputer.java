@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.contentassist;
 
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -75,7 +74,7 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
         final CodeVisitorSupportContext codeVisitorSupportContext = new CodeVisitorSupportContext(computeIdentifierPrefix.toString(),
                 (JavaContentAssistInvocationContext) context,
                 contentAssistContext,
-                getProjectClassloader(),
+                getProjectClassloader(monitor),
                 new GroovyCompletionProposalComputer(),
                 createMethodProposalCreator(),
                 getModuleNode(contentAssistContext));
@@ -111,8 +110,8 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
         return inputs;
     }
 
-    protected URLClassLoader getProjectClassloader() {
-        return RepositoryManager.getInstance().getCurrentRepository().createProjectClassloader();
+    protected ClassLoader getProjectClassloader(final IProgressMonitor monitor) {
+        return RepositoryManager.getInstance().getCurrentRepository().createProjectClassloader(monitor);
     }
 
 }

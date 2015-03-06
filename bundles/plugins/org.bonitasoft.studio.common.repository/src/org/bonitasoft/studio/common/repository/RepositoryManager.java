@@ -172,11 +172,11 @@ public class RepositoryManager {
         return result;
     }
 
-    public void setRepository(final String repositoryName) {
-        setRepository(repositoryName, false);
+    public void setRepository(final String repositoryName, final IProgressMonitor monitor) {
+        setRepository(repositoryName, false, monitor);
     }
 
-    public void setRepository(final String repositoryName, final boolean migrateIfNeeded) {
+    public void setRepository(final String repositoryName, final boolean migrateIfNeeded, final IProgressMonitor monitor) {
         if (repository != null && repository.getName().equals(repositoryName)) {
             return;
         } else {
@@ -186,7 +186,7 @@ public class RepositoryManager {
         if (repository == null) {
             repository = createRepository(repositoryName);
         }
-        repository.create(migrateIfNeeded);
+        repository.create(migrateIfNeeded, monitor);
         repository.open();
         preferenceStore.setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY, repositoryName);
     }
