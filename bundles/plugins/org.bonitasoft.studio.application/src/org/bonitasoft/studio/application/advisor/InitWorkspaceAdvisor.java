@@ -17,10 +17,13 @@ package org.bonitasoft.studio.application.advisor;
 import java.io.File;
 import java.io.FileFilter;
 
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.importer.ImporterRegistry;
+import org.bonitasoft.studio.importer.processors.ToProcProcessor;
 import org.eclipse.core.resources.ResourcesPlugin;
 
 /**
@@ -49,7 +52,13 @@ public class InitWorkspaceAdvisor extends InstallerApplicationWorkbenchAdvisor {
                 final IRepository repository = RepositoryManager.getInstance().getRepository(repositoryName);
                 if (repository != null) {
                     try {
-                        repository.importFromArchive(workspaceArchive, false, false);
+                        final boolean disableConfirmation = FileActionDialog.getDisablePopup();
+                        FileActionDialog.setDisablePopup(false);
+                        final ToProcProcessor importer = ImporterRegistry.getInstance().createImporterFor(workspaceArchive.getName());
+                        if (importer != null) {
+                            importer.createDiagram(workspaceArchive.toURL(), Repository.NULL_PROGRESS_MONITOR);
+                        }
+                        FileActionDialog.setDisablePopup(disableConfirmation);
                         workspaceArchive.delete();
                     } catch (final Exception e) {
                         BonitaStudioLog.error(e);
@@ -59,5 +68,4 @@ public class InitWorkspaceAdvisor extends InstallerApplicationWorkbenchAdvisor {
             RepositoryManager.getInstance().setRepository("default", Repository.NULL_PROGRESS_MONITOR);
         }
     }
-
 }

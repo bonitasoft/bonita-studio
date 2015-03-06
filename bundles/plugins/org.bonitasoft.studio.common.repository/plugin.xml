@@ -48,11 +48,6 @@
     <extension
        point="org.eclipse.ui.commands">
     <command
-          defaultHandler="org.bonitasoft.studio.common.repository.handler.ImportArtifactsFromZip"
-          id="org.bonitasoft.studio.repository.importArtifacts"
-          name="import artifacts">
-    </command>
-    <command
           defaultHandler="org.bonitasoft.studio.common.repository.handler.ExportArtifactsToZip"
           id="org.bonitasoft.studio.repository.exportArtifacts"
           name="export artifacts">

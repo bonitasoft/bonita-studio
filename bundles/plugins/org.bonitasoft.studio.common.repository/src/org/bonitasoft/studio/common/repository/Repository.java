@@ -32,7 +32,6 @@ import org.apache.xbean.classloader.NonLockingJarFileClassLoader;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectClasspath;
 import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
@@ -42,7 +41,6 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
-import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
 import org.bonitasoft.studio.pics.Pics;
@@ -459,17 +457,6 @@ public class Repository implements IRepository {
         } else {
             return Pics.getImage("local-repository.png", CommonRepositoryPlugin.getDefault());
         }
-    }
-
-    @Override
-    public void importFromArchive(final File archiveFile, final boolean askOverwrite, final boolean validateAfterImport) {
-        final boolean disableConfirmation = FileActionDialog.getDisablePopup();
-        FileActionDialog.setDisablePopup(!askOverwrite);
-        final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(validateAfterImport);
-        operation.setArchiveFile(archiveFile.getAbsolutePath());
-        operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
-        operation.run(NULL_PROGRESS_MONITOR);
-        FileActionDialog.setDisablePopup(disableConfirmation);
     }
 
     @Override

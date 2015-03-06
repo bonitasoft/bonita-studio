@@ -18,7 +18,6 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Mickael Istria
- *
  */
 public class Messages extends NLS {
 
@@ -192,7 +191,6 @@ public class Messages extends NLS {
     public static String edit;
     public static String openNameAndVersionDialogTitle;
 
-
     public static String january;
     public static String february;
     public static String march;
@@ -272,9 +270,6 @@ public class Messages extends NLS {
     public static String outlineDialogRefactoringText;
     public static String removalConfirmationDialogTitle;
 
-    public static String errorValidationMessage;
-    public static String errorValidationContinueAnywayMessage;
-    public static String validationFailedTitle;
     public static String endWarningMessage;
     public static String showHelp;
     public static String createAndNewButton;
@@ -282,6 +277,5 @@ public class Messages extends NLS {
     public static String Image_desc;
     public static String hideHelp;
     public static String toggleHelp;
-
 
 }

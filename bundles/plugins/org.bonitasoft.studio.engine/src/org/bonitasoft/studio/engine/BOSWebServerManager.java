@@ -501,16 +501,15 @@ public class BOSWebServerManager {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IProject confProject = workspace.getRoot().getProject(SERVER_CONFIGURATION_PROJECT);
         if (!confProject.exists()) {
-            workspace.run(new IWorkspaceRunnable() {
+            confProject.create(Repository.NULL_PROGRESS_MONITOR);
+            confProject.open(Repository.NULL_PROGRESS_MONITOR);
+            final ProjectProperties projectProperties = new ProjectProperties(confProject);
+            confProject.getWorkspace().run(new IWorkspaceRunnable() {
 
                 @Override
                 public void run(final IProgressMonitor monitor) throws CoreException {
-                    confProject.create(Repository.NULL_PROGRESS_MONITOR);
-                    confProject.open(Repository.NULL_PROGRESS_MONITOR);
-                    final ProjectProperties projectProperties = new ProjectProperties(confProject);
                     projectProperties.setServerProject(true, monitor);
                 }
-
             }, monitor);
 
         }

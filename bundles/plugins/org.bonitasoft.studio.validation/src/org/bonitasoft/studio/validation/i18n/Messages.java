@@ -84,8 +84,6 @@ public class Messages extends NLS {
 
     public static String targetProcessNotSet;
 
-    public static String validating;
-
     public static String pageTemplateNotValid;
 
     public static String incompatilbeOperationReturnType;

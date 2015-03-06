@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,10 +25,10 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
-import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.handler.ExportBosArchiveHandler;
+import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.assertions.ElementAssert;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
@@ -39,7 +37,6 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
@@ -53,7 +50,6 @@ import org.junit.runner.RunWith;
 
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
@@ -63,7 +59,7 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
 
     @Override
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         bot.saveAllEditors();
         bot.closeAllEditors();
         FileActionDialog.setDisablePopup(true);
@@ -122,8 +118,8 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         final ImportBosArchiveOperation importBosArchiveOperation = new ImportBosArchiveOperation(false);
         importBosArchiveOperation.setArchiveFile(bosFile.getAbsolutePath());
         importBosArchiveOperation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
-        final IStatus status = importBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
-        assertThat(status.isOK()).isTrue();
+        importBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
+        assertThat(importBosArchiveOperation.getStatus().isOK()).isTrue();
 
         diagramFileStore = diagramRepositoryStore.getDiagram("ExportImportWithoutMigrationIT",
                 "1.0");
@@ -133,6 +129,5 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         final EObject target = EcoreUtil.copy(newSemanticElement);
         assertThat(EcoreUtil.equals(source, target)).isTrue();
     }
-
 
 }

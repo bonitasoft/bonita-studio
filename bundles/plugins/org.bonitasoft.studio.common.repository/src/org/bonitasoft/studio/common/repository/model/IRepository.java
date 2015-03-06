@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.common.repository.model;
 
-import java.io.File;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -62,8 +61,6 @@ public interface IRepository extends IFileStoreChangeListener {
     String getDisplayName();
 
     Image getIcon();
-
-    void importFromArchive(File archiveFile, boolean askOverwrite, boolean validateAfterImport);
 
     void exportToArchive(String file);
 

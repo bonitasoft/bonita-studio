@@ -482,6 +482,11 @@
             id="org.bonitasoft.studio.application.command.rename"
             name="Rename Command">
       </command>
+      <command
+            defaultHandler="org.bonitasoft.studio.application.handler.ImportArtifactsFromZipHandler"
+            id="org.bonitasoft.studio.repository.importArtifacts"
+            name="import artifacts">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.views">

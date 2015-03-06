@@ -31,7 +31,6 @@ import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -84,19 +83,16 @@ public class ImportHandler extends AbstractHandler {
             fileStore.open();
         }
         PlatformUtil.openIntroIfNoOtherEditorOpen();
-
-        final IStatus importStatus = operation.getStatus();
-        Display.getDefault().asyncExec(openStatusDialog(importStatus));
-
+        Display.getDefault().asyncExec(openStatusDialog(operation));
         return null;
     }
 
-    private Runnable openStatusDialog(final IStatus importStatus) {
+    private Runnable openStatusDialog(final ImportFileOperation operation) {
         return new Runnable() {
 
             @Override
             public void run() {
-                new ImportStatusDialogHandler(importStatus, getDiagramRepositoryStore()).open(Display.getDefault().getActiveShell());
+                operation.getImportStatusDialogHandler(operation.getStatus()).open(Display.getDefault().getActiveShell());
             }
         };
     }

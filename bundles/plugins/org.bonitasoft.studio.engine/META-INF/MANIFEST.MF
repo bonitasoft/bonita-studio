@@ -40,7 +40,8 @@ Require-Bundle: org.bonitasoft.studio.model;bundle-version="1.0.0",
  org.eclipse.xtext.ui,
  org.bonitasoft.studio.document;bundle-version="6.5.0",
  org.bonitasoft.studio.pagedesigner;bundle-version="6.5.0",
- org.bonitasoft.studio.browser;bundle-version="6.5.0"
+ org.bonitasoft.studio.browser;bundle-version="6.5.0",
+ org.bonitasoft.studio.validation.common;bundle-version="7.0.0"
 Export-Package: org.bonitasoft.studio.engine,org.bonitasoft.studio.eng
  ine.command,org.bonitasoft.studio.engine.config,org.bonitasoft.studio
  .engine.contribution,org.bonitasoft.studio.engine.export,org.bonitaso
