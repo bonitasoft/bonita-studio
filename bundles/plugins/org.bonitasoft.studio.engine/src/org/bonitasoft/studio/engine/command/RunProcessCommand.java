@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.engine.EnginePlugin;
@@ -93,7 +94,11 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
             final List<AbstractProcess> processes = new ArrayList<AbstractProcess>(executableProcesses);
             final RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(processes);
             try {
-                service.run(true, false, validationOperation);
+                if (runSynchronously) {
+                    validationOperation.run(Repository.NULL_PROGRESS_MONITOR);
+                } else {
+                    service.run(true, false, validationOperation);
+                }
             } catch (final InvocationTargetException e) {
                 throw new ExecutionException("Error occured during validation", e);
             } catch (final InterruptedException e) {
