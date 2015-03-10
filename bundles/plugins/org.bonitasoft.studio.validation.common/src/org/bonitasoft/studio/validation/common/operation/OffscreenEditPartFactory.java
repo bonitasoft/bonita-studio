@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.validation.common.operation;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,20 +31,27 @@ import org.eclipse.swt.widgets.Shell;
 public class OffscreenEditPartFactory {
 
     private final List<Shell> toDispose = new ArrayList<Shell>();
+    private final org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory factory;
+
+    public OffscreenEditPartFactory(final org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory factory) {
+        this.factory = factory;
+    }
 
     public DiagramEditPart createOffscreenDiagramEditPart(final Diagram d) {
         final EObject element = d.getElement();
-        if (element != null) {
-            final OffscreenDiagramEditPartRunnable runnable = new OffscreenDiagramEditPartRunnable(d);
-            if (inUIThread()) {
-                runnable.run();
-            } else {
-                Display.getDefault().syncExec(runnable);
-            }
-            toDispose.add(runnable.getDisposable());
-            return runnable.getDiagramEditPart();
+        checkNotNull(element);
+        final OffscreenDiagramEditPartRunnable runnable = new OffscreenDiagramEditPartRunnable(d, factory);
+        if (inUIThread()) {
+            runnable.run();
+        } else {
+            runInUI(runnable);
         }
-        return null;
+        toDispose.add(runnable.getDisposable());
+        return runnable.getDiagramEditPart();
+    }
+
+    protected void runInUI(final Runnable runnable) {
+        Display.getDefault().syncExec(runnable);
     }
 
     protected boolean inUIThread() {

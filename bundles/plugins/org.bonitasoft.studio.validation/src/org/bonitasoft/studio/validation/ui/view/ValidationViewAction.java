@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
+import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -66,7 +67,9 @@ public class ValidationViewAction extends Action {
      */
     @Override
     public void run() {
-        final BatchValidationOperation validateOperation = new BatchValidationOperation(new OffscreenEditPartFactory());
+        final BatchValidationOperation validateOperation = new BatchValidationOperation(new OffscreenEditPartFactory(
+                org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
+                new ValidationMarkerProvider());
         final IEditorPart ieditor = activePage.getActiveEditor();
         if (ieditor instanceof DiagramEditor) {
 

@@ -1,7 +1,11 @@
 package org.bonitasoft.studio.validation.common.operation;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -31,11 +35,23 @@ import org.eclipse.ui.PlatformUI;
 
 public class RunProcessesValidationOperation implements IRunnableWithProgress {
 
-    private final List<AbstractProcess> listOfProcessesToValidate;
+    private final List<AbstractProcess> listOfProcessesToValidate = new ArrayList<AbstractProcess>();
     private IStatus status;
+    private final BatchValidationOperation validationOperation;
 
-    public RunProcessesValidationOperation(final List<AbstractProcess> processes) {
-        listOfProcessesToValidate = processes;
+    public RunProcessesValidationOperation(final BatchValidationOperation validationOperation) {
+        checkNotNull(validationOperation);
+        this.validationOperation = validationOperation;
+    }
+
+    public RunProcessesValidationOperation addProcess(final AbstractProcess process) {
+        listOfProcessesToValidate.add(process);
+        return this;
+    }
+
+    public RunProcessesValidationOperation addProcesses(final List<AbstractProcess> processes) {
+        listOfProcessesToValidate.addAll(newArrayList(processes));
+        return this;
     }
 
     private boolean statusContainsError() {
@@ -116,7 +132,6 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
 
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        final BatchValidationOperation batchValidationOperation = new BatchValidationOperation(new OffscreenEditPartFactory());
         for (final AbstractProcess p : listOfProcessesToValidate) {
             final DiagramFileStore fileStore = asDiagramFileStore(p);
             if (fileStore == null) {
@@ -129,8 +144,8 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
                         .getName(), mainProcess.getVersion())));
             }
             final Resource eResource = fileStore.getEMFResource();
-            final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
-            final FindDiagramRunnable runnable = new FindDiagramRunnable(eResource, batchValidationOperation);
+            final TransactionalEditingDomain editingDomain = editingDomain(eResource);
+            final FindDiagramRunnable runnable = new FindDiagramRunnable(eResource, validationOperation);
             if (editingDomain != null) {
                 try {
                     editingDomain.runExclusive(runnable);
@@ -141,8 +156,12 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
                 runnable.run();
             }
         }
-        batchValidationOperation.run(monitor);
-        status = batchValidationOperation.getResult();
+        validationOperation.run(monitor);
+        status = validationOperation.getResult();
+    }
+
+    protected TransactionalEditingDomain editingDomain(final Resource eResource) {
+        return TransactionUtil.getEditingDomain(eResource);
     }
 
     protected DiagramFileStore asDiagramFileStore(final AbstractProcess process) {

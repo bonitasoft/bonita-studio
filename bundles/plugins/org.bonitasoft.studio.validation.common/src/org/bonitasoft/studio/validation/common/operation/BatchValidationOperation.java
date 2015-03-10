@@ -39,14 +39,12 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.emf.validation.model.EvaluationMode;
 import org.eclipse.emf.validation.service.IBatchValidator;
 import org.eclipse.emf.validation.service.ModelValidationService;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -63,9 +61,11 @@ public class BatchValidationOperation implements IRunnableWithProgress {
     private final Map<Diagram, DiagramEditPart> diagramsToDiagramEditPart = new HashMap<Diagram, DiagramEditPart>();
     private final List<IFile> fileProcessed = new ArrayList<IFile>(); //Avoid duplicate
     private final OffscreenEditPartFactory offscreenEditPartFactory;
+    private final ValidationMarkerProvider validationMarkerProvider;
 
-    public BatchValidationOperation(final OffscreenEditPartFactory offscreenEditPartFactory) {
+    public BatchValidationOperation(final OffscreenEditPartFactory offscreenEditPartFactory, final ValidationMarkerProvider validationMarkerProvider) {
         this.offscreenEditPartFactory = offscreenEditPartFactory;
+        this.validationMarkerProvider = validationMarkerProvider;
     }
 
     /*
@@ -104,14 +104,14 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 
     }
 
-    private static void validate(final DiagramEditPart diagramEditPart, final View view, final IProgressMonitor monitor) {
+    protected void validate(final DiagramEditPart diagramEditPart, final View view, final IProgressMonitor monitor) {
         final IFile target = view.eResource() != null ?
                 WorkspaceSynchronizer.getFile(view.eResource()) : null;
         if (target != null) {
             ProcessMarkerNavigationProvider.deleteMarkers(target);
         }
-        final Diagnostic diagnostic = runEMFValidator(view);
-        ValidationUtil.createMarkers(target, diagnostic, diagramEditPart);
+        final Diagnostic diagnostic = validationMarkerProvider.runEMFValidator(view);
+        validationMarkerProvider.createMarkers(target, diagnostic, diagramEditPart);
         final IBatchValidator validator =
                 (IBatchValidator)
                 ModelValidationService.getInstance().newValidator(
@@ -119,21 +119,8 @@ public class BatchValidationOperation implements IRunnableWithProgress {
         validator.setIncludeLiveConstraints(true);
         if (view.isSetElement() && view.getElement() != null) {
             final IStatus status = validator.validate(view.getElement(), monitor);
-            ValidationUtil.createMarkers(target, status, diagramEditPart);
+            validationMarkerProvider.createMarkers(target, status, diagramEditPart);
         }
-    }
-
-    private static Diagnostic runEMFValidator(final View target) {
-        if (target.isSetElement() && target.getElement() != null) {
-            return new Diagnostician() {
-
-                @Override
-                public String getObjectLabel(final EObject eObject) {
-                    return EMFCoreUtil.getQualifiedName(eObject, true);
-                }
-            }.validate(target.getElement());
-        }
-        return Diagnostic.OK_INSTANCE;
     }
 
     private void clearMarkers() {
@@ -193,7 +180,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
     }
 
     protected IWorkbenchPage getActivePage() {
-        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+        if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
             return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         }
         return null;

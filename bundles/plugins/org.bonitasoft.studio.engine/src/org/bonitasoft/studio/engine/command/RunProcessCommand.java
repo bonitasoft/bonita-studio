@@ -36,7 +36,10 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
+import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
+import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -92,7 +95,9 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         final Set<AbstractProcess> executableProcesses = new ProcessSelector(event).getExecutableProcesses();
         if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN)) {
             final List<AbstractProcess> processes = new ArrayList<AbstractProcess>(executableProcesses);
-            final RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(processes);
+            final RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(new BatchValidationOperation(
+                    new OffscreenEditPartFactory(org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()), new ValidationMarkerProvider()));
+            validationOperation.addProcesses(processes);
             try {
                 if (runSynchronously) {
                     validationOperation.run(Repository.NULL_PROGRESS_MONITOR);

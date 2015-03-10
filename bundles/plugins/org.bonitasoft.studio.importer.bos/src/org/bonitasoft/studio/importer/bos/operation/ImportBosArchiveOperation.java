@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -46,7 +45,10 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
+import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
+import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -166,7 +168,11 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         if (validate) {
             for (final IRepositoryFileStore diagramFileStore : iResourceImporter.getImportedProcesses()) {
                 final AbstractProcess process = (AbstractProcess) diagramFileStore.getContent();
-                final RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(Collections.singletonList(process));
+                final RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(
+                        new BatchValidationOperation(
+                                new OffscreenEditPartFactory(org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
+                                new ValidationMarkerProvider()));
+                validationAction.addProcess(process);
                 validationAction.run(monitor);
                 statusBuilder.addStatus(process, validationAction.getStatus());
             }

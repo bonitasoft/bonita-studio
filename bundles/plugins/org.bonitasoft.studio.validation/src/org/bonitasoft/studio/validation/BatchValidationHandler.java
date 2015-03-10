@@ -27,6 +27,7 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.FindDiagramRunnable;
+import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.bonitasoft.studio.validation.ui.view.ValidationViewPart;
 import org.eclipse.core.commands.AbstractHandler;
@@ -37,6 +38,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -63,7 +65,8 @@ public class BatchValidationHandler extends AbstractHandler {
         }
         final Map<?, ?> parameters = event.getParameters();
         final BatchValidationOperation validateOperation = new BatchValidationOperation(
-                new org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory());
+                new org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory(OffscreenEditPartFactory.getInstance()),
+                new ValidationMarkerProvider());
         if (parameters != null && !parameters.isEmpty()) {
             final String files = event.getParameter("diagrams");
             if (files != null) {

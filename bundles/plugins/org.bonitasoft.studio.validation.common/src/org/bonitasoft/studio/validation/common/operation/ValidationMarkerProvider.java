@@ -34,9 +34,14 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.notation.View;
 
-public class ValidationUtil {
+/**
+ * Some validation marker util generated from GMF
+ * 
+ * @author Romain Bioteau
+ */
+public class ValidationMarkerProvider {
 
-    public static Diagnostic runEMFValidator(final View target) {
+    public Diagnostic runEMFValidator(final View target) {
         if (target.isSetElement() && target.getElement() != null) {
             return new Diagnostician() {
 
@@ -49,7 +54,7 @@ public class ValidationUtil {
         return Diagnostic.OK_INSTANCE;
     }
 
-    static void createMarkers(final IFile
+    public void createMarkers(final IFile
             target, final IStatus validationStatus, final DiagramEditPart diagramEditPart) {
         if (validationStatus.isOK()) {
             return;
@@ -77,7 +82,7 @@ public class ValidationUtil {
         }
     }
 
-    public static void createMarkers(final IFile
+    public void createMarkers(final IFile
             target, final Diagnostic emfValidationStatus, final DiagramEditPart diagramEditPart) {
         if (emfValidationStatus.getSeverity() == Diagnostic.OK) {
             return;
@@ -102,9 +107,6 @@ public class ValidationUtil {
         }
     }
 
-    /**
-     * @generated
-     */
     private static void addMarker(final String constaintId, final EditPartViewer viewer, final IFile
             target, final String elementId, final String location, final String message, final int statusSeverity) {
         if (target == null) {
@@ -114,9 +116,6 @@ public class ValidationUtil {
                 target, elementId, location, message, statusSeverity);
     }
 
-    /**
-     * @generated
-     */
     private static int diagnosticToStatusSeverity(final int diagnosticSeverity) {
         if (diagnosticSeverity == Diagnostic.OK) {
             return IStatus.OK;
@@ -131,9 +130,6 @@ public class ValidationUtil {
         return IStatus.INFO;
     }
 
-    /**
-     * @generated
-     */
     private static Set<EObject> collectTargetElements(final IStatus status,
             final Set<EObject> targetElementCollector, final List allConstraintStatuses) {
         if (status instanceof IConstraintStatus) {
@@ -149,9 +145,6 @@ public class ValidationUtil {
         return targetElementCollector;
     }
 
-    /**
-     * @generated
-     */
     private static Set<EObject> collectTargetElements(final Diagnostic diagnostic,
             final Set<EObject> targetElementCollector, final List allDiagnostics) {
         final List data = diagnostic.getData();
