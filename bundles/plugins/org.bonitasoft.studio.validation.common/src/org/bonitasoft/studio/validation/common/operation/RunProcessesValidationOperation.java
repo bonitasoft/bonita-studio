@@ -1,7 +1,6 @@
 package org.bonitasoft.studio.validation.common.operation;
 
-import static com.google.common.collect.Iterables.filter;
-
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -9,15 +8,19 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.validation.common.i18n.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -25,8 +28,6 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-
-import com.google.common.base.Predicates;
 
 public class RunProcessesValidationOperation implements IRunnableWithProgress {
 
@@ -117,15 +118,40 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         final BatchValidationOperation batchValidationOperation = new BatchValidationOperation(new OffscreenEditPartFactory());
         for (final AbstractProcess p : listOfProcessesToValidate) {
-            final Resource eResource = p.eResource();
-            if (eResource != null) {
-                for (final EObject diagram : filter(eResource.getContents(), Predicates.instanceOf(Diagram.class))) {
-                    batchValidationOperation.addDiagram((Diagram) diagram);
+            final DiagramFileStore fileStore = asDiagramFileStore(p);
+            if (fileStore == null) {
+                final MainProcess mainProcess = ModelHelper.getMainProcess(p);
+                if (mainProcess == null) {
+                    throw new InvocationTargetException(new NullPointerException(String.format("Process %s (%s) is not contained in a MainProcess",
+                            p.getName(), p.getVersion())));
                 }
+                throw new InvocationTargetException(new IOException(String.format("Failed to retrieve resource for diagram %s (%s)", mainProcess
+                        .getName(), mainProcess.getVersion())));
+            }
+            final Resource eResource = fileStore.getEMFResource();
+            final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
+            final FindDiagramRunnable runnable = new FindDiagramRunnable(eResource, batchValidationOperation);
+            if (editingDomain != null) {
+                try {
+                    editingDomain.runExclusive(runnable);
+                } catch (final InterruptedException e) {
+                    BonitaStudioLog.error(e);
+                }
+            } else {
+                runnable.run();
             }
         }
         batchValidationOperation.run(monitor);
         status = batchValidationOperation.getResult();
+    }
+
+    protected DiagramFileStore asDiagramFileStore(final AbstractProcess process) {
+        final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final Resource eResource = process.eResource();
+        if (eResource != null) {
+            return store.getChild(URI.decode(eResource.getURI().lastSegment()));
+        }
+        return null;
     }
 
 }

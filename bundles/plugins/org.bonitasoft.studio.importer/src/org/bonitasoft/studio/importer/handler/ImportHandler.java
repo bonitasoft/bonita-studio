@@ -35,6 +35,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
+import com.google.common.base.Strings;
+
 /**
  * @author Romain Bioteau
  */
@@ -63,8 +65,8 @@ public class ImportHandler extends AbstractHandler {
             BonitaStudioLog.error("Import has failed for file " + selectedFile.getName(), ImporterPlugin.PLUGIN_ID);
             BonitaStudioLog.error(e, ImporterPlugin.PLUGIN_ID);
             String message = Messages.errorWhileImporting_message;
-            if (e.getMessage() != null && !e.getMessage().isEmpty()) {
-                message = e.getMessage();
+            if (e.getTargetException() != null && !Strings.isNullOrEmpty(e.getTargetException().getMessage())) {
+                message = e.getTargetException().getMessage();
             }
             new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title, message, e).open();
             return null;

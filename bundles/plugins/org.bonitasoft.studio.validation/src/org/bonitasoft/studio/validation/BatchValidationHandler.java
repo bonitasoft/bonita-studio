@@ -26,6 +26,7 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
+import org.bonitasoft.studio.validation.common.operation.FindDiagramRunnable;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.bonitasoft.studio.validation.ui.view.ValidationViewPart;
 import org.eclipse.core.commands.AbstractHandler;

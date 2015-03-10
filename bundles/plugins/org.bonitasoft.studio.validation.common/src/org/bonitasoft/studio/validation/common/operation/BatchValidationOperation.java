@@ -25,7 +25,6 @@ import java.util.Map.Entry;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.diagram.part.ValidateAction;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.common.ValidationCommonPlugin;
 import org.bonitasoft.studio.validation.common.i18n.Messages;
@@ -38,11 +37,18 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.Diagnostician;
+import org.eclipse.emf.validation.model.EvaluationMode;
+import org.eclipse.emf.validation.service.IBatchValidator;
+import org.eclipse.emf.validation.service.ModelValidationService;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -77,21 +83,18 @@ public class BatchValidationOperation implements IRunnableWithProgress {
             final DiagramEditPart diagramEp = entry.getValue();
             final Diagram diagram = entry.getKey();
             if (diagramEp != null) {
-                final EObject resolvedSemanticElement = diagramEp.resolveSemanticElement();
-                if (resolvedSemanticElement instanceof MainProcess) {
-                    monitor.subTask(Messages.bind(Messages.validatingProcess, ((MainProcess) resolvedSemanticElement).getName(),
-                            ((MainProcess) resolvedSemanticElement).getVersion()));
-                    ValidateAction.runValidation(diagramEp, diagram);
-                    monitor.worked(1);
-                } else if (resolvedSemanticElement instanceof Form) {
-                    monitor.subTask(Messages.bind(Messages.validatingForm, ((Form) resolvedSemanticElement).getName()));
-                    org.bonitasoft.studio.model.process.diagram.form.part.ValidateAction.runValidation(diagramEp, diagram);
-                    monitor.worked(1);
-                }
+                monitor.subTask(subTaskName(diagramEp.resolveSemanticElement()));
+                validate(diagramEp, diagram, monitor);
             }
         }
 
         offscreenEditPartFactory.dispose();
+    }
+
+    private String subTaskName(final EObject semanticElement) {
+        return semanticElement instanceof Form ? Messages.bind(Messages.validatingForm, ((Form) semanticElement).getName()) : Messages.bind(
+                Messages.validatingProcess, ((MainProcess) semanticElement).getName(),
+                ((MainProcess) semanticElement).getVersion());
     }
 
     private void buildEditPart() {
@@ -99,6 +102,38 @@ public class BatchValidationOperation implements IRunnableWithProgress {
             diagramsToDiagramEditPart.put(diagram, getDiagramEditPart(diagram));
         }
 
+    }
+
+    private static void validate(final DiagramEditPart diagramEditPart, final View view, final IProgressMonitor monitor) {
+        final IFile target = view.eResource() != null ?
+                WorkspaceSynchronizer.getFile(view.eResource()) : null;
+        if (target != null) {
+            ProcessMarkerNavigationProvider.deleteMarkers(target);
+        }
+        final Diagnostic diagnostic = runEMFValidator(view);
+        ValidationUtil.createMarkers(target, diagnostic, diagramEditPart);
+        final IBatchValidator validator =
+                (IBatchValidator)
+                ModelValidationService.getInstance().newValidator(
+                        EvaluationMode.BATCH);
+        validator.setIncludeLiveConstraints(true);
+        if (view.isSetElement() && view.getElement() != null) {
+            final IStatus status = validator.validate(view.getElement(), monitor);
+            ValidationUtil.createMarkers(target, status, diagramEditPart);
+        }
+    }
+
+    private static Diagnostic runEMFValidator(final View target) {
+        if (target.isSetElement() && target.getElement() != null) {
+            return new Diagnostician() {
+
+                @Override
+                public String getObjectLabel(final EObject eObject) {
+                    return EMFCoreUtil.getQualifiedName(eObject, true);
+                }
+            }.validate(target.getElement());
+        }
+        return Diagnostic.OK_INSTANCE;
     }
 
     private void clearMarkers() {
