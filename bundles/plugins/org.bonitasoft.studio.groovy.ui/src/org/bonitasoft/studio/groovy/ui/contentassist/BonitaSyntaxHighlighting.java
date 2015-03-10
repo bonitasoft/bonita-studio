@@ -15,13 +15,15 @@
 
 package org.bonitasoft.studio.groovy.ui.contentassist;
 
+import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Iterators.forArray;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import org.bonitasoft.engine.bdm.dao.BusinessObjectDAO;
 import org.bonitasoft.engine.expression.ExpressionConstants;
-import org.bonitasoft.engine.expression.ExpressionConstantsResolver;
 import org.bonitasoft.forms.server.api.IFormExpressionsAPI;
 import org.bonitasoft.forms.server.validator.AbstractFormValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -39,11 +41,15 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.rules.IRule;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterators;
+
 /**
  * @author Romain Bioteau
  */
 public class BonitaSyntaxHighlighting implements IHighlightingExtender {
 
+    private static final String BDM_CLIENT_POJO_JAR_NAME = "bdm-client-pojo.jar";
     public static List<String> BONITA_KEYWORDS = new ArrayList<String>();
 
     static {
@@ -69,32 +75,97 @@ public class BonitaSyntaxHighlighting implements IHighlightingExtender {
 
     @Override
     public List<String> getAdditionalGJDKKeywords() {
-        final ArrayList<String> keyWords = new ArrayList<String>(BONITA_KEYWORDS);
-        final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-        IType daoType;
+        final List<String> keyWords = new ArrayList<String>(BONITA_KEYWORDS);
+        keyWords.addAll(allBusinessObjectDao());
+        return keyWords;
+    }
+
+    protected List<String> allBusinessObjectDao() {
+        final List<String> result = new ArrayList<String>();
+        final IJavaProject javaProject = currentJavaProject();
+
+        IType daoType = null;
         try {
             daoType = javaProject.findType(BusinessObjectDAO.class.getName());
-            final IRegion newRegion = JavaCore.newRegion();
-            final IClasspathEntry[] referencedClasspathEntries = javaProject.getRawClasspath();
-            for (final IClasspathEntry iClasspathEntry : referencedClasspathEntries) {
-                if (iClasspathEntry.getPath().equals(new Path("repositoryDependencies"))) {
-                    final IPackageFragmentRoot[] findPackageFragmentRoots = javaProject.findPackageFragmentRoots(iClasspathEntry);
-                    for (final IPackageFragmentRoot r : findPackageFragmentRoots) {
-                        if (r.getElementName().equals("bdm-client-pojo.jar")) {
-                            newRegion.add(r);
-                        }
-                    }
-                }
-            }
-            final ITypeHierarchy newTypeHierarchy = javaProject.newTypeHierarchy(daoType, newRegion, Repository.NULL_PROGRESS_MONITOR);
-            for (final IType t : newTypeHierarchy.getAllSubtypes(daoType)) {
-                final String elementName = t.getElementName();
-                keyWords.add(Character.toLowerCase(elementName.charAt(0)) + elementName.substring(1, elementName.length()));
-            }
         } catch (final JavaModelException e) {
-            BonitaStudioLog.error(e);
+            BonitaStudioLog.error(String.format("Failed to retrieve %s type", BusinessObjectDAO.class.getName()), e);
         }
-        return keyWords;
+        final ITypeHierarchy newTypeHierarchy = typeHierarchy(javaProject, daoType);
+        if (newTypeHierarchy != null) {
+            for (final IType t : newTypeHierarchy.getAllSubtypes(daoType)) {
+                result.add(unCapitalizeFirstLetter(t.getElementName()));
+            }
+        }
+        return result;
+    }
+
+    protected ITypeHierarchy typeHierarchy(final IJavaProject javaProject, final IType daoType) {
+        IRegion newRegion = null;
+        try {
+            newRegion = regionWithBDM(javaProject);
+        } catch (final JavaModelException e) {
+            BonitaStudioLog.error("Failed to compute region for BDM", e);
+        }
+        ITypeHierarchy newTypeHierarchy = null;
+        try {
+            newTypeHierarchy = javaProject.newTypeHierarchy(daoType, newRegion,
+                    Repository.NULL_PROGRESS_MONITOR);
+        } catch (final JavaModelException e) {
+            BonitaStudioLog.error(String.format("Failed to compute %s hierarchy", daoType.getElementName()), e);
+        }
+        return newTypeHierarchy;
+    }
+
+    private String unCapitalizeFirstLetter(final String elementName) {
+        return Character.toLowerCase(elementName.charAt(0)) + elementName.substring(1, elementName.length());
+    }
+
+    protected IJavaProject currentJavaProject() {
+        return RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+    }
+
+    protected IRegion regionWithBDM(final IJavaProject javaProject) throws JavaModelException {
+        final IRegion newRegion = JavaCore.newRegion();
+        final IClasspathEntry repositoryDependenciesClasspathEntry = find(asIterable(javaProject.getRawClasspath()), repositoryDependenciesEntry(), null);
+        final IPackageFragmentRoot[] fragmentRoots = javaProject.findPackageFragmentRoots(repositoryDependenciesClasspathEntry);
+        final IPackageFragmentRoot packageFragmentRoot = find(asIterable(fragmentRoots), withElementName(BDM_CLIENT_POJO_JAR_NAME), null);
+        if (packageFragmentRoot != null) {
+            newRegion.add(packageFragmentRoot);
+        }
+        return newRegion;
+    }
+
+    private Predicate<IPackageFragmentRoot> withElementName(final String elementName) {
+        return new Predicate<IPackageFragmentRoot>() {
+
+            @Override
+            public boolean apply(final IPackageFragmentRoot input) {
+                return elementName.equals(input.getElementName());
+            }
+        };
+    }
+
+    private <T> Iterable<T> asIterable(final T[] elements) {
+        return new Iterable<T>() {
+
+            @Override
+            public Iterator<T> iterator() {
+                if (elements == null) {
+                    return Iterators.emptyIterator();
+                }
+                return forArray(elements);
+            }
+        };
+    }
+
+    protected Predicate<IClasspathEntry> repositoryDependenciesEntry() {
+        return new Predicate<IClasspathEntry>() {
+
+            @Override
+            public boolean apply(final IClasspathEntry input) {
+                return input.getPath().equals(new Path("repositoryDependencies"));
+            }
+        };
     }
 
     @Override
@@ -104,24 +175,6 @@ public class BonitaSyntaxHighlighting implements IHighlightingExtender {
 
     @Override
     public List<IRule> getAdditionalRules() {
-        return null;
-    }
-
-    public static Class<?> getTypeForKeyWord(final String keyWord) {
-        if (keyWord != null) {
-            final ExpressionConstants expressionConstantsFromName = ExpressionConstantsResolver.getExpressionConstantsFromName(keyWord);
-            if (expressionConstantsFromName != null) {
-                try {
-                    return Class.forName(expressionConstantsFromName.getReturnType());
-                } catch (final Exception e) {
-                    BonitaStudioLog.error(e);
-                }
-            } else if (keyWord.equals(IFormExpressionsAPI.USER_LOCALE)) {
-                return Locale.class;
-            } else if (keyWord.equals(AbstractFormValidator.CLICKED_BUTTON_VARNAME)) {
-                return String.class;
-            }
-        }
         return null;
     }
 
