@@ -68,24 +68,9 @@ public class BatchValidationHandler extends AbstractHandler {
                 new org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory(OffscreenEditPartFactory.getInstance()),
                 new ValidationMarkerProvider());
         if (parameters != null && !parameters.isEmpty()) {
-            final String files = event.getParameter("diagrams");
-            if (files != null) {
-                try {
-                    addDiagramsToValidate(validateOperation, toFileNames(files));
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
+            computeDiagramsToValidate(event, validateOperation);
         } else if (currentEditorIsADiagram()) {
-            final DiagramEditor part = (DiagramEditor) getActiveEditor();
-            final IFile resource = (IFile) part.getEditorInput().getAdapter(IFile.class);
-            if (resource != null) {
-                try {
-                    addDiagramsToValidate(validateOperation, new String[] { resource.getLocation().toFile().getName() });
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
+            computeDiagramToValidate(validateOperation);
         }
 
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
@@ -107,6 +92,12 @@ public class BatchValidationHandler extends AbstractHandler {
             }
         }
 
+        refreshViewerPropertyPart();
+
+        return validateOperation.getResult();
+    }
+
+    protected void refreshViewerPropertyPart() {
         if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
             final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
             if (activePage != null) {
@@ -116,8 +107,29 @@ public class BatchValidationHandler extends AbstractHandler {
                 }
             }
         }
+    }
 
-        return validateOperation.getResult();
+    protected void computeDiagramToValidate(final BatchValidationOperation validateOperation) {
+        final DiagramEditor part = (DiagramEditor) getActiveEditor();
+        final IFile resource = (IFile) part.getEditorInput().getAdapter(IFile.class);
+        if (resource != null) {
+            try {
+                addDiagramsToValidate(validateOperation, new String[] { resource.getLocation().toFile().getName() });
+            } catch (final IOException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+    }
+
+    protected void computeDiagramsToValidate(final ExecutionEvent event, final BatchValidationOperation validateOperation) {
+        final String files = event.getParameter("diagrams");
+        if (files != null) {
+            try {
+                addDiagramsToValidate(validateOperation, toFileNames(files));
+            } catch (final IOException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
     }
 
     protected IEditorPart getActiveEditor() {

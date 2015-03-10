@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.properties.sections.forms.wizard;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -120,7 +120,7 @@ public class SelectGeneratedWidgetsWizardPageTest {
         myData2.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
         data.add(myData);
         data.add(myData2);
-        assertThat(selectGeneratedWidgetsWizardPage.asWidgetMappingList(data)).isNotNull().isNotEmpty().hasSize(2).onProperty("modelElement")
+        assertThat(selectGeneratedWidgetsWizardPage.asWidgetMappingList(data)).isNotNull().isNotEmpty().hasSize(2).extracting("modelElement")
                 .contains(myData, myData2);
     }
 

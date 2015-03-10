@@ -1,51 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <modelVersion>4.0.0</modelVersion>
-
-    <groupId>org.bonitasoft.studio</groupId>
-    <artifactId>platform</artifactId>
-    <packaging>eclipse-target-definition</packaging>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <layout>default</layout>
-            <id>JBoss Snapshots</id>
-            <name>JBoss Snapshots</name>
-            <url>http://snapshots.jboss.org/maven2/</url>
-            <snapshots>
-                <updatePolicy>always</updatePolicy>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.eclipse.tycho.extras</groupId>
-                <artifactId>target-platform-validation-plugin</artifactId>
-                <version>${tychoExtrasVersion}</version>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>validate-target-platform</goal>
-                        </goals>
-                        <configuration>
-                            <targetFiles>
-                                <param>platform.target</param>
-                            </targetFiles>
-                            <failOnError>true</failOnError>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.bonitasoft.studio</groupId>
@@ -53,86 +10,130 @@
         <version>7.0.0-SNAPSHOT</version>
     </parent>
 
-    <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>Generate target file</id>
-                                <phase>initialize</phase>
-                                <configuration>
-                                    <tasks>
-                                        <copy file="${basedir}/original_platform.target" tofile="${basedir}/platform.target" overwrite="true" />
-                                    </tasks>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>mirrored</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>Generate target file</id>
-                                <phase>initialize</phase>
-                                <configuration>
-                                    <tasks>
-                                        <echo>P2 Mirror Repository = ${p2MirrorUrl}</echo>
-                                        <copy file="${basedir}/mirrored.target.template" tofile="${basedir}/platform.target" overwrite="true" />
-                                        <replace token="XXX_REPOSITORY_URL_XXX" value="${p2MirrorUrl}" file="${basedir}/platform.target" />
-                                    </tasks>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>mirror-tp</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jboss.tools.tycho-plugins</groupId>
-                        <artifactId>target-platform-utils</artifactId>
-                        <executions>
-                            <execution>
-                                <id>create-mirror-repo</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>mirror-target-to-repo</goal>
-                                </goals>
-                                <configuration>
-                                <sourceTargetFile>original_platform.target</sourceTargetFile>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+	<groupId>org.bonitasoft.studio</groupId>
+	<artifactId>platform</artifactId>
+	<packaging>eclipse-target-definition</packaging>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>jboss-public-repository-group</id>
+			<name>JBoss Public Repository Group</name>
+			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>jboss-snapshots-repository</id>
+			<name>JBoss Snapshots Repository</name>
+			<url>https://repository.jboss.org/nexus/content/repositories/snapshots/</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho.extras</groupId>
+				<artifactId>target-platform-validation-plugin</artifactId>
+				<version>${tychoExtrasVersion}</version>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>validate-target-platform</goal>
+						</goals>
+						<configuration>
+							<targetFiles>
+								<param>platform.target</param>
+							</targetFiles>
+							<failOnError>true</failOnError>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>Generate target file</id>
+								<phase>initialize</phase>
+								<configuration>
+									<tasks>
+										<copy file="${basedir}/original_platform.target" tofile="${basedir}/platform.target"
+											overwrite="true" />
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>mirrored</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>Generate target file</id>
+								<phase>initialize</phase>
+								<configuration>
+									<tasks>
+										<echo>P2 Mirror Repository = ${p2MirrorUrl}</echo>
+										<copy file="${basedir}/mirrored.target.template" tofile="${basedir}/platform.target"
+											overwrite="true" />
+										<replace token="XXX_REPOSITORY_URL_XXX" value="${p2MirrorUrl}"
+											file="${basedir}/platform.target" />
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>mirror-tp</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jboss.tools.tycho-plugins</groupId>
+						<artifactId>target-platform-utils</artifactId>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>mirror-target-to-repo</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<sourceTargetFile>original_platform.target</sourceTargetFile>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+
+		</profile>
+	</profiles>
 
 
 </project>

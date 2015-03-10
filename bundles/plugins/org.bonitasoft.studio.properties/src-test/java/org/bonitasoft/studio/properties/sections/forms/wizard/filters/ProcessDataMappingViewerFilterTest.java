@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.properties.sections.forms.wizard.filters;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;

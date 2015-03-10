@@ -82,7 +82,9 @@ Require-Bundle: org.eclipse.ui.workbench,
  org.bonitasoft.studio.pagedesigner;bundle-version="6.5.0",
  org.restlet;bundle-version="2.2.2",
  org.eclipse.jdt.launching,
- org.bonitasoft.studio.importer.bos;bundle-version="7.0.0"
+ org.bonitasoft.studio.importer.bos;bundle-version="7.0.0",
+ org.bonitasoft.studio.validation.test,
+ assertj-core;bundle-version="1.5.0"
 Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.api,
  org.bonitasoft.studio.tests.bug,

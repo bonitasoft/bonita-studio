@@ -31,6 +31,7 @@ import org.bonitasoft.studio.properties.test.TestResources;
 import org.bonitasoft.studio.repository.test.swtbot.TestExportBosArchive;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.businessobject.CreateDeployExportBusinessObjectIT;
+import org.bonitasoft.studio.tests.conditions.SWTBOTTestConditions;
 import org.bonitasoft.studio.tests.contract.ContractIT;
 import org.bonitasoft.studio.tests.data.DataWizardIT;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
@@ -75,6 +76,7 @@ import org.junit.runners.Suite;
         NewRunTest.class,
         DeleteWidgetWithContextMenuIT.class,
         DataWizardIT.class,
+        SWTBOTTestConditions.class,
         TestConvertToMessage.class,
         ExtractAsSubprocessTest.class,
         BPMNExportTests.class,
@@ -84,8 +86,6 @@ import org.junit.runners.Suite;
         TestResources.class,
         OpenNameAndVersionForDiagramDialogTest.class,
         TestDuplicate.class,
-        CopyPasteTests.class,
-        DeleteCommandTest.class,
         TestCreateValidatorWizard.class,
         TestLifeCycleWidget.class,
         TestConnectorExpression.class,
@@ -108,8 +108,10 @@ import org.junit.runners.Suite;
         RefactorWidgetIT.class,
         TestFormValidatorIT.class,
         TestOrganizationPassword.class,
-        CreateDeployExportBusinessObjectIT.class,
-        BarImportReportIT.class
+        BarImportReportIT.class,
+        CopyPasteTests.class,
+        DeleteCommandTest.class,
+        CreateDeployExportBusinessObjectIT.class
 })
 public class AllSWTBotTests2 {
 

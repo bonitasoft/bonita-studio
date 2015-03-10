@@ -832,7 +832,7 @@
       </key>
       <key
             commandId="org.eclipse.ui.views.showView"
-            contextId="org.bonitasoft.studio.model.process.diagram.ui.diagramContext"
+            contextId="org.bonitasoft.studio.model.process.diagram.form.ui.diagramContext"
             schemeId="org.bonitasoft.studio.application.scheme"
             sequence="M1+F">
          <parameter
@@ -842,7 +842,7 @@
       </key>
       <key
             commandId="org.eclipse.ui.views.showView"
-            contextId="org.bonitasoft.studio.model.process.diagram.form.ui.diagramContext"
+            contextId="org.bonitasoft.studio.model.process.diagram.ui.diagramContext"
             schemeId="org.bonitasoft.studio.application.scheme"
             sequence="M1+F">
          <parameter

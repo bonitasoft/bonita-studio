@@ -2,15 +2,18 @@ Manifest-Version: 1.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Built-By: genie.modeling.gmp.gmf-tooling
 Bundle-SymbolicName: org.eclipse.gmf.runtime.lite.svg;singleton:=true
-Require-Bundle: org.eclipse.ui,org.eclipse.core.runtime,org.eclipse.dr
- aw2d,org.apache.batik.bridge;bundle-version="[1.6.0,1.7.0)",org.apach
- e.batik.css;bundle-version="[1.6.0,1.7.0)",org.apache.batik.dom;bundl
- e-version="[1.6.0,1.7.0)",org.apache.batik.dom.svg;bundle-version="[1
- .6.0,1.7.0)",org.apache.batik.ext.awt;bundle-version="[1.6.0,1.7.0)",
- org.apache.batik.svggen;bundle-version="[1.6.0,1.7.0)",org.apache.bat
- ik.transcoder;bundle-version="[1.6.0,1.7.0)",org.apache.batik.util;bu
- ndle-version="[1.6.0,1.7.0)",org.w3c.dom.svg;bundle-version="[1.1.0,2
- .0.0)"
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.draw2d,
+ org.apache.batik.bridge;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.css;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.dom;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.dom.svg;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.ext.awt;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.svggen;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.transcoder;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.util;bundle-version="[1.6.0,1.7.0)",
+ org.w3c.dom.svg;bundle-version="[1.1.0,2.0.0)"
 Bundle-Activator: org.eclipse.gmf.internal.runtime.lite.svg.Activator
 Export-Package: org.eclipse.gmf.internal.runtime.lite.svg;x-internal:=
  true,org.eclipse.gmf.runtime.lite.svg

@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.bonitasoft.studio</groupId>
-    <artifactId>studio</artifactId>
-    <version>7.0.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>Bonita Studio</name>
-    <properties>
-        <!--forceContextQualifier -->
-        <tychoVersion>0.20.0</tychoVersion>
-        <tychoExtrasVersion>0.20.0</tychoExtrasVersion>
-        <os-jvm-flags></os-jvm-flags>
-        <bundle.version>7.0.0-SNAPSHOT</bundle.version>
-        <engine.version>7.0.0-SNAPSHOT</engine.version>
-        <connector.version>6.1.1</connector.version>
-        <simulation.version>6.1.0</simulation.version>
-        <filters.version>7.0.0-SNAPSHOT</filters.version>
-        <theme.builder.version>6.1.0</theme.builder.version>
-        <watchdog.version>6.0.1</watchdog.version>
-        <p2MirrorUrl>http://repositories.rd.lan/p2/7.0</p2MirrorUrl>
-        <!-- Sonar -->
-        <jacoco.version>0.7.2.201409121644</jacoco.version>
-        <sonar.language>java</sonar.language>
-        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <sonar.junit.reportsPath>target/surefire-reports/</sonar.junit.reportsPath>
-        <sonar.jacoco.reportPath>target/jacoco.exec</sonar.jacoco.reportPath>
-        <sonar.jacoco.itReportPath>${project.basedir}/../../../target/jacoco-it.exec</sonar.jacoco.itReportPath>
-        <!-- Skip generated code -->
-        <sonar.skippedModules>org.bonitasoft.studio.model,org.bonitasoft.studio.model.edit,org.bonitasoft.studio.diagram,org.bonitasoft.studio.diagram.form,org.bonitasoft.studio.connector.model,org.bonitasoft.studio.tests-utils</sonar.skippedModules>
-        <sonar.exclusions>src/org/w3/**/*,src/org/omg/**/*,org/wfmc/**/*,src/org/jbpm/**/*,**/Messages.java,
-            file:**/src-gen/**/*,src/org/bonitasoft/studio/connector/model/definition/provider/*,src/org/bonitasoft/studio/connector/model/implementation/provider/*,src/org/bonitasoft/studio/actor/model/organization/*</sonar.exclusions>
-        <sonar.skipDesign>true</sonar.skipDesign><!-- Takes too much time -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.bonitasoft.studio</groupId>
+	<artifactId>studio</artifactId>
+	<version>7.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Bonita Studio</name>
+	<properties>
+		<!--forceContextQualifier -->
+		<tychoVersion>0.21.0</tychoVersion>
+		<tychoExtrasVersion>0.21.0</tychoExtrasVersion>
+		<os-jvm-flags></os-jvm-flags>
+		<bundle.version>7.0.0-SNAPSHOT</bundle.version>
+		<engine.version>7.0.0-SNAPSHOT</engine.version>
+		<connector.version>6.1.1</connector.version>
+		<simulation.version>6.1.0</simulation.version>
+		<filters.version>7.0.0-SNAPSHOT</filters.version>
+		<theme.builder.version>6.1.0</theme.builder.version>
+		<watchdog.version>6.0.1</watchdog.version>
+		<p2MirrorUrl>http://repositories.rd.lan/p2/7.0</p2MirrorUrl>
+		<!-- Sonar -->
+		<jacoco.version>0.7.2.201409121644</jacoco.version>
+		<sonar.language>java</sonar.language>
+		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.junit.reportsPath>target/surefire-reports/</sonar.junit.reportsPath>
+		<sonar.jacoco.reportPath>target/jacoco.exec</sonar.jacoco.reportPath>
+		<sonar.jacoco.itReportPath>${project.basedir}/../../../target/jacoco-it.exec</sonar.jacoco.itReportPath>
+		<!-- Skip generated code -->
+		<sonar.skippedModules>org.bonitasoft.studio.model,org.bonitasoft.studio.model.edit,org.bonitasoft.studio.diagram,org.bonitasoft.studio.diagram.form,org.bonitasoft.studio.connector.model,org.bonitasoft.studio.tests-utils</sonar.skippedModules>
+		<sonar.exclusions>org/w3/**/*,org/omg/**/*,org/wfmc/**/*,org/jbpm/**/*,**/Messages.java, file:**/src-gen/**/*,org/bonitasoft/studio/connector/model/definition/provider/*,org/bonitasoft/studio/connector/model/implementation/provider/*,org/bonitasoft/studio/actor/model/organization/*</sonar.exclusions>
+		<sonar.skipDesign>true</sonar.skipDesign><!-- Takes too much time -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
     <modules>
         <module>platform</module>
@@ -55,38 +55,38 @@
                     <artifactId>image-overlay-plugin</artifactId>
                     <version>1.0.1</version>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.5.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.16</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.5</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.eclipse.tycho</groupId>
-                    <artifactId>tycho-versions-plugin</artifactId>
-                    <version>${tychoVersion}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.eclipse.tycho.extras</groupId>
-                    <artifactId>tycho-eclipserun-plugin</artifactId>
-                    <version>${tychoExtrasVersion}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.eclipse.tycho</groupId>
-                    <artifactId>tycho-packaging-plugin</artifactId>
-                    <version>${tychoVersion}</version>
-                    <configuration>
-                        <strictBinIncludes>false</strictBinIncludes>
-                        <strictVersions>false</strictVersions>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.5.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.17</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-versions-plugin</artifactId>
+					<version>${tychoVersion}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho.extras</groupId>
+					<artifactId>tycho-eclipserun-plugin</artifactId>
+					<version>${tychoExtrasVersion}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-packaging-plugin</artifactId>
+					<version>${tychoVersion}</version>
+					<configuration>
+						<strictBinIncludes>false</strictBinIncludes>
+						<strictVersions>false</strictVersions>
                         <archive>
                             <addMavenDescriptor>false</addMavenDescriptor>
                         </archive>
