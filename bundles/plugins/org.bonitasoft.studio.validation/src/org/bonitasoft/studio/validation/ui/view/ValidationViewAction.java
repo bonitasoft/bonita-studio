@@ -80,7 +80,7 @@ public class ValidationViewAction extends Action {
 
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         try {
-            service.run(true, false, validateOperation);
+            service.run(true, true, validateOperation);
         } catch (final InvocationTargetException e) {
             BonitaStudioLog.error(e);
         } catch (final InterruptedException e) {

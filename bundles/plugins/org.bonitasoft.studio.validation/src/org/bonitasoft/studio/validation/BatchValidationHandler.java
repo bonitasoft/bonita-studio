@@ -87,7 +87,7 @@ public class BatchValidationHandler extends AbstractHandler {
 
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         try {
-            service.run(true, false, validateOperation);
+            service.run(true, true, validateOperation);
         } catch (final InvocationTargetException e) {
             throw new ExecutionException("Error during Validation", e);
         } catch (final InterruptedException e) {
