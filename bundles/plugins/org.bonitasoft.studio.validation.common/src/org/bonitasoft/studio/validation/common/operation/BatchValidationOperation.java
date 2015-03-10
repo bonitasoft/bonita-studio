@@ -14,10 +14,11 @@
  */
 package org.bonitasoft.studio.validation.common.operation;
 
+import static org.bonitasoft.studio.model.process.diagram.providers.ProcessValidationProvider.runWithConstraints;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,6 +40,8 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.validation.model.EvaluationMode;
 import org.eclipse.emf.validation.service.IBatchValidator;
 import org.eclipse.emf.validation.service.ModelValidationService;
@@ -78,13 +81,21 @@ public class BatchValidationOperation implements IRunnableWithProgress {
         monitor.beginTask(Messages.validating, diagramsToDiagramEditPart.size());
 
         buildEditPart();
-        clearMarkers();
+        validationMarkerProvider.clearMarkers(diagramsToDiagramEditPart);
         for (final Entry<Diagram, DiagramEditPart> entry : diagramsToDiagramEditPart.entrySet()) {
             final DiagramEditPart diagramEp = entry.getValue();
             final Diagram diagram = entry.getKey();
             if (diagramEp != null) {
                 monitor.subTask(subTaskName(diagramEp.resolveSemanticElement()));
-                validate(diagramEp, diagram, monitor);
+                final TransactionalEditingDomain txDomain = TransactionUtil.getEditingDomain(diagram);
+                runWithConstraints(txDomain, new Runnable() {
+
+                    @Override
+                    public void run() {
+                        validate(diagramEp, diagram, monitor);
+
+                    }
+                });
             }
         }
 
@@ -107,9 +118,6 @@ public class BatchValidationOperation implements IRunnableWithProgress {
     protected void validate(final DiagramEditPart diagramEditPart, final View view, final IProgressMonitor monitor) {
         final IFile target = view.eResource() != null ?
                 WorkspaceSynchronizer.getFile(view.eResource()) : null;
-        if (target != null) {
-            ProcessMarkerNavigationProvider.deleteMarkers(target);
-        }
         final Diagnostic diagnostic = validationMarkerProvider.runEMFValidator(view);
         validationMarkerProvider.createMarkers(target, diagnostic, diagramEditPart);
         final IBatchValidator validator =
@@ -120,25 +128,6 @@ public class BatchValidationOperation implements IRunnableWithProgress {
         if (view.isSetElement() && view.getElement() != null) {
             final IStatus status = validator.validate(view.getElement(), monitor);
             validationMarkerProvider.createMarkers(target, status, diagramEditPart);
-        }
-    }
-
-    private void clearMarkers() {
-        final Iterator<Entry<Diagram, DiagramEditPart>> iterator = diagramsToDiagramEditPart.entrySet().iterator();
-        while (iterator.hasNext()) {
-            final Entry<Diagram, DiagramEditPart> entry = iterator.next();
-            final Diagram d = entry.getKey();
-            final DiagramEditPart de = entry.getValue();
-            if (de != null) {
-                final EObject resolvedSemanticElement = de.resolveSemanticElement();
-                if (resolvedSemanticElement instanceof Form) {
-                    final IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
-                    if (target != null) {
-                        ProcessMarkerNavigationProvider.deleteMarkers(target);
-                        break;
-                    }
-                }
-            }
         }
     }
 

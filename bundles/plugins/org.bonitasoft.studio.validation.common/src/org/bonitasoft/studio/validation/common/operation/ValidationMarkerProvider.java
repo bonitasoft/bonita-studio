@@ -18,9 +18,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.Triple;
+import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.eclipse.core.resources.IFile;
@@ -29,14 +32,16 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.emf.validation.model.IConstraintStatus;
+import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Some validation marker util generated from GMF
- * 
+ *
  * @author Romain Bioteau
  */
 public class ValidationMarkerProvider {
@@ -162,4 +167,24 @@ public class ValidationMarkerProvider {
         }
         return targetElementCollector;
     }
+
+    public void clearMarkers(final Map<Diagram, DiagramEditPart> diagramsToDiagramEditPart) {
+        final Iterator<Entry<Diagram, DiagramEditPart>> iterator = diagramsToDiagramEditPart.entrySet().iterator();
+        while (iterator.hasNext()) {
+            final Entry<Diagram, DiagramEditPart> entry = iterator.next();
+            final Diagram d = entry.getKey();
+            final DiagramEditPart de = entry.getValue();
+            if (de != null) {
+                final EObject resolvedSemanticElement = de.resolveSemanticElement();
+                if (resolvedSemanticElement instanceof Form) {
+                    final IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
+                    if (target != null) {
+                        ProcessMarkerNavigationProvider.deleteMarkers(target);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
 }
