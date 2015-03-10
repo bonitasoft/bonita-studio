@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.importer.test.bos;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-
-import junit.framework.TestCase;
 
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -28,60 +28,64 @@ import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.Test;
 
 /**
  * @author Romain Bioteau
  */
-public class TestBOSArchiveImport extends TestCase {
+public class TestBOSArchiveImport {
 
+    @Test
     public void testImportBOSArchiveLight() throws Exception {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
         final File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("MyDiagram_1_0.bos")).getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.run(new NullProgressMonitor());
-        assertNotNull(operation.getStatus());
+        assertThat(operation.getStatus()).isNotNull();
     }
 
+    @Test
     public void testImportBOSArchiveFull() throws Exception {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
         final File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("testRepo_100912_1757.bos")).getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.run(new NullProgressMonitor());
-        assertNotNull(operation.getStatus());
+        assertThat(operation.getStatus()).isNotNull();
     }
 
+    @Test
     public void testImportSeveralDiagrams() throws IOException, InvocationTargetException, InterruptedException {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
         final File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("severalDiagramsImportTest.bos")).getFile());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.run(new NullProgressMonitor());
-        assertNotNull(operation.getStatus());
+        assertThat(operation.getStatus()).isNotNull();
         final DiagramRepositoryStore store = RepositoryManager.getInstance().getCurrentRepository()
                 .getRepositoryStore(DiagramRepositoryStore.class);
         final DiagramFileStore diagram1 = store.getDiagram("diagram1", "1.0");
-        assertNotNull("diagram1 was not imported correctly", diagram1);
+        assertThat(diagram1).isNotNull().as("diagram1 was not imported correctly");
         final DiagramFileStore diagram2 = store.getDiagram("diagram2", "1.0");
-        assertNotNull("diagram2 was not imported correctly", diagram2);
+        assertThat(diagram2).isNotNull().as("diagram2 was not imported correctly");
         final DiagramFileStore diagram3 = store.getDiagram("diagram3", "1.0");
-        assertNotNull("diagram2 was not imported correctly", diagram3);
+        assertThat(diagram3).isNotNull().as("diagram3 was not imported correctly");
     }
 
+    @Test
     public void testImportBOSArchiveDemoProcess() throws Exception {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
         final File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("FillDBForDemo_1_0.bos")).getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.run(new NullProgressMonitor());
-        assertNotNull(operation.getStatus());
-        assertTrue(operation.getStatus().getMessage(), operation.getStatus().isOK());
+        assertThat(operation.getStatus()).isNotNull();
 
-        assertTrue("Missing connector source after import", ResourcesPlugin.getWorkspace().getRoot().getProject(CommonRepositoryPlugin.getCurrentRepository())
+        final boolean javaFileExists = ResourcesPlugin.getWorkspace().getRoot().getProject(CommonRepositoryPlugin.getCurrentRepository())
                 .getFolder("src-connectors").getFolder("org").getFolder("bonitasoft").getFolder("connector").getFolder("demo").getFile("FillDBImpl.java")
-                .exists());
+                .exists();
+        assertThat(javaFileExists).isTrue();
 
     }
-
 }
