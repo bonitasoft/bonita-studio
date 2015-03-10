@@ -90,11 +90,4 @@ public class OffscreenEditPartFactoryTest {
         verify(offscreenEditPartFactory).runInUI(notNull(Runnable.class));
     }
 
-    @Test(expected = NullPointerException.class)
-    public void should_throw_a_NullPointerException_if_diagram_element_is_null() throws Exception {
-        final Diagram diagram = NotationFactory.eINSTANCE.createDiagram();
-
-        offscreenEditPartFactory.createOffscreenDiagramEditPart(diagram);
-    }
-
 }

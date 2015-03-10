@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.validation.common.operation;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,15 +37,18 @@ public class OffscreenEditPartFactory {
 
     public DiagramEditPart createOffscreenDiagramEditPart(final Diagram d) {
         final EObject element = d.getElement();
-        checkNotNull(element);
-        final OffscreenDiagramEditPartRunnable runnable = new OffscreenDiagramEditPartRunnable(d, factory);
-        if (inUIThread()) {
-            runnable.run();
-        } else {
-            runInUI(runnable);
+        if (element != null) {
+            final OffscreenDiagramEditPartRunnable runnable = new OffscreenDiagramEditPartRunnable(d, factory);
+            if (inUIThread()) {
+                runnable.run();
+            } else {
+                runInUI(runnable);
+            }
+
+            toDispose.add(runnable.getDisposable());
+            return runnable.getDiagramEditPart();
         }
-        toDispose.add(runnable.getDisposable());
-        return runnable.getDiagramEditPart();
+        return null;
     }
 
     protected void runInUI(final Runnable runnable) {

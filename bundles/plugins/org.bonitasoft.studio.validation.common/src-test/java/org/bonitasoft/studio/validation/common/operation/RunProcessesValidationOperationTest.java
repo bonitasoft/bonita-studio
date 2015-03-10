@@ -18,12 +18,9 @@ import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
-import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -31,7 +28,6 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.junit.Before;
@@ -50,10 +46,6 @@ public class RunProcessesValidationOperationTest {
     @Mock
     private IProgressMonitor monitor;
     @Mock
-    private DiagramFileStore fStore;
-    @Mock
-    private TransactionalEditingDomain editingDomain;
-    @Mock
     private BatchValidationOperation validationOperation;
 
     /**
@@ -67,10 +59,8 @@ public class RunProcessesValidationOperationTest {
     @Test
     public void should_run_Batch_validation_operation() throws Exception {
         doReturn(ValidationStatus.ok()).when(validationOperation).getResult();
-        doReturn(fStore).when(runProcessesValidationOperation).asDiagramFileStore(notNull(AbstractProcess.class));
-        final Resource eResource = new ResourceImpl();
-        doReturn(eResource).when(fStore).getEMFResource();
 
+        final Resource eResource = new ResourceImpl();
         final Pool pool = aPool().build();
         final MainProcess mainProcess = ProcessFactory.eINSTANCE.createMainProcess();
         mainProcess.getElements().add(pool);
@@ -83,30 +73,8 @@ public class RunProcessesValidationOperationTest {
         runProcessesValidationOperation.addProcess(pool).run(monitor);
 
         assertThat(runProcessesValidationOperation.getStatus()).isOK();
-        verify(editingDomain, never()).runExclusive(notNull(Runnable.class));
         verify(validationOperation).addDiagram(diagram);
         verify(validationOperation).run(monitor);
-    }
-
-    @Test
-    public void should_run_find_diagram_in_editing_domain() throws Exception {
-        doReturn(ValidationStatus.ok()).when(validationOperation).getResult();
-        doReturn(fStore).when(runProcessesValidationOperation).asDiagramFileStore(notNull(AbstractProcess.class));
-        final Resource eResource = new ResourceImpl();
-        doReturn(eResource).when(fStore).getEMFResource();
-
-        final Pool pool = aPool().build();
-        final MainProcess mainProcess = ProcessFactory.eINSTANCE.createMainProcess();
-        mainProcess.getElements().add(pool);
-        eResource.getContents().add(mainProcess);
-
-        final Diagram diagram = aDiagram(mainProcess);
-        eResource.getContents().add(diagram);
-        doReturn(editingDomain).when(runProcessesValidationOperation).editingDomain(notNull(Resource.class));
-
-        runProcessesValidationOperation.addProcess(pool).run(monitor);
-
-        verify(editingDomain).runExclusive(notNull(Runnable.class));
     }
 
     private Diagram aDiagram(final MainProcess mainProcess) {
