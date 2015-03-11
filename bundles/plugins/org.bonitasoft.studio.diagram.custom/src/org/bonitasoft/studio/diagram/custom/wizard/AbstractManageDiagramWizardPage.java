@@ -98,6 +98,7 @@ public abstract class AbstractManageDiagramWizardPage extends WizardPage impleme
 
             }
         });
+        diagramTree.getViewer().getTree().setFocus();
     }
 
     public abstract ISelectionChangedListener diagramTreeSelectionChangeListener();
