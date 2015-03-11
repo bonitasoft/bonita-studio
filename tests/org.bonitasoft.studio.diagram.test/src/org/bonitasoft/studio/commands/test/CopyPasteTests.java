@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.commands.test;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.diagram.custom.editPolicies.NextElementEditPolicy;
 import org.bonitasoft.studio.model.process.Activity;
@@ -53,6 +54,7 @@ public class CopyPasteTests extends SWTBotGefTestCase {
     @Override
     @Before
     public void setUp() {
+        FileActionDialog.setDisablePopup(true);
         bot.saveAllEditors();
         bot.closeAllEditors();
     }
@@ -93,6 +95,7 @@ public class CopyPasteTests extends SWTBotGefTestCase {
         waitForcloseAction(editor2);
         final SWTBotMenu open = bot.menu("Diagram").menu("Open...");
         open.click();
+
         final BotOpenDiagramDialog botOpenDiagramDialog = new BotOpenDiagramDialog(bot);
         botOpenDiagramDialog.selectDiagram(diagram1.getName(), diagram1.getVersion()).delete();
         botOpenDiagramDialog.selectDiagram(diagram2.getName(), diagram2.getVersion()).open();

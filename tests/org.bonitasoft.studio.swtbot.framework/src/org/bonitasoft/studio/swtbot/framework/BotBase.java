@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
@@ -20,7 +21,7 @@ import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
  *
  * @author Joachim Segala
  */
-public class BotBase {
+public class BotBase implements SWTBotConstants {
 
     protected final SWTGefBot bot;
     private final Keyboard keyboard;
