@@ -71,6 +71,8 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaTestSuite.class)
 @Suite.SuiteClasses({
+        CopyPasteTests.class,
+        DeleteCommandTest.class,
         TestBug1640.class,
         NewRunTest.class,
         DeleteWidgetWithContextMenuIT.class,
@@ -108,8 +110,6 @@ import org.junit.runners.Suite;
         TestFormValidatorIT.class,
         TestOrganizationPassword.class,
         BarImportReportIT.class,
-        CopyPasteTests.class,
-        DeleteCommandTest.class,
         CreateDeployExportBusinessObjectIT.class
 })
 public class AllSWTBotTests2 {
