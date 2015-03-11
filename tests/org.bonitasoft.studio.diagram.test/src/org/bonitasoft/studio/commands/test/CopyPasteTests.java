@@ -27,6 +27,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.application.BotOpenDiagramDialog;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.draw2d.IFigure;
@@ -37,18 +38,20 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author Mickael Istria
  */
+@RunWith(SWTBotJunit4ClassRunner.class)
 public class CopyPasteTests extends SWTBotGefTestCase {
 
     @Override
@@ -93,10 +96,8 @@ public class CopyPasteTests extends SWTBotGefTestCase {
         waitForcloseAction(editor1);
         editor1.saveAndClose();
         waitForcloseAction(editor2);
-        final SWTBotMenu open = bot.menu("Diagram").menu("Open...");
-        open.click();
 
-        final BotOpenDiagramDialog botOpenDiagramDialog = new BotOpenDiagramDialog(bot);
+        final BotOpenDiagramDialog botOpenDiagramDialog = new BotApplicationWorkbenchWindow(bot).open();
         botOpenDiagramDialog.selectDiagram(diagram1.getName(), diagram1.getVersion()).delete();
         botOpenDiagramDialog.selectDiagram(diagram2.getName(), diagram2.getVersion()).open();
         editor2 = bot.gefEditor(bot.activeEditor().getTitle());
