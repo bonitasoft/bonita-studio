@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>de</artifactId>
+    <artifactId>ja</artifactId>
     <groupId>org.bonitasoft.studio.translations</groupId>
     <version>7.0.0-SNAPSHOT</version>
   </parent>
