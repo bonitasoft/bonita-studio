@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2009 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.bonitasoft.studio.test.swtbot.suite;
 
 import org.bonitasoft.expressions.test.TestPatternExpressionViewer;
@@ -52,84 +67,66 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-/**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2.0 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
-
 @RunWith(BonitaTestSuite.class)
 @Suite.SuiteClasses({
-    TestBugsSWTBot.class,
-    DiagramTests.class,
-    TestRenameDiagram.class,
-    TestDatabaseConnectorOutputMode.class,
-    TestPatternExpressionViewer.class,
-    TestLoadSaveConnectorConfiguration.class,
-    TestConditionExpression.class,
-    TestConfigurationDialog.class,
-    OrganizationCreationTest.class,
-    TestDeleteDiagrams.class,
-    ActorDefinitionTranslationsTest.class,
-    ActorFilterDefinitionTest.class,
-    ActorFilterDefinitionWizardPageTest.class,
-    ActorFilterEditionTest.class,
-    ActorFilterImplementationTest.class,
-    SWTBotActorFilterExportTests.class,
-    ConnectorEditionTest.class,
-    ConnectorDefinitionWizardPageTest.class,
-    ConnectorImplementationTest.class,
-    TestTextAreaInConnectorWizard.class,
-    SWTBotConnectorExportTests.class,
-    SWTBotConnectorDefinitionTest.class,
-    TestDecisionTable.class,
-    TestThrowCatchMessage.class,
-    TestWebPurchase.class,
-    TestAddValidatorToProcessAndRun.class,
-    FormsDiagramTests.class,
-    PageTemplateEditionIT.class,
-    TestUndoRedoStackLimit.class,
-    TestOpenDiagram.class,
-    TestDeleteTaskWithForm.class,
-    TestDebugFeature.class,
-    OpenNameAndVersionDiagramTest.class,
-    OpenNameAndVersionDiagramForDiagramTest.class,
-    //WORKAROUND: put at the end otherwise when doing a new run after, it fails
-    ConnectorDefinitionTranslationsTest.class
+        TestBugsSWTBot.class,
+        DiagramTests.class,
+        TestRenameDiagram.class,
+        TestDatabaseConnectorOutputMode.class,
+        TestPatternExpressionViewer.class,
+        TestLoadSaveConnectorConfiguration.class,
+        TestConditionExpression.class,
+        TestConfigurationDialog.class,
+        OrganizationCreationTest.class,
+        TestDeleteDiagrams.class,
+        ActorDefinitionTranslationsTest.class,
+        ActorFilterDefinitionTest.class,
+        ActorFilterDefinitionWizardPageTest.class,
+        ActorFilterEditionTest.class,
+        ActorFilterImplementationTest.class,
+        SWTBotActorFilterExportTests.class,
+        ConnectorEditionTest.class,
+        ConnectorDefinitionWizardPageTest.class,
+        ConnectorImplementationTest.class,
+        TestTextAreaInConnectorWizard.class,
+        SWTBotConnectorExportTests.class,
+        SWTBotConnectorDefinitionTest.class,
+        TestDecisionTable.class,
+        TestThrowCatchMessage.class,
+        TestWebPurchase.class,
+        TestAddValidatorToProcessAndRun.class,
+        FormsDiagramTests.class,
+        PageTemplateEditionIT.class,
+        TestUndoRedoStackLimit.class,
+        TestOpenDiagram.class,
+        TestDeleteTaskWithForm.class,
+        TestDebugFeature.class,
+        OpenNameAndVersionDiagramTest.class,
+        OpenNameAndVersionDiagramForDiagramTest.class,
+        //WORKAROUND: put at the end otherwise when doing a new run after, it fails
+        ConnectorDefinitionTranslationsTest.class
 })
 public class AllSWTBotTests {
 
-
     @BeforeClass
     public static void setUp() {
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
         ConnectorEditPlugin.getPlugin().getPreferenceStore().setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
-        WebBrowserUIPlugin.getInstance().getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
+        WebBrowserUIPlugin.getInstance().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         FileActionDialog.setDisablePopup(true);
     }
 
     @AfterClass
     public static void tearDown() {
-        for(final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.tests.heapdump")){
+        for (final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
+                "org.bonitasoft.studio.tests.heapdump")) {
             IHeapDumper dumper;
             try {
                 dumper = (IHeapDumper) elem.createExecutableExtension("class");
-                dumper.dumpHeap(AllSWTBotTests.class.getSimpleName()+".hprof", false);
+                dumper.dumpHeap(AllSWTBotTests.class.getSimpleName() + ".hprof", false);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
