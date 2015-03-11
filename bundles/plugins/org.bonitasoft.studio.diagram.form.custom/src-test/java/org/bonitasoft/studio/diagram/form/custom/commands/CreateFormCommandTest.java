@@ -1,4 +1,3 @@
-package org.bonitasoft.studio.diagram.form.custom.commands;
 /**
  * Copyright (C) 2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
@@ -6,22 +5,28 @@ package org.bonitasoft.studio.diagram.form.custom.commands;
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.bonitasoft.studio.diagram.form.custom.commands;
 
-
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.expression.assertions.ExpressionAssert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
 import java.util.List;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.field.FieldType;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
@@ -29,6 +34,7 @@ import org.bonitasoft.studio.diagram.form.custom.model.WidgetContainer;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
 import org.bonitasoft.studio.model.form.CheckBoxSingleFormField;
 import org.bonitasoft.studio.model.form.FileWidget;
@@ -44,6 +50,7 @@ import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.ViewForm;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.form.WidgetLayoutInfo;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.Document;
@@ -62,7 +69,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CreateFormCommandTest {
@@ -72,17 +78,54 @@ public class CreateFormCommandTest {
     @Mock
     private PageFlow pageFlow;
 
+    private SimpleField firstNameAttribute;
+
+    private SimpleField validAttribute;
+
+    private SimpleField colors;
+
+    private BusinessObjectData data;
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        commandUnderTest = new CreateFormCommand(ProcessFactory.eINSTANCE.createTask(),
+        final BusinessObject employee = new BusinessObject();
+        employee.setQualifiedName("Employee");
+
+        firstNameAttribute = new SimpleField();
+        firstNameAttribute.setName("firstName");
+        firstNameAttribute.setType(FieldType.STRING);
+        firstNameAttribute.setCollection(false);
+
+        validAttribute = new SimpleField();
+        validAttribute.setName("valid");
+        validAttribute.setType(FieldType.BOOLEAN);
+        validAttribute.setCollection(false);
+
+        colors = new SimpleField();
+        colors.setName("colors");
+        colors.setType(FieldType.STRING);
+        colors.setCollection(true);
+
+        employee.getFields().add(firstNameAttribute);
+        employee.getFields().add(validAttribute);
+        employee.getFields().add(colors);
+
+        data = ProcessFactory.eINSTANCE.createBusinessObjectData();
+        data.setDataType(ProcessFactory.eINSTANCE.createBusinessObjectType());
+        data.setName("currentEmployee");
+        data.setBusinessDataRepositoryId("pojo");
+        data.setEClassName("Employee");
+        data.setClassName("org.bonita.pojo.Employee");
+
+        commandUnderTest = spy(new CreateFormCommand(ProcessFactory.eINSTANCE.createTask(),
                 ProcessPackage.Literals.PAGE_FLOW__FORM,
                 "Test form",
                 "Test form description",
-                Collections.<WidgetMapping>emptyList(),
-                null);
+                Collections.<WidgetMapping> emptyList(),
+                null));
     }
 
     /**
@@ -122,7 +165,7 @@ public class CreateFormCommandTest {
                 ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM,
                 "Test form",
                 "Test form description",
-                Collections.<WidgetMapping>emptyList(),
+                Collections.<WidgetMapping> emptyList(),
                 null);
         final Form viewForm = commandUnderTest.createForm();
         assertThat(viewForm).isNotNull().isInstanceOf(ViewForm.class);
@@ -144,7 +187,7 @@ public class CreateFormCommandTest {
                 ProcessPackage.Literals.PAGE_FLOW__FORM,
                 "Test form",
                 "Test form description",
-                Collections.<WidgetMapping>emptyList(),
+                Collections.<WidgetMapping> emptyList(),
                 null);
         final Form form = commandUnderTest.createForm();
         assertThat(form).isNotNull().isInstanceOf(Form.class);
@@ -161,13 +204,12 @@ public class CreateFormCommandTest {
         assertThat(exp.getReferencedElements()).isEmpty();
     }
 
-
     @Test
     public void shouldGetVerticalSpan_ReturnOneIfWidgetIsNotAGroup() throws Exception {
-        for(final EClassifier eClass : FormFactory.eINSTANCE.getEPackage().getEClassifiers()){
-            if(eClass instanceof EClass && !((EClass) eClass).isAbstract() && FormPackage.Literals.WIDGET.isSuperTypeOf((EClass) eClass)){
+        for (final EClassifier eClass : FormFactory.eINSTANCE.getEPackage().getEClassifiers()) {
+            if (eClass instanceof EClass && !((EClass) eClass).isAbstract() && FormPackage.Literals.WIDGET.isSuperTypeOf((EClass) eClass)) {
                 final Widget w = (Widget) FormFactory.eINSTANCE.create((EClass) eClass);
-                if(!(w instanceof Group)){
+                if (!(w instanceof Group)) {
                     assertThat(commandUnderTest.getVerticalSpan(w)).isEqualTo(1);
                 }
             }
@@ -494,6 +536,86 @@ public class CreateFormCommandTest {
         assertThat(wLayout.getLine()).isEqualTo(nLine);
         assertThat(wLayout.getHorizontalSpan()).isEqualTo(horizontalSpan);
         assertThat(wLayout.getVerticalSpan()).isEqualTo(verticalSpan);
+    }
+
+    @Test
+    public void shouldAddMappingExpressions_AddFieldMappings() throws Exception {
+        final Widget widget = FormFactory.eINSTANCE.createTextFormField();
+        final WidgetMapping widgetMappingEx = new WidgetMapping(data);
+        final WidgetMapping child = new WidgetMapping(firstNameAttribute);
+        widgetMappingEx.addChild(child);
+        commandUnderTest.addMappingExpressions(child, widget);
+        verify(commandUnderTest).addInputExpressionForBusinessDataField(eq(data), any(SimpleField.class), eq(widget));
+        verify(commandUnderTest).addOutputOperationForBusinessDataField(eq(data), any(SimpleField.class), eq(widget));
+    }
+
+    @Test
+    public void shouldAddOutputOperationForBusinessDataField_AddActionOnWidget() throws Exception {
+        final Widget widget = FormFactory.eINSTANCE.createTextFormField();
+        widget.setName("firstName1");
+        commandUnderTest.addOutputOperationForBusinessDataField(data, firstNameAttribute, widget);
+        final Operation action = widget.getAction();
+        assertThat(action).isNotNull();
+        final Expression leftOperand = action.getLeftOperand();
+        assertThat(leftOperand).isNotNull();
+        assertThat(leftOperand.getType()).isEqualTo(ExpressionConstants.VARIABLE_TYPE);
+        assertThat(leftOperand.getName()).isEqualTo("currentEmployee");
+        assertThat(leftOperand.getReferencedElements()).isNotEmpty().hasSize(1);
+        assertThat(leftOperand.getReturnType()).isEqualTo("org.bonita.pojo.Employee");
+        final Expression rightOperand = action.getRightOperand();
+        assertThat(rightOperand).isNotNull();
+        assertThat(rightOperand.getType()).isEqualTo(ExpressionConstants.FORM_FIELD_TYPE);
+        assertThat(rightOperand.getName()).isEqualTo("field_firstName1");
+        assertThat(rightOperand.getReferencedElements()).isNotEmpty().hasSize(1);
+        assertThat(rightOperand.getReturnType()).isEqualTo(String.class.getName());
+        final Operator operator = action.getOperator();
+        assertThat(operator).isNotNull();
+        assertThat(operator.getType()).isEqualTo(ExpressionConstants.JAVA_METHOD_OPERATOR);
+        assertThat(operator.getExpression()).isNotNull().isEqualTo("setFirstName");
+        assertThat(operator.getInputTypes()).isNotEmpty().containsOnly(String.class.getName());
+    }
+
+    @Test
+    public void shouldAddInputExpressionForBusinessDataEAttribute_AddInputExpressionOnWidget() throws Exception {
+        final Widget widget = FormFactory.eINSTANCE.createTextFormField();
+        widget.setName("firstName1");
+        commandUnderTest.addInputExpressionForBusinessDataField(data, firstNameAttribute, widget);
+        final Expression inputExpression = widget.getInputExpression();
+        assertThat(inputExpression).isNotNull();
+        assertThat(inputExpression.getType()).isEqualTo(ExpressionConstants.JAVA_TYPE);
+        assertThat(inputExpression.getName()).isEqualTo("currentEmployee - org.bonita.pojo.Employee#getFirstName");
+        assertThat(inputExpression.getContent()).isEqualTo("getFirstName");
+        assertThat(inputExpression.getReferencedElements()).isNotEmpty().hasSize(1);
+        assertThat(inputExpression.getReturnType()).isEqualTo(String.class.getName());
+    }
+
+    @Test
+    public void shouldGetSetterFor_ReturnValidNameForStringAttribute() throws Exception {
+        final String setterName = commandUnderTest.getSetterFor(firstNameAttribute);
+        assertThat(setterName).isNotNull().isEqualTo("setFirstName");
+    }
+
+    @Test
+    public void shouldGetGetterFor_ReturnValidNameForStringAttribute() throws Exception {
+        final String setterName = commandUnderTest.getGetterFor(firstNameAttribute);
+        assertThat(setterName).isNotNull().isEqualTo("getFirstName");
+    }
+
+    @Test
+    public void shouldGetGetterFor_ReturnValidNameForBooleanAttribute() throws Exception {
+        final String setterName = commandUnderTest.getGetterFor(validAttribute);
+        assertThat(setterName).isNotNull().isEqualTo("isValid");
+    }
+
+    @Test
+    public void shoulSetMaxLength_SetMaxLengthAttributeOnTextField() throws Exception {
+        final TextFormField widget = FormFactory.eINSTANCE.createTextFormField();
+        final SimpleField f = new SimpleField();
+        f.setName("name");
+        f.setType(FieldType.STRING);
+        f.setLength(255);
+        commandUnderTest.setMaxLength(widget, f);
+        assertThat(widget.getMaxLength()).isEqualTo(f.getLength());
     }
 
 }

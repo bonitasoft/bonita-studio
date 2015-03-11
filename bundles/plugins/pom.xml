@@ -25,6 +25,8 @@
 		<module>org.bonitasoft.studio.diagram</module>
 		<module>org.bonitasoft.studio.diagram.form</module>
 		<module>org.bonitasoft.studio.actors</module>
+        <module>org.bonitasoft.studio.browser</module>
+        <module>org.bonitasoft.studio.businessobject</module>
 		<module>org.bonitasoft.studio.common</module>
 		<module>org.bonitasoft.studio.common.diagram</module>
 		<module>org.bonitasoft.studio.common.repository</module>
@@ -60,6 +62,8 @@
 		<module>org.bonitasoft.studio.jpdl</module>
 		<module>org.bonitasoft.studio.model.edit.custom</module>
 		<module>org.bonitasoft.studio.refactoring</module>
+        <module>org.bonitasoft.studio.parameters</module>
+        <module>org.bonitasoft.studio.pagedesigner</module>
 		<module>org.bonitasoft.studio.pics</module>
 		<module>org.bonitasoft.studio.pics.bonitasoft</module>
 		<module>org.bonitasoft.studio.preferences</module>
@@ -72,6 +76,7 @@
 		<module>org.bonitasoft.studio.scripting</module>
 		<module>org.bonitasoft.studio.simulation</module>
 		<module>org.bonitasoft.studio.validation</module>
+        <module>org.bonitasoft.studio.validation.common</module>
 		<module>org.bonitasoft.studio.validators</module>
 		<module>org.bonitasoft.studio.xml</module>
 		<module>org.bonitasoft.studio.xpdl</module>
@@ -128,10 +133,6 @@
 						<goals>
 							<goal>testCompile</goal>
 						</goals>
-                        <configuration>
-                            <source>1.6</source>
-                             <target>1.6</target>
-                        </configuration>
 					</execution>
 				</executions>
 			</plugin>

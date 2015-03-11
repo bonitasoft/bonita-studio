@@ -18,7 +18,7 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.data.attachment.repository.DocumentRepositoryStore;
+import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;

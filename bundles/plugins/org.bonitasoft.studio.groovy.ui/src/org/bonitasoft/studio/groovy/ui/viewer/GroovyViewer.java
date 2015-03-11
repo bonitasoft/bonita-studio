@@ -14,8 +14,11 @@
  */
 package org.bonitasoft.studio.groovy.ui.viewer;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +30,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.provider.ExpressionComparator;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.ICustomExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
@@ -200,7 +204,6 @@ public class GroovyViewer implements IDocumentListener {
                 }
             }
 
-
         });
         enableContextAssitShortcut();
 
@@ -213,8 +216,6 @@ public class GroovyViewer implements IDocumentListener {
             }
         });
     }
-
-
 
     public void enableContextAssitShortcut() {
         final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getAdapter(IHandlerService.class);
@@ -230,8 +231,6 @@ public class GroovyViewer implements IDocumentListener {
             fHandlerActivation.clearResult();
         }
     }
-
-
 
     public IDocument getDocument() {
         return editor.getDocumentProvider().getDocument(input);
@@ -313,12 +312,13 @@ public class GroovyViewer implements IDocumentListener {
         unknownElementsIndexer.addJobChangeListener(new UpdateUnknownReferencesListener(getDocument(), getSourceViewer().getAnnotationModel()));
     }
 
-
     public List<ScriptVariable> getProvidedVariables(final EObject context, final ViewerFilter[] filters) {
         final List<ScriptVariable> providedScriptVariable = GroovyUtil.getBonitaVariables(context, filters, isPageFlowContext);
         final IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
         if (daoExpressionProvider != null) {
-            for (final Expression e : daoExpressionProvider.getExpressions(null)) {
+            final List<Expression> expressions = newArrayList(daoExpressionProvider.getExpressions(null));
+            Collections.sort(expressions, new ExpressionComparator());
+            for (final Expression e : expressions) {
                 final ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType());
                 providedScriptVariable.add(scriptVariable);
             }
@@ -334,11 +334,7 @@ public class GroovyViewer implements IDocumentListener {
         if (tmpGroovyFileStore != null) {
             tmpGroovyFileStore.delete();
         }
-
         disableContextAssitShortcut();
-        if (editor.getViewer() != null && editor.getViewer().getTextWidget() != null) {
-            editor.dispose();
-        }
     }
 
     public GroovyCompilationUnit getGroovyCompilationUnit() {
@@ -358,7 +354,6 @@ public class GroovyViewer implements IDocumentListener {
         nodes = fieldNodes;
         getSourceViewer().getTextWidget().setData(PROCESS_VARIABLES_DATA_KEY, fieldNodes);
     }
-
 
     @Override
     public void documentAboutToBeChanged(final DocumentEvent event) {

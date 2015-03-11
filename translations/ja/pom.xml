@@ -16,6 +16,7 @@
 	<modules>
 		<module>org.bonitasoft.studio.actors.nl_ja</module>
 		<module>org.bonitasoft.studio.application.nl_ja</module>
+        <module>org.bonitasoft.studio.businessobject.nl_ja</module>
 		<module>org.bonitasoft.studio.common.nl_ja</module>
 		<module>org.bonitasoft.studio.common.diagram.nl_ja</module>
 		<module>org.bonitasoft.studio.common.repository.nl_ja</module>
@@ -50,6 +51,7 @@
 		<module>org.bonitasoft.studio.migration.nl_ja</module>
 		<module>org.bonitasoft.studio.model.edit.nl_ja</module>
 		<module>org.bonitasoft.studio.model.edit.custom.nl_ja</module>
+        <module>org.bonitasoft.studio.parameters.nl_ja</module>
 		<module>org.bonitasoft.studio.preferences.nl_ja</module>
 		<module>org.bonitasoft.studio.profiles.nl_ja</module>
 		<module>org.bonitasoft.studio.properties.nl_ja</module>

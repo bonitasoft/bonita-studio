@@ -46,7 +46,6 @@ public class Messages extends NLS {
     public static String EditSimulationResourceWizardPage_lblCostUnit_text;
     public static String EditSimulationResourceWizard_ErrorEmptyName;
     public static String EditSimulationResourceWizard_ErrorFixedCost;
-    public static String EditSimulationResourceWizard_ErrorInvalidName;
     public static String EditSimulationResourceWizard_ErrorQuantity;
     public static String EditSimulationResourceWizard_ErrorSameName;
     public static String EditSimulationResourceWizard_ErrorTimeCost;
@@ -162,7 +161,6 @@ public class Messages extends NLS {
     public static String EditCalendarWizardPage_OverlapingPeriods;
     public static String EditCalendarWizardPage_OnePeriodAtLeastDefined;
     public static String AddSimulationDataWizardPage_Error_MinMax;
-    public static String AddSimulationDataWizardPage_Error_EmptyName;
     public static String loopError;
     public static String transitionCondition;
     public static String AddSimulationDataWizardPage_Error_EmptyLiteral;

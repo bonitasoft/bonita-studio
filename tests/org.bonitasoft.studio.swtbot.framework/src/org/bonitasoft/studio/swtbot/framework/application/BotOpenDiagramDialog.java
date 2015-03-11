@@ -39,12 +39,12 @@ public class BotOpenDiagramDialog extends BotDialog {
     }
 
     public BotOpenDiagramDialog selectDiagram(final String diagramName, final String diagramVersion) {
-        bot.tree().select(diagramName + " (" + diagramVersion + ")");
+        bot.treeWithId(SWTBOT_ID_OPEN_DIAGRAM_TREE_ID).select(diagramName + " (" + diagramVersion + ")");
         return this;
     }
 
     public BotOpenDiagramDialog selectDiagram(final int indexInList) {
-        bot.tree().select(indexInList);
+        bot.treeWithId(SWTBOT_ID_OPEN_DIAGRAM_TREE_ID).select(indexInList);
         return this;
     }
 

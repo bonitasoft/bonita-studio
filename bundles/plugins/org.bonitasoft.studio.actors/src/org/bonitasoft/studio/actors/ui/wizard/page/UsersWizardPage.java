@@ -459,7 +459,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             public void handleValueChange(final ValueChangeEvent event) {
                 final IObservableValue value = event.getObservableValue();
                 final PasswordType password = (PasswordType) ((DetailObservableValue) value).getObserved();
-                password.setEncrypted(false);
+                if (password != null) {
+                    password.setEncrypted(false);
+                }
             }
         });
 

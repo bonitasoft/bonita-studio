@@ -9438,6 +9438,187 @@
         </operation>
       </changes>
     </changes>
-      </releases>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FormMappingCustomMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+            element="process.ecore#//FormMapping">
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping" featureName="name"
+              dataValue="FormMapping"/>
+        </changes>
+        <operation name="newClass">
+          <parameters name="ePackage">
+            <referenceValue element="process.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>FormMapping</dataValue>
+          </parameters>
+          <parameters name="superClasses"/>
+          <parameters name="abstr">
+            <dataValue>false</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//FormMapping" referenceName="eStructuralFeatures"
+            element="process.ecore#//FormMapping/targetForm">
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/targetForm"
+              featureName="name" dataValue="targetForm"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/targetForm"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/targetForm"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//FormMapping"/>
+            <referenceValue element="process.ecore#//FormMapping"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>targetForm</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//FormMapping" referenceName="eStructuralFeatures"
+            element="process.ecore#//FormMapping/external">
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/external"
+              featureName="name" dataValue="external"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/external"
+              featureName="defaultValueLiteral" dataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/external"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//FormMapping"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>external</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue>false</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//FormMapping" referenceName="eStructuralFeatures"
+            element="process.ecore#//FormMapping/url">
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/url"
+              featureName="name" dataValue="url"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/url"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//FormMapping"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>url</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
+            element="process.ecore#//PageFlow/formMapping">
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/formMapping"
+              featureName="name" dataValue="formMapping"/>
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/formMapping"
+              featureName="eType" referenceValue="process.ecore#//FormMapping"/>
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/formMapping"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//PageFlow"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>formMapping</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//FormMapping"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//RecapFlow" referenceName="eStructuralFeatures"
+            element="process.ecore#//RecapFlow/overviewFormMapping">
+          <changes xsi:type="history:Set" element="process.ecore#//RecapFlow/overviewFormMapping"
+              featureName="name" dataValue="overviewFormMapping"/>
+          <changes xsi:type="history:Set" element="process.ecore#//RecapFlow/overviewFormMapping"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//RecapFlow/overviewFormMapping"
+              featureName="eType" referenceValue="process.ecore#//FormMapping"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//RecapFlow"/>
+            <referenceValue element="process.ecore#//RecapFlow"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>overviewFormMapping</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//FormMapping"/>
+            <referenceValue element="process.ecore#//FormMapping"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+    </changes>
+  </releases>
   <releases/>
 </history:History>

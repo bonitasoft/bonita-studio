@@ -47,7 +47,6 @@ public class Messages extends NLS {
     public static String password;
     public static String jobLabel;
     public static String jobHint;
-    public static String metadata;
     public static String general;
     public static String emailHint;
     public static String emailLabel;
@@ -73,11 +72,6 @@ public class Messages extends NLS {
     public static String websiteLabel;
     public static String websiteHint;
     public static String roomHint;
-    public static String addMetadata;
-    public static String metadataName;
-    public static String deleteMetadataTitle;
-    public static String deleteMetadataMsg;
-    public static String metadataAlreadyExists;
     public static String add;
     public static String remove;
     public static String defaultUserName;
@@ -175,10 +169,6 @@ public class Messages extends NLS {
     public static String importingFilterArchive;
     public static String selectFilterImplementationToExportDesc;
     public static String selectFilterImplementationToExportTitle;
-    public static String exportSuccessfulTitle;
-    public static String exportSuccessfulMsg;
-    public static String exportFailedTitle;
-    public static String exportFailedMsg;
     public static String emtpyMembershipValue;
     public static String defaultUserOrganizationTitle;
     public static String defaultUserOrganizationDesc;
@@ -204,8 +194,6 @@ public class Messages extends NLS {
     public static String addSubGroup;
     public static String addParentGroup;
     public static String missingMembershipForUser;
-    public static String userLastNameMissing;
-    public static String userFirstNameMissing;
     public static String userPasswordMissing;
     public static String userNameMissing;
     public static String validatingOrganizationContent;
@@ -253,7 +241,6 @@ public class Messages extends NLS {
     public static String customUserInfoDescription;
     public static String customUserInfoDefinitionNotEmpty;
     public static String customUserInfoDefinitionAlreadyExist;
-    public static String customUserInformationAddWindowTitle;
     public static String defaultInformationGroupTitle;
     public static String defaultInformationGroupGeneralDataTableTitle;
     public static String defaultInformationGroupBusinessCardTableTitle;
@@ -278,10 +265,10 @@ public class Messages extends NLS {
     public static String displayNameLimitSize;
     public static String labelExplicationCustomUserInformation;
     public static String customUserInfoValueLimitSize;
-    public static String userNameIsEmpty;
     public static String groupDisplayLengthTooLong;
     public static String importOrganizationWithWarningTitle;
     public static String importOrganizationWithWarningMessage;
+    public static String userNameIsEmpty;
 
 
 }

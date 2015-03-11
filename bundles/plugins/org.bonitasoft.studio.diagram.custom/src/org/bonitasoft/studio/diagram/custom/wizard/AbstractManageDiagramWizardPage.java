@@ -5,19 +5,18 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.diagram.custom.wizard;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.FileStoreLabelProvider;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
@@ -38,11 +37,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 
-
 /**
  * @author aurelie zara
  */
-public abstract class AbstractManageDiagramWizardPage extends WizardPage implements IWizardPage {
+public abstract class AbstractManageDiagramWizardPage extends WizardPage implements IWizardPage, SWTBotConstants {
 
     private FilteredTree diagramTree;
     private Composite mainComposite;
@@ -55,22 +53,20 @@ public abstract class AbstractManageDiagramWizardPage extends WizardPage impleme
      */
     protected AbstractManageDiagramWizardPage(final String pageName) {
         super(pageName);
-        processConfStore=getConfigurationRepositoryStore();
+        processConfStore = getConfigurationRepositoryStore();
         applicationResourceStore = getApplicationResourceRepositoryStore();
     }
-
 
     public ApplicationResourceRepositoryStore getApplicationResourceRepositoryStore() {
         return RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
     }
 
-
     public ProcessConfigurationRepositoryStore getConfigurationRepositoryStore() {
         return RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -78,12 +74,12 @@ public abstract class AbstractManageDiagramWizardPage extends WizardPage impleme
         createDiagramTreeViewer(parent);
     }
 
-
     public void createDiagramTreeViewer(final Composite parent) {
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(new GridLayout(2, true));
         //Composite repositoryComposite = new Composite(composite, SWT.NONE);
         diagramTree = new FilteredTree(mainComposite, SWT.MULTI | SWT.BORDER, new PatternFilter(), false);
+        diagramTree.getViewer().getTree().setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_OPEN_DIAGRAM_TREE_ID);
         diagramTree.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(SWT.DEFAULT, 250).create());
         diagramTree.getViewer().setContentProvider(new DiagramTreeContentProvider());
 
@@ -133,7 +129,6 @@ public abstract class AbstractManageDiagramWizardPage extends WizardPage impleme
     public void setMainComposite(final Composite mainComposite) {
         this.mainComposite = mainComposite;
     }
-
 
     public List<DiagramFileStore> getDiagrams() {
         if (!getDiagramTree().getViewer().getSelection().isEmpty()) {

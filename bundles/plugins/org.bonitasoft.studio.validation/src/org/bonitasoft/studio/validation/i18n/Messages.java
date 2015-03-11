@@ -84,8 +84,6 @@ public class Messages extends NLS {
 
     public static String targetProcessNotSet;
 
-    public static String validating;
-
     public static String pageTemplateNotValid;
 
     public static String incompatilbeOperationReturnType;
@@ -183,7 +181,28 @@ public class Messages extends NLS {
 
     public static String cmisConnectorWebserviceConfigMissingUrl;
 
+    public static String queryReturnTypeIsInvalid;
+
+    public static String queryNotExistsInBusinessObject;
+
+    public static String queryReferencedAnUnexistingBusinessObject;
+
+    public static String invalidQueryExpression;
+
+    public static String queryParameterDoesNotExistInQueryDefinition;
+
+    public static String queryParameterReturnTypeIsInvalid;
+
+    public static String queryParameterDoesNotExistInExpression;
+
+    public static String businessObjectDefinitionNotFound;
     public static String invalidContractDefinition;
+
+    public static String invalidFormMapping;
+
+    public static String entryFormMapping;
+
+    public static String overviewFormMapping;
 
     static {
         // initialize resource bundle

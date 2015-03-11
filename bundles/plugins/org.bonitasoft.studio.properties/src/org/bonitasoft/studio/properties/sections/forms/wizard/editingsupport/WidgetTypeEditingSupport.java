@@ -74,20 +74,25 @@ public class WidgetTypeEditingSupport extends EditingSupport {
     }
 
     public Control createControl(final Object element) {
+        final Widget widgetType = ((WidgetMapping) element).getWidgetType();
+        if (widgetType != null) {
         final CCombo combo = new CCombo((Composite) getViewer().getControl(), SWT.READ_ONLY);
         combo.setEditable(false);
         combo.setItems(getItemsFor(element));
-        final String initialValue = getText(((WidgetMapping) element).getWidgetType().eClass(), (WidgetMapping) element);
-        combo.setText(initialValue);
-        combo.addSelectionListener(new SelectionAdapter() {
 
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                setValue(element, combo.getText());
-            }
+            final String initialValue = getText(widgetType.eClass(), (WidgetMapping) element);
+            combo.setText(initialValue);
+            combo.addSelectionListener(new SelectionAdapter() {
 
-        });
-        return combo;
+                @Override
+                public void widgetSelected(final SelectionEvent e) {
+                    setValue(element, combo.getText());
+                }
+
+            });
+            return combo;
+        }
+        return null;
     }
 
     protected String[] getItemsFor(final Object element) {

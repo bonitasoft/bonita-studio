@@ -1,26 +1,22 @@
 /**
  * Copyright (C) 2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.migration.ui.view;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.bonitasoft.studio.common.ProcessesValidationAction;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
@@ -108,7 +104,7 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
  * @author Aurelien Pupier
  * @author Romain Bioteau
  */
-public class MigrationStatusView extends ViewPart implements ISelectionListener,ISelectionChangedListener,ISelectionProvider {
+public class MigrationStatusView extends ViewPart implements ISelectionListener, ISelectionChangedListener, ISelectionProvider {
 
     public static String ID = "org.bonitasoft.studio.migration.view";
     private TableViewer tableViewer;
@@ -130,8 +126,8 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         final ISelectionService ss = getSite().getWorkbenchWindow().getSelectionService();
         ss.addPostSelectionListener(this);
         final IEditorPart activeEditor = getSite().getPage().getActiveEditor();
-        if(activeEditor instanceof DiagramEditor){
-            selectionProvider =  activeEditor.getEditorSite().getSelectionProvider();
+        if (activeEditor instanceof DiagramEditor) {
+            selectionProvider = activeEditor.getEditorSite().getSelectionProvider();
         }
         getSite().setSelectionProvider(this);
         createActions();
@@ -144,7 +140,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         final IMenuManager dropDownMenu = actionBars.getMenuManager();
         final IToolBarManager toolBar = actionBars.getToolBarManager();
         exportAction = new ExportMigrationReportAsPDFAction();
-        if(editor instanceof DiagramEditor){
+        if (editor instanceof DiagramEditor) {
             exportAction.setReport(getReportFromEditor(editor));
         }
         exportAction.setViewer(tableViewer);
@@ -154,7 +150,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         linkAction.setChecked(true);
         linkAction.setViewer(tableViewer);
         linkAction.run();
-        if(editor instanceof DiagramEditor){
+        if (editor instanceof DiagramEditor) {
             linkAction.setEditor((DiagramEditor) editor);
         }
         toolBar.add(linkAction);
@@ -167,9 +163,6 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         hideReviewedAction.setViewer(tableViewer);
         dropDownMenu.add(hideReviewedAction);
     }
-
-
-
 
     protected void createBottomComposite(final Composite mainComposite) {
         final Composite bottomComposite = new Composite(mainComposite, SWT.NONE);
@@ -187,6 +180,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         final ToolItem helpItem = new ToolItem(helpToolbar, SWT.PUSH);
         helpItem.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
         helpItem.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 new WizardDialog(Display.getDefault().getActiveShell(), new MigrationWarningWizard()).open();
@@ -199,6 +193,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         markAsCompletedButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).grab(true, false).create());
         markAsCompletedButton.setText(Messages.completeImport);
         markAsCompletedButton.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 super.widgetSelected(e);
@@ -210,19 +205,14 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
                         true,
                         MigrationPlugin.getDefault().getPreferenceStore(),
                         "toggleStateForImportExportStatus");
-                if(IDialogConstants.OK_ID== mdwt.getReturnCode()){
-                    if(mdwt.getToggleState()){
+                if (IDialogConstants.OK_ID == mdwt.getReturnCode()) {
+                    if (mdwt.getToggleState()) {
                         exportAction.run();
                     }
-                    final IEditorPart editorPart = getSite().getPage().getActiveEditor();
-                    final List<AbstractProcess> processes = getProcesses(editorPart);
-                    final ProcessesValidationAction validation = new ProcessesValidationAction(processes);
-                    validation.performValidation();
-                    validation.displayOkSeeMoreDetailsDialog();
                     try {
                         clearMigrationReport(true);
                     } catch (final IOException e1) {
-                        BonitaStudioLog.error(e1,MigrationPlugin.PLUGIN_ID);
+                        BonitaStudioLog.error(e1, MigrationPlugin.PLUGIN_ID);
                     }
                     final String id = BonitaPerspectivesUtils.getPerspectiveId((IEditorPart) tableViewer.getInput());
                     if (id != null) {
@@ -234,30 +224,28 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         });
     }
 
-
-
-
-    private void clearMigrationReport(final boolean save) throws IOException{
+    private void clearMigrationReport(final boolean save) throws IOException {
         final IEditorPart editorPart = (IEditorPart) tableViewer.getInput();
-        if(editorPart != null && editorPart instanceof DiagramEditor){
-            final Resource emfResource = ((DiagramEditor)editorPart).getDiagramEditPart().getNotationView().eResource();
+        if (editorPart != null && editorPart instanceof DiagramEditor) {
+            final Resource emfResource = ((DiagramEditor) editorPart).getDiagramEditPart().getNotationView().eResource();
             final Report report = getMigrationReport(emfResource);
-            if(report != null){
+            if (report != null) {
                 final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(emfResource);
-                if(domain != null){
+                if (domain != null) {
                     domain.getCommandStack().execute(new RecordingCommand(domain) {
+
                         @Override
                         protected void doExecute() {
                             emfResource.getContents().remove(report);
                         }
                     });
-                    if(save){
+                    if (save) {
                         final ICommandService service = (ICommandService) getSite().getService(ICommandService.class);
                         final Command cmd = service.getCommand("org.eclipse.ui.file.save");
                         try {
                             cmd.executeWithChecks(new ExecutionEvent());
                         } catch (final Exception e) {
-                            BonitaStudioLog.error(e,MigrationPlugin.PLUGIN_ID);
+                            BonitaStudioLog.error(e, MigrationPlugin.PLUGIN_ID);
                         }
                     }
                 }
@@ -266,8 +254,8 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
     }
 
     private Report getMigrationReport(final Resource resource) {
-        for(final EObject r : resource.getContents()){
-            if(r instanceof Report){
+        for (final EObject r : resource.getContents()) {
+            if (r instanceof Report) {
                 return (Report) r;
             }
         }
@@ -279,8 +267,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         tableComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         tableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-
-        tableViewer = new TableViewer(tableComposite,SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION) ;
+        tableViewer = new TableViewer(tableComposite, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
         tableViewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_MIGRATION_REPORT_TABLE);
         tableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
         tableViewer.getTable().setHeaderVisible(true);
@@ -289,9 +276,9 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
             @Override
             public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-                return viewerSelect(element,searchQuery) ;
+                return viewerSelect(element, searchQuery);
             }
-        }) ;
+        });
 
         addElementTypeColumn();
         addElementNameColumn();
@@ -313,6 +300,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         tableViewer.setInput(activeEditor);
         tableViewer.addSelectionChangedListener(this);
         tableViewer.getTable().addListener(SWT.MeasureItem, new Listener() {
+
             @Override
             public void handleEvent(final Event event) {
                 event.height = 25;
@@ -323,20 +311,20 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
             @Override
             public void controlResized(final ControlEvent e) {
-                if(tableViewer != null && !tableViewer.getTable().isDisposed() && tableViewer.getTable().getParent().getBounds().width > 300){
+                if (tableViewer != null && !tableViewer.getTable().isDisposed() && tableViewer.getTable().getParent().getBounds().width > 300) {
                     Display.getDefault().asyncExec(new Runnable() {
 
                         @Override
                         public void run() {
-                            if(!tableViewer.getTable().isDisposed()){
+                            if (!tableViewer.getTable().isDisposed()) {
                                 tableViewer.getTable().setLayoutDeferred(false);
                                 final Point oldSize = tableViewer.getTable().getSize();
                                 final Point s = tableViewer.getTable().computeSize(SWT.DEFAULT, tableViewer.getTable().getBounds().height);
-                                if(oldSize.x != s.x){
+                                if (oldSize.x != s.x) {
                                     oldSize.x = s.x;
                                     tableViewer.getTable().setSize(oldSize);
                                 }
-                                tableViewer.getTable().layout(true,true);
+                                tableViewer.getTable().layout(true, true);
 
                             }
                         }
@@ -350,8 +338,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
             }
         });
 
-
-        ColumnViewerToolTipSupport.enableFor(tableViewer,ToolTip.NO_RECREATE);
+        ColumnViewerToolTipSupport.enableFor(tableViewer, ToolTip.NO_RECREATE);
 
         final Label descriptionLabel = new Label(tableComposite, SWT.NONE);
         descriptionLabel.setText(Messages.description);
@@ -367,26 +354,28 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         final TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.FILL);
         column.getColumn().setText(Messages.name);
         column.getColumn().setAlignment(SWT.LEFT);
-        column.setLabelProvider(new ColumnLabelProvider(){
+        column.setLabelProvider(new ColumnLabelProvider() {
+
             @Override
             public String getText(final Object element) {
-                if(element instanceof Change){
+                if (element instanceof Change) {
                     return ((Change) element).getElementName();
                 }
                 return Messages.unknown;
             }
+
             @Override
             public String getToolTipText(final Object element) {
-                if(element instanceof Change){
+                if (element instanceof Change) {
                     return ((Change) element).getElementName();
                 }
 
-                return null ;
+                return null;
             }
 
             @Override
             public int getToolTipTimeDisplayed(final Object object) {
-                return 4000 ;
+                return 4000;
             }
 
             @Override
@@ -396,7 +385,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
             @Override
             public Point getToolTipShift(final Object object) {
-                return new Point(5,5);
+                return new Point(5, 5);
             }
         });
     }
@@ -405,26 +394,28 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         final TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.FILL);
         column.getColumn().setText(Messages.elementType);
         column.getColumn().setAlignment(SWT.LEFT);
-        column.setLabelProvider(new ColumnLabelProvider(){
+        column.setLabelProvider(new ColumnLabelProvider() {
+
             @Override
             public String getText(final Object element) {
-                if(element instanceof Change){
+                if (element instanceof Change) {
                     return ((Change) element).getElementType();
                 }
                 return Messages.unknown;
             }
+
             @Override
             public String getToolTipText(final Object element) {
-                if(element instanceof Change){
+                if (element instanceof Change) {
                     return ((Change) element).getElementType();
                 }
 
-                return null ;
+                return null;
             }
 
             @Override
             public int getToolTipTimeDisplayed(final Object object) {
-                return 4000 ;
+                return 4000;
             }
 
             @Override
@@ -434,7 +425,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
             @Override
             public Point getToolTipShift(final Object object) {
-                return new Point(5,5);
+                return new Point(5, 5);
             }
         });
     }
@@ -443,26 +434,28 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         final TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.FILL);
         column.getColumn().setText(Messages.property);
         column.getColumn().setAlignment(SWT.LEFT);
-        column.setLabelProvider(new ColumnLabelProvider(){
+        column.setLabelProvider(new ColumnLabelProvider() {
+
             @Override
             public String getText(final Object element) {
-                if(element instanceof Change){
+                if (element instanceof Change) {
                     return ((Change) element).getPropertyName();
                 }
                 return Messages.unknown;
             }
+
             @Override
             public String getToolTipText(final Object element) {
-                if(element instanceof Change){
+                if (element instanceof Change) {
                     return ((Change) element).getPropertyName();
                 }
 
-                return null ;
+                return null;
             }
 
             @Override
             public int getToolTipTimeDisplayed(final Object object) {
-                return 4000 ;
+                return 4000;
             }
 
             @Override
@@ -472,11 +465,10 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
             @Override
             public Point getToolTipShift(final Object object) {
-                return new Point(5,5);
+                return new Point(5, 5);
             }
         });
     }
-
 
     protected void addStatusColumn() {
         final TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.FILL);
@@ -498,7 +490,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
             @Override
             protected void setValue(final Object element, final Object value) {
                 final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(element);
-                if(editingDomain != null){
+                if (editingDomain != null) {
                     editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, element, MigrationReportPackage.Literals.CHANGE__REVIEWED, value));
                 }
                 getViewer().update(element, null);
@@ -506,7 +498,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
             @Override
             protected Object getValue(final Object element) {
-                return ((Change)element).isReviewed();
+                return ((Change) element).isReviewed();
             }
 
             @Override
@@ -520,8 +512,8 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
             }
         });
 
-        final TableColumnSorter sorter = new TableColumnSorter(tableViewer) ;
-        sorter.setColumn(column.getColumn()) ;
+        final TableColumnSorter sorter = new TableColumnSorter(tableViewer);
+        sorter.setColumn(column.getColumn());
     }
 
     protected void createTopComposite(final Composite mainComposite) {
@@ -539,25 +531,23 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         findText.setMessage(Messages.find);
         findText.addModifyListener(new ModifyListener() {
 
-
-
             @Override
             public void modifyText(final ModifyEvent e) {
-                searchQuery = findText.getText() ;
-                tableViewer.refresh() ;
+                searchQuery = findText.getText();
+                tableViewer.refresh();
 
             }
         });
     }
 
     protected boolean viewerSelect(final Object element, final String searchQuery) {
-        if(searchQuery == null || searchQuery.isEmpty()
-                || ((Change)element).getElementType() != null && ((Change)element).getElementType().toLowerCase().contains(searchQuery.toLowerCase())
-                || ((Change)element).getElementName() != null && ((Change)element).getElementName().toLowerCase().contains(searchQuery.toLowerCase())
-                || ((Change)element).getPropertyName() != null && ((Change)element).getPropertyName().toLowerCase().contains(searchQuery.toLowerCase())){
-            return true ;
+        if (searchQuery == null || searchQuery.isEmpty()
+                || ((Change) element).getElementType() != null && ((Change) element).getElementType().toLowerCase().contains(searchQuery.toLowerCase())
+                || ((Change) element).getElementName() != null && ((Change) element).getElementName().toLowerCase().contains(searchQuery.toLowerCase())
+                || ((Change) element).getPropertyName() != null && ((Change) element).getPropertyName().toLowerCase().contains(searchQuery.toLowerCase())) {
+            return true;
         }
-        return false ;
+        return false;
     }
 
     @Override
@@ -567,25 +557,25 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
     @Override
     public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
-        if(selection instanceof StructuredSelection && !tableViewer.getTable().isDisposed()){
+        if (selection instanceof StructuredSelection && !tableViewer.getTable().isDisposed()) {
             final Object selectedEP = ((StructuredSelection) selection).getFirstElement();
-            if(selectedEP instanceof IGraphicalEditPart){
+            if (selectedEP instanceof IGraphicalEditPart) {
                 final IEditorPart editorPart = getSite().getPage().getActiveEditor();
-                if(editorPart instanceof DiagramEditor && !editorPart.equals(tableViewer.getInput())){
+                if (editorPart instanceof DiagramEditor && !editorPart.equals(tableViewer.getInput())) {
                     selectionProvider = editorPart.getEditorSite().getSelectionProvider();
                     tableViewer.setInput(editorPart);
                     exportAction.setReport(getReportFromEditor(editorPart));
                     linkAction.setEditor((DiagramEditor) editorPart);
-                }else if(editorPart != null && editorPart.equals(tableViewer.getInput())){
+                } else if (editorPart != null && editorPart.equals(tableViewer.getInput())) {
                     tableViewer.refresh();
                 }
-                tableViewer.getTable().layout(true,true);
+                tableViewer.getTable().layout(true, true);
             }
         }
     }
 
     private Report getReportFromEditor(final IEditorPart editorPart) {
-        if(editorPart instanceof DiagramEditor){
+        if (editorPart instanceof DiagramEditor) {
             final Resource resource = ((DiagramEditor) editorPart).getDiagramEditPart().getNotationView().eResource();
             if (resource != null) {
                 for (final EObject r : resource.getContents()) {
@@ -598,10 +588,10 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         return null;
     }
 
-    private List<AbstractProcess> getProcesses(final IEditorPart editorPart){
-        if(editorPart instanceof DiagramEditor){
-            final DiagramEditor diagramEditor = (DiagramEditor)editorPart;
-            final MainProcess diagram = (MainProcess)diagramEditor.getDiagramEditPart().resolveSemanticElement();
+    private List<AbstractProcess> getProcesses(final IEditorPart editorPart) {
+        if (editorPart instanceof DiagramEditor) {
+            final DiagramEditor diagramEditor = (DiagramEditor) editorPart;
+            final MainProcess diagram = (MainProcess) diagramEditor.getDiagramEditPart().resolveSemanticElement();
             final List<AbstractProcess> procs = ModelHelper.getAllProcesses(diagram);
             return procs;
         }
@@ -611,14 +601,15 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
     @SuppressWarnings("rawtypes")
     @Override
     public Object getAdapter(final Class adapter) {
-        if (adapter == IPropertySheetPage.class){
+        if (adapter == IPropertySheetPage.class) {
             return getSite().getPage().getActiveEditor().getAdapter(adapter);
-        }else if(adapter == IEditingDomainProvider.class){
+        } else if (adapter == IEditingDomainProvider.class) {
             return new IEditingDomainProvider() {
+
                 @Override
                 public EditingDomain getEditingDomain() {
                     final IEditorPart part = getSite().getPage().getActiveEditor();
-                    if(part instanceof DiagramEditor){
+                    if (part instanceof DiagramEditor) {
                         return ((DiagramEditor) part).getEditingDomain();
                     }
                     return null;
@@ -628,10 +619,9 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         return super.getAdapter(adapter);
     }
 
-
     @Override
     public void selectionChanged(final SelectionChangedEvent event) {
-        if(!event.getSelection().isEmpty()){
+        if (!event.getSelection().isEmpty()) {
             descripitonText.setText(((Change) ((IStructuredSelection) event.getSelection()).getFirstElement()).getDescription());
         }
     }

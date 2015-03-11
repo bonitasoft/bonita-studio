@@ -5,19 +5,19 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.contract.ui.property;
 
+import javax.inject.Inject;
+
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
-import org.bonitasoft.studio.common.properties.EObjectSelectionProviderSection;
+import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraintController;
@@ -29,6 +29,7 @@ import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.pagedesigner.ui.contribution.NewFormContributionItem;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -38,28 +39,32 @@ import org.eclipse.core.databinding.observable.list.ListChangeEvent;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * @author Romain Bioteau
- *
  */
-public class ContractPropertySection extends EObjectSelectionProviderSection {
+public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private EMFDataBindingContext context;
 
@@ -68,6 +73,12 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     private ContractInputController inputController;
 
     private ContractConstraintController constraintController;
+
+    @Inject
+    private TaskAdaptableSelectionProvider selectionProvider;
+
+    @Inject
+    private IEclipseContext eclipseContext;
 
     @Override
     public String getSectionDescription() {
@@ -88,13 +99,33 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     }
 
     @Override
+    protected void updateToolbar(final IToolBarManager toolbarManager) {
+        final NewFormContributionItem newFormContributionItem = newContributionItem(NewFormContributionItem.class);
+        newFormContributionItem.setSelectionProvider(selectionProvider);
+        toolbarManager.add(newFormContributionItem);
+    }
+
+    protected <T> T newContributionItem(final Class<T> clazz) {
+        return ContextInjectionFactory.make(clazz, eclipseContext);
+    }
+
+    @Override
+    public void refresh() {
+        super.refresh();
+        for (final IContributionItem object : form.getToolBarManager().getItems()) {
+            object.update();
+        }
+    }
+
+    @Override
     protected void createContent(final Composite parent) {
         init();
         final CTabFolder tabFolder = getWidgetFactory().createTabFolder(parent, SWT.FLAT | SWT.TOP);
         tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         getWidgetFactory().adapt(tabFolder, true, true);
 
-        final IObservableValue observeContractValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
+        final IObservableValue observeContractValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
+                ViewersObservables.observeSingleSelection(selectionProvider),
                 ProcessPackage.Literals.TASK__CONTRACT);
         observeContractValue.addValueChangeListener(new IValueChangeListener() {
 
@@ -136,7 +167,6 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         final ContractConstraintsTableViewer constraintsTableViewer = new ContractConstraintsTableViewer(parent, getWidgetFactory());
         constraintsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, 180).create());
         constraintsTableViewer.initialize(getConstraintController(), getContractDefinitionValidator());
-
 
         constraintsTableViewer.setInput(CustomEMFEditObservables.observeDetailList(Realm.getDefault(), observeContractValue,
                 ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
@@ -198,6 +228,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
             }
         });
     }
+
     protected void bindRemoveButtonEnablement(final Button button, final Viewer viewer) {
         getContext().bindValue(SWTObservables.observeEnabled(button),
                 ViewersObservables.observeSingleSelection(viewer),
@@ -235,7 +266,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
 
     private UpdateValueStrategy emptySelectionToBooleanStrategy() {
         final UpdateValueStrategy modelStrategy = new UpdateValueStrategy();
-        modelStrategy.setConverter(new Converter(Object.class,Boolean.class) {
+        modelStrategy.setConverter(new Converter(Object.class, Boolean.class) {
 
             @Override
             public Object convert(final Object from) {
@@ -309,10 +340,15 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         return modelStrategy;
     }
 
+    @Override
+    public void setInput(final IWorkbenchPart part, final ISelection selection) {
+        super.setInput(part, selection);
+        selectionProvider.setSelection(selection);
+    }
+
     protected void validate(final Contract contract) {
         getContractDefinitionValidator().validate(contract);
     }
-
 
     public ContractDefinitionValidator getContractDefinitionValidator() {
         return contractDefinitionValidator;

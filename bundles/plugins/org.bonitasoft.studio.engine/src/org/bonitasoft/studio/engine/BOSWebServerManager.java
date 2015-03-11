@@ -34,13 +34,19 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
+import org.bonitasoft.studio.pagedesigner.core.WorkspaceResourceServerManager;
+import org.bonitasoft.studio.pagedesigner.core.WorkspaceSystemProperties;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -164,12 +170,22 @@ public class BOSWebServerManager {
                 PlatformUtil.copyResource(targetFolder, tomcatFolder, monitor);
                 BonitaStudioLog.debug("Tomcat bundle copied in workspace.",
                         EnginePlugin.PLUGIN_ID);
+                addPageBuilderWar(targetFolder, monitor);
             }
         } catch (final IOException e) {
             BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
 
         }
 
+    }
+
+    protected void addPageBuilderWar(final File targetFolder, final IProgressMonitor monitor) throws IOException {
+        BonitaStudioLog.debug("Copying Page Designer war in tomcat/webapps...", EnginePlugin.PLUGIN_ID);
+        final URL url = Platform.getBundle(PageDesignerPlugin.PLUGIN_ID).getResource("webapp");
+        final File pageBuilderWarFile = new File(FileLocator.toFileURL(url).getFile(), "page-designer.war");
+        PlatformUtil.copyResource(new File(targetFolder, "webapps"), pageBuilderWarFile, monitor);
+        BonitaStudioLog.debug("Page Designer war copied in tomcat/webapps.",
+                EnginePlugin.PLUGIN_ID);
     }
 
     /**
@@ -187,6 +203,11 @@ public class BOSWebServerManager {
                         EnginePlugin.PLUGIN_ID);
             }
             startWatchdog();
+            try {
+                WorkspaceResourceServerManager.getInstance().start(org.eclipse.jdt.launching.SocketUtil.findFreePort());
+            } catch (final Exception e1) {
+                BonitaStudioLog.error(e1);
+            }
             if (tomcat != null) {
                 try {
                     tomcat.delete();
@@ -229,12 +250,12 @@ public class BOSWebServerManager {
             @Override
             public void run() {
                 MessageDialog
-                .openInformation(
+                        .openInformation(
                                 PlatformUI.getWorkbench()
                                         .getActiveWorkbenchWindow()
                                         .getShell(),
-                        "",
-                        "Tomcat cannot be launched:\nthe port might be already used by another application.\nPossible causes are that another Studio or another Tomcat is already running.");
+                                "",
+                                "Tomcat cannot be launched:\nthe port might be already used by another application.\nPossible causes are that another Studio or another Tomcat is already running.");
 
             }
         });
@@ -335,6 +356,7 @@ public class BOSWebServerManager {
                     Repository.NULL_PROGRESS_MONITOR);
             workingCopy = conf.getWorkingCopy();
         }
+        RepositoryManager.getInstance().getCurrentRepository().getAllStores();
         workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
                 getVMArgs());
@@ -476,7 +498,8 @@ public class BOSWebServerManager {
     }
 
     protected IProject createServerConfigurationProject(final IProgressMonitor monitor) throws CoreException {
-        final IProject confProject = ResourcesPlugin.getWorkspace().getRoot().getProject(SERVER_CONFIGURATION_PROJECT);
+        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        final IProject confProject = workspace.getRoot().getProject(SERVER_CONFIGURATION_PROJECT);
         if (!confProject.exists()) {
             confProject.create(Repository.NULL_PROGRESS_MONITOR);
             confProject.open(Repository.NULL_PROGRESS_MONITOR);
@@ -488,6 +511,7 @@ public class BOSWebServerManager {
                     projectProperties.setServerProject(true, monitor);
                 }
             }, monitor);
+
         }
         return confProject;
     }
@@ -530,12 +554,25 @@ public class BOSWebServerManager {
                 System.getProperty(WATCHDOG_TIMER, "20000"));
         addSystemProperty(args, "eclipse.product", Platform.getProduct()
                 .getApplication());
+
+        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties(repositoryAccessor);
+        addSystemProperty(args, workspaceSystemProperties.getPageRepositoryLocation());
+        addSystemProperty(args, workspaceSystemProperties.getWidgetRepositoryLocation());
+        addSystemProperty(args, workspaceSystemProperties.getFragmentRepositoryLocation());
+        addSystemProperty(args, workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()));
         return args.toString();
     }
 
     protected void addSystemProperty(final StringBuilder sBuilder, final String key, final String value) {
         sBuilder.append(" ");
         sBuilder.append("-D" + key + "=" + value);
+    }
+
+    protected void addSystemProperty(final StringBuilder sBuilder, final String systemPropertyArgument) {
+        sBuilder.append(" ");
+        sBuilder.append(systemPropertyArgument);
     }
 
     protected void startWatchdog() {
@@ -633,6 +670,11 @@ public class BOSWebServerManager {
                         EnginePlugin.PLUGIN_ID);
             }
             stopWatchdog();
+            try {
+                WorkspaceResourceServerManager.getInstance().stop();
+            } catch (final Exception e1) {
+                BonitaStudioLog.error(e1, EnginePlugin.PLUGIN_ID);
+            }
             tomcat.stop(true);
             waitServerStopped(monitor);
             try {

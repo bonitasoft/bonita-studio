@@ -5,26 +5,21 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.jface;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public interface SWTBotConstants {
 
     public static final String SWTBOT_WIDGET_ID_KEY = "org.eclipse.swtbot.widget.key";
-
 
     public static final String SWTBOT_ID_EXPRESSIONVIEWER_TEXT = "expressionViewerText";
     public static final String SWTBOT_ID_EDITBUTTON = "expressionViewerEditButton";
@@ -53,9 +48,7 @@ public interface SWTBotConstants {
 
     public static final String SQLBUILDER_CRITERIA_TREE_ID = "sqlBuilderCriteriaTreeId";
 
-
     public static final String APPLICATION_SECTION_FORMS_SELECTION_TREE = "org.bonitasoft.studio.application.formTree";
-
 
     public static final String SWTBOT_ID_INPUT_NAME_TEXTEDITOR = "SWTBOT_ID_INPUT_NAME_TEXTEDITOR";
 
@@ -69,5 +62,6 @@ public interface SWTBotConstants {
 
     public static final String SWTBOT_ID_MIGRATION_REPORT_TABLE = "org.bonitasoft.studio.importer.bar.reportTable";
     public static final String SWTBOT_ID_CONSTRAINT_ERROR_MESSAGE_TEXTEDITOR = "SWTBOT_ID_CONSTRAINT_ERROR_MESSAGE_TEXTEDITOR";
+    public static final String SWTBOT_ID_OPEN_DIAGRAM_TREE_ID = "SWTBOT_ID_OPEN_DIAGRAM_TREE_ID";
 
 }

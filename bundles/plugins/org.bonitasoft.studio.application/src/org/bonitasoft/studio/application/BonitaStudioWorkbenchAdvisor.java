@@ -1,17 +1,14 @@
 /**
  * Copyright (C) 2009-2011 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -76,6 +73,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
+import org.osgi.framework.BundleException;
 
 public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IStartup {
 
@@ -137,7 +135,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
      * (non-Javadoc)
      * @see org.eclipse.ui.application.WorkbenchAdvisor#preStartup()
      */
-    @SuppressWarnings({ "restriction" })
     @Override
     public void preStartup() {
         try {
@@ -152,23 +149,35 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         }
 
         monitor.beginTask(BOSSplashHandler.BONITA_TASK, 100);
+
+        startGroovyPlugin();
         monitor.subTask(Messages.initializingCurrentRepository);
 
         disableInternalWebBrowser();
-        checkCurrentRepository();
+        checkCurrentRepository(monitor);
 
         final List<IConfigurationElement> sortedConfigElems = retrievePreStartupContribution();
         sortConfigurationElementsByPriority(sortedConfigElems);
         executeConfigurationElement(sortedConfigElems);
-
+        try {
+            ResourcesPlugin.getWorkspace().run(initRepositoryRunnable(), monitor);
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e);
+        }
         doStartEngine();
-
-        initializeBonitaRepositories();
 
         executeContributions();
     }
 
-    private void checkCurrentRepository() {
+    protected void startGroovyPlugin() {
+        try {
+            org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getBundle().start();
+        } catch (final BundleException e1) {
+            BonitaStudioLog.error("Failed to loag Groovy plugin", e1);
+        }
+    }
+
+    private void checkCurrentRepository(final IProgressMonitor monitor) {
         final String current = CommonRepositoryPlugin.getDefault().getPreferenceStore().getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
         final IRepository repository = RepositoryManager.getInstance().getCurrentRepository();
         if (repository.getProject().exists() && !RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME.equals(repository.getName())) {
@@ -188,15 +197,15 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                         Messages.badWorkspaceVersionTitle,
                         Messages.bind(Messages.badWorkspaceVersionMessage, new Object[] { current, version, bonitaStudioModuleName,
                                 ProductVersion.CURRENT_VERSION, bosProductName }));
-                resetToDefaultRepository();
+                resetToDefaultRepository(monitor);
             }
 
         }
     }
 
-    protected void resetToDefaultRepository() {
+    protected void resetToDefaultRepository(final IProgressMonitor monitor) {
         CommonRepositoryPlugin.setCurrentRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME);
-        RepositoryManager.getInstance().setRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME);
+        RepositoryManager.getInstance().setRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME, monitor);
     }
 
     private List<IConfigurationElement> retrievePreStartupContribution() {
@@ -254,8 +263,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         });
     }
 
-    private void initializeBonitaRepositories() {
-        final IWorkspaceRunnable workspaceOperation = new IWorkspaceRunnable() {
+    private IWorkspaceRunnable initRepositoryRunnable() {
+        return new IWorkspaceRunnable() {
 
             @Override
             public void run(final IProgressMonitor monitor) throws CoreException {
@@ -263,21 +272,14 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
                 monitor.worked(1);
                 final Repository repository = (Repository) RepositoryManager.getInstance().getCurrentRepository();
-                repository.setProgressMonitor(monitor);
-
                 monitor.worked(1);
                 if (!repository.getProject().exists()) {
-                    repository.create();
+                    repository.create(monitor);
                 }
                 repository.open();
                 repository.getAllStores();
             }
         };
-        try {
-            workspaceOperation.run(monitor);
-        } catch (final CoreException e3) {
-            BonitaStudioLog.error(e3);
-        }
     }
 
     private void executeContributions() {
@@ -297,7 +299,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     /**
      * Disconnect from the core workspace.
      */
-    @SuppressWarnings("restriction")
     private void disconnectFromWorkspace(final IProgressMonitor monitor) {
         // save the workspace
         final MultiStatus status = new MultiStatus(

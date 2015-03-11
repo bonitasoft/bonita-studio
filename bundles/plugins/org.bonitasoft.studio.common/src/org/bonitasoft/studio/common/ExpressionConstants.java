@@ -108,7 +108,6 @@ public interface ExpressionConstants {
     String LEFT_OPERAND_EXTERNAL_DATA = LeftOperand.TYPE_EXTERNAL_DATA;
     String LEFT_OPERAND_TRANSIENT_DATA = LeftOperand.TYPE_TRANSIENT_DATA;
     String LEFT_OPERAND_BUSINESS_DATA = LeftOperand.TYPE_BUSINESS_DATA;
-    
 
     /*
      * It is an assignment to a left operand that is a a business data (business data do not exists exists)
@@ -125,5 +124,6 @@ public interface ExpressionConstants {
      */
     String ATTACH_EXISTING_BUSINESS_DATA = "ATTACH_EXISTING_BUSINESS_DATA";
 
+    String FORM_REFERENCE_TYPE = "FORM_REFERENCE_TYPE";
 
 }

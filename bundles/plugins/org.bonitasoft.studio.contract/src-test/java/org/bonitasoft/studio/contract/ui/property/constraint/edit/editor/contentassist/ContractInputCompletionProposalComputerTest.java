@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -42,6 +40,7 @@ import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.codehaus.groovy.eclipse.codeassist.creators.MethodProposalCreator;
 import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -54,10 +53,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ContractInputCompletionProposalComputerTest extends AbstractSWTTestCase {
@@ -77,6 +74,12 @@ public class ContractInputCompletionProposalComputerTest extends AbstractSWTTest
     @Mock
     private ModuleNode moduleNode;
 
+    @Mock
+    private GroovyCompilationUnit groovyCompilationUnit;
+
+    @Mock
+    private IProgressMonitor monitor;
+
     /**
      * @throws java.lang.Exception
      */
@@ -93,11 +96,12 @@ public class ContractInputCompletionProposalComputerTest extends AbstractSWTTest
         contract.getInputs().add(buildInput(null, "days", ContractInputType.TEXT, true));
         doReturn(contract.getInputs()).when(proposalComputer).getContractInputs(context);
         doReturn(contentAssistContext).when(proposalComputer).createContentAssistContext(any(GroovyCompilationUnit.class), anyInt(), any(Document.class));
-        doReturn(ContractInputCompletionProposalComputerTest.class.getClassLoader()).when(proposalComputer).getProjectClassloader();
+        doReturn(ContractInputCompletionProposalComputerTest.class.getClassLoader()).when(proposalComputer).getProjectClassloader(monitor);
         doReturn(methodProposalCreator).when(proposalComputer).createMethodProposalCreator();
         doReturn(moduleNode).when(proposalComputer).getModuleNode(contentAssistContext);
         when(context.computeIdentifierPrefix()).thenReturn("");
         when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(new VariableExpression(""));
+        when(context.getCompilationUnit()).thenReturn(groovyCompilationUnit);
     }
 
     /**
@@ -110,24 +114,24 @@ public class ContractInputCompletionProposalComputerTest extends AbstractSWTTest
 
     @Test
     public void should_computeCompletionProposals_return_emptyList_if_context_is_not_a_JavaContentAssistInvocationContext() throws Exception {
-        assertThat(proposalComputer.computeCompletionProposals(null, null)).isEmpty();
+        assertThat(proposalComputer.computeCompletionProposals(null, monitor)).isEmpty();
     }
 
     @Test
     public void should_computeCompletionProposals_log_BadLocationException_and_return_emptyList() throws Exception {
         when(context.computeIdentifierPrefix()).thenThrow(new BadLocationException());
-        assertThat(proposalComputer.computeCompletionProposals(context, null)).isEmpty();
+        assertThat(proposalComputer.computeCompletionProposals(context, monitor)).isEmpty();
     }
 
     @Test
     public void should_computeCompletionProposals_return_empty_list_when_inputs_is_empty() throws Exception {
         doReturn(Collections.emptyList()).when(proposalComputer).getContractInputs(context);
-        assertThat(proposalComputer.computeCompletionProposals(context, null)).isEmpty();
+        assertThat(proposalComputer.computeCompletionProposals(context, monitor)).isEmpty();
     }
 
     @Test
     public void should_computeCompletionProposals_returns_inputs_proposal() throws Exception {
-        final List<ICompletionProposal> proposals = proposalComputer.computeCompletionProposals(context, null);
+        final List<ICompletionProposal> proposals = proposalComputer.computeCompletionProposals(context, monitor);
         assertThat(proposals).extracting("displayString").contains("name -- TEXT", "employee -- COMPLEX", "days -- TEXT");
     }
 
@@ -149,14 +153,14 @@ public class ContractInputCompletionProposalComputerTest extends AbstractSWTTest
     @Test
     public void should_computeCompletionProposals_returns_complex_input_children() throws Exception {
         when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(new VariableExpression("employee"));
-        final List<ICompletionProposal> proposals = proposalComputer.computeCompletionProposals(context, null);
+        final List<ICompletionProposal> proposals = proposalComputer.computeCompletionProposals(context, monitor);
         assertThat(proposals).extracting("displayString").contains("firstName -- TEXT", "lastName -- TEXT", "skills -- TEXT");
     }
 
     @Test
     public void should_computeCompletionProposals_call_java_methods_proposal_creator() throws Exception {
         when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(new VariableExpression("days"));
-        proposalComputer.computeCompletionProposals(context, null);
+        proposalComputer.computeCompletionProposals(context, monitor);
         verify(methodProposalCreator).findAllProposals(any(ClassNode.class), anySet(), eq(""), eq(false), eq(false));
     }
 
@@ -164,7 +168,7 @@ public class ContractInputCompletionProposalComputerTest extends AbstractSWTTest
     public void should_computeCompletionProposals_returns_complex_and_multiple_input_children_for_variable_expression() throws Exception {
         final BinaryExpression binaryExpression = new BinaryExpression(new VariableExpression("employee"), null, null);
         when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(binaryExpression);
-        assertThat(proposalComputer.computeCompletionProposals(context, null)).extracting("displayString").contains("firstName -- TEXT", "lastName -- TEXT",
+        assertThat(proposalComputer.computeCompletionProposals(context, monitor)).extracting("displayString").contains("firstName -- TEXT", "lastName -- TEXT",
                 "skills -- TEXT");
     }
 
@@ -173,7 +177,7 @@ public class ContractInputCompletionProposalComputerTest extends AbstractSWTTest
         final BinaryExpression binaryExpression = new BinaryExpression(new PropertyExpression(new ConstantExpression("employee"), new ConstantExpression(
                 "employee")), null, null);
         when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(binaryExpression);
-        assertThat(proposalComputer.computeCompletionProposals(context, null)).extracting("displayString").contains("firstName -- TEXT", "lastName -- TEXT",
+        assertThat(proposalComputer.computeCompletionProposals(context, monitor)).extracting("displayString").contains("firstName -- TEXT", "lastName -- TEXT",
                 "skills -- TEXT");
     }
 

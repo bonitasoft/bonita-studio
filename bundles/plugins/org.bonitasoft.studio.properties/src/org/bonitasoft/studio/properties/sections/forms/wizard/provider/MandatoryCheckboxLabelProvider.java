@@ -22,6 +22,7 @@ import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.HiddenWidget;
 import org.bonitasoft.studio.model.form.Widget;
+import org.eclipse.swt.graphics.Image;
 
 public class MandatoryCheckboxLabelProvider extends AbstractCheckboxLabelProvider {
 
@@ -35,7 +36,7 @@ public class MandatoryCheckboxLabelProvider extends AbstractCheckboxLabelProvide
 		}
 		return false;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider#isEnabled(java.lang.Object)
 	 */
@@ -44,6 +45,14 @@ public class MandatoryCheckboxLabelProvider extends AbstractCheckboxLabelProvide
 		final Widget widget = ((WidgetMapping) element).getWidgetType();
 		return  widget instanceof FormField && !(widget instanceof HiddenWidget) || widget instanceof Group ;
 	}
-	
+
+    @Override
+    public Image getImage(final Object element) {
+        final Widget widget = ((WidgetMapping) element).getWidgetType();
+        if (widget == null) {
+            return null;
+        }
+        return super.getImage(element);
+    }
 
 }
