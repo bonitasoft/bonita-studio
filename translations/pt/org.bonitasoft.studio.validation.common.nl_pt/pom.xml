@@ -9,6 +9,6 @@
     
   </parent>
   <groupId>org.bonitasoft.studio.translations.pt</groupId>
-  <artifactId>org.bonitasoft.studio.validation.common.nl_ja</artifactId>
+  <artifactId>org.bonitasoft.studio.validation.common.nl_pt</artifactId>
   <packaging>eclipse-plugin</packaging>
 </project>
