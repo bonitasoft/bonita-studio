@@ -151,7 +151,7 @@ public class WorkspaceSystemPropertiesTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void should_throw_an_IllegalArgumentException_if_profiles_are_null() throws Exception {
-        workspaceSystemProperties.activateSpringProfile(null);
+        workspaceSystemProperties.activateSpringProfile();
     }
 
     @Test

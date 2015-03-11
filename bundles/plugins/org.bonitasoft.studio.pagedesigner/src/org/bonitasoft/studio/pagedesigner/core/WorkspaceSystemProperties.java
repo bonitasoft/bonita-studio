@@ -82,7 +82,7 @@ public class WorkspaceSystemProperties {
     }
 
     public String activateSpringProfile(final String... profiles) {
-        checkArgument(profiles != null);
+        checkArgument(profiles != null && profiles.length > 0);
         return aSystemProperty(SPRING_PROFILES_ACTIVE, Joiner.on(",").skipNulls().join(profiles));
     }
 
