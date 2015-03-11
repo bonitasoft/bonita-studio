@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.pagedesigner.core;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.io.File;
 
 import javax.inject.Inject;
@@ -24,6 +26,8 @@ import org.bonitasoft.studio.pagedesigner.core.repository.WebFragmentRepositoryS
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebWidgetRepositoryStore;
 import org.eclipse.e4.core.di.annotations.Creatable;
+
+import com.google.common.base.Joiner;
 
 /**
  * @author Romain Bioteau
@@ -36,6 +40,7 @@ public class WorkspaceSystemProperties {
     private static final String REPOSITORY_FRAGMENTS_PROPERTIES = "repository.fragments";
     private static final String REPOSITORY_WIDGETS_PROPERTIES = "repository.widgets";
     private static final String WORKSPACE_API_REST_URL = "workspace.api.rest.url";
+    private static final String SPRING_PROFILES_ACTIVE = "spring.profiles.active";
 
     @Inject
     private RepositoryAccessor repositoryAccessor;
@@ -72,16 +77,21 @@ public class WorkspaceSystemProperties {
         return aSystemProperty(REPOSITORY_WIDGETS_PROPERTIES, webWidgetRepository.getResource().getLocation().toFile());
     }
 
+    public String getRestAPIURL(final int port) {
+        return aSystemProperty(WORKSPACE_API_REST_URL, String.format("http://localhost:%s/api/workspace", port));
+    }
+
+    public String activateSpringProfile(final String... profiles) {
+        checkArgument(profiles != null);
+        return aSystemProperty(SPRING_PROFILES_ACTIVE, Joiner.on(",").skipNulls().join(profiles));
+    }
+
     static String aSystemProperty(final String propertyName, final Object value) {
         String properyValue = value.toString();
         if (value instanceof File) {
             properyValue = "\"" + ((File) value).getAbsolutePath() + "\"";
         }
         return "-D" + propertyName + "=" + properyValue;
-    }
-
-    public String getRestAPIURL(final int port) {
-        return aSystemProperty(WORKSPACE_API_REST_URL, String.format("http://localhost:%s/api/workspace", port));
     }
 
 }
