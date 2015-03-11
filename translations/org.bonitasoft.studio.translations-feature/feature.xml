@@ -61,7 +61,7 @@
          fragment="true"
          unpack="false"/>
          
-         <plugin
+       <plugin
          id="org.bonitasoft.studio.businessobject.nl_de"
          download-size="0"
          install-size="0"
@@ -69,7 +69,7 @@
          fragment="true"
          unpack="false"/>
          
-          <plugin
+     <plugin
          id="org.bonitasoft.studio.businessobject.nl_es"
          download-size="0"
          install-size="0"
@@ -77,7 +77,7 @@
          fragment="true"
          unpack="false"/>
          
-          <plugin
+     <plugin
          id="org.bonitasoft.studio.businessobject.nl_fr"
          download-size="0"
          install-size="0"
@@ -103,6 +103,55 @@
          
    <plugin
          id="org.bonitasoft.studio.businessobject.nl_ja"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+         
+     <plugin
+         id="org.bonitasoft.studio.browser.nl_de"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+     <plugin
+         id="org.bonitasoft.studio.browser.nl_es"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+     <plugin
+         id="org.bonitasoft.studio.browser.nl_fr"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+  <plugin
+         id="org.bonitasoft.studio.browser.nl_it"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+   <plugin
+         id="org.bonitasoft.studio.browser.nl_pt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+   <plugin
+         id="org.bonitasoft.studio.browser.nl_ja"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -2183,6 +2232,102 @@
          
            <plugin
          id="org.bonitasoft.studio.parameters.nl_pt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+          <plugin
+         id="org.bonitasoft.studio.pagedesigner.nl_de"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+     <plugin
+         id="org.bonitasoft.studio.pagedesigner.nl_es"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+     <plugin
+         id="org.bonitasoft.studio.pagedesigner.nl_fr"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+  <plugin
+         id="org.bonitasoft.studio.pagedesigner.nl_it"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+   <plugin
+         id="org.bonitasoft.studio.pagedesigner.nl_pt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+   <plugin
+         id="org.bonitasoft.studio.pagedesigner.nl_ja"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+          <plugin
+         id="org.bonitasoft.studio.validation.common.nl_de"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+     <plugin
+         id="org.bonitasoft.studio.validation.common.nl_es"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+     <plugin
+         id="org.bonitasoft.studio.validation.common.nl_fr"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+  <plugin
+         id="org.bonitasoft.studio.validation.common.nl_it"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+   <plugin
+         id="org.bonitasoft.studio.validation.common.nl_pt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+   <plugin
+         id="org.bonitasoft.studio.validation.common.nl_ja"
          download-size="0"
          install-size="0"
          version="0.0.0"
