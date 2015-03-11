@@ -8,7 +8,7 @@
           <version>7.0.0-SNAPSHOT</version>
     
   </parent>
-  <groupId>org.bonitasoft.studio.translations.de</groupId>
+  <groupId>org.bonitasoft.studio.translations.it</groupId>
   <artifactId>org.bonitasoft.studio.pagedesigner.nl_it</artifactId>
   <packaging>eclipse-plugin</packaging>
 </project>
