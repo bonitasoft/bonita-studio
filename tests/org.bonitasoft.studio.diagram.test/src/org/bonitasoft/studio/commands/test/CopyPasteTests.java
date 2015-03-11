@@ -65,7 +65,7 @@ public class CopyPasteTests extends SWTBotGefTestCase {
     @Override
     @After
     public void tearDown() {
-        bot.activeEditor().saveAndClose();
+        bot.saveAllEditors();
         bot.closeAllEditors();
     }
 
