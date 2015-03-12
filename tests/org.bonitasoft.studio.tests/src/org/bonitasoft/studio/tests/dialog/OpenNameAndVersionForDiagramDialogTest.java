@@ -42,33 +42,31 @@ import org.junit.runner.RunWith;
 public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCase {
 
     private static final int VALIDATION_DELAY = 100;
-    private OpenNameAndVersionForDiagramDialog dialog;
 
     @Before
     public void openDialog() {
-        if (dialog == null) {
-            Display.getDefault().asyncExec(new Runnable() {
+        Display.getDefault().asyncExec(new Runnable() {
 
-                @Override
-                public void run() {
-                    final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-                    final MainProcess mp = ProcessFactory.eINSTANCE.createMainProcess();
-                    mp.setName("TestName");
-                    mp.setVersion("test.version");
-                    final Pool pool = ProcessFactory.eINSTANCE.createPool();
-                    pool.setName("Pool");
-                    pool.setVersion("1.0");
-                    mp.getElements().add(pool);
+            @Override
+            public void run() {
+                final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+                final MainProcess mp = ProcessFactory.eINSTANCE.createMainProcess();
+                mp.setName("TestName");
+                mp.setVersion("test.version");
+                final Pool pool = ProcessFactory.eINSTANCE.createPool();
+                pool.setName("Pool");
+                pool.setVersion("1.0");
+                mp.getElements().add(pool);
 
-                    final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-                    final IRepositoryFileStore fileStore = store.createRepositoryFileStore(NamingUtils.toDiagramFilename(mp));
-                    fileStore.save(mp);
-                    dialog = new OpenNameAndVersionForDiagramDialog(shell, mp, RepositoryManager.getInstance().getRepositoryStore(
-                            DiagramRepositoryStore.class));
-                    dialog.open();
-                }
-            });
-        }
+                final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+                final IRepositoryFileStore fileStore = store.createRepositoryFileStore(NamingUtils.toDiagramFilename(mp));
+                fileStore.save(mp);
+                final OpenNameAndVersionForDiagramDialog dialog = new OpenNameAndVersionForDiagramDialog(shell, mp, RepositoryManager.getInstance()
+                        .getRepositoryStore(
+                                DiagramRepositoryStore.class));
+                dialog.open();
+            }
+        });
         bot.waitUntil(Conditions.shellIsActive(Messages.openNameAndVersionDialogTitle));
         bot.shell(Messages.openNameAndVersionDialogTitle).setFocus();
     }
