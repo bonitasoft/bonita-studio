@@ -19,9 +19,17 @@ import junit.framework.TestSuite;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.importer.bar.tests.TestBarImporterInput;
+import org.bonitasoft.studio.importer.bar.tests.TestSimpleMigrationUseCase;
+import org.bonitasoft.studio.importer.bar.tests.attachmentDataImport.AttachmentDataImportTest;
+import org.bonitasoft.studio.importer.bar.tests.connector.TestConnectorMigrationUseCase;
+import org.bonitasoft.studio.importer.bar.tests.connector.TestCustomConnectorMigrationUseCase;
+import org.bonitasoft.studio.importer.bar.tests.examples.Test59ExampleImport;
+import org.bonitasoft.studio.importer.bar.tests.messagesImport.CorrelationMigrationTest;
 import org.bonitasoft.studio.migration.tests.EdaptHistoryIT;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.util.test.BonitaJunit4TestSuite;
 import org.eclipse.core.runtime.CoreException;
@@ -38,14 +46,14 @@ import org.junit.runners.Suite;
 @RunWith(BonitaJunit4TestSuite.class)
 @Suite.SuiteClasses({
         EdaptHistoryIT.class,
-//    TestBarImporterInput.class,
-//    TestSimpleMigrationUseCase.class,
-//    TestConnectorMigrationUseCase.class,
-//    TestCustomConnectorMigrationUseCase.class,
-//    Test59ExampleImport.class,
-//    AttachmentDataImportTest.class,
-//    CorrelationMigrationTest.class,
-//    CloseAllEditors.class
+        TestBarImporterInput.class,
+        TestSimpleMigrationUseCase.class,
+        TestConnectorMigrationUseCase.class,
+        TestCustomConnectorMigrationUseCase.class,
+        Test59ExampleImport.class,
+        AttachmentDataImportTest.class,
+        CorrelationMigrationTest.class,
+        CloseAllEditors.class
 })
 public class AllMigrationTests extends TestSuite {
 

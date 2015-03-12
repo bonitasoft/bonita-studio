@@ -19,7 +19,9 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.IHeapDumper;
+import org.bonitasoft.studio.tests.stress.TestDesignStress;
 import org.bonitasoft.studio.util.test.BonitaJunit4TestSuite;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -34,8 +36,8 @@ import org.junit.runners.Suite;
  */
 @RunWith(BonitaJunit4TestSuite.class)
 @Suite.SuiteClasses({
-//    TestDesignStress.class,
-//    CloseAllEditors.class
+        TestDesignStress.class,
+        CloseAllEditors.class
 })
 public class AllTestsStress {
 
