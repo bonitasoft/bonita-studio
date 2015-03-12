@@ -31,7 +31,6 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.ui.PlatformUI;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -84,7 +83,6 @@ public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCas
     }
 
     @Test
-    @Ignore
     public void testForbiddenSameVersionDifferentCaseForDiagram() {
         bot.text("test.version").setText("Test.version");
         bot.sleep(VALIDATION_DELAY);
@@ -94,7 +92,6 @@ public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCas
     }
 
     @Test
-    @Ignore
     public void testAllowDifferentVersionForDiagram() {
         bot.text("test.version").setText("wouhou.version");
         bot.sleep(VALIDATION_DELAY);
