@@ -17,12 +17,16 @@ package org.bonitasoft.studio.businessobject.ui.expression;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.AddBusinessObjectDataWizard;
+import org.bonitasoft.studio.common.DataTypeLabels;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
+import org.bonitasoft.studio.expression.editor.provider.IDataProposalListener;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -35,10 +39,9 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * @author Romain Bioteau
  */
-public class CreateBusinessDataProposalListener implements IProposalListener {
+public class CreateBusinessDataProposalListener implements IDataProposalListener {
 
-    public CreateBusinessDataProposalListener() {
-    }
+    private boolean multipleData;
 
     @Override
     public String handleEvent(EObject context, final String fixedReturnType) {
@@ -46,9 +49,11 @@ public class CreateBusinessDataProposalListener implements IProposalListener {
         while (!(context instanceof Pool)) {
             context = context.eContainer();
         }
-
+        final BusinessObjectData businessObjectData = ProcessFactory.eINSTANCE.createBusinessObjectData();
+        businessObjectData.setDataType(ModelHelper.getDataTypeForID(context, DataTypeLabels.businessObjectType));
+        businessObjectData.setMultiple(multipleData);
         final BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        final AddBusinessObjectDataWizard newWizard = new AddBusinessObjectDataWizard((DataAware) context, repositoryStore,
+        final AddBusinessObjectDataWizard newWizard = new AddBusinessObjectDataWizard((DataAware) context, businessObjectData, repositoryStore,
                 TransactionUtil.getEditingDomain(context));
         Shell activeShell = Display
                 .getDefault().getActiveShell();
@@ -120,6 +125,11 @@ public class CreateBusinessDataProposalListener implements IProposalListener {
     @Override
     public boolean isRelevant(final EObject context) {
         return context instanceof Pool;
+    }
+
+    @Override
+    public void setMultipleData(final boolean multipleData) {
+        this.multipleData = multipleData;
     }
 
 }

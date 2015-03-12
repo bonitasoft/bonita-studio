@@ -17,6 +17,7 @@
 		<module>org.bonitasoft.studio.actors.nl_de</module>
 		<module>org.bonitasoft.studio.application.nl_de</module>
         <module>org.bonitasoft.studio.businessobject.nl_de</module>
+        <module>org.bonitasoft.studio.browser.nl_de</module>
 		<module>org.bonitasoft.studio.common.nl_de</module>
 		<module>org.bonitasoft.studio.common.repository.nl_de</module>
 		<module>org.bonitasoft.studio.condition.nl_de</module>
@@ -47,6 +48,7 @@
 		<module>org.bonitasoft.studio.jpdl.nl_de</module>
 		<module>org.bonitasoft.studio.migration.nl_de</module>
 		<module>org.bonitasoft.studio.model.edit.custom.nl_de</module>
+        <module>org.bonitasoft.studio.pagedesigner.nl_de</module>
         <module>org.bonitasoft.studio.parameters.nl_de</module>
 		<module>org.bonitasoft.studio.preferences.nl_de</module>
 		<module>org.bonitasoft.studio.profiles.nl_de</module>
@@ -56,6 +58,7 @@
 		<module>org.bonitasoft.studio.scripting.nl_de</module>
 		<module>org.bonitasoft.studio.simulation.nl_de</module>
 		<module>org.bonitasoft.studio.validation.nl_de</module>
+        <module>org.bonitasoft.studio.validation.common.nl_de</module>
 		<module>org.bonitasoft.studio.validators.nl_de</module>
 		<module>org.bonitasoft.studio.xml.nl_de</module>
 		<module>org.omg.schema.spec.bpmn.nl_de</module>

@@ -148,4 +148,14 @@ public class WorkspaceSystemPropertiesTest {
         assertThat(workspaceSystemProperties.getRestAPIURL(6666)).isEqualTo(
                 "-Dworkspace.api.rest.url=http://localhost:6666/api/workspace");
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void should_throw_an_IllegalArgumentException_if_profiles_are_null() throws Exception {
+        workspaceSystemProperties.activateSpringProfile();
+    }
+
+    @Test
+    public void should_activateSpringProfile_return_a_valid_spring_environment_property() throws Exception {
+        assertThat(workspaceSystemProperties.activateSpringProfile("dev", null, "prod")).isEqualTo("-Dspring.profiles.active=dev,prod");
+    }
 }

@@ -52,7 +52,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 
     private final EObject container;
 
-    private final Data dataWorkingCopy;
+    private Data dataWorkingCopy;
 
     private boolean editMode = false;
 
@@ -117,6 +117,13 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
         editMode = true;
         this.featureToCheckForUniqueID = featureToCheckForUniqueID;
         setWindowTitle(Messages.editVariable);
+    }
+
+    public DataWizard(final TransactionalEditingDomain editingDomain, final EObject dataContainer, final Data wc,
+            final EStructuralFeature dataContainmentFeature,
+            final Set<EStructuralFeature> featureToCheckForUniqueID, final boolean showAutogenerate, final String fixedReturnType) {
+        this(editingDomain, dataContainer, dataContainmentFeature, featureToCheckForUniqueID, showAutogenerate, fixedReturnType);
+        dataWorkingCopy = wc;
     }
 
     private void initDataWizard(final EStructuralFeature dataContainmentFeature, final boolean showAutogenerateForm) {
@@ -202,7 +209,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
     protected void refreshXtextReferences() {
         try {
             RepositoryManager.getInstance().getCurrentRepository().getProject()
-            .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
+                    .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
         }

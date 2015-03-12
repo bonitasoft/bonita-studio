@@ -158,40 +158,44 @@ public class PlatformUtil {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         if (workbench != null) {
             final Display display = workbench.getDisplay();
-            display.asyncExec(new Runnable() {
+            display.asyncExec(openIntroRunnable(workbench));
+        }
+    }
 
-                @Override
-                public void run() {
-                    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-                    if (window != null && window.getActivePage() != null) {
-                        final IWorkbenchPage activePage = window.getActivePage();
-                        final IIntroManager introManager = workbench.getIntroManager();
-                        //colse intro to reload content if already opened
-                        if (introManager.getIntro() != null) {
-                            introManager.closeIntro(introManager.getIntro());
-                        } else if (activePage != null) {
-                            final IViewPart view = activePage.findView("org.eclipse.ui.internal.introview");
-                            if (view != null) {
-                                activePage.hideView(view);
-                            }
-                        }
-                        final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
-                        if (model != null
-                                && introManager.getIntro() != null
-                                && ((CustomizableIntroPart) introManager.getIntro()).getControl() != null) {
-                            model.getPresentation().navigateHome();
-                        }
-                        introManager.showIntro(
-                                window,
-                                false);
-                        if (window != null) {
-                            PlatformUtil.maximizeWindow(window.getActivePage());
+    public static Runnable openIntroRunnable(final IWorkbench workbench) {
+        return new Runnable() {
+
+            @Override
+            public void run() {
+                final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+                if (window != null && window.getActivePage() != null) {
+                    final IWorkbenchPage activePage = window.getActivePage();
+                    final IIntroManager introManager = workbench.getIntroManager();
+                    //colse intro to reload content if already opened
+                    if (introManager.getIntro() != null) {
+                        introManager.closeIntro(introManager.getIntro());
+                    } else if (activePage != null) {
+                        final IViewPart view = activePage.findView("org.eclipse.ui.internal.introview");
+                        if (view != null) {
+                            activePage.hideView(view);
                         }
                     }
+                    final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
+                    if (model != null
+                            && introManager.getIntro() != null
+                            && ((CustomizableIntroPart) introManager.getIntro()).getControl() != null) {
+                        model.getPresentation().navigateHome();
+                    }
+                    introManager.showIntro(
+                            window,
+                            false);
+                    if (window != null) {
+                        PlatformUtil.maximizeWindow(window.getActivePage());
+                    }
                 }
+            }
 
-            });
-        }
+        };
     }
 
     /**

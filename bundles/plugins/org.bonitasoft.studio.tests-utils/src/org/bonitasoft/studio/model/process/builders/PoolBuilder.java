@@ -30,6 +30,11 @@ public class PoolBuilder extends ElementBuilder<Pool, PoolBuilder> {
         return new PoolBuilder();
     }
 
+    public PoolBuilder withVersion(final String version) {
+        getBuiltInstance().setVersion(version);
+        return getThis();
+    }
+
     public PoolBuilder havingElements(final ElementBuilder<?, ?>... elements) {
         if (elements != null) {
             for (final ElementBuilder<?, ?> elementBuilder : elements) {

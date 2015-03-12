@@ -53,6 +53,7 @@ public class BotOpenDiagramDialog extends BotDialog {
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.diagram.custom.i18n.Messages.confirmProcessDeleteTitle));
         bot.button(IDialogConstants.YES_LABEL).click();
         bot.waitUntil(Conditions.shellIsActive(getDialogTitle()));
+        bot.activeShell().setFocus();
         return this;
     }
 

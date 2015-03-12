@@ -562,6 +562,7 @@ public class BOSWebServerManager {
         addSystemProperty(args, workspaceSystemProperties.getWidgetRepositoryLocation());
         addSystemProperty(args, workspaceSystemProperties.getFragmentRepositoryLocation());
         addSystemProperty(args, workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()));
+        addSystemProperty(args, workspaceSystemProperties.activateSpringProfile("studio"));
         return args.toString();
     }
 
