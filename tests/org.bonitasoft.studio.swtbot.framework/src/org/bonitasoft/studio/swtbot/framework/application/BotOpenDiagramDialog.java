@@ -46,6 +46,7 @@ public class BotOpenDiagramDialog extends BotDialog {
     }
 
     public BotOpenDiagramDialog selectDiagram(final String diagramName, final String diagramVersion) {
+
         System.out.println("===============================");
         System.out.println(String.format("ACTIVE SHELL BEFORE SELECTING DIAGRAM = %s", bot.activeShell().getText()));
         try {
@@ -95,6 +96,7 @@ public class BotOpenDiagramDialog extends BotDialog {
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.diagram.custom.i18n.Messages.confirmProcessDeleteTitle));
         bot.button(IDialogConstants.YES_LABEL).click();
         bot.waitUntil(Conditions.shellIsActive(getDialogTitle()));
+        bot.activeShell().setFocus();
         return this;
     }
 

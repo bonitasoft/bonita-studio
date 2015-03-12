@@ -98,8 +98,7 @@ public class CopyPasteTests extends SWTBotGefTestCase {
         waitForcloseAction(editor2);
 
         final BotOpenDiagramDialog botOpenDiagramDialog = new BotApplicationWorkbenchWindow(bot).open();
-        botOpenDiagramDialog.selectDiagram(diagram1.getName(), diagram1.getVersion()).delete();
-        botOpenDiagramDialog.selectDiagram(diagram2.getName(), diagram2.getVersion()).open();
+        botOpenDiagramDialog.selectDiagram(diagram1.getName(), diagram1.getVersion()).delete().selectDiagram(diagram2.getName(), diagram2.getVersion()).open();
         editor2 = bot.gefEditor(bot.activeEditor().getTitle());
         part = editor2.getEditPart("Step1").parent();
         editor2.drag(part, 100, 100);

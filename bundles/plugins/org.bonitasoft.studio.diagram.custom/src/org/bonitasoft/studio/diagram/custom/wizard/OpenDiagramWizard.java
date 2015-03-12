@@ -59,7 +59,6 @@ public class OpenDiagramWizard extends AbstractManageDiagramWizard {
      */
     @Override
     public boolean performFinish() {
-
         try {
             getContainer().run(false, false, new IRunnableWithProgress() {
 

@@ -82,9 +82,6 @@ public abstract class AbstractManageDiagramWizard extends Wizard implements IWiz
                     }
 
                     page.getViewer().setInput(getDiagramRepositoryStore());
-                    if (PlatformUtil.isIntroOpen()) {
-                        PlatformUtil.openIntro();
-                    }
                     return true;
                 }
             } catch (final Exception e1) {
@@ -104,6 +101,12 @@ public abstract class AbstractManageDiagramWizard extends Wizard implements IWiz
 
     protected DiagramRepositoryStore getDiagramRepositoryStore() {
         return RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+    }
+
+    @Override
+    public boolean performCancel() {
+        PlatformUtil.openIntroIfNoOtherEditorOpen();
+        return super.performCancel();
     }
 
     /*
