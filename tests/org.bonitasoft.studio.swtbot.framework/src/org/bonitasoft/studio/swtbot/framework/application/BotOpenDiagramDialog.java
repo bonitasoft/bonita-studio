@@ -25,6 +25,8 @@ import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -65,7 +67,21 @@ public class BotOpenDiagramDialog extends BotDialog {
 
         }
         System.out.println("===============================");
-        bot.treeWithId(SWTBOT_ID_OPEN_DIAGRAM_TREE_ID).select(diagramName + " (" + diagramVersion + ")");
+        searchDiagram(String.format("%s (%s)", diagramName, diagramVersion));
+        final SWTBotTree swtBotTree = bot.treeWithId(SWTBOT_ID_OPEN_DIAGRAM_TREE_ID);
+        bot.waitUntil(new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return swtBotTree.rowCount() == 1;
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return String.format("No diagram found with name %s (%)", diagramName, diagramVersion);
+            }
+        });
+        swtBotTree.select(0);
         return this;
     }
 
