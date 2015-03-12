@@ -55,6 +55,7 @@ import org.bonitasoft.studio.properties.test.TestThrowCatchMessage;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.bug.TestBugsSWTBot;
 import org.bonitasoft.studio.tests.debug.TestDebugFeature;
+import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
 import org.bonitasoft.studio.tests.pagetemplate.PageTemplateEditionIT;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
 import org.bonitasoft.studio.util.test.BonitaTestSuite;
@@ -69,6 +70,7 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaTestSuite.class)
 @Suite.SuiteClasses({
+        OpenNameAndVersionForDiagramDialogTest.class,
         TestBugsSWTBot.class,
         DiagramTests.class,
         TestRenameDiagram.class,

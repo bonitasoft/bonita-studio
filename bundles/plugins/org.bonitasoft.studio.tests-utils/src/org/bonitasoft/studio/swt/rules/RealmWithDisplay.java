@@ -85,4 +85,8 @@ public class RealmWithDisplay extends ExternalResource {
         }
     }
 
+    public Shell getShell() {
+        return headlessShell;
+    }
+
 }
