@@ -4,6 +4,13 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.bonitasoft.studio</groupId>
+        <artifactId>studio</artifactId>
+        <version>7.0.0-SNAPSHOT</version>
+    </parent>
+
+
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>platform</artifactId>
 	<packaging>eclipse-target-definition</packaging>
@@ -44,12 +51,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<parent>
-		<groupId>org.bonitasoft.studio</groupId>
-		<artifactId>studio</artifactId>
-		<version>6.5.0-SNAPSHOT</version>
-	</parent>
 
 	<profiles>
 		<profile>

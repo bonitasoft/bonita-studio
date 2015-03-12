@@ -46,9 +46,9 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.data.attachment.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
+import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.exporter.application.FormsXMLExporter;
 import org.bonitasoft.studio.exporter.application.ResourcesExporter;
 import org.bonitasoft.studio.exporter.application.TemplatesExporter;
@@ -339,7 +339,7 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 				final String autoLoginPassword = conf.getAnonymousPassword();
 				if (autoLoginUserName != null && !autoLoginUserName.isEmpty()) {
 					properties.setProperty(AUTO_LOGIN_USERNAME_PROPERTY, autoLoginUserName);
-					properties.setProperty(AUTO_LOGIN_PASSWORD_PROPERTY, (autoLoginPassword!=null && !autoLoginPassword.isEmpty())? autoLoginPassword : "");
+					properties.setProperty(AUTO_LOGIN_PASSWORD_PROPERTY, autoLoginPassword!=null && !autoLoginPassword.isEmpty()? autoLoginPassword : "");
 				}
 
 				final ByteArrayOutputStream os = new ByteArrayOutputStream();

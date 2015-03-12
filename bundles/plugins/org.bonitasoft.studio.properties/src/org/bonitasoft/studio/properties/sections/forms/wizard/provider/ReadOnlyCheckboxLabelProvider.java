@@ -22,6 +22,7 @@ import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.Widget;
+import org.eclipse.swt.graphics.Image;
 
 public class ReadOnlyCheckboxLabelProvider extends AbstractCheckboxLabelProvider {
 
@@ -35,7 +36,7 @@ public class ReadOnlyCheckboxLabelProvider extends AbstractCheckboxLabelProvider
 		}
 		return false;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider#isEnabled(java.lang.Object)
 	 */
@@ -44,6 +45,14 @@ public class ReadOnlyCheckboxLabelProvider extends AbstractCheckboxLabelProvider
 		final Widget widget = ((WidgetMapping) element).getWidgetType();
 		return (widget instanceof FormField || widget instanceof Group) && !(widget instanceof FileWidget);
 	}
-	
+
+    @Override
+    public Image getImage(final Object element) {
+        final Widget widget = ((WidgetMapping) element).getWidgetType();
+        if (widget == null) {
+            return null;
+        }
+        return super.getImage(element);
+    }
 
 }

@@ -172,7 +172,11 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
     @Override
     protected void measure(final Event event, final Object element) {
-        event.height = getImage(element).getBounds().height;
+        final Image image = getImage(element);
+        if (image != null) {
+            event.height = image.getBounds().height;
+        }
+
     }
 
 }

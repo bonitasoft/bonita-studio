@@ -22,7 +22,6 @@ import java.util.Set;
 import org.bonitasoft.studio.data.ui.property.section.AbstractDataSection;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Aurelien Pupier
@@ -30,27 +29,13 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class DataSectionBOS extends AbstractDataSection {
 	
-	public DataSectionBOS(){
-		
-	}
-	
 	@Override
 	protected Set<EStructuralFeature> getDataFeatureToCheckUniqueID() {
-		Set<EStructuralFeature> res = super.getDataFeatureToCheckUniqueID();
+		final Set<EStructuralFeature> res = super.getDataFeatureToCheckUniqueID();
 		res.add(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA);
 		res.add(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA);
 		res.add(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA);
 		return res;
 	}
 
-	@Override
-	protected void createLabel(Composite dataComposite) {
-		
-	}
-
-	
-
-	
-	
-	
 }
