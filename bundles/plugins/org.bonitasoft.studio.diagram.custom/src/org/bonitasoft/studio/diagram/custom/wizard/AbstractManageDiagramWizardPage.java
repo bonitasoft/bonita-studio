@@ -14,25 +14,37 @@
  */
 package org.bonitasoft.studio.diagram.custom.wizard;
 
+import static org.eclipse.jface.layout.GridLayoutFactory.fillDefaults;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.FileStoreLabelProvider;
-import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
-import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.list.WritableList;
+import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
+import org.eclipse.core.databinding.validation.MultiValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
+import org.eclipse.jface.databinding.viewers.TreeStructureAdvisor;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ITreeSelection;
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
@@ -43,26 +55,18 @@ import org.eclipse.ui.dialogs.PatternFilter;
 public abstract class AbstractManageDiagramWizardPage extends WizardPage implements IWizardPage, SWTBotConstants {
 
     private FilteredTree diagramTree;
-    private Composite mainComposite;
 
-    private final ProcessConfigurationRepositoryStore processConfStore;
-    private final ApplicationResourceRepositoryStore applicationResourceStore;
+    private DataBindingContext context;
+    private List<DiagramFileStore> selectedDiagrams = new ArrayList<DiagramFileStore>();
+
+    private final DiagramRepositoryStore diagramRepositoryStore;
 
     /**
      * @param pageName
      */
-    protected AbstractManageDiagramWizardPage(final String pageName) {
+    protected AbstractManageDiagramWizardPage(final String pageName, final DiagramRepositoryStore diagramRepositoryStore) {
         super(pageName);
-        processConfStore = getConfigurationRepositoryStore();
-        applicationResourceStore = getApplicationResourceRepositoryStore();
-    }
-
-    public ApplicationResourceRepositoryStore getApplicationResourceRepositoryStore() {
-        return RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
-    }
-
-    public ProcessConfigurationRepositoryStore getConfigurationRepositoryStore() {
-        return RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+        this.diagramRepositoryStore = diagramRepositoryStore;
     }
 
     /*
@@ -71,22 +75,34 @@ public abstract class AbstractManageDiagramWizardPage extends WizardPage impleme
      */
     @Override
     public void createControl(final Composite parent) {
-        createDiagramTreeViewer(parent);
+        context = new DataBindingContext();
+        setControl(doCreateControl(parent, context));
+        WizardPageSupport.create(this, context);
     }
 
-    public void createDiagramTreeViewer(final Composite parent) {
-        mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayout(new GridLayout(2, true));
-        //Composite repositoryComposite = new Composite(composite, SWT.NONE);
-        diagramTree = new FilteredTree(mainComposite, SWT.MULTI | SWT.BORDER, new PatternFilter(), false);
-        diagramTree.getViewer().getTree().setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_OPEN_DIAGRAM_TREE_ID);
-        diagramTree.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(SWT.DEFAULT, 250).create());
-        diagramTree.getViewer().setContentProvider(new DiagramTreeContentProvider());
+    protected Composite doCreateControl(final Composite parent, final DataBindingContext context) {
+        final Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayout(fillDefaults().numColumns(2).equalWidth(true).create());
 
-        final LabelProvider fileStoreLabelProvider = new FileStoreLabelProvider();
-        diagramTree.getViewer().setLabelProvider(new DiagramLabelProvider(fileStoreLabelProvider));
-        diagramTree.getViewer().addSelectionChangedListener(diagramTreeSelectionChangeListener());
-        diagramTree.getViewer().addDoubleClickListener(new IDoubleClickListener() {
+        diagramTree = new FilteredTree(mainComposite, SWT.MULTI | SWT.BORDER, new PatternFilter(), false);
+        final TreeViewer treeViewer = diagramTree.getViewer();
+        treeViewer.getTree().setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_OPEN_DIAGRAM_TREE_ID);
+        diagramTree.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(SWT.DEFAULT, 250).create());
+
+        treeViewer.setContentProvider(new ObservableListTreeContentProvider(diagramListObservableFactory(), diagramTreeStructure()));
+        treeViewer.setLabelProvider(new DiagramLabelProvider(new FileStoreLabelProvider()));
+
+        final IObservableList selectionObservable = PojoObservables.observeList(this, "selectedDiagrams");
+        context.bindList(ViewersObservables.observeMultiSelection(diagramTree.getViewer()),
+                selectionObservable);
+        context.addValidationStatusProvider(new MultiValidator() {
+
+            @Override
+            protected IStatus validate() {
+                return selectionObservable.isEmpty() ? ValidationStatus.error(Messages.noDiagramSelected) : ValidationStatus.ok();
+            }
+        });
+        treeViewer.addDoubleClickListener(new IDoubleClickListener() {
 
             @Override
             public void doubleClick(final DoubleClickEvent arg0) {
@@ -98,10 +114,40 @@ public abstract class AbstractManageDiagramWizardPage extends WizardPage impleme
 
             }
         });
-        diagramTree.getViewer().getTree().setFocus();
+        treeViewer.setInput(diagramRepositoryStore);
+        treeViewer.getTree().setFocus();
+        defaultSelection(selectionObservable);
+        return mainComposite;
     }
 
-    public abstract ISelectionChangedListener diagramTreeSelectionChangeListener();
+    private TreeStructureAdvisor diagramTreeStructure() {
+        return new TreeStructureAdvisor() {
+        };
+    }
+
+    private IObservableFactory diagramListObservableFactory() {
+        return new IObservableFactory() {
+
+            @Override
+            public IObservable createObservable(final Object target) {
+                if (target instanceof DiagramRepositoryStore) {
+                    return new WritableList(((DiagramRepositoryStore) target).getChildren(), DiagramFileStore.class);
+                }
+                return null;
+            }
+        };
+    }
+
+    protected void defaultSelection(final IObservableList selectionObservable) {
+        final DiagramRepositoryStore diagramRepositoryStore = (DiagramRepositoryStore) getViewer().getInput();
+        if (!diagramRepositoryStore.getChildren().isEmpty()) {
+            selectionObservable.add(diagramRepositoryStore.getChildren().get(0));
+        }
+    }
+
+    protected TreeViewer getViewer() {
+        return diagramTree.getViewer();
+    }
 
     /**
      * @return the diagramTree
@@ -110,46 +156,12 @@ public abstract class AbstractManageDiagramWizardPage extends WizardPage impleme
         return diagramTree;
     }
 
-    /**
-     * @param diagramTree the diagramTree to set
-     */
-    public void setDiagramTree(final FilteredTree diagramTree) {
-        this.diagramTree = diagramTree;
+    public List<DiagramFileStore> getSelectedDiagrams() {
+        return selectedDiagrams;
     }
 
-    /**
-     * @return the mainComposite
-     */
-    public Composite getMainComposite() {
-        return mainComposite;
-    }
-
-    /**
-     * @param mainComposite the mainComposite to set
-     */
-    public void setMainComposite(final Composite mainComposite) {
-        this.mainComposite = mainComposite;
-    }
-
-    public List<DiagramFileStore> getDiagrams() {
-        if (!getDiagramTree().getViewer().getSelection().isEmpty()) {
-            return ((ITreeSelection) getDiagramTree().getViewer().getSelection()).toList();
-        }
-        return null;
-    }
-
-    /**
-     * @return the processConfStore
-     */
-    public ProcessConfigurationRepositoryStore getProcessConfStore() {
-        return processConfStore;
-    }
-
-    /**
-     * @return the applicationResourceStore
-     */
-    public ApplicationResourceRepositoryStore getApplicationResourceStore() {
-        return applicationResourceStore;
+    public void setSelectedDiagrams(final List<DiagramFileStore> selectedDiagrams) {
+        this.selectedDiagrams = selectedDiagrams;
     }
 
 }

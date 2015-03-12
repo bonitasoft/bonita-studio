@@ -21,8 +21,13 @@ import org.bonitasoft.studio.swtbot.framework.BotDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.widget.BotTreeWidget;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.ui.dialogs.FilteredTree;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 
 /**
  * @author Romain Bioteau
@@ -39,6 +44,27 @@ public class BotOpenDiagramDialog extends BotDialog {
     }
 
     public BotOpenDiagramDialog selectDiagram(final String diagramName, final String diagramVersion) {
+        System.out.println("===============================");
+        System.out.println(String.format("ACTIVE SHELL BEFORE SELECTING DIAGRAM = %s", bot.activeShell().getText()));
+        try {
+            bot.widget(new BaseMatcher<Widget>() {
+
+                @Override
+                public boolean matches(final Object item) {
+                    System.out.println(String.format("Found widget: %s", item));
+                    return item instanceof FilteredTree;
+                }
+
+                @Override
+                public void describeTo(final Description description) {
+
+                }
+            });
+
+        } catch (final WidgetNotFoundException e) {
+
+        }
+        System.out.println("===============================");
         bot.treeWithId(SWTBOT_ID_OPEN_DIAGRAM_TREE_ID).select(diagramName + " (" + diagramVersion + ")");
         return this;
     }

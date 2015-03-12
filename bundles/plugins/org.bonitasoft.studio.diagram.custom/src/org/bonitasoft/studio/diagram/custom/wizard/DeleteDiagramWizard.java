@@ -31,7 +31,7 @@ public class DeleteDiagramWizard extends AbstractManageDiagramWizard {
      */
     @Override
     public void addPages() {
-        page = new DeleteDiagramWizardPage(Messages.DeleteDiagramWizardPage_title);
+        page = new DeleteDiagramWizardPage(Messages.DeleteDiagramWizardPage_title, getDiagramRepositoryStore());
         addPage(page);
     }
 
