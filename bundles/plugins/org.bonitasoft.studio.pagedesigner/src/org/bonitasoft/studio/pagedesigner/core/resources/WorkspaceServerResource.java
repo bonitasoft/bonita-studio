@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -40,10 +38,8 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class WorkspaceServerResource extends ServerResource {
 
@@ -67,8 +63,8 @@ public class WorkspaceServerResource extends ServerResource {
         filePath = getAttribute(FILEPATH_ATTRIBUTE);
     }
 
-    @Post
-    public void dispatch(final String filePath) throws ResourceNotFoundException, LockedResourceException{
+    @Post("text/plain")
+    public void dispatch(final String filePath) throws ResourceNotFoundException, LockedResourceException {
         if (filePath == null) {
             throw new IllegalArgumentException("filePath is null");
         }
@@ -102,12 +98,12 @@ public class WorkspaceServerResource extends ServerResource {
     }
 
     @Get
-    public String getLockStatus() throws ResourceNotFoundException  {
+    public String getLockStatus() throws ResourceNotFoundException {
         if (filePath == null) {
             throw new IllegalArgumentException("filePath is not set");
         }
         if (!GET_LOCK_STATUS.equals(action)) {
-            throw new IllegalArgumentException("Unsupported action attribute "+action);
+            throw new IllegalArgumentException("Unsupported action attribute " + action);
         }
         try {
             final String decodedPath = URLDecoder.decode(filePath, "UTF-8");

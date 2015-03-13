@@ -2,7 +2,6 @@ package org.bonitasoft.studio.pagedesigner.core;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
-import org.bonitasoft.studio.pagedesigner.core.resources.WorkspaceServerResource;
 import org.restlet.Component;
 import org.restlet.Server;
 import org.restlet.data.Protocol;
@@ -28,13 +27,9 @@ public class WorkspaceResourceServerManager {
         if (component == null || !component.isStarted()) {
             component = new Component();
             server = component.getServers().add(Protocol.HTTP, port);
-            component.getDefaultHost().attach(
-                    "api/workspace/{filePath}/{action}",
-                    WorkspaceServerResource.class);
-            component.getDefaultHost().attach("api/workspace/{action}", WorkspaceServerResource.class);
+            component.getDefaultHost().attach("/api", new WorkspaceApplication());
 
             BonitaStudioLog.debug("Starting RESTLET server on port " + port + "...", PageDesignerPlugin.PLUGIN_ID);
-
             component.start();
         }
     }
@@ -58,6 +53,10 @@ public class WorkspaceResourceServerManager {
             throw new IllegalStateException("Restlet server is not running");
         }
         return server.getPort();
+    }
+
+    public boolean isRunning() {
+        return component != null && component.isStarted();
     }
 
 }
