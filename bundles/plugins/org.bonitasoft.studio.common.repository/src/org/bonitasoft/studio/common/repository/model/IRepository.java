@@ -14,9 +14,10 @@
  */
 package org.bonitasoft.studio.common.repository.model;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -80,7 +81,7 @@ public interface IRepository extends IFileStoreChangeListener {
 
     ClassLoader createProjectClassloader(IProgressMonitor monitor);
 
-    IRepositoryFileStore asRepositoryFileStore(IFile res);
+    IRepositoryFileStore asRepositoryFileStore(Path path) throws IOException;
 
     void migrate(IProgressMonitor monitor) throws CoreException, MigrationException;
 

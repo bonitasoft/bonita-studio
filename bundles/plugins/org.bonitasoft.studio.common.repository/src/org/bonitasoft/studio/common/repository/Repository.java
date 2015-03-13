@@ -18,7 +18,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -581,13 +583,24 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public IRepositoryFileStore asRepositoryFileStore(final IFile res) {
-        final IPath projectRelativePath = res.getProjectRelativePath();
+    public IRepositoryFileStore asRepositoryFileStore(final Path path) throws IOException {
+        Path resolvedPath = path;
+        if (!resolvedPath.isAbsolute()) {
+            resolvedPath = getProject().getLocation().toFile().toPath().resolve(resolvedPath);
+        }
+        if (!resolvedPath.toFile().exists()) {
+            throw new FileNotFoundException(resolvedPath.toFile().getAbsolutePath());
+        }
+        final URI rawLocationURI = getProject().getLocationURI();
+        final URI relativize = rawLocationURI.relativize(resolvedPath.toUri());
+        final IFile iResource = getProject().getFile(org.eclipse.core.runtime.Path.fromOSString(relativize.toString()));
+
+        final IPath projectRelativePath = iResource.getProjectRelativePath();
         if (projectRelativePath.segmentCount() > 0) {
-            final IPath path = projectRelativePath.removeFirstSegments(0);
-            if (path.segmentCount() > 1) {
-                final String repoName = path.segments()[0];
-                final IFile file = getProject().getFile(path);
+            final IPath iPath = projectRelativePath.removeFirstSegments(0);
+            if (iPath.segmentCount() > 1) {
+                final String repoName = iPath.segments()[0];
+                final IFile file = getProject().getFile(iPath);
                 if (file.exists()) {
                     for (final IRepositoryStore<?> store : getAllStores()) {
                         if (belongToRepositoryStore(store, file)) {

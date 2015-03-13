@@ -42,7 +42,7 @@ public class WorkspaceApplicationTest {
     public void should_attach_inbound_route_to_application() throws Exception {
         final Router inboundRoot = (Router) workspaceApplication.createInboundRoot();
 
-        assertThat(inboundRoot).isNull();
+        assertThat(inboundRoot).isNotNull();
         assertThat(inboundRoot.getRoutes()).hasSize(2);
         final TemplateRoute route1 = (TemplateRoute) inboundRoot.getRoutes().get(0);
         assertThat(route1.getTemplate().getPattern()).isEqualTo("/workspace/{filePath}/{action}");
