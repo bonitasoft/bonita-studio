@@ -19,17 +19,16 @@ package org.bonitasoft.studio.engine.operation;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
+import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
-import org.bonitasoft.studio.engine.command.OpenBrowserCommand;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -104,7 +103,7 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
                 if (!executionContext.synchronousExecution()) {
                     BOSWebServerManager.getInstance().startServer(monitor);
                     if (hasInitiator) {
-                        new OpenBrowserCommand(url, BonitaPreferenceConstants.APPLICATION_BROWSER_ID, "Bonita Application").execute(null);
+                        new OpenBrowserOperation(url).execute();
                     } else {
                         Display.getDefault().syncExec(new Runnable() {
 

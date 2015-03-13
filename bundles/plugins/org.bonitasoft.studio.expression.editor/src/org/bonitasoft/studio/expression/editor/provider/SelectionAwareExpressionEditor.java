@@ -38,6 +38,8 @@ import org.eclipse.swt.widgets.Listener;
 public abstract class SelectionAwareExpressionEditor implements IExpressionEditor {
 
     private final List<Listener> listeners = new ArrayList<Listener>();
+    private boolean isPageFlowContext;
+    private boolean isOverviewContext;
 
     @Override
     public void addListener(final Listener listener) {
@@ -99,4 +101,42 @@ public abstract class SelectionAwareExpressionEditor implements IExpressionEdito
         return expressionReturnTypeFilter.compatibleReturnTypes(currentReturnType, expressionReturnType);
     }
 
+    @Override
+    public boolean isPageFlowContext() {
+        return isPageFlowContext;
+    }
+
+    @Override
+    public void setIsPageFlowContext(final boolean isPageFlowContext) {
+        this.isPageFlowContext = isPageFlowContext;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+     */
+    @Override
+    public boolean isOverViewContext() {
+        return isOverviewContext;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+     */
+    @Override
+    public void setIsOverviewContext(final boolean isOverviewContext) {
+        this.isOverviewContext = isOverviewContext;
+    }
+
+    @Override
+    public void okPressed() {
+        //Implement behavior in subclasses
+    }
+
+    @Override
+    public Control getTextControl() {
+        //No text control by default
+        return null;
+    }
 }

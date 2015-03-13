@@ -59,7 +59,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Aurelien Pupier
@@ -123,13 +122,9 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
     private EMFDataBindingContext context;
     private PageFlow pageFlow;
 
-    @Override
-    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
-        final Composite composite = getWidgetFactory().createComposite(parent);
-        composite.setLayout(new GridLayout());
-        composite.setLayoutData(GridDataFactory.fillDefaults().create());
-        createConfPanel(composite);
+
+    public ConfirmationPropertySection() {
+
     }
 
     protected void createConfPanel(final Composite parent) {
@@ -258,6 +253,14 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
     @Override
     public String getSectionDescription() {
         return Messages.confirmationPropertySectionDescription;
+    }
+
+    @Override
+    protected void createContent(final Composite parent) {
+        final Composite composite = getWidgetFactory().createComposite(parent);
+        composite.setLayout(new GridLayout());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        createConfPanel(composite);
     }
 
 }

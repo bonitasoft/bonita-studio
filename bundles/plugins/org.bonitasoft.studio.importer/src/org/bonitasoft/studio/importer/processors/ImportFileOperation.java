@@ -29,6 +29,7 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.ImporterFactory;
 import org.bonitasoft.studio.importer.ImporterPlugin;
+import org.bonitasoft.studio.importer.handler.ImportStatusDialogHandler;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -37,103 +38,91 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ImportFileOperation implements IRunnableWithProgress {
 
-	private final ImporterFactory importerFactory;
-	private final File fileToImport;
-	private final List<DiagramFileStore> fileStoresToOpen;
+    private final ImporterFactory importerFactory;
+    private final File fileToImport;
+    private final List<DiagramFileStore> fileStoresToOpen;
     private IStatus status;
+    private ToProcProcessor processor;
 
-	public List<DiagramFileStore> getFileStoresToOpen() {
-		return fileStoresToOpen;
-	}
+    public List<DiagramFileStore> getFileStoresToOpen() {
+        return fileStoresToOpen;
+    }
 
-	public ImportFileOperation(final ImporterFactory importerFactory,
-			final File fileToImport) {
-		this.importerFactory = importerFactory;
-		this.fileToImport = fileToImport;
-		fileStoresToOpen = new ArrayList<DiagramFileStore>();
-	}
+    public ImportFileOperation(final ImporterFactory importerFactory,
+            final File fileToImport) {
+        this.importerFactory = importerFactory;
+        this.fileToImport = fileToImport;
+        fileStoresToOpen = new ArrayList<DiagramFileStore>();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	@Override
-	public void run(final IProgressMonitor monitor) throws InvocationTargetException,
-	InterruptedException {
-		monitor.beginTask(Messages.importProcessProgressDialog,IProgressMonitor.UNKNOWN);
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+    public void run(final IProgressMonitor monitor) throws InvocationTargetException,
+            InterruptedException {
+        monitor.beginTask(Messages.importProcessProgressDialog, IProgressMonitor.UNKNOWN);
 
-		final ToProcProcessor processor = importerFactory.createProcessor(fileToImport.getName()) ;
-		try {
-			processor.createDiagram(fileToImport.toURI().toURL(), monitor)  ;
-		} catch (final MalformedURLException e) {
+        processor = importerFactory.createProcessor(fileToImport.getName());
+        try {
+            processor.createDiagram(fileToImport.toURI().toURL(), monitor);
+        } catch (final MalformedURLException e) {
             status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
-			throw new InvocationTargetException(e, e.getMessage());
-		} catch (final Exception e) {
+            throw new InvocationTargetException(e, e.getMessage());
+        } catch (final Exception e) {
             status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
-			throw new InvocationTargetException(e, e.getMessage());
+            throw new InvocationTargetException(e, e.getMessage());
         }
         //handleErrors(processor);
-		addFileStoresToOpen(processor);
+        addFileStoresToOpen(processor);
         status = processor.getStatus();
-	}
+    }
 
-    //	protected void handleErrors(final ToProcProcessor processor) {
-    //		if(processor.getErrors().size()>0) {
-    //			Display.getDefault().syncExec(new Runnable() {
-    //				@Override
-    //				public void run() {
-    //					final String message = Messages.errorWhileImporting_message;
-    //					final StringBuilder stringBuilder = new StringBuilder(message);
-    //					for (final Object error : processor.getErrors()) {
-    //						stringBuilder.append('\n');
-    //						stringBuilder.append(error.toString());
-    //					}
-    //					MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title, stringBuilder.toString());
-    //				}
-    //			});
-    //		}
-    //	}
-
-	protected void addFileStoresToOpen(final ToProcProcessor processor)
-			throws InvocationTargetException {
-		for(final IRepositoryFileStore fStore : processor.getDiagramFileStoresToOpen()){
-			if(fStore instanceof DiagramFileStore){
-				fileStoresToOpen.add((DiagramFileStore) fStore);
-			}
-		}
-		if(processor.getResources() != null){
-			for(final File f : processor.getResources()){
-				FileInputStream fis = null;
-				try {
-					fis = new FileInputStream(f);
-					final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
-					final DiagramFileStore fileStore = diagramStore.importInputStream(f.getName(), fis);
-					if(fileStore instanceof DiagramFileStore){
-					    fileStoresToOpen.add(fileStore) ;
-					}
-					f.delete();
-				} catch (final FileNotFoundException e) {
+    protected void addFileStoresToOpen(final ToProcProcessor processor)
+            throws InvocationTargetException {
+        for (final IRepositoryFileStore fStore : processor.getDiagramFileStoresToOpen()) {
+            if (fStore instanceof DiagramFileStore) {
+                fileStoresToOpen.add((DiagramFileStore) fStore);
+            }
+        }
+        if (processor.getResources() != null) {
+            for (final File f : processor.getResources()) {
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(f);
+                    final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getCurrentRepository()
+                            .getRepositoryStore(DiagramRepositoryStore.class);
+                    final DiagramFileStore fileStore = diagramStore.importInputStream(f.getName(), fis);
+                    if (fileStore instanceof DiagramFileStore) {
+                        fileStoresToOpen.add(fileStore);
+                    }
+                    f.delete();
+                } catch (final FileNotFoundException e) {
                     status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
-					throw new InvocationTargetException(e);
-				}finally{
-					if(fis != null){
-						try {
-							fis.close();
-						} catch (final IOException e) {
-							throw new InvocationTargetException(e);
-						}
-					}
-				}
-			}
-		}
-	}
+                    throw new InvocationTargetException(e);
+                } finally {
+                    if (fis != null) {
+                        try {
+                            fis.close();
+                        } catch (final IOException e) {
+                            throw new InvocationTargetException(e);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     public IStatus getStatus() {
         return status;
     }
 
+    public ImportStatusDialogHandler getImportStatusDialogHandler(final IStatus status) {
+        return processor.getImportStatusDialogHandler(status);
+    }
 
 }

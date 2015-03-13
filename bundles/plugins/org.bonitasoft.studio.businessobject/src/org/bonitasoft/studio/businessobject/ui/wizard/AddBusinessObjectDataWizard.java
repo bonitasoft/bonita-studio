@@ -34,28 +34,35 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
  */
 public class AddBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
 
-    private DataAware container;
+    private final DataAware container;
 
-    private BusinessObjectModelRepositoryStore businessObjectDefinitionStore;
+    private final BusinessObjectModelRepositoryStore businessObjectDefinitionStore;
 
     private BusinessObjectDataWizardPage addBusinessObjectDataWizardPage;
 
-    private TransactionalEditingDomain editingDomain;
+    private final TransactionalEditingDomain editingDomain;
 
-    private Set<String> existingNames;
+    private final Set<String> existingNames;
 
     private BusinessObjectData businessObjectData;
 
-    public AddBusinessObjectDataWizard(DataAware container,
-            BusinessObjectModelRepositoryStore businessObjectDefinitionStore,
-            TransactionalEditingDomain editingDomain) {
+    public AddBusinessObjectDataWizard(final DataAware container,
+            final BusinessObjectModelRepositoryStore businessObjectDefinitionStore,
+            final TransactionalEditingDomain editingDomain) {
         this.container = container;
-        this.businessObjectData = ProcessFactory.eINSTANCE.createBusinessObjectData();
-        this.businessObjectData.setDataType(ModelHelper.getDataTypeForID(container, DataTypeLabels.businessObjectType));
+        businessObjectData = ProcessFactory.eINSTANCE.createBusinessObjectData();
+        businessObjectData.setDataType(ModelHelper.getDataTypeForID(container, DataTypeLabels.businessObjectType));
         this.businessObjectDefinitionStore = businessObjectDefinitionStore;
         this.editingDomain = editingDomain;
-        this.existingNames = computeExistingNames(container);
+        existingNames = computeExistingNames(container);
         setDefaultPageImageDescriptor(Pics.getWizban());
+    }
+
+    public AddBusinessObjectDataWizard(final DataAware container, final BusinessObjectData wc,
+            final BusinessObjectModelRepositoryStore businessObjectDefinitionStore,
+            final TransactionalEditingDomain editingDomain) {
+        this(container, businessObjectDefinitionStore, editingDomain);
+        businessObjectData = wc;
     }
 
     @Override
@@ -65,7 +72,7 @@ public class AddBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
     }
 
     protected BusinessObjectDataWizardPage createAddBusinessObjectDataWizardPage() {
-        BusinessObjectDataWizardPage page = new BusinessObjectDataWizardPage(businessObjectData, businessObjectDefinitionStore, existingNames);
+        final BusinessObjectDataWizardPage page = new BusinessObjectDataWizardPage(businessObjectData, businessObjectDefinitionStore, existingNames);
         page.setTitle(Messages.bind(Messages.addBusinessObjectDataTitle, ModelHelper.getParentProcess(container).getName()));
         page.setDescription(Messages.addBusinessObjectDataDescription);
         return page;
@@ -77,8 +84,8 @@ public class AddBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
      */
     @Override
     public boolean performFinish() {
-        BusinessObjectData data = addBusinessObjectDataWizardPage.getBusinessObjectData();
-        Command addCommand = AddCommand.create(editingDomain, container, ProcessPackage.Literals.DATA_AWARE__DATA, data);
+        final BusinessObjectData data = addBusinessObjectDataWizardPage.getBusinessObjectData();
+        final Command addCommand = AddCommand.create(editingDomain, container, ProcessPackage.Literals.DATA_AWARE__DATA, data);
         editingDomain.getCommandStack().execute(addCommand);
         return !addCommand.getResult().isEmpty();
     }

@@ -345,7 +345,7 @@ public class EngineExpressionUtilTest {
     }
 
     @Test
-    public void testCreateDependenciesListForMultipleDocument() {
+    public void testCreateDependenciesListForMultipleDocument() throws Exception {
         final Expression expression = ExpressionHelper.createEmptyListGroovyScriptExpression();
         expression.setName("script");
         final Document document = ProcessFactory.eINSTANCE.createDocument();
@@ -359,7 +359,7 @@ public class EngineExpressionUtilTest {
     }
 
     @Test
-    public void testCreateDependenciesListForSimpleDocument() {
+    public void testCreateDependenciesListForSimpleDocument() throws Exception {
         final Expression expression = ExpressionHelper.createEmptyListGroovyScriptExpression();
         expression.setName("script");
         final Document document = ProcessFactory.eINSTANCE.createDocument();

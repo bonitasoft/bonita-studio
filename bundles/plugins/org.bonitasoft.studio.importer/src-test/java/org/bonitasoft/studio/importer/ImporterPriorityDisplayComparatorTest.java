@@ -5,25 +5,20 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.importer;
-
-import java.io.InputStream;
 
 import org.bonitasoft.studio.importer.processors.ToProcProcessor;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 
 public class ImporterPriorityDisplayComparatorTest {
 
@@ -40,7 +35,7 @@ public class ImporterPriorityDisplayComparatorTest {
             }
 
             @Override
-            public boolean appliesTo(final String resourceName, final InputStream is) {
+            public boolean appliesTo(final String resourceName) {
                 return false;
             }
 
@@ -58,7 +53,7 @@ public class ImporterPriorityDisplayComparatorTest {
             }
 
             @Override
-            public boolean appliesTo(final String resourceName, final InputStream is) {
+            public boolean appliesTo(final String resourceName) {
                 return false;
             }
 

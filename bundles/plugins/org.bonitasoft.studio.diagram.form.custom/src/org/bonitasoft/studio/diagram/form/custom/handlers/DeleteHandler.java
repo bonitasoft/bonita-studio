@@ -37,6 +37,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
+import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -94,7 +95,10 @@ public class DeleteHandler extends AbstractHandler {
                 }
             }
         }
-        GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE).run();
+        final GlobalAction handler = GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE);
+        if (handler.isRunnable()) {
+            handler.run();
+        }
         return null;
     }
 

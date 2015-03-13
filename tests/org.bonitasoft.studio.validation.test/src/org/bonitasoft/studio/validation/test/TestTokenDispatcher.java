@@ -19,12 +19,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
@@ -68,13 +69,11 @@ public class TestTokenDispatcher {
         SequenceFlow taskOutgoingconnection = null;
         Task humanTask = null;
 
-
-
         for (final Connection transition : parentProcess.getConnections()) {
             if (transition.getSource() instanceof NonInterruptingBoundaryTimerEvent) {
                 boundaryEvent = (NonInterruptingBoundaryTimerEvent) transition.getSource();
                 nonInterruptedOutgoingconnection = (SequenceFlow) transition;
-            }else if (transition.getSource() instanceof Task) {
+            } else if (transition.getSource() instanceof Task) {
                 humanTask = (Task) transition.getSource();
                 taskOutgoingconnection = (SequenceFlow) transition;
             }
@@ -84,7 +83,6 @@ public class TestTokenDispatcher {
         assertNotNull(boundaryEvent);
         assertNotNull(humanTask);
 
-
         // Test the token returned is the one of the source transition
         tokenD.setSequenceFlow(nonInterruptedOutgoingconnection);
         final String nonInterruptedToken = tokenD.getToken();
@@ -92,14 +90,13 @@ public class TestTokenDispatcher {
                 ModelHelper.getEObjectID(nonInterruptedOutgoingconnection.getSource()),
                 nonInterruptedToken);
 
-
         // Test Non Interrupted token is different from the Task token
         tokenD.setSequenceFlow(taskOutgoingconnection);
         assertTrue("Non Interrupted token and task token must be different", !nonInterruptedToken.equals(tokenD.getToken()));
     }
 
     private ProcessDiagramEditor importBos(final String processResourceName)
-            throws IOException {
+            throws IOException, InvocationTargetException, InterruptedException {
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
         final URL fileURL = FileLocator.toFileURL(TestTokenDispatcher.class.getResource(processResourceName)); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
@@ -115,6 +112,5 @@ public class TestTokenDispatcher {
         }
         return processEditor;
     }
-
 
 }

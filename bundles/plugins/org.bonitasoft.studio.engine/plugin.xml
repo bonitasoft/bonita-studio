@@ -7,6 +7,7 @@
    <extension-point id="bonitaWebServerManager" name="bonitaWebServerManager" schema="schema/bonitaWebServerManager.exsd"/>
    <extension-point id="org.bonitasoft.studio.engine.processDefinitionExporter" name="org.bonitasoft.studio.engine.processDefinitionExporter" schema="schema/org.bonitasoft.studio.engine.processDefinitionExporter.exsd"/>
    <extension-point id="bonitaEngineManager" name="bonitaEngineManager" schema="schema/bonitaEngineManager.exsd"/>
+   <extension-point id="org.bonitasoft.studio.engine.definition.builder" name="org.bonitasoft.studio.engine.definition.builder" schema="schema/DefinitionBuilder.exsd"/>
   <extension
         point="org.eclipse.ui.commands">
         <command

@@ -16,9 +16,14 @@
  */
 package org.bonitasoft.studio.swtbot.framework.widget;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractInputRow;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.utils.TableCollection;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
 
 /**
@@ -69,6 +74,18 @@ public class BotTreeWidget extends BotWidget {
                 return "Tree is not empty";
             }
         };
+    }
+
+    public BotContractInputRow selectRow(final SWTGefBot bot, final int row) {
+        return new BotContractInputRow(bot, row);
+    }
+
+    public BotContractInputRow selectActiveRow(final SWTGefBot bot) {
+        final SWTBotTree treeWithId = bot.treeWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE);
+        final TableCollection selection = treeWithId.selection();
+        final SWTBotTreeItem treeItem = treeWithId.getTreeItem(selection.get(0, 0));
+        System.out.println(treeItem);
+        return new BotContractInputRow(bot, selection.rowCount());
     }
 
     public ICondition activeCondition() {

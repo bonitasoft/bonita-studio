@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.validation;
 
@@ -27,9 +25,10 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
+import org.bonitasoft.studio.validation.common.operation.FindDiagramRunnable;
+import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
 import org.bonitasoft.studio.validation.i18n.Messages;
-import org.bonitasoft.studio.validation.operation.BatchValidationOperation;
-import org.bonitasoft.studio.validation.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.ui.view.ValidationViewPart;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -39,6 +38,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -51,7 +51,6 @@ import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class BatchValidationHandler extends AbstractHandler {
 
@@ -64,16 +63,24 @@ public class BatchValidationHandler extends AbstractHandler {
         if (!PlatformUI.isWorkbenchRunning()) {
             return IStatus.OK;
         }
-
         final Map<?, ?> parameters = event.getParameters();
-        final BatchValidationOperation validateOperation = new BatchValidationOperation(new OffscreenEditPartFactory());
+        final BatchValidationOperation validateOperation = new BatchValidationOperation(
+                new org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory(OffscreenEditPartFactory.getInstance()),
+                new ValidationMarkerProvider());
         if (parameters != null && !parameters.isEmpty()) {
             computeDiagramsToValidate(event, validateOperation);
         } else if (currentEditorIsADiagram()) {
             computeDiagramToValidate(validateOperation);
         }
 
-        executeOperationInProgressService(validateOperation);
+        final IProgressService service = PlatformUI.getWorkbench().getProgressService();
+        try {
+            service.run(true, true, validateOperation);
+        } catch (final InvocationTargetException e) {
+            throw new ExecutionException("Error during Validation", e);
+        } catch (final InterruptedException e) {
+            //Validation cancelled
+        }
 
         Object showReport = parameters.get("showReport");
         if (showReport == null) {
@@ -88,23 +95,6 @@ public class BatchValidationHandler extends AbstractHandler {
         refreshViewerPropertyPart();
 
         return validateOperation.getResult();
-    }
-
-    protected void executeOperationInProgressService(final BatchValidationOperation validateOperation) {
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                final IProgressService service = PlatformUI.getWorkbench().getProgressService();
-                try {
-                    service.run(true, false, validateOperation);
-                } catch (final InvocationTargetException e) {
-                    BonitaStudioLog.error(e);
-                } catch (final InterruptedException e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
-        });
     }
 
     protected void refreshViewerPropertyPart() {
@@ -164,14 +154,14 @@ public class BatchValidationHandler extends AbstractHandler {
             }
             final Resource eResource = fileStore.getEMFResource();
             final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
-            final FindDiagramRunnable runnable = new FindDiagramRunnable(eResource,validateOperation);
-            if(editingDomain != null){
+            final FindDiagramRunnable runnable = new FindDiagramRunnable(eResource, validateOperation);
+            if (editingDomain != null) {
                 try {
                     editingDomain.runExclusive(runnable);
                 } catch (final InterruptedException e) {
                     BonitaStudioLog.error(e);
                 }
-            }else{
+            } else {
                 runnable.run();
             }
         }
@@ -220,7 +210,6 @@ public class BatchValidationHandler extends AbstractHandler {
 
     }
 
-
     private boolean statusContainsError(final IStatus validationStatus) {
         if (validationStatus != null) {
             for (final IStatus s : validationStatus.getChildren()) {
@@ -231,7 +220,6 @@ public class BatchValidationHandler extends AbstractHandler {
         }
         return false;
     }
-
 
     @Override
     public boolean isEnabled() {

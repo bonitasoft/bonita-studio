@@ -16,16 +16,12 @@ package org.bonitasoft.studio.tests.bug;
 
 import static org.bonitasoft.studio.repository.themes.i18n.Messages.themeRepository;
 
-import org.bonitasoft.studio.application.ApplicationPlugin;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
-import org.bonitasoft.studio.tests.Activator;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.junit.Test;
-import org.osgi.framework.Bundle;
 
 /**
  * @author Mickael Istria
@@ -47,17 +43,6 @@ public class TestBugsSWTBot extends SWTBotGefTestCase {
         properties.bot().button(Messages.Edit, 1).click();
         final SWTBotEditor activeEditor = bot.activeEditor();
         assertEquals("org.eclipse.wst.html.core.htmlsource.source", activeEditor.getReference().getId());
-
-        final Bundle[] bundles = ApplicationPlugin.getDefault().getBundle().getBundleContext().getBundles();
-        final StringBuilder sb = new StringBuilder();
-        for (final Bundle bundle : bundles) {
-            sb.append(bundle.getSymbolicName());
-            sb.append(" (");
-            sb.append(bundle.getVersion());
-            sb.append(")");
-            sb.append("\n");
-        }
-        BonitaStudioLog.info(sb.toString(), Activator.PLUGIN_ID);
     }
 
     @Override

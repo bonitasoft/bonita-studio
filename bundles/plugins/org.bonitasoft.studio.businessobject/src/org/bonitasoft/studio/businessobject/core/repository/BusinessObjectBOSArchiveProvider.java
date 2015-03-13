@@ -1,11 +1,17 @@
-/*******************************************************************************
- * Copyright (C) 2009, 2013 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- * BonitaSoft, 32 rue Gustave Eiffel – 38000 Grenoble
- * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.businessobject.core.repository;
 
 import java.util.HashSet;
@@ -23,7 +29,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class BusinessObjectBOSArchiveProvider implements IBOSArchiveFileStoreProvider {
 
@@ -33,12 +39,12 @@ public class BusinessObjectBOSArchiveProvider implements IBOSArchiveFileStorePro
      * AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
      */
     @Override
-    public Set<IRepositoryFileStore> getFileStoreForConfiguration(AbstractProcess process, Configuration configuration) {
-        Set<IRepositoryFileStore> result = new HashSet<IRepositoryFileStore>();
-        List<BusinessObjectData> allBusinessObjectData = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.BUSINESS_OBJECT_DATA);
-        BusinessObjectModelRepositoryStore store = getBusinessObjectDefinitionStore();
-        for (BusinessObjectData data : allBusinessObjectData) {
-            BusinessObjectModelFileStore childByName = store.getChildByQualifiedName(data.getClassName());
+    public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process, final Configuration configuration) {
+        final Set<IRepositoryFileStore> result = new HashSet<IRepositoryFileStore>();
+        final List<BusinessObjectData> allBusinessObjectData = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.BUSINESS_OBJECT_DATA);
+        final BusinessObjectModelRepositoryStore store = getBusinessObjectDefinitionStore();
+        for (final BusinessObjectData data : allBusinessObjectData) {
+            final BusinessObjectModelFileStore childByName = store.getChildByQualifiedName(data.getClassName());
             if (childByName != null) {
                 result.add(childByName);
             }

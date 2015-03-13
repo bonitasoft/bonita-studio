@@ -57,7 +57,7 @@ public class DataLabelProvider extends ObservableMapLabelProvider {
      * @param element
      * @return
      */
-    private String getTypeLabel(final Data element) {
+    public static String getTypeLabel(final Data element) {
         final StringBuilder builder = new StringBuilder();
         if (element.isMultiple()) {
             builder.append("Multiple<"); //$NON-NLS-1$

@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,8 +20,8 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.migration.i18n.Messages;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.runtime.FileLocator;
@@ -38,11 +36,10 @@ import org.junit.Test;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class MigrationReporTest extends SWTBotGefTestCase {
 
-    private DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+    private final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
     @BeforeClass
     public static void disablePopup() {
@@ -53,7 +50,7 @@ public class MigrationReporTest extends SWTBotGefTestCase {
     public void testAutomaticPerspectiveSwitch() throws Exception {
         FileActionDialog.setDisablePopup(true);
         final URL url = MigrationReporTest.class.getResource("TestMigrationReport-1.0.bos");
-        ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
         op.setArchiveFile(FileLocator.toFileURL(url).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
@@ -66,7 +63,7 @@ public class MigrationReporTest extends SWTBotGefTestCase {
     public void testCompleteReport() throws Exception {
         FileActionDialog.setDisablePopup(true);
         final URL url = MigrationReporTest.class.getResource("TestMigrationReport-1.0.bos");
-        ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
         op.setArchiveFile(FileLocator.toFileURL(url).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
@@ -75,11 +72,9 @@ public class MigrationReporTest extends SWTBotGefTestCase {
         bot.waitUntil(Conditions.shellIsActive(Messages.completeImport));
         bot.checkBox().deselect();
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.validationFailedTitle));
-        bot.button(IDialogConstants.OK_LABEL).click();
         assertEquals("Invalid perspective for process without migration report", "org.bonitasoft.studio.perspective.process",
                 BonitaPerspectivesUtils.getPerspectiveId(bot.activeEditor().getReference().getEditor(false)));
-        EObject mainProcess = (EObject) bot.gefEditor(bot.activeEditor().getTitle()).mainEditPart().part().getModel();
+        final EObject mainProcess = (EObject) bot.gefEditor(bot.activeEditor().getTitle()).mainEditPart().part().getModel();
         assertEquals("Report model should have been deleted", 2, mainProcess.eResource().getContents().size());
     }
 
@@ -87,14 +82,14 @@ public class MigrationReporTest extends SWTBotGefTestCase {
     public void testEditorSelectionSynchronization() throws Exception {
         FileActionDialog.setDisablePopup(true);
         final URL url = MigrationReporTest.class.getResource("TestMigrationReport-1.0.bos");
-        ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
         op.setArchiveFile(FileLocator.toFileURL(url).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
         store.getChild("MonDiagramme1-1.0.proc").open();
         bot.viewById("org.bonitasoft.studio.migration.view").toolbarToggleButton("Link with Editor").select();
         bot.table().select(1);
-        SWTBotGefEditPart part = bot.gefEditor(bot.activeEditor().getTitle()).selectedEditParts().get(0);
+        final SWTBotGefEditPart part = bot.gefEditor(bot.activeEditor().getTitle()).selectedEditParts().get(0);
         assertTrue(((IGraphicalEditPart) part.part()).resolveSemanticElement() instanceof Pool);
     }
 

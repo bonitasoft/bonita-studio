@@ -84,7 +84,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Aurelien Pupier
@@ -150,7 +149,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
     private final SelectionAdapter editButtonListener = new SelectionAdapter() {
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse
          * .swt.events.SelectionEvent)
@@ -198,9 +197,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
     private Button editFile;
 
     @Override
-    public void createControls(final Composite parent,
-            final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
+    protected void createContent(final Composite parent) {
         final Composite mainComposite = getWidgetFactory().createComposite(parent, SWT.NONE);
         final GridLayout layout = new GridLayout(3, false);
         mainComposite.setLayout(layout);
@@ -209,7 +206,6 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
         createTree(mainComposite);
         updateButtons() ;
         final Composite templates = createRightPanel(mainComposite);
-        //createWelcomePage(templates);
         createLoginPage(templates);
     }
 
@@ -602,7 +598,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
     private static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
     /**
      * download login page from bonita-app.war
-     * 
+     *
      * @param name
      *            resource name
      * @param path

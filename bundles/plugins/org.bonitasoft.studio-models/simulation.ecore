@@ -9,33 +9,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SimulationAbstractProcess" abstract="true"
-      interface="true" eSuperTypes="#//SimulationDataContainer">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="loadProfileID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SimulationData" abstract="true" interface="true"
       eSuperTypes="#//SimulationElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="expressionBased" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expression" eType="ecore:EClass expression.ecore#//Expression"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SimulationActivity" abstract="true"
-      interface="true" eSuperTypes="#//SimulationDataContainer">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="resourcesUsages" upperBound="-1"
-        eType="#//ResourceUsage" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="executionTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="estimatedTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
-        defaultValueLiteral="0"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
-        defaultValueLiteral="0"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contigous" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exclusiveOutgoingTransition"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="dataChange" upperBound="-1"
-        eType="#//DataChange" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="loopTransition" eType="#//SimulationTransition"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SimulationTransition">
@@ -56,18 +34,12 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="TimeUnit">
-    <eLiterals name="Minute"/>
-    <eLiterals name="Hour" value="1"/>
-    <eLiterals name="Day" value="2"/>
-    <eLiterals name="Week" value="3"/>
-    <eLiterals name="Month" value="4"/>
-    <eLiterals name="Year" value="5"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LoadProfile" eSuperTypes="#//SimulationElement #//ModelVersion">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="calendar" eType="#//SimulationCalendar"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="injectionPeriods" upperBound="-1"
-        eType="#//InjectionPeriod" containment="true"/>
+    <eLiterals name="Minute" literal="Minute"/>
+    <eLiterals name="Hour" value="1" literal="Hour"/>
+    <eLiterals name="Day" value="2" literal="Day"/>
+    <eLiterals name="Week" value="3" literal="Week"/>
+    <eLiterals name="Month" value="4" literal="Month"/>
+    <eLiterals name="Year" value="5" literal="Year"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InjectionPeriod">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="begin" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"
@@ -81,7 +53,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="RepartitionType">
     <eLiterals name="CONSTANT" literal="CONSTANT"/>
-    <eLiterals name="DIRECT" value="1"/>
+    <eLiterals name="DIRECT" value="1" literal="DIRECT"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SimulationBoolean" eSuperTypes="#//SimulationData">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="probabilityOfTrue" lowerBound="1"
@@ -116,6 +88,28 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="simulationData" upperBound="-1"
         eType="#//SimulationData" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SimulationAbstractProcess" abstract="true"
+      interface="true" eSuperTypes="#//SimulationDataContainer">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="loadProfileID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SimulationActivity" abstract="true"
+      interface="true" eSuperTypes="#//SimulationDataContainer">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourcesUsages" upperBound="-1"
+        eType="#//ResourceUsage" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="executionTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="estimatedTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
+        defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
+        defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contigous" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exclusiveOutgoingTransition"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="loopTransition" eType="#//SimulationTransition"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dataChange" upperBound="-1"
+        eType="#//DataChange" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DataChange">
     <eStructuralFeatures xsi:type="ecore:EReference" name="data" eType="#//SimulationData"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="ecore:EClass expression.ecore#//Expression"
@@ -124,20 +118,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="SimulationCalendar">
     <eStructuralFeatures xsi:type="ecore:EReference" name="daysOfWeek" upperBound="7"
         eType="#//DayPeriod" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Resource" eSuperTypes="#//SimulationElement #//ModelVersion">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="quantity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
-        defaultValueLiteral="1"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumQuantity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="costUnit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeUnit" eType="#//TimeUnit"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fixedCost" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeCost" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="calendar" eType="#//SimulationCalendar"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlimited" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        defaultValueLiteral="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DayPeriod">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="day" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -152,5 +132,25 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelVersion">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LoadProfile" eSuperTypes="#//SimulationElement #//ModelVersion">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="calendar" eType="#//SimulationCalendar"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="injectionPeriods" upperBound="-1"
+        eType="#//InjectionPeriod" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Resource" eSuperTypes="#//SimulationElement #//ModelVersion">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="quantity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumQuantity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="costUnit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeUnit" eType="#//TimeUnit"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fixedCost" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeCost" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="calendar" eType="#//SimulationCalendar"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlimited" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
   </eClassifiers>
 </ecore:EPackage>
