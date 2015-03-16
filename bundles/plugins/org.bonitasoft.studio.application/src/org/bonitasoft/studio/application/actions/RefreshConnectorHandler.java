@@ -45,7 +45,7 @@ public class RefreshConnectorHandler extends AbstractHandler implements IHandler
 				public void run(IProgressMonitor monitor) throws InvocationTargetException,
 				InterruptedException {
 					monitor.beginTask(Messages.resfreshConnectors,IProgressMonitor.UNKNOWN) ;
-					RepositoryManager.getInstance().getCurrentRepository().refresh(monitor) ;
+					RepositoryManager.getInstance().getCurrentRepository().build(monitor) ;
 				}
 			});
 		} catch (InvocationTargetException e) {

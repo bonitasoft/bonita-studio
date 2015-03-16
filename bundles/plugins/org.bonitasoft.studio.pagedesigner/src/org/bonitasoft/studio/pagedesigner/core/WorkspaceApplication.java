@@ -12,11 +12,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.pagedesigner.core.resources;
+package org.bonitasoft.studio.pagedesigner.core;
+
+import org.bonitasoft.studio.pagedesigner.core.resources.WorkspaceServerResource;
+import org.restlet.Application;
+import org.restlet.Restlet;
+import org.restlet.routing.Router;
 
 /**
  * @author Romain Bioteau
  */
-public enum WorkspaceAPIEvent {
-    PRE_OPEN, POST_OPEN, POST_CLOSE, PRE_CLOSE, PRE_DELETE, POST_DELETE, PRE_SAVE, POST_SAVE, POST_IMPORT, PRE_IMPORT
+public class WorkspaceApplication extends Application {
+
+    @Override
+    public Restlet createInboundRoot() {
+        final Router router = new Router(getContext());
+        router.attach(
+                "/workspace/{filePath}/{action}",
+                WorkspaceServerResource.class);
+        router.attach("/workspace/{action}", WorkspaceServerResource.class);
+        return router;
+    }
+
 }

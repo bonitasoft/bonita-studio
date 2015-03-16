@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.repository.filestore;
 
@@ -43,182 +41,185 @@ import org.eclipse.jdt.ui.jarpackager.JarPackageData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class PackageFileStore extends AbstractFileStore {
 
-	private final String packageName;
+    private final String packageName;
 
-	public PackageFileStore(String packageName, IRepositoryStore<?> parentStore) {
-		super("", parentStore);
-		this.packageName = packageName ;
-	}
+    public PackageFileStore(final String packageName, final IRepositoryStore<?> parentStore) {
+        super("", parentStore);
+        this.packageName = packageName;
+    }
 
-	@Override
-	public String getName() {
-		return packageName;
-	}
+    @Override
+    public String getName() {
+        return packageName;
+    }
 
-	@Override
-	public String getDisplayName() {
-		return getName() ;
-	}
+    @Override
+    public String getDisplayName() {
+        return getName();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
-	 */
-	@Override
-	public Image getIcon() {
-		return Pics.getImage("package.gif", CommonRepositoryPlugin.getDefault());
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
+     */
+    @Override
+    public Image getIcon() {
+        return Pics.getImage("package.gif", CommonRepositoryPlugin.getDefault());
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-	 */
-	@Override
-	public IFolder getContent() {
-		return getResource();
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
+     */
+    @Override
+    public IFolder getContent() {
+        return getResource();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getResource()
-	 */
-	@Override
-	public IFolder getResource() {
-		final IPackageFragment packageFragment = getPackageFragment();
-		if(packageFragment != null){
-			return (IFolder) packageFragment.getResource() ;
-		}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getResource()
+     */
+    @Override
+    public IFolder getResource() {
+        final IPackageFragment packageFragment = getPackageFragment();
+        if (packageFragment != null) {
+            return (IFolder) packageFragment.getResource();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public void exportAsJar(String absoluteTargetFilePath, boolean includeSources) throws InvocationTargetException, InterruptedException {
-		try {
-			checkWritePermission(new File(absoluteTargetFilePath));
-		} catch (IOException e) {
-			throw new InvocationTargetException(e);
-		}
-		final JarPackageData jarPackakeData = new JarPackageData() ;
-		final IPackageFragment packageFragment = getPackageFragment() ;
-		if(packageFragment==null){
-			throw new RuntimeException("Error while exporting as JAR : package Fragment is null");
-		}
+    public void exportAsJar(final String absoluteTargetFilePath, final boolean includeSources) throws InvocationTargetException, InterruptedException {
+        try {
+            checkWritePermission(new File(absoluteTargetFilePath));
+        } catch (final IOException e) {
+            throw new InvocationTargetException(e);
+        }
+        final JarPackageData jarPackakeData = new JarPackageData();
+        final IPackageFragment packageFragment = getPackageFragment();
+        if (packageFragment == null) {
+            throw new RuntimeException("Error while exporting as JAR : package Fragment is null");
+        }
 
-		final List<Object> toExport = new ArrayList<Object>() ;
-		try {
-			for(ICompilationUnit cunit : packageFragment.getCompilationUnits()){
-				toExport.add(cunit) ;
-			}
-		} catch (Exception e2) {
-			BonitaStudioLog.error(e2) ;
-		}
+        final List<Object> toExport = new ArrayList<Object>();
+        try {
+            for (final ICompilationUnit cunit : packageFragment.getCompilationUnits()) {
+                toExport.add(cunit);
+            }
+        } catch (final Exception e2) {
+            BonitaStudioLog.error(e2);
+        }
 
-		jarPackakeData.setBuildIfNeeded(true) ;
-		jarPackakeData.setJarLocation(Path.fromOSString(absoluteTargetFilePath)) ;
-		jarPackakeData.setCompress(true) ;
-		jarPackakeData.setElements(toExport.toArray(new Object[toExport.size()])) ;
-		jarPackakeData.setExportErrors(true) ;
-		jarPackakeData.setExportWarnings(true);
-		jarPackakeData.setDeprecationAware(true) ;
-		jarPackakeData.setExportClassFiles(true) ;
-		jarPackakeData.setExportJavaFiles(includeSources) ;
-		jarPackakeData.setGenerateManifest(true) ;
-		jarPackakeData.setOverwrite(true) ;
-		final IJarExportRunnable runnable = jarPackakeData.createJarExportRunnable(null) ;
-		runnable.run(Repository.NULL_PROGRESS_MONITOR) ;
-	}
+        jarPackakeData.setBuildIfNeeded(true);
+        jarPackakeData.setJarLocation(Path.fromOSString(absoluteTargetFilePath));
+        jarPackakeData.setCompress(true);
+        jarPackakeData.setElements(toExport.toArray(new Object[toExport.size()]));
+        jarPackakeData.setExportErrors(true);
+        jarPackakeData.setExportWarnings(true);
+        jarPackakeData.setDeprecationAware(true);
+        jarPackakeData.setExportClassFiles(true);
+        jarPackakeData.setExportJavaFiles(includeSources);
+        jarPackakeData.setGenerateManifest(true);
+        jarPackakeData.setOverwrite(true);
+        final IJarExportRunnable runnable = jarPackakeData.createJarExportRunnable(null);
+        runnable.run(Repository.NULL_PROGRESS_MONITOR);
+    }
 
-	public IPackageFragment getPackageFragment() {
-		IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
-		try {
-			return project.findPackageFragment(getParentStore().getResource().getFullPath().append(packageName.replace(".", "/")));
-		} catch (JavaModelException e) {
-			BonitaStudioLog.error(e) ;
-		}
-		return null;
-	}
+    public IPackageFragment getPackageFragment() {
+        final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        try {
+            return project.findPackageFragment(getParentStore().getResource().getFullPath().append(packageName.replace(".", "/")));
+        } catch (final JavaModelException e) {
+            BonitaStudioLog.error(e);
+        }
+        return null;
+    }
 
-	public List<IFile> getChildren() {
-		List<IFile> result = new ArrayList<IFile>() ;
-		retrieveChildren(getResource(),result) ;
-		return result ;
-	}
+    public List<IFile> getChildren() {
+        final List<IFile> result = new ArrayList<IFile>();
+        retrieveChildren(getResource(), result);
+        return result;
+    }
 
-	private void retrieveChildren(IResource resource, List<IFile> result) {
-		try{
-			if(resource instanceof IFolder){
-				for(IResource r : ((IFolder) resource).members()){
-					retrieveChildren(r, result) ;
-				}
-			}else if(resource instanceof IFile){
-				result.add((IFile) resource) ;
-			}
-		}catch (Exception e) {
-			BonitaStudioLog.error(e) ;
-		}
-	}
+    private void retrieveChildren(final IResource resource, final List<IFile> result) {
+        try {
+            if (resource instanceof IFolder) {
+                for (final IResource r : ((IFolder) resource).members()) {
+                    retrieveChildren(r, result);
+                }
+            } else if (resource instanceof IFile) {
+                result.add((IFile) resource);
+            }
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
-	 */
-	@Override
-	protected void doSave(Object content) {
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
+     */
+    @Override
+    protected void doSave(final Object content) {
 
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doOpen()
-	 */
-	@Override
-	protected IWorkbenchPart doOpen() {
-		return null;
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doOpen()
+     */
+    @Override
+    protected IWorkbenchPart doOpen() {
+        return null;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doClose()
-	 */
-	@Override
-	protected void doClose() {
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doClose()
+     */
+    @Override
+    protected void doClose() {
 
-	}
-    
+    }
+
     @Override
     protected void doDelete() {
-    	IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
-    	try {
-			deleteRecursivelyEmptyPackages(project, getPackageFragment());
-		} catch (JavaModelException e) {
-			BonitaStudioLog.error(e);
-			super.doDelete();
-		}
+        try {
+            deleteRecursivelyEmptyPackages(getRepository().getJavaProject(), getPackageFragment());
+        } catch (final JavaModelException e) {
+            BonitaStudioLog.error(e);
+            super.doDelete();
+        }
     }
-    
-	private void deleteRecursivelyEmptyPackages(IJavaProject project, IPackageFragment packageFragment) throws JavaModelException {
-		if(packageFragment != null){
-			packageFragment.delete(true, new NullProgressMonitor());//delete the first one, we have only one package per Type
-			packageFragment = retrieveParentPackageFragment(project, packageFragment);
-			while(!packageFragment.hasChildren()){
-				//I don't find another way than passing through IResource, directly using IJavaElement seems not possible.
-				IPackageFragment parent = retrieveParentPackageFragment(project, packageFragment);
-				packageFragment.delete(true, new NullProgressMonitor());
-				if(parent instanceof IPackageFragment && !parent.isDefaultPackage()){
-					packageFragment = (IPackageFragment) parent;
-				} else {
-					return;
-				}
-			}
-		}
-	}
 
-	private IPackageFragment retrieveParentPackageFragment(IJavaProject project,
-			IPackageFragment packageFragment) throws JavaModelException {
-		final IPath pathOfParentPackageFragment = packageFragment.getResource().getParent().getFullPath();
-		IPackageFragment parent = project.findPackageFragment(pathOfParentPackageFragment);
-		return parent;
-	}
+    private void deleteRecursivelyEmptyPackages(final IJavaProject project, IPackageFragment packageFragment) throws JavaModelException {
+        if (packageFragment != null) {
+            packageFragment.delete(true, new NullProgressMonitor());//delete the first one, we have only one package per Type
+            packageFragment = retrieveParentPackageFragment(project, packageFragment);
+            while (!packageFragment.hasChildren()) {
+                //I don't find another way than passing through IResource, directly using IJavaElement seems not possible.
+                final IPackageFragment parent = retrieveParentPackageFragment(project, packageFragment);
+                packageFragment.delete(true, new NullProgressMonitor());
+                if (parent instanceof IPackageFragment && !parent.isDefaultPackage()) {
+                    packageFragment = parent;
+                } else {
+                    return;
+                }
+            }
+        }
+    }
+
+    private IPackageFragment retrieveParentPackageFragment(final IJavaProject project,
+            final IPackageFragment packageFragment) throws JavaModelException {
+        final IPath pathOfParentPackageFragment = packageFragment.getResource().getParent().getFullPath();
+        final IPackageFragment parent = project.findPackageFragment(pathOfParentPackageFragment);
+        return parent;
+    }
 
 }
