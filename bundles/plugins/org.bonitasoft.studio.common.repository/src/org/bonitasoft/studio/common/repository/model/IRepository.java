@@ -23,7 +23,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -49,9 +48,9 @@ public interface IRepository extends IFileStoreChangeListener {
 
     <T> T getRepositoryStore(final Class<T> repositoryStoreClass);
 
-    List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores();
+    IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStoreByName(String storeName) throws CoreException;
 
-    void refresh(IProgressMonitor monitor);
+    List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores();
 
     String getVersion();
 
@@ -69,25 +68,13 @@ public interface IRepository extends IFileStoreChangeListener {
 
     IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(IResource resource);
 
-    boolean isBuildEnable();
-
-    void disableBuild();
-
-    void enableBuild();
-
-    IJavaProject getJavaProject();
-
     List<IRepositoryStore<? extends IRepositoryFileStore>> getAllShareableStores();
 
-    ClassLoader createProjectClassloader(IProgressMonitor monitor);
-
-    IRepositoryFileStore asRepositoryFileStore(Path path) throws IOException;
+    IRepositoryFileStore asRepositoryFileStore(Path path) throws IOException, CoreException;
 
     void migrate(IProgressMonitor monitor) throws CoreException, MigrationException;
 
     void create(IProgressMonitor monitor);
-
-    void updateStudioShellText();
 
     boolean isOnline();
 }

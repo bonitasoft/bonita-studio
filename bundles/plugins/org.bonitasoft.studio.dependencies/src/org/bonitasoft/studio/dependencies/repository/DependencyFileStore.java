@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -23,7 +21,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.dependencies.DependenciesPlugin;
@@ -38,11 +35,10 @@ import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class DependencyFileStore extends AbstractFileStore {
 
-    public DependencyFileStore(String fileName, IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
+    public DependencyFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
     }
 
@@ -63,7 +59,7 @@ public class DependencyFileStore extends AbstractFileStore {
     public InputStream getContent() {
         try {
             return getResource().getContents();
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
         return null;
@@ -74,7 +70,7 @@ public class DependencyFileStore extends AbstractFileStore {
      * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
      */
     @Override
-    protected void doSave(Object content) {
+    protected void doSave(final Object content) {
         if (content instanceof InputStream) {
             try {
                 if (getResource().exists()) {
@@ -82,7 +78,7 @@ public class DependencyFileStore extends AbstractFileStore {
                 } else {
                     getResource().create((InputStream) content, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 BonitaStudioLog.error(e);
             }
         }
@@ -106,24 +102,26 @@ public class DependencyFileStore extends AbstractFileStore {
 
     }
 
+    @Override
     protected void doDelete() {
         try {
-            IResource r = getResource();
+            final IResource r = getResource();
             if (r != null && r.exists()) {
                 r.delete(true, Repository.NULL_PROGRESS_MONITOR);
-                IRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-                IProject project = currentRepository.getProject();
+                final Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                final IProject project = currentRepository.getProject();
                 project.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
                 if (currentRepository.isBuildEnable()) {
                     project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
                 }
 
             }
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
     }
 
+    @Override
     public IFile getResource() {
         return getParentStore().getResource().getFile(getName());
     }
@@ -134,10 +132,10 @@ public class DependencyFileStore extends AbstractFileStore {
     }
 
     public boolean existsInRuntimeContainer() {
-        DependencyRepositoryStore depRepositoryStore = getParentStore();
-        Map<String, String> runtimeDependencies = depRepositoryStore.getRuntimeDependencies();
-        String libName = depRepositoryStore.getLibName(getName());
-        String libVersion = depRepositoryStore.getLibVersion(getName());
+        final DependencyRepositoryStore depRepositoryStore = getParentStore();
+        final Map<String, String> runtimeDependencies = depRepositoryStore.getRuntimeDependencies();
+        final String libName = depRepositoryStore.getLibName(getName());
+        final String libVersion = depRepositoryStore.getLibVersion(getName());
         if (runtimeDependencies.containsKey(libName)) {
             return runtimeDependencies.get(libName).equals(libVersion); // same libname & same version
         }
@@ -145,10 +143,10 @@ public class DependencyFileStore extends AbstractFileStore {
     }
 
     public boolean existsInRuntimeContainerWithAnotherVersion() {
-        DependencyRepositoryStore depRepositoryStore = getParentStore();
-        Map<String, String> runtimeDependencies = depRepositoryStore.getRuntimeDependencies();
-        String libName = depRepositoryStore.getLibName(getName());
-        String libVersion = depRepositoryStore.getLibVersion(getName());
+        final DependencyRepositoryStore depRepositoryStore = getParentStore();
+        final Map<String, String> runtimeDependencies = depRepositoryStore.getRuntimeDependencies();
+        final String libName = depRepositoryStore.getLibName(getName());
+        final String libVersion = depRepositoryStore.getLibVersion(getName());
         if (runtimeDependencies.containsKey(libName)) {
             return !runtimeDependencies.get(libName).equals(libVersion); // same libname & !same version
         }

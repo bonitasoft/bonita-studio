@@ -127,7 +127,7 @@ public class WorkspaceServerResource extends ServerResource {
         IRepositoryFileStore fileStore;
         try {
             fileStore = repository.asRepositoryFileStore(new File(filePath).toPath());
-        } catch (final IOException e) {
+        } catch (final IOException | CoreException e) {
             throw new ResourceNotFoundException(filePath);
         }
         if (fileStore == null) {
