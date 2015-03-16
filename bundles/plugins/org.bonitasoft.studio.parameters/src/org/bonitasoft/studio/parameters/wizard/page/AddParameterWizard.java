@@ -1,11 +1,17 @@
-/*******************************************************************************
- * Copyright (C) 2013 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- * BonitaSoft, 32 rue Gustave Eiffel a 38000 Grenoble
- * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.parameters.wizard.page;
 
 import java.util.Collections;
@@ -30,21 +36,21 @@ import org.eclipse.xtext.ui.XtextProjectHelper;
 
 /**
  * @author Maxence Raoux
- * 
+ *
  */
 public class AddParameterWizard extends Wizard {
 
     private ParametersWizardPage addParameterPage;
 
-    private AbstractProcess container;
+    private final AbstractProcess container;
 
-    private Parameter parameterWorkingCopy;
+    private final Parameter parameterWorkingCopy;
 
-    private EditingDomain editingDomain;
+    private final EditingDomain editingDomain;
 
-    public AddParameterWizard(AbstractProcess container, EditingDomain editingDomain) {
+    public AddParameterWizard(final AbstractProcess container, final EditingDomain editingDomain) {
         this.container = container;
-        this.setWindowTitle(Messages.newParameter);
+        setWindowTitle(Messages.newParameter);
         setDefaultPageImageDescriptor(Pics.getWizban());
         parameterWorkingCopy = ParameterFactory.eINSTANCE.createParameter();
         parameterWorkingCopy.setTypeClassname(String.class.getName());
@@ -61,7 +67,7 @@ public class AddParameterWizard extends Wizard {
         try {
             RepositoryManager.getInstance().getCurrentRepository().getProject()
                     .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID, Collections.<String, String> emptyMap(), null);
-        } catch (CoreException e1) {
+        } catch (final CoreException e1) {
             BonitaStudioLog.error(e1, ParameterPlugin.PLUGIN_ID);
             return false;
         }
@@ -69,6 +75,7 @@ public class AddParameterWizard extends Wizard {
         return true;
     }
 
+    @Override
     public void addPages() {
         addParameterPage = new ParametersWizardPage(parameterWorkingCopy, getExistingParametersName());
         addParameterPage.setTitle(Messages.bind(Messages.newParameterWizardTitle, container.getName()));
@@ -77,8 +84,8 @@ public class AddParameterWizard extends Wizard {
     }
 
     protected Set<String> getExistingParametersName() {
-        Set<String> params = new HashSet<String>();
-        for (Parameter p : container.getParameters()) {
+        final Set<String> params = new HashSet<String>();
+        for (final Parameter p : container.getParameters()) {
             params.add(p.getName());
         }
         return params;

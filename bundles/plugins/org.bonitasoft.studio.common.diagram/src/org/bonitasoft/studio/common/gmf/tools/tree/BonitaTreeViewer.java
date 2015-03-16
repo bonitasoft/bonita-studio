@@ -126,7 +126,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
     /**
      * Creates the default tree and sets it as the control. The default styles
      * will show scrollbars as needed, and allows for multiple selection.
-     * 
+     *
      * @param parent
      *            The parent for the Tree
      * @return the control
@@ -153,7 +153,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
             }
 
         });
-      
+
         setControl(mainComposite);
         return mainComposite;
     }
@@ -179,6 +179,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
         treeViewer.addFilter(new EmptyExpressionViewFilter());
         treeViewer.addFilter(new EmptySearchIndexViewFilter());
         treeViewer.addFilter(new EmptyOperationViewFilter());
+        treeViewer.addFilter(new EmptyContractInputMappingViewerFilter());
 	}
 
     public void setDiagramEditPart(final DiagramEditPart diagramEditPart){
@@ -187,7 +188,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
             final EObject resolveSemanticElement = ((IGraphicalEditPart) diagramEditPart).resolveSemanticElement();
 			filteredTree.getViewer().setInput(resolveSemanticElement) ;
 			diagramEditPart.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-				
+
 				@Override
 				public void selectionChanged(final SelectionChangedEvent event) {
 					if (!filteredTree.isDisposed()) {
@@ -208,7 +209,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
 									}
 								}
 							}
-						}				
+						}
 					}
 				}
 			});
@@ -233,7 +234,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
      */
     @Override
     protected void fireSelectionChanged() {
-    	
+
     }
 
     /**
@@ -248,7 +249,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
 
         final Tree tree =  filteredTree.getViewer().getTree();
         filteredTree.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
 			public void selectionChanged(final SelectionChangedEvent event) {
 				  handleTreeSelection(tree);

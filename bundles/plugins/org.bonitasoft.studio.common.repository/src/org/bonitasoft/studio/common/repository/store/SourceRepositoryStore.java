@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -38,6 +36,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -52,7 +51,6 @@ import org.eclipse.jdt.internal.core.SourceType;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends AbstractRepositoryStore<T> {
 
@@ -62,16 +60,16 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
      * Handles the import of packages folder
      */
     @Override
-    protected T doImportIResource(String fileName, IResource resource) {
+    protected T doImportIResource(final String fileName, final IResource resource) {
         try {
             if (resource instanceof IFile) {
                 return doImportInputStream(fileName, ((IFile) resource).getContents());
             } else if (resource instanceof IFolder) {
-                List<IFile> sourceFiles = new ArrayList<IFile>();
+                final List<IFile> sourceFiles = new ArrayList<IFile>();
                 findParentPackage((IFolder) resource, sourceFiles);
-                for (IFile sourceFile : sourceFiles) {
-                    IPath path = sourceFile.getProjectRelativePath();
-                    IFile targetFile = RepositoryManager.getInstance().getCurrentRepository().getProject().getFile(path.removeFirstSegments(1));
+                for (final IFile sourceFile : sourceFiles) {
+                    final IPath path = sourceFile.getProjectRelativePath();
+                    final IFile targetFile = RepositoryManager.getInstance().getCurrentRepository().getProject().getFile(path.removeFirstSegments(1));
                     boolean skip = false;
                     if (targetFile.exists()) {
                         if (FileActionDialog.overwriteQuestion(targetFile.getName())) {
@@ -87,7 +85,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
                         try {
                             targetFile.create(new FileInputStream(sourceFile.getLocation().toFile()), true, Repository.NULL_PROGRESS_MONITOR);
                             incrementaBuild();
-                        } catch (Exception e) {
+                        } catch (final Exception e) {
                             BonitaStudioLog.error(e);
                         }
 
@@ -95,7 +93,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
                 }
                 return null;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
         return createRepositoryFileStore(fileName);
@@ -103,57 +101,57 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
 
     private void incrementaBuild() throws CoreException {
         if (RepositoryManager.getInstance().getCurrentRepository().isBuildEnable()) {
-            IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
+            final IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
             project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
         }
     }
 
     @Override
-    protected T doImportInputStream(String fileName, InputStream inputStream) {
+    protected T doImportInputStream(final String fileName, final InputStream inputStream) {
         if (fileName.indexOf("/") == -1) {
-            T fileStore = super.doImportInputStream(fileName, inputStream);
+            final T fileStore = super.doImportInputStream(fileName, inputStream);
             if (fileStore instanceof SourceFileStore) {
                 fileStore.save(null);// notify svn event
             }
             return fileStore;
         }
-        String packageName = fileName.substring(0, fileName.lastIndexOf("/"));
-        String className = fileName.substring(packageName.length() + 1, fileName.length());
+        final String packageName = fileName.substring(0, fileName.lastIndexOf("/"));
+        final String className = fileName.substring(packageName.length() + 1, fileName.length());
         PackageFileStore packageStore = (PackageFileStore) getChild(packageName);
         if (packageStore == null) {
-            IFolder folder = getResource();
-            IFolder packageFolder = folder.getFolder(packageName);
+            final IFolder folder = getResource();
+            final IFolder packageFolder = folder.getFolder(packageName);
             if (!packageFolder.exists()) {
                 try {
                     packageFolder.getLocation().toFile().mkdirs();
                     packageFolder.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
                     packageStore = (PackageFileStore) getChild(packageName);
-                } catch (CoreException e) {
+                } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
                 }
             }
         }
 
-        IFolder packageFolder = packageStore.getResource();
-        IFile file = packageFolder.getFile(className);
+        final IFolder packageFolder = packageStore.getResource();
+        final IFile file = packageFolder.getFile(className);
         if (file.exists() && FileActionDialog.overwriteQuestion(fileName)) {
             try {
                 file.delete(true, Repository.NULL_PROGRESS_MONITOR);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }
         try {
             file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
         return createRepositoryFileStore(packageName);
     }
 
-    private void findParentPackage(IFolder folder, List<IFile> sourceFiles) {
+    private void findParentPackage(final IFolder folder, final List<IFile> sourceFiles) {
         try {
-            for (IResource r : folder.members()) {
+            for (final IResource r : folder.members()) {
                 if (r instanceof IFile) {
                     if (!sourceFiles.contains(r)) {
                         sourceFiles.add((IFile) r);
@@ -162,7 +160,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
                     findParentPackage((IFolder) r, sourceFiles);
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
     }
@@ -173,37 +171,37 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
         if (getCompatibleExtensions() != null) {
             return super.getChildren();
         }
-        List<T> result = new ArrayList<T>();
-        IFolder folder = getResource();
+        final List<T> result = new ArrayList<T>();
+        final IFolder folder = getResource();
         try {
-            for (IResource r : folder.members()) {
+            for (final IResource r : folder.members()) {
                 addChildren(r, result);
             }
 
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
         Collections.sort(result, new RepositoryFileStoreComparator());
         return result;
     }
 
-    private void addChildren(IResource r, List<T> result) throws CoreException {
-
+    private void addChildren(final IResource r, final List<T> result) throws CoreException {
+        final Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         if (r instanceof IFolder && !r.isHidden() && !r.getName().startsWith(".")) {
             if (containsSourceFile((IFolder) r)) {
-                IPackageFragment pk = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findPackageFragment(r.getFullPath());
+                final IPackageFragment pk = currentRepository.getJavaProject().findPackageFragment(r.getFullPath());
                 if (pk != null) {
                     result.add(createRepositoryFileStore(pk.getElementName()));
                 }
             }
-            for (IResource child : ((IFolder) r).members()) {
+            for (final IResource child : ((IFolder) r).members()) {
                 addChildren(child, result);
             }
         }
     }
 
-    private boolean containsSourceFile(IFolder folder) throws CoreException {
-        for (IResource res : folder.members()) {
+    private boolean containsSourceFile(final IFolder folder) throws CoreException {
+        for (final IResource res : folder.members()) {
             if (res.getFileExtension() != null && (res.getFileExtension().equals("java") || res.getFileExtension().equals("grrovy"))) {
                 return true;
             }
@@ -213,41 +211,41 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
 
     @SuppressWarnings("unchecked")
     @Override
-    public T getChild(String fileName) {
+    public T getChild(final String fileName) {
         if (fileName == null) {
             return null;
         }
         if (fileName.endsWith(".java") || fileName.endsWith(".groovy")) {
-            T fileStore = super.getChild(fileName);
+            final T fileStore = super.getChild(fileName);
             if (fileStore != null) {
                 return fileStore;
             }
         }
         try {
             final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-            IType javaType = javaProject.findType(fileName);
+            final IType javaType = javaProject.findType(fileName);
             if (javaType != null) {
                 if (javaType instanceof SourceType || isSourceType(fileName, javaProject)) {
                     return (T) new SourceFileStore(fileName, this);
                 }
                 return null;
             } else { // package name
-                IPackageFragment packageFragment = javaProject.findPackageFragment(getResource().getFullPath().append(fileName.replace(".", "/")));
+                final IPackageFragment packageFragment = javaProject.findPackageFragment(getResource().getFullPath().append(fileName.replace(".", "/")));
                 if (packageFragment != null) {
                     return (T) new PackageFileStore(fileName, this);
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
 
         return null;
     }
 
-    private boolean isSourceType(String qualifiedClassname, final IJavaProject javaProject) throws JavaModelException {
-        SearchEngine sEngine = new SearchEngine();
-        IJavaSearchScope searchScope = SearchEngine.createJavaSearchScope(new IJavaElement[] { javaProject }, IJavaSearchScope.SOURCES);
-        TypeNameFoundRequestor nameRequestor = new TypeNameFoundRequestor();
+    private boolean isSourceType(final String qualifiedClassname, final IJavaProject javaProject) throws JavaModelException {
+        final SearchEngine sEngine = new SearchEngine();
+        final IJavaSearchScope searchScope = SearchEngine.createJavaSearchScope(new IJavaElement[] { javaProject }, IJavaSearchScope.SOURCES);
+        final TypeNameFoundRequestor nameRequestor = new TypeNameFoundRequestor();
         sEngine.searchAllTypeNames(NamingUtils.getPackageName(qualifiedClassname).toCharArray(), SearchPattern.R_EXACT_MATCH,
                 NamingUtils.getSimpleName(qualifiedClassname)
                         .toCharArray(),
@@ -258,7 +256,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
     }
 
     @Override
-    public void migrate() throws CoreException, MigrationException {
+    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
         // NOTHING TO MIGRATE
     }
 }

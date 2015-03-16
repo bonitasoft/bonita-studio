@@ -1,11 +1,17 @@
-/*******************************************************************************
- * Copyright (C) 2009, 2013 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- *      BonitaSoft, 32 rue Gustave Eiffel – 38000 Grenoble
- *      or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.parameters.property.section.editingsupport;
 
 import org.bonitasoft.studio.common.jface.CellEditorValidationStatusListener;
@@ -37,7 +43,7 @@ public class ParameterNameEditingSupport extends EditingSupport {
 	private TransactionalEditingDomain transactionalEditingDomain;
 	private final CellEditorValidationStatusListener listener;
 
-	public ParameterNameEditingSupport(ColumnViewer viewer, TransactionalEditingDomain transactionalEditingDomain, CellEditorValidationStatusListener listener) {
+	public ParameterNameEditingSupport(final ColumnViewer viewer, final TransactionalEditingDomain transactionalEditingDomain, final CellEditorValidationStatusListener listener) {
 		super(viewer);
 		this.transactionalEditingDomain = transactionalEditingDomain;
 		this.listener = listener;
@@ -47,7 +53,7 @@ public class ParameterNameEditingSupport extends EditingSupport {
 	 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
 	 */
 	@Override
-	protected boolean canEdit(Object element) {
+	protected boolean canEdit(final Object element) {
 		return true;
 	}
 
@@ -56,25 +62,25 @@ public class ParameterNameEditingSupport extends EditingSupport {
 	 */
 	@Override
 	protected CellEditor getCellEditor(final Object element) {
-		TextCellEditor editor = new TextCellEditor((Composite) getViewer().getControl(), SWT.NONE) ;
+		final TextCellEditor editor = new TextCellEditor((Composite) getViewer().getControl(), SWT.NONE) ;
 		editor.setValidator(new ICellEditorValidator() {
 
 			@Override
-			public String isValid(Object value) {
-				String input = (String) value ;
-			
+			public String isValid(final Object value) {
+				final String input = (String) value ;
+
 				final IStatus javaConventionNameStatus = new GroovyReferenceValidator(Messages.name).validate(value.toString());
 				if(!javaConventionNameStatus.isOK()){
 					return javaConventionNameStatus.getMessage();
 				}
-				
+
 				final IStatus lenghtNameStatus = new InputLengthValidator(Messages.name, 50).validate(input);
 				if(!lenghtNameStatus.isOK()){
 					return lenghtNameStatus.getMessage();
 				}
-				Parameter param = (Parameter) element ;
-				AbstractProcess process = (AbstractProcess) param.eContainer() ;
-				for(Parameter p : process.getParameters()){
+				final Parameter param = (Parameter) element ;
+				final AbstractProcess process = (AbstractProcess) param.eContainer() ;
+				for(final Parameter p : process.getParameters()){
 					if(!p.equals(param)){
 						if(p.getName().equals(input)){
 							return Messages.invalidName ;
@@ -93,7 +99,7 @@ public class ParameterNameEditingSupport extends EditingSupport {
 	 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
 	 */
 	@Override
-	protected Object getValue(Object element) {
+	protected Object getValue(final Object element) {
 		if(element instanceof Parameter){
 			return ((Parameter) element).getName() ;
 		}
@@ -104,11 +110,11 @@ public class ParameterNameEditingSupport extends EditingSupport {
 	 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	protected void setValue(Object element, Object value) {
+	protected void setValue(final Object element, final Object value) {
 		if(element != null && value != null && transactionalEditingDomain != null){
-			AbstractProcess process = (AbstractProcess) ((EObject)element).eContainer() ;
+			final AbstractProcess process = (AbstractProcess) ((EObject)element).eContainer() ;
 			if(process != null){
-				CompoundCommand cc = new CompoundCommand() ;
+				final CompoundCommand cc = new CompoundCommand() ;
 				cc.append(SetCommand.create(transactionalEditingDomain, element, ParameterPackage.Literals.PARAMETER__NAME, value)) ;
 				transactionalEditingDomain.getCommandStack().execute(cc) ;
 				getViewer().refresh() ;
@@ -116,7 +122,7 @@ public class ParameterNameEditingSupport extends EditingSupport {
 		}
 	}
 
-	public void setTransactionalEditingDomain(TransactionalEditingDomain transactionalEditingDomain) {
+	public void setTransactionalEditingDomain(final TransactionalEditingDomain transactionalEditingDomain) {
 		this.transactionalEditingDomain = transactionalEditingDomain;
 	}
 

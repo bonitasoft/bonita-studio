@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.groovy.ui.viewer;
 
@@ -58,152 +56,152 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class TestExpressionOperation implements IRunnableWithProgress {
 
     private static final String TEST_EXPRESSION_POOL = "TEST_EXPRESSION_POOL";
     private Serializable result;
-    private Map<String, Serializable> inputValues = new HashMap<String, Serializable>() ;
+    private Map<String, Serializable> inputValues = new HashMap<String, Serializable>();
     private org.bonitasoft.studio.model.expression.Expression expression;
     private Set<IRepositoryFileStore> additionalJars;
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        Assert.isNotNull(expression) ;
+    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        Assert.isNotNull(expression);
 
         APISession session = null;
         ProcessAPI processApi = null;
-        long procId = -1 ;
-        ClassLoader cl = Thread.currentThread().getContextClassLoader() ;
+        long procId = -1;
+        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
         try {
-            session = BOSEngineManager.getInstance().loginDefaultTenant(monitor) ;
+            session = BOSEngineManager.getInstance().loginDefaultTenant(monitor);
             processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-            Assert.isNotNull(processApi) ;
+            Assert.isNotNull(processApi);
             final AbstractProcess proc = createAbstractProcess();
-
 
             final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
             configuration.setName("TestExpressionConfiguration");
             new ConfigurationSynchronizer(proc, configuration).synchronize();
-            for(FragmentContainer fc : configuration.getProcessDependencies()){
-            	if(additionalJars!=null && FragmentTypes.OTHER.equals(fc.getId())){
-            		final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
-            		if(libFolder.exists()){
-            			for(IResource f : libFolder.members()){
-            				if(f instanceof IFile && ((IFile)f).getFileExtension() != null && ((IFile)f).getFileExtension().equalsIgnoreCase("jar") && isSelectedJar(((IFile)f).getName())){
-            					Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
-            					fragment.setExported(true);
-            					fragment.setKey(f.getName());
-            					fragment.setValue(f.getName());
-            					fragment.setType(FragmentTypes.JAR);
-            					fc.getFragments().add(fragment);
-            				}
-            			}
-            		}
-            	}
-            	if(FragmentTypes.GROOVY_SCRIPT.equals(fc.getId())){
-                    GroovyRepositoryStore store = (GroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class) ;
-                    List<GroovyFileStore> fileStores = store.getChildren();
-                    for(IRepositoryFileStore fileStore : fileStores){
-                    	String name = fileStore.getName();
-                        Fragment newFragment = ConfigurationFactory.eINSTANCE.createFragment() ;
-                        newFragment.setType(FragmentTypes.GROOVY_SCRIPT) ;
-                        newFragment.setKey(name) ;
+            for (final FragmentContainer fc : configuration.getProcessDependencies()) {
+                if (additionalJars != null && FragmentTypes.OTHER.equals(fc.getId())) {
+                    final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
+                    if (libFolder.exists()) {
+                        for (final IResource f : libFolder.members()) {
+                            if (f instanceof IFile && ((IFile) f).getFileExtension() != null && ((IFile) f).getFileExtension().equalsIgnoreCase("jar")
+                                    && isSelectedJar(((IFile) f).getName())) {
+                                final Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
+                                fragment.setExported(true);
+                                fragment.setKey(f.getName());
+                                fragment.setValue(f.getName());
+                                fragment.setType(FragmentTypes.JAR);
+                                fc.getFragments().add(fragment);
+                            }
+                        }
+                    }
+                }
+                if (FragmentTypes.GROOVY_SCRIPT.equals(fc.getId())) {
+                    final GroovyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class);
+                    final List<GroovyFileStore> fileStores = store.getChildren();
+                    for (final IRepositoryFileStore fileStore : fileStores) {
+                        final String name = fileStore.getName();
+                        final Fragment newFragment = ConfigurationFactory.eINSTANCE.createFragment();
+                        newFragment.setType(FragmentTypes.GROOVY_SCRIPT);
+                        newFragment.setKey(name);
                         newFragment.setValue(name);
                         newFragment.setExported(true);
                         fc.getFragments().add(newFragment);
                     }
-            	}
+                }
             }
 
-            final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc,configuration,Collections.EMPTY_SET);
+            final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc, configuration, Collections.EMPTY_SET);
 
             undeployProcess(proc, processApi);
-            ProcessDefinition def = processApi.deploy(businessArchive);
+            final ProcessDefinition def = processApi.deploy(businessArchive);
             procId = def.getId();
-            processApi.enableProcess(procId) ;
+            processApi.enableProcess(procId);
             expression.setReturnType(Object.class.getName());
-            Thread.currentThread().setContextClassLoader(RepositoryManager.getInstance().getCurrentRepository().createProjectClassloader());
-            result = processApi.evaluateExpressionOnProcessDefinition(EngineExpressionUtil.createExpression(expression), inputValues , procId);
-        }catch (Exception e) {
+            Thread.currentThread().setContextClassLoader(RepositoryManager.getInstance().getCurrentRepository().createProjectClassloader(monitor));
+            result = processApi.evaluateExpressionOnProcessDefinition(EngineExpressionUtil.createExpression(expression), inputValues, procId);
+        } catch (final Exception e) {
             result = e;
-        }finally{
-        	if(cl != null){
-        		Thread.currentThread().setContextClassLoader(cl);
-        	}
-            if(processApi != null && procId != -1){
-                try{
-                    processApi.disableProcess(procId) ;
+        } finally {
+            if (cl != null) {
+                Thread.currentThread().setContextClassLoader(cl);
+            }
+            if (processApi != null && procId != -1) {
+                try {
+                    processApi.disableProcess(procId);
                     processApi.deleteProcess(procId);
-                }catch (Exception e) {
+                } catch (final Exception e) {
                     BonitaStudioLog.error(e);
                 }
             }
-            if(session != null){
+            if (session != null) {
                 BOSEngineManager.getInstance().logoutDefaultTenant(session);
             }
         }
     }
 
-    private boolean isSelectedJar(String fileName){
-    	for(IRepositoryFileStore fileStore : additionalJars){
-    		if(fileStore.getName().equals(fileName)){
-    			return true;
-    		}
-    	}
-    	return false;
+    private boolean isSelectedJar(final String fileName) {
+        for (final IRepositoryFileStore fileStore : additionalJars) {
+            if (fileStore.getName().equals(fileName)) {
+                return true;
+            }
+        }
+        return false;
     }
-    
+
     private AbstractProcess createAbstractProcess() {
-        AbstractProcess proc = ProcessFactory.eINSTANCE.createPool();
+        final AbstractProcess proc = ProcessFactory.eINSTANCE.createPool();
         proc.setName(TEST_EXPRESSION_POOL);
         proc.setVersion("1.0");
         return proc;
     }
 
-    public Serializable getResult(){
-        return result ;
+    public Serializable getResult() {
+        return result;
     }
 
-    public void setExpression(org.bonitasoft.studio.model.expression.Expression expression){
-        this.expression = expression ;
+    public void setExpression(final org.bonitasoft.studio.model.expression.Expression expression) {
+        this.expression = expression;
     }
 
-    protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException,  ProcessDefinitionNotFoundException,  IllegalProcessStateException, DeletionException {
-        long nbDeployedProcesses = processApi.getNumberOfProcessDeploymentInfos() ;
-        if(nbDeployedProcesses > 0){
-            List<ProcessDeploymentInfo> processes = processApi.getProcessDeploymentInfos(0, (int) nbDeployedProcesses, ProcessDeploymentInfoCriterion.DEFAULT) ;
-            for(ProcessDeploymentInfo info : processes){
-                if(info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())){
-                    try{
-                        processApi.disableProcess(info.getProcessId()) ;
-                    }catch (ProcessActivationException e) {
+    protected void undeployProcess(final AbstractProcess process, final ProcessAPI processApi) throws InvalidSessionException,
+            ProcessDefinitionNotFoundException, IllegalProcessStateException, DeletionException {
+        final long nbDeployedProcesses = processApi.getNumberOfProcessDeploymentInfos();
+        if (nbDeployedProcesses > 0) {
+            final List<ProcessDeploymentInfo> processes = processApi.getProcessDeploymentInfos(0, (int) nbDeployedProcesses,
+                    ProcessDeploymentInfoCriterion.DEFAULT);
+            for (final ProcessDeploymentInfo info : processes) {
+                if (info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())) {
+                    try {
+                        processApi.disableProcess(info.getProcessId());
+                    } catch (final ProcessActivationException e) {
 
                     }
-                    processApi.deleteProcess(info.getProcessId()) ;
+                    processApi.deleteProcess(info.getProcessId());
                 }
             }
         }
     }
 
-
-    public void setContextMap(Map<String, Serializable> variableMap) {
+    public void setContextMap(final Map<String, Serializable> variableMap) {
         inputValues = variableMap;
     }
 
-	public Set<IRepositoryFileStore> getAdditionalJars() {
-		return additionalJars;
-	}
+    public Set<IRepositoryFileStore> getAdditionalJars() {
+        return additionalJars;
+    }
 
-	public void setAdditionalJars(Set<IRepositoryFileStore> additionalJars) {
-		this.additionalJars = additionalJars;
-	}
+    public void setAdditionalJars(final Set<IRepositoryFileStore> additionalJars) {
+        this.additionalJars = additionalJars;
+    }
 
 }

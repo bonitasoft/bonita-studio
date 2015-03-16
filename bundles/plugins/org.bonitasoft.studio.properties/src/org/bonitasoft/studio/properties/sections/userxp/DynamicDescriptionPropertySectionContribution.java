@@ -58,7 +58,8 @@ public class DynamicDescriptionPropertySectionContribution extends AbstractPrope
         composite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
         expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, ProcessPackage.Literals.FLOW_ELEMENT__DYNAMIC_DESCRIPTION);
         expressionViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
-        expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.SCRIPT_TYPE}));
+        expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
+                ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.SCRIPT_TYPE }));
         expressionViewer.setInput(eObject) ;
         expressionViewer.setMessage(Messages.dynamicDescriptionHint,IStatus.INFO) ;
         expressionViewer.addExpressionValidator(new ExpressionLengthValidator(MAX_LENGTH));

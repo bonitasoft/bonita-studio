@@ -1,0 +1,89 @@
+/**
+ * Copyright (C) 2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.pagedesigner.core.expression;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
+import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.pagedesigner.core.operation.CreateFormOperation;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.ui.progress.IProgressService;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
+
+/**
+ * @author Romain Bioteau
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class CreateNewFormProposalListenerTest implements BonitaPreferenceConstants {
+
+    @Mock
+    private IEclipsePreferences preferenceStore;
+
+    @Mock
+    private IProgressService progressService;
+
+    @Spy
+    @InjectMocks
+    private CreateNewFormProposalListener createNewFormProposal;
+
+    @Mock
+    private CreateFormOperation createFormOperation;
+
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        doNothing().when(createNewFormProposal).openPageDesigner(any(PageDesignerURLFactory.class), eq("page-id"));
+        doReturn(createFormOperation).when(createNewFormProposal).doCreateFormOperation(any(PageDesignerURLFactory.class));
+        when(createFormOperation.getNewPageId()).thenReturn("page-id");
+        when(preferenceStore.get(CONSOLE_HOST, DEFAULT_HOST)).thenReturn(DEFAULT_HOST);
+        when(preferenceStore.getInt(CONSOLE_PORT, DEFAULT_PORT)).thenReturn(DEFAULT_PORT);
+    }
+
+    @Test
+    public void should_handleEvent_returns_new_pageid_and_open_page_designer_with_new_id() throws Exception {
+        final String pageId = createNewFormProposal.handleEvent(null, null);
+
+        assertThat(pageId).isEqualTo("page-id");
+        verify(progressService).busyCursorWhile(any(CreateFormOperation.class));
+        verify(createNewFormProposal).openPageDesigner(any(PageDesignerURLFactory.class), eq("page-id"));
+    }
+
+    @Test
+    public void should_handleEvent_setFormName_on_CreateFormOperation() throws Exception {
+        final Task task = aTask().withName("Step1").havingFormMapping(aFormMapping()).build();
+        createNewFormProposal.handleEvent(task.getFormMapping(), null);
+
+        verify(createFormOperation).setFormName("Step1");
+    }
+
+}

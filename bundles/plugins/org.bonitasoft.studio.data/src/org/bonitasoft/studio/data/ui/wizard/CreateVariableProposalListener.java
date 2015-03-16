@@ -14,14 +14,16 @@
  */
 package org.bonitasoft.studio.data.ui.wizard;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collections;
 
+import org.bonitasoft.studio.common.DataTypeLabels;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.data.i18n.Messages;
-import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
+import org.bonitasoft.studio.expression.editor.provider.IDataProposalListener;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ReceiveTask;
 import org.bonitasoft.studio.model.process.SendTask;
@@ -35,31 +37,27 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Maxence Raoux
- *
  */
-public class CreateVariableProposalListener implements IProposalListener {
+public class CreateVariableProposalListener implements IDataProposalListener {
 
     private boolean isPageFlowContext = true;
 
-    private EStructuralFeature feature;
+    private EStructuralFeature feature = ProcessPackage.Literals.DATA_AWARE__DATA;
+
+    private boolean multipleData = false;
 
     @Override
     public String handleEvent(final EObject context, final String fixedReturnType) {
         Assert.isNotNull(context);
         final EObject dataContainer = getDataContainer(context);
-        if (feature == null) {
-            feature = ProcessPackage.Literals.DATA_AWARE__DATA;
-        }
-        final Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
-        res.add(feature);
-        final DataWizard newWizard = new DataWizard(TransactionUtil.getEditingDomain(context), dataContainer, feature, res, true, fixedReturnType);
+        final Data dataWorkingCopy = ProcessFactory.eINSTANCE.createData();
+        dataWorkingCopy.setMultiple(multipleData);
+        dataWorkingCopy.setDataType(ModelHelper.getDataTypeForID(dataContainer, DataTypeLabels.stringDataType));
+        final DataWizard newWizard = new DataWizard(TransactionUtil.getEditingDomain(context), dataContainer, dataWorkingCopy, feature,
+                Collections.singleton(feature), true,
+                fixedReturnType);
         newWizard.setIsPageFlowContext(isPageFlowContext);
-        Shell activeShell = Display
-                .getDefault().getActiveShell();
-        if (activeShell.getParent() != null) {
-            activeShell = activeShell.getParent().getShell();
-        }
-        final DataWizardDialog wizardDialog = new DataWizardDialog(activeShell,
+        final DataWizardDialog wizardDialog = new DataWizardDialog(activeShell(),
                 newWizard, null);
         if (wizardDialog.open() == Dialog.OK) {
             final EObject obj = newWizard.getWorkingCopy();
@@ -71,6 +69,15 @@ public class CreateVariableProposalListener implements IProposalListener {
             }
         }
         return null;
+    }
+
+    protected Shell activeShell() {
+        Shell activeShell = Display
+                .getDefault().getActiveShell();
+        if (activeShell.getParent() != null) {
+            activeShell = activeShell.getParent().getShell();
+        }
+        return activeShell;
     }
 
     protected EObject getDataContainer(EObject context) {
@@ -142,4 +149,8 @@ public class CreateVariableProposalListener implements IProposalListener {
         return true;
     }
 
+    @Override
+    public void setMultipleData(final boolean multipleData) {
+        this.multipleData = multipleData;
+    }
 }

@@ -1,11 +1,17 @@
-/*******************************************************************************
- * Copyright (C) 2009, 2013 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- *      BonitaSoft, 32 rue Gustave Eiffel – 38000 Grenoble
- *      or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.parameters.configuration;
 
 import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
@@ -31,16 +37,16 @@ public class ParametersConfigurationSynchronizer implements IConfigurationSynchr
 
 
     @Override
-    public void synchronize(Configuration configuration, AbstractProcess process, CompoundCommand cc, EditingDomain editingDomain) {
+    public void synchronize(final Configuration configuration, final AbstractProcess process, final CompoundCommand cc, final EditingDomain editingDomain) {
         addNewParameters(configuration,process,editingDomain,cc);
         removeDeletedParameters(configuration,process,editingDomain,cc) ;
     }
 
-    private void removeDeletedParameters(Configuration configuration, AbstractProcess process, EditingDomain editingDomain, CompoundCommand cc) {
-        for(Parameter param : configuration.getParameters()){
-            String paramName = param.getName() ;
+    private void removeDeletedParameters(final Configuration configuration, final AbstractProcess process, final EditingDomain editingDomain, final CompoundCommand cc) {
+        for(final Parameter param : configuration.getParameters()){
+            final String paramName = param.getName() ;
             boolean exists = false ;
-            for(Parameter p : process.getParameters()){
+            for(final Parameter p : process.getParameters()){
                 if(p.getName().equals(paramName)){
                     exists = true ;
                     break ;
@@ -54,11 +60,11 @@ public class ParametersConfigurationSynchronizer implements IConfigurationSynchr
 
 
 
-    private void addNewParameters(Configuration configuration, AbstractProcess process, EditingDomain editingDomain, CompoundCommand cc) {
-        for(Parameter parameter : process.getParameters()){
-            String parameterName = parameter.getName() ;
+    private void addNewParameters(final Configuration configuration, final AbstractProcess process, final EditingDomain editingDomain, final CompoundCommand cc) {
+        for(final Parameter parameter : process.getParameters()){
+            final String parameterName = parameter.getName() ;
             boolean exists = false ;
-            for(Parameter p : configuration.getParameters()){
+            for(final Parameter p : configuration.getParameters()){
                 if(p.getName().equals(parameterName)){
                     exists = true ;
                     if(p.getTypeClassname() == null || !p.getTypeClassname().equals(parameter.getTypeClassname())){
@@ -68,7 +74,7 @@ public class ParametersConfigurationSynchronizer implements IConfigurationSynchr
                 }
             }
             if(!exists){
-                Parameter param = ParameterFactory.eINSTANCE.createParameter() ;
+                final Parameter param = ParameterFactory.eINSTANCE.createParameter() ;
                 param.setName(parameterName) ;
                 param.setTypeClassname(parameter.getTypeClassname()) ;
                 param.setDescription(parameter.getDescription()) ;

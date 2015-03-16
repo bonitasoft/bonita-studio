@@ -76,19 +76,19 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
     private final NotificationListener notificationListener = new NotificationListener() {
 
         @Override
-        public void notifyChanged(Notification notification) {
+        public void notifyChanged(final Notification notification) {
             refresh();
         }
     };
     protected TabbedPropertySheetPage aTabbedPropertySheetPage;
-	private Button addEventButton;
+    private Button addEventButton;
 
     @Override
     public void refresh() {
         super.refresh();
         if (filteredTree != null) {
             if (getEObject() instanceof Node) {
-                Node node = (Node)getEObject();
+                final Node node = (Node)getEObject();
                 filteredTree.getViewer().setInput(node.getElement());
             } else {
                 if(getEObject() != null && getEObject() instanceof ThrowMessageEvent) {
@@ -100,7 +100,7 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
     }
 
     @Override
-    public void setInput(IWorkbenchPart part, ISelection selection) {
+    public void setInput(final IWorkbenchPart part, final ISelection selection) {
         super.setInput(part, selection);
         if(getEObject() != null && getEObject() instanceof ConnectableElement){
             DiagramEventBroker.getInstance(getEditingDomain()).addNotificationListener(getEObject(),ProcessPackage.eINSTANCE.getConnectableElement_Connectors(),notificationListener);
@@ -108,17 +108,16 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
     }
 
     @Override
-    public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
-        this.aTabbedPropertySheetPage = aTabbedPropertySheetPage;
+    protected void createContent(final Composite parent) {
         doCreateControls(parent);
     }
 
-    private void doCreateControls(Composite parent) {
-        Composite mainComposite = getWidgetFactory().createPlainComposite(parent, SWT.NONE);
+
+    private void doCreateControls(final Composite parent) {
+        final Composite mainComposite = getWidgetFactory().createPlainComposite(parent, SWT.NONE);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(20, 20).create());
 
-        Composite buttonsComposite = getWidgetFactory().createPlainComposite(mainComposite, SWT.NONE);
+        final Composite buttonsComposite = getWidgetFactory().createPlainComposite(mainComposite, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
         addEventButton = createAddEventButton(buttonsComposite);
@@ -132,14 +131,14 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
         filteredTree.getViewer().setLabelProvider(new EventLabelProvider());
         filteredTree.getViewer().addDoubleClickListener(new IDoubleClickListener() {
             @Override
-            public void doubleClick(DoubleClickEvent event) {
+            public void doubleClick(final DoubleClickEvent event) {
                 updateEventAction();
             }
         });
         filteredTree.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 updateButtons();
             }
         });
@@ -148,10 +147,10 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
     }
 
     /**
-     * 
+     *
      */
     private void updateButtons() {
-        ITreeSelection selection = (ITreeSelection)filteredTree.getViewer().getSelection();
+        final ITreeSelection selection = (ITreeSelection)filteredTree.getViewer().getSelection();
         if(!removeEventButton.isDisposed()) {
             removeEventButton.setEnabled(selection.size() > 0);
         }
@@ -159,23 +158,23 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
         if(!updateEventButton.isDisposed()) {
             updateEventButton.setEnabled(selection.size() == 1);
         }
-        
+
         if(eObject instanceof SendTask){
-        	if(!addEventButton.isDisposed()) {
-        		addEventButton.setEnabled(((SendTask) eObject).getEvents().isEmpty());
+            if(!addEventButton.isDisposed()) {
+                addEventButton.setEnabled(((SendTask) eObject).getEvents().isEmpty());
             }
         }
 
     }
 
 
-    private Button createUpdateConnectorButton(Composite buttonsComposite) {
-        Button updateButton = getWidgetFactory().createButton(buttonsComposite, Messages.updateConnector, SWT.FLAT);
+    private Button createUpdateConnectorButton(final Composite buttonsComposite) {
+        final Button updateButton = getWidgetFactory().createButton(buttonsComposite, Messages.updateConnector, SWT.FLAT);
         updateButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
         updateButton.addListener(SWT.Selection, new Listener() {
 
             @Override
-            public void handleEvent(Event event) {
+            public void handleEvent(final Event event) {
                 updateEventAction();
             }
         });
@@ -183,21 +182,21 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
     }
 
     private Button createRemoveConnectorButton(final Composite buttonsComposite) {
-        Button removeButton = getWidgetFactory().createButton(buttonsComposite, Messages.removeConnector, SWT.FLAT);
+        final Button removeButton = getWidgetFactory().createButton(buttonsComposite, Messages.removeConnector, SWT.FLAT);
         removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
         removeButton.addListener(SWT.Selection, new Listener() {
 
             @Override
             @SuppressWarnings("unchecked")
-            public void handleEvent(Event event) {
-                ITreeSelection selection = (ITreeSelection)filteredTree.getViewer().getSelection();
+            public void handleEvent(final Event event) {
+                final ITreeSelection selection = (ITreeSelection)filteredTree.getViewer().getSelection();
                 if (MessageDialog.openConfirm(buttonsComposite.getShell(), Messages.removeEventConfirmTitle, createMessage(selection))) {
-                    DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+                    final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
                     MessageFlowFactory.removeMessageFlow(getEditingDomain(),selection.toList(), getThrowMessageEvent(),editor.getDiagramEditPart()) ;
-                    IUndoableOperation operation = new DeleteMessageCommand(getEditingDomain(), (ThrowMessageEvent)getEObject(), selection.toList(), ThrowEventSection.this);
+                    final IUndoableOperation operation = new DeleteMessageCommand(getEditingDomain(), (ThrowMessageEvent)getEObject(), selection.toList(), ThrowEventSection.this);
                     try {
                         OperationHistoryFactory.getOperationHistory().execute(operation, new NullProgressMonitor(), null);
-                    } catch (ExecutionException e) {
+                    } catch (final ExecutionException e) {
                         BonitaStudioLog.error(e);
                     }
 
@@ -206,11 +205,11 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
                 }
             }
 
-            private String createMessage(ITreeSelection selection) {
-                StringBuilder sb = new StringBuilder();
+            private String createMessage(final ITreeSelection selection) {
+                final StringBuilder sb = new StringBuilder();
                 sb.append(Messages.removeEventConfirmMessage);
-                for (Object item : selection.toList()) {
-                    Message event = (Message)item;
+                for (final Object item : selection.toList()) {
+                    final Message event = (Message)item;
                     sb.append('\n');
                     sb.append(event.getName());
                     sb.append(", "); //$NON-NLS-1$
@@ -225,12 +224,12 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
 
 
 
-    private Button createAddEventButton(Composite buttonsComposite) {
-        Button addMessageEventButton = getWidgetFactory().createButton(buttonsComposite, Messages.addConnector, SWT.FLAT);
+    private Button createAddEventButton(final Composite buttonsComposite) {
+        final Button addMessageEventButton = getWidgetFactory().createButton(buttonsComposite, Messages.addConnector, SWT.FLAT);
         addMessageEventButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
         addMessageEventButton.addListener(SWT.Selection, new Listener() {
             @Override
-            public void handleEvent(Event event) {
+            public void handleEvent(final Event event) {
                 new WizardDialog(ThrowEventSection.this.getPart().getSite().getShell(),
                         createMessageEventWizard(ModelHelper.getMainProcess(getEObject()),null)).open();
                 refresh();
@@ -257,10 +256,10 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
     }
 
     /**
-     * 
+     *
      */
     private void updateEventAction() {
-        ITreeSelection selection = (ITreeSelection)filteredTree.getViewer().getSelection();
+        final ITreeSelection selection = (ITreeSelection)filteredTree.getViewer().getSelection();
         if (selection.size() == 1) {
             new WizardDialog(Display.getCurrent().getActiveShell(),
                     createMessageEventWizard(ModelHelper.getMainProcess(getEObject()),(Message)selection.getFirstElement())).open();
@@ -275,15 +274,15 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
         super.dispose();
         if(getEObject() != null){
             DiagramEventBroker.getInstance(getEditingDomain()).removeNotificationListener(getEObject(),notificationListener);
-            for(Message event : ((ThrowMessageEvent)getEObject()).getEvents()){
+            for(final Message event : ((ThrowMessageEvent)getEObject()).getEvents()){
                 DiagramEventBroker.getInstance(getEditingDomain()).removeNotificationListener(event,notificationListener);
             }
         }
     }
-    
+
     @Override
     public String getSectionDescription() {
-    	return Messages.messagesSectionDescription;
+        return Messages.messagesSectionDescription;
     }
 
 }

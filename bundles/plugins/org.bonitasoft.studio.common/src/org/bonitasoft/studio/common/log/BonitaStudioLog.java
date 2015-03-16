@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.log;
 
@@ -24,10 +21,8 @@ import org.eclipse.e4.ui.internal.workbench.WorkbenchLogger;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class BonitaStudioLog {
-
 
     public static void log(final String message) {
         final Logger logger = getLogger(Activator.PLUGIN_ID);
@@ -53,6 +48,26 @@ public class BonitaStudioLog {
      */
     public static void error(final Throwable exception, final String bundleId) {
         error(exception);
+    }
+
+    public static void error(final String message, final Throwable t, final String bundleId) {
+        final Logger logger = getLogger(bundleId);
+        if (logger != null) {
+            logger.error(t, message);
+        } else {
+            System.err.println(message);
+            t.printStackTrace();
+        }
+    }
+
+    public static void error(final String message, final Throwable t) {
+        final Logger logger = getLogger(Activator.PLUGIN_ID);
+        if (logger != null) {
+            logger.error(t, message);
+        } else {
+            System.err.println(message);
+            t.printStackTrace();
+        }
     }
 
     public static Logger getLogger(final String bundleName) {
@@ -133,4 +148,5 @@ public class BonitaStudioLog {
     public static void setLogger(final WorkbenchLogger workbenchLogger) {
         BonitaStudioLogger.setLogger(workbenchLogger);
     }
+
 }

@@ -465,6 +465,13 @@
          unpack="false"/>
 
    <plugin
+         id="org.bonitasoft.studio.contract"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+    unpack="false"/>
+    
+       <plugin
          id="org.eclipse.emf.edapt.common"
          download-size="0"
          install-size="0"
@@ -520,9 +527,30 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
-    <plugin
+
+   <plugin
          id="org.bonitasoft.studio.parameters"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.pagedesigner"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.browser"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.validation.common"
          download-size="0"
          install-size="0"
          version="0.0.0"

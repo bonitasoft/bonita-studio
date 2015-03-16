@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.document.core.expression;
 
@@ -38,28 +36,29 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.emf.ecore.EObject;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class DocumentBarResourceProvider implements BARResourcesProvider {
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.extension.BARResourcesProvider#getResourcesForConfiguration(org.bonitasoft.studio.model.process.AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration, org.bonitasoft.engine.bpm.model.DesignProcessDefinition, java.util.Map)
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.extension.BARResourcesProvider#getResourcesForConfiguration(org.bonitasoft.studio.model.process.AbstractProcess,
+     * org.bonitasoft.studio.model.configuration.Configuration, org.bonitasoft.engine.bpm.model.DesignProcessDefinition, java.util.Map)
      */
     @Override
-    public List<BarResource> addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,final Set<EObject> excludedObjects) {
-        final List<BarResource> resources = new ArrayList<BarResource>() ;
-        if(process instanceof Pool){
-            final List<Document> documents = ((Pool)process).getDocuments();
+    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
+            final Set<EObject> excludedObjects) {
+        final List<BarResource> resources = new ArrayList<BarResource>();
+        if (process instanceof Pool) {
+            final List<Document> documents = ((Pool) process).getDocuments();
             final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
             for (final Document document : documents) {
                 if (document.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL)) {
-                    final String documentID= document.getDefaultValueIdOfDocumentStore();
-                    if(documentID != null){
+                    final String documentID = document.getDefaultValueIdOfDocumentStore();
+                    if (documentID != null) {
                         final DocumentFileStore artifact = store.getChild(documentID);
-                        if(artifact != null){
+                        if (artifact != null) {
                             try {
                                 addFileContents(resources, artifact.getResource().getLocation().toFile(), "");
                             } catch (final FileNotFoundException e) {
@@ -72,23 +71,22 @@ public class DocumentBarResourceProvider implements BARResourcesProvider {
                 }
             }
 
-            for(final BarResource barResource : resources ){
-                builder.addDocumentResource(barResource)  ;
+            for (final BarResource barResource : resources) {
+                builder.addDocumentResource(barResource);
             }
         }
-        return resources ;
     }
 
-    private void addFileContents(final List<BarResource>  resources, final File file,String barPathPrefix) throws FileNotFoundException, IOException {
+    private void addFileContents(final List<BarResource> resources, final File file, String barPathPrefix) throws FileNotFoundException, IOException {
         if (file.exists()) {
             final byte[] jarBytes = new byte[(int) file.length()];
             final InputStream stream = new FileInputStream(file);
             stream.read(jarBytes);
             stream.close();
-            if(barPathPrefix != null && !barPathPrefix.isEmpty() && !barPathPrefix.endsWith("/")){
-                barPathPrefix = barPathPrefix+"/" ;
+            if (barPathPrefix != null && !barPathPrefix.isEmpty() && !barPathPrefix.endsWith("/")) {
+                barPathPrefix = barPathPrefix + "/";
             }
-            resources.add(new BarResource(barPathPrefix+file.getName(), jarBytes));
+            resources.add(new BarResource(barPathPrefix + file.getName(), jarBytes));
         }
     }
 

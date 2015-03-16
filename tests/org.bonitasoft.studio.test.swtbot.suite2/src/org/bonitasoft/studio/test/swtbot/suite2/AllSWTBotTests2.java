@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2009 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.test.swtbot.suite2;
 
 import org.bonitasoft.expressions.test.TestConnectorExpression;
@@ -24,21 +38,22 @@ import org.bonitasoft.studio.exporter.tests.bpmn.BPMNExportTests;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNGatewayExportImportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
 import org.bonitasoft.studio.groovy.tests.TestBonitaGroovyEditorDialog;
-import org.bonitasoft.studio.migration.tests.ExportImportWithoutMigrationIT;
 import org.bonitasoft.studio.migration.tests.MigrationReporTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.test.TestResources;
 import org.bonitasoft.studio.repository.test.swtbot.TestExportBosArchive;
 import org.bonitasoft.studio.tests.IHeapDumper;
+import org.bonitasoft.studio.tests.businessobject.CreateDeployExportBusinessObjectIT;
 import org.bonitasoft.studio.tests.conditions.SWTBOTTestConditions;
+import org.bonitasoft.studio.tests.contract.ContractIT;
 import org.bonitasoft.studio.tests.data.DataWizardIT;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
 import org.bonitasoft.studio.tests.dialog.TestDuplicate;
 import org.bonitasoft.studio.tests.document.TestDocument;
 import org.bonitasoft.studio.tests.document.TestRunWithDocument;
 import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
-import org.bonitasoft.studio.tests.form.TestBug1682;
+import org.bonitasoft.studio.tests.form.DeleteWidgetWithContextMenuIT;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.migration.BarImportReportIT;
 import org.bonitasoft.studio.tests.refactoring.widget.RefactorWidgetIT;
@@ -54,26 +69,13 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-/**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2.0 of the License, or
- * (at your option) any later version.
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
 @RunWith(BonitaTestSuite.class)
 @Suite.SuiteClasses({
+        CopyPasteTests.class,
+        DeleteCommandTest.class,
         TestBug1640.class,
         NewRunTest.class,
-        TestBug1682.class,
+        DeleteWidgetWithContextMenuIT.class,
         DataWizardIT.class,
         SWTBOTTestConditions.class,
         TestConvertToMessage.class,
@@ -103,13 +105,12 @@ import org.junit.runners.Suite;
         TestTimer.class,
         TestBonitaGroovyEditorDialog.class,
         TestProcessDependencies.class,
+        ContractIT.class,
         RefactorWidgetIT.class,
-        ExportImportWithoutMigrationIT.class,
         TestFormValidatorIT.class,
         TestOrganizationPassword.class,
         BarImportReportIT.class,
-        CopyPasteTests.class,
-        DeleteCommandTest.class
+        CreateDeployExportBusinessObjectIT.class
 })
 public class AllSWTBotTests2 {
 

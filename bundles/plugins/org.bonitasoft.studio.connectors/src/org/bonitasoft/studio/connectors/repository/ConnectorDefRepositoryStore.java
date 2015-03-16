@@ -26,6 +26,7 @@ import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
@@ -47,7 +48,6 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     }
 
     private DefinitionResourceProvider resourceProvider;
-
 
     @Override
     public ConnectorDefFileStore createRepositoryFileStore(final String fileName) {
@@ -126,8 +126,8 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     }
 
     @Override
-    public void migrate() throws CoreException, MigrationException {
-        super.migrate();
+    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
+        super.migrate(monitor);
         getResourceProvider().loadDefinitionsCategories(null);
     }
 

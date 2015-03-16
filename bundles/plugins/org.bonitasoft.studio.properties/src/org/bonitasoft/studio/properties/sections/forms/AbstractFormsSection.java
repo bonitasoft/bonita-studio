@@ -87,7 +87,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Aurelien Pupier
@@ -110,16 +109,12 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     private IObservableList observeFormList;
     private IChangeListener formListener;
     private IObservableList observeFormListName;
-    protected TabbedPropertySheetPage aTabbedPropertySheetPage;
-
 
     @Override
-    public void createControls(final Composite parent,
-            final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
+    protected void createContent(final Composite parent) {
         mainComposite = getWidgetFactory().createComposite(parent);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(new GridLayout(1, false));
-        this.aTabbedPropertySheetPage = aTabbedPropertySheetPage;
         radioComposite = createRadioButtons(mainComposite);
 
         contentComposite = new MagicComposite(mainComposite, SWT.NONE);
@@ -128,9 +123,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         contentComposite.setBackground(mainComposite.getBackground());
 
         pageFlowComposite = createPageFlowComposite(contentComposite);
-
     }
-
     /**
      *
      */

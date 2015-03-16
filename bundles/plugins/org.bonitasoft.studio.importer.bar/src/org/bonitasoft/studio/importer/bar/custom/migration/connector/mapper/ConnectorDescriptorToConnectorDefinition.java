@@ -261,7 +261,7 @@ public class ConnectorDescriptorToConnectorDefinition {
         }
         zipfile.close();
         if(sourceImported){
-            RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
+            RepositoryManager.getInstance().getCurrentRepository().build(Repository.NULL_PROGRESS_MONITOR);
             final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
             final IType originalImplType = project.findType(implementationClassname);
             final IType implType = project.findType(getNewImplementationClassName());

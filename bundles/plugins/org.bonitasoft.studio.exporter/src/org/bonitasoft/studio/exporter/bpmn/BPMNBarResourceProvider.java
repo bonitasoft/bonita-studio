@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.exporter.bpmn;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -30,20 +29,17 @@ import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
-
 public class BPMNBarResourceProvider implements BARResourcesProvider {
 
     @Override
-    public List<BarResource> addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
+    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
             final Set<EObject> excludedObject) throws Exception {
         if (PlatformUI.isWorkbenchRunning()) {
             final RunnableWithResult<List<BarResource>> runnableWithResult = new AddBpmnBarResourceRunnable(builder, process);
             Display.getDefault().syncExec(runnableWithResult);
-            return runnableWithResult.getResult();
         } else {
             BonitaStudioLog.warning("UI is not available. The BPMN file will not be included in the generated bar file. Some Portal features might not work.",
                     Activator.PLUGIN_ID);
-            return Collections.emptyList();
         }
     }
 

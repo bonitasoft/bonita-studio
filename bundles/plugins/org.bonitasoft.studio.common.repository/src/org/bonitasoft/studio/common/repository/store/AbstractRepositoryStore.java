@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.repository.store;
 
@@ -44,13 +42,12 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.widgets.Display;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> implements IRepositoryStore<T> {
 
@@ -134,8 +131,6 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
             }
             return null;
         }
-
-
 
         if (newIs == null) {
             return null;
@@ -311,7 +306,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
     public abstract T createRepositoryFileStore(String fileName);
 
     @Override
-    public void migrate() throws CoreException, MigrationException {
+    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
         for (final IRepositoryFileStore fs : getChildren()) {
             if (!fs.isReadOnly() && fs.canBeShared()) {
                 final IResource r = fs.getResource();
@@ -322,8 +317,8 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
                     try {
                         newIs = handlePreImport(r.getName(), is);
                         if (!is.equals(newIs)) {
-                            iFile.setContents(newIs, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
-                            iFile.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+                            iFile.setContents(newIs, IResource.FORCE, monitor);
+                            iFile.refreshLocal(IResource.DEPTH_ONE, monitor);
                         }
                     } catch (final IOException e) {
                         throw new MigrationException("Cannot migrate resource " + r.getName() + " (not a valid file)", new Exception());

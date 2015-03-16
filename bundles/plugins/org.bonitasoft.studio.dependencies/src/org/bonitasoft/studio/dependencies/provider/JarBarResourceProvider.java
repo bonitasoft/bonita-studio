@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.dependencies.provider;
 
@@ -40,29 +38,29 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class JarBarResourceProvider implements BARResourcesProvider {
 
     @Override
-    public List<BarResource> addResourcesForConfiguration(final BusinessArchiveBuilder builder,final AbstractProcess process, final Configuration configuration,final Set<EObject> excludedObjects) {
-        final List<BarResource> resources = new ArrayList<BarResource>() ;
-        if(configuration == null){
-            return resources ;
+    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
+            final Set<EObject> excludedObjects) {
+        if (configuration == null) {
+            return;
         }
-        final DependencyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
+        final List<BarResource> resources = new ArrayList<BarResource>();
+        final DependencyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
         for (final FragmentContainer fc : configuration.getProcessDependencies()) {
-            final List<Fragment> fragments = ModelHelper.getAllItemsOfType(fc, ConfigurationPackage.Literals.FRAGMENT) ;
+            final List<Fragment> fragments = ModelHelper.getAllItemsOfType(fc, ConfigurationPackage.Literals.FRAGMENT);
             for (final Fragment fragment : fragments) {
-                if(fragment.getType().equals(FragmentTypes.JAR)) {
-                    if(fragment.isExported()){
-                        final IRepositoryFileStore jarArtifact = store.getChild(fragment.getValue()) ;
-                        if(jarArtifact != null){
+                if (fragment.getType().equals(FragmentTypes.JAR)) {
+                    if (fragment.isExported()) {
+                        final IRepositoryFileStore jarArtifact = store.getChild(fragment.getValue());
+                        if (jarArtifact != null) {
                             final File file = jarArtifact.getResource().getLocation().toFile();
                             try {
                                 BarResourcesProviderUtil.addFileContents(resources, file);
-                            } catch (final Exception e){
-                                BonitaStudioLog.error(e) ;
+                            } catch (final Exception e) {
+                                BonitaStudioLog.error(e);
                             }
                         }
                     }
@@ -70,11 +68,9 @@ public class JarBarResourceProvider implements BARResourcesProvider {
             }
         }
 
-        for(final BarResource barResource : resources){
-            builder.addClasspathResource(barResource) ;
+        for (final BarResource barResource : resources) {
+            builder.addClasspathResource(barResource);
         }
-
-        return resources;
     }
 
 }

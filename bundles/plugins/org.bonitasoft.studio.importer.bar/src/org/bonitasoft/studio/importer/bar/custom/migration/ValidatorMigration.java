@@ -67,7 +67,7 @@ public class ValidatorMigration extends ReportCustomMigration {
 	@Override
 	public void migrateAfter(Model model, Metamodel metamodel)
 			throws MigrationException {
-		RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
+		RepositoryManager.getInstance().getCurrentRepository().build(Repository.NULL_PROGRESS_MONITOR);
 		for(Instance validator : model.getAllInstances("form.Validator")){
 			setDisplayName(validator,model);
 			setParameter(validator,model);

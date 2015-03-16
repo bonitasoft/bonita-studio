@@ -37,7 +37,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
@@ -55,14 +54,13 @@ public class TableDataPropertySection extends AbstractTableDataPropertySection {
 
 
     @Override
-    public void createControls(final Composite parent,
-            final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
-        createSaveTo(parent, aTabbedPropertySheetPage);
+    protected void createContent(final Composite parent) {
+        createSaveTo(parent);
+
     }
 
-    protected void createSaveTo(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        final TabbedPropertySheetWidgetFactory widgetFactory = aTabbedPropertySheetPage.getWidgetFactory();
+    protected void createSaveTo(final Composite parent) {
+        final TabbedPropertySheetWidgetFactory widgetFactory = getWidgetFactory();
         final Composite compoForSaveTo = widgetFactory.createComposite(parent, SWT.NONE);
         compoForSaveTo.setLayout(new GridLayout(1, false));
         compoForSaveTo.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
@@ -75,12 +73,15 @@ public class TableDataPropertySection extends AbstractTableDataPropertySection {
         final Composite selectionButtonsComposite = widgetFactory.createComposite(compoForSaveTo);
         selectionButtonsComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
 
+
+
         //Messages.data_allowSelectionInTable
         allowSelectionButton = widgetFactory.createButton(selectionButtonsComposite, Messages.data_allowSelectionInTable, SWT.CHECK);
         //Messages.data_multipleSelectionInTable
         allowSingleSelection = widgetFactory.createButton(selectionButtonsComposite, Messages.table_selectionSingle, SWT.RADIO);
 
         allowMultipleSelection = widgetFactory.createButton(selectionButtonsComposite, Messages.table_selectionMultiple, SWT.RADIO);
+
 
         allowedSelectionCompo = widgetFactory.createComposite(compoForSaveTo);
         allowedSelectionCompo.setLayout(new GridLayout(1, false));
@@ -96,6 +97,7 @@ public class TableDataPropertySection extends AbstractTableDataPropertySection {
         contrib.createControl(rightOutputComposite, widgetFactory, null);
     }
 
+
     protected void createInitialSelectedValues(
             final TabbedPropertySheetWidgetFactory widgetFactory) {
         final Composite initialSelectedValuesCompo = widgetFactory.createComposite(allowedSelectionCompo);
@@ -108,15 +110,14 @@ public class TableDataPropertySection extends AbstractTableDataPropertySection {
         initialFromColumn = new ExpressionViewer(initialSelectedValuesCompo, SWT.BORDER, widgetFactory,getEditingDomain(), FormPackage.Literals.TABLE__COLUMN_FOR_INITIAL_SELECTION_INDEX);
         initialFromColumn.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         initialFromColumn.setMessage(Messages.data_initialSelectedTableValuesFromColumn_hint,IStatus.INFO) ;
-
     }
+
 
     @Override
     protected void refreshDataBinding() {
         super.refreshDataBinding();
         if(getEObject() != null){
             final UpdateValueStrategy not = new UpdateValueStrategy().setConverter(new Converter(Boolean.class,Boolean.class) {
-
                 public Object convert(final Object fromObject) {
                     return !((Boolean)fromObject);
                 }
@@ -134,8 +135,10 @@ public class TableDataPropertySection extends AbstractTableDataPropertySection {
             dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(paginationMaxNumber), EMFEditProperties.value(getEditingDomain(), FormPackage.Literals.TABLE__MAX_ROW_FOR_PAGINATION).observe(getEObject()));
             paginationMaxNumber.setInput(getEObject());
             paginationMaxNumber.setEditingDomain(getEditingDomain()) ;
+
             dataBindingContext.bindValue(SWTObservables.observeEnabled(paginationMaxNumber.getControl()), EMFEditObservables.observeValue(getEditingDomain(),
                     getEObject(), FormPackage.Literals.TABLE__ALLOW_SELECTION), new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), not);
+
             Expression selectedValues = getEObject().getMaxRowForPagination();
             if(selectedValues == null){
                 selectedValues = ExpressionFactory.eINSTANCE.createExpression();
@@ -178,7 +181,6 @@ public class TableDataPropertySection extends AbstractTableDataPropertySection {
 
     @Override
     public String getSectionDescription() {
-        // TODO Auto-generated method stub
         return null;
     }
 }
