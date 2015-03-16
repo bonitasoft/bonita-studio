@@ -21,20 +21,26 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 
-/**
- * @author Romain Bioteau
- */
-public class PageDesignerURLFactory {
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.di.extensions.Preference;
+
+@Creatable
+@Singleton
+public class PageDesignerURLFactory implements BonitaPreferenceConstants {
 
     private static final String PAGE_BUILDER_ROOT = "page-designer";
-    private final String host;
-    private final int port;
 
-    public PageDesignerURLFactory(final String host, final int port) {
-        checkNotNull(host);
-        checkArgument(port > 0);
-        this.host = host;
-        this.port = port;
+    private final IEclipsePreferences preferenceStore;
+
+    @Inject
+    public PageDesignerURLFactory(@Preference(nodePath = "org.bonitasoft.studio.preferences") final IEclipsePreferences preferenceStore) {
+        checkNotNull(preferenceStore);
+        this.preferenceStore = preferenceStore;
     }
 
     public URL openPageDesignerHome() throws MalformedURLException {
@@ -49,11 +55,19 @@ public class PageDesignerURLFactory {
         return new URL("http://" + host() + ":" + port() + "/" + PAGE_BUILDER_ROOT + "/api/rest/pages/");
     }
 
+    public URL exportPage(final String pageId) throws MalformedURLException {
+        return new URL("http://" + host() + ":" + port() + "/" + PAGE_BUILDER_ROOT + "/api/export/page/" + pageId);
+    }
+
     private String host() {
+        final String host = preferenceStore.get(CONSOLE_HOST, DEFAULT_HOST);
+        checkNotNull(host);
         return host;
     }
 
     private String port() {
+        final int port = preferenceStore.getInt(CONSOLE_PORT, DEFAULT_PORT);
+        checkArgument(port > 0);
         return String.valueOf(port);
     }
 }

@@ -104,8 +104,7 @@ public class PageDesignerMappingComposite extends Composite implements BonitaPre
         final Expression targetForm = mapping.getTargetForm();
         if (targetForm.getContent() != null && !targetForm.getContent().isEmpty()) {
             try {
-                new OpenBrowserOperation(new PageDesignerURLFactory(preferenceStore.get(CONSOLE_HOST, DEFAULT_HOST), preferenceStore
-                        .getInt(CONSOLE_PORT, DEFAULT_PORT)).openPage(targetForm.getContent())).execute();
+                new OpenBrowserOperation(new PageDesignerURLFactory(preferenceStore).openPage(targetForm.getContent())).execute();
             } catch (final MalformedURLException e1) {
                 BonitaStudioLog.error(e1);
             }

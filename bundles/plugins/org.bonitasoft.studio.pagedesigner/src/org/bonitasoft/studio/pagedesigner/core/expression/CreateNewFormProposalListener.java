@@ -26,9 +26,7 @@ import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.pagedesigner.core.operation.CreateFormOperation;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.di.annotations.Creatable;
-import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -39,19 +37,18 @@ import org.eclipse.ui.progress.IProgressService;
 public class CreateNewFormProposalListener extends IProposalAdapter implements BonitaPreferenceConstants {
 
     @Inject
-    @Preference(nodePath = "org.bonitasoft.studio.preferences")
-    private IEclipsePreferences preferenceStore;
+    private IProgressService progressService;
 
     @Inject
-    private IProgressService progressService;
+    private PageDesignerURLFactory pageDesignerURLFactory;
 
     CreateNewFormProposalListener() {
 
     }
 
-    public CreateNewFormProposalListener(final IEclipsePreferences preferenceStore, final IProgressService progressService) {
-        this.preferenceStore = preferenceStore;
+    public CreateNewFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory, final IProgressService progressService) {
         this.progressService = progressService;
+        this.pageDesignerURLFactory = pageDesignerURLFactory;
     }
 
     /*
@@ -60,9 +57,7 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
      */
     @Override
     public String handleEvent(final EObject context, final String fixedReturnType) {
-        final PageDesignerURLFactory pageDesignerURLBuilder = new PageDesignerURLFactory(preferenceStore.get(CONSOLE_HOST, DEFAULT_HOST),
-                preferenceStore.getInt(CONSOLE_PORT, DEFAULT_PORT));
-        final CreateFormOperation operation = doCreateFormOperation(pageDesignerURLBuilder);
+        final CreateFormOperation operation = doCreateFormOperation(pageDesignerURLFactory);
         final PageFlow pageFlow = pageFlowFor(context);
         if (pageFlow != null) {
             operation.setFormName(pageFlow.getName());
@@ -74,7 +69,7 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
         }
 
         final String newPageId = operation.getNewPageId();
-        openPageDesigner(pageDesignerURLBuilder, newPageId);
+        openPageDesigner(pageDesignerURLFactory, newPageId);
         return newPageId;
     }
 
@@ -86,9 +81,9 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
         return (PageFlow) pageflow;
     }
 
-    protected void openPageDesigner(final PageDesignerURLFactory pageDesignerURLBuilder, final String newPageId) {
+    protected void openPageDesigner(final PageDesignerURLFactory pageDesignerURLFactory, final String newPageId) {
         try {
-            new OpenBrowserOperation(pageDesignerURLBuilder.openPage(newPageId)).execute();
+            new OpenBrowserOperation(pageDesignerURLFactory.openPage(newPageId)).execute();
         } catch (final MalformedURLException e) {
             BonitaStudioLog.error(e);
         }

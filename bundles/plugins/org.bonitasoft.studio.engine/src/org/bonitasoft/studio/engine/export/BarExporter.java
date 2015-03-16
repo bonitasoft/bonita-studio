@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.engine.export;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +49,9 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -58,6 +63,7 @@ import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Romain Bioteau
@@ -240,12 +246,28 @@ public class BarExporter {
                 BAR_RESOURCE_PROVIDERS_EXTENSION_POINT);
         for (final IConfigurationElement extension : extensions) {
             try {
-                res.add((BARResourcesProvider) extension.createExecutableExtension("providerClass"));
+                final String className = extension.getAttribute("providerClass");
+
+                final BARResourcesProvider barResourcesProvider = (BARResourcesProvider) ContextInjectionFactory.make(
+                        Platform.getBundle(extension.getDeclaringExtension().getNamespaceIdentifier())
+                                .loadClass(
+                                        className), workbenchContext());
+                res.add(barResourcesProvider);
             } catch (final Exception ex) {
                 BonitaStudioLog.error(ex);
             }
         }
         return res;
+    }
+
+    private IEclipseContext workbenchContext() {
+        final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
+        if (workbench != null) {
+            final IEclipseContext context = workbench.getContext();
+            checkNotNull(context, "Workbench eclipse context is null");
+            return context;
+        }
+        throw new IllegalStateException("No workbench available");
     }
 
     protected void addProcessImage(final BusinessArchiveBuilder builder, final AbstractProcess process) throws CoreException {
