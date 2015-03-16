@@ -447,7 +447,7 @@ public class TestSimpleMigrationUseCase {
         final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
         final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
         final List<Validator> validators = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.VALIDATOR);
-        RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
+        RepositoryManager.getInstance().getCurrentRepository().build(Repository.NULL_PROGRESS_MONITOR);
         final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
         final ValidatorDescriptorRepositoryStore validatorDescriptorStore = RepositoryManager.getInstance().getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
         for(final Validator validator : validators){

@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.Properties;
 
-import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.After;
@@ -27,7 +27,7 @@ public class ImportBosArchiveOperationTest {
     private ImportBosArchiveOperation operationUnserTest;
 
     @Mock
-    private IRepository repostioty;
+    private Repository repostioty;
 
     private File archiveFile;
 
@@ -54,7 +54,7 @@ public class ImportBosArchiveOperationTest {
         operationUnserTest.setCurrentRepository(repostioty);
         operationUnserTest.setArchiveFile(archiveFile.getAbsolutePath());
         operationUnserTest.run(monitor);
-        verify(repostioty).refresh(monitor);
+        verify(repostioty).build(monitor);
     }
 
     @Test

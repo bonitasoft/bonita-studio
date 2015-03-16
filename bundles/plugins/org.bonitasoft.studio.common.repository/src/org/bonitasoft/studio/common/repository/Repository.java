@@ -14,11 +14,15 @@
  */
 package org.bonitasoft.studio.common.repository;
 
+import static com.google.common.collect.Iterables.tryFind;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,6 +41,7 @@ import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectClasspath;
 import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaBPMProjectOperation;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
+import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -62,6 +67,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -75,10 +81,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.xml.sax.InputSource;
 
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+
 /**
  * @author Romain Bioteau
  */
-public class Repository implements IRepository {
+public class Repository implements IRepository, IJavaContainer {
 
     private static final String REPOSITORY_STORE_EXTENSION_POINT_ID = "org.bonitasoft.studio.repositoryStore";
 
@@ -206,8 +215,7 @@ public class Repository implements IRepository {
         }
     }
 
-    @Override
-    public void updateStudioShellText() {
+    protected void updateStudioShellText() {
         Display.getDefault().syncExec(new Runnable() {
 
             @Override
@@ -326,7 +334,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void refresh(IProgressMonitor monitor) {
+    public void build(IProgressMonitor monitor) {
         if (isBuildEnable()) {
             try {
                 if (monitor == null) {
@@ -365,7 +373,7 @@ public class Repository implements IRepository {
     @Override
     public void delete(final IProgressMonitor monitor) {
         BonitaStudioLog.debug("Deleting repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
-        refresh(NULL_PROGRESS_MONITOR);
+        build(NULL_PROGRESS_MONITOR);
         try {
             if (!project.isOpen()) {
                 project.open(NULL_PROGRESS_MONITOR);
@@ -581,27 +589,55 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public IRepositoryFileStore asRepositoryFileStore(final IFile res) {
-        final IPath projectRelativePath = res.getProjectRelativePath();
+    public IRepositoryFileStore asRepositoryFileStore(final Path path) throws IOException, CoreException {
+        final IResource iResource = pathToIResource(getProject(), path);
+        iResource.refreshLocal(IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);
+        if (!iResource.exists()) {
+            throw new FileNotFoundException(path.toFile().getAbsolutePath());
+        }
+
+        final IPath projectRelativePath = iResource.getProjectRelativePath();
         if (projectRelativePath.segmentCount() > 0) {
-            final IPath path = projectRelativePath.removeFirstSegments(0);
-            if (path.segmentCount() > 1) {
-                final String repoName = path.segments()[0];
-                final IFile file = getProject().getFile(path);
-                if (file.exists()) {
-                    for (final IRepositoryStore<?> store : getAllStores()) {
-                        if (belongToRepositoryStore(store, file)) {
-                            final IRepositoryFileStore fileStore = store.createRepositoryFileStore(file.getName());
-                            if (fileStore != null && fileStore.getParentStore().getName().startsWith(repoName)) {
-                                return fileStore;
-                            }
-                        }
-                    }
+            final IPath iPath = projectRelativePath.removeFirstSegments(0);
+            if (iPath.segmentCount() > 1) {
+                final String storeName = iPath.segments()[0];
+                final IFile file = getProject().getFile(iPath);
+                final IRepositoryStore<? extends IRepositoryFileStore> repositoryStore = getRepositoryStoreByName(storeName);
+                if (belongToRepositoryStore(repositoryStore, file)) {
+                    return repositoryStore.createRepositoryFileStore(file.getName());
                 }
             }
-
         }
         return null;
+    }
+
+    private IResource pathToIResource(final IProject project, final Path path) throws FileNotFoundException {
+        Path resolvedPath = path;
+        if (!resolvedPath.isAbsolute()) {
+            resolvedPath = project.getLocation().toFile().toPath().resolve(resolvedPath);
+        }
+        final URI relativize = project.getLocationURI().relativize(resolvedPath.toUri());
+        return project.getFile(org.eclipse.core.runtime.Path.fromOSString(relativize.toString()));
+    }
+
+    @Override
+    public IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStoreByName(final String storeName) throws CoreException {
+        final Optional<IRepositoryStore<? extends IRepositoryFileStore>> foundStore = tryFind(getAllStores(), storeWithName(storeName));
+        if (!foundStore.isPresent()) {
+            throw new CoreException(new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, String.format("No repository store found with name: %s",
+                    storeName)));
+        }
+        return foundStore.get();
+    }
+
+    private Predicate<? super IRepositoryStore<? extends IRepositoryFileStore>> storeWithName(final String storeName) {
+        return new Predicate<IRepositoryStore<? extends IRepositoryFileStore>>() {
+
+            @Override
+            public boolean apply(final IRepositoryStore<? extends IRepositoryFileStore> store) {
+                return store.getName().equals(storeName);
+            }
+        };
     }
 
     private boolean belongToRepositoryStore(final IRepositoryStore<?> store, final IFile file) {
@@ -637,23 +673,6 @@ public class Repository implements IRepository {
                 addBuilder("org.eclipse.pde.ManifestBuilder").
                 addBuilder("org.eclipse.pde.SchemaBuilder");
     }
-
-    //
-    //    public void setProgressMonitor(final IProgressMonitor monitor) {
-    //        this.monitor = monitor;
-    //    }
-    //
-    //    protected void monitorWorked(final int work) {
-    //        if (monitor != null) {
-    //            monitor.worked(work);
-    //        }
-    //    }
-    //
-    //    protected void monitorSubtask(final String subtask) {
-    //        if (monitor != null && subtask != null) {
-    //            monitor.subTask(subtask);
-    //        }
-    //    }
 
     @Override
     public boolean isOnline() {

@@ -39,7 +39,6 @@ import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
-import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
@@ -75,7 +74,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     private static final String TMP_IMPORT_PROJECT = "tmpImport";
     private String archiveFile;
-    private IRepository currentRepository;
+    private Repository currentRepository;
     private Status validationStatus;
     private final IResourceImporter iResourceImporter;
     private final boolean launchValidationafterImport;
@@ -148,7 +147,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             status.add(ValidationStatus.error(String.format("Failed to import %s", fileName)));
         }
 
-        currentRepository.refresh(monitor);
+        currentRepository.build(monitor);
         currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
 
         if (launchValidationafterImport) {
@@ -180,7 +179,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         validationStatus = statusBuilder.done();
     }
 
-    public void setCurrentRepository(final IRepository currentRepository) {
+    public void setCurrentRepository(final Repository currentRepository) {
         this.currentRepository = currentRepository;
     }
 
