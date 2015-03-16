@@ -19,7 +19,6 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -108,10 +107,10 @@ public class DependencyFileStore extends AbstractFileStore {
             final IResource r = getResource();
             if (r != null && r.exists()) {
                 r.delete(true, Repository.NULL_PROGRESS_MONITOR);
-                final Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-                final IProject project = currentRepository.getProject();
+                final Repository repository = getRepository();
+                final IProject project = repository.getProject();
                 project.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
-                if (currentRepository.isBuildEnable()) {
+                if (repository.isBuildEnable()) {
                     project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
                 }
 
