@@ -188,7 +188,7 @@
        <propertyTabs
              contributorId="org.bonitasoft.studio.diagram">
           <propertyTab
-                afterTab="tab.lane"
+                afterTab="tab.data"
                 category="domain"
                 id="tab.actors"
                 label="%actor_tab_label">

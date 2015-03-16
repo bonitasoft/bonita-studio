@@ -36,6 +36,7 @@ import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
+import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
 import org.bonitasoft.studio.expression.editor.autocompletion.BonitaContentProposalAdapter;
 import org.bonitasoft.studio.expression.editor.autocompletion.ExpressionProposal;
@@ -48,6 +49,7 @@ import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvide
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionToolbarContribution;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.expression.editor.widget.ContentAssistText;
@@ -623,6 +625,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         autoCompletion.setFilteredExpressionType(filteredExpressionType);
         if (filteredExpressionType.contains(ExpressionConstants.VARIABLE_TYPE)
                 && filteredExpressionType.contains(ExpressionConstants.PARAMETER_TYPE)
+                && filteredExpressionType.contains(ExpressionConstants.FORM_REFERENCE_TYPE)
                 && filteredExpressions.isEmpty()) {
             contentAssistText.setProposalEnabled(false);
         }
@@ -642,26 +645,13 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
         exp.setName("");
         if (filters != null && expressionNatureProvider != null && context != null) {
-            for (final ViewerFilter viewerFilter : fitlers) {
-                exp.setType(ExpressionConstants.VARIABLE_TYPE);
-                if (!viewerFilter.select(this, context, exp)) {
-                    filteredExpressions.add(ExpressionConstants.VARIABLE_TYPE);
-                }
-                exp.setType(ExpressionConstants.PARAMETER_TYPE);
-                if (!viewerFilter.select(this, context, exp)) {
-                    filteredExpressions.add(ExpressionConstants.PARAMETER_TYPE);
-                }
-                exp.setType(ExpressionConstants.CONSTANT_TYPE);
-                if (!viewerFilter.select(this, context, exp)) {
-                    filteredExpressions.add(ExpressionConstants.CONSTANT_TYPE);
-                }
-                exp.setType(ExpressionConstants.DOCUMENT_TYPE);
-                if (!viewerFilter.select(this, context, exp)) {
-                    filteredExpressions.add(ExpressionConstants.DOCUMENT_TYPE);
-                }
-                exp.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
-                if (!viewerFilter.select(this, context, exp)) {
-                    filteredExpressions.add(ExpressionConstants.DOCUMENT_REF_TYPE);
+            final Set<IExpressionProvider> expressionProviders = ExpressionEditorService.getInstance().getExpressionProviders();
+            for (final IExpressionProvider provider : expressionProviders) {
+                for (final ViewerFilter viewerFilter : fitlers) {
+                    exp.setType(provider.getExpressionType());
+                    if (!viewerFilter.select(this, context, exp)) {
+                        filteredExpressions.add(provider.getExpressionType());
+                    }
                 }
             }
         }
@@ -1120,7 +1110,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                 messages.remove(IStatus.ERROR);
                 messages.remove(IStatus.WARNING);
             }
-            if(message != null && message.isEmpty()){
+            if (message != null && message.isEmpty()) {
                 message = null;
             }
             messages.put(messageKind, message);
@@ -1138,7 +1128,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         }
         refresh();
     }
-
 
     @Override
     protected void handleDispose(final DisposeEvent event) {
@@ -1218,7 +1207,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         expressionViewerValidator.setContext(context);
         expressionViewerValidator.setExpression(getSelectedExpression());
         expressionViewerValidator.addValidationsStatusChangedListener(this);
-        for(final IExpressionValidationListener l : validationListeners){
+        for (final IExpressionValidationListener l : validationListeners) {
             expressionViewerValidator.addValidationsStatusChangedListener(l);
         }
         final Expression selectedExpression = getSelectedExpression();
@@ -1227,7 +1216,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         }
         validateExternalDatabindingContextTargets(externalDataBindingContext);
     }
-
 
     public void setExternalDataBindingContext(final DataBindingContext ctx) {
         externalDataBindingContext = ctx;

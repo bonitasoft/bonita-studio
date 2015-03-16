@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 /**
- * 
+ *
  * @author Baptiste Mesta
  */
 public class ApplicationTransientDataSection extends AbstractDataSection {
@@ -36,7 +36,7 @@ public class ApplicationTransientDataSection extends AbstractDataSection {
 	 * @see org.bonitasoft.studio.properties.sections.data.DataSection#createPromoteDataButton(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
-	protected Button createMoveDataButton(Composite parent) {
+	protected Button createMoveDataButton(final Composite parent) {
 		return null;
 	}
 
@@ -44,19 +44,25 @@ public class ApplicationTransientDataSection extends AbstractDataSection {
 	 * @see org.bonitasoft.studio.properties.sections.data.DataSection#createLabel(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
-	protected void createLabel(Composite dataComposite) {
-		Label label = getWidgetFactory().createLabel(dataComposite, Messages.pageFlowTransientData);
+	protected void createLabel(final Composite dataComposite) {
+		final Label label = getWidgetFactory().createLabel(dataComposite, Messages.pageFlowTransientData);
 		label.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).create());
 	}
 
 	@Override
+    protected void createBusinessData() {
+
+    }
+
+    @Override
 	protected Set<EStructuralFeature> getDataFeatureToCheckUniqueID() {
-		Set<EStructuralFeature> dataFeatureToCheckUniqueID = super.getDataFeatureToCheckUniqueID();
+		final Set<EStructuralFeature> dataFeatureToCheckUniqueID = super.getDataFeatureToCheckUniqueID();
 		dataFeatureToCheckUniqueID.add(getDataFeature());
 		return dataFeatureToCheckUniqueID;
 	}
 
-	protected boolean getShowAutoGenerateForm() {
+	@Override
+    protected boolean getShowAutoGenerateForm() {
 		return false;
 	}
 

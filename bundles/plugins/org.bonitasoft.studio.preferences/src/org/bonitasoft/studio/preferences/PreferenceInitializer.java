@@ -18,6 +18,8 @@ import java.util.Locale;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
@@ -28,7 +30,7 @@ import org.eclipse.ui.internal.util.PrefUtil;
  * @author Romain Bioteau
  *         Class used to initialize default preference values.
  */
-public class PreferenceInitializer extends AbstractPreferenceInitializer {
+public class PreferenceInitializer extends AbstractPreferenceInitializer implements BonitaPreferenceConstants {
 
     /*
      * (non-Javadoc)
@@ -36,36 +38,36 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
      */
     @Override
     public void initializeDefaultPreferences() {
-        IPreferenceStore store = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
-        IPreferenceStore webStore = WebBrowserUIPlugin.getInstance().getPreferenceStore();
-        ResourcesPlugin.getPlugin().getPluginPreferences().setDefault(ResourcesPlugin.PREF_ENCODING, "UTF-8");
-        final String consolePortSpecifiedAsSystemProperty = System.getProperty(BonitaPreferenceConstants.CONSOLE_PORT);
+        final IPreferenceStore store = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
+        final IPreferenceStore webStore = WebBrowserUIPlugin.getInstance().getPreferenceStore();
+        final IEclipsePreferences node = DefaultScope.INSTANCE.getNode(ResourcesPlugin.PI_RESOURCES);
+        node.put(ResourcesPlugin.PREF_ENCODING, "UTF-8");
+        final String consolePortSpecifiedAsSystemProperty = System.getProperty(CONSOLE_PORT);
         if (consolePortSpecifiedAsSystemProperty != null
                 && !consolePortSpecifiedAsSystemProperty.isEmpty()) {
             try {
-                int port = Integer.parseInt(consolePortSpecifiedAsSystemProperty);
-                store.setDefault(BonitaPreferenceConstants.CONSOLE_PORT, port);
-            } catch (Exception e) {
-                store.setDefault(BonitaPreferenceConstants.CONSOLE_PORT, 8080);
+                store.setDefault(CONSOLE_PORT, Integer.parseInt(consolePortSpecifiedAsSystemProperty));
+            } catch (final Exception e) {
+                store.setDefault(CONSOLE_PORT, DEFAULT_PORT);
             }
         } else {
-            store.setDefault(BonitaPreferenceConstants.CONSOLE_PORT, 8080);
+            store.setDefault(CONSOLE_PORT, DEFAULT_PORT);
         }
-        store.setDefault(BonitaPreferenceConstants.CONSOLE_HOST, "localhost");
-        webStore.setDefault(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.EXTERNAL_BROWSER);
+        store.setDefault(CONSOLE_HOST, DEFAULT_HOST);
+        webStore.setDefault(CONSOLE_BROWSER_CHOICE, EXTERNAL_BROWSER);
 
-        store.setDefault(BonitaPreferenceConstants.USER_NAME, BonitaPreferenceConstants.USER_NAME_DEFAULT);
-        store.setDefault(BonitaPreferenceConstants.USER_PASSWORD, BonitaPreferenceConstants.USER_PASSWORD_DEFAULT);
-        store.setDefault(BonitaPreferenceConstants.SHOW_CONDITION_ON_TRANSITION, "false");
-        store.setDefault(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT, true);
-        store.setDefault(BonitaPreferenceConstants.LOAD_ORGANIZATION, true);
-        store.setDefault(BonitaPreferenceConstants.AUTOMATIC_ID, "true");
-        store.setDefault(BonitaPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION, MessageDialogWithToggle.NEVER);
-        store.setDefault(BonitaPreferenceConstants.PUBLISH_ORGANIZATION, false);
+        store.setDefault(USER_NAME, USER_NAME_DEFAULT);
+        store.setDefault(USER_PASSWORD, USER_PASSWORD_DEFAULT);
+        store.setDefault(SHOW_CONDITION_ON_TRANSITION, "false");
+        store.setDefault(DELETE_TENANT_ON_EXIT, true);
+        store.setDefault(LOAD_ORGANIZATION, true);
+        store.setDefault(AUTOMATIC_ID, "true");
+        store.setDefault(TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION, MessageDialogWithToggle.NEVER);
+        store.setDefault(PUBLISH_ORGANIZATION, false);
 
         Locale defaultStudioLocal = Locale.getDefault();
         boolean defaultLocalExists = false;
-        for (Locale locale : LocaleUtil.getStudioLocales()) {
+        for (final Locale locale : LocaleUtil.getStudioLocales()) {
             if (locale.getLanguage().equals(defaultStudioLocal.getLanguage())) {
                 defaultStudioLocal = locale;
                 defaultLocalExists = true;
@@ -73,27 +75,27 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
             }
         }
 
-        String defaultLocaleValue = store.getString(BonitaPreferenceConstants.DEFAULT_STUDIO_LOCALE);// Default value is compute on the first the studio is run
-                                                                                                     // only because Locale.getDefault() is based on osgi.nl
-                                                                                                     // property
+        String defaultLocaleValue = store.getString(DEFAULT_STUDIO_LOCALE);// Default value is compute on the first the studio is run
+                                                                           // only because Locale.getDefault() is based on osgi.nl
+                                                                           // property
         if (defaultLocaleValue == null || defaultLocaleValue.isEmpty()) {
-            store.setValue(BonitaPreferenceConstants.DEFAULT_STUDIO_LOCALE,
+            store.setValue(DEFAULT_STUDIO_LOCALE,
                     defaultLocalExists ? defaultStudioLocal.getLanguage() : Locale.ENGLISH.getLanguage());
-            defaultLocaleValue = store.getString(BonitaPreferenceConstants.DEFAULT_STUDIO_LOCALE);
+            defaultLocaleValue = store.getString(DEFAULT_STUDIO_LOCALE);
         }
 
-        store.setDefault(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
-        store.setDefault(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
+        store.setDefault(CURRENT_UXP_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
+        store.setDefault(CURRENT_STUDIO_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
 
         store.setDefault(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE, BonitaCoolBarPreferenceConstant.NORMAL);
-        store.setDefault(BonitaPreferenceConstants.APLLICATION_DEPLOYMENT_MODE, BonitaPreferenceConstants.ALL_IN_BAR);
-        store.setDefault(BonitaPreferenceConstants.PREF_ENABLE_VALIDATION, true);
-        store.setDefault(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, "default");
-        store.setDefault(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME, "Default Application");
-        store.setDefault(BonitaPreferenceConstants.DEFAULT_ORGANIZATION, BonitaPreferenceConstants.DEFAULT_ORGANIZATION_NAME);
-        store.setDefault(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN, true);
-        store.setDefault(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, true);
-        store.setDefault(BonitaPreferenceConstants.ALWAYS_USE_SCRIPTING_MODE, false);
+        store.setDefault(APLLICATION_DEPLOYMENT_MODE, ALL_IN_BAR);
+        store.setDefault(PREF_ENABLE_VALIDATION, true);
+        store.setDefault(DEFAULT_USERXP_THEME, "default");
+        store.setDefault(DEFAULT_APPLICATION_THEME, "Default Application");
+        store.setDefault(DEFAULT_ORGANIZATION, DEFAULT_ORGANIZATION_NAME);
+        store.setDefault(VALIDATION_BEFORE_RUN, true);
+        store.setDefault(ASK_RENAME_ON_FIRST_SAVE, true);
+        store.setDefault(ALWAYS_USE_SCRIPTING_MODE, false);
         PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.DISABLE_OPEN_EDITOR_IN_PLACE, true);
     }
 

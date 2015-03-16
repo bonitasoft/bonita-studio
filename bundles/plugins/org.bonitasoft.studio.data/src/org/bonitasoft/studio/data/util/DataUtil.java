@@ -5,23 +5,20 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.data.util;
 
-
-import java.net.URLClassLoader;
 import java.util.Date;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -44,7 +41,6 @@ import org.w3c.dom.Document;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class DataUtil {
 
@@ -52,30 +48,30 @@ public class DataUtil {
      * @param text
      * @return
      */
-    public static String getTechnicalTypeFor(AbstractProcess container,String type) {
-        StringBuilder sb = new StringBuilder();
+    public static String getTechnicalTypeFor(final AbstractProcess container, String type) {
+        final StringBuilder sb = new StringBuilder();
         type = ModelHelper.getDataTypeID(type);
-        for (DataType t : (container).getDatatypes()) {
+        for (final DataType t : container.getDatatypes()) {
             if (t.getName().equals(type)) {
                 sb.append(Messages.dataTechnicalTypeLabel);
                 sb.append(' ');
-                if(t instanceof IntegerType) {
+                if (t instanceof IntegerType) {
                     sb.append(Integer.class.getName());
-                }else if(t instanceof DoubleType)  {
+                } else if (t instanceof DoubleType) {
                     sb.append(Double.class.getName());
-                }else if(t instanceof LongType)  {
+                } else if (t instanceof LongType) {
                     sb.append(Long.class.getName());
-                } else if(t instanceof FloatType)  {
+                } else if (t instanceof FloatType) {
                     sb.append(Float.class.getName());
-                } else if(t instanceof DateType)  {
+                } else if (t instanceof DateType) {
                     sb.append(Date.class.getName());
-                } else if(t instanceof StringType)  {
+                } else if (t instanceof StringType) {
                     sb.append(String.class.getName());
-                } else if(t instanceof BooleanType)  {
+                } else if (t instanceof BooleanType) {
                     sb.append(Boolean.class.getName());
-                }else if(t instanceof XMLType)  {
+                } else if (t instanceof XMLType) {
                     sb.append(String.class.getName());
-                }else if(t instanceof EnumType)  {
+                } else if (t instanceof EnumType) {
                     sb.append(String.class.getName());
                 } else {
                     return "";
@@ -86,8 +82,7 @@ public class DataUtil {
         return sb.toString();
     }
 
-
-    public static Class<?> getClassForData(Data data) {
+    public static Class<?> getClassForData(final Data data) {
         Class<?> clazz = null;
         final DataType type = data.getDataType();
         if (type instanceof DateType) {
@@ -102,16 +97,17 @@ public class DataUtil {
             clazz = Boolean.class;
         } else if (type instanceof JavaType) {
             try {
-                IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
-                IType javaType = project.findType(((JavaObjectData) data).getClassName()) ;
-                if(javaType != null){
-                    final URLClassLoader urlClassLoader = RepositoryManager.getInstance().getCurrentRepository().createProjectClassloader() ;
-                    clazz = urlClassLoader.loadClass(((JavaObjectData) data).getClassName()) ;
+                final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+                final IType javaType = project.findType(((JavaObjectData) data).getClassName());
+                if (javaType != null) {
+                    final ClassLoader urlClassLoader = RepositoryManager.getInstance().getCurrentRepository()
+                            .createProjectClassloader(Repository.NULL_PROGRESS_MONITOR);
+                    clazz = urlClassLoader.loadClass(((JavaObjectData) data).getClassName());
 
-                }else{
+                } else {
                     clazz = Object.class;
                 }
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 BonitaStudioLog.error(ex);
                 clazz = Object.class;
             }
@@ -121,7 +117,7 @@ public class DataUtil {
             clazz = Document.class;
         }
 
-        return clazz ;
+        return clazz;
     }
 
 }

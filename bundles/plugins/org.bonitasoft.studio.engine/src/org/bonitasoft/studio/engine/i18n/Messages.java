@@ -69,8 +69,6 @@ public class Messages extends NLS {
 
     public static String selectProcessToExport;
 
-    public static String noProcessAvailable;
-
     public static String buildTitle;
 
     public static String buildDesc;
@@ -115,8 +113,6 @@ public class Messages extends NLS {
 
     public static String exportErrorOccuredMsg;
 
-    public static String errorValidationMessage;
-
     public static String errorValidationContinueAnywayMessage;
 
     public static String errorValidationInDiagramToExport;
@@ -132,12 +128,6 @@ public class Messages extends NLS {
     public static String resetingEngine;
 
     public static String undeploymentFailedMessage;
-
-    public static String noBrowserFoundMsg;
-
-    public static String noBrowserFoundTitle;
-
-    public static String waitingForOrganizationPublish;
 
     public static String cannotStartTomcatTitle;
 

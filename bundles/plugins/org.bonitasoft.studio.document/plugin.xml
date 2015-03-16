@@ -27,5 +27,32 @@
                 </propertySection>
       </propertySections>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.common.barResourcesProvider">
+      <barResourceProvider
+            providerClass="org.bonitasoft.studio.document.core.expression.DocumentBarResourceProvider">
+      </barResourceProvider>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.expression.expressionProvider">
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.document.core.expression.DocumentObjectExpressionProvider">
+      </expressionProvider>
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.document.core.expression.DocumentReferenceExpressionProvider">
+      </expressionProvider>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.repositoryStore">
+      <repositoryStore
+            class="org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore">
+      </repositoryStore>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.bosArchiveProvider">
+      <bosArchiveProvider
+            providerClass="org.bonitasoft.studio.document.core.repository.DocumentFilseStoreProvider">
+      </bosArchiveProvider>
+   </extension>
 
 </plugin>

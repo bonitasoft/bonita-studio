@@ -35,16 +35,7 @@ public class Messages extends NLS {
 
     public static String unableTofindLogTitle;
     public static String unableTofindLogMessage;
-    public static String confirmContributionInstall_message;
-    public static String confirmContributionInstall_title;
-    public static String error;
-    public static String contributionSuccessfullyInstalled;
-    public static String success;
-    public static String notLoggedIn;
-    public static String errorWhileDownloadingContrib;
-    public static String installingFromContribution;
-    public static String downloading;
-    public static String installingContribution;
+
     public static String badWorkspaceVersionTitle;
     public static String badWorkspaceVersionMessage;
     public static String PreferencesButtonLabel;
@@ -63,7 +54,6 @@ public class Messages extends NLS {
     public static String failedToOpenLogTitle;
     public static String failedToOpenLogMessage;
     public static String doNotDisplayForOtherDiagrams;
-    public static Object openingStudio;
     public static String noProcessAvailable;
 
     public static String offlineRepositoryTitle;
@@ -71,6 +61,7 @@ public class Messages extends NLS {
 
     public static String incompatibleJavaVersionTitle;
     public static String incompatibleJavaVersionMessage;
+
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

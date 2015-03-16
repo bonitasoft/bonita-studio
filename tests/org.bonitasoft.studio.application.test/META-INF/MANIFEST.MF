@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-SymbolicName: org.bonitasoft.studio.application.test;singleton:=true
-Bundle-Version: 6.5.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit,
@@ -26,7 +26,8 @@ Require-Bundle: org.junit,
  org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.bonitasoft.studio.common.repository;bundle-version="1.0.0",
  org.bonitasoft.studio.repository.themes;bundle-version="1.0.0",
- org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0"
+ org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
+ org.bonitasoft.studio.importer.bos
 Export-Package: org.bonitasoft.studio.application.test,org.bonitasoft.
  studio.application.test.deploycommand,org.bonitasoft.studio.applicati
  on.test.duplicatecommand

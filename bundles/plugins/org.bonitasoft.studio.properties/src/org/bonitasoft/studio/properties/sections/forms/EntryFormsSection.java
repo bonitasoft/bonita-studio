@@ -41,7 +41,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 
 /**
@@ -53,15 +52,15 @@ public class EntryFormsSection extends AbstractFormsSection {
     protected Button skipRadio;
     protected Button autoLoginCheckbox;
     protected DataBindingContext thisContext;
-	private EObject lastEObject;
-	private ControlDecoration checkBoxWarning;
+    private EObject lastEObject;
+    private ControlDecoration checkBoxWarning;
 
     @Override
-    public void setInput(IWorkbenchPart part, ISelection selection) {
+    public void setInput(final IWorkbenchPart part, final ISelection selection) {
         super.setInput(part, selection);
-        if(lastEObject == null || (lastEObject != null && !lastEObject.equals(getEObject()))){
+        if(lastEObject == null || lastEObject != null && !lastEObject.equals(getEObject())){
             refreshDataBinding();
-		}
+        }
     }
 
     @Override
@@ -81,24 +80,24 @@ public class EntryFormsSection extends AbstractFormsSection {
 
         showOrHideComposite(pageFlowComposite, true);
 
-        IObservableValue isAutoLogin = EMFEditObservables.observeValue(getEditingDomain(), getPageFlow(),
+        final IObservableValue isAutoLogin = EMFEditObservables.observeValue(getEditingDomain(), getPageFlow(),
                 ProcessPackage.Literals.PROCESS_APPLICATION__AUTO_LOGIN);
-        
+
         context.bindValue(SWTObservables.observeSelection(autoLoginCheckbox), isAutoLogin);
         activateAutoLoginWarning();
-        boolean visible = getPageFlow() instanceof AbstractProcess;
+        final boolean visible = getPageFlow() instanceof AbstractProcess;
         autoLoginCheckbox.setVisible(visible);
     }
-    
+
     /** Show a warning icon when the auto-login check box is selected
-     * 
+     *
      */
     private void activateAutoLoginWarning(){
-		if(autoLoginCheckbox.getSelection()){
-    		checkBoxWarning.show();
-    	}else{
-    		checkBoxWarning.hide();
-    	}
+        if(autoLoginCheckbox.getSelection()){
+            checkBoxWarning.show();
+        }else{
+            checkBoxWarning.hide();
+        }
     }
 
     /* (non-Javadoc)
@@ -111,19 +110,10 @@ public class EntryFormsSection extends AbstractFormsSection {
 
 
     /* (non-Javadoc)
-     * @see org.bonitasoft.studio.properties.sections.forms.AbstractFormsSection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
-     */
-    @Override
-    public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
-        createAutoLoginPart(pageFlowComposite);
-    }
-
-    /* (non-Javadoc)
      * @see org.bonitasoft.studio.properties.sections.forms.AbstractFormsSection#createRadioButtons(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Composite createRadioButtons(Composite parent) {
+    protected Composite createRadioButtons(final Composite parent) {
         return null;
     }
 
@@ -155,40 +145,40 @@ public class EntryFormsSection extends AbstractFormsSection {
     /**
      * @param templates
      */
-    private void createAutoLoginPart(Composite parent) {
-        Composite autologinComposite = getWidgetFactory().createComposite(parent);
+    private void createAutoLoginPart(final Composite parent) {
+        final Composite autologinComposite = getWidgetFactory().createComposite(parent);
         autologinComposite.setLayout(new GridLayout(4, false));
         autologinComposite.setLayoutData(GridDataFactory.fillDefaults().span(4, 1).create());
-        
+
         autoLoginCheckbox = getWidgetFactory().createButton(autologinComposite, "", SWT.CHECK);
         autoLoginCheckbox.setLayoutData(GridDataFactory.fillDefaults().indent(20, 0).create());
         autoLoginCheckbox.setText(Messages.ResourceSection_AutoLogin);
-        
-        //Auto-login checkBox tooltip 
-        ControlDecoration checkBoxToolTip =  new ControlDecoration(autoLoginCheckbox, SWT.LEFT);
+
+        //Auto-login checkBox tooltip
+        final ControlDecoration checkBoxToolTip =  new ControlDecoration(autoLoginCheckbox, SWT.LEFT);
         checkBoxToolTip.setDescriptionText(Messages.ResourceSection_AutoLoginTooltip);
         checkBoxToolTip.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK));
         checkBoxToolTip.show();
-        
+
         // Auto-login warning when checkBox selected
         checkBoxWarning = new ControlDecoration(autoLoginCheckbox, SWT.RIGHT);
         checkBoxWarning.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
         checkBoxWarning.setDescriptionText("An anonymous username and password must be defined in the authentification configuration") ;
         checkBoxWarning.setShowOnlyOnFocus(false) ;
-        
+
         autoLoginCheckbox.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				activateAutoLoginWarning();
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                activateAutoLoginWarning();
+            }
+
+            @Override
+            public void widgetDefaultSelected(final SelectionEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+        });
 
     }
 
@@ -200,12 +190,16 @@ public class EntryFormsSection extends AbstractFormsSection {
         }
     }
 
-	@Override
-	public String getSectionDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getSectionDescription() {
+        return null;
+    }
 
+    @Override
+    protected void createContent(final Composite parent) {
+        super.createContent(parent);
+        createAutoLoginPart(pageFlowComposite);
+    }
 
 
 

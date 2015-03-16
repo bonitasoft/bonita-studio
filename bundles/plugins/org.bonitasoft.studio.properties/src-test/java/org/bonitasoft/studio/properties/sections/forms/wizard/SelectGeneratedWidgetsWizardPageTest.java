@@ -15,9 +15,11 @@
 package org.bonitasoft.studio.properties.sections.forms.wizard;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,19 +27,31 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.field.FieldType;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
+import org.bonitasoft.studio.model.process.builders.BusinessObjectDataTypeBuilder;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.set.SetChangeEvent;
 import org.eclipse.core.databinding.observable.set.SetDiff;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -47,13 +61,43 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class SelectGeneratedWidgetsWizardPageTest {
 
     private SelectGeneratedWidgetsWizardPage selectGeneratedWidgetsWizardPage;
+    @Mock
+    private BusinessObjectModelRepositoryStore store;
+    private BusinessObjectData businessData;
+    @Mock
+    private BusinessObjectModelFileStore fStore;
+
+    @Mock
+    private CheckboxTreeViewer checkboxTreeViewer;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        selectGeneratedWidgetsWizardPage = spy(new SelectGeneratedWidgetsWizardPage("", Collections.<EObject> emptyList()));
+        final BusinessObjectModel bom = new BusinessObjectModel();
+        final BusinessObject car = new BusinessObject();
+        car.setQualifiedName("org.bonita.Car");
+        final SimpleField modelField = new SimpleField();
+        modelField.setName("model");
+        modelField.setType(FieldType.STRING);
+        car.getFields().add(modelField);
+        bom.getBusinessObjects().add(car);
+        when(fStore.getContent()).thenReturn(bom);
+        when(store.getChildByQualifiedName("org.bonita.Car")).thenReturn(fStore);
+        when(fStore.getBusinessObjects()).thenCallRealMethod();
+        when(fStore.getBusinessObject(anyString())).thenCallRealMethod();
+
+        final PageFlow pageFlow = ProcessFactory.eINSTANCE.createPool();
+        businessData = ProcessFactory.eINSTANCE.createBusinessObjectData();
+        businessData.setDataType(ProcessFactory.eINSTANCE.createBusinessObjectType());
+        businessData.setName("testData");
+        businessData.setClassName("org.bonita.Car");
+        pageFlow.getData().add(businessData);
+        final List<EObject> input = new ArrayList<EObject>();
+        input.add(businessData);
+        selectGeneratedWidgetsWizardPage = spy(new SelectGeneratedWidgetsWizardPage(pageFlow, "",
+                input, store));
     }
 
     /**
@@ -96,8 +140,10 @@ public class SelectGeneratedWidgetsWizardPageTest {
         assertThat(c2.isGenerated()).isFalse();
         assertThat(c1_c1.isGenerated()).isFalse();
         selectGeneratedWidgetsWizardPage.setMappingEnabledRecursivly(root, true);
-        assertThat(root.isGenerated()).isTrue();
-        assertThat(c1.isGenerated()).isTrue();
+
+        assertThat(root.isGenerated()).isFalse();
+        assertThat(c1.isGenerated()).isFalse();
+
         assertThat(c2.isGenerated()).isTrue();
         assertThat(c1_c1.isGenerated()).isTrue();
     }
@@ -222,4 +268,41 @@ public class SelectGeneratedWidgetsWizardPageTest {
         verify(selectGeneratedWidgetsWizardPage).setMappingEnabledRecursivly(c2, false);
     }
 
+    @Test
+    public void shouldGetEClassFromBusinessObjectData_ReturnValidEClass() throws Exception {
+        final BusinessObject bo = selectGeneratedWidgetsWizardPage.getBusinessObjectFromData(businessData);
+        assertThat(bo).isNotNull();
+        assertThat(bo.getQualifiedName()).isEqualTo("org.bonita.Car");
+        assertThat(bo.getFields()).isNotEmpty();
+    }
+
+    @Test
+    public void should_a_widget_container_be_grayed_if_not_all_of_its_children_is_selected() throws Exception {
+        final WidgetMapping parent = new WidgetMapping(BusinessObjectDataBuilder.createBusinessObjectDataBuilder()
+                .havingDataType(BusinessObjectDataTypeBuilder.createBusinessObjectDataType()).build());
+        final SimpleField modelElement = new SimpleField();
+        modelElement.setType(FieldType.BOOLEAN);
+        final WidgetMapping mapping1 = new WidgetMapping(modelElement);
+        when(checkboxTreeViewer.getChecked(mapping1)).thenReturn(true);
+        final WidgetMapping mapping2 = new WidgetMapping(modelElement);
+        when(checkboxTreeViewer.getChecked(mapping2)).thenReturn(false);
+        parent.addChild(mapping1);
+        parent.addChild(mapping2);
+
+        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(checkboxTreeViewer);
+
+        assertThat(checkStateProvider.isGrayed(parent)).isTrue();
+        assertThat(checkStateProvider.isChecked(parent)).isFalse();
+    }
+
+    @Test
+    public void should_a_widget_not_grayed_if_a_leaf() throws Exception {
+        final SimpleField modelElement = new SimpleField();
+        modelElement.setType(FieldType.BOOLEAN);
+        final WidgetMapping mapping1 = new WidgetMapping(modelElement);
+        when(checkboxTreeViewer.getChecked(mapping1)).thenReturn(true);
+        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(checkboxTreeViewer);
+
+        assertThat(checkStateProvider.isGrayed(mapping1)).isFalse();
+    }
 }

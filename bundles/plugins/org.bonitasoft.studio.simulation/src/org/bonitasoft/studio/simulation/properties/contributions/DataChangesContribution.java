@@ -82,7 +82,7 @@ public class DataChangesContribution  extends AbstractPropertySectionContributio
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public boolean isRelevantFor(EObject eObject) {
+    public boolean isRelevantFor(final EObject eObject) {
         return eObject instanceof SimulationActivity;
     }
 
@@ -107,30 +107,28 @@ public class DataChangesContribution  extends AbstractPropertySectionContributio
      */
     @Override
     public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory, final ExtensibleGridPropertySection extensibleGridPropertySection) {
-
         composite.setLayout(new GridLayout(1,false));
-
         context = new EMFDataBindingContext();
         dynamicComposite = new DynamicAddRemoveLineComposite(composite,SWT.NONE){
 
             @Override
-            protected org.eclipse.swt.widgets.Button createAddButton(Composite parent) {
-                org.eclipse.swt.widgets.Button addButton = new Button(parent, SWT.FLAT);
+            protected org.eclipse.swt.widgets.Button createAddButton(final Composite parent) {
+                final org.eclipse.swt.widgets.Button addButton = new Button(parent, SWT.FLAT);
                 addButton.setText(Messages.add);
                 return addButton;
             };
 
             @Override
-            protected Control createLineComposite(Composite parent,Object object) {
+            protected Control createLineComposite(final Composite parent,final Object object) {
                 final DataChange dataChange;
                 if(object instanceof DataChange){
                     dataChange = (DataChange) object;
                 }else{
                     dataChange = SimulationFactory.eINSTANCE.createDataChange();
-                    AddCommand addCommand = new AddCommand(editingDomain, eObject, SimulationPackage.Literals.SIMULATION_ACTIVITY__DATA_CHANGE, dataChange);
+                    final AddCommand addCommand = new AddCommand(editingDomain, eObject, SimulationPackage.Literals.SIMULATION_ACTIVITY__DATA_CHANGE, dataChange);
                     editingDomain.getCommandStack().execute(addCommand);
                 }
-                Composite lineComposite = getWidgetFactory().createComposite(parent);
+                final Composite lineComposite = getWidgetFactory().createComposite(parent);
                 composites.add(lineComposite);
                 lineComposite.setLayout(new GridLayout(5,false));
 
@@ -141,7 +139,7 @@ public class DataChangesContribution  extends AbstractPropertySectionContributio
                 final ComboViewer viewer = new ComboViewer(combo);
                 viewer.setLabelProvider(new LabelProvider(){
                     @Override
-                    public String getText(Object element) {
+                    public String getText(final Object element) {
                         return ((SimulationData)element).getName();
                     };
                 });
@@ -167,12 +165,12 @@ public class DataChangesContribution  extends AbstractPropertySectionContributio
                 //expressionText.setSelection(new StructuredSelection(selection)) ;
 
 
-                Button createDataButton = new Button(lineComposite,SWT.FLAT) ;
+                final Button createDataButton = new Button(lineComposite,SWT.FLAT) ;
                 createDataButton.setText(Messages.createSimulationData) ;
                 createDataButton.addSelectionListener(new SelectionAdapter() {
                     @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        AddSimulationDataWizard wiz = new AddSimulationDataWizard(ModelHelper.getParentProcess(eObject), editingDomain) ;
+                    public void widgetSelected(final SelectionEvent e) {
+                        final AddSimulationDataWizard wiz = new AddSimulationDataWizard(ModelHelper.getParentProcess(eObject), editingDomain) ;
                         if(new WizardDialog(Display.getDefault().getActiveShell(), wiz).open() == WizardDialog.OK){
                             viewer.setInput(ModelHelper.getParentProcess(eObject).getSimulationData());
                             viewer.setSelection(new StructuredSelection(wiz.getCreatedData())) ;
@@ -194,20 +192,20 @@ public class DataChangesContribution  extends AbstractPropertySectionContributio
                 return lineComposite;
             }
             @Override
-            protected void lineRemoved(int i) {
+            protected void lineRemoved(final int i) {
                 composites.remove(i);
                 createButtons.remove(i) ;
                 combos.remove(i);
                 context.removeBinding(bindings.get(i));
                 bindings.remove(i);
-                DataChange dataChange = dataChanges.get(i);
-                RemoveCommand removeCommand = new RemoveCommand(editingDomain, eObject, SimulationPackage.Literals.SIMULATION_ACTIVITY__DATA_CHANGE, dataChange);
+                final DataChange dataChange = dataChanges.get(i);
+                final RemoveCommand removeCommand = new RemoveCommand(editingDomain, eObject, SimulationPackage.Literals.SIMULATION_ACTIVITY__DATA_CHANGE, dataChange);
                 editingDomain.getCommandStack().execute(removeCommand);
                 dataChanges.remove(i);
                 extensibleGridPropertySection.getTabbedPropertySheetPage().resizeScrolledComposite();
             }
             @Override
-            protected void lineAdded(int i) {
+            protected void lineAdded(final int i) {
                 extensibleGridPropertySection.getTabbedPropertySheetPage().resizeScrolledComposite();
             }
             @Override
@@ -243,7 +241,7 @@ public class DataChangesContribution  extends AbstractPropertySectionContributio
      * @see org.bonitasoft.studio.common.properties.AbstractPropertySectionContribution#setEObject(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public void setEObject(EObject object) {
+    public void setEObject(final EObject object) {
         super.setEObject(object);
     }
 
@@ -252,7 +250,7 @@ public class DataChangesContribution  extends AbstractPropertySectionContributio
      */
     private void fillDynamicWidget() {
         dataChanges.clear();
-        for (DataChange dataChange : ((SimulationActivity) eObject).getDataChange()) {
+        for (final DataChange dataChange : ((SimulationActivity) eObject).getDataChange()) {
             dynamicComposite.addLine(dataChange);
         }
     }

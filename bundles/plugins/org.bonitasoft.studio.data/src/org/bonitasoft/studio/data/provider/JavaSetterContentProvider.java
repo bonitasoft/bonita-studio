@@ -17,7 +17,6 @@
  */
 package org.bonitasoft.studio.data.provider;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,7 +25,6 @@ import java.util.List;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
@@ -34,20 +32,18 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class JavaSetterContentProvider implements ITreeContentProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
     @Override
@@ -56,64 +52,64 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface
      * .viewers.Viewer, java.lang.Object, java.lang.Object)
      */
     @Override
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.ITreeContentProvider#getElements(java.lang.
      * Object)
      */
     @Override
-    public Object[] getElements(Object inputElement) {
+    public Object[] getElements(final Object inputElement) {
         if(inputElement instanceof String){
             IType type = null ;
             try {
                 type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(inputElement.toString());
-            } catch (JavaModelException e1) {
+            } catch (final JavaModelException e1) {
                 BonitaStudioLog.error(e1) ;
             }
             return new Object[]{type};
         }else if(inputElement instanceof IType){
             return getChildren(inputElement) ;
         }
-        return null;
+        return new Object[0];
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
      * Object)
      */
     @Override
-    public Object[] getChildren(Object parentElement) {
+    public Object[] getChildren(final Object parentElement) {
         try {
             if (parentElement instanceof IMethod) {
-                String typeName = ((IMethod) parentElement).getReturnType();
+                final String typeName = ((IMethod) parentElement).getReturnType();
                 IType type = null ;
                 try {
                     type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(Signature.toString(typeName));
-                } catch (JavaModelException e1) {
+                } catch (final JavaModelException e1) {
                     BonitaStudioLog.error(e1) ;
                 }
                 return getChildren(type);
             } else if (parentElement instanceof IType) {
-                IType type = (IType) parentElement;
+                final IType type = (IType) parentElement;
                 return computeChildren(type);
             } else {
-                return new Object[] {};
+                return new Object[0];
             }
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             BonitaStudioLog.error(ex);
             return new Object[] {};
         }
@@ -125,31 +121,22 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
      */
     protected Object[] computeChildren(final IType type) throws Exception {
         final List<IMember> res = new ArrayList<IMember>();
-        PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-
-            @Override
-            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-
-                try {
-                    for (IMethod method : type.getMethods()) {
-                        if (Flags.isPublic(method.getFlags())
-                                && method.getParameterNames().length == 1
-                                && !method.isConstructor()
-                                && !res.contains(method)) {
-                            res.add(method);
-                        }
-                    }
-                } catch (CoreException e) {
-                    BonitaStudioLog.error(e);
+        try {
+            for (final IMethod method : type.getMethods()) {
+                if (Flags.isPublic(method.getFlags())
+                        && method.getParameterNames().length == 1
+                        && !method.isConstructor()
+                        && !res.contains(method)) {
+                    res.add(method);
                 }
-
             }
-        });
-
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e);
+        }
         Collections.sort(res, new Comparator<IMember>() {
 
             @Override
-            public int compare(IMember arg0, IMember arg1) {
+            public int compare(final IMember arg0, final IMember arg1) {
                 if (arg0.getElementType() == arg1.getElementType()) {
                     return arg0.getElementName().compareTo(arg1.getElementName());
                 } else if (arg0.getElementType() == IJavaElement.FIELD) {
@@ -166,30 +153,30 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object
      * )
      */
     @Override
-    public Object getParent(Object element) {
+    public Object getParent(final Object element) {
         return null;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.
      * Object)
      */
     @Override
-    public boolean hasChildren(Object element) {
+    public boolean hasChildren(final Object element) {
         if (element instanceof IMethod) {
-            IMethod method = (IMethod) element;
+            final IMethod method = (IMethod) element;
             try {
                 return method.getParameterNames().length == 0;
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 BonitaStudioLog.error(ex);
                 return true;
             }

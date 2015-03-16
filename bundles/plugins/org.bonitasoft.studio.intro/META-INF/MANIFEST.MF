@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Intro Plugin
 Bundle-Localization: plugin
 Bundle-SymbolicName: org.bonitasoft.studio.intro;singleton:=true
-Bundle-Version: 6.5.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.intro.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
@@ -17,11 +17,12 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
  org.bonitasoft.studio.migration;bundle-version="1.0.0",
  org.bonitasoft.studio.importer;bundle-version="6.2.0",
- org.bonitasoft.studio.engine
+ org.bonitasoft.studio.engine,
+ org.bonitasoft.studio.browser;bundle-version="6.5.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.intro,org.bonitasoft.studio.intr
  o.actions,org.bonitasoft.studio.intro.content
 Import-Package: com.sun.syndication.feed.synd;version="0.9.0",
  com.sun.syndication.io;version="0.9.0",
- org.jdom;version="0.0.0"
+ org.jdom;version="1.0.0"

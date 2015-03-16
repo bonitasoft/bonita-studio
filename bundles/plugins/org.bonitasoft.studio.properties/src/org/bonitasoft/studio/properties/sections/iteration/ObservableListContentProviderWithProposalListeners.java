@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,16 +20,15 @@ import java.util.List;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.expression.editor.provider.IDataProposalListener;
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public abstract class ObservableListContentProviderWithProposalListeners extends ObservableListContentProvider {
 
@@ -50,10 +47,11 @@ public abstract class ObservableListContentProviderWithProposalListeners extends
         for (final IConfigurationElement configElement : configurationElements) {
             final String type = configElement.getAttribute("type");
             if (type.equals(ExpressionConstants.VARIABLE_TYPE)) {
-                IProposalListener extension;
+                IDataProposalListener extension;
                 try {
-                    extension = (IProposalListener) configElement.createExecutableExtension("providerClass");
+                    extension = (IDataProposalListener) configElement.createExecutableExtension("providerClass");
                     if (extension.isRelevant(context) && !proposalListeners.contains(extension)) {
+                        extension.setMultipleData(true);
                         proposalListeners.add(extension);
                     }
                 } catch (final CoreException e) {
@@ -74,6 +72,5 @@ public abstract class ObservableListContentProviderWithProposalListeners extends
         result.addAll(proposalListeners);
         return result.toArray();
     }
-
 
 }

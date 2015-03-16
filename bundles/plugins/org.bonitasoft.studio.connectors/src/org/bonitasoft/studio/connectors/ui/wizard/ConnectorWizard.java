@@ -144,12 +144,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
     private boolean useEvents = true;
 
-    private final AvailableExpressionTypeFilter expressionTypeFilter = new AvailableExpressionTypeFilter(new String[] {
-            ExpressionConstants.CONSTANT_TYPE,
-            ExpressionConstants.VARIABLE_TYPE,
-            ExpressionConstants.SCRIPT_TYPE,
-            ExpressionConstants.PARAMETER_TYPE
-    });
+    private final AvailableExpressionTypeFilter expressionTypeFilter = new ConnectorAvailableExpressionTypeFilter();
 
     private final AvailableExpressionTypeFilter formExpressionTypeFilter = new AvailableExpressionTypeFilter(new String[] {
             ExpressionConstants.CONSTANT_TYPE,

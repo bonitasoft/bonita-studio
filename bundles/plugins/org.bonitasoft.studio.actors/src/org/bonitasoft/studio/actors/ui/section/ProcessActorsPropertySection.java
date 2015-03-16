@@ -68,7 +68,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
@@ -85,46 +84,43 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
     private Button setAsInitiatorButton;
     private EMFDataBindingContext context;
 
-
     @Override
-    public void createControls(Composite parent,TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        TabbedPropertySheetWidgetFactory widgetFactory = aTabbedPropertySheetPage.getWidgetFactory() ;
-        super.createControls(parent, aTabbedPropertySheetPage) ;
-        //  parent.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).hint(SWT.DEFAULT, 180).create()) ;
-        Composite mainComposite = widgetFactory.createComposite(parent, SWT.NONE) ;
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).extendedMargins(0, 20, 5, 15).spacing(5, 2).create()) ;
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).hint(SWT.DEFAULT, 180).create());
+    protected void createContent(final Composite parent) {
+        final TabbedPropertySheetWidgetFactory widgetFactory = getWidgetFactory();
+        final Composite mainComposite = widgetFactory.createComposite(parent, SWT.NONE);
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).extendedMargins(0, 20, 5, 15).spacing(5, 2).create());
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 180).create());
 
-        // Label actorsLabel = widgetFactory.createLabel(mainComposite, Messages.addRemoveActors,SWT.WRAP) ;
-        // actorsLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).span(2, 1).create()) ;
-        widgetFactory.createCLabel(mainComposite,"", SWT.NONE);
-        final CLabel statusControl = widgetFactory.createCLabel(mainComposite,"", SWT.NONE);
-        statusControl.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create());
 
-        Composite buttonsComposite = widgetFactory.createComposite(mainComposite, SWT.NONE) ;
-        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create()) ;
-        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(false).margins(0, 0).spacing(0, 3).create()) ;
+        widgetFactory.createCLabel(mainComposite, "", SWT.NONE);
+        final CLabel statusControl = widgetFactory.createCLabel(mainComposite, "", SWT.NONE);
+        statusControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        createAddButton(buttonsComposite,widgetFactory) ;
-        setAsInitiatorButton =  createInitiatorButton(buttonsComposite,widgetFactory) ;
-        removeButton = createRemoveButton(buttonsComposite,widgetFactory) ;
+        final Composite buttonsComposite = widgetFactory.createComposite(mainComposite, SWT.NONE);
+        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
+        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(false).margins(0, 0).spacing(0, 3).create());
+
+        createAddButton(buttonsComposite, widgetFactory);
+        setAsInitiatorButton = createInitiatorButton(buttonsComposite, widgetFactory);
+        removeButton = createRemoveButton(buttonsComposite, widgetFactory);
 
         createTable(widgetFactory, mainComposite, statusControl);
 
         widgetFactory.createLabel(mainComposite, "");
         widgetFactory.createLabel(mainComposite, Messages.initiatorExplanation);
 
-        updateButtons() ;
+        updateButtons();
+
     }
 
 
-    protected void createTable(TabbedPropertySheetWidgetFactory widgetFactory,
-            Composite mainComposite, final CLabel statusControl) {
+    protected void createTable(final TabbedPropertySheetWidgetFactory widgetFactory,
+            final Composite mainComposite, final CLabel statusControl) {
         actorsViewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL) ;
         widgetFactory.adapt(actorsViewer.getTable(),false,false) ;
         actorsViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         actorsViewer.setContentProvider(new ArrayContentProvider());
-        TableLayout tableLayout = new TableLayout() ;
+        final TableLayout tableLayout = new TableLayout() ;
         tableLayout.addColumnData(new ColumnWeightData(3)) ;
         tableLayout.addColumnData(new ColumnWeightData(30)) ;
         tableLayout.addColumnData(new ColumnWeightData(67)) ;
@@ -133,20 +129,20 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
         actorsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 updateButtons() ;
             }
         }) ;
 
-        TableViewerColumn initiatorIconViewer = new TableViewerColumn(actorsViewer,SWT.NONE) ;
+        final TableViewerColumn initiatorIconViewer = new TableViewerColumn(actorsViewer,SWT.NONE) ;
         initiatorIconViewer.setLabelProvider(new ColumnLabelProvider(){
             @Override
-            public String getText(Object element) {
+            public String getText(final Object element) {
                 return null;
             }
 
             @Override
-            public String getToolTipText(Object element) {
+            public String getToolTipText(final Object element) {
                 if(((Actor)element).isInitiator()){
                     return Messages.processInitiator ;
                 }
@@ -154,24 +150,24 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
             }
 
             @Override
-            public int getToolTipTimeDisplayed(Object object) {
+            public int getToolTipTimeDisplayed(final Object object) {
                 return 4000 ;
             }
 
             @Override
-            public int getToolTipDisplayDelayTime(Object object) {
+            public int getToolTipDisplayDelayTime(final Object object) {
                 return 300;
             }
 
 
 
             @Override
-            public Point getToolTipShift(Object object) {
+            public Point getToolTipShift(final Object object) {
                 return new Point(5,5);
             }
 
             @Override
-            public Image getImage(Object element) {
+            public Image getImage(final Object element) {
                 if(((Actor)element).isInitiator()){
                     return Pics.getImage("initiator.png", ActorsPlugin.getDefault()) ;
                 }
@@ -179,10 +175,10 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
             }
         }) ;
 
-        TableViewerColumn columnNameViewer = new TableViewerColumn(actorsViewer,SWT.NONE) ;
+        final TableViewerColumn columnNameViewer = new TableViewerColumn(actorsViewer,SWT.NONE) ;
         columnNameViewer.setLabelProvider(new ColumnLabelProvider(){
             @Override
-            public String getText(Object element) {
+            public String getText(final Object element) {
                 return ((Actor)element).getName() ;
             }
         }) ;
@@ -190,21 +186,21 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
         final CellEditorValidationStatusListener listener = new CellEditorValidationStatusListener(statusControl);
         nameEditingSupport = new ActorNameEditingSupport(columnNameViewer.getViewer(),getEditingDomain(),listener) ;
         columnNameViewer.setEditingSupport(nameEditingSupport) ;
-        TableColumn column = columnNameViewer.getColumn()  ;
+        final TableColumn column = columnNameViewer.getColumn()  ;
         column.setText(Messages.name) ;
 
 
-        TableViewerColumn columnDescriptionViewer = new TableViewerColumn(actorsViewer,SWT.NONE) ;
+        final TableViewerColumn columnDescriptionViewer = new TableViewerColumn(actorsViewer,SWT.NONE) ;
         columnDescriptionViewer.setLabelProvider(new ColumnLabelProvider(){
             @Override
-            public String getText(Object element) {
+            public String getText(final Object element) {
                 return ((Actor)element).getDocumentation();
             }
         }) ;
 
         descripitonEditingSupport = new ActorDescripitonEditingSupport(columnDescriptionViewer.getViewer(),getEditingDomain()) ;
         columnDescriptionViewer.setEditingSupport(descripitonEditingSupport) ;
-        TableColumn column3 = columnDescriptionViewer.getColumn() ;
+        final TableColumn column3 = columnDescriptionViewer.getColumn() ;
         column3.setText(Messages.description) ;
 
 
@@ -212,17 +208,17 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
         actorsViewer.getTable().setLinesVisible(true) ;
         ColumnViewerToolTipSupport.enableFor(actorsViewer);
 
-        TableColumnSorter sorter = new TableColumnSorter(actorsViewer) ;
+        final TableColumnSorter sorter = new TableColumnSorter(actorsViewer) ;
         sorter.setColumn(column) ;
     }
 
 
-    private Button createRemoveButton(Composite buttonsComposite, TabbedPropertySheetWidgetFactory widgetFactory) {
-        Button removeButton = widgetFactory.createButton(buttonsComposite, Messages.remove, SWT.PUSH) ;
+    private Button createRemoveButton(final Composite buttonsComposite, final TabbedPropertySheetWidgetFactory widgetFactory) {
+        final Button removeButton = widgetFactory.createButton(buttonsComposite, Messages.remove, SWT.PUSH) ;
         removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 removeSelected();
             }
         }) ;
@@ -232,41 +228,41 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
     protected void removeSelected() {
         if(!actorsViewer.getSelection().isEmpty()){
             if(MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.deleteActorsTitle,Messages.deleteActorsTitleMessage)){
-                List<?> actors = ((IStructuredSelection) actorsViewer.getSelection()).toList() ;
+                final List<?> actors = ((IStructuredSelection) actorsViewer.getSelection()).toList() ;
                 getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), actors));
                 refresh() ;
             }
         }
     }
 
-    protected Button createAddButton(Composite buttonsComposite, TabbedPropertySheetWidgetFactory widgetFactory) {
-        Button addButton = widgetFactory.createButton(buttonsComposite, Messages.add, SWT.PUSH) ;
+    protected Button createAddButton(final Composite buttonsComposite, final TabbedPropertySheetWidgetFactory widgetFactory) {
+        final Button addButton = widgetFactory.createButton(buttonsComposite, Messages.add, SWT.PUSH) ;
         addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
         addButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 addSelected();
             }
         }) ;
         return addButton;
     }
 
-    protected Button createInitiatorButton(Composite buttonsComposite, TabbedPropertySheetWidgetFactory widgetFactory) {
-        Button addButton = widgetFactory.createButton(buttonsComposite, Messages.setAsProcessInitiator, SWT.PUSH) ;
+    protected Button createInitiatorButton(final Composite buttonsComposite, final TabbedPropertySheetWidgetFactory widgetFactory) {
+        final Button addButton = widgetFactory.createButton(buttonsComposite, Messages.setAsProcessInitiator, SWT.PUSH) ;
         addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
         addButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                Actor selectedActor = (Actor) ((IStructuredSelection) actorsViewer.getSelection()).getFirstElement() ;
-                CompoundCommand cc = new CompoundCommand() ;
-                AbstractProcess process = (AbstractProcess) getEObject() ;
-                for(Actor a : process.getActors()){
+            public void widgetSelected(final SelectionEvent e) {
+                final Actor selectedActor = (Actor) ((IStructuredSelection) actorsViewer.getSelection()).getFirstElement() ;
+                final CompoundCommand cc = new CompoundCommand() ;
+                final AbstractProcess process = (AbstractProcess) getEObject() ;
+                for(final Actor a : process.getActors()){
                     cc.append(SetCommand.create(getEditingDomain(), a, ProcessPackage.Literals.ACTOR__INITIATOR, false)) ;
                 }
                 cc.append(SetCommand.create(getEditingDomain(), selectedActor, ProcessPackage.Literals.ACTOR__INITIATOR, true)) ;
                 getEditingDomain().getCommandStack().execute(cc) ;
                 Display.getDefault().asyncExec(new Runnable() {
-                    
+
                     @Override
                     public void run() {
                         if(actorsViewer != null && !actorsViewer.getControl().isDisposed()){
@@ -274,7 +270,7 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
                         }
                     }
                 });
-               
+
                 updateButtons();
             }
         }) ;
@@ -282,17 +278,17 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
     }
 
     protected void addSelected() {
-        AbstractProcess process = (AbstractProcess) getEObject() ;
-        Actor actor = ProcessFactory.eINSTANCE.createActor() ;
+        final AbstractProcess process = (AbstractProcess) getEObject() ;
+        final Actor actor = ProcessFactory.eINSTANCE.createActor() ;
         actor.setName(generateActorName(process)) ;
         getEditingDomain().getCommandStack().execute(AddCommand.create(getEditingDomain(), process, ProcessPackage.Literals.ABSTRACT_PROCESS__ACTORS,actor)) ;
         refresh() ;
         actorsViewer.editElement(actor, 0) ;
     }
 
-    private String generateActorName(AbstractProcess process) {
-        Set<String> actorsName = new HashSet<String>() ;
-        for(Actor a : process.getActors()){
+    private String generateActorName(final AbstractProcess process) {
+        final Set<String> actorsName = new HashSet<String>() ;
+        for(final Actor a : process.getActors()){
             actorsName.add(a.getName()) ;
         }
 
@@ -319,7 +315,7 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
 
 
     @Override
-    public void selectionChanged(SelectionChangedEvent arg0) {
+    public void selectionChanged(final SelectionChangedEvent arg0) {
         updateButtons() ;
     }
 
@@ -331,7 +327,7 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
 
         if(setAsInitiatorButton != null && !setAsInitiatorButton.isDisposed()){
             if(!actorsViewer.getSelection().isEmpty()){
-                Actor selectedActor = (Actor) ((IStructuredSelection) actorsViewer.getSelection()).getFirstElement() ;
+                final Actor selectedActor = (Actor) ((IStructuredSelection) actorsViewer.getSelection()).getFirstElement() ;
                 setAsInitiatorButton.setEnabled(!selectedActor.isInitiator()) ;
             }else{
                 setAsInitiatorButton.setEnabled(false) ;
@@ -341,7 +337,7 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
 
 
     @Override
-    protected void setEditingDomain(TransactionalEditingDomain editingDomain) {
+    protected void setEditingDomain(final TransactionalEditingDomain editingDomain) {
         super.setEditingDomain(editingDomain);
         if(nameEditingSupport != null){
             nameEditingSupport.setTransactionalEditingDomain(editingDomain) ;
@@ -351,7 +347,7 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
 
 
     @Override
-    public void doubleClick(DoubleClickEvent arg0) {
+    public void doubleClick(final DoubleClickEvent arg0) {
 
 
     }
@@ -366,7 +362,7 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
     }
 
     @Override
-    public void setEObject(EObject object) {
+    public void setEObject(final EObject object) {
         super.setEObject(object);
         bindActorList();
     }

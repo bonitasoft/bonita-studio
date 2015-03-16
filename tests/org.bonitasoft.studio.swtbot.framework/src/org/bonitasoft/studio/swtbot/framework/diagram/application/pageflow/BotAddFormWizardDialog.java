@@ -42,10 +42,20 @@ public class BotAddFormWizardDialog extends BotWizardDialog {
     }
 
     /**
+     * /**
      * Select Process data tab.
      */
     public BotProcessDataMappingPanel selectProcessDataTab() {
+        bot.tabItem(Messages.processData).activate();
         return new BotProcessDataMappingPanel(bot);
+    }
+
+    /**
+     * Select Business data tab.
+     */
+    public BotBusinessDataMappingPanel selectBusinessDataTab() {
+        bot.tabItem(Messages.businessData).activate();
+        return new BotBusinessDataMappingPanel(bot);
     }
 
     /**
@@ -58,7 +68,7 @@ public class BotAddFormWizardDialog extends BotWizardDialog {
 
     /**
      * Return content of the Widget column of a given element
-     * 
+     *
      * @param dataName
      * @return
      */

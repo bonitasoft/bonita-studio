@@ -23,9 +23,8 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Properties;
 
+import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.engine.command.OpenBrowserCommand;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 
@@ -36,30 +35,28 @@ import org.eclipse.ui.intro.config.IIntroAction;
 public class OpenInExternalBrowserIntroAction implements IIntroAction {
 
 	@Override
-	public void run(IIntroSite site, Properties params) {
-		String urlToOpen = retrieveURLToOpen(params);
+	public void run(final IIntroSite site, final Properties params) {
+		final String urlToOpen = retrieveURLToOpen(params);
 		openInExternalBrowser(urlToOpen);
 	}
 
-	private void openInExternalBrowser(String urlToOpen) {
+	private void openInExternalBrowser(final String urlToOpen) {
 		try {
 			if(urlToOpen != null){
 				final URL url = new URL(urlToOpen);
-				new OpenBrowserCommand(url, "", "").execute(null);
+                new OpenBrowserOperation(url).execute();
 			}
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			BonitaStudioLog.error(e);
-		} catch (ExecutionException e) {
-			BonitaStudioLog.error(e);
-		}
+        }
 	}
 
-	private String retrieveURLToOpen(Properties params) {
+	private String retrieveURLToOpen(final Properties params) {
 		String urlToOpen = null;
 		try {
 			final String urlEncoded = params.getProperty("url");
 			urlToOpen = URLDecoder.decode(urlEncoded, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			BonitaStudioLog.error(e);
 		}
 		return urlToOpen;
