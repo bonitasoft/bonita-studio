@@ -1,16 +1,14 @@
 /**
- * Copyright (C) 2014 Bonitasoft S.A.
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,6 +24,7 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BarResourcesProviderUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -41,9 +40,11 @@ import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorReference;
 
 public class AddBpmnBarResourceRunnable implements RunnableWithResult<List<BarResource>> {
 
@@ -60,15 +61,31 @@ public class AddBpmnBarResourceRunnable implements RunnableWithResult<List<BarRe
     public void run() {
         final Diagram diagramFor = ModelHelper.getDiagramFor(ModelHelper.getMainProcess(process), (EditingDomain) null);
         if (diagramFor != null) {
-            final Resource eResource = diagramFor.eResource();
-            if (eResource != null) {
-                final MainProcessEditPart mped = createMainEditPart(diagramFor, eResource);
+            final MainProcessEditPart mped = findOrCreateMainProcessEditPart(diagramFor);
+            if (mped != null) {
                 createBPMNFileAndAddContents(mped);
                 for (final BarResource barResource : res) {
                     builder.addExternalResource(barResource);
                 }
             }
         }
+    }
+
+    protected MainProcessEditPart findOrCreateMainProcessEditPart(final Diagram diagramFor) {
+        final Resource eResource = diagramFor.eResource();
+        MainProcessEditPart mped = findInOpenedEditor(eResource);
+        if (mped == null && eResource != null) {
+            mped = createMainEditPart(diagramFor, eResource);
+        }
+        return mped;
+    }
+
+    protected MainProcessEditPart findInOpenedEditor(final Resource eResource) {
+        final IEditorReference openedEditor = PlatformUtil.getOpenEditor(eResource.getURI().lastSegment());
+        if (openedEditor != null && openedEditor.getEditor(true) instanceof DiagramEditor) {
+            return (MainProcessEditPart) ((DiagramEditor) openedEditor.getEditor(true)).getDiagramEditPart();
+        }
+        return null;
     }
 
     protected void createBPMNFileAndAddContents(final MainProcessEditPart mped) {

@@ -16,6 +16,10 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,6 +35,7 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.junit.After;
@@ -108,6 +113,33 @@ public class ExpressionViewerTest extends AbstractSWTTestCase {
         ExpressionAssert.assertThat(selectedExpression).hasReturnType(Integer.class.getName());
         ExpressionAssert.assertThat(selectedExpression).hasNoReferencedElements();
         ExpressionAssert.assertThat(selectedExpression).hasType(ExpressionConstants.CONSTANT_TYPE);
+    }
+
+    @Mock
+    EObject input1, input2, context;
+    @Mock
+    ExpressionViewer mockedExprViewer;
+
+    @Test
+    public void setInputShouldUpdateContextIfTheyAreTheSame() {//for legacy purpose
+        doCallRealMethod().when(mockedExprViewer).setContext(any(EObject.class));
+        doCallRealMethod().when(mockedExprViewer).isOldContextAndInputSimilar(any(EObject.class));
+        doReturn(input1).when(mockedExprViewer).getInput();
+
+        mockedExprViewer.setContext(input1);
+
+        assertThat(mockedExprViewer.isOldContextAndInputSimilar(input2)).isTrue();
+    }
+
+    @Test
+    public void setInputShouldNOTUpdateContextIfTheyAreDifferent() {//for legacy purpose
+        doCallRealMethod().when(mockedExprViewer).setContext(any(EObject.class));
+        doCallRealMethod().when(mockedExprViewer).isOldContextAndInputSimilar(any(EObject.class));
+        doReturn(context).when(mockedExprViewer).getInput();
+
+        mockedExprViewer.setContext(input1);
+
+        assertThat(mockedExprViewer.isOldContextAndInputSimilar(input2)).isFalse();
     }
 
 }
