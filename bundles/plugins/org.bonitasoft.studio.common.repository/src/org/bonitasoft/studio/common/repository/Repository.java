@@ -15,12 +15,12 @@
 package org.bonitasoft.studio.common.repository;
 
 import static com.google.common.collect.Iterables.tryFind;
+import static org.eclipse.core.runtime.Path.fromOSString;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -590,10 +590,12 @@ public class Repository implements IRepository, IJavaContainer {
 
     @Override
     public IRepositoryFileStore asRepositoryFileStore(final Path path) throws IOException, CoreException {
-        final IResource iResource = pathToIResource(getProject(), path);
-        iResource.refreshLocal(IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);
+        final IResource iResource = project.getFile(fromOSString(path.toString()).makeRelativeTo(project.getLocation()));
         if (!iResource.exists()) {
-            throw new FileNotFoundException(path.toFile().getAbsolutePath());
+            iResource.refreshLocal(IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);
+            if (!iResource.exists()) {
+                throw new FileNotFoundException(path.toFile().getAbsolutePath());
+            }
         }
 
         final IPath projectRelativePath = iResource.getProjectRelativePath();
@@ -609,15 +611,6 @@ public class Repository implements IRepository, IJavaContainer {
             }
         }
         return null;
-    }
-
-    private IResource pathToIResource(final IProject project, final Path path) throws FileNotFoundException {
-        Path resolvedPath = path;
-        if (!resolvedPath.isAbsolute()) {
-            resolvedPath = project.getLocation().toFile().toPath().resolve(resolvedPath);
-        }
-        final URI relativize = project.getLocationURI().relativize(resolvedPath.toUri());
-        return project.getFile(org.eclipse.core.runtime.Path.fromOSString(relativize.toString()));
     }
 
     @Override
