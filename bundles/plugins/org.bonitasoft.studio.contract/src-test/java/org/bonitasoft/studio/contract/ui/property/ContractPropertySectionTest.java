@@ -59,7 +59,7 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
     private ContractPropertySection section;
 
     @Mock
-    private TaskAdaptableSelectionProvider selectionProvider;
+    private ContractContainerAdaptableSelectionProvider selectionProvider;
 
     @Mock
     private NewFormContributionItem contributionItem;
