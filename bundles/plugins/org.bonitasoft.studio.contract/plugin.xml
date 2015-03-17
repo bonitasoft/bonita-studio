@@ -51,7 +51,10 @@
    <extension
          point="org.bonitasoft.studio.engine.definition.builder">
            <EngineDefinitionBuilder
-                 class="org.bonitasoft.studio.contract.core.ContractEngineDefinitionBuilder">
+                 class="org.bonitasoft.studio.contract.core.ProcessContractEngineBuilder">
+           </EngineDefinitionBuilder>
+           <EngineDefinitionBuilder
+                 class="org.bonitasoft.studio.contract.core.TaskContractEngineDefinitionBuilder">
            </EngineDefinitionBuilder>
    </extension>
 

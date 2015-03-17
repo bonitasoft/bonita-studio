@@ -23,12 +23,12 @@ import org.eclipse.emf.ecore.EObject;
  * @author Romain Bioteau
  *
  */
-public interface IEngineDefinitionBuilder {
+public interface IEngineDefinitionBuilder<T> {
 
     void build(EObject element) throws BuildProcessDefinitionException;
 
-    boolean appliesTo(EObject element);
+    boolean appliesTo(EObject context, EObject element);
 
-    void setEngineBuilder(Object engineBuilder);
+    void setEngineBuilder(T engineBuilder);
 
 }

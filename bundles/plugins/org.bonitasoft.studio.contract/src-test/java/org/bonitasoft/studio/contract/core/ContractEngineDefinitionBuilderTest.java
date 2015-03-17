@@ -26,7 +26,6 @@ import static org.mockito.Mockito.when;
 import org.bonitasoft.engine.bpm.contract.ComplexInputDefinition;
 import org.bonitasoft.engine.bpm.contract.Type;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
-import org.bonitasoft.engine.bpm.process.impl.FlowElementContainerBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.model.process.Contract;
@@ -55,7 +54,7 @@ public class ContractEngineDefinitionBuilderTest {
     @Mock
     private UserTaskDefinitionBuilder taskBuilder;
 
-    private ContractEngineDefinitionBuilder engineContractBuilder;
+    private ContractEngineDefinitionBuilder<UserTaskDefinitionBuilder> engineContractBuilder;
 
     private Contract aContract;
 
@@ -69,7 +68,7 @@ public class ContractEngineDefinitionBuilderTest {
     public void setUp() throws Exception {
         when(taskBuilder.addContract()).thenReturn(contractDefBuilder);
         aContract = ProcessFactory.eINSTANCE.createContract();
-        engineContractBuilder = new ContractEngineDefinitionBuilder();
+        engineContractBuilder = new TaskContractEngineDefinitionBuilder();
         engineContractBuilder.setEngineBuilder(taskBuilder);
     }
 
@@ -82,8 +81,12 @@ public class ContractEngineDefinitionBuilderTest {
 
     @Test
     public void should_appliesTo_a_contract() throws Exception {
-        assertThat(engineContractBuilder.appliesTo(aContract)).isTrue();
-        assertThat(engineContractBuilder.appliesTo(null)).isFalse();
+        assertThat(new TaskContractEngineDefinitionBuilder().appliesTo(ProcessFactory.eINSTANCE.createTask(), aContract)).isTrue();
+        assertThat(new TaskContractEngineDefinitionBuilder().appliesTo(ProcessFactory.eINSTANCE.createPool(), aContract)).isFalse();
+        assertThat(engineContractBuilder.appliesTo(null, null)).isFalse();
+        assertThat(new ProcessContractEngineBuilder().appliesTo(ProcessFactory.eINSTANCE.createTask(), aContract)).isFalse();
+        assertThat(new ProcessContractEngineBuilder().appliesTo(ProcessFactory.eINSTANCE.createPool(), aContract)).isTrue();
+        assertThat(engineContractBuilder.appliesTo(null, null)).isFalse();
     }
 
     @Test
@@ -128,7 +131,7 @@ public class ContractEngineDefinitionBuilderTest {
 
     @Test(expected = AssertionFailedException.class)
     public void should_build_throw_an_AssertionFailedException_if_no_builder_is_set() throws Exception {
-        engineContractBuilder = new ContractEngineDefinitionBuilder();
+        engineContractBuilder = new TaskContractEngineDefinitionBuilder();
         engineContractBuilder.build(aContract);
     }
 
@@ -222,11 +225,6 @@ public class ContractEngineDefinitionBuilderTest {
         assertThat(complexInputDefinition.getSimpleInputs()).extracting("name", "type").contains(
                 tuple("name", Type.TEXT),
                 tuple("rate", Type.INTEGER));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void should_setEngineBuilder_throw_IllegalArgumentExcpetion() throws Exception {
-        engineContractBuilder.setEngineBuilder(new FlowElementContainerBuilder(null, null));
     }
 
 }

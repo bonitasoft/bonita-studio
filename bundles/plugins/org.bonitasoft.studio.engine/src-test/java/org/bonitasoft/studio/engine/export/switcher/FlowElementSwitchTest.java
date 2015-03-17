@@ -43,6 +43,7 @@ import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.ActorFilter;
 import org.bonitasoft.studio.model.process.BoundaryMessageEvent;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.StartMessageEvent;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
@@ -87,8 +88,7 @@ public class FlowElementSwitchTest {
     public void setUp() throws Exception {
         instance = new ProcessDefinitionBuilder().createNewInstance("test", "1.0");
         flowElementSwitch = spy(new FlowElementSwitch(instance, Collections.<EObject> emptySet()));
-        doReturn(engineContractBuilder).when(flowElementSwitch).getEngineDefinitionBuilder(any(Contract.class));
-
+        doReturn(engineContractBuilder).when(flowElementSwitch).getEngineDefinitionBuilder(any(EObject.class), any(Contract.class));
     }
 
     /**
@@ -139,11 +139,13 @@ public class FlowElementSwitchTest {
         flowElementSwitch.addBoundaryEvents(activityDefinitionBuilder, activity);
         verify(flowElementSwitch).addMessageCorrelation(eq(bmEvent), any(CatchMessageEventTriggerDefinitionBuilder.class));
 	}
-	
+
 	@Test
     public void should_addContract_build_an_engine_contract() throws Exception {
+        final Pool pool = ProcessFactory.eINSTANCE.createPool();
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
-        flowElementSwitch.addContract(taskBuilder, contract);
+        pool.setContract(contract);
+        flowElementSwitch.addContract(taskBuilder, pool);
         verify(engineContractBuilder).setEngineBuilder(taskBuilder);
         verify(engineContractBuilder).build(contract);
     }
