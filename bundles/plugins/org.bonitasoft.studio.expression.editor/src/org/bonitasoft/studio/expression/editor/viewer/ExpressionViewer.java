@@ -1370,4 +1370,16 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         validate();
     }
 
+    @Override
+    public void setInput(final Object input) {
+        if (isOldContextAndInputSimilar(input)) {
+            setContext((EObject) input);
+        }
+        super.setInput(input);
+    }
+
+    protected boolean isOldContextAndInputSimilar(final Object input) {
+        return getInput() != null && input instanceof EObject && getInput().equals(context);
+    }
+
 }
