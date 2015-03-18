@@ -67,13 +67,11 @@ public class JSONFileStoreTest {
         assertThat(content).isNotNull();
     }
 
-    @Test
-    public void should_return_null_if_resource_does_not_exists() throws Exception {
+    @Test(expected = IllegalStateException.class)
+    public void should_throw_IllegalStateException_if_resource_does_not_exists() throws Exception {
         when(iResource.exists()).thenReturn(false);
 
-        final JSONObject content = jsonFileStore.getContent();
-
-        assertThat(content).isNull();
+        jsonFileStore.getContent();
     }
 
     @Test
