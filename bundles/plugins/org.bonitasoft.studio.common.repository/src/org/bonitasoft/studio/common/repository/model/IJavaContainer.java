@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -12,11 +12,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.pagedesigner.core.resources;
+package org.bonitasoft.studio.common.repository.model;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.IJavaProject;
 
 /**
  * @author Romain Bioteau
  */
-public enum WorkspaceAPIEvent {
-    PRE_OPEN, POST_OPEN, POST_CLOSE, PRE_CLOSE, PRE_DELETE, POST_DELETE, PRE_SAVE, POST_SAVE, POST_IMPORT, PRE_IMPORT
+public interface IJavaContainer {
+
+    void build(IProgressMonitor monitor);
+
+    boolean isBuildEnable();
+
+    void disableBuild();
+
+    void enableBuild();
+
+    IJavaProject getJavaProject();
+
+    ClassLoader createProjectClassloader(IProgressMonitor monitor);
+
 }

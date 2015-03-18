@@ -18,12 +18,11 @@ package org.bonitasoft.studio.businessobject.ui.wizard.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import org.bonitasoft.engine.bdm.model.field.SimpleField;
 
 /**
  * @author Romain Bioteau
@@ -54,6 +53,22 @@ public class MandatoryCheckboxLabelProviderTest extends AbstractSWTTestCase {
     public void shouldIsEnable_ReturnsTrue() throws Exception {
         assertThat(labelProviderUnderTest.isEnabled(null)).isTrue();
         final SimpleField f = new SimpleField();
+        assertThat(labelProviderUnderTest.isEnabled(f)).isTrue();
+    }
+
+    @Test
+    public void shouldIsEnable_ReturnsFalse() throws Exception {
+        assertThat(labelProviderUnderTest.isEnabled(null)).isTrue();
+        final SimpleField f = new SimpleField();
+        f.setCollection(true);
+        assertThat(labelProviderUnderTest.isEnabled(f)).isFalse();
+    }
+
+    @Test
+    public void shouldIsEnable_ReturnsTrue_WithNullCollection() throws Exception {
+        assertThat(labelProviderUnderTest.isEnabled(null)).isTrue();
+        final SimpleField f = new SimpleField();
+        f.setCollection(null);
         assertThat(labelProviderUnderTest.isEnabled(f)).isTrue();
     }
 

@@ -29,9 +29,9 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
@@ -59,9 +59,9 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
     @Override
     public Set<Expression> getExpressions(final EObject context) {
         final FlowElement flowElement = ModelHelper.getParentFlowElement(context);
-        Assert.isLegal(flowElement instanceof Task);
+        Assert.isLegal(flowElement instanceof ContractContainer);
 
-        final Contract contract = ((Task) flowElement).getContract();
+        final Contract contract = ((ContractContainer) flowElement).getContract();
         Assert.isLegal(contract != null);
 
         final Set<Expression> result = new HashSet<Expression>();
@@ -111,7 +111,7 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
      */
     @Override
     public boolean isRelevantFor(final EObject context) {
-        return ModelHelper.getParentFlowElement(context) instanceof Task && ModelHelper.getParentForm(context) == null;
+        return ModelHelper.getParentFlowElement(context) instanceof ContractContainer && ModelHelper.getParentForm(context) == null;
     }
 
     /* (non-Javadoc)

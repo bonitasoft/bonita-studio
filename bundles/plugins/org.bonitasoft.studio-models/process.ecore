@@ -180,6 +180,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="inputNames" upperBound="-1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContractContainer" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contract" eType="#//Contract"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ContractInputType">
     <eLiterals name="TEXT"/>
     <eLiterals name="INTEGER" value="1"/>
@@ -425,7 +429,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="formMapping" eType="#//FormMapping"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Pool" eSuperTypes="#//AbstractProcess">
+  <eClassifiers xsi:type="ecore:EClass" name="Pool" eSuperTypes="#//AbstractProcess #//ContractContainer">
     <eStructuralFeatures xsi:type="ecore:EReference" name="documents" upperBound="-1"
         eType="#//Document" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="searchIndexes" upperBound="-1"
@@ -571,13 +575,11 @@
         defaultValueLiteral="GROOVY"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SubProcessEvent" eSuperTypes="#//Container"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Task" eSuperTypes="#//Activity #//PageFlow #//ResourceContainer #//Assignable">
+  <eClassifiers xsi:type="ecore:EClass" name="Task" eSuperTypes="#//Activity #//PageFlow #//ResourceContainer #//Assignable #//ContractContainer">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="overrideActorsOfTheLane"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
         defaultValueLiteral="2"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="contract" eType="#//Contract"
-        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TargetElement" abstract="true" interface="true"
       eSuperTypes="#//Element">

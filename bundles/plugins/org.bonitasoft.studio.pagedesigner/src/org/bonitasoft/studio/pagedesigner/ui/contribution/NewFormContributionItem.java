@@ -26,6 +26,7 @@ import org.bonitasoft.studio.model.expression.provider.ExpressionItemProvider;
 import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.PageFlow;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.provider.FormMappingItemProvider;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
@@ -40,6 +41,7 @@ import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -66,6 +68,14 @@ public class NewFormContributionItem extends ContributionItem {
     public void update() {
         if (toolItem != null) {
             toolItem.setEnabled(canCreateNewForm());
+            final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
+            if (pageFlow != null) {
+                if (pageFlow instanceof Pool) {
+                    toolItem.setToolTipText(NLS.bind(Messages.newFormTooltip, Messages.pool));
+                } else {
+                    toolItem.setToolTipText(NLS.bind(Messages.newFormTooltip, Messages.task));
+                }
+            }
         }
     }
 

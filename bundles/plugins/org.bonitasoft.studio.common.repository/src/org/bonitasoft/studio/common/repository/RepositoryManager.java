@@ -44,7 +44,7 @@ public class RepositoryManager {
 
     private static RepositoryManager INSTANCE;
 
-    private IRepository repository;
+    private Repository repository;
     private final IPreferenceStore preferenceStore;
     private final IConfigurationElement repositoryImplementationElement;
 
@@ -88,9 +88,9 @@ public class RepositoryManager {
 
     }
 
-    public IRepository createRepository(final String name) {
+    public Repository createRepository(final String name) {
         try {
-            final IRepository repository = (IRepository) repositoryImplementationElement.createExecutableExtension(CLASS);
+            final Repository repository = (Repository) repositoryImplementationElement.createExecutableExtension(CLASS);
             repository.createRepository(name);
             return repository;
         } catch (final CoreException e) {
@@ -114,7 +114,7 @@ public class RepositoryManager {
         return preferenceStore;
     }
 
-    public IRepository getCurrentRepository() {
+    public Repository getCurrentRepository() {
         return repository;
     }
 
@@ -122,7 +122,7 @@ public class RepositoryManager {
         return storeClass.cast(repository.getRepositoryStore(storeClass));
     }
 
-    public IRepository getRepository(final String repositoryName) {
+    public Repository getRepository(final String repositoryName) {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IProject project = workspace.getRoot().getProject(repositoryName);
         if (project == null || !project.exists()) {
