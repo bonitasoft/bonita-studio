@@ -71,7 +71,7 @@ public class ContractEngineDefinitionBuilderTest {
      */
     @Before
     public void setUp() throws Exception {
-        when(taskBuilder.addContract()).thenReturn(contractDefBuilder);
+        when(processBuilder.addContract()).thenReturn(contractDefBuilder);
         aContract = ProcessFactory.eINSTANCE.createContract();
         processengineContractBuilder = new ProcessContractEngineBuilder();
         processengineContractBuilder.setEngineBuilder(processBuilder);
@@ -122,6 +122,22 @@ public class ContractEngineDefinitionBuilderTest {
         addInput(aContract, "isMarried", ContractInputType.BOOLEAN, null);
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
+        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", false);
+        verify(contractDefBuilder).addSimpleInput("birthDate", Type.DATE, "Birth date of an employee", false);
+        verify(contractDefBuilder).addSimpleInput("age", Type.INTEGER, null, false);
+        verify(contractDefBuilder).addSimpleInput("salary", Type.DECIMAL, null, false);
+        verify(contractDefBuilder).addSimpleInput("isMarried", Type.BOOLEAN, null, false);
+    }
+
+    @Test
+    public void should_build_create_a_contract_with_simple_input_for_process() throws Exception {
+        addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
+        addInput(aContract, "birthDate", ContractInputType.DATE, "Birth date of an employee");
+        addInput(aContract, "age", ContractInputType.INTEGER, null);
+        addInput(aContract, "salary", ContractInputType.DECIMAL, null);
+        addInput(aContract, "isMarried", ContractInputType.BOOLEAN, null);
+        processengineContractBuilder.build(aContract);
+        verify(processBuilder).addContract();
         verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", false);
         verify(contractDefBuilder).addSimpleInput("birthDate", Type.DATE, "Birth date of an employee", false);
         verify(contractDefBuilder).addSimpleInput("age", Type.INTEGER, null, false);
