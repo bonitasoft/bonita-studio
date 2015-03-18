@@ -18,10 +18,10 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.io.IOException;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 import org.json.JSONException;
@@ -35,36 +35,12 @@ import com.google.common.io.Files;
  */
 public class JSONFileStore extends AbstractFileStore {
 
-    private static final String FORM_NAME_KEY = "name";
-    private static final String FORM_ID_KEY = "id";
-
     public JSONFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
     }
 
-    public String getId() {
-        final JSONObject jSonObject = getContent();
-        if (jSonObject == null) {
-            throw new IllegalAccessError(String.format("Invalid JSON file %s.", getName()));
-        }
-        try {
-            return jSonObject.getString(FORM_ID_KEY);
-        } catch (final JSONException e) {
-            throw new IllegalAccessError(String.format("Failed to retrieve id in JSON file %s, with key %s.", getName(), FORM_NAME_KEY));
-        }
-    }
-
-    @Override
-    public String getDisplayName() {
-        final JSONObject jSonObject = getContent();
-        if (jSonObject == null) {
-            throw new IllegalAccessError(String.format("Invalid JSON file %s.", getName()));
-        }
-        try {
-            return jSonObject.getString(FORM_NAME_KEY);
-        } catch (final JSONException e) {
-            throw new IllegalAccessError(String.format("Failed to retrieve name in JSON file %s, with key %s.", getName(), FORM_NAME_KEY));
-        }
+    public String getStringAttribute(final String attribute) throws JSONException, ReadFileStoreException {
+        return getContent().getString(attribute);
     }
 
     /*
@@ -81,14 +57,13 @@ public class JSONFileStore extends AbstractFileStore {
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
      */
     @Override
-    public JSONObject getContent() {
+    public JSONObject getContent() throws ReadFileStoreException {
         checkState(getResource().exists());
         try {
             return new org.json.JSONObject(Files.toString(getResource().getLocation().toFile(), Charsets.UTF_8));
         } catch (final JSONException | IOException e) {
-            BonitaStudioLog.error(String.format("Failed to retrieve JSON content from %s", getResource().getName()), e);
+            throw new ReadFileStoreException(String.format("Failed to retrieve JSON content from %s", getResource().getName()), e);
         }
-        return null;
     }
 
     /*

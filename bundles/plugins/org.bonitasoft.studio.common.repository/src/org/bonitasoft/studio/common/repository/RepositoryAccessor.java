@@ -17,6 +17,8 @@ package org.bonitasoft.studio.common.repository;
 import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 /**
@@ -33,7 +35,7 @@ public class RepositoryAccessor {
         repositoryManagerInstance = RepositoryManager.getInstance();
     }
 
-    public <T> T getRepositoryStore(final Class<T> storeClass) {
+    public <T extends IRepositoryStore<? extends IRepositoryFileStore>> T getRepositoryStore(final Class<T> storeClass) {
         return repositoryManagerInstance.getRepositoryStore(storeClass);
     }
 }

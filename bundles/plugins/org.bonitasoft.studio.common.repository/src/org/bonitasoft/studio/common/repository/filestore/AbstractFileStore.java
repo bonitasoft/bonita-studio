@@ -142,7 +142,7 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
     }
 
     @Override
-    final public void save(final Object content) {
+    public void save(final Object content) {
         if (!isReadOnly()) {
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_SAVE, this));
             doSave(content);
@@ -165,7 +165,7 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
     }
 
     @Override
-    final public IWorkbenchPart open() {
+    public IWorkbenchPart open() {
         fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, this));
         Display.getDefault().syncExec(new Runnable() {
 
@@ -190,7 +190,7 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
     }
 
     @Override
-    final public void close() {
+    public void close() {
         fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_CLOSE, this));
         doClose();
         if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null &&
@@ -258,7 +258,7 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
     protected abstract void doClose();
 
     @Override
-    final public void fireFileStoreEvent(final FileStoreChangeEvent event) {
+    public void fireFileStoreEvent(final FileStoreChangeEvent event) {
         final IRepository repository = RepositoryManager.getInstance().getCurrentRepository();
         if (repository != null) {
             repository.notifyFileStoreEvent(event);

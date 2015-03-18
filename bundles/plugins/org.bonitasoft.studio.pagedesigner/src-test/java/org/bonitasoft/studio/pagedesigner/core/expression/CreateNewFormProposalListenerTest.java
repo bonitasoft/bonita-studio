@@ -18,24 +18,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.pagedesigner.core.operation.CreateFormOperation;
+import org.bonitasoft.studio.pagedesigner.core.repository.WebPageFileStore;
+import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.ui.progress.IProgressService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -50,19 +50,32 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
     @Mock
     private IProgressService progressService;
 
-    @Spy
-    @InjectMocks
-    private CreateNewFormProposalListener createNewFormProposal;
+    @Mock
+    private RepositoryAccessor repositoryAccessor;
 
     @Mock
     private CreateFormOperation createFormOperation;
+
+    @Mock
+    private WebPageRepositoryStore formRepository;
+
+    @Mock
+    private WebPageFileStore formFileStore;
+
+    @Mock
+    private PageDesignerURLFactory pageDesignerURLFactory;
+
+    private CreateNewFormProposalListener createNewFormProposal;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        doNothing().when(createNewFormProposal).openPageDesigner(any(PageDesignerURLFactory.class), eq("page-id"));
+        doReturn(formRepository).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
+        doReturn(formFileStore).when(formRepository).getChild("page-id.json");
+
+        createNewFormProposal = spy(new CreateNewFormProposalListener(pageDesignerURLFactory, progressService, repositoryAccessor));
         doReturn(createFormOperation).when(createNewFormProposal).doCreateFormOperation(any(PageDesignerURLFactory.class));
         when(createFormOperation.getNewPageId()).thenReturn("page-id");
         when(preferenceStore.get(CONSOLE_HOST, DEFAULT_HOST)).thenReturn(DEFAULT_HOST);
@@ -75,7 +88,7 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
 
         assertThat(pageId).isEqualTo("page-id");
         verify(progressService).busyCursorWhile(any(CreateFormOperation.class));
-        verify(createNewFormProposal).openPageDesigner(any(PageDesignerURLFactory.class), eq("page-id"));
+        verify(formFileStore).open();
     }
 
     @Test

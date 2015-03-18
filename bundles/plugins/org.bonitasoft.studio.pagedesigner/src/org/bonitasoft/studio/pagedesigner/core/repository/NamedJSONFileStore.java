@@ -14,36 +14,38 @@
  */
 package org.bonitasoft.studio.pagedesigner.core.repository;
 
-import java.net.MalformedURLException;
-
-import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
-import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.ui.IWorkbenchPart;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.json.JSONException;
 
 /**
  * @author Romain Bioteau
  */
-public class WebPageFileStore extends NamedJSONFileStore {
+public class NamedJSONFileStore extends JSONFileStore {
 
-    private final PageDesignerURLFactory pageDesignerURLFactory = new PageDesignerURLFactory(
-            InstanceScope.INSTANCE.getNode("org.bonitasoft.studio.preferences"));
+    private static final String NAME_KEY = "name";
+    private static final String ID_KEY = "id";
 
-    public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
+    public NamedJSONFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
     }
 
-    @Override
-    protected IWorkbenchPart doOpen() {
+    public String getId() {
         try {
-            new OpenBrowserOperation(pageDesignerURLFactory.openPage(getId())).execute();
-        } catch (final MalformedURLException e) {
-            BonitaStudioLog.error(String.format("Failed to open page %s", getId()), e);
+            return getStringAttribute(ID_KEY);
+        } catch (final JSONException | ReadFileStoreException e) {
+            throw new IllegalAccessError(String.format("Failed to retrieve id in JSON file %s, with key %s.", getName(), ID_KEY));
         }
-        return null;
+    }
+
+    @Override
+    public String getDisplayName() {
+        try {
+            return getStringAttribute(NAME_KEY);
+        } catch (final JSONException | ReadFileStoreException e) {
+            throw new IllegalAccessError(String.format("Failed to retrieve name in JSON file %s, with key %s.", getName(), NAME_KEY));
+        }
     }
 
 }

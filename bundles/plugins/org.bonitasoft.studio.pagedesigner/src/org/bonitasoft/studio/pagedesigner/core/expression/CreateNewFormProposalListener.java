@@ -15,16 +15,16 @@
 package org.bonitasoft.studio.pagedesigner.core.expression;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.expression.editor.provider.IProposalAdapter;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.pagedesigner.core.operation.CreateFormOperation;
+import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;
@@ -42,13 +42,18 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
     @Inject
     private PageDesignerURLFactory pageDesignerURLFactory;
 
+    @Inject
+    private RepositoryAccessor repositoryAccessor;
+
     CreateNewFormProposalListener() {
 
     }
 
-    public CreateNewFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory, final IProgressService progressService) {
+    public CreateNewFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory, final IProgressService progressService,
+            final RepositoryAccessor repositoryAccessor) {
         this.progressService = progressService;
         this.pageDesignerURLFactory = pageDesignerURLFactory;
+        this.repositoryAccessor = repositoryAccessor;
     }
 
     /*
@@ -69,7 +74,7 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
         }
 
         final String newPageId = operation.getNewPageId();
-        openPageDesigner(pageDesignerURLFactory, newPageId);
+        repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newPageId + ".json").open();
         return newPageId;
     }
 
@@ -79,14 +84,6 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
             pageflow = pageflow.eContainer();
         }
         return (PageFlow) pageflow;
-    }
-
-    protected void openPageDesigner(final PageDesignerURLFactory pageDesignerURLFactory, final String newPageId) {
-        try {
-            new OpenBrowserOperation(pageDesignerURLFactory.openPage(newPageId)).execute();
-        } catch (final MalformedURLException e) {
-            BonitaStudioLog.error(e);
-        }
     }
 
     protected CreateFormOperation doCreateFormOperation(final PageDesignerURLFactory pageDesignerURLBuilder) {

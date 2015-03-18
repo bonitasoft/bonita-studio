@@ -26,73 +26,71 @@ import java.nio.file.Paths;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.IResource;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
  */
-@RunWith(MockitoJUnitRunner.class)
-public class JSONFileStoreTest {
+public class NamedJSONFileStoreTest {
 
     @Mock
     private IRepositoryStore<? extends IRepositoryFileStore> parentStore;
-    private JSONFileStore jsonFileStore;
+    private NamedJSONFileStore jsonFileStore;
     private IResource iResource;
     private File jsonFile;
-    private File invalidJsonFile;
+    private File jsonFileWithoutName;
+    private File jsonFileWithoutId;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        jsonFileStore = spy(new JSONFileStore("myJson.json", parentStore));
+        jsonFileStore = spy(new NamedJSONFileStore("myJson.json", parentStore));
         jsonFile = Paths.get(JSONFileStoreTest.class.getResource("/myJson.json").toURI()).toFile();
-        invalidJsonFile = Paths.get(JSONFileStoreTest.class.getResource("/invalidJson.json").toURI()).toFile();
+        jsonFileWithoutName = Paths.get(JSONFileStoreTest.class.getResource("/noNameJson.json").toURI()).toFile();
+        jsonFileWithoutId = Paths.get(JSONFileStoreTest.class.getResource("/noIdJson.json").toURI()).toFile();
         iResource = mock(IResource.class, RETURNS_DEEP_STUBS);
         doReturn(iResource).when(jsonFileStore).getResource();
     }
 
-    @Test
-    public void should_get_content_as_a_JSONObject() throws Exception {
+    @Test(expected = IllegalAccessError.class)
+    public void should_throw_IllegalAccessError_if_name_attribute_not_found() throws Exception {
         when(iResource.exists()).thenReturn(true);
-        when(iResource.getLocation().toFile()).thenReturn(jsonFile);
+        when(iResource.getLocation().toFile()).thenReturn(jsonFileWithoutName);
 
-        final JSONObject content = jsonFileStore.getContent();
-
-        assertThat(content).isNotNull();
+        jsonFileStore.getDisplayName();
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void should_throw_IllegalStateException_if_resource_does_not_exists() throws Exception {
-        when(iResource.exists()).thenReturn(false);
-
-        jsonFileStore.getContent();
-    }
-
-    @Test(expected = ReadFileStoreException.class)
-    public void should_throw_ReadFileStoreException_if_content_cannot_be_parsed() throws Exception {
+    @Test(expected = IllegalAccessError.class)
+    public void should_throw_IllegalAccessError_if_id_attribute_not_found() throws Exception {
         when(iResource.exists()).thenReturn(true);
-        when(iResource.getLocation().toFile()).thenReturn(invalidJsonFile);
+        when(iResource.getLocation().toFile()).thenReturn(jsonFileWithoutId);
 
-        jsonFileStore.getContent();
+        jsonFileStore.getId();
     }
 
     @Test
-    public void should_get_string_attribute_from_JSONObject() throws Exception {
+    public void should_get_name_attribute() throws Exception {
         when(iResource.exists()).thenReturn(true);
         when(iResource.getLocation().toFile()).thenReturn(jsonFile);
 
-        final String name = jsonFileStore.getStringAttribute("name");
+        final String name = jsonFileStore.getDisplayName();
 
         assertThat(name).isEqualTo("Step1");
+    }
+
+    @Test
+    public void should_get_id_attribute() throws Exception {
+        when(iResource.exists()).thenReturn(true);
+        when(iResource.getLocation().toFile()).thenReturn(jsonFile);
+
+        final String id = jsonFileStore.getId();
+
+        assertThat(id).isEqualTo("c09d5655-9b54-4315-b37a-693a18c52a1d");
     }
 
 }
