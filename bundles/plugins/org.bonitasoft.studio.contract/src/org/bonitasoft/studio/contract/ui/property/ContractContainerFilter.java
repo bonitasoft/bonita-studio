@@ -16,7 +16,8 @@
  */
 package org.bonitasoft.studio.contract.ui.property;
 
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.model.process.ContractContainer;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.IFilter;
 
@@ -25,7 +26,7 @@ import org.eclipse.jface.viewers.IFilter;
  * @author Romain Bioteau
  *
  */
-public class TaskFilter implements IFilter {
+public class ContractContainerFilter implements IFilter {
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IFilter#select(java.lang.Object)
@@ -33,7 +34,8 @@ public class TaskFilter implements IFilter {
     @Override
     public boolean select(final Object editPart) {
         if (editPart instanceof IGraphicalEditPart) {
-            return ((IGraphicalEditPart) editPart).resolveSemanticElement() instanceof Task;
+            final EObject semanticElement = ((IGraphicalEditPart) editPart).resolveSemanticElement();
+            return semanticElement instanceof ContractContainer;
         }
         return false;
     }

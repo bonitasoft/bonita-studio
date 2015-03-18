@@ -19,17 +19,23 @@ package org.bonitasoft.studio.tests.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
+import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.IntegerType;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
@@ -42,10 +48,18 @@ import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.widget.BotTableWidget;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -54,7 +68,6 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -163,7 +176,7 @@ public class DataWizardIT extends SWTBotGefTestCase {
         bot.button(IDialogConstants.OK_LABEL).click();
 
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        final SWTBotMenu menuDiagram = bot.menu("Diagram");
+        bot.menu("Diagram");
         final BotApplicationWorkbenchWindow applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         applicationWorkbenchWindow.save();
 
@@ -301,6 +314,82 @@ public class DataWizardIT extends SWTBotGefTestCase {
 
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         applicationWorkbenchWindow.close();
+    }
+
+    @Test
+    public void testProcessDataCanBeInitializedWithProcessContractInput() throws ExecutionException {
+        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
+        final BotGefProcessDiagramEditor activeProcessDiagramEditor = diagramPerspective.activeProcessDiagramEditor();
+        final Pool pool = (Pool) activeProcessDiagramEditor.getSelectedSemanticElement();
+        Display.getDefault().syncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    new AbstractEMFOperation(TransactionUtil.getEditingDomain(pool), "Prepare Pool with Contract Input") {
+
+                        @Override
+                        protected IStatus doExecute(final IProgressMonitor monitor, final IAdaptable info) throws ExecutionException {
+                            final Contract contract = ProcessFactory.eINSTANCE.createContract();
+                            final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
+                            contractInput.setName("input1");
+                            contractInput.setType(ContractInputType.TEXT);
+                            contract.getInputs().add(contractInput);
+                            pool.setContract(contract);
+                            return Status.OK_STATUS;
+                        }
+                    }.execute(null, null);
+                } catch (final ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab();
+        final BotAddDataWizardPage addData = botDataPropertySection.addData();
+        addData.editDefaultValueExpression().selectContractInputType().selectContractInput("input1 -- TEXT").ok();
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
+    }
+
+    @Test
+    public void testTaskDataCantBeInitializedWithTaskContractInput() throws ExecutionException {
+        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
+        final BotGefProcessDiagramEditor activeProcessDiagramEditor = diagramPerspective.activeProcessDiagramEditor();
+        final Task task = (Task) activeProcessDiagramEditor.selectElement("Step1").getSelectedSemanticElement();
+        Display.getDefault().syncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    new AbstractEMFOperation(TransactionUtil.getEditingDomain(task), "Prepare Task with Contract Input") {
+
+                        @Override
+                        protected IStatus doExecute(final IProgressMonitor monitor, final IAdaptable info) throws ExecutionException {
+                            final Contract contract = ProcessFactory.eINSTANCE.createContract();
+                            final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
+                            contractInput.setName("input1");
+                            contractInput.setType(ContractInputType.TEXT);
+                            contract.getInputs().add(contractInput);
+                            task.setContract(contract);
+                            return Status.OK_STATUS;
+                        }
+                    }.execute(null, null);
+                } catch (final ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab();
+        final BotAddDataWizardPage addData = botDataPropertySection.addData();
+        final BotExpressionEditorDialog editDefaultValueExpression = addData.editDefaultValueExpression();
+        Assertions
+                .assertThat(editDefaultValueExpression.listAvailableTypes().containsItem(org.bonitasoft.studio.contract.i18n.Messages.contractInputTypeLabel))
+                .isFalse();
+        editDefaultValueExpression.cancel();
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
 
     @Test

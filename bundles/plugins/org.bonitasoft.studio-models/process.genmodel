@@ -593,6 +593,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/inputNames"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="process.ecore#//ContractContainer">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//ContractContainer/contract"/>
+    </genClasses>
     <genClasses ecoreClass="process.ecore#//Connection">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Connection/target"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Connection/source"/>
@@ -819,7 +822,6 @@
     <genClasses ecoreClass="process.ecore#//Task">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Task/overrideActorsOfTheLane"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Task/priority"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Task/contract"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//TargetElement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//TargetElement/incoming"/>

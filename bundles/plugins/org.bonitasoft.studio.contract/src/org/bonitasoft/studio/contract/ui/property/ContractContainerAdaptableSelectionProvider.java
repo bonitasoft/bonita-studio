@@ -15,8 +15,7 @@
 package org.bonitasoft.studio.contract.ui.property;
 
 import org.bonitasoft.studio.common.jface.selection.EObjectAdaptableSelectionProvider;
-import org.bonitasoft.studio.model.process.PageFlow;
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;
@@ -25,7 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  * @author Romain Bioteau
  */
 @Creatable
-public class TaskAdaptableSelectionProvider extends EObjectAdaptableSelectionProvider {
+public class ContractContainerAdaptableSelectionProvider extends EObjectAdaptableSelectionProvider {
 
     /*
      * (non-Javadoc)
@@ -35,14 +34,14 @@ public class TaskAdaptableSelectionProvider extends EObjectAdaptableSelectionPro
     @Override
     public Object getAdapter(final Class adapter) {
         if (EObject.class.equals(adapter)) {
-            return asTask((EObject) ((IAdaptable) unwrap(selection)).getAdapter(EObject.class));
+            return asContractContainer((EObject) ((IAdaptable) unwrap(selection)).getAdapter(EObject.class));
         }
         return null;
     }
 
-    private static PageFlow asTask(final EObject semanticElement) {
-        if (semanticElement instanceof Task) {
-            return (Task) semanticElement;
+    private static ContractContainer asContractContainer(final EObject semanticElement) {
+        if (semanticElement instanceof ContractContainer) {
+            return (ContractContainer) semanticElement;
         }
         return null;
     }

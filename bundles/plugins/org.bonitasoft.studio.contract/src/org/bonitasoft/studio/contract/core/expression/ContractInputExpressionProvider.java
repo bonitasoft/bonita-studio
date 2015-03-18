@@ -1,16 +1,14 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2014-2015 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,9 +27,9 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
@@ -58,10 +56,13 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
      */
     @Override
     public Set<Expression> getExpressions(final EObject context) {
-        final FlowElement flowElement = ModelHelper.getParentFlowElement(context);
-        Assert.isLegal(flowElement instanceof Task);
+        ContractContainer contractContainer = (ContractContainer) ModelHelper.getParentFlowElement(context);
+        if (contractContainer == null) {
+            contractContainer = ModelHelper.getParentPool(context);
+        }
+        Assert.isLegal(contractContainer instanceof ContractContainer);
 
-        final Contract contract = ((Task) flowElement).getContract();
+        final Contract contract = contractContainer.getContract();
         Assert.isLegal(contract != null);
 
         final Set<Expression> result = new HashSet<Expression>();
@@ -111,7 +112,12 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
      */
     @Override
     public boolean isRelevantFor(final EObject context) {
-        return ModelHelper.getParentFlowElement(context) instanceof Task && ModelHelper.getParentForm(context) == null;
+        final FlowElement parentFlowElement = ModelHelper.getParentFlowElement(context);
+        if (parentFlowElement != null) {//check if on an Activity
+            return parentFlowElement instanceof ContractContainer && ModelHelper.getParentForm(context) == null;
+        } else {// we are at Pool Level
+            return ModelHelper.getParentForm(context) == null;
+        }
     }
 
     /* (non-Javadoc)

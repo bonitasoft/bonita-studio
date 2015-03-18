@@ -32,7 +32,6 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 public class ContractConstraintUtil {
 
     private ContractConstraintUtil() {
-
     }
 
     public static List<ContractConstraint> getConstraintsForInput(final Contract contract, final ContractInput input) {

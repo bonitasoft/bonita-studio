@@ -319,14 +319,17 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 
             @Override
             public Object convert(final Object dataList) {
-                final Data d = ((List<Data>) dataList).get(0);
-                final Collection<Data> inputData = (Collection<Data>) viewer
-                        .getInput();
-                for (final Data data : inputData) {
-                    if (data.getName().equals(d.getName())
-                            && data.getDataType().getName()
-                                    .equals(d.getDataType().getName())) {
-                        return data;
+                final List<Data> list = (List<Data>) dataList;
+                if (!list.isEmpty()) {
+                    final Data d = list.get(0);
+                    final Collection<Data> inputData = (Collection<Data>) viewer
+                            .getInput();
+                    for (final Data data : inputData) {
+                        if (data.getName().equals(d.getName())
+                                && data.getDataType().getName()
+                                        .equals(d.getDataType().getName())) {
+                            return data;
+                        }
                     }
                 }
                 return null;

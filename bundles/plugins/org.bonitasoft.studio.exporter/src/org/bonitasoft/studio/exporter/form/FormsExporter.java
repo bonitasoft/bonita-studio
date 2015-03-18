@@ -835,7 +835,7 @@ public class FormsExporter {
      * @param builder
      * @throws InvalidFormDefinitionException
      */
-    protected void addPageValidators(final Form f, final IFormBuilder builder)
+    public void addPageValidators(final Form f, final IFormBuilder builder)
             throws InvalidFormDefinitionException {
         final ValidatorDescriptorRepositoryStore store = RepositoryManager
                 .getInstance().getRepositoryStore(
@@ -2200,12 +2200,13 @@ public class FormsExporter {
 
     /**
      * Add all form page relative to a studio process.
+     * Set public for test purpose
      *
      * @param entryPageFlow
      * @param builder
      * @throws InvalidFormDefinitionException
      */
-    protected void addEntryPageFlow(final PageFlow entryPageFlow,
+    public void addEntryPageFlow(final PageFlow entryPageFlow,
             final IFormBuilder builder) throws InvalidFormDefinitionException {
         final EList<Form> formPages = entryPageFlow.getForm();
         if (formPages.isEmpty()) {

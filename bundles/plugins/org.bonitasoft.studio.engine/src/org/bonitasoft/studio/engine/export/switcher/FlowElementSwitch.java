@@ -52,8 +52,6 @@ import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
-import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -70,7 +68,6 @@ import org.bonitasoft.studio.model.process.BoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.Correlation;
 import org.bonitasoft.studio.model.process.CorrelationTypeActive;
 import org.bonitasoft.studio.model.process.Data;
@@ -492,24 +489,11 @@ public class FlowElementSwitch extends AbstractSwitch {
         taskBuilder.addPriority(TaskPriority.values()[task.getPriority()].name());
         addExpectedDuration(taskBuilder, task);
         addUserFilterToTask(taskBuilder, actor, filter);
-        try {
-            addContract(taskBuilder, task.getContract());
-        } catch (final BuildProcessDefinitionException e) {
-            throw new RuntimeException("Failed to export contract definition for " + task.getName(), e);
-        }
+        addContract(taskBuilder, task);
 
         handleCommonActivity(task, taskBuilder);
         return task;
     }
-
-    protected void addContract(final UserTaskDefinitionBuilder taskBuilder, final Contract contract) throws BuildProcessDefinitionException {
-        if (contract != null) {
-            final IEngineDefinitionBuilder contractBuilder = getEngineDefinitionBuilder(contract);
-            contractBuilder.setEngineBuilder(taskBuilder);
-            contractBuilder.build(contract);
-        }
-    }
-
 
     protected void addUserFilterToTask(final UserTaskDefinitionBuilder taskBuilder, final String actor, final ActorFilter filter) {
         if (filter != null) {

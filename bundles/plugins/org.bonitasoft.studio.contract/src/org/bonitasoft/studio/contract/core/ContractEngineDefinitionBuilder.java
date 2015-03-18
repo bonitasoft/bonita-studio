@@ -21,7 +21,6 @@ import org.bonitasoft.engine.bpm.contract.Type;
 import org.bonitasoft.engine.bpm.contract.impl.ComplexInputDefinitionImpl;
 import org.bonitasoft.engine.bpm.contract.impl.SimpleInputDefinitionImpl;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
-import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
 import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.model.process.Contract;
@@ -35,17 +34,17 @@ import org.eclipse.emf.ecore.EObject;
  * @author Romain Bioteau
  *
  */
-public class ContractEngineDefinitionBuilder implements IEngineDefinitionBuilder {
+public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefinitionBuilder<T> {
 
-    private UserTaskDefinitionBuilder taskBuilder;
+    protected T builder;
 
     @Override
     public void build(final EObject element) throws BuildProcessDefinitionException {
-        Assert.isNotNull(taskBuilder);
+        Assert.isNotNull(builder);
         Assert.isLegal(element instanceof Contract);
         final Contract contract = (Contract) element;
 
-        final ContractDefinitionBuilder contractBuilder = taskBuilder.addContract();
+        final ContractDefinitionBuilder contractBuilder = addContract();
         for (final ContractInput input : contract.getInputs()) {
             if (input.getType() == ContractInputType.COMPLEX) {
                 addComplexInput(contractBuilder, input);
@@ -60,7 +59,13 @@ public class ContractEngineDefinitionBuilder implements IEngineDefinitionBuilder
                     constraint.getErrorMessage(),
                     constraint.getInputNames().toArray(new String[constraint.getInputNames().size()]));
         }
+    }
 
+    protected abstract ContractDefinitionBuilder addContract();
+
+    @Override
+    public void setEngineBuilder(final T engineBuilder) {
+        builder = engineBuilder;
     }
 
     protected void addSimpleInput(final ContractDefinitionBuilder contractBuilder, final ContractInput input, final Type inputType) {
@@ -102,14 +107,8 @@ public class ContractEngineDefinitionBuilder implements IEngineDefinitionBuilder
 
 
     @Override
-    public boolean appliesTo(final EObject element) {
+    public boolean appliesTo(final EObject context, final EObject element) {
         return element instanceof Contract;
-    }
-
-    @Override
-    public void setEngineBuilder(final Object engineBuilder) {
-        Assert.isLegal(engineBuilder instanceof UserTaskDefinitionBuilder);
-        taskBuilder = (UserTaskDefinitionBuilder) engineBuilder;
     }
 
 }

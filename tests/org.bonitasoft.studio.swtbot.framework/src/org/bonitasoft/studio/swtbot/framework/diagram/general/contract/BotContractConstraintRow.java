@@ -24,6 +24,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 
@@ -91,6 +93,22 @@ public class BotContractConstraintRow extends BotBase {
         bot.textWithId(SWTBotConstants.SWTBOT_ID_CONSTRAINT_ERROR_MESSAGE_TEXTEDITOR);
         typeText(errorMessage);
         pressEnter();
+        bot.waitUntil(new ICondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return errorMessage.equals(constraintTable.getTableItem(row).getText(ERROR_MESSAGE_COLUMN));
+            }
+
+            @Override
+            public void init(final SWTBot bot) {
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "item not found: " + errorMessage + " in " + constraintTable.getTableItem(row).getText(ERROR_MESSAGE_COLUMN);
+            }
+        });
         return this;
     }
 
