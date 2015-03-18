@@ -14,37 +14,22 @@
  */
 package org.bonitasoft.studio.pagedesigner.core.repository;
 
-import java.io.IOException;
+import static com.google.common.base.Preconditions.checkState;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.IWorkbenchPart;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
  */
-public class WebWidgetFileStore extends JSONFileStore {
+public class WebWidgetFileStore extends NamedJSONFileStore {
 
     public WebWidgetFileStore(final String folderName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(folderName, parentStore);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
-     */
-    @Override
-    public Image getIcon() {
-        return null;
     }
 
     @Override
@@ -57,45 +42,11 @@ public class WebWidgetFileStore extends JSONFileStore {
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
      */
     @Override
-    public JSONObject getContent() {
-        if (getResource() != null && getResource().exists()) {
-            try {
-                final IFile jsonFile = getResource().getFile(getName() + ".json");
-                if (jsonFile.exists()) {
-                    return new org.json.JSONObject(Files.toString(jsonFile.getLocation().toFile(), Charsets.UTF_8));
-                }
-            } catch (final JSONException | IOException e) {
-                BonitaStudioLog.error("Failed to parse JSON content", e);
-            }
-        }
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
-     */
-    @Override
-    protected void doSave(final Object content) {
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doOpen()
-     */
-    @Override
-    protected IWorkbenchPart doOpen() {
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doClose()
-     */
-    @Override
-    protected void doClose() {
-
+    public JSONObject getContent() throws ReadFileStoreException {
+        checkState(getResource().exists());
+        final IFile jsonFile = getResource().getFile(getName() + ".json");
+        checkState(jsonFile.exists());
+        return toJSONObject(jsonFile);
     }
 
 }

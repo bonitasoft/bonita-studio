@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,60 +40,52 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class JSONFileStoreTest {
+public class WebWidgetFileStoreTest {
 
     @Mock
     private IRepositoryStore<? extends IRepositoryFileStore> parentStore;
-    private JSONFileStore jsonFileStore;
-    private IFile iResource;
-    private File jsonFile;
-    private File invalidJsonFile;
+
+    private WebWidgetFileStore webWidgetFileStore;
+    @Mock
+    private IFolder folderResource;
+    @Mock
+    private IFile jsonResource;
+
+    private File jsonWidgetFile;
+
+    private File invalidJsonWidgetFile;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        jsonFileStore = spy(new JSONFileStore("myJson.json", parentStore));
-        jsonFile = Paths.get(JSONFileStoreTest.class.getResource("/myJson.json").toURI()).toFile();
-        invalidJsonFile = Paths.get(JSONFileStoreTest.class.getResource("/invalidJson.json").toURI()).toFile();
-        iResource = mock(IFile.class, RETURNS_DEEP_STUBS);
-        doReturn(iResource).when(jsonFileStore).getResource();
+        webWidgetFileStore = spy(new WebWidgetFileStore("pbButton", parentStore));
+        jsonWidgetFile = Paths.get(WebWidgetFileStoreTest.class.getResource("/pbButton.json").toURI()).toFile();
+        invalidJsonWidgetFile = Paths.get(WebWidgetFileStoreTest.class.getResource("/invalidJson.json").toURI()).toFile();
+        folderResource = mock(IFolder.class);
+        jsonResource = mock(IFile.class, RETURNS_DEEP_STUBS);
+        doReturn(folderResource).when(webWidgetFileStore).getResource();
+        doReturn(jsonResource).when(folderResource).getFile("pbButton.json");
     }
 
     @Test
-    public void should_get_content_as_a_JSONObject() throws Exception {
-        when(iResource.exists()).thenReturn(true);
-        when(iResource.getLocation().toFile()).thenReturn(jsonFile);
+    public void should_get_content_of_child_json_file() throws Exception {
+        doReturn(true).when(folderResource).exists();
+        doReturn(true).when(jsonResource).exists();
+        when(jsonResource.getLocation().toFile()).thenReturn(jsonWidgetFile);
 
-        final JSONObject content = jsonFileStore.getContent();
+        final JSONObject content = webWidgetFileStore.getContent();
 
         assertThat(content).isNotNull();
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void should_throw_IllegalStateException_if_resource_does_not_exists() throws Exception {
-        when(iResource.exists()).thenReturn(false);
-
-        jsonFileStore.getContent();
-    }
-
     @Test(expected = ReadFileStoreException.class)
-    public void should_throw_ReadFileStoreException_if_content_cannot_be_parsed() throws Exception {
-        when(iResource.exists()).thenReturn(true);
-        when(iResource.getLocation().toFile()).thenReturn(invalidJsonFile);
+    public void should_throw_a_ReadFileStoreException_if_json_file_is_invalid() throws Exception {
+        doReturn(true).when(folderResource).exists();
+        doReturn(true).when(jsonResource).exists();
+        when(jsonResource.getLocation().toFile()).thenReturn(invalidJsonWidgetFile);
 
-        jsonFileStore.getContent();
+        webWidgetFileStore.getContent();
     }
-
-    @Test
-    public void should_get_string_attribute_from_JSONObject() throws Exception {
-        when(iResource.exists()).thenReturn(true);
-        when(iResource.getLocation().toFile()).thenReturn(jsonFile);
-
-        final String name = jsonFileStore.getStringAttribute("name");
-
-        assertThat(name).isEqualTo("Step1");
-    }
-
 }

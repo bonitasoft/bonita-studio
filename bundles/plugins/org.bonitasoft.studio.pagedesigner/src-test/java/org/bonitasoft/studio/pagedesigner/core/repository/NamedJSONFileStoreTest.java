@@ -26,7 +26,7 @@ import java.nio.file.Paths;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IFile;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -39,7 +39,7 @@ public class NamedJSONFileStoreTest {
     @Mock
     private IRepositoryStore<? extends IRepositoryFileStore> parentStore;
     private NamedJSONFileStore jsonFileStore;
-    private IResource iResource;
+    private IFile iResource;
     private File jsonFile;
     private File jsonFileWithoutName;
     private File jsonFileWithoutId;
@@ -53,7 +53,7 @@ public class NamedJSONFileStoreTest {
         jsonFile = Paths.get(JSONFileStoreTest.class.getResource("/myJson.json").toURI()).toFile();
         jsonFileWithoutName = Paths.get(JSONFileStoreTest.class.getResource("/noNameJson.json").toURI()).toFile();
         jsonFileWithoutId = Paths.get(JSONFileStoreTest.class.getResource("/noIdJson.json").toURI()).toFile();
-        iResource = mock(IResource.class, RETURNS_DEEP_STUBS);
+        iResource = mock(IFile.class, RETURNS_DEEP_STUBS);
         doReturn(iResource).when(jsonFileStore).getResource();
     }
 

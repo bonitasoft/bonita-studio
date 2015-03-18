@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 import org.json.JSONException;
@@ -58,11 +59,15 @@ public class JSONFileStore extends AbstractFileStore {
      */
     @Override
     public JSONObject getContent() throws ReadFileStoreException {
-        checkState(getResource().exists());
+        checkState(getResource() instanceof IFile && getResource().exists());
+        return toJSONObject((IFile) getResource());
+    }
+
+    protected JSONObject toJSONObject(final IFile jsonFile) throws ReadFileStoreException {
         try {
-            return new org.json.JSONObject(Files.toString(getResource().getLocation().toFile(), Charsets.UTF_8));
-        } catch (final JSONException | IOException e) {
-            throw new ReadFileStoreException(String.format("Failed to retrieve JSON content from %s", getResource().getName()), e);
+            return new org.json.JSONObject(Files.toString(jsonFile.getLocation().toFile(), Charsets.UTF_8));
+        } catch (JSONException | IOException e) {
+            throw new ReadFileStoreException(String.format("Failed to retrieve JSON content from %s", jsonFile.getName()), e);
         }
     }
 
