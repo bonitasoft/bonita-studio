@@ -44,7 +44,8 @@ public class DataDefaultValueExpressionFilter extends AvailableExpressionTypeFil
                 ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.SCRIPT_TYPE,
                 ExpressionConstants.PARAMETER_TYPE,
-                ExpressionConstants.QUERY_TYPE });
+                ExpressionConstants.QUERY_TYPE,
+                ExpressionConstants.CONTRACT_INPUT_TYPE });
         this.wizardPage = wizardPage;
         this.container = container;
         this.isOverviewContext = isOverviewContext;
@@ -55,6 +56,9 @@ public class DataDefaultValueExpressionFilter extends AvailableExpressionTypeFil
         final boolean selected = super.select(viewer, context, element);
         final Set<String> availableDataNames = wizardPage.refreshDataNames();
         final String expressionType = getExpressionType(element);
+        if (ExpressionConstants.CONTRACT_INPUT_TYPE.equals(expressionType)) {
+            return container instanceof Pool;
+        }
         if (element instanceof Expression && ExpressionConstants.VARIABLE_TYPE.equals(((Expression) element).getType())) {
             return availableDataNames.contains(((Expression) element).getName());
         } else {
