@@ -40,6 +40,7 @@ import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.PasswordType;
+import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
 import org.bonitasoft.studio.common.BonitaConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -113,7 +114,7 @@ public class PublishOrganizationOperation implements IRunnableWithProgress{
 
     String toString(final Organization organization) throws IOException {
         final XMLResource resource = createResourceFromOrganization(organization);
-        final XMLProcessor processor = new OrganizationXMLProcessorRespectingEncoding();
+        final XMLProcessor processor = new OrganizationXMLProcessor();
         final Map<String, Object> options = new HashMap<String, Object>();
         options.put(XMLResource.OPTION_ENCODING, "UTF-8");
         options.put(XMLResource.OPTION_XML_VERSION, "1.0");
