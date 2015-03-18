@@ -63,7 +63,7 @@ import com.google.common.io.ByteStreams;
  */
 public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreProvider {
 
-    private static final String WIDGET_ENTRY_REGEXP = "^resources\\\\widgets\\\\(.*)\\\\.*\\.json";
+    private static final String WIDGET_ENTRY_REGEXP = "^resources/widgets/(.*)/.*\\.json";
     private static final String FRAGMENT_ENTRY_REGEXP = "^resources/fragments/(.*\\.json)";
 
     @Inject

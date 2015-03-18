@@ -86,7 +86,7 @@ public class WebFormBOSArchiveFileStoreProviderTest {
         when(widgetRepositoryStore.getChild("customTestWidget")).thenReturn(customWidgetFileStore);
 
         webFormArtifactsFileStoreProvider = spy(new WebFormBOSArchiveFileStoreProvider(repositoryAccessor, null));
-        doReturn(newHashSet("resources\\widgets\\customTestWidget\\customTestWidget.json")).when(webFormArtifactsFileStoreProvider)
+        doReturn(newHashSet("resources/widgets/customTestWidget/customTestWidget.json")).when(webFormArtifactsFileStoreProvider)
                 .findFormRelatedEntries(processFormFileStore);
         doReturn(newHashSet("resources/fragments/fragmentDep.json")).when(webFormArtifactsFileStoreProvider)
                 .findFormRelatedEntries(taskFormFileStore);
