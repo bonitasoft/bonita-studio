@@ -117,6 +117,7 @@
 					<plugin>
 						<groupId>org.jboss.tools.tycho-plugins</groupId>
 						<artifactId>target-platform-utils</artifactId>
+                        <version>${tychoVersion}</version>
 						<executions>
 							<execution>
 								<phase>package</phase>
