@@ -41,6 +41,7 @@ import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectClasspath;
 import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaBPMProjectOperation;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
+import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -101,6 +102,8 @@ public class Repository implements IRepository, IJavaContainer {
 
     private SortedMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>> stores;
 
+    private JDTTypeHierarchyManager jdtTypeHierarchyManager;
+
     public Repository() {
 
     }
@@ -109,6 +112,7 @@ public class Repository implements IRepository, IJavaContainer {
     public void createRepository(final String repositoryName) {
         name = repositoryName;
         project = ResourcesPlugin.getWorkspace().getRoot().getProject(repositoryName);
+        jdtTypeHierarchyManager = new JDTTypeHierarchyManager();
     }
 
     @Override
@@ -526,8 +530,8 @@ public class Repository implements IRepository, IJavaContainer {
     }
 
     @Override
-    public void notifyFileStoreEvent(final FileStoreChangeEvent event) {
-        // NO BEHAVIOR
+    public void handleFileStoreEvent(final FileStoreChangeEvent event) {
+        jdtTypeHierarchyManager.handleFileStoreEvent(event);
     }
 
     @Override
@@ -670,6 +674,10 @@ public class Repository implements IRepository, IJavaContainer {
     @Override
     public boolean isOnline() {
         return true;
+    }
+
+    public JDTTypeHierarchyManager getJdtTypeHierarchyManager() {
+        return jdtTypeHierarchyManager;
     }
 
 }

@@ -36,4 +36,8 @@ public class RepositoryAccessor {
     public <T> T getRepositoryStore(final Class<T> storeClass) {
         return repositoryManagerInstance.getRepositoryStore(storeClass);
     }
+
+    public Repository getCurrentRepository() {
+        return repositoryManagerInstance.getCurrentRepository();
+    }
 }

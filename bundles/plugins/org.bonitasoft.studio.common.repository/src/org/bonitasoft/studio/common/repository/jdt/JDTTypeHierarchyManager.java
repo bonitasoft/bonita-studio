@@ -16,39 +16,20 @@ package org.bonitasoft.studio.common.repository.jdt;
 
 import java.util.WeakHashMap;
 
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
+import org.bonitasoft.studio.common.repository.model.IFileStoreChangeListener;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
 
+public class JDTTypeHierarchyManager implements IFileStoreChangeListener {
 
-public class JDTTypeHierarchyManager {
+    private final WeakHashMap<IType, ITypeHierarchy> typeHierarchies = new WeakHashMap<IType, ITypeHierarchy>();
 
-    private static final WeakHashMap<IType, ITypeHierarchy> typeHierarchies = new WeakHashMap<IType, ITypeHierarchy>();
-    private static IResourceChangeListener listener = null;
-
-    public JDTTypeHierarchyManager() {
-        if (listener == null) {
-            registerModificationListener();
-        }
-    }
-
-    /**
-     * It will clear the cache each time a resource change in the workspace with a POST_BUILD event.
-     * A more intelligent way to do it will be do listen exactly the changes which implies a modification of the AST
-     * but it is a safer implementation which will already provide a great performance improvement.
-     */
-    protected void registerModificationListener() {
-        listener = new IResourceChangeListener() {
-
-            @Override
-            public void resourceChanged(final IResourceChangeEvent event) {
-                clearCache();
-            }
-        };
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(listener, IResourceChangeEvent.POST_BUILD);
+    protected boolean isAJarResource(final IResource resource) {
+        return "jar".equals(resource.getFileExtension());
     }
 
     public ITypeHierarchy getTypeHierarchy(final IType type) throws JavaModelException {
@@ -65,8 +46,19 @@ public class JDTTypeHierarchyManager {
         return res;
     }
 
-    public void clearCache() {
+    protected void clearCache() {
         typeHierarchies.clear();
+    }
+
+    @Override
+    public void handleFileStoreEvent(final FileStoreChangeEvent event) {
+        final IRepositoryFileStore fileStore = event.getFileStore();
+        if (fileStore != null) {
+            final IResource resource = fileStore.getResource();
+            if (resource != null && isAJarResource(resource)) {
+                clearCache();
+            }
+        }
     }
 
 }
