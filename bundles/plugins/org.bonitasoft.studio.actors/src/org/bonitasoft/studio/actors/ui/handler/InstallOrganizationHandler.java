@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.actors.ui.handler;
 
@@ -28,6 +26,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -36,47 +35,52 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class InstallOrganizationHandler extends AbstractHandler {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        if(event != null){
-            String id = event.getParameter("artifact") ;
-            IRepositoryStore<?> organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
-            IRepositoryFileStore file = organizationStore.getChild(id) ;
-            if(file == null){
-                BonitaStudioLog.warning("Organization : "+ id +" not found !",ActorsPlugin.PLUGIN_ID) ;
-                List<? extends IRepositoryFileStore> organizationFiles = organizationStore.getChildren();
-                if(organizationFiles.isEmpty()){
-                    BonitaStudioLog.warning("No organization found in repository",ActorsPlugin.PLUGIN_ID) ;
+    public Object execute(final ExecutionEvent event) throws ExecutionException {
+        if (event != null) {
+            final String id = event.getParameter("artifact");
+            final IRepositoryStore<?> organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
+            IRepositoryFileStore file = organizationStore.getChild(id);
+            if (file == null) {
+                BonitaStudioLog.warning("Organization : " + id + " not found !", ActorsPlugin.PLUGIN_ID);
+                final List<? extends IRepositoryFileStore> organizationFiles = organizationStore.getChildren();
+                if (organizationFiles.isEmpty()) {
+                    BonitaStudioLog.warning("No organization found in repository", ActorsPlugin.PLUGIN_ID);
                     return null;
-                }else{
-                    file = organizationFiles.get(0) ;
+                } else {
+                    file = organizationFiles.get(0);
                 }
             }
 
-            PublishOrganizationOperation op = new PublishOrganizationOperation((Organization) file.getContent());
-            try{
+            Organization organization;
+            try {
+                organization = (Organization) file.getContent();
+            } catch (final ReadFileStoreException e1) {
+                throw new ExecutionException("Failed to read organization content", e1);
+            }
+            final PublishOrganizationOperation op = new PublishOrganizationOperation(organization);
+            try {
                 op.run(Repository.NULL_PROGRESS_MONITOR);
-            }catch (final Exception e) {
-                if(PlatformUI.isWorkbenchRunning()){
+            } catch (final Exception e) {
+                if (PlatformUI.isWorkbenchRunning()) {
                     Display.getDefault().syncExec(new Runnable() {
 
                         @Override
                         public void run() {
-                            new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Error", "An error occured during synchronization", e).open() ;
+                            new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Error", "An error occured during synchronization", e).open();
                         }
 
-                    }) ;
+                    });
                 }
-                throw new ExecutionException("", e) ;
+                throw new ExecutionException("", e);
             }
-
 
         }
         return null;

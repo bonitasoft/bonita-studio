@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.simulation.engine;
@@ -52,6 +49,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.ANDGateway;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -82,7 +80,6 @@ import org.eclipse.emf.ecore.EClass;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class SimulationExporter {
 
@@ -101,7 +98,7 @@ public class SimulationExporter {
 
     public SimProcess createSimulationProcess(final AbstractProcess process) throws Exception {
         // CREATE SIMULATION PROCESS
-        final SimProcess simProcess = new SimProcess(process.getName(),process.getMaximumTime());
+        final SimProcess simProcess = new SimProcess(process.getName(), process.getMaximumTime());
         final List<Resource> usedResource = new ArrayList<Resource>();
         usedResourceMap.put(simProcess.getName(), usedResource);
 
@@ -119,16 +116,16 @@ public class SimulationExporter {
             throw new SimulationException(Messages.simulation_Error_startEvent);
         }
         final List<FlowElement> flowElements = new ArrayList<FlowElement>();
-        for(final Element elem : elements){
+        for (final Element elem : elements) {
             flowElements.add((FlowElement) elem);
         }
 
         final Map<SimulationActivity, SimActivity> processElems = new HashMap<SimulationActivity, SimActivity>();
         final List<SimTransition> processTransitions = new ArrayList<SimTransition>();
-        final HashSet<SimActivity> startElems = new HashSet<SimActivity>() ;
+        final HashSet<SimActivity> startElems = new HashSet<SimActivity>();
         simulationActivities = new HashMap<String, SimActivity>();
-        buildProcess(flowElements, null ,processElems, processTransitions, true, simProcess.getName(),startElems);
-        for(final SimActivity start : startElems){
+        buildProcess(flowElements, null, processElems, processTransitions, true, simProcess.getName(), startElems);
+        for (final SimActivity start : startElems) {
             simProcess.addStartElement(start);
         }
         createData(simProcess, process);
@@ -172,7 +169,7 @@ public class SimulationExporter {
         } else if (data instanceof SimulationNumberData) {
 
             if (data.isExpressionBased()) {
-                return new SimNumberData(data.getName(),  data.getExpression() == null ? "" : data.getExpression().getContent());
+                return new SimNumberData(data.getName(), data.getExpression() == null ? "" : data.getExpression().getContent());
             } else {
                 final SimulationNumberData numberData = (SimulationNumberData) data;
                 final List<NumericRange> ranges = new ArrayList<NumericRange>();
@@ -186,17 +183,17 @@ public class SimulationExporter {
         }
     }
 
-    public void buildProcess(final List<FlowElement> elems,final SimActivity simActivity, final Map<SimulationActivity, SimActivity> processElems, final List<SimTransition> processTransitions,
-            final boolean isStartElement, final String parentProcessName,final Set<SimActivity> startElems) throws Exception {
+    public void buildProcess(final List<FlowElement> elems, final SimActivity simActivity, final Map<SimulationActivity, SimActivity> processElems,
+            final List<SimTransition> processTransitions,
+            final boolean isStartElement, final String parentProcessName, final Set<SimActivity> startElems) throws Exception {
 
-        for(final FlowElement startElem : elems){
-            SimActivity simElem = null ;
-            if(simActivity == null){
+        for (final FlowElement startElem : elems) {
+            SimActivity simElem = null;
+            if (simActivity == null) {
                 simElem = getSimActivity(startElem, processElems, isStartElement, parentProcessName);
-            }else{
-                simElem = simActivity ;
+            } else {
+                simElem = simActivity;
             }
-
 
             final EList<Connection> outgoingConnection = startElem.getOutgoing();
             for (final Connection c : outgoingConnection) {
@@ -209,10 +206,9 @@ public class SimulationExporter {
                     }
                     SimTransition t;
                     if (c.getTarget() instanceof FlowElement && !(c.getTarget() instanceof ThrowLinkEvent)) {
-                        if(c.getTarget().getName().equals(simElem.getName())){
-                            throw new Exception(Messages.loopError) ;
+                        if (c.getTarget().getName().equals(simElem.getName())) {
+                            throw new Exception(Messages.loopError);
                         }
-
 
                         if (c.isUseExpression() && c.getExpression() != null) {
                             t = new SimTransition(transitionName, getSimActivity((FlowElement) c.getTarget(), processElems, false, parentProcessName), true,
@@ -227,28 +223,31 @@ public class SimulationExporter {
                         }
 
                         simElem.addOutgoingTransition(t);
-                        simulationActivities.put(simElem.getName(),simElem);
-                        if(!simulationActivities.containsKey(t.getTarget().getName())){
-                            buildProcess(Collections.singletonList((FlowElement) c.getTarget()),t.getTarget(), processElems, processTransitions, false, parentProcessName,startElems);
+                        simulationActivities.put(simElem.getName(), simElem);
+                        if (!simulationActivities.containsKey(t.getTarget().getName())) {
+                            buildProcess(Collections.singletonList((FlowElement) c.getTarget()), t.getTarget(), processElems, processTransitions, false,
+                                    parentProcessName, startElems);
                         }
-                    }else if(c.getTarget() instanceof ThrowLinkEvent){
-                        if(c.getTarget().getName().equals(simElem.getName())){
-                            throw new Exception(Messages.loopError) ;
+                    } else if (c.getTarget() instanceof ThrowLinkEvent) {
+                        if (c.getTarget().getName().equals(simElem.getName())) {
+                            throw new Exception(Messages.loopError);
                         }
-                        final ThrowLinkEvent throwLink = (ThrowLinkEvent) c.getTarget() ;
-                        if(throwLink.getTo() != null){
-                            final CatchLinkEvent target = throwLink.getTo() ;
-                            for(final Connection conn : target.getOutgoing()){
+                        final ThrowLinkEvent throwLink = (ThrowLinkEvent) c.getTarget();
+                        if (throwLink.getTo() != null) {
+                            final CatchLinkEvent target = throwLink.getTo();
+                            for (final Connection conn : target.getOutgoing()) {
                                 if (conn.getName() == null || conn.getName().trim().length() == 0) {
                                     transitionName = c.getSource().getName() + "_" + conn.getTarget().getName(); //$NON-NLS-1$
                                 } else {
                                     transitionName = conn.getName();
                                 }
-                                if (conn.isUseExpression() && c.getExpression() != null  ) {
-                                    t = new SimTransition(transitionName, getSimActivity((FlowElement) conn.getTarget(), processElems, false, parentProcessName), true,
+                                if (conn.isUseExpression() && c.getExpression() != null) {
+                                    t = new SimTransition(transitionName,
+                                            getSimActivity((FlowElement) conn.getTarget(), processElems, false, parentProcessName), true,
                                             toSimpleString(c.getExpression()));
                                 } else {
-                                    t = new SimTransition(transitionName, getSimActivity((FlowElement) conn.getTarget(), processElems, false, parentProcessName), false, c.getProbability());
+                                    t = new SimTransition(transitionName,
+                                            getSimActivity((FlowElement) conn.getTarget(), processElems, false, parentProcessName), false, c.getProbability());
                                 }
 
                                 if (!processTransitions.contains(t)) {
@@ -256,30 +255,29 @@ public class SimulationExporter {
                                 }
 
                                 simElem.addOutgoingTransition(t);
-                                simulationActivities.put(simElem.getName(),simElem);
-                                if(!simulationActivities.containsKey(conn.getTarget().getName())){
-                                    buildProcess(Collections.singletonList((FlowElement) conn.getTarget()),t.getTarget(), processElems, processTransitions, false, parentProcessName,startElems);
+                                simulationActivities.put(simElem.getName(), simElem);
+                                if (!simulationActivities.containsKey(conn.getTarget().getName())) {
+                                    buildProcess(Collections.singletonList((FlowElement) conn.getTarget()), t.getTarget(), processElems, processTransitions,
+                                            false, parentProcessName, startElems);
                                 }
                             }
                         }
 
-
                     }
                 }
             }
-            if(simElem.isStartElement()){
-                startElems.add(simElem) ;
+            if (simElem.isStartElement()) {
+                startElems.add(simElem);
             }
         }
-
 
     }
 
     private String toSimpleString(final Expression expression) throws Exception {
-        if(expression == null){
-            return  "" ;
-        }else{
-            return expression.getContent() ;
+        if (expression == null) {
+            return "";
+        } else {
+            return expression.getContent();
         }
     }
 
@@ -291,7 +289,8 @@ public class SimulationExporter {
      * @return
      * @throws Exception
      */
-    private SimActivity getSimActivity(final FlowElement activity, final Map<SimulationActivity, SimActivity> processElems, final boolean isStartElement, final String parentProcessName) throws Exception {
+    private SimActivity getSimActivity(final FlowElement activity, final Map<SimulationActivity, SimActivity> processElems, final boolean isStartElement,
+            final String parentProcessName) throws Exception {
         SimActivity simElem;
         if (processElems.containsKey(activity)) {
             simElem = processElems.get(activity);
@@ -303,10 +302,10 @@ public class SimulationExporter {
             if (activity instanceof ANDGateway) {
                 simElem = new SimActivity(activity.getName(), JoinType.AND, parentProcessName, activity.getExecutionTime(), estimatedTime, maximumTime,
                         activity.isExclusiveOutgoingTransition(), activity.isContigous());
-            }else if(activity instanceof XORGateway) {
+            } else if (activity instanceof XORGateway) {
                 simElem = new SimActivity(activity.getName(), parentProcessName, isStartElement, activity.getExecutionTime(), estimatedTime, maximumTime,
                         true, activity.isContigous());
-            }else {
+            } else {
                 simElem = new SimActivity(activity.getName(), parentProcessName, isStartElement, activity.getExecutionTime(), estimatedTime, maximumTime,
                         activity.isExclusiveOutgoingTransition(), activity.isContigous());
             }
@@ -339,16 +338,16 @@ public class SimulationExporter {
     /**
      * @param simElem
      * @param activity
+     * @throws ReadFileStoreException
      */
-    private void addResourceAssignments(final SimActivity simElem, final FlowElement activity) {
+    private void addResourceAssignments(final SimActivity simElem, final FlowElement activity) throws ReadFileStoreException {
         for (final ResourceUsage resourceUsage : activity.getResourcesUsages()) {
 
-
             ResourceAssignement assignment;
-            if(resourceUsage.isUseActivityDuration()){
+            if (resourceUsage.isUseActivityDuration()) {
                 assignment = new ResourceAssignement(getResource(resourceUsage.getResourceID()), activity.getExecutionTime(), resourceUsage
                         .getQuantity());
-            }else{
+            } else {
                 assignment = new ResourceAssignement(getResource(resourceUsage.getResourceID()), resourceUsage.getDuration(), resourceUsage
                         .getQuantity());
             }
@@ -364,10 +363,11 @@ public class SimulationExporter {
     /**
      * @param modelResource
      * @return
+     * @throws ReadFileStoreException
      */
-    private Resource getResource(final String resourceID) {
-        final SimulationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(SimulationResourceRepositoryStore.class) ;
-        final IRepositoryFileStore file = store.getChild(resourceID+"."+SimulationResourceRepositoryStore.SIMULATION_RESOURCE_EXT);
+    private Resource getResource(final String resourceID) throws ReadFileStoreException {
+        final SimulationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(SimulationResourceRepositoryStore.class);
+        final IRepositoryFileStore file = store.getChild(resourceID + "." + SimulationResourceRepositoryStore.SIMULATION_RESOURCE_EXT);
         if (file != null) {
             final org.bonitasoft.studio.model.simulation.Resource modelResource = (org.bonitasoft.studio.model.simulation.Resource) file.getContent();
             Resource resource;
@@ -401,13 +401,13 @@ public class SimulationExporter {
                         timeUnit = TimeUnit.HOUR;
                         break;
                 }
-                int quantity = modelResource.getQuantity() ;
-                if(modelResource.isUnlimited()){
-                    quantity = -1 ;
+                int quantity = modelResource.getQuantity();
+                if (modelResource.isUnlimited()) {
+                    quantity = -1;
                 }
                 resource = new Resource(modelResource.getName(), modelResource.getType(), quantity, modelResource.getMaximumQuantity(),
                         createSimCalendar(modelResource.getCalendar()), modelResource.getCostUnit(), timeUnit, modelResource.getFixedCost(), modelResource
-                        .getTimeCost());
+                                .getTimeCost());
                 resourcesMap.put(modelResource, resource);
                 return resource;
             }

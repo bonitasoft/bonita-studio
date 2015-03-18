@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.engine.export;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,11 +29,13 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.gmf.tools.CopyToImageUtilEx;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
@@ -49,9 +49,6 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.e4.core.contexts.ContextInjectionFactory;
-import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -63,7 +60,6 @@ import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Romain Bioteau
@@ -75,9 +71,10 @@ public class BarExporter {
     private static final String BAR_APPLICATION_RESOURCE_PROVIDERS_EXTENSION_POINT = "org.bonitasoft.studio.exporter.barApplicationResourceProvider";
 
     private static BarExporter INSTANCE;
+    private final ExtensionContextInjectionFactory extensionContextInjectionFactory;
 
     private BarExporter() {
-
+        extensionContextInjectionFactory = new ExtensionContextInjectionFactory();
     }
 
     public static BarExporter getInstance() {
@@ -191,7 +188,11 @@ public class BarExporter {
                 configuration.setVersion(ModelVersion.CURRENT_VERSION);
                 file.save(configuration);
             }
-            configuration = (Configuration) file.getContent();
+            try {
+                configuration = (Configuration) file.getContent();
+            } catch (final ReadFileStoreException e) {
+                BonitaStudioLog.error("Failed to read process configuration", e);
+            }
         } else {
             for (final Configuration conf : process.getConfigurations()) {
                 if (configurationId.equals(conf.getName())) {
@@ -246,28 +247,12 @@ public class BarExporter {
                 BAR_RESOURCE_PROVIDERS_EXTENSION_POINT);
         for (final IConfigurationElement extension : extensions) {
             try {
-                final String className = extension.getAttribute("providerClass");
-
-                final BARResourcesProvider barResourcesProvider = (BARResourcesProvider) ContextInjectionFactory.make(
-                        Platform.getBundle(extension.getDeclaringExtension().getNamespaceIdentifier())
-                                .loadClass(
-                                        className), workbenchContext());
-                res.add(barResourcesProvider);
+                res.add(extensionContextInjectionFactory.make(extension, "providerClass", BARResourcesProvider.class));
             } catch (final Exception ex) {
                 BonitaStudioLog.error(ex);
             }
         }
         return res;
-    }
-
-    private IEclipseContext workbenchContext() {
-        final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
-        if (workbench != null) {
-            final IEclipseContext context = workbench.getContext();
-            checkNotNull(context, "Workbench eclipse context is null");
-            return context;
-        }
-        throw new IllegalStateException("No workbench available");
     }
 
     protected void addProcessImage(final BusinessArchiveBuilder builder, final AbstractProcess process) throws CoreException {

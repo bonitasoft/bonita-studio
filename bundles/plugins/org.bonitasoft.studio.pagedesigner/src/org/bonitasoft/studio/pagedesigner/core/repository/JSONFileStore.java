@@ -14,13 +14,14 @@
  */
 package org.bonitasoft.studio.pagedesigner.core.repository;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.io.IOException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 import org.json.JSONException;
@@ -32,10 +33,38 @@ import com.google.common.io.Files;
 /**
  * @author Romain Bioteau
  */
-public class WebWidgetFileStore extends JSONFileStore {
+public class JSONFileStore extends AbstractFileStore {
 
-    public WebWidgetFileStore(final String folderName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
-        super(folderName, parentStore);
+    private static final String FORM_NAME_KEY = "name";
+    private static final String FORM_ID_KEY = "id";
+
+    public JSONFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
+        super(fileName, parentStore);
+    }
+
+    public String getId() {
+        final JSONObject jSonObject = getContent();
+        if (jSonObject == null) {
+            throw new IllegalAccessError(String.format("Invalid JSON file %s.", getName()));
+        }
+        try {
+            return jSonObject.getString(FORM_ID_KEY);
+        } catch (final JSONException e) {
+            throw new IllegalAccessError(String.format("Failed to retrieve id in JSON file %s, with key %s.", getName(), FORM_NAME_KEY));
+        }
+    }
+
+    @Override
+    public String getDisplayName() {
+        final JSONObject jSonObject = getContent();
+        if (jSonObject == null) {
+            throw new IllegalAccessError(String.format("Invalid JSON file %s.", getName()));
+        }
+        try {
+            return jSonObject.getString(FORM_NAME_KEY);
+        } catch (final JSONException e) {
+            throw new IllegalAccessError(String.format("Failed to retrieve name in JSON file %s, with key %s.", getName(), FORM_NAME_KEY));
+        }
     }
 
     /*
@@ -47,26 +76,17 @@ public class WebWidgetFileStore extends JSONFileStore {
         return null;
     }
 
-    @Override
-    public IFolder getResource() {
-        return getParentStore().getResource().getFolder(getName());
-    }
-
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
      */
     @Override
     public JSONObject getContent() {
-        if (getResource() != null && getResource().exists()) {
-            try {
-                final IFile jsonFile = getResource().getFile(getName() + ".json");
-                if (jsonFile.exists()) {
-                    return new org.json.JSONObject(Files.toString(jsonFile.getLocation().toFile(), Charsets.UTF_8));
-                }
-            } catch (final JSONException | IOException e) {
-                BonitaStudioLog.error("Failed to parse JSON content", e);
-            }
+        checkState(getResource().exists());
+        try {
+            return new org.json.JSONObject(Files.toString(getResource().getLocation().toFile(), Charsets.UTF_8));
+        } catch (final JSONException | IOException e) {
+            BonitaStudioLog.error(String.format("Failed to retrieve JSON content from %s", getResource().getName()), e);
         }
         return null;
     }

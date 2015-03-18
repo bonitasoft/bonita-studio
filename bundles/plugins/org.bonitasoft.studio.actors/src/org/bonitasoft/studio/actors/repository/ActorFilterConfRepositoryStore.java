@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.actors.repository;
 
@@ -37,6 +35,7 @@ import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.filestore.DefinitionConfigurationFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.util.ConnectorConfigurationAdapterFactory;
@@ -53,21 +52,20 @@ import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.swt.graphics.Image;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class ActorFilterConfRepositoryStore extends AbstractEMFRepositoryStore<DefinitionConfigurationFileStore> {
 
     private static final String STORE_NAME = "filters-conf";
-    private static final Set<String> extensions = new HashSet<String>() ;
+    private static final Set<String> extensions = new HashSet<String>();
     public static final String CONF_EXT = "connectorconfig";
-    static{
-        extensions.add(CONF_EXT) ;
+    static {
+        extensions.add(CONF_EXT);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
      */
     @Override
@@ -75,16 +73,17 @@ public class ActorFilterConfRepositoryStore extends AbstractEMFRepositoryStore<D
         return new DefinitionConfigurationFileStore(fileName, this);
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getName()
      */
     @Override
     public String getName() {
-        return STORE_NAME ;
+        return STORE_NAME;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
      */
     @Override
@@ -92,15 +91,17 @@ public class ActorFilterConfRepositoryStore extends AbstractEMFRepositoryStore<D
         return Messages.filterConfRepositoryName;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
      */
     @Override
     public Image getIcon() {
-        return Pics.getImage("conf.png",ActorsPlugin.getDefault());
+        return Pics.getImage("conf.png", ActorsPlugin.getDefault());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getCompatibleExtensions()
      */
     @Override
@@ -111,19 +112,23 @@ public class ActorFilterConfRepositoryStore extends AbstractEMFRepositoryStore<D
     public List<ConnectorConfiguration> getFilterConfigurations() {
         final List<ConnectorConfiguration> result = new ArrayList<ConnectorConfiguration>();
         for (final IRepositoryFileStore child : getChildren()) {
-            result.add((ConnectorConfiguration) child.getContent()) ;
+            try {
+                result.add((ConnectorConfiguration) child.getContent());
+            } catch (final ReadFileStoreException e) {
+                BonitaStudioLog.error("Failed to add filter configuration", e);
+            }
         }
-        return result ;
+        return result;
     }
 
     public List<ConnectorConfiguration> getFilterConfigurationsFor(final String defintionId, final String definitionVersion) {
         final List<ConnectorConfiguration> result = new ArrayList<ConnectorConfiguration>();
         for (final ConnectorConfiguration child : getFilterConfigurations()) {
-            if(child.getDefinitionId().equals(defintionId) && child.getVersion().equals(definitionVersion) ){
-                result.add(child) ;
+            if (child.getDefinitionId().equals(defintionId) && child.getVersion().equals(definitionVersion)) {
+                result.add(child);
             }
         }
-        return result ;
+        return result;
     }
 
     @Override

@@ -12,18 +12,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.pagedesigner.core.repository;
-
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+package org.bonitasoft.studio.common.repository.model;
 
 /**
  * @author Romain Bioteau
  */
-public class WebPageFileStore extends JSONFileStore {
+public class ReadFileStoreException extends Exception {
 
-    public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
-        super(fileName, parentStore);
+    public ReadFileStoreException(final String message, final Throwable exception) {
+        super(message, exception);
     }
 
 }

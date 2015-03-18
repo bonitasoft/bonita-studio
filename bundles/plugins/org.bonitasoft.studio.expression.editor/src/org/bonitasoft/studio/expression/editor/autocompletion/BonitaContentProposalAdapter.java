@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.provider.DataExpressionNatureProvider;
@@ -30,8 +31,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -74,8 +73,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * ContentProposalAdapter can be used to attach content proposal behavior to a
@@ -728,18 +725,15 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                 creationZoneComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
                 creationZoneComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
                 Link createDataLink;
-
+                final ExtensionContextInjectionFactory extensionContextInjectionFactory = new ExtensionContextInjectionFactory();
                 for (final IConfigurationElement element : getProposalListeners()) {
                     final String expressionTypeLink = element.getAttribute("type");
                     if (!filteredExpressionType.contains(expressionTypeLink)) {
                         createDataLink = new Link(creationZoneComposite, SWT.NONE);
                         final String name = element.getAttribute("name");
                         createDataLink.setText(name);
-                        final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
                         try {
-                            final IProposalListener listener = (IProposalListener) ContextInjectionFactory.make(Platform.getBundle(
-                                    element.getDeclaringExtension().getNamespaceIdentifier()).loadClass(
-                                    element.getAttribute("providerClass")), workbench.getContext());
+                            final IProposalListener listener = extensionContextInjectionFactory.make(element, "providerClass", IProposalListener.class);
                             createDataLink.addSelectionListener(new SelectionAdapter() {
 
                                 @Override
