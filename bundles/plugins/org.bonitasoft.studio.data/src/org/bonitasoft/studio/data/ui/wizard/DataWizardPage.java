@@ -349,16 +349,14 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         if (fixedReturnType != null) {
             for (final Object object : (AbstractCollection<?>) typeCombo.getInput()) {
                 final DataType type = (DataType) object;
-                if (fixedReturnType.equals(String.class.getName()) && type.getName().equals("Text")) {
+                if (fixedReturnType.equals(String.class.getName()) && "Text".equals(type.getName())) {
                     typeCombo.setSelection(new StructuredSelection(type));
                     break;
-                } else if (fixedReturnType.equals(Boolean.class.getName()) && type.getName().equals("Boolean")) {
+                } else if (fixedReturnType.equals(Boolean.class.getName()) && "Boolean".equals(type.getName())) {
                     typeCombo.setSelection(new StructuredSelection(type));
                     break;
                 }
             }
-        } else {
-
         }
         setControl(mainComposite);
     }
