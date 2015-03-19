@@ -60,18 +60,13 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.DateType;
-import org.bonitasoft.studio.model.process.DoubleType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.EnumType;
-import org.bonitasoft.studio.model.process.FloatType;
-import org.bonitasoft.studio.model.process.IntegerType;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.JavaType;
-import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.model.process.XMLType;
@@ -323,59 +318,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     }
 
     protected String getHintFor(final DataType newType) {
-        final ProcessSwitch<String> dataTypeSwitch = new ProcessSwitch<String>() {
-
-            @Override
-            public String caseDateType(final DateType object) {
-                return Messages.dateTypeHint;
-            }
-
-            @Override
-            public String caseStringType(final StringType object) {
-                return Messages.stringTypeHint;
-            }
-
-            @Override
-            public String caseIntegerType(final IntegerType object) {
-                return Messages.integerTypeHint;
-            }
-
-            @Override
-            public String caseBooleanType(final BooleanType object) {
-                return Messages.booleanTypeHint;
-            }
-
-            @Override
-            public String caseLongType(final LongType object) {
-                return Messages.longTypeHint;
-            }
-
-            @Override
-            public String caseDoubleType(final DoubleType object) {
-                return Messages.doubleTypeHint;
-            }
-
-            @Override
-            public String caseFloatType(final FloatType object) {
-                return Messages.floatTypeHint;
-            }
-
-            @Override
-            public String caseJavaType(final JavaType object) {
-                return Messages.javaTypeHint;
-            }
-
-            @Override
-            public String caseXMLType(final XMLType object) {
-                return Messages.xmlTypeHint;
-            }
-
-            @Override
-            public String caseEnumType(final EnumType object) {
-                return Messages.enumTypeHint;
-            }
-
-        };
+        final ProcessSwitch<String> dataTypeSwitch = new DataTypeProcessSwitch();
         return dataTypeSwitch.doSwitch(newType);
     }
 
