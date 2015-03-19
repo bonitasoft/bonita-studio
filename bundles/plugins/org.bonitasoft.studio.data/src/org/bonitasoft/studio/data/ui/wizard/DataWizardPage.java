@@ -583,10 +583,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             private List<Data> getAllAccessibleDatas(final EObject container) {
                 final List<Data> allDatas = ModelHelper.getAccessibleData(container, true);
                 for (final Object o : ModelHelper.getAllItemsOfType(container, ProcessPackage.Literals.DATA)) {
-                    if (o instanceof Data) {
-                        if (!allDatas.contains(o)) {
-                            allDatas.add((Data) o);
-                        }
+                    if (o instanceof Data && !allDatas.contains(o)) {
+                        allDatas.add((Data) o);
                     }
                 }
 

@@ -232,10 +232,8 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
             final EObject context, final Expression inputExpression, final ViewerFilter[] filters, final ExpressionViewer expressionViewer) {
 
         final EObject finalContext = context;
-        if (context instanceof Widget) {
-            if (ModelHelper.getPageFlow((Widget) context) instanceof Pool) {
-                addExpressionButton.setEnabled(false);
-            }
+        if (context instanceof Widget && ModelHelper.getPageFlow((Widget) context) instanceof Pool) {
+            addExpressionButton.setEnabled(false);
         }
         final ViewerFilter[] finalFilters = filters;
         addExpressionButton.addSelectionListener(new SelectionAdapter() {
