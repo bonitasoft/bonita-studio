@@ -30,6 +30,7 @@ import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
@@ -92,6 +93,14 @@ public class ContractInputExpressionProviderTest {
         form.getWidgets().add(texField);
         context.getForm().add(form);
         assertThat(contractInputExpressionProvider.isRelevantFor(texField)).isFalse();
+    }
+
+    @Test
+    public void should_isRelevant_returns_true_if_context_is_a_data_in_a_Pool() throws Exception {
+        final Pool context = ProcessFactory.eINSTANCE.createPool();
+        final Data data = ProcessFactory.eINSTANCE.createData();
+        context.getData().add(data);
+        assertThat(contractInputExpressionProvider.isRelevantFor(data)).isTrue();
     }
 
     @Test

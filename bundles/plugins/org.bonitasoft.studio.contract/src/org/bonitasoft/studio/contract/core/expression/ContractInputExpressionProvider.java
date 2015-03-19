@@ -29,6 +29,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.Assert;
@@ -116,7 +117,7 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
         if (parentFlowElement != null) {//check if on an Activity
             return parentFlowElement instanceof ContractContainer && ModelHelper.getParentForm(context) == null;
         } else {// we are at Pool Level
-            return ModelHelper.getParentPool(context) != null && ModelHelper.getParentForm(context) == null;
+            return context instanceof Data || (ModelHelper.getParentPool(context) != null && ModelHelper.getParentForm(context) == null);
         }
     }
 
