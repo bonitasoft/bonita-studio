@@ -14,115 +14,42 @@
  */
 package org.bonitasoft.studio.pagedesigner.core.repository;
 
-import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.swt.graphics.Image;
+import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.ui.IWorkbenchPart;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
  */
-public class WebPageFileStore extends AbstractFileStore {
-
-    private static final String FORM_NAME_KEY = "name";
-    private static final String FORM_ID_KEY = "id";
+public class WebPageFileStore extends NamedJSONFileStore {
 
     public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
     }
 
-    public String getId() {
-        final JSONObject jSonObject = getContent();
-        if (jSonObject == null) {
-            throw new IllegalAccessError(String.format("Invalid JSON file %s.", getName()));
-        }
-        try {
-            return jSonObject.getString(FORM_ID_KEY);
-        } catch (final JSONException e) {
-            throw new IllegalAccessError(String.format("Failed to retrieve Form id in JSON file %s, with key %s.", getName(), FORM_NAME_KEY));
-        }
-    }
-
-    @Override
-    public String getDisplayName() {
-        final JSONObject jSonObject = getContent();
-        if (jSonObject == null) {
-            throw new IllegalAccessError(String.format("Invalid JSON file %s.", getName()));
-        }
-        try {
-            return jSonObject.getString(FORM_NAME_KEY);
-        } catch (final JSONException e) {
-            throw new IllegalAccessError(String.format("Failed to retrieve Form name in JSON file %s, with key %s.", getName(), FORM_NAME_KEY));
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
-     */
-    @Override
-    public Image getIcon() {
-        return null;
-    }
-
-    @Override
-    public IFile getResource() {
-        return (IFile) super.getResource();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-     */
-    @Override
-    public JSONObject getContent() {
-        if (getResource() != null && getResource().exists()) {
-            try {
-                return new org.json.JSONObject(Files.toString(getResource().getLocation().toFile(), Charsets.UTF_8));
-            } catch (final JSONException e) {
-                BonitaStudioLog.error(e);
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
-     */
-    @Override
-    protected void doSave(final Object content) {
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doOpen()
-     */
     @Override
     protected IWorkbenchPart doOpen() {
+        try {
+            openBrowserOperation(urlFactory().openPage(getId())).execute();
+        } catch (final MalformedURLException e) {
+            BonitaStudioLog.error(String.format("Failed to open page %s", getId()), e);
+        }
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doClose()
-     */
-    @Override
-    protected void doClose() {
-
+    protected OpenBrowserOperation openBrowserOperation(final URL url) throws MalformedURLException {
+        return new OpenBrowserOperation(url);
     }
 
+    protected PageDesignerURLFactory urlFactory() {
+        return new PageDesignerURLFactory(
+                InstanceScope.INSTANCE.getNode("org.bonitasoft.studio.preferences"));
+    }
 }

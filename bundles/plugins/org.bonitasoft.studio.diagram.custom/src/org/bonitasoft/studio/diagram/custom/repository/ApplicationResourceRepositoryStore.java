@@ -66,14 +66,6 @@ public class ApplicationResourceRepositoryStore extends AbstractRepositoryStore<
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#canImportBARResource(java.lang.String)
-     */
-    public boolean canImportBARResource(final String resourceName) {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getName()
      */
     @Override

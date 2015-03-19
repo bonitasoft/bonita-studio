@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.repository.model;
 
@@ -25,29 +23,28 @@ import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * @author Romain Bioteau
- *
  */
 public interface IRepositoryFileStore {
 
-    String getName() ;
+    String getName();
 
-    String getDisplayName() ;
+    String getDisplayName();
 
-    Image getIcon() ;
+    Image getIcon();
 
-    IRepositoryStore getParentStore() ;
+    IRepositoryStore getParentStore();
 
-    Object getContent() ;
+    Object getContent() throws ReadFileStoreException;
 
-    IResource getResource() ;
+    IResource getResource();
 
-    Set<IResource> getRelatedResources() ;
+    Set<IResource> getRelatedResources();
 
-    boolean isShared() ;
+    boolean isShared();
 
-    boolean isReadOnly() ;
+    boolean isReadOnly();
 
-    void setReadOnly(boolean readOnly) ;
+    void setReadOnly(boolean readOnly);
 
     IWorkbenchPart open();
 
@@ -55,14 +52,14 @@ public interface IRepositoryFileStore {
 
     void delete();
 
-    void rename(String newName) ;
+    void rename(String newName);
 
-    void save(Object content) ;
+    void save(Object content);
 
     boolean canBeShared();
 
     boolean canBeExported();
 
-    void export(String targetAbsoluteFilePath) throws IOException ;
+    void export(String targetAbsoluteFilePath) throws IOException;
 
 }

@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.exporter.handler;
 
@@ -27,10 +25,12 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.common.repository.ui.wizard.ExportRepositoryWizard;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
@@ -52,80 +52,82 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class ExportBosArchiveHandler extends AbstractHandler {
 
     private static final String BOS_ARCHIVE_PROVIDERS_EXTENSION_POINT = "org.bonitasoft.studio.bosArchiveProvider";
+    private static ArrayList<IBOSArchiveFileStoreProvider> providers;
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
-        if(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(true)){
-            Set<Object> selectedFiles = new HashSet<Object>() ;
+        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(true)) {
+            Set<Object> selectedFiles = new HashSet<Object>();
             final MainProcess diagram = getDiagramInEditor();
-            if(diagram != null){
+            if (diagram != null) {
                 selectedFiles = getAllDiagramRelatedFiles(diagram);
-            }else{
-                for(final IRepositoryStore<? extends IRepositoryFileStore> store : RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores()){
-                    final List<? extends IRepositoryFileStore> files = store.getChildren() ;
-                    if( files != null){
-                        for(final IRepositoryFileStore fStore : files){
-                            if(fStore != null){
-                                selectedFiles.add(fStore) ;
+            } else {
+                for (final IRepositoryStore<? extends IRepositoryFileStore> store : RepositoryManager.getInstance().getCurrentRepository()
+                        .getAllExportableStores()) {
+                    final List<? extends IRepositoryFileStore> files = store.getChildren();
+                    if (files != null) {
+                        for (final IRepositoryFileStore fStore : files) {
+                            if (fStore != null) {
+                                selectedFiles.add(fStore);
                             }
                         }
                     }
                 }
             }
 
-            final ExportRepositoryWizard wizard = new ExportRepositoryWizard(RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores(),true,selectedFiles,getDefaultName(),Messages.ExportButtonLabel) ;
-            final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard){
+            final ExportRepositoryWizard wizard = new ExportRepositoryWizard(RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores(),
+                    true, selectedFiles, getDefaultName(), Messages.ExportButtonLabel);
+            final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard) {
+
                 @Override
-                protected void initializeBounds() {
-                    super.initializeBounds();
-                    getShell().setSize(600, 500);
+                protected Point getInitialSize() {
+                    return new Point(500, 600);
                 }
             };
             dialog.setTitle(Messages.ExportButtonLabel);
-            dialog.open() ;
+            dialog.open();
         }
         return null;
     }
 
     private String getDefaultName() {
-        final MainProcess diagram = getDiagramInEditor() ;
-        if(diagram == null){
+        final MainProcess diagram = getDiagramInEditor();
+        if (diagram == null) {
             return RepositoryManager.getInstance().getCurrentRepository().getName() + "_" + new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date()) + ".bos";
         }
         return NamingUtils.toDiagramFilename(diagram).replace(".proc", ".bos");
     }
 
     public static Set<Object> getAllDiagramRelatedFiles(final MainProcess diagram) {
-        final Set<Object> result = new HashSet<Object>() ;
-        final List<Pool> processes =  ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL) ;
-        final List<IBOSArchiveFileStoreProvider> fileStoreProvider = getFileStoreProviders() ;
+        final Set<Object> result = new HashSet<Object>();
+        final List<Pool> processes = ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL);
+        final List<IBOSArchiveFileStoreProvider> fileStoreProvider = getFileStoreProviders();
 
-        for(final Pool p : processes){
-            final Configuration conf = getConfiguration(p, ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON) ;
-            for(final IBOSArchiveFileStoreProvider provider : fileStoreProvider){
-                result.addAll(provider.getFileStoreForConfiguration(p, conf)) ;
-                for(final Configuration config : p.getConfigurations()){
-                    result.addAll(provider.getFileStoreForConfiguration(p, config)) ;
+        for (final Pool p : processes) {
+            final Configuration conf = getConfiguration(p, ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON);
+            for (final IBOSArchiveFileStoreProvider provider : fileStoreProvider) {
+                result.addAll(provider.getFileStoreForConfiguration(p, conf));
+                for (final Configuration config : p.getConfigurations()) {
+                    result.addAll(provider.getFileStoreForConfiguration(p, config));
                 }
             }
         }
 
-        if(processes.isEmpty()){
+        if (processes.isEmpty()) {
             final DiagramRepositoryStore dStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
             result.add(dStore.getDiagram(diagram.getName(), diagram.getVersion()));
         }
@@ -134,71 +136,78 @@ public class ExportBosArchiveHandler extends AbstractHandler {
     }
 
     private static List<IBOSArchiveFileStoreProvider> getFileStoreProviders() {
-        final List<IBOSArchiveFileStoreProvider> res = new ArrayList<IBOSArchiveFileStoreProvider>();
-        final IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(BOS_ARCHIVE_PROVIDERS_EXTENSION_POINT);
-        for (final IConfigurationElement extension : extensions) {
-            try {
-                res.add((IBOSArchiveFileStoreProvider)extension.createExecutableExtension("providerClass"));
-            } catch (final Exception ex) {
-                BonitaStudioLog.error(ex);
+        if (providers == null) {
+            providers = new ArrayList<IBOSArchiveFileStoreProvider>();
+            final IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
+                    BOS_ARCHIVE_PROVIDERS_EXTENSION_POINT);
+            final ExtensionContextInjectionFactory extensionContextInjectionFactory = new ExtensionContextInjectionFactory();
+            for (final IConfigurationElement extension : extensions) {
+                try {
+                    providers.add(extensionContextInjectionFactory.make(extension, "providerClass", IBOSArchiveFileStoreProvider.class));
+                } catch (final Exception ex) {
+                    BonitaStudioLog.error(ex);
+                }
             }
         }
-        return res;
+        return providers;
     }
 
     protected MainProcess getDiagramInEditor() {
-        if( PlatformUI.getWorkbench().getWorkbenchWindows() == null ||  PlatformUI.getWorkbench().getWorkbenchWindows().length == 0){
-            return null ;
+        if (PlatformUI.getWorkbench().getWorkbenchWindows() == null || PlatformUI.getWorkbench().getWorkbenchWindows().length == 0) {
+            return null;
         }
-        final IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor() ;
+        final IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor();
         final boolean isADiagram = editor != null && editor instanceof DiagramEditor;
-        if(isADiagram){
-            final EObject root = ((DiagramEditor)editor).getDiagramEditPart().resolveSemanticElement() ;
-            final MainProcess mainProc = ModelHelper.getMainProcess(root) ;
-            return mainProc ;
+        if (isADiagram) {
+            final EObject root = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
+            final MainProcess mainProc = ModelHelper.getMainProcess(root);
+            return mainProc;
         }
 
         return null;
     }
 
     public static Configuration getConfiguration(final AbstractProcess process, String configurationId) {
-        Configuration configuration = null ;
-        final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
-        if(configurationId == null){
-            configurationId = ConfigurationPlugin.getDefault().getPreferenceStore().getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION) ;
+        Configuration configuration = null;
+        final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getRepositoryStore(
+                ProcessConfigurationRepositoryStore.class);
+        if (configurationId == null) {
+            configurationId = ConfigurationPlugin.getDefault().getPreferenceStore().getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
         }
-        if(configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)){
-            final String id = ModelHelper.getEObjectID(process) ;
-            IRepositoryFileStore file = processConfStore.getChild(id+".conf") ;
-            if(file == null){
-                file = processConfStore.createRepositoryFileStore(id+".conf") ;
+        if (configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) {
+            final String id = ModelHelper.getEObjectID(process);
+            IRepositoryFileStore file = processConfStore.getChild(id + ".conf");
+            if (file == null) {
+                file = processConfStore.createRepositoryFileStore(id + ".conf");
                 final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
                 conf.setVersion(ModelVersion.CURRENT_VERSION);
                 file.save(conf);
             }
-            configuration = (Configuration) file.getContent();
-        }else{
-            for(final Configuration conf : process.getConfigurations()){
-                if(configurationId.equals(conf.getName())){
-                    configuration = conf ;
+            try {
+                configuration = (Configuration) file.getContent();
+            } catch (final ReadFileStoreException e) {
+                BonitaStudioLog.error("Failed to retrieve configuration content", e);
+            }
+        } else {
+            for (final Configuration conf : process.getConfigurations()) {
+                if (configurationId.equals(conf.getName())) {
+                    configuration = conf;
                 }
             }
         }
-        if(configuration == null){
-            configuration = ConfigurationFactory.eINSTANCE.createConfiguration() ;
-            configuration.setName(configurationId) ;
+        if (configuration == null) {
+            configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
+            configuration.setName(configurationId);
             configuration.setVersion(ModelVersion.CURRENT_VERSION);
         }
         //Synchronize configuration with definition
-        new ConfigurationSynchronizer(process, configuration).synchronize() ;
-        return configuration ;
+        new ConfigurationSynchronizer(process, configuration).synchronize();
+        return configuration;
     }
 
     @Override
     public boolean isEnabled() {
         return true;
     }
-
-
 
 }

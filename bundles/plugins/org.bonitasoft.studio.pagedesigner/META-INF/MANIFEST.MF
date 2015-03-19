@@ -49,4 +49,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.bar.form.model,
- org.bonitasoft.engine.form
+ org.bonitasoft.engine.form,
+ org.bonitasoft.studio.pagedesigner.core.repository

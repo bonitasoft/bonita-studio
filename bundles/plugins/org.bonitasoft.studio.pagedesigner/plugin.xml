@@ -106,7 +106,13 @@
 <extension
       point="org.bonitasoft.studio.common.barResourcesProvider">
    <barResourceProvider
-         providerClass="org.bonitasoft.studio.pagedesigner.core.bar.FormMappingBarResourceProvider">
+         providerClass="org.bonitasoft.studio.pagedesigner.core.bar.FormBarResourceProvider">
    </barResourceProvider>
+</extension>
+<extension
+      point="org.bonitasoft.studio.bosArchiveProvider">
+   <bosArchiveProvider
+         providerClass="org.bonitasoft.studio.pagedesigner.core.bos.WebFormBOSArchiveFileStoreProvider">
+   </bosArchiveProvider>
 </extension>
 </plugin>

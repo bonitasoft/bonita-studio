@@ -27,11 +27,10 @@ import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.viewers.ViewerFilter;
 
@@ -52,6 +51,7 @@ public class ExpressionEditorService {
 
     private Set<IExpressionProvider> expressionProviders;
     private final Map<String, List<ViewerFilter>> expressionFilters = new HashMap<String, List<ViewerFilter>>();
+    private final ExtensionContextInjectionFactory extensionContextInjectionFactory;
 
     public static ExpressionEditorService getInstance() {
         return INSTANCE;
@@ -59,6 +59,7 @@ public class ExpressionEditorService {
 
     ExpressionEditorService() {
         INSTANCE = this;
+        extensionContextInjectionFactory = new ExtensionContextInjectionFactory();
     }
 
     @PostConstruct
@@ -67,9 +68,7 @@ public class ExpressionEditorService {
         final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(EXPRESSION_PROVIDER_ID);
         for (final IConfigurationElement element : elements) {
             try {
-                final Class<?> providerClass = Platform.getBundle(element.getDeclaringExtension().getNamespaceIdentifier()).loadClass(
-                        element.getAttribute(PROVIDER_CLASS_ATTRIBUTE));
-                expressionProviders.add((IExpressionProvider) ContextInjectionFactory.make(providerClass, context));
+                expressionProviders.add(extensionContextInjectionFactory.make(element, PROVIDER_CLASS_ATTRIBUTE, IExpressionProvider.class, context));
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);
             }
