@@ -15,27 +15,38 @@
 package org.bonitasoft.studio.pagedesigner.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 
 import java.net.URL;
 import java.util.Locale;
 
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
  */
-public class PageDesignerURLFactoryTest {
+@RunWith(MockitoJUnitRunner.class)
+public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
 
     private PageDesignerURLFactory pageDesignerURLBuilder;
+    @Mock
+    private IEclipsePreferences preferenceStore;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        pageDesignerURLBuilder = new PageDesignerURLFactory("localhost", 8080);
+        doReturn("localhost").when(preferenceStore).get(CONSOLE_HOST, DEFAULT_HOST);
+        doReturn(8080).when(preferenceStore).getInt(CONSOLE_PORT, DEFAULT_PORT);
+        pageDesignerURLBuilder = new PageDesignerURLFactory(preferenceStore);
     }
 
     /**
@@ -60,6 +71,12 @@ public class PageDesignerURLFactoryTest {
     public void should_newPage_return_URL_to_post_a_new_page() throws Exception {
         assertThat(pageDesignerURLBuilder.newPage()).isEqualTo(
                 new URL("http://localhost:8080/page-designer/api/rest/pages/"));
+    }
+
+    @Test
+    public void should_exportPage_return_URL_to_that_export_the_page_with_given_id() throws Exception {
+        assertThat(pageDesignerURLBuilder.exportPage("my-page-id")).isEqualTo(
+                new URL("http://localhost:8080/page-designer/api/export/page/my-page-id"));
     }
 
 }

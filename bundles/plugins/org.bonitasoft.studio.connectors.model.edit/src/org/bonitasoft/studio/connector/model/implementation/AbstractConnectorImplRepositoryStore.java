@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -33,6 +31,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.util.ConnectorImplementationAdapterFactory;
 import org.bonitasoft.studio.connector.model.implementation.util.ConnectorImplementationResourceImpl;
@@ -52,7 +51,6 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 
 /**
  * @author Romain Bioteau
- *
  */
 public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T> implements IRepositoryStore<T>,
         IImplementationRepositoryStore {
@@ -76,8 +74,11 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
     public List<ConnectorImplementation> getImplementations() {
         final List<ConnectorImplementation> result = new ArrayList<ConnectorImplementation>();
         for (final IRepositoryFileStore fileStore : getChildren()) {
-            final ConnectorImplementation def = (ConnectorImplementation) fileStore.getContent();
-            result.add(def);
+            try {
+                result.add((ConnectorImplementation) fileStore.getContent());
+            } catch (final ReadFileStoreException e) {
+                BonitaStudioLog.error("Failed to retrieve connector definition", e);
+            }
         }
         return result;
     }
@@ -98,11 +99,16 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
     @Override
     public IRepositoryFileStore getImplementationFileStore(final String implId, final String implVersion) {
         for (final IRepositoryFileStore implStore : getChildren()) {
-            final ConnectorImplementation impl = (ConnectorImplementation) implStore.getContent();
-            if (impl != null && implId.equals(impl.getImplementationId())
-                    && implVersion.equals(impl.getImplementationVersion())) {
-                return implStore;
+            try {
+                final ConnectorImplementation impl = (ConnectorImplementation) implStore.getContent();
+                if (impl != null && implId.equals(impl.getImplementationId())
+                        && implVersion.equals(impl.getImplementationVersion())) {
+                    return implStore;
+                }
+            } catch (final ReadFileStoreException e) {
+                BonitaStudioLog.error("Failed to retrieve connector implementation", e);
             }
+
         }
         return null;
     }
@@ -157,21 +163,27 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
 
     protected void cleanJarDependency(final IRepositoryFileStore fStore, final IRepositoryStore<? extends IRepositoryFileStore> dependencyRepositoryStore,
             final IRepositoryStore<? extends IRepositoryFileStore> sourceRepositoryStore) {
-        final ConnectorImplementation content = (ConnectorImplementation) fStore.getContent();
-        if (hasSources(content, sourceRepositoryStore)) {
-            final JarDependencies jarDependencies = content.getJarDependencies();
-            if (jarDependencies != null) {
-                for (final String dep : jarDependencies.getJarDependency()) {
-                    final String depJarName = NamingUtils.toConnectorImplementationFilename(content.getImplementationId(), content.getImplementationVersion(), false)
-                            + ".jar";
-                    if (dep.equals(depJarName)) {
-                        final IRepositoryFileStore dependencyFileStore = dependencyRepositoryStore.getChild(depJarName);
-                        if (dependencyFileStore != null) {
-                            dependencyFileStore.delete();
+        try {
+            final ConnectorImplementation content = (ConnectorImplementation) fStore.getContent();
+            if (hasSources(content, sourceRepositoryStore)) {
+                final JarDependencies jarDependencies = content.getJarDependencies();
+                if (jarDependencies != null) {
+                    for (final String dep : jarDependencies.getJarDependency()) {
+                        final String depJarName = NamingUtils.toConnectorImplementationFilename(content.getImplementationId(),
+                                content.getImplementationVersion(),
+                                false)
+                                + ".jar";
+                        if (dep.equals(depJarName)) {
+                            final IRepositoryFileStore dependencyFileStore = dependencyRepositoryStore.getChild(depJarName);
+                            if (dependencyFileStore != null) {
+                                dependencyFileStore.delete();
+                            }
                         }
                     }
                 }
             }
+        } catch (final ReadFileStoreException e) {
+            BonitaStudioLog.error("Failed to retrieve connector implementation", e);
         }
     }
 

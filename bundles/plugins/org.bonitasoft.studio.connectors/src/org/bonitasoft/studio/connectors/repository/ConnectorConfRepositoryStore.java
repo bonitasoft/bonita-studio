@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connectors.repository;
 
@@ -38,6 +36,7 @@ import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.filestore.DefinitionConfigurationFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
@@ -59,21 +58,20 @@ import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.swt.graphics.Image;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<DefinitionConfigurationFileStore> {
 
     private static final String STORE_NAME = "connectors-conf";
-    private static final Set<String> extensions = new HashSet<String>() ;
+    private static final Set<String> extensions = new HashSet<String>();
     public static final String CONF_EXT = "connectorconfig";
-    static{
-        extensions.add(CONF_EXT) ;
+    static {
+        extensions.add(CONF_EXT);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
      */
     @Override
@@ -81,16 +79,17 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
         return new DefinitionConfigurationFileStore(fileName, this);
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getName()
      */
     @Override
     public String getName() {
-        return STORE_NAME ;
+        return STORE_NAME;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
      */
     @Override
@@ -98,15 +97,17 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
         return Messages.connectorConfRepositoryName;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
      */
     @Override
     public Image getIcon() {
-        return Pics.getImage("conf.png",ConnectorPlugin.getDefault());
+        return Pics.getImage("conf.png", ConnectorPlugin.getDefault());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getCompatibleExtensions()
      */
     @Override
@@ -114,23 +115,26 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
         return extensions;
     }
 
-
     public List<ConnectorConfiguration> getConnectorConfigurations() {
         final List<ConnectorConfiguration> result = new ArrayList<ConnectorConfiguration>();
         for (final IRepositoryFileStore child : getChildren()) {
-            result.add((ConnectorConfiguration) child.getContent()) ;
+            try {
+                result.add((ConnectorConfiguration) child.getContent());
+            } catch (final ReadFileStoreException e) {
+                BonitaStudioLog.error("Failed read connector configuration content", e);
+            }
         }
-        return result ;
+        return result;
     }
 
     public List<ConnectorConfiguration> getConnectorConfigurationsFor(final String defintionId, final String definitionVersion) {
         final List<ConnectorConfiguration> result = new ArrayList<ConnectorConfiguration>();
         for (final ConnectorConfiguration child : getConnectorConfigurations()) {
-            if(child.getDefinitionId().equals(defintionId) && child.getVersion().equals(definitionVersion) ){
-                result.add(child) ;
+            if (child.getDefinitionId().equals(defintionId) && child.getVersion().equals(definitionVersion)) {
+                result.add(child);
             }
         }
-        return result ;
+        return result;
     }
 
     @Override

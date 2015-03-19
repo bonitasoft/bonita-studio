@@ -29,11 +29,13 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.gmf.tools.CopyToImageUtilEx;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
@@ -69,9 +71,10 @@ public class BarExporter {
     private static final String BAR_APPLICATION_RESOURCE_PROVIDERS_EXTENSION_POINT = "org.bonitasoft.studio.exporter.barApplicationResourceProvider";
 
     private static BarExporter INSTANCE;
+    private final ExtensionContextInjectionFactory extensionContextInjectionFactory;
 
     private BarExporter() {
-
+        extensionContextInjectionFactory = new ExtensionContextInjectionFactory();
     }
 
     public static BarExporter getInstance() {
@@ -185,7 +188,11 @@ public class BarExporter {
                 configuration.setVersion(ModelVersion.CURRENT_VERSION);
                 file.save(configuration);
             }
-            configuration = (Configuration) file.getContent();
+            try {
+                configuration = (Configuration) file.getContent();
+            } catch (final ReadFileStoreException e) {
+                BonitaStudioLog.error("Failed to read process configuration", e);
+            }
         } else {
             for (final Configuration conf : process.getConfigurations()) {
                 if (configurationId.equals(conf.getName())) {
@@ -240,7 +247,7 @@ public class BarExporter {
                 BAR_RESOURCE_PROVIDERS_EXTENSION_POINT);
         for (final IConfigurationElement extension : extensions) {
             try {
-                res.add((BARResourcesProvider) extension.createExecutableExtension("providerClass"));
+                res.add(extensionContextInjectionFactory.make(extension, "providerClass", BARResourcesProvider.class));
             } catch (final Exception ex) {
                 BonitaStudioLog.error(ex);
             }

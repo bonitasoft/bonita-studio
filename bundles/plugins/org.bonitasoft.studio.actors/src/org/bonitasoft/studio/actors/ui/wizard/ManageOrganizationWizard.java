@@ -34,6 +34,7 @@ import org.bonitasoft.studio.actors.validator.OrganizationValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -74,9 +75,13 @@ public class ManageOrganizationWizard extends Wizard {
         organizations = new ArrayList<Organization>();
         organizationsWorkingCopy = new ArrayList<Organization>();
         setWindowTitle(Messages.manageOrganizationTitle);
-        store = (OrganizationRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(OrganizationRepositoryStore.class);
+        store = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(OrganizationRepositoryStore.class);
         for (final IRepositoryFileStore file : store.getChildren()) {
-            organizations.add((Organization) file.getContent());
+            try {
+                organizations.add((Organization) file.getContent());
+            } catch (final ReadFileStoreException e) {
+                BonitaStudioLog.error("Failed read organization content", e);
+            }
         }
         final String activeOrganizationName = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .getString(BonitaPreferenceConstants.DEFAULT_ORGANIZATION);
@@ -148,7 +153,11 @@ public class ManageOrganizationWizard extends Wizard {
                         if (file == null) {
                             file = store.createRepositoryFileStore(fileName);
                         } else {
-                            oldOrga = (Organization) file.getContent();
+                            try {
+                                oldOrga = (Organization) file.getContent();
+                            } catch (final ReadFileStoreException e) {
+                                BonitaStudioLog.error("Failed read organization content", e);
+                            }
                         }
                         if (oldOrga != null) {
                             final RefactorActorMappingsOperation refactorOp = new RefactorActorMappingsOperation(oldOrga, organization);
@@ -196,7 +205,8 @@ public class ManageOrganizationWizard extends Wizard {
         } else {
             if (MessageDialogWithToggle.NEVER.equals(pref) && activeOrganizationHasBeenModified) {
                 final String[] buttons = { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL };
-                final MessageDialogWithToggle mdwt = new MessageDialogWithToggle(Display.getDefault().getActiveShell(), Messages.organizationHasBeenModifiedTitle,
+                final MessageDialogWithToggle mdwt = new MessageDialogWithToggle(Display.getDefault().getActiveShell(),
+                        Messages.organizationHasBeenModifiedTitle,
                         null, Messages.bind(Messages.organizationHasBeenModifiedMessage, activeOrganization.getName()), MessageDialog.WARNING, buttons, 0,
                         Messages.doNotDisplayAgain, false);
                 mdwt.setPrefStore(preferenceStore);
@@ -296,6 +306,5 @@ public class ManageOrganizationWizard extends Wizard {
         }
         return null;
     }
-
 
 }

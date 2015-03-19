@@ -5,19 +5,19 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connector.model.definition.dialog;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
 import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
@@ -51,7 +51,6 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * @author Romain Bioteau
- *
  */
 public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
 
@@ -93,8 +92,6 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
         ((GridData) buttonSection.getLayoutData()).grabExcessHorizontalSpace = true;
         return composite;
     }
-
-
 
     protected void createToolbar(final Composite parent) {
         toolbar = new ToolBar(parent, SWT.FLAT);
@@ -148,7 +145,6 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
         }
     }
 
-
     @Override
     public void updateButtons() {
         super.updateButtons();
@@ -175,13 +171,19 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
             final String defVersion = connectorConfPage.getConfiguration().getVersion();
             boolean confExists = false;
             for (final IRepositoryFileStore file : configurationStore.getChildren()) {
-                final ConnectorConfiguration conf = (ConnectorConfiguration) file.getContent();
-                if (conf != null) {
-                    if (conf.getDefinitionId().equals(defId) && conf.getVersion().equals(defVersion)) {
-                        confExists = true;
-                        break;
+                ConnectorConfiguration conf;
+                try {
+                    conf = (ConnectorConfiguration) file.getContent();
+                    if (conf != null) {
+                        if (conf.getDefinitionId().equals(defId) && conf.getVersion().equals(defVersion)) {
+                            confExists = true;
+                            break;
+                        }
                     }
+                } catch (final ReadFileStoreException e) {
+                    BonitaStudioLog.error("Failed to retrieve connector configuration", e);
                 }
+
             }
 
             loadItem.setEnabled(confExists);
@@ -190,8 +192,6 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
             toolbar.setVisible(false);
         }
     }
-
-
 
     @Override
     public void showPage(final IWizardPage page) {
@@ -209,7 +209,6 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
             }
         }
     }
-
 
     protected abstract ITestConfigurationListener getTestListener(ConnectorConfiguration configuration, Connector connector);
 

@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,12 +19,13 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
-
 
 /**
  * @author Romain Bioteau
- *
  */
 public class WebFragmentRepositoryStore extends AbstractRepositoryStore<WebFragmentFileStore> {
 
@@ -61,6 +60,11 @@ public class WebFragmentRepositoryStore extends AbstractRepositoryStore<WebFragm
     @Override
     public WebFragmentFileStore createRepositoryFileStore(final String fileName) {
         return new WebFragmentFileStore(fileName, this);
+    }
+
+    @Override
+    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
+        //NOTHING TO MIGRATE
     }
 
 }

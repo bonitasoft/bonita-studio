@@ -46,6 +46,7 @@ import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceC
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.internal.resources.Workspace;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -149,7 +150,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         }
 
         monitor.beginTask(BOSSplashHandler.BONITA_TASK, 100);
-
+        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         startGroovyPlugin();
         monitor.subTask(Messages.initializingCurrentRepository);
 
@@ -160,7 +161,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         sortConfigurationElementsByPriority(sortedConfigElems);
         executeConfigurationElement(sortedConfigElems);
         try {
-            ResourcesPlugin.getWorkspace().run(initRepositoryRunnable(), monitor);
+            workspace.run(initRepositoryRunnable(), monitor);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
@@ -271,7 +272,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 monitor.worked(1);
                 FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
                 monitor.worked(1);
-                final Repository repository = (Repository) RepositoryManager.getInstance().getCurrentRepository();
+                final Repository repository = RepositoryManager.getInstance().getCurrentRepository();
                 monitor.worked(1);
                 if (!repository.getProject().exists()) {
                     repository.create(monitor);
