@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingDefinition;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingModel;
+import org.bonitasoft.engine.form.FormMappingTarget;
 import org.bonitasoft.engine.form.FormMappingType;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
@@ -72,7 +73,7 @@ public class FormBarResourceProvider implements BARResourcesProvider {
         if (isValid(formMapping)) {
             final FormMappingDefinition mappingDefinition = newFormMappingDefinition(formMapping);
             formMappingModel.addFormMapping(mappingDefinition);
-            if (!mappingDefinition.isExternal()) {
+            if (mappingDefinition.getTarget() == FormMappingTarget.INTERNAL) {
                 builder.addExternalResource(customPageBarResourceFactory.newBarResource(mappingDefinition.getForm(), formUUID(formMapping)));
             }
         }
@@ -80,8 +81,12 @@ public class FormBarResourceProvider implements BARResourcesProvider {
 
     private FormMappingDefinition newFormMappingDefinition(final FormMapping formMapping) {
         return isTaskMapping(formMapping) ?
-                new FormMappingDefinition(formValue(formMapping), formMappingType(formMapping), formMapping.isExternal(), taskName(formMapping))
-                : new FormMappingDefinition(formValue(formMapping), formMappingType(formMapping), formMapping.isExternal());
+                new FormMappingDefinition(formValue(formMapping), formMappingType(formMapping), formMappingTarget(formMapping), taskName(formMapping))
+                : new FormMappingDefinition(formValue(formMapping), formMappingType(formMapping), formMappingTarget(formMapping));
+    }
+
+    private FormMappingTarget formMappingTarget(final FormMapping formMapping) {
+        return formMapping.isExternal() ? FormMappingTarget.URL : FormMappingTarget.INTERNAL;
     }
 
     private FormMappingType formMappingType(final FormMapping formMapping) {
@@ -94,7 +99,8 @@ public class FormBarResourceProvider implements BARResourcesProvider {
     }
 
     private String formValue(final FormMapping formMapping) {
-        return formMapping.isExternal() ? formMapping.getUrl() : String.format("%s%s--%s--%s", CUSTOMPAGE_PREFIX, processName(formMapping),
+        return formMappingTarget(formMapping) == FormMappingTarget.URL ? formMapping.getUrl() : String.format("%s%s--%s--%s", CUSTOMPAGE_PREFIX,
+                processName(formMapping),
                 processVersion(formMapping), formName(formMapping));
     }
 
@@ -111,7 +117,7 @@ public class FormBarResourceProvider implements BARResourcesProvider {
     }
 
     private String formUUID(final FormMapping formMapping) {
-        checkArgument(!formMapping.isExternal(), "An external form has no uuid");
+        checkArgument(formMappingTarget(formMapping) == FormMappingTarget.INTERNAL, "Only internal forms has no uuid");
         return formMapping.getTargetForm().getContent();
     }
 
@@ -125,7 +131,7 @@ public class FormBarResourceProvider implements BARResourcesProvider {
     }
 
     private boolean isValid(final FormMapping formMapping) {
-        return formMapping.isExternal() ? !isNullOrEmpty(formMapping.getUrl()) : formMapping.getTargetForm().hasName();
+        return formMappingTarget(formMapping) == FormMappingTarget.URL ? !isNullOrEmpty(formMapping.getUrl()) : formMapping.getTargetForm().hasName();
     }
 
 }

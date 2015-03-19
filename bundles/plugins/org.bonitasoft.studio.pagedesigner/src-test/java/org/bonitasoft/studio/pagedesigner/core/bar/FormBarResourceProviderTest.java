@@ -29,6 +29,7 @@ import java.util.Collections;
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingModel;
+import org.bonitasoft.engine.form.FormMappingTarget;
 import org.bonitasoft.engine.form.FormMappingType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.emf.ecore.EObject;
@@ -94,10 +95,10 @@ public class FormBarResourceProviderTest {
 
         verify(builder).setFormMappings(formMappingModel);
         assertThat(formMappingModel.getFormMappings()).hasSize(3);
-        assertThat(formMappingModel.getFormMappings()).extracting("external", "form", "type", "taskname")
-                .contains(tuple(true, "http://www.bonitasoft.com", FormMappingType.PROCESS_OVERVIEW, null),
-                        tuple(false, "custompage_Pool1--1.0--processForm", FormMappingType.PROCESS_START, null),
-                        tuple(false, "custompage_Pool1--1.0--StepForm", FormMappingType.TASK, "Step1"));
+        assertThat(formMappingModel.getFormMappings()).extracting("target", "form", "type", "taskname")
+                .contains(tuple(FormMappingTarget.URL, "http://www.bonitasoft.com", FormMappingType.PROCESS_OVERVIEW, null),
+                        tuple(FormMappingTarget.INTERNAL, "custompage_Pool1--1.0--processForm", FormMappingType.PROCESS_START, null),
+                        tuple(FormMappingTarget.INTERNAL, "custompage_Pool1--1.0--StepForm", FormMappingType.TASK, "Step1"));
     }
 
     @Test
@@ -118,9 +119,9 @@ public class FormBarResourceProviderTest {
 
         verify(builder).setFormMappings(formMappingModel);
         assertThat(formMappingModel.getFormMappings()).hasSize(1);
-        assertThat(formMappingModel.getFormMappings()).extracting("external", "form", "type", "taskname")
+        assertThat(formMappingModel.getFormMappings()).extracting("target", "form", "type", "taskname")
                 .contains(
-                        tuple(false, "custompage_Pool2--2.0--Step1", FormMappingType.TASK, "Step1"));
+                        tuple(FormMappingTarget.INTERNAL, "custompage_Pool2--2.0--Step1", FormMappingType.TASK, "Step1"));
     }
 
     @Test
