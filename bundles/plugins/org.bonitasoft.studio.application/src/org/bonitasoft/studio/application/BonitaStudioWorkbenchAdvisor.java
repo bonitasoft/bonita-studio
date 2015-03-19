@@ -74,7 +74,6 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
-import org.osgi.framework.BundleException;
 
 public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IStartup {
 
@@ -151,7 +150,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
         monitor.beginTask(BOSSplashHandler.BONITA_TASK, 100);
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        startGroovyPlugin();
         monitor.subTask(Messages.initializingCurrentRepository);
 
         disableInternalWebBrowser();
@@ -168,14 +166,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         doStartEngine();
 
         executeContributions();
-    }
-
-    protected void startGroovyPlugin() {
-        try {
-            org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getBundle().start();
-        } catch (final BundleException e1) {
-            BonitaStudioLog.error("Failed to loag Groovy plugin", e1);
-        }
     }
 
     private void checkCurrentRepository(final IProgressMonitor monitor) {
