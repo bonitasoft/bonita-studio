@@ -19,8 +19,11 @@ import static org.bonitasoft.studio.properties.i18n.Messages.useDecisionTable;
 
 import java.io.IOException;
 
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.decision.ui.Messages;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
@@ -29,6 +32,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -40,6 +44,14 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestDecisionTable extends SWTBotGefTestCase {
 
+    @Override
+    @Before
+    public void setUp() {
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
+        FileActionDialog.setDisablePopup(true);
+    }
 
 
     @Test
