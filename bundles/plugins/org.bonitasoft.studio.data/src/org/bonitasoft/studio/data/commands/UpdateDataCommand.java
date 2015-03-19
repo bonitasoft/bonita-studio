@@ -93,15 +93,30 @@ public class UpdateDataCommand extends AbstractTransactionalCommand {
 	@Override
 	protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
 			IAdaptable info) throws ExecutionException {
-		DataType t = null ;
+		DataType t = searchDataType();	
 
-		for(DataType type : process.getDatatypes()){
-			if(type.getName().equals(datatype)){
-				t = type ; 
+		preHandleJavaObjectAndXMLData(t);
+
+		data.setMultiple(multiplicity);
+		data.setTransient(dataIsTransient);
+		data.setDefaultValue(defaultValue);
+		data.setDataType(t);
+		data.setName(name);
+		data.setDocumentation(description);
+		data.setGenerated(generateData);
+
+		((List) element.eGet(feature)).add(data);
+		ECollections.sort(((EList<?>) element.eGet(feature)),new Comparator<Object>() {
+
+			public int compare(Object o1, Object o2) {
+				return ((Element) o1).getName().compareTo(((Element) o2).getName());
 			}
-		}	
+		});
+		return CommandResult.newOKCommandResult();
+	}
 
-		if(data instanceof JavaObjectData){
+    protected void preHandleJavaObjectAndXMLData(DataType t) {
+        if(data instanceof JavaObjectData){
 			if(t.equals(data.getDataType())){
 				((JavaObjectData)data).setClassName(javaTypeClass) ;
 			}else{
@@ -130,23 +145,17 @@ public class UpdateDataCommand extends AbstractTransactionalCommand {
 			((XMLData)data).setNamespace(xmlNamespace) ;
 			((XMLData)data).setType(xmlElement);
 		}
+    }
 
-		data.setMultiple(multiplicity);
-		data.setTransient(dataIsTransient);
-		data.setDefaultValue(defaultValue);
-		data.setDataType(t);
-		data.setName(name);
-		data.setDocumentation(description);
-		data.setGenerated(generateData);
+    protected DataType searchDataType() {
+        DataType t = null ;
 
-		((List) element.eGet(feature)).add(data);
-		ECollections.sort(((EList<?>) element.eGet(feature)),new Comparator<Object>() {
-
-			public int compare(Object o1, Object o2) {
-				return ((Element) o1).getName().compareTo(((Element) o2).getName());
+		for(DataType type : process.getDatatypes()){
+			if(type.getName().equals(datatype)){
+				t = type ; 
 			}
-		});
-		return CommandResult.newOKCommandResult();
-	}
+		}
+        return t;
+    }
 
 }
