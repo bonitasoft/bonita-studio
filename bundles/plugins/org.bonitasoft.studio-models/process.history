@@ -9657,6 +9657,7 @@
       <changes xsi:type="history:Add" element="process.ecore#//Pool" featureName="eSuperTypes"
           referenceValue="process.ecore#//ContractContainer"/>
     </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.contract.CreatePoolContractCustomMigration"/>
   </releases>
   <releases/>
 </history:History>

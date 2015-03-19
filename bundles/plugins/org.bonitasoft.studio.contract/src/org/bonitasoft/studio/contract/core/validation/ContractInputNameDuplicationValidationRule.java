@@ -62,10 +62,11 @@ public class ContractInputNameDuplicationValidationRule implements IValidationRu
 
     private void validateDuplicatedInputsRecursively(final List<ContractInput> inputs, final Set<String> duplicated, final Set<String> result) {
         for (final ContractInput child : inputs) {
-            if (child.getName() != null
-                    && !child.getName().isEmpty()
-                    && !result.add(child.getName())) {
-                duplicated.add(child.getName());
+            final String childName = child.getName();
+            if (childName != null
+                    && !childName.isEmpty()
+                    && !result.add(childName)) {
+                duplicated.add(childName);
             }
             validateDuplicatedInputsRecursively(child.getInputs(), duplicated, result);
         }
