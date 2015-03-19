@@ -132,7 +132,7 @@ public class AddJarsHandler extends AbstractHandler {
 					@Override
 					public void run(final IProgressMonitor monitor) throws InvocationTargetException,
 					InterruptedException {
-						RepositoryManager.getInstance().getCurrentRepository().refresh(monitor) ;
+						RepositoryManager.getInstance().getCurrentRepository().build(monitor) ;
 					}
 				}) ;
 			} catch (final InvocationTargetException e1) {

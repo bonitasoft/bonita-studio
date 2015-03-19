@@ -94,7 +94,7 @@ public class CustomConnectorMigrator {
             }
             RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class).getResourceProvider()
             .loadDefinitionsCategories(progressMonitor);
-            RepositoryManager.getInstance().getCurrentRepository().refresh(progressMonitor);
+            RepositoryManager.getInstance().getCurrentRepository().build(progressMonitor);
         } finally {
             FileActionDialog.deactivateYesNoToAll();
             if (zipfile != null) {

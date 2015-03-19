@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 Bonitasoft S.A.
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.expression.editor.autocompletion;
 
-import org.assertj.core.util.Strings;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.fieldassist.IContentProposal;
@@ -35,8 +34,9 @@ public class ExpressionProposal implements IContentProposal {
         this.expression = expression;
         content = labelProvider.getContent(expression);
         description = labelProvider.getDescription(expression);
-        label = Strings.isNullOrEmpty(description) ? labelProvider.getText(expression) : String.format("%s -- %s", labelProvider.getText(expression),
-                description);
+        label = (description == null || description.isEmpty()) ?
+                labelProvider.getText(expression)
+                : String.format("%s -- %s", labelProvider.getText(expression), description);
     }
 
     /*

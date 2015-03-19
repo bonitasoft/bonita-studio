@@ -75,7 +75,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
     private ContractConstraintController constraintController;
 
     @Inject
-    private TaskAdaptableSelectionProvider selectionProvider;
+    private ContractContainerAdaptableSelectionProvider selectionProvider;
 
     @Inject
     private IEclipseContext eclipseContext;
@@ -126,7 +126,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
         final IObservableValue observeContractValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(selectionProvider),
-                ProcessPackage.Literals.TASK__CONTRACT);
+                ProcessPackage.Literals.CONTRACT_CONTAINER__CONTRACT);
         observeContractValue.addValueChangeListener(new IValueChangeListener() {
 
             @Override

@@ -59,10 +59,8 @@ public class ContractInputTypeEditingSupport extends PropertyEditingSupport impl
     @Override
     public void applyEditorValue() {
         final ContractInput input = getContractInput();
-        if (input.getType() == ContractInputType.COMPLEX) {
-            if (input.getInputs().isEmpty()) {
-                controller.addChildInput(getViewer());
-            }
+        if (input.getType() == ContractInputType.COMPLEX && input.getInputs().isEmpty()) {
+            controller.addChildInput(getViewer());
         }
     }
 

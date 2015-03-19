@@ -16,28 +16,16 @@
  */
 package org.bonitasoft.studio.migration.custom.migration.contract;
 
-import org.eclipse.emf.edapt.migration.CustomMigration;
-import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.spi.migration.Instance;
-import org.eclipse.emf.edapt.spi.migration.Metamodel;
-import org.eclipse.emf.edapt.spi.migration.Model;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class CreateContractCustomMigration extends CustomMigration {
+public class CreateContractCustomMigration extends AbstractCreateContractCustomMigration {
 
-    @Override
-    public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
-        for (final Instance taskInstance : model.getAllInstances("process.Task")) {
-            final Instance contract = taskInstance.get("contract");
-            if (contract == null) {
-                final Instance contractInstance = model.newInstance("process.Contract");
-                taskInstance.set("contract", contractInstance);
-            }
-        }
+    protected String getParentTypeToMigrate() {
+        return "process.Task";
     }
 
 }

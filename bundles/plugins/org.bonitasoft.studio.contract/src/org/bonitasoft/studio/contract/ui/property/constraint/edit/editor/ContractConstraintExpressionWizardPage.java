@@ -28,9 +28,9 @@ import org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.content
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.model.process.ContractConstraint;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -116,11 +116,11 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
 
     protected GroovyViewer createSourceViewer(final Composite container) {
         groovyViewer = groovyViewerFactory.createSourceViewer(container, editorFactory.newInstance());
-        Task parentTask = null;
+        ContractContainer contractContainer = null;
         if (!inputs.isEmpty()) {
-            parentTask = ModelHelper.getFirstContainerOfType(inputs.get(0), Task.class);
+            contractContainer = ModelHelper.getFirstContainerOfType(inputs.get(0), ContractContainer.class);
         }
-        groovyViewer.setContext(null, parentTask, null, null);
+        groovyViewer.setContext(null, contractContainer, null, null);
         return groovyViewer;
     }
 

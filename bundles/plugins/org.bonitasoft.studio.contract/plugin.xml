@@ -20,7 +20,7 @@
          <propertySection
                class="org.bonitasoft.studio.contract.ui.property.ContractPropertySection"
                enablesFor="1"
-               filter="org.bonitasoft.studio.contract.ui.property.TaskFilter"
+               filter="org.bonitasoft.studio.contract.ui.property.ContractContainerFilter"
                id="InputsSection"
                tab="tab.contract"
                viewID="org.bonitasoft.studio.views.properties.process.general">
@@ -51,7 +51,10 @@
    <extension
          point="org.bonitasoft.studio.engine.definition.builder">
            <EngineDefinitionBuilder
-                 class="org.bonitasoft.studio.contract.core.ContractEngineDefinitionBuilder">
+                 class="org.bonitasoft.studio.contract.core.ProcessContractEngineBuilder">
+           </EngineDefinitionBuilder>
+           <EngineDefinitionBuilder
+                 class="org.bonitasoft.studio.contract.core.TaskContractEngineDefinitionBuilder">
            </EngineDefinitionBuilder>
    </extension>
 

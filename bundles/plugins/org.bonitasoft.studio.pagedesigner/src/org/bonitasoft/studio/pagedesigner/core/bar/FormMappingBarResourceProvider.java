@@ -38,6 +38,7 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
+ *         Create the Form Mapping artifact to be included in a bar file.
  */
 public class FormMappingBarResourceProvider implements BARResourcesProvider {
 

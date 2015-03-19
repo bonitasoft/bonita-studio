@@ -19,6 +19,7 @@ import java.util.Set;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -34,17 +35,19 @@ public class AbstractProcessSwitch extends AbstractSwitch {
     }
 
     @Override
-    public Element caseAbstractProcess(final AbstractProcess object) {
-        addActors(builder, object);
-        addData(builder, object);
-        addParameters(builder, object);
-        addConnector(builder, object);
-        addKPIBinding(builder, object);
-        return object;
+    public Element caseAbstractProcess(final AbstractProcess process) {
+        addActors(builder, process);
+        addData(builder, process);
+        addParameters(builder, process);
+        addConnector(builder, process);
+        addKPIBinding(builder, process);
+        if (process instanceof Pool) {
+            addContract(builder, (Pool) process);
+        }
+        return process;
     }
 
     public ProcessDefinitionBuilder getProcessBuilder() {
         return builder;
     }
-
 }

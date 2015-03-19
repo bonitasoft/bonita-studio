@@ -16,8 +16,6 @@
 
 
 	<modules>
-		<module>org.mockito</module>
-        <module>cucumber-jvm</module>
 		<module>assertj-core</module>
 		<module>org.eclipse.swtbot.finder.nebula</module>
 		<module>org.eclipse.swtbot.finder.nebula.gallery</module>
