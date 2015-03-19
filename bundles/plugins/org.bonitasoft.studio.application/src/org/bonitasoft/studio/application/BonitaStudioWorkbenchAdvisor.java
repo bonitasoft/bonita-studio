@@ -453,6 +453,9 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void earlyStartup() {
+        if (PlatformUtil.isHeadless()) {
+            return;//Do not execute earlyStartup in headless mode
+        }
         final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
                 "org.bonitasoft.studio.common.poststartup"); //$NON-NLS-1$
         IPostStartupContribution contrib = null;
