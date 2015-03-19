@@ -62,4 +62,12 @@ public class ConstraintExpressionCellLabelProviderTest {
         assertThat(styledText.toString()).doesNotContain("\n").doesNotContain("\r");
     }
 
+    @Test
+    public void should_getStyledText_supportNull() throws Exception {
+        final ContractConstraint constraint = ProcessFactory.eINSTANCE.createContractConstraint();
+        constraint.setExpression(null);
+        final StyledString styledText = labelProvider.getStyledText(constraint);
+        assertThat(styledText.toString()).doesNotContain("\n").doesNotContain("\r");
+    }
+
 }
