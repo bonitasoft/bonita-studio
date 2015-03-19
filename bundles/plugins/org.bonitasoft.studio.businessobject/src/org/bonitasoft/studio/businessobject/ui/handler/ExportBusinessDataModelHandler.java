@@ -19,6 +19,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.ExportBusinessDataModelWizard;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.wizard.IWizard;
@@ -26,7 +27,6 @@ import org.eclipse.swt.SWT;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ExportBusinessDataModelHandler extends AbstractBusinessObjectHandler {
 
@@ -54,8 +54,12 @@ public class ExportBusinessDataModelHandler extends AbstractBusinessObjectHandle
      */
     @Override
     public boolean isEnabled() {
-        final BusinessObjectModelFileStore fileStore = getStore().getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
-        return fileStore != null && fileStore.getContent() != null && !fileStore.getContent().getBusinessObjects().isEmpty();
+        if (!PlatformUtil.isHeadless()) {
+            final BusinessObjectModelFileStore fileStore = getStore().getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+            return fileStore != null && fileStore.getContent() != null && !fileStore.getContent().getBusinessObjects().isEmpty();
+        }
+        return false;
+
     }
 
 }
