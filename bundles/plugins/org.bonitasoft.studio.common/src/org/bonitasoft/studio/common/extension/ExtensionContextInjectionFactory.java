@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.common.extension;
 
-import static org.assertj.core.util.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
