@@ -116,7 +116,7 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
         if (parentFlowElement != null) {//check if on an Activity
             return parentFlowElement instanceof ContractContainer && ModelHelper.getParentForm(context) == null;
         } else {// we are at Pool Level
-            return ModelHelper.getParentForm(context) == null;
+            return ModelHelper.getParentPool(context) != null && ModelHelper.getParentForm(context) == null;
         }
     }
 
