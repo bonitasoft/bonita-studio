@@ -16,6 +16,7 @@ package org.bonitasoft.studio.model.process.builders;
 
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 
 /**
@@ -43,13 +44,8 @@ public class FormMappingBuilder {
         return this;
     }
 
-    public FormMappingBuilder external() {
-        instance.setExternal(true);
-        return this;
-    }
-
-    public FormMappingBuilder internal() {
-        instance.setExternal(false);
+    public FormMappingBuilder withType(final FormMappingType type) {
+        instance.setType(type);
         return this;
     }
 

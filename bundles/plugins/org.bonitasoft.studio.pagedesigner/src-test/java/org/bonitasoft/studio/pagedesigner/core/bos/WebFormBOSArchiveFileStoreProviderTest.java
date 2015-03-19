@@ -32,6 +32,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebFragmentFileStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageFileStore;
@@ -103,12 +104,11 @@ public class WebFormBOSArchiveFileStoreProviderTest {
 
     private AbstractProcess aProcessWithFormMappings() {
         return aPool().withName("Pool1").withVersion("1.0")
-                .havingOverviewFormMapping(aFormMapping().external().withURL("http://www.bonitasoft.com"))
-                .havingFormMapping(aFormMapping().internal().havingTargetForm(anExpression().withName("processForm").withContent("process-form-id")))
+                .havingOverviewFormMapping(aFormMapping().withType(FormMappingType.URL).withURL("http://www.bonitasoft.com"))
+                .havingFormMapping(aFormMapping().havingTargetForm(anExpression().withName("processForm").withContent("process-form-id")))
                 .havingElements(
                         aTask().withName("Step1").havingFormMapping(
                                 aFormMapping().havingTargetForm(anExpression().withName("StepForm").withContent("step-form-id"))))
                 .build();
     }
-
 }

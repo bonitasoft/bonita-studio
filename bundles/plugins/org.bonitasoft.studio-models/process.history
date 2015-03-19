@@ -9494,12 +9494,12 @@
       </changes>
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Create" target="process.ecore#//FormMapping" referenceName="eStructuralFeatures"
-            element="process.ecore#//FormMapping/external">
-          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/external"
+            element="process.ecore#//FormMapping/type">
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/type"
               featureName="name" dataValue="external"/>
-          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/external"
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/type"
               featureName="defaultValueLiteral" dataValue="false"/>
-          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/external"
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/type"
               featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
         </changes>
         <operation name="newAttribute">
@@ -9658,6 +9658,79 @@
           referenceValue="process.ecore#//ContractContainer"/>
     </changes>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.contract.CreatePoolContractCustomMigration"/>
+  </releases>
+  <releases date="2015-03-19T11:19:03.139+0100" label="7.0.0-003">
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+          element="process.ecore#//FormMappingType">
+        <changes xsi:type="history:Set" element="process.ecore#//FormMappingType"
+            featureName="name" dataValue="FormMappingType"/>
+      </changes>
+      <changes xsi:type="history:Create" target="process.ecore#//FormMappingType"
+          referenceName="eLiterals" element="process.ecore#//FormMappingType/INTERNAL">
+        <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/INTERNAL"
+            featureName="name" dataValue="INTERNAL"/>
+        <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/INTERNAL"
+            featureName="literal" dataValue="INTERNAL"/>
+      </changes>
+      <changes xsi:type="history:Create" target="process.ecore#//FormMappingType"
+          referenceName="eLiterals" element="process.ecore#//FormMappingType/URL">
+        <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/URL"
+            featureName="name" dataValue="URL"/>
+        <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/URL"
+            featureName="literal" dataValue="URL"/>
+        <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/URL"
+            featureName="value" dataValue="1" oldDataValue="0"/>
+      </changes>
+      <changes xsi:type="history:Create" target="process.ecore#//FormMappingType"
+          referenceName="eLiterals" element="process.ecore#//FormMappingType/LEGACY">
+        <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/LEGACY"
+            featureName="name" dataValue="LEGACY"/>
+        <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/LEGACY"
+            featureName="literal" dataValue="LEGACY"/>
+        <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/LEGACY"
+            featureName="value" dataValue="2" oldDataValue="0"/>
+      </changes>
+      <operation name="createEnumeration">
+        <parameters name="ePackage">
+          <referenceValue element="process.ecore#/"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>FormMappingType</dataValue>
+        </parameters>
+        <parameters name="literals">
+          <dataValue>INTERNAL</dataValue>
+          <dataValue>URL</dataValue>
+          <dataValue>LEGACY</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Set" element="process.ecore#//FormMapping/type" featureName="name"
+          dataValue="type" oldDataValue="external"/>
+      <operation name="rename">
+        <parameters name="element">
+          <referenceValue element="process.ecore#//FormMapping/type"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>type</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Set" element="process.ecore#//FormMapping/type" featureName="eType"
+          referenceValue="process.ecore#//FormMappingType" oldReferenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+      <changes xsi:type="history:Set" element="process.ecore#//FormMapping/type" featureName="defaultValueLiteral"
+          dataValue="INTERNAL" oldDataValue="false"/>
+      <operation name="changeAttributeType">
+        <parameters name="attribute">
+          <referenceValue element="process.ecore#//FormMapping/type"/>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="process.ecore#//FormMappingType"/>
+        </parameters>
+      </operation>
+    </changes>
   </releases>
   <releases/>
 </history:History>

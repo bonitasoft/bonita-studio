@@ -19,6 +19,7 @@ import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFacto
 
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
@@ -59,8 +60,8 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
         externalRadio.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
 
         externalObservable = new SelectObservableValue(Boolean.class);
-        externalObservable.addOption(Boolean.FALSE, SWTObservables.observeSelection(pageDesignerRadio));
-        externalObservable.addOption(Boolean.TRUE, SWTObservables.observeSelection(externalRadio));
+        externalObservable.addOption(FormMappingType.INTERNAL, SWTObservables.observeSelection(pageDesignerRadio));
+        externalObservable.addOption(FormMappingType.URL, SWTObservables.observeSelection(externalRadio));
 
         final Composite stackedComposite = widgetFactory.createComposite(this);
         stackedComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
@@ -85,7 +86,7 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
         context.bindValue(externalObservable,
                 CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                         formMappingObservable,
-                        ProcessPackage.Literals.FORM_MAPPING__EXTERNAL));
+                        ProcessPackage.Literals.FORM_MAPPING__TYPE));
         pageDesignerMappingComposite.doBindControl(context, formMappingObservable);
         urlMappingComposite.doBindControl(context, formMappingObservable);
     }
@@ -95,7 +96,7 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
 
             @Override
             public Object convert(final Object isExternal) {
-                return isExternal != null && (Boolean) isExternal ? urlMappingComposite : pageDesignerMappingComposite;
+                return isExternal == FormMappingType.URL ? urlMappingComposite : pageDesignerMappingComposite;
             }
         };
     }

@@ -81,12 +81,9 @@ public class FormBarResourceProvider implements BARResourcesProvider {
 
     private FormMappingDefinition newFormMappingDefinition(final FormMapping formMapping) {
         return isTaskMapping(formMapping) ?
-                new FormMappingDefinition(formValue(formMapping), formMappingType(formMapping), formMappingTarget(formMapping), taskName(formMapping))
-                : new FormMappingDefinition(formValue(formMapping), formMappingType(formMapping), formMappingTarget(formMapping));
-    }
-
-    private FormMappingTarget formMappingTarget(final FormMapping formMapping) {
-        return formMapping.isExternal() ? FormMappingTarget.URL : FormMappingTarget.INTERNAL;
+                new FormMappingDefinition(formValue(formMapping), formMappingType(formMapping), FormMappingTarget.valueOf(formMapping.getType().getName()),
+                        taskName(formMapping))
+                : new FormMappingDefinition(formValue(formMapping), formMappingType(formMapping), FormMappingTarget.valueOf(formMapping.getType().getName()));
     }
 
     private FormMappingType formMappingType(final FormMapping formMapping) {
@@ -99,7 +96,8 @@ public class FormBarResourceProvider implements BARResourcesProvider {
     }
 
     private String formValue(final FormMapping formMapping) {
-        return formMappingTarget(formMapping) == FormMappingTarget.URL ? formMapping.getUrl() : String.format("%s%s--%s--%s", CUSTOMPAGE_PREFIX,
+        return formMapping.getType() == org.bonitasoft.studio.model.process.FormMappingType.URL ? formMapping.getUrl() : String.format("%s%s--%s--%s",
+                CUSTOMPAGE_PREFIX,
                 processName(formMapping),
                 processVersion(formMapping), formName(formMapping));
     }
@@ -117,7 +115,7 @@ public class FormBarResourceProvider implements BARResourcesProvider {
     }
 
     private String formUUID(final FormMapping formMapping) {
-        checkArgument(formMappingTarget(formMapping) == FormMappingTarget.INTERNAL, "Only internal forms has no uuid");
+        checkArgument(formMapping.getType() == org.bonitasoft.studio.model.process.FormMappingType.INTERNAL, "Only internal forms has no uuid");
         return formMapping.getTargetForm().getContent();
     }
 
@@ -131,7 +129,8 @@ public class FormBarResourceProvider implements BARResourcesProvider {
     }
 
     private boolean isValid(final FormMapping formMapping) {
-        return formMappingTarget(formMapping) == FormMappingTarget.URL ? !isNullOrEmpty(formMapping.getUrl()) : formMapping.getTargetForm().hasName();
+        return formMapping.getType() == org.bonitasoft.studio.model.process.FormMappingType.URL ? !isNullOrEmpty(formMapping.getUrl()) : formMapping
+                .getTargetForm().hasName();
     }
 
 }

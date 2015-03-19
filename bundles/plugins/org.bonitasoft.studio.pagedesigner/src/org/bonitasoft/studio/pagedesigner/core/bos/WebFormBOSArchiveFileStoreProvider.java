@@ -44,6 +44,7 @@ import org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProv
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pagedesigner.core.bar.BarResourceCreationException;
 import org.bonitasoft.studio.pagedesigner.core.bar.CustomPageBarResourceFactory;
@@ -182,7 +183,7 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
 
             @Override
             public boolean apply(final FormMapping mapping) {
-                return !mapping.isExternal() && mapping.getTargetForm().hasContent();
+                return mapping.getType() == FormMappingType.INTERNAL && mapping.getTargetForm().hasContent();
             }
         };
     }

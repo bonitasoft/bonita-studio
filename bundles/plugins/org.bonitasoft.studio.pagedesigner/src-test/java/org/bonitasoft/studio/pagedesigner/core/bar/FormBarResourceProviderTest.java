@@ -68,9 +68,12 @@ public class FormBarResourceProviderTest {
      */
     @Before
     public void setUp() throws Exception {
-        poolWithFormMappings = aPool().withName("Pool1").withVersion("1.0")
-                .havingOverviewFormMapping(aFormMapping().external().withURL("http://www.bonitasoft.com"))
-                .havingFormMapping(aFormMapping().internal().havingTargetForm(anExpression().withName("processForm").withContent("process-form-id")))
+        poolWithFormMappings = aPool()
+                .withName("Pool1")
+                .withVersion("1.0")
+                .havingOverviewFormMapping(
+                        aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.URL).withURL("http://www.bonitasoft.com"))
+                .havingFormMapping(aFormMapping().havingTargetForm(anExpression().withName("processForm").withContent("process-form-id")))
                 .havingElements(
                         aTask().withName("Step1").havingFormMapping(
                                 aFormMapping().havingTargetForm(anExpression().withName("StepForm").withContent("step-form-id"))))
@@ -104,8 +107,8 @@ public class FormBarResourceProviderTest {
     @Test
     public void should_not_add_formMapping_resource_in_bar_if_mapping_is_invalid() throws Exception {
         final Pool pool = aPool().withName("Pool2").withVersion("2.0")
-                .havingOverviewFormMapping(aFormMapping().external().withURL(""))
-                .havingFormMapping(aFormMapping().internal().havingTargetForm(anExpression().withContent(null)))
+                .havingOverviewFormMapping(aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.URL).withURL(""))
+                .havingFormMapping(aFormMapping().havingTargetForm(anExpression().withContent(null)))
                 .havingElements(
                         aTask().withName("Step1").havingFormMapping(
                                 aFormMapping().havingTargetForm(anExpression().withName("Step1").withContent("step-form-id"))))
