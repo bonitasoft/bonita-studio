@@ -599,9 +599,10 @@ public class Repository implements IRepository, IJavaContainer {
 
     @Override
     public IRepositoryFileStore asRepositoryFileStore(final Path path) throws IOException, CoreException {
-        final IResource iResource = project.getFile(fromOSString(path.toString()).makeRelativeTo(project.getLocation()));
+        final IPath resourcePath = fromOSString(path.toString()).makeRelativeTo(project.getLocation());
+        final IResource iResource = isFile(resourcePath) ? project.getFile(resourcePath) : project.getFolder(resourcePath);
         if (!iResource.exists()) {
-            iResource.refreshLocal(IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);
+            iResource.getParent().refreshLocal(IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);
             if (!iResource.exists()) {
                 throw new FileNotFoundException(path.toFile().getAbsolutePath());
             }
@@ -620,6 +621,10 @@ public class Repository implements IRepository, IJavaContainer {
             }
         }
         return null;
+    }
+
+    private boolean isFile(final IPath resourcePath) {
+        return resourcePath.getFileExtension() != null;
     }
 
     @Override
