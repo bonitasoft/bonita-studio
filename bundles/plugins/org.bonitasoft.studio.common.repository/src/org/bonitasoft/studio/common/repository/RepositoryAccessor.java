@@ -63,8 +63,12 @@ public class RepositoryAccessor {
         return repositoryManagerInstance.getRepositoryStore(storeClass);
     }
 
+    public Repository getCurrentRepository() {
+        return repositoryManagerInstance.getCurrentRepository();
+    }
+
     public IRepository start(final IProgressMonitor monitor) throws CoreException {
-        final IRepository repository = repositoryManagerInstance.getCurrentRepository();
+        final IRepository repository = getCurrentRepository();
         if (!repository.exists()) {
             return repository.create(monitor);
         }
