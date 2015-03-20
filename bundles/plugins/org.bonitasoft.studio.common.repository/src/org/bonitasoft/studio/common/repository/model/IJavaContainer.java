@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.common.repository.model;
 
+import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 
@@ -31,6 +32,8 @@ public interface IJavaContainer {
     void enableBuild();
 
     IJavaProject getJavaProject();
+
+    JDTTypeHierarchyManager getJdtTypeHierarchyManager();
 
     ClassLoader createProjectClassloader(IProgressMonitor monitor);
 

@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+import org.bonitasoft.studio.common.repository.Repository;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -30,7 +31,11 @@ import org.eclipse.swt.graphics.Image;
  */
 public interface IRepository extends IFileStoreChangeListener {
 
-    void createRepository(String repositoryName);
+    void createRepository(String repositoryName, boolean migrationEnabled);
+
+    boolean exists();
+
+    boolean isLoaded();
 
     String getName();
 
@@ -38,11 +43,9 @@ public interface IRepository extends IFileStoreChangeListener {
 
     IProject getProject();
 
-    void create(boolean migrateStoreIfNeeded, IProgressMonitor monitor);
-
     void delete(IProgressMonitor monitor);
 
-    void open();
+    Repository open(IProgressMonitor monitor);
 
     void close();
 
@@ -74,7 +77,8 @@ public interface IRepository extends IFileStoreChangeListener {
 
     void migrate(IProgressMonitor monitor) throws CoreException, MigrationException;
 
-    void create(IProgressMonitor monitor);
+    IRepository create(IProgressMonitor monitor);
 
     boolean isOnline();
+
 }

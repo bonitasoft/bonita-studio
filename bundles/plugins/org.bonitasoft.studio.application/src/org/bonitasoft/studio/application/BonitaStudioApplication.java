@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.application;
 
@@ -37,6 +34,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -102,7 +101,7 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
     }
 
     protected BonitaStudioWorkbenchAdvisor createWorkbenchAdvisor() {
-        return new BonitaStudioWorkbenchAdvisor();
+        return ContextInjectionFactory.make(BonitaStudioWorkbenchAdvisor.class, EclipseContextFactory.create());
     }
 
     protected void addBuildJobListener() {
@@ -195,6 +194,7 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
             }
         }
     }
+
     /*
      * (non-Javadoc)
      * @see org.eclipse.equinox.app.IApplication#stop()

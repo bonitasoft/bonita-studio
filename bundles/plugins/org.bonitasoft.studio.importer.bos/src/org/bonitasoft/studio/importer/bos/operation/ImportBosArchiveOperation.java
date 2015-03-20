@@ -109,7 +109,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             throw new InvocationTargetException(e1, "Failed to create temporary project");
         }
 
-        currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
+        currentRepository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
         final List<IRepositoryStore<? extends IRepositoryFileStore>> allRepositories = currentRepository.getAllStores();
 
         activateYesNoToAll();
@@ -149,7 +149,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         }
 
         currentRepository.build(monitor);
-        currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
+        currentRepository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
 
         if (launchValidationafterImport) {
             validateAllAfterImport(monitor);

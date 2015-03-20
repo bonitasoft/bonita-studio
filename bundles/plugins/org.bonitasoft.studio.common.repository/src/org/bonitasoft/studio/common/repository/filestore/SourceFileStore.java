@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -147,6 +148,14 @@ public class SourceFileStore extends AbstractFileStore {
                 try {
                     editorPart = IDE.openEditor(page, new FileEditorInput(getResource()), "org.eclipse.jdt.ui.CompilationUnitEditor");
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveEditor(editorPart, false);
+                    editorPart.addPropertyListener(new IPropertyListener() {
+
+                        @Override
+                        public void propertyChanged(final Object source, final int propId) {
+                            System.out.println(propId);
+
+                        }
+                    });
                 } catch (final PartInitException e) {
                 }
 
