@@ -50,7 +50,7 @@ public class ConstraintExpressionSourceViewerConfiguration extends GroovyConfigu
                 "fCategories", processor);
         final List<CompletionProposalCategory> newCategories = new ArrayList<CompletionProposalCategory>();
         for (final CompletionProposalCategory category : categories) {
-            if (category.getId().equals("org.bonitasoft.studio.contract.input.category")) {
+            if ("org.bonitasoft.studio.contract.input.category".equals(category.getId())) {
                 newCategories.add(category);
             }
         }

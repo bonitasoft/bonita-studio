@@ -280,14 +280,16 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
             @SuppressWarnings("unchecked")
             @Override
             public Object convert(final Object parameterList) {
-                final Parameter p = ((List<Parameter>) parameterList).get(0);
-                final Collection<Parameter> inputParameters = (Collection<Parameter>) viewer
-                        .getInput();
-                for (final Parameter param : inputParameters) {
-                    if (param.getName().equals(p.getName())
-                            && param.getTypeClassname().equals(
-                                    p.getTypeClassname())) {
-                        return param;
+                if (!((List<Parameter>) parameterList).isEmpty()) {
+                    final Parameter p = ((List<Parameter>) parameterList).get(0);
+                    final Collection<Parameter> inputParameters = (Collection<Parameter>) viewer
+                            .getInput();
+                    for (final Parameter param : inputParameters) {
+                        if (param.getName().equals(p.getName())
+                                && param.getTypeClassname().equals(
+                                        p.getTypeClassname())) {
+                            return param;
+                        }
                     }
                 }
                 return null;
