@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
@@ -25,7 +23,9 @@ import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -43,102 +43,106 @@ import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * @author Romain Bioteau
- *
  */
-public class SelectUserMappingWizardPage extends SelectOrganizationWizardPage{
+public class SelectUserMappingWizardPage extends SelectOrganizationWizardPage {
 
     private final ActorMapping mapping;
-    private final SortedSet<String> availableUsers = new TreeSet<String>() ;
-    private final SortedSet<String> selectedUsers ;
+    private final SortedSet<String> availableUsers = new TreeSet<String>();
+    private final SortedSet<String> selectedUsers;
     private List<User> users;
     private CheckboxTableViewer availableUserViewer;
 
-    public SelectUserMappingWizardPage(ActorMapping mapping) {
+    public SelectUserMappingWizardPage(final ActorMapping mapping) {
         super();
-        setTitle(Messages.selectUserTitle) ;
-        setDescription(Messages.selectUserDescription) ;
-        this.mapping = mapping ;
-        selectedUsers = new TreeSet<String>(this.mapping.getUsers().getUser()) ;
+        setTitle(Messages.selectUserTitle);
+        setDescription(Messages.selectUserDescription);
+        this.mapping = mapping;
+        selectedUsers = new TreeSet<String>(this.mapping.getUsers().getUser());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public void createControl(Composite parent) {
-        super.createControl(parent) ;
+    public void createControl(final Composite parent) {
+        super.createControl(parent);
 
         final Composite mainComposite = (Composite) getControl();
-        Composite viewersComposite = new Composite(mainComposite, SWT.NONE) ;
-        viewersComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).span(2, 1).hint(SWT.DEFAULT,250).create()) ;
-        viewersComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).extendedMargins(0, 0, 10, 0).create()) ;
+        final Composite viewersComposite = new Composite(mainComposite, SWT.NONE);
+        viewersComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).span(2, 1).hint(SWT.DEFAULT, 250).create());
+        viewersComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).extendedMargins(0, 0, 10, 0).create());
 
-
-        availableUserViewer = CheckboxTableViewer.newCheckList(viewersComposite, SWT.BORDER | SWT.FULL_SELECTION) ;
-        availableUserViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
-        availableUserViewer.getTable().setHeaderVisible(true) ;
-        availableUserViewer.setContentProvider(new ArrayContentProvider()) ;
-        TableLayout layout = new TableLayout() ;
+        availableUserViewer = CheckboxTableViewer.newCheckList(viewersComposite, SWT.BORDER | SWT.FULL_SELECTION);
+        availableUserViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        availableUserViewer.getTable().setHeaderVisible(true);
+        availableUserViewer.setContentProvider(new ArrayContentProvider());
+        final TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(100));
-        availableUserViewer.getTable().setLayout(layout) ;
+        availableUserViewer.getTable().setLayout(layout);
 
-        TableViewerColumn columnViewer = new TableViewerColumn(availableUserViewer, SWT.NONE) ;
-        TableColumn usernameColumn = columnViewer.getColumn() ;
+        final TableViewerColumn columnViewer = new TableViewerColumn(availableUserViewer, SWT.NONE);
+        final TableColumn usernameColumn = columnViewer.getColumn();
         usernameColumn.setText(Messages.userName);
         columnViewer.setLabelProvider(new ColumnLabelProvider());
-        TableColumnSorter sorter = new TableColumnSorter(availableUserViewer) ;
-        sorter.setColumn(usernameColumn) ;
+        final TableColumnSorter sorter = new TableColumnSorter(availableUserViewer);
+        sorter.setColumn(usernameColumn);
 
-        availableUserViewer.setInput(availableUsers) ;
+        availableUserViewer.setInput(availableUsers);
         availableUserViewer.setCheckedElements(selectedUsers.toArray());
 
     }
 
-    protected void removedUsers(List<String> removedUsers) {
-        selectedUsers.removeAll(removedUsers) ;
-        for(User u : users){
-            if(removedUsers.contains(u.getUserName())
-                    && !availableUsers.contains(u.getUserName())){
-                availableUsers.add(u.getUserName()) ;
+    protected void removedUsers(final List<String> removedUsers) {
+        selectedUsers.removeAll(removedUsers);
+        for (final User u : users) {
+            if (removedUsers.contains(u.getUserName())
+                    && !availableUsers.contains(u.getUserName())) {
+                availableUsers.add(u.getUserName());
             }
         }
-        mapping.getUsers().getUser().clear() ;
-        mapping.getUsers().getUser().addAll(selectedUsers) ;
+        mapping.getUsers().getUser().clear();
+        mapping.getUsers().getUser().addAll(selectedUsers);
 
     }
 
-    protected void selectedUsers(List<String> selectedUsers) {
-        availableUsers.removeAll(selectedUsers) ;
-        this.selectedUsers.addAll(selectedUsers) ;
-        mapping.getUsers().getUser().clear() ;
-        mapping.getUsers().getUser().addAll(this.selectedUsers) ;
+    protected void selectedUsers(final List<String> selectedUsers) {
+        availableUsers.removeAll(selectedUsers);
+        this.selectedUsers.addAll(selectedUsers);
+        mapping.getUsers().getUser().clear();
+        mapping.getUsers().getUser().addAll(this.selectedUsers);
 
     }
 
     @Override
-    protected void refreshOrganization(Organization organization) {
-        if(organization != null){
-            if(organization.getUsers() == null){
-                organization.setUsers(OrganizationFactory.eINSTANCE.createUsers()) ;
+    protected void refreshOrganization(final Organization organization) {
+        if (organization != null) {
+            if (organization.getUsers() == null) {
+                organization.setUsers(OrganizationFactory.eINSTANCE.createUsers());
             }
 
-            users = organization.getUsers().getUser() ;
+            users = organization.getUsers().getUser();
 
-            availableUsers.clear() ;
-            for(User u : users){
-                availableUsers.add(u.getUserName()) ;
+            availableUsers.clear();
+            for (final User u : users) {
+                availableUsers.add(u.getUserName());
             }
             availableUsers.addAll(selectedUsers);
-            if(availableUserViewer != null){
-                availableUserViewer.setInput(availableUsers) ;
+            if (availableUserViewer != null) {
+                availableUserViewer.setInput(availableUsers);
                 availableUserViewer.setCheckedElements(selectedUsers.toArray());
             }
         }
     }
 
     @Override
-    public void selectionChanged(SelectionChangedEvent event) {
-        refreshOrganization((Organization) ((IRepositoryFileStore)((IStructuredSelection) event.getSelection()).getFirstElement()).getContent()) ;
+    public void selectionChanged(final SelectionChangedEvent event) {
+        final IRepositoryFileStore fstore = (IRepositoryFileStore) ((IStructuredSelection) event.getSelection()).getFirstElement();
+        try {
+            refreshOrganization((Organization) fstore.getContent());
+        } catch (final ReadFileStoreException e) {
+            BonitaStudioLog.error("Failed read organization content", e);
+        }
     }
 
     public Object[] getSelectedUsers() {

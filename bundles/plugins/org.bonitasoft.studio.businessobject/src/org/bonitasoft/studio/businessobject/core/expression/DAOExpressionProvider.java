@@ -17,6 +17,8 @@ package org.bonitasoft.studio.businessobject.core.expression;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.bonitasoft.engine.bdm.dao.BusinessObjectDAO;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
@@ -25,8 +27,8 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
+import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -44,6 +46,9 @@ import org.eclipse.swt.graphics.Image;
  */
 public class DAOExpressionProvider implements IExpressionProvider {
 
+    @Inject
+    private RepositoryAccessor repositoryAccessor;
+
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressions(org.eclipse.emf.ecore.EObject)
@@ -51,13 +56,15 @@ public class DAOExpressionProvider implements IExpressionProvider {
     @Override
     public Set<Expression> getExpressions(final EObject context) {
         final Set<Expression> result = new HashSet<Expression>();
-        final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        final Repository currentRepository = repositoryAccessor.getCurrentRepository();
+        final IJavaProject javaProject = currentRepository.getJavaProject();
         try {
             final IType baseType = javaProject.findType(BusinessObjectDAO.class.getName());
             if (baseType == null) {
                 throw new RuntimeException(new ClassNotFoundException(BusinessObjectDAO.class.getName()));
             }
-            final ITypeHierarchy newTypeHierarchy = new JDTTypeHierarchyManager().getTypeHierarchy(baseType);
+            final ITypeHierarchy newTypeHierarchy = currentRepository.getJdtTypeHierarchyManager()
+                    .getTypeHierarchy(baseType);
             for (final IType daoType : newTypeHierarchy.getAllInterfaces()) {
                 if (!daoType.equals(baseType)) {
                     result.add(createExpression(daoType));
@@ -154,8 +161,6 @@ public class DAOExpressionProvider implements IExpressionProvider {
     }
 
     protected BusinessObjectModelFileStore getBusinessFileStore() {
-        final BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        final BusinessObjectModelFileStore fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
-        return fileStore;
+        return repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class).getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
     }
 }

@@ -41,6 +41,7 @@ import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectClasspath;
 import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaBPMProjectOperation;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
+import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -101,18 +102,24 @@ public class Repository implements IRepository, IJavaContainer {
 
     private SortedMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>> stores;
 
+    private JDTTypeHierarchyManager jdtTypeHierarchyManager;
+
+    private boolean migrationEnabled = false;;
+
     public Repository() {
 
     }
 
     @Override
-    public void createRepository(final String repositoryName) {
+    public void createRepository(final String repositoryName, final boolean migrationEnabled) {
         name = repositoryName;
         project = ResourcesPlugin.getWorkspace().getRoot().getProject(repositoryName);
+        jdtTypeHierarchyManager = new JDTTypeHierarchyManager();
+        this.migrationEnabled = migrationEnabled;
     }
 
     @Override
-    public void create(final boolean migrateStoreIfNeeded, final IProgressMonitor monitor) {
+    public Repository create(final IProgressMonitor monitor) {
         final long init = System.currentTimeMillis();
         if (BonitaStudioLog.isLoggable(IStatus.OK)) {
             BonitaStudioLog.debug("Creating repository " + project.getName() + "...", CommonRepositoryPlugin.PLUGIN_ID);
@@ -123,8 +130,8 @@ public class Repository implements IRepository, IJavaContainer {
             if (!project.exists()) {
                 workspace.run(newProjectWorkspaceOperation(name, workspace), monitor);
             }
-            open();
-            initRepositoryStores(migrateStoreIfNeeded, monitor);
+            open(monitor);
+            //initRepositoryStores(migrateStoreIfNeeded, monitor);
             new BonitaBPMProjectClasspath(project, this).create(monitor);
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
@@ -141,6 +148,7 @@ public class Repository implements IRepository, IJavaContainer {
                         CommonRepositoryPlugin.PLUGIN_ID);
             }
         }
+        return this;
     }
 
     protected CreateBonitaBPMProjectOperation newProjectWorkspaceOperation(final String projectName, final IWorkspace workspace) {
@@ -154,11 +162,6 @@ public class Repository implements IRepository, IJavaContainer {
                 addBuilder("org.eclipse.xtext.ui.shared.xtextBuilder").
                 addBuilder("org.eclipse.pde.ManifestBuilder").
                 addBuilder("org.eclipse.pde.SchemaBuilder");
-    }
-
-    @Override
-    public void create(final IProgressMonitor monitor) {
-        create(false, monitor);
     }
 
     /*
@@ -193,7 +196,7 @@ public class Repository implements IRepository, IJavaContainer {
      * @see org.bonitasoft.studio.common.repository.IRepository#open()
      */
     @Override
-    public void open() {
+    public Repository open(final IProgressMonitor monitor) {
         try {
             if (!project.isOpen()) {
                 BonitaStudioLog.log("Opening project: " + project.getName());
@@ -213,10 +216,12 @@ public class Repository implements IRepository, IJavaContainer {
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
+        initRepositoryStores(monitor);
+        return this;
     }
 
     protected void updateStudioShellText() {
-        Display.getDefault().syncExec(new Runnable() {
+        Display.getDefault().asyncExec(new Runnable() {
 
             @Override
             public void run() {
@@ -261,7 +266,7 @@ public class Repository implements IRepository, IJavaContainer {
         }
     }
 
-    protected synchronized void initRepositoryStores(final boolean migrateStoreIfNeeded, final IProgressMonitor monitor) {
+    protected synchronized void initRepositoryStores(final IProgressMonitor monitor) {
         if (stores == null || stores.isEmpty()) {
             disableBuild();
             stores = new TreeMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>>(new Comparator<Class<?>>() {
@@ -277,7 +282,7 @@ public class Repository implements IRepository, IJavaContainer {
             for (final IConfigurationElement configuration : repositoryStoreConfigurationElements) {
                 try {
                     final IRepositoryStore<? extends IRepositoryFileStore> store = createRepositoryStore(configuration, monitor);
-                    if (migrateStoreIfNeeded) {
+                    if (migrationEnabled()) {
                         try {
                             store.migrate(monitor);
                         } catch (final MigrationException e) {
@@ -290,6 +295,10 @@ public class Repository implements IRepository, IJavaContainer {
                 }
             }
         }
+    }
+
+    private boolean migrationEnabled() {
+        return migrationEnabled;
     }
 
     protected IRepositoryStore<? extends IRepositoryFileStore> createRepositoryStore(
@@ -390,7 +399,7 @@ public class Repository implements IRepository, IJavaContainer {
     @Override
     public <T> T getRepositoryStore(final Class<T> repositoryStoreClass) {
         if (stores == null || stores.isEmpty()) {
-            initRepositoryStores(false, NULL_PROGRESS_MONITOR);
+            initRepositoryStores(NULL_PROGRESS_MONITOR);
             enableBuild();
         }
         return repositoryStoreClass.cast(stores.get(repositoryStoreClass));
@@ -433,7 +442,7 @@ public class Repository implements IRepository, IJavaContainer {
     @Override
     public synchronized List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() {
         if (stores == null) {
-            initRepositoryStores(false, NULL_PROGRESS_MONITOR);
+            initRepositoryStores(NULL_PROGRESS_MONITOR);
             enableBuild();
         }
         final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>(stores.values());
@@ -526,8 +535,8 @@ public class Repository implements IRepository, IJavaContainer {
     }
 
     @Override
-    public void notifyFileStoreEvent(final FileStoreChangeEvent event) {
-        // NO BEHAVIOR
+    public void handleFileStoreEvent(final FileStoreChangeEvent event) {
+        jdtTypeHierarchyManager.handleFileStoreEvent(event);
     }
 
     @Override
@@ -590,9 +599,10 @@ public class Repository implements IRepository, IJavaContainer {
 
     @Override
     public IRepositoryFileStore asRepositoryFileStore(final Path path) throws IOException, CoreException {
-        final IResource iResource = project.getFile(fromOSString(path.toString()).makeRelativeTo(project.getLocation()));
+        final IPath resourcePath = fromOSString(path.toString()).makeRelativeTo(project.getLocation());
+        final IResource iResource = isFile(resourcePath) ? project.getFile(resourcePath) : project.getFolder(resourcePath);
         if (!iResource.exists()) {
-            iResource.refreshLocal(IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);
+            iResource.getParent().refreshLocal(IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);
             if (!iResource.exists()) {
                 throw new FileNotFoundException(path.toFile().getAbsolutePath());
             }
@@ -611,6 +621,10 @@ public class Repository implements IRepository, IJavaContainer {
             }
         }
         return null;
+    }
+
+    private boolean isFile(final IPath resourcePath) {
+        return resourcePath.getFileExtension() != null;
     }
 
     @Override
@@ -670,6 +684,21 @@ public class Repository implements IRepository, IJavaContainer {
     @Override
     public boolean isOnline() {
         return true;
+    }
+
+    @Override
+    public JDTTypeHierarchyManager getJdtTypeHierarchyManager() {
+        return jdtTypeHierarchyManager;
+    }
+
+    @Override
+    public boolean exists() {
+        return project.exists();
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return stores != null && !stores.isEmpty();
     }
 
 }

@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2011 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common;
 
@@ -26,11 +23,13 @@ import java.util.List;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.ForbiddenCharactersValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.databinding.Binding;
@@ -57,7 +56,6 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class OpenNameAndVersionDialog extends Dialog {
 
@@ -72,7 +70,6 @@ public class OpenNameAndVersionDialog extends Dialog {
     private HashSet<String> existingFileNames;
     public List<AbstractProcess> processes;
 
-
     protected OpenNameAndVersionDialog(final Shell parentShell, final MainProcess diagram, final IRepositoryStore diagramStore) {
         super(parentShell);
         isDiagram = true;
@@ -86,7 +83,8 @@ public class OpenNameAndVersionDialog extends Dialog {
         listExistingAbstractProcess(diagramStore);
     }
 
-    public OpenNameAndVersionDialog(final Shell parentShell, final MainProcess diagram, final String poolName, final String versionName, final IRepositoryStore diagramStore) {
+    public OpenNameAndVersionDialog(final Shell parentShell, final MainProcess diagram, final String poolName, final String versionName,
+            final IRepositoryStore diagramStore) {
         super(parentShell);
         diagramName = poolName;
         diagramVersion = versionName;
@@ -98,7 +96,8 @@ public class OpenNameAndVersionDialog extends Dialog {
         listExistingAbstractProcess(diagramStore);
     }
 
-    public OpenNameAndVersionDialog(final Shell parentShell, final MainProcess diagram, final IRepositoryStore diagramStore, final boolean diagramNameOrVersionChangeMandatory) {
+    public OpenNameAndVersionDialog(final Shell parentShell, final MainProcess diagram, final IRepositoryStore diagramStore,
+            final boolean diagramNameOrVersionChangeMandatory) {
         super(parentShell);
         isDiagram = true;
         diagramName = diagram.getName();
@@ -130,8 +129,13 @@ public class OpenNameAndVersionDialog extends Dialog {
         processes = new ArrayList<AbstractProcess>();
         final List<IRepositoryFileStore> l = diagramStore.getChildren();
         for (final IRepositoryFileStore irepStore : l) {
-            final MainProcess m = (MainProcess) irepStore.getContent();
-            processes.addAll(ModelHelper.getAllProcesses(m));
+            MainProcess m;
+            try {
+                m = (MainProcess) irepStore.getContent();
+                processes.addAll(ModelHelper.getAllProcesses(m));
+            } catch (final ReadFileStoreException e) {
+                BonitaStudioLog.error("Failed read diagram content", e);
+            }
         }
     }
 
@@ -178,7 +182,6 @@ public class OpenNameAndVersionDialog extends Dialog {
 
         bindVersion(dbc, observeVersionText);
 
-
         final MultiValidator caseValidator = new MultiValidator() {
 
             @Override
@@ -192,8 +195,6 @@ public class OpenNameAndVersionDialog extends Dialog {
 
         dbc.addValidationStatusProvider(caseValidator);
         ControlDecorationSupport.create(caseValidator, SWT.LEFT);
-
-
 
     }
 
@@ -245,7 +246,7 @@ public class OpenNameAndVersionDialog extends Dialog {
         ControlDecorationSupport.create(diagramNameBinding, SWT.LEFT);
     }
 
-    public IStatus validateModification(final String name, final String version){
+    public IStatus validateModification(final String name, final String version) {
         if (isDiagram) {
             final String newDiagramFilename = NamingUtils.toDiagramFilename(name, version);
             final IRepositoryFileStore fileStore = diagramStore.getChild(newDiagramFilename);

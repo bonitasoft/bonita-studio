@@ -41,6 +41,7 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -108,7 +109,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             throw new InvocationTargetException(e1, "Failed to create temporary project");
         }
 
-        currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
+        currentRepository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
         final List<IRepositoryStore<? extends IRepositoryFileStore>> allRepositories = currentRepository.getAllStores();
 
         activateYesNoToAll();
@@ -148,7 +149,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         }
 
         currentRepository.build(monitor);
-        currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
+        currentRepository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
 
         if (launchValidationafterImport) {
             validateAllAfterImport(monitor);
@@ -166,14 +167,19 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         final ImportBosArchiveStatusBuilder statusBuilder = new ImportBosArchiveStatusBuilder();
         if (validate) {
             for (final IRepositoryFileStore diagramFileStore : iResourceImporter.getImportedProcesses()) {
-                final AbstractProcess process = (AbstractProcess) diagramFileStore.getContent();
-                final RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(
-                        new BatchValidationOperation(
-                                new OffscreenEditPartFactory(org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
-                                new ValidationMarkerProvider()));
-                validationAction.addProcess(process);
-                validationAction.run(monitor);
-                statusBuilder.addStatus(process, validationAction.getStatus());
+                try {
+                    final AbstractProcess process = (AbstractProcess) diagramFileStore.getContent();
+                    final RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(
+                            new BatchValidationOperation(
+                                    new OffscreenEditPartFactory(org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
+                                    new ValidationMarkerProvider()));
+                    validationAction.addProcess(process);
+                    validationAction.run(monitor);
+                    statusBuilder.addStatus(process, validationAction.getStatus());
+                } catch (final ReadFileStoreException e) {
+                    throw new InvocationTargetException(e, "Failed to retrieve diagram content");
+                }
+
             }
         }
         validationStatus = statusBuilder.done();

@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connector.model.i18n;
 
@@ -45,6 +43,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
@@ -73,7 +72,6 @@ import org.osgi.framework.Bundle;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class DefinitionResourceProvider {
 
@@ -164,7 +162,16 @@ public class DefinitionResourceProvider {
             return null;
         }
 
-        final Resource emfResource = ((ConnectorDefinition) fileStore.getContent()).eResource();
+        ConnectorDefinition def = null;
+        try {
+            def = (ConnectorDefinition) fileStore.getContent();
+        } catch (final ReadFileStoreException e2) {
+            BonitaStudioLog.error("Failed to retrieve connector definition", e2);
+        }
+        if (def == null) {
+            return null;
+        }
+        final Resource emfResource = def.eResource();
         if (emfResource == null) {
             return null;
         }
@@ -341,8 +348,8 @@ public class DefinitionResourceProvider {
                             if (resourceName.substring(baseName.length())
                                     .indexOf("_") != -1
                                     && resourceName
-                                    .substring(baseName.length())
-                                    .indexOf(".") != -1) {
+                                            .substring(baseName.length())
+                                            .indexOf(".") != -1) {
                                 String language = resourceName
                                         .substring(baseName.length());
                                 language = language.substring(1,
@@ -359,7 +366,7 @@ public class DefinitionResourceProvider {
                                 }
                                 result.add(new Locale(language,
                                         country == null ? "" : country,
-                                                variant == null ? "" : variant));
+                                        variant == null ? "" : variant));
                             }
                         }
                     }
@@ -493,11 +500,16 @@ public class DefinitionResourceProvider {
         final Set<String> providedCategoryIds = new HashSet<String>();
         for (final IRepositoryFileStore defFile : store.getChildren()) {
             if (!defFile.canBeShared()) { // provided definition
-                final ConnectorDefinition def = (ConnectorDefinition) defFile
-                        .getContent();
-                for (final Category cat : def.getCategory()) {
-                    providedCategoryIds.add(cat.getId());
+                try {
+                    final ConnectorDefinition def = (ConnectorDefinition) defFile
+                            .getContent();
+                    for (final Category cat : def.getCategory()) {
+                        providedCategoryIds.add(cat.getId());
+                    }
+                } catch (final ReadFileStoreException e) {
+                    BonitaStudioLog.error("Failed to retrieve connector definition", e);
                 }
+
             }
         }
         return providedCategoryIds;
@@ -508,21 +520,24 @@ public class DefinitionResourceProvider {
         final Set<String> providedCategoryIds = getProvidedCategoriesIds();
         for (final IRepositoryFileStore defFile : store.getChildren()) {
             if (defFile.canBeShared()) {
-                final ConnectorDefinition def = (ConnectorDefinition) defFile
-                        .getContent();
-                if (def != null) {
-                    for (final Category cat : def.getCategory()) {
-                        if (!providedCategoryIds.contains(cat.getId())) {
-                            userCategoryIds.add(cat.getId());
+                try {
+                    final ConnectorDefinition def = (ConnectorDefinition) defFile
+                            .getContent();
+                    if (def != null) {
+                        for (final Category cat : def.getCategory()) {
+                            if (!providedCategoryIds.contains(cat.getId())) {
+                                userCategoryIds.add(cat.getId());
+                            }
                         }
                     }
+                } catch (final ReadFileStoreException e) {
+                    BonitaStudioLog.error("Failed to retrieve connector definition", e);
                 }
+
             }
         }
         return userCategoryIds;
     }
-
-
 
     public List<Category> getAllCategories() {
         if (categories == null) {
@@ -537,7 +552,6 @@ public class DefinitionResourceProvider {
         unloadable.setId(Messages.unloadable);
         return unloadable;
     }
-
 
     public Category getUncategorizedCategory() {
         return uncategorized;
@@ -625,7 +639,6 @@ public class DefinitionResourceProvider {
         return Collections.emptyList();
     }
 
-
     public void loadDefinitionsCategories(final IProgressMonitor monitor) {
         categories = new ArrayList<Category>();
         final Set<String> idsToAdd = new HashSet<String>();
@@ -634,35 +647,45 @@ public class DefinitionResourceProvider {
         boolean addUnloadableCategory = false;
         for (final IRepositoryFileStore defFile : store.getChildren()) {
             if (!defFile.canBeShared()) { // provided definition
-                final ConnectorDefinition def = (ConnectorDefinition) defFile
-                        .getContent();
-                if (def instanceof UnloadableConnectorDefinition) {
-                    addUnloadableCategory = true;
-                } else if (def != null) {
-                    for (final Category cat : def.getCategory()) {
-                        if (idsToAdd.contains(cat.getId())) {
-                            categories.add(cat);
-                            idsToAdd.remove(cat.getId());
+                try {
+                    final ConnectorDefinition def = (ConnectorDefinition) defFile
+                            .getContent();
+                    if (def instanceof UnloadableConnectorDefinition) {
+                        addUnloadableCategory = true;
+                    } else if (def != null) {
+                        for (final Category cat : def.getCategory()) {
+                            if (idsToAdd.contains(cat.getId())) {
+                                categories.add(cat);
+                                idsToAdd.remove(cat.getId());
+                            }
                         }
                     }
+                } catch (final ReadFileStoreException e) {
+                    BonitaStudioLog.error("Failed to retrieve connector definition", e);
                 }
+
             }
         }
 
         for (final IRepositoryFileStore defFile : store.getChildren()) {
             if (defFile.canBeShared()) { // user definition
-                final ConnectorDefinition def = (ConnectorDefinition) defFile
-                        .getContent();
-                if (def instanceof UnloadableConnectorDefinition) {
-                    addUnloadableCategory = true;
-                } else if (def != null) {
-                    for (final Category cat : def.getCategory()) {
-                        if (idsToAdd.contains(cat.getId())) {
-                            categories.add(cat);
-                            idsToAdd.remove(cat.getId());
+                try {
+                    final ConnectorDefinition def = (ConnectorDefinition) defFile
+                            .getContent();
+                    if (def instanceof UnloadableConnectorDefinition) {
+                        addUnloadableCategory = true;
+                    } else if (def != null) {
+                        for (final Category cat : def.getCategory()) {
+                            if (idsToAdd.contains(cat.getId())) {
+                                categories.add(cat);
+                                idsToAdd.remove(cat.getId());
+                            }
                         }
                     }
+                } catch (final ReadFileStoreException e) {
+                    BonitaStudioLog.error("Failed to retrieve connector definition", e);
                 }
+
             }
         }
         if (addUnloadableCategory) {

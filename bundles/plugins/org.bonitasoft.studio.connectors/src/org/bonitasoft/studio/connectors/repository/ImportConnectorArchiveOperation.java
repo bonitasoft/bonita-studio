@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -33,6 +31,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
@@ -46,7 +45,6 @@ import org.eclipse.core.runtime.Status;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class ImportConnectorArchiveOperation {
 
@@ -55,7 +53,7 @@ public class ImportConnectorArchiveOperation {
     private final FilenameFilter implFileFilter = new FilenameFilter() {
 
         @Override
-        public boolean accept(File file, String name) {
+        public boolean accept(final File file, final String name) {
             return name.endsWith("." + ConnectorImplRepositoryStore.CONNECTOR_IMPL_EXT);
         }
     };
@@ -63,7 +61,7 @@ public class ImportConnectorArchiveOperation {
     private final FilenameFilter defFileFilter = new FilenameFilter() {
 
         @Override
-        public boolean accept(File file, String name) {
+        public boolean accept(final File file, final String name) {
             return name.endsWith("." + ConnectorDefRepositoryStore.CONNECTOR_DEF_EXT);
         }
     };
@@ -71,7 +69,7 @@ public class ImportConnectorArchiveOperation {
     private final FilenameFilter messageFileFilter = new FilenameFilter() {
 
         @Override
-        public boolean accept(File file, String name) {
+        public boolean accept(final File file, final String name) {
             return name.endsWith(".properties") && !name.equals(ExportConnectorArchiveOperation.DESCRIPTOR_FILE);
         }
     };
@@ -79,7 +77,7 @@ public class ImportConnectorArchiveOperation {
     private final FilenameFilter imageFileFilter = new FilenameFilter() {
 
         @Override
-        public boolean accept(File file, String name) {
+        public boolean accept(final File file, final String name) {
             return name.endsWith(".png")
                     || name.endsWith(".jpg")
                     || name.endsWith(".gif")
@@ -87,24 +85,24 @@ public class ImportConnectorArchiveOperation {
         }
     };
 
-    public void setFile(File file) {
+    public void setFile(final File file) {
         zipFile = file;
     }
 
-    public IStatus run(IProgressMonitor monitor) {
+    public IStatus run(final IProgressMonitor monitor) {
         if (zipFile == null) {
             return ValidationStatus.error("input file not set");
         }
-        File tmp = new File(ProjectUtil.getBonitaStudioWorkFolder(), "tmpImportConnectorDir");
+        final File tmp = new File(ProjectUtil.getBonitaStudioWorkFolder(), "tmpImportConnectorDir");
         tmp.delete();
         tmp.mkdir();
         try {
             PlatformUtil.unzipZipFiles(zipFile, tmp, monitor);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
 
-        IStatus status = readManifest(tmp);
+        final IStatus status = readManifest(tmp);
         if (status.getSeverity() != IStatus.OK) {
             PlatformUtil.delete(tmp, monitor);
             return status;
@@ -119,14 +117,14 @@ public class ImportConnectorArchiveOperation {
         return Status.OK_STATUS;
     }
 
-    private IStatus readManifest(File tmp) {
-        File manifest = new File(tmp, ExportConnectorArchiveOperation.DESCRIPTOR_FILE);
+    private IStatus readManifest(final File tmp) {
+        final File manifest = new File(tmp, ExportConnectorArchiveOperation.DESCRIPTOR_FILE);
         if (!manifest.exists()) {
             return ValidationStatus.error("Descriptor file not found");
         }
 
         try {
-            Properties p = new Properties();
+            final Properties p = new Properties();
             final FileInputStream fis = new FileInputStream(manifest);
             p.load(fis);
 
@@ -140,25 +138,25 @@ public class ImportConnectorArchiveOperation {
                 return ValidationStatus.error("Type is missing in the descriptor");
             }
 
-            IStatus status = checkTypeIsValid(type);
+            final IStatus status = checkTypeIsValid(type);
             if (status.getSeverity() != IStatus.OK) {
                 return status;
             }
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return ValidationStatus.error("Cannot read the descriptor file");
         }
         return Status.OK_STATUS;
     }
 
-    protected IStatus checkTypeIsValid(String type) {
+    protected IStatus checkTypeIsValid(final String type) {
         if (!ExportConnectorArchiveOperation.CONNECTOR_TYPE.equals(type)) {
             return ValidationStatus.error("This is not a connector archive");
         }
         return Status.OK_STATUS;
     }
 
-    private void importConnectorImplementation(File tmpDir) {
+    private void importConnectorImplementation(final File tmpDir) {
         final File[] files = tmpDir.listFiles(implFileFilter);
         if (files != null && files.length == 1) {
             final File implFile = files[0];
@@ -167,18 +165,24 @@ public class ImportConnectorArchiveOperation {
                 final FileInputStream fis = new FileInputStream(implFile);
                 implStore.importInputStream(implFile.getName(), fis);
                 fis.close();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 BonitaStudioLog.error(e);
             }
 
-            IRepositoryFileStore implFileStore = implStore.getChild(implFile.getName());
-            ConnectorImplementation impl = (ConnectorImplementation) implFileStore.getContent();
-            if (impl.isHasSources()) {
-                final String implJarName = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)
-                        + ".jar";
-                importImplementationSources(tmpDir, implJarName);
+            final IRepositoryFileStore implFileStore = implStore.getChild(implFile.getName());
+            try {
+                final ConnectorImplementation impl = (ConnectorImplementation) implFileStore.getContent();
+                if (impl.isHasSources()) {
+                    final String implJarName = NamingUtils
+                            .toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)
+                            + ".jar";
+                    importImplementationSources(tmpDir, implJarName);
+                }
+                importImplementationDependencies(tmpDir, impl);
+            } catch (final ReadFileStoreException e) {
+                BonitaStudioLog.error("Failed to read connector implementation", e);
             }
-            importImplementationDependencies(tmpDir, impl);
+
         }
     }
 
@@ -186,7 +190,7 @@ public class ImportConnectorArchiveOperation {
         return RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
     }
 
-    private void importConnectorDefinition(File tmpDir) {
+    private void importConnectorDefinition(final File tmpDir) {
         final File[] files = tmpDir.listFiles(defFileFilter);
         if (files != null && files.length == 1) {
             final File defFile = files[0];
@@ -196,49 +200,53 @@ public class ImportConnectorArchiveOperation {
                 final FileInputStream fis = new FileInputStream(defFile);
                 fileStore = defStore.importInputStream(defFile.getName(), fis);
                 fis.close();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 BonitaStudioLog.error(e);
             }
             importIcons(tmpDir);
             importMessages(tmpDir);
             if (fileStore != null) {
-                importDefinitionDependencies(tmpDir, (ConnectorDefinition) fileStore.getContent());
+                try {
+                    importDefinitionDependencies(tmpDir, (ConnectorDefinition) fileStore.getContent());
+                } catch (final ReadFileStoreException e) {
+                    BonitaStudioLog.error("Failed to read connector implementation", e);
+                }
             }
         }
     }
 
-    private void importMessages(File tmpDir) {
+    private void importMessages(final File tmpDir) {
         final File[] files = tmpDir.listFiles(messageFileFilter);
         if (files != null) {
-            IRepositoryStore defStore = getDefinitionStore();
-            for (File messageFile : files) {
-                IFolder folder = defStore.getResource();
-                IFile file = folder.getFile(messageFile.getName());
+            final IRepositoryStore defStore = getDefinitionStore();
+            for (final File messageFile : files) {
+                final IFolder folder = defStore.getResource();
+                final IFile file = folder.getFile(messageFile.getName());
                 try {
                     if (file.exists() && FileActionDialog.confirmDeletionQuestion(messageFile.getName())) {
                         file.delete(true, Repository.NULL_PROGRESS_MONITOR);
                     }
                     file.create(new FileInputStream(messageFile), true, Repository.NULL_PROGRESS_MONITOR);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     BonitaStudioLog.error(e);
                 }
             }
         }
     }
 
-    private void importIcons(File tmpDir) {
+    private void importIcons(final File tmpDir) {
         final File[] files = tmpDir.listFiles(imageFileFilter);
         if (files != null) {
-            IRepositoryStore defStore = getDefinitionStore();
-            for (File iconFile : files) {
-                IFolder folder = defStore.getResource();
-                IFile file = folder.getFile(iconFile.getName());
+            final IRepositoryStore defStore = getDefinitionStore();
+            for (final File iconFile : files) {
+                final IFolder folder = defStore.getResource();
+                final IFile file = folder.getFile(iconFile.getName());
                 try {
                     if (file.exists() && FileActionDialog.confirmDeletionQuestion(iconFile.getName())) {
                         file.delete(true, Repository.NULL_PROGRESS_MONITOR);
                     }
                     file.create(new FileInputStream(iconFile), true, Repository.NULL_PROGRESS_MONITOR);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     BonitaStudioLog.error(e);
                 }
             }
@@ -249,19 +257,19 @@ public class ImportConnectorArchiveOperation {
         return RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
     }
 
-    private void importImplementationSources(File tmpDir, String implJarName) {
+    private void importImplementationSources(final File tmpDir, final String implJarName) {
         final File srcDir = new File(tmpDir, ExportConnectorArchiveOperation.SRC_DIR);
         if (srcDir.exists()) {
-            List<File> files = new ArrayList<File>();
+            final List<File> files = new ArrayList<File>();
             findSourceFiles(srcDir, files);
-            SourceRepositoryStore sourceStore = getSourceStore();
-            for (File sourceFile : files) {
+            final SourceRepositoryStore sourceStore = getSourceStore();
+            for (final File sourceFile : files) {
 
-                String className = getClassName(srcDir, sourceFile);
+                final String className = getClassName(srcDir, sourceFile);
 
                 try {
                     sourceStore.importInputStream(className, new FileInputStream(sourceFile));
-                } catch (FileNotFoundException e) {
+                } catch (final FileNotFoundException e) {
                     BonitaStudioLog.error(e);
                 }
             }
@@ -269,15 +277,15 @@ public class ImportConnectorArchiveOperation {
         }
     }
 
-    private String getClassName(File root, File sourceFile) {
+    private String getClassName(final File root, final File sourceFile) {
         return sourceFile.getAbsolutePath().substring(root.getAbsolutePath().length() + 1, sourceFile.getAbsolutePath().length());
     }
 
-    private void findSourceFiles(File file, List<File> files) {
+    private void findSourceFiles(final File file, final List<File> files) {
         if (file.isDirectory()) {
-            File[] children = file.listFiles();
+            final File[] children = file.listFiles();
             if (children != null) {
-                for (File child : children) {
+                for (final File child : children) {
                     findSourceFiles(child, files);
                 }
             }
@@ -288,22 +296,22 @@ public class ImportConnectorArchiveOperation {
     }
 
     protected SourceRepositoryStore getSourceStore() {
-        return (SourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
+        return RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
     }
 
-    private void importDefinitionDependencies(File tmpDir, ConnectorDefinition def) {
+    private void importDefinitionDependencies(final File tmpDir, final ConnectorDefinition def) {
         final File classpathDir = new File(tmpDir, ExportConnectorArchiveOperation.CLASSPATH_DIR);
         if (classpathDir.exists()) {
-            DependencyRepositoryStore depStore = (DependencyRepositoryStore) RepositoryManager.getInstance()
+            final DependencyRepositoryStore depStore = RepositoryManager.getInstance()
                     .getRepositoryStore(DependencyRepositoryStore.class);
-            for (String jarName : def.getJarDependency()) {
+            for (final String jarName : def.getJarDependency()) {
                 final File jarFile = new File(classpathDir, jarName);
                 if (jarFile.exists()) {
                     try {
-                        FileInputStream fis = new FileInputStream(jarFile);
+                        final FileInputStream fis = new FileInputStream(jarFile);
                         depStore.importInputStream(jarName, fis);
                         fis.close();
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         BonitaStudioLog.error(e);
                     }
                 }
@@ -312,22 +320,22 @@ public class ImportConnectorArchiveOperation {
 
     }
 
-    private void importImplementationDependencies(File tmpDir, ConnectorImplementation impl) {
+    private void importImplementationDependencies(final File tmpDir, final ConnectorImplementation impl) {
         final File classpathDir = new File(tmpDir, ExportConnectorArchiveOperation.CLASSPATH_DIR);
         if (classpathDir.exists()) {
-            DependencyRepositoryStore depStore = (DependencyRepositoryStore) RepositoryManager.getInstance()
+            final DependencyRepositoryStore depStore = RepositoryManager.getInstance()
                     .getRepositoryStore(DependencyRepositoryStore.class);
-            for (String jarName : impl.getJarDependencies().getJarDependency()) {
+            for (final String jarName : impl.getJarDependencies().getJarDependency()) {
                 if (isImplementationJar(jarName, impl) && impl.isHasSources()) {
                     continue;
                 }
                 final File jarFile = new File(classpathDir, jarName);
                 if (jarFile.exists()) {
                     try {
-                        FileInputStream fis = new FileInputStream(jarFile);
+                        final FileInputStream fis = new FileInputStream(jarFile);
                         depStore.importInputStream(jarName, fis);
                         fis.close();
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         BonitaStudioLog.error(e);
                     }
                 }
@@ -335,8 +343,8 @@ public class ImportConnectorArchiveOperation {
         }
     }
 
-    protected boolean isImplementationJar(String jarName,
-            ConnectorImplementation impl) {
+    protected boolean isImplementationJar(final String jarName,
+            final ConnectorImplementation impl) {
         return (NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false) + ".jar").equals(jarName);
     }
 }

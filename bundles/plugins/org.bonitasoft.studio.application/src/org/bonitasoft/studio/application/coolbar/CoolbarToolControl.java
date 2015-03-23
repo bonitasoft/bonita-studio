@@ -5,17 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.application.coolbar;
-
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +28,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -76,9 +74,8 @@ import org.osgi.service.event.EventHandler;
 
 /**
  * @author Romain Bioteau
- *
  */
-public class CoolbarToolControl implements INullSelectionListener,IActivityManagerListener,org.eclipse.e4.ui.workbench.modeling.IPartListener {
+public class CoolbarToolControl implements INullSelectionListener, IActivityManagerListener, org.eclipse.e4.ui.workbench.modeling.IPartListener {
 
     private static final int ICON_SIZE = 24;
 
@@ -138,7 +135,7 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
 
     protected boolean isRendered(final IEclipseContext context) {
         final MTrimBar topTrim = getTrimBar(context, "org.eclipse.ui.main.toolbar");
-        return topTrim != null && topTrim.isToBeRendered();
+        return topTrim != null && topTrim.isToBeRendered() && !PlatformUtil.isHeadless();
     }
 
     protected MTrimBar getTrimBar(final IEclipseContext context, final String trimBarId) {
@@ -172,7 +169,6 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
         sizingToolbar.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
         sizingToolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).create());
 
-
         final ToolItem minimizeButton = new ToolItem(sizingToolbar, SWT.FLAT);
         minimizeButton.setImage(Pics.getImage("arrow-up.png"));
         minimizeButton.setToolTipText(Messages.reduceCoolbarTooltip);
@@ -194,8 +190,6 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
                 maximizeCoolbar();
             }
         });
-
-
 
         if (image != null) {
             image.dispose();

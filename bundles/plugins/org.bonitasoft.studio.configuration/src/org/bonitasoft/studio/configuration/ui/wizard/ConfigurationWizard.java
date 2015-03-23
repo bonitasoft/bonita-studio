@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.i18n.Messages;
@@ -93,7 +94,7 @@ public class ConfigurationWizard extends Wizard {
         return false;
     }
 
-    public ConfigurationWizard(MainProcess diagram, AbstractProcess selectedProcess, String configurationName) {
+    public ConfigurationWizard(final MainProcess diagram, final AbstractProcess selectedProcess, final String configurationName) {
         this();
         Assert.isNotNull(selectedProcess);
         Assert.isNotNull(configurationName);
@@ -101,19 +102,19 @@ public class ConfigurationWizard extends Wizard {
         this.diagram = diagram;
         this.configurationName = configurationName;
         setProcess(selectedProcess);
-        String processName = selectedProcess.getName() + " (" + selectedProcess.getVersion() + ")";
+        final String processName = selectedProcess.getName() + " (" + selectedProcess.getVersion() + ")";
         setWindowTitle(Messages.bind(Messages.configurationTitle, configurationName, processName));
     }
 
     @Override
     public void addPages() {
-        IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(CONFIGURATION_WIZARD_PAGE_ID);
-        List<IConfigurationElement> elements = sortByPriority(elems);
-        for (IConfigurationElement e : elements) {
+        final IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(CONFIGURATION_WIZARD_PAGE_ID);
+        final List<IConfigurationElement> elements = sortByPriority(elems);
+        for (final IConfigurationElement e : elements) {
             try {
-                IProcessConfigurationWizardPage page = (IProcessConfigurationWizardPage) e.createExecutableExtension(CLASS_ATTRIBUTE);
+                final IProcessConfigurationWizardPage page = (IProcessConfigurationWizardPage) e.createExecutableExtension(CLASS_ATTRIBUTE);
                 addPage(page);
-            } catch (Exception e1) {
+            } catch (final Exception e1) {
                 BonitaStudioLog.error(e1);
             }
         }
@@ -122,26 +123,26 @@ public class ConfigurationWizard extends Wizard {
         addPage(new RunConfigurationWizardPage());
     }
 
-    private List<IConfigurationElement> sortByPriority(IConfigurationElement[] elems) {
-        List<IConfigurationElement> sortedConfigElems = new ArrayList<IConfigurationElement>();
-        for (IConfigurationElement elem : elems) {
+    private List<IConfigurationElement> sortByPriority(final IConfigurationElement[] elems) {
+        final List<IConfigurationElement> sortedConfigElems = new ArrayList<IConfigurationElement>();
+        for (final IConfigurationElement elem : elems) {
             sortedConfigElems.add(elem);
         }
 
         Collections.sort(sortedConfigElems, new Comparator<IConfigurationElement>() {
 
             @Override
-            public int compare(IConfigurationElement e1, IConfigurationElement e2) {
+            public int compare(final IConfigurationElement e1, final IConfigurationElement e2) {
                 int p1 = 0;
                 int p2 = 0;
                 try {
                     p1 = Integer.parseInt(e1.getAttribute(PRIORITY_ATTRIBUTE));
-                } catch (NumberFormatException e) {
+                } catch (final NumberFormatException e) {
                     p1 = 0;
                 }
                 try {
                     p2 = Integer.parseInt(e2.getAttribute(PRIORITY_ATTRIBUTE));
-                } catch (NumberFormatException e) {
+                } catch (final NumberFormatException e) {
                     p2 = 0;
                 }
                 return p1 - p2; //Lowest Priority first
@@ -163,18 +164,18 @@ public class ConfigurationWizard extends Wizard {
     }
 
     public void applyChanges() {
-        Configuration configuration = getConfigurationCopy();
+        final Configuration configuration = getConfigurationCopy();
         if (process != null && configuration != null) {
-            String id = ModelHelper.getEObjectID(process);
+            final String id = ModelHelper.getEObjectID(process);
             if (configurationName.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) {
-                String fileName = id + ".conf";
+                final String fileName = id + ".conf";
                 IRepositoryFileStore file = processConfStore.getChild(fileName);
                 if (file == null) {
                     file = processConfStore.createRepositoryFileStore(fileName);
                 }
                 try {
                     file.save(configuration);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     BonitaStudioLog.error(e);
                 }
             } else {
@@ -184,8 +185,8 @@ public class ConfigurationWizard extends Wizard {
                     dispose = true;
                     editingDomain = initializeEditingDomain();
                 }
-                CompoundCommand cc = new CompoundCommand();
-                for (Configuration conf : process.getConfigurations()) {
+                final CompoundCommand cc = new CompoundCommand();
+                for (final Configuration conf : process.getConfigurations()) {
                     if (conf.getName().equals(configuration.getName())) {
                         cc.append(RemoveCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__CONFIGURATIONS, conf));
                         break;
@@ -197,7 +198,7 @@ public class ConfigurationWizard extends Wizard {
                     adapterFactory.dispose();
                     try {
                         process.eResource().save(Collections.EMPTY_MAP);
-                    } catch (IOException e) {
+                    } catch (final IOException e) {
                         BonitaStudioLog.error(e);
                     }
                 }
@@ -214,10 +215,10 @@ public class ConfigurationWizard extends Wizard {
         adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
 
         // command stack that will notify this editor as commands are executed
-        BasicCommandStack commandStack = new BasicCommandStack();
+        final BasicCommandStack commandStack = new BasicCommandStack();
 
         // Create the editing domain with our adapterFactory and command stack.
-        AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
+        final AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
         editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl());
         return editingDomain;
     }
@@ -230,19 +231,19 @@ public class ConfigurationWizard extends Wizard {
         this.process = process;
         final Configuration configuration = getConfigurationFromProcess(process, configurationName);
         if (configuration != null) {
-            IProgressService service = PlatformUI.getWorkbench().getProgressService();
+            final IProgressService service = PlatformUI.getWorkbench().getProgressService();
             try {
                 service.run(true, false, new IRunnableWithProgress() {
 
                     @Override
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException,
+                    public void run(final IProgressMonitor monitor) throws InvocationTargetException,
                             InterruptedException {
                         new ConfigurationSynchronizer(process, configuration).synchronize(monitor);
                     }
                 });
-            } catch (InvocationTargetException e) {
+            } catch (final InvocationTargetException e) {
                 BonitaStudioLog.error(e);
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 BonitaStudioLog.error(e);
             }
 
@@ -255,7 +256,7 @@ public class ConfigurationWizard extends Wizard {
     }
 
     public void updatePages() {
-        for (IWizardPage page : getPages()) {
+        for (final IWizardPage page : getPages()) {
             if (page instanceof IProcessConfigurationWizardPage) {
                 ((IProcessConfigurationWizardPage) page).updatePage(process, configurationWorkingCopy);
             }
@@ -267,7 +268,7 @@ public class ConfigurationWizard extends Wizard {
         if (getPageCount() == 0) {
             return null;
         }
-        for (IWizardPage page : getPages()) {
+        for (final IWizardPage page : getPages()) {
             if (page instanceof IProcessConfigurationWizardPage) {
                 if (configurationWorkingCopy != null && ((IProcessConfigurationWizardPage) page).isConfigurationPageValid(configurationWorkingCopy) != null) {
                     return page;
@@ -277,20 +278,24 @@ public class ConfigurationWizard extends Wizard {
         return super.getStartingPage();
     }
 
-    private Configuration getConfigurationFromProcess(AbstractProcess process, String confName) {
-        String id = ModelHelper.getEObjectID(getProcess());
+    private Configuration getConfigurationFromProcess(final AbstractProcess process, final String confName) {
+        final String id = ModelHelper.getEObjectID(getProcess());
         Configuration configuration = null;
         if (ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON.equals(confName)) {
             final IRepositoryFileStore file = processConfStore.getChild(id + ".conf");
             if (file != null) {
-                configuration = (Configuration) file.getContent();
+                try {
+                    configuration = (Configuration) file.getContent();
+                } catch (final ReadFileStoreException e) {
+                    BonitaStudioLog.error("Failed read process configuration content", e);
+                }
             } else {
                 configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
                 configuration.setName(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON);
                 configuration.setVersion(ModelVersion.CURRENT_VERSION);
             }
         } else if (process != null) {
-            for (Configuration conf : process.getConfigurations()) {
+            for (final Configuration conf : process.getConfigurations()) {
                 if (conf.getName().equals(confName)) {
                     configuration = conf;
                     break;
