@@ -19,12 +19,12 @@ import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.emf.ecore.EObject;
 
-
 public class ProcessContractEngineBuilder extends ContractEngineDefinitionBuilder<ProcessDefinitionBuilder> {
 
     @Override
     protected ContractDefinitionBuilder addContract() {
-        return builder.addContract();
+        return null;
+        //return builder.addContract();
     }
 
     @Override
