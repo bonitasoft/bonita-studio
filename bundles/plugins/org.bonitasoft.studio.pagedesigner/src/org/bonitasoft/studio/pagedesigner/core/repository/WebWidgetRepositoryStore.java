@@ -21,7 +21,9 @@ import java.util.Set;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
+import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -48,7 +50,7 @@ public class WebWidgetRepositoryStore extends AbstractRepositoryStore<WebWidgetF
 
     @Override
     public Image getIcon() {
-        return null;
+        return Pics.getImage("custom_widget.png", PageDesignerPlugin.getDefault());
     }
 
     @Override

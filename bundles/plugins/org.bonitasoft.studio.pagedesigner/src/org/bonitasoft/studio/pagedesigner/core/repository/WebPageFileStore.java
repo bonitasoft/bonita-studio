@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -32,6 +33,11 @@ public class WebPageFileStore extends NamedJSONFileStore {
 
     public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
+    }
+
+    @Override
+    public Image getIcon() {
+        return getParentStore().getIcon();
     }
 
     @Override

@@ -18,7 +18,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
+import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -49,7 +51,7 @@ public class WebPageRepositoryStore extends AbstractRepositoryStore<WebPageFileS
 
     @Override
     public Image getIcon() {
-        return null;
+        return Pics.getImage("page.png", PageDesignerPlugin.getDefault());
     }
 
     @Override
