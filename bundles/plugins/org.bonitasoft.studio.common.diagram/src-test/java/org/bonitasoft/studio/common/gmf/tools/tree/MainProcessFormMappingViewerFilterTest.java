@@ -15,11 +15,13 @@
 package org.bonitasoft.studio.common.gmf.tools.tree;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
 import static org.bonitasoft.studio.model.process.builders.MainProcessBuilder.aMainProcess;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 
 import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,8 +65,32 @@ public class MainProcessFormMappingViewerFilterTest {
         assertThat(isSelcted).isFalse();
     }
 
+    @Test
+    public void should_not_select_legacy_form_mappings() throws Exception {
+        //Given
+        final FormMapping aLegacyFormMapping = aFormMapping().withType(FormMappingType.LEGACY).build();
+
+        //When
+        final boolean isSelcted = mainProcessFormMappingViewerFilter.select(null, null, aLegacyFormMapping);
+
+        //Then
+        assertThat(isSelcted).isFalse();
+    }
+
+    @Test
+    public void should_not_select_internal_form_mapping_without_target_form() throws Exception {
+        //Given
+        final FormMapping anInternalFormMappingWithoutTargetForm = aFormMapping().withType(FormMappingType.INTERNAL).havingTargetForm(anExpression()).build();
+
+        //When
+        final boolean isSelcted = mainProcessFormMappingViewerFilter.select(null, null, anInternalFormMappingWithoutTargetForm);
+
+        //Then
+        assertThat(isSelcted).isFalse();
+    }
+
     private FormMapping aFormMappingInAPageflow() {
-        return aPool().havingFormMapping(aFormMapping()).build().getFormMapping();
+        return aPool().havingFormMapping(aFormMapping().havingTargetForm(anExpression().withContent("form-id"))).build().getFormMapping();
     }
 
     private FormMapping aFormMappingInAMainProcess() {
