@@ -167,7 +167,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
         doInitWorkspace();
         doStartEngine();
-
         executeContributions();
     }
 
