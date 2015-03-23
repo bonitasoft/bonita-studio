@@ -39,7 +39,6 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -76,7 +75,6 @@ public class ContractIT extends SWTBotGefTestCase {
     }
 
     @Test
-    @Ignore("Fix me when process contract merged properly")
     public void create_expense_report_process_contract() {
         final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot).createNewDiagram();
         final BotGefProcessDiagramEditor activeProcessDiagramEditor = botProcessDiagramPerspective.activeProcessDiagramEditor();
