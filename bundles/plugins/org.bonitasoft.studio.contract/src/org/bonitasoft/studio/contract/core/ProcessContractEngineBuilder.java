@@ -23,8 +23,8 @@ public class ProcessContractEngineBuilder extends ContractEngineDefinitionBuilde
 
     @Override
     protected ContractDefinitionBuilder addContract() {
-        throw new RuntimeException("Fix me when Process contract has been merged properly");
-        //  return builder.addContract();
+        return null;
+        //return builder.addContract();
     }
 
     @Override
