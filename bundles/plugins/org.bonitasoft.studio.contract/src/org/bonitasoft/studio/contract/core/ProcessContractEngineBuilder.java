@@ -23,8 +23,7 @@ public class ProcessContractEngineBuilder extends ContractEngineDefinitionBuilde
 
     @Override
     protected ContractDefinitionBuilder addContract() {
-        return null;
-        //return builder.addContract();
+        return builder.addContract();
     }
 
     @Override
