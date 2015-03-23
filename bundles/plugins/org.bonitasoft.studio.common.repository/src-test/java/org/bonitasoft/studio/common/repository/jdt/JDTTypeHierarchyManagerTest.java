@@ -5,18 +5,28 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.repository.jdt;
 
-import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
@@ -38,18 +48,18 @@ public class JDTTypeHierarchyManagerTest {
     @Mock
     private ITypeHierarchy typeHierarchy;
 
-    private class JDTTypeHierarchyManagerWithoutListener extends JDTTypeHierarchyManager {
+    @Mock
+    private IResource jarResource;
 
-        @Override
-        protected void registerModificationListener() {
-            //Do nothing
-        }
-    }
+    @Mock
+    private IResource notAJarResource;
 
     @Before
     public void setUp() throws Exception {
         Mockito.doReturn(typeHierarchy).when(type).newTypeHierarchy(Mockito.any(IProgressMonitor.class));
-        new JDTTypeHierarchyManagerWithoutListener().clearCache();
+        new JDTTypeHierarchyManager().clearCache();
+        doReturn("jar").when(jarResource).getFileExtension();
+        doReturn("whatever").when(notAJarResource).getFileExtension();
     }
 
     @After
@@ -58,23 +68,69 @@ public class JDTTypeHierarchyManagerTest {
 
     @Test
     public void testGetTypeHierarchy() throws JavaModelException {
-        final JDTTypeHierarchyManager jdtTypeHierarchyManager = new JDTTypeHierarchyManagerWithoutListener();
-        final JDTTypeHierarchyManager spy = Mockito.spy(jdtTypeHierarchyManager);
-        Mockito.doNothing().when(spy).registerModificationListener();
-        Assertions.assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
-        Assertions.assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
-        Assertions.assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
-        Mockito.verify(type, Mockito.times(1)).newTypeHierarchy(Mockito.any(IProgressMonitor.class));
+        final JDTTypeHierarchyManager jdtTypeHierarchyManager = new JDTTypeHierarchyManager();
+        final JDTTypeHierarchyManager spy = spy(jdtTypeHierarchyManager);
+        assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
+        assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
+        assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
+        verify(type, times(1)).newTypeHierarchy(any(IProgressMonitor.class));
     }
 
     @Test
     public void testClearCache() throws JavaModelException {
-        final JDTTypeHierarchyManager jdtTypeHierarchyManager = new JDTTypeHierarchyManagerWithoutListener();
-        final JDTTypeHierarchyManager spy = Mockito.spy(jdtTypeHierarchyManager);
-        Assertions.assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
+        final JDTTypeHierarchyManager jdtTypeHierarchyManager = new JDTTypeHierarchyManager();
+        final JDTTypeHierarchyManager spy = spy(jdtTypeHierarchyManager);
+        assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
         spy.clearCache();
-        Assertions.assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
-        Mockito.verify(type, Mockito.times(2)).newTypeHierarchy(Mockito.any(IProgressMonitor.class));
+        assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
+        verify(type, Mockito.times(2)).newTypeHierarchy(any(IProgressMonitor.class));
     }
 
+    @Test
+    public void should_clear_cache_when_catching_a_file_store_event_related_to_a_jar() throws JavaModelException {
+        final JDTTypeHierarchyManager jdtTypeHierarchyManager = spy(new JDTTypeHierarchyManager());
+
+        final FileStoreChangeEvent event = mock(FileStoreChangeEvent.class, RETURNS_DEEP_STUBS);
+        when(event.getFileStore().getResource()).thenReturn(jarResource);
+
+        jdtTypeHierarchyManager.handleFileStoreEvent(event);
+
+        verify(jdtTypeHierarchyManager).clearCache();
+    }
+
+    @Test
+    public void should_not_clear_cache_when_catching_a_file_store_event_not_related_to_ajar() throws JavaModelException {
+        final JDTTypeHierarchyManager jdtTypeHierarchyManager = spy(new JDTTypeHierarchyManager());
+
+        final FileStoreChangeEvent event = mock(FileStoreChangeEvent.class, RETURNS_DEEP_STUBS);
+        when(event.getFileStore().getResource()).thenReturn(notAJarResource);
+
+        jdtTypeHierarchyManager.handleFileStoreEvent(event);
+
+        verify(jdtTypeHierarchyManager, never()).clearCache();
+    }
+
+    @Test
+    public void should_not_clear_cache_when_catching_a_file_store_event_with_no_fileStore() throws JavaModelException {
+        final JDTTypeHierarchyManager jdtTypeHierarchyManager = spy(new JDTTypeHierarchyManager());
+
+        final FileStoreChangeEvent event = mock(FileStoreChangeEvent.class, RETURNS_DEEP_STUBS);
+        when(event.getFileStore()).thenReturn(null);
+
+        jdtTypeHierarchyManager.handleFileStoreEvent(event);
+
+        verify(jdtTypeHierarchyManager, never()).clearCache();
+    }
+
+    @Test
+    public void should_not_clear_cache_when_catching_a_file_store_event_with_no_resources() throws JavaModelException {
+        final JDTTypeHierarchyManager jdtTypeHierarchyManager = spy(new JDTTypeHierarchyManager());
+
+        final FileStoreChangeEvent event = mock(FileStoreChangeEvent.class, RETURNS_DEEP_STUBS);
+        when(event.getFileStore().getResource()).thenReturn(null);
+
+        jdtTypeHierarchyManager.handleFileStoreEvent(event);
+
+        verify(jdtTypeHierarchyManager, never()).clearCache();
+    }
 }

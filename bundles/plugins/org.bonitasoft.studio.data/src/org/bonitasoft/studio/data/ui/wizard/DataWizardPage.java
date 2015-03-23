@@ -60,18 +60,13 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.DateType;
-import org.bonitasoft.studio.model.process.DoubleType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.EnumType;
-import org.bonitasoft.studio.model.process.FloatType;
-import org.bonitasoft.studio.model.process.IntegerType;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.JavaType;
-import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.model.process.XMLType;
@@ -323,59 +318,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     }
 
     protected String getHintFor(final DataType newType) {
-        final ProcessSwitch<String> dataTypeSwitch = new ProcessSwitch<String>() {
-
-            @Override
-            public String caseDateType(final DateType object) {
-                return Messages.dateTypeHint;
-            }
-
-            @Override
-            public String caseStringType(final StringType object) {
-                return Messages.stringTypeHint;
-            }
-
-            @Override
-            public String caseIntegerType(final IntegerType object) {
-                return Messages.integerTypeHint;
-            }
-
-            @Override
-            public String caseBooleanType(final BooleanType object) {
-                return Messages.booleanTypeHint;
-            }
-
-            @Override
-            public String caseLongType(final LongType object) {
-                return Messages.longTypeHint;
-            }
-
-            @Override
-            public String caseDoubleType(final DoubleType object) {
-                return Messages.doubleTypeHint;
-            }
-
-            @Override
-            public String caseFloatType(final FloatType object) {
-                return Messages.floatTypeHint;
-            }
-
-            @Override
-            public String caseJavaType(final JavaType object) {
-                return Messages.javaTypeHint;
-            }
-
-            @Override
-            public String caseXMLType(final XMLType object) {
-                return Messages.xmlTypeHint;
-            }
-
-            @Override
-            public String caseEnumType(final EnumType object) {
-                return Messages.enumTypeHint;
-            }
-
-        };
+        final ProcessSwitch<String> dataTypeSwitch = new DataTypeProcessSwitch();
         return dataTypeSwitch.doSwitch(newType);
     }
 
@@ -406,16 +349,14 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         if (fixedReturnType != null) {
             for (final Object object : (AbstractCollection<?>) typeCombo.getInput()) {
                 final DataType type = (DataType) object;
-                if (fixedReturnType.equals(String.class.getName()) && type.getName().equals("Text")) {
+                if (fixedReturnType.equals(String.class.getName()) && "Text".equals(type.getName())) {
                     typeCombo.setSelection(new StructuredSelection(type));
                     break;
-                } else if (fixedReturnType.equals(Boolean.class.getName()) && type.getName().equals("Boolean")) {
+                } else if (fixedReturnType.equals(Boolean.class.getName()) && "Boolean".equals(type.getName())) {
                     typeCombo.setSelection(new StructuredSelection(type));
                     break;
                 }
             }
-        } else {
-
         }
         setControl(mainComposite);
     }
@@ -608,7 +549,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                             if (object instanceof Data) {
                                 final Data otherData = (Data) object;
                                 final Data originalData = ((DataWizard) getWizard()).getOriginalData();
-                                if (!otherData.equals(originalData) && value.toString().toLowerCase().equals(otherData.getName().toLowerCase())) {
+                                if (!otherData.equals(originalData) && value.toString().equalsIgnoreCase(otherData.getName())) {
                                     return new Status(IStatus.ERROR, DataPlugin.PLUGIN_ID, Messages.dataAlreadyExist);
                                 }
                             }
@@ -628,7 +569,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                     if (object instanceof Data && !(object.eContainer() instanceof Expression)) {
                         final Data otherData = object;
                         final Data originalData = ((DataWizard) getWizard()).getOriginalData();
-                        if (!otherData.equals(originalData) && value.toString().toLowerCase().equals(otherData.getName().toLowerCase())) {
+                        if (!otherData.equals(originalData) && value.toString().equalsIgnoreCase(otherData.getName())) {
                             return new Status(IStatus.ERROR, DataPlugin.PLUGIN_ID, Messages.dataAlreadyExist);
                         }
                     }
@@ -640,10 +581,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             private List<Data> getAllAccessibleDatas(final EObject container) {
                 final List<Data> allDatas = ModelHelper.getAccessibleData(container, true);
                 for (final Object o : ModelHelper.getAllItemsOfType(container, ProcessPackage.Literals.DATA)) {
-                    if (o instanceof Data) {
-                        if (!allDatas.contains(o)) {
-                            allDatas.add((Data) o);
-                        }
+                    if (o instanceof Data && !allDatas.contains(o)) {
+                        allDatas.add((Data) o);
                     }
                 }
 

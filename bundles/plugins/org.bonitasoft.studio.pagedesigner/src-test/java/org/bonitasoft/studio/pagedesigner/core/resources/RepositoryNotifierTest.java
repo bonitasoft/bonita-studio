@@ -66,7 +66,7 @@ public class RepositoryNotifierTest {
         repositoryNotifier.dispatch(WorkspaceAPIEvent.PRE_OPEN, fileStore);
 
         verify(store).refresh();
-        verify(repository).notifyFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, fileStore));
+        verify(repository).handleFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, fileStore));
     }
 
     @Test
@@ -74,14 +74,14 @@ public class RepositoryNotifierTest {
         repositoryNotifier.dispatch(WorkspaceAPIEvent.POST_SAVE, fileStore);
 
         verify(store).refresh();
-        verify(repository).notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, fileStore));
+        verify(repository).handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, fileStore));
     }
 
     @Test
     public void should_notifyFileStoreEvent_when_dispatching_a_postClose_event() throws Exception {
         repositoryNotifier.dispatch(WorkspaceAPIEvent.POST_CLOSE, fileStore);
 
-        verify(repository).notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_CLOSE, fileStore));
+        verify(repository).handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_CLOSE, fileStore));
     }
 
     @Test
@@ -89,21 +89,21 @@ public class RepositoryNotifierTest {
         repositoryNotifier.dispatch(WorkspaceAPIEvent.POST_DELETE, fileStore);
 
         verify(store).refresh();
-        verify(repository).notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_DELETE, fileStore));
+        verify(repository).handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_DELETE, fileStore));
     }
 
     @Test
     public void should_notifyFileStoreEvent_when_dispatching_a_preImport_event() throws Exception {
         repositoryNotifier.dispatch(WorkspaceAPIEvent.PRE_IMPORT, fileStore);
 
-        verify(repository).notifyFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
+        verify(repository).handleFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
     }
 
     @Test
     public void should_notifyFileStoreEvent_when_dispatching_a_postImport_event() throws Exception {
         repositoryNotifier.dispatch(WorkspaceAPIEvent.POST_IMPORT, fileStore);
 
-        verify(repository).notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
+        verify(repository).handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
     }
 
     @Test(expected = IllegalStateException.class)

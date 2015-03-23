@@ -198,11 +198,13 @@ public class Messages extends NLS {
     public static String businessObjectDefinitionNotFound;
     public static String invalidContractDefinition;
 
-    public static String invalidFormMapping;
+    public static String invalidInternalFormMapping;
 
     public static String entryFormMapping;
 
     public static String overviewFormMapping;
+
+    public static String invalidURLFormMapping;
 
     static {
         // initialize resource bundle

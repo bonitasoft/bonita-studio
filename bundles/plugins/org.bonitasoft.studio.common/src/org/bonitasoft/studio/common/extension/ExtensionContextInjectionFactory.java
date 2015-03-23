@@ -14,11 +14,12 @@
  */
 package org.bonitasoft.studio.common.extension;
 
-import static org.assertj.core.util.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
@@ -29,6 +30,8 @@ import org.osgi.framework.Bundle;
  */
 public class ExtensionContextInjectionFactory {
 
+    private static final IEclipseContext HEADLESS_CONTEXT = EclipseContextFactory.create("headlessContext");
+
     public <T> T make(final IConfigurationElement element, final String classNameAttribute, final Class<T> extension) throws ClassNotFoundException {
         return make(element, classNameAttribute, extension, workbenchContext());
     }
@@ -38,13 +41,16 @@ public class ExtensionContextInjectionFactory {
     }
 
     private IEclipseContext workbenchContext() {
-        final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
-        if (workbench != null) {
-            final IEclipseContext context = workbench.getContext();
-            checkNotNull(context, "Workbench eclipse context is null");
-            return context;
+        if (PlatformUI.isWorkbenchRunning()) {
+            final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
+            if (workbench != null) {
+                final IEclipseContext context = workbench.getContext();
+                checkNotNull(context, "Workbench eclipse context is null");
+                return context;
+            }
+            throw new IllegalStateException("No workbench available");
         }
-        throw new IllegalStateException("No workbench available");
+        return HEADLESS_CONTEXT;
     }
 
     @SuppressWarnings("unchecked")

@@ -55,7 +55,7 @@ public class RepositoryManager {
         repositoryImplementationElement = sortedElems.get(0); //Higher element
         preferenceStore = CommonRepositoryPlugin.getDefault().getPreferenceStore();
         final String currentRepository = preferenceStore.getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
-        repository = createRepository(currentRepository);
+        repository = createRepository(currentRepository, false);
     }
 
     private List<IConfigurationElement> sortByPriority(final IConfigurationElement[] elements) {
@@ -88,10 +88,10 @@ public class RepositoryManager {
 
     }
 
-    public Repository createRepository(final String name) {
+    public Repository createRepository(final String name, final boolean migrationEnabled) {
         try {
             final Repository repository = (Repository) repositoryImplementationElement.createExecutableExtension(CLASS);
-            repository.createRepository(name);
+            repository.createRepository(name, migrationEnabled);
             return repository;
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
@@ -123,12 +123,16 @@ public class RepositoryManager {
     }
 
     public Repository getRepository(final String repositoryName) {
+        return getRepository(repositoryName, false);
+    }
+
+    public Repository getRepository(final String repositoryName, final boolean migrationEnabled) {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IProject project = workspace.getRoot().getProject(repositoryName);
         if (project == null || !project.exists()) {
             return null;
         }
-        return createRepository(repositoryName);
+        return createRepository(repositoryName, migrationEnabled);
     }
 
     public List<IRepository> getAllRepositories() {
@@ -152,7 +156,7 @@ public class RepositoryManager {
                                 }
                                 if (p.getDescription().hasNature(BonitaProjectNature.NATURE_ID)) {
                                     if (!p.getName().equals(repository.getName())) {
-                                        result.add(createRepository(p.getName()));
+                                        result.add(createRepository(p.getName(), false));
                                     }
                                 }
                                 if (close) {
@@ -176,18 +180,19 @@ public class RepositoryManager {
         setRepository(repositoryName, false, monitor);
     }
 
-    public void setRepository(final String repositoryName, final boolean migrateIfNeeded, final IProgressMonitor monitor) {
+    public void setRepository(final String repositoryName, final boolean migrationEnabled, final IProgressMonitor monitor) {
         if (repository != null && repository.getName().equals(repositoryName)) {
             return;
         } else {
             repository.close();
         }
-        repository = getRepository(repositoryName);
+        repository = getRepository(repositoryName, migrationEnabled);
         if (repository == null) {
-            repository = createRepository(repositoryName);
+            repository = createRepository(repositoryName, migrationEnabled);
         }
-        repository.create(migrateIfNeeded, monitor);
-        repository.open();
+        repository.create(monitor);
+        repository.open(monitor);
         preferenceStore.setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY, repositoryName);
     }
+
 }
