@@ -5,17 +5,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.model.expression.builders;
 
+import org.bonitasoft.engine.expression.ExpressionType;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.Connector;
@@ -23,7 +22,6 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ExpressionBuilder {
 
@@ -35,6 +33,14 @@ public class ExpressionBuilder {
 
     public static ExpressionBuilder anExpression() {
         return new ExpressionBuilder(ExpressionFactory.eINSTANCE.createExpression());
+    }
+
+    public static ExpressionBuilder aConstantExpression() {
+        return new ExpressionBuilder(ExpressionFactory.eINSTANCE.createExpression()).withExpressionType(ExpressionType.TYPE_CONSTANT.name());
+    }
+
+    public static ExpressionBuilder aVariableExpression() {
+        return new ExpressionBuilder(ExpressionFactory.eINSTANCE.createExpression()).withExpressionType(ExpressionType.TYPE_VARIABLE.name());
     }
 
     public ExpressionBuilder withName(final String name) {

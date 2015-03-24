@@ -134,7 +134,7 @@ public class EmptyNameConstraintTest {
 
     @Test
     public void should_accept_names_with_special_chars_for_widget() throws Exception {
-        when(ctx.getTarget()).thenReturn(FileWidgetBuilder.createFileWidgetBuilder().withName("hello#").build());
+        when(ctx.getTarget()).thenReturn(FileWidgetBuilder.aFileWidget().withName("hello#").build());
 
         final IStatus iStatus = emptyNameConstraint.performBatchValidation(ctx);
 

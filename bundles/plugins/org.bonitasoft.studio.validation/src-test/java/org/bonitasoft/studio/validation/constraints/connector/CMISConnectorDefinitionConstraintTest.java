@@ -5,18 +5,17 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.validation.constraints.connector;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.ConnectorBuilder.aConnector;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -27,8 +26,6 @@ import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorConf
 import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorParameterBuilder;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.builders.ConnectorBuilder;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
 import org.junit.After;
 import org.junit.Before;
@@ -37,10 +34,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CMISConnectorDefinitionConstraintTest {
@@ -124,7 +119,6 @@ public class CMISConnectorDefinitionConstraintTest {
         verify(context).createFailureStatus(anyString());
     }
 
-
     @Test
     public void should_performBatchValidation_return_a_succes_status_for_a_valid_websercie_cmis_connector_config() throws Exception {
         when(context.getTarget()).thenReturn(aCMISConfigWithWSUrl("webservices", "http://some/url", null));
@@ -157,11 +151,11 @@ public class CMISConnectorDefinitionConstraintTest {
     }
 
     private Connector aNonCMISConnectorConfig() {
-        return ConnectorBuilder.createConnectorBuilder().withDefinitionId("whatever").withDefinitionVersion("1.0").build();
+        return aConnector().withDefinitionId("whatever").withDefinitionVersion("1.0").build();
     }
 
     private Connector anInvalidCMISConfigWithoutBindingType() {
-        return ConnectorBuilder.createConnectorBuilder().
+        return aConnector().
                 withDefinitionId("cmis-createfolder").
                 withDefinitionVersion("1.0").
                 havingConfiguration(ConnectorConfigurationBuilder.create().
@@ -169,7 +163,7 @@ public class CMISConnectorDefinitionConstraintTest {
     }
 
     private Connector anInvalidCMISConfigWithInvalidBindingType() {
-        return ConnectorBuilder.createConnectorBuilder().
+        return aConnector().
                 withDefinitionId("cmis-createfolder").
                 withDefinitionVersion("1.0").
                 havingConfiguration(ConnectorConfigurationBuilder.create().
@@ -178,16 +172,15 @@ public class CMISConnectorDefinitionConstraintTest {
     }
 
     private ConnectorParameterBuilder aConnectorParameter(final String key, final String expressionContent) {
-        final ConnectorParameterBuilder builder =  ConnectorParameterBuilder.create().
-                withKey(key);
-        if(expressionContent != null){
+        final ConnectorParameterBuilder builder = ConnectorParameterBuilder.aConnectorParameter().withKey(key);
+        if (expressionContent != null) {
             builder.havingExpression(ExpressionBuilder.anExpression().withContent(expressionContent));
         }
         return builder;
     }
 
     private Connector aCMISConfigWithUrl(final String bindingContent, final String urlContent) {
-        return ConnectorBuilder.createConnectorBuilder().
+        return aConnector().
                 withDefinitionId("cmis-createfolder").
                 withDefinitionVersion("1.0").
                 havingConfiguration(ConnectorConfigurationBuilder.create().
@@ -196,15 +189,15 @@ public class CMISConnectorDefinitionConstraintTest {
     }
 
     private Connector anAtompubConfigWithoutURL(final String bindingContent) {
-        return ConnectorBuilder.createConnectorBuilder().
+        return aConnector().
                 withDefinitionId("cmis-createfolder").
                 withDefinitionVersion("1.0").
                 havingConfiguration(ConnectorConfigurationBuilder.create().
                         havingParameters(aConnectorParameter("binding_type", bindingContent))).build();
     }
 
-    private EObject aCMISConfigWithWSUrl(final String bindingContent, final String wsServiceUrl, final String wsServiceEndpointURL) {
-        return ConnectorBuilder.createConnectorBuilder().
+    private Connector aCMISConfigWithWSUrl(final String bindingContent, final String wsServiceUrl, final String wsServiceEndpointURL) {
+        return aConnector().
                 withDefinitionId("cmis-createfolder").
                 withDefinitionVersion("1.0").
                 havingConfiguration(ConnectorConfigurationBuilder.create().
