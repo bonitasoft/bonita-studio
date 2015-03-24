@@ -17,6 +17,7 @@
 
 	<modules>
 		<module>assertj-core</module>
+        <module>org.mockito</module>
 		<module>org.eclipse.swtbot.finder.nebula</module>
 		<module>org.eclipse.swtbot.finder.nebula.gallery</module>
 		<module>org.eclipse.swtbot.finder.nebula.tableCombo</module>
