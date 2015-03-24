@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>translations</artifactId>
 		<groupId>org.bonitasoft.studio</groupId>
-<version>6.5.1-SNAPSHOT</version>
+<version>6.5.1.RC1</version>
 	</parent>
 	<groupId>org.bonitasoft.studio.translations</groupId>
 	<artifactId>ja</artifactId>
