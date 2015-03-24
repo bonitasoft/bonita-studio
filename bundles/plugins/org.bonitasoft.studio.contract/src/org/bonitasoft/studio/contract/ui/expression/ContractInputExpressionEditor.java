@@ -212,12 +212,14 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
             @SuppressWarnings("unchecked")
             @Override
             public Object convert(final Object inputList) {
-                final ContractInput contractInput = ((List<ContractInput>) inputList).get(0);
-                final Collection<ContractInput> inputs = (Collection<ContractInput>) viewer
-                        .getInput();
-                for (final ContractInput input : inputs) {
-                    if (EcoreUtil.equals(input, contractInput)) {
-                        return input;
+                final List<ContractInput> list = (List<ContractInput>) inputList;
+                if (!list.isEmpty()) {
+                    final ContractInput contractInput = list.get(0);
+                    final Collection<ContractInput> inputs = (Collection<ContractInput>) viewer.getInput();
+                    for (final ContractInput input : inputs) {
+                        if (EcoreUtil.equals(input, contractInput)) {
+                            return input;
+                        }
                     }
                 }
                 return null;

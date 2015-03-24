@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,7 +24,7 @@ import static org.mockito.Mockito.when;
 import org.bonitasoft.engine.bpm.contract.ComplexInputDefinition;
 import org.bonitasoft.engine.bpm.contract.Type;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
-import org.bonitasoft.engine.bpm.process.impl.FlowElementContainerBuilder;
+import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.model.process.Contract;
@@ -44,10 +42,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ContractEngineDefinitionBuilderTest {
@@ -55,7 +51,11 @@ public class ContractEngineDefinitionBuilderTest {
     @Mock
     private UserTaskDefinitionBuilder taskBuilder;
 
-    private ContractEngineDefinitionBuilder engineContractBuilder;
+    @Mock
+    private ProcessDefinitionBuilder processBuilder;
+
+    private ContractEngineDefinitionBuilder<UserTaskDefinitionBuilder> userTaskengineContractBuilder;
+    //    private ContractEngineDefinitionBuilder<ProcessDefinitionBuilder> processengineContractBuilder;
 
     private Contract aContract;
 
@@ -67,10 +67,15 @@ public class ContractEngineDefinitionBuilderTest {
      */
     @Before
     public void setUp() throws Exception {
+        //        when(processBuilder.addContract()).thenReturn(contractDefBuilder);
+        //        aContract = ProcessFactory.eINSTANCE.createContract();
+        //        processengineContractBuilder = new ProcessContractEngineBuilder();
+        //        processengineContractBuilder.setEngineBuilder(processBuilder);
+
         when(taskBuilder.addContract()).thenReturn(contractDefBuilder);
         aContract = ProcessFactory.eINSTANCE.createContract();
-        engineContractBuilder = new ContractEngineDefinitionBuilder();
-        engineContractBuilder.setEngineBuilder(taskBuilder);
+        userTaskengineContractBuilder = new TaskContractEngineDefinitionBuilder();
+        userTaskengineContractBuilder.setEngineBuilder(taskBuilder);
     }
 
     /**
@@ -82,15 +87,27 @@ public class ContractEngineDefinitionBuilderTest {
 
     @Test
     public void should_appliesTo_a_contract() throws Exception {
-        assertThat(engineContractBuilder.appliesTo(aContract)).isTrue();
-        assertThat(engineContractBuilder.appliesTo(null)).isFalse();
+        assertThat(new TaskContractEngineDefinitionBuilder().appliesTo(ProcessFactory.eINSTANCE.createTask(), aContract)).isTrue();
+        assertThat(new TaskContractEngineDefinitionBuilder().appliesTo(ProcessFactory.eINSTANCE.createPool(), aContract)).isFalse();
+        assertThat(new TaskContractEngineDefinitionBuilder().appliesTo(ProcessFactory.eINSTANCE.createTask(), null)).isFalse();
+        assertThat(userTaskengineContractBuilder.appliesTo(null, null)).isFalse();
+        assertThat(new ProcessContractEngineBuilder().appliesTo(ProcessFactory.eINSTANCE.createTask(), aContract)).isFalse();
+        assertThat(new ProcessContractEngineBuilder().appliesTo(ProcessFactory.eINSTANCE.createPool(), aContract)).isTrue();
+        assertThat(new ProcessContractEngineBuilder().appliesTo(ProcessFactory.eINSTANCE.createPool(), null)).isFalse();
+        assertThat(userTaskengineContractBuilder.appliesTo(null, null)).isFalse();
     }
 
     @Test
     public void should_build_build_an_empty_contract() throws Exception {
-        engineContractBuilder.build(aContract);
+        userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
     }
+
+    //    @Test
+    //    public void should_build_build_an_empty_contract_for_process() throws Exception {
+    //        processengineContractBuilder.build(aContract);
+    //        verify(processBuilder).addContract();
+    //    }
 
     @Test
     public void should_build_create_a_contract_with_simple_input() throws Exception {
@@ -99,7 +116,7 @@ public class ContractEngineDefinitionBuilderTest {
         addInput(aContract, "age", ContractInputType.INTEGER, null);
         addInput(aContract, "salary", ContractInputType.DECIMAL, null);
         addInput(aContract, "isMarried", ContractInputType.BOOLEAN, null);
-        engineContractBuilder.build(aContract);
+        userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
         verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", false);
         verify(contractDefBuilder).addSimpleInput("birthDate", Type.DATE, "Birth date of an employee", false);
@@ -107,6 +124,22 @@ public class ContractEngineDefinitionBuilderTest {
         verify(contractDefBuilder).addSimpleInput("salary", Type.DECIMAL, null, false);
         verify(contractDefBuilder).addSimpleInput("isMarried", Type.BOOLEAN, null, false);
     }
+
+    //    @Test
+    //    public void should_build_create_a_contract_with_simple_input_for_process() throws Exception {
+    //        addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
+    //        addInput(aContract, "birthDate", ContractInputType.DATE, "Birth date of an employee");
+    //        addInput(aContract, "age", ContractInputType.INTEGER, null);
+    //        addInput(aContract, "salary", ContractInputType.DECIMAL, null);
+    //        addInput(aContract, "isMarried", ContractInputType.BOOLEAN, null);
+    //        processengineContractBuilder.build(aContract);
+    //        verify(processBuilder).addContract();
+    //        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", false);
+    //        verify(contractDefBuilder).addSimpleInput("birthDate", Type.DATE, "Birth date of an employee", false);
+    //        verify(contractDefBuilder).addSimpleInput("age", Type.INTEGER, null, false);
+    //        verify(contractDefBuilder).addSimpleInput("salary", Type.DECIMAL, null, false);
+    //        verify(contractDefBuilder).addSimpleInput("isMarried", Type.BOOLEAN, null, false);
+    //    }
 
     private ContractInput addInput(final Contract contract, final String inputName, final ContractInputType type, final String description) {
         final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
@@ -128,13 +161,13 @@ public class ContractEngineDefinitionBuilderTest {
 
     @Test(expected = AssertionFailedException.class)
     public void should_build_throw_an_AssertionFailedException_if_no_builder_is_set() throws Exception {
-        engineContractBuilder = new ContractEngineDefinitionBuilder();
-        engineContractBuilder.build(aContract);
+        userTaskengineContractBuilder = new TaskContractEngineDefinitionBuilder();
+        userTaskengineContractBuilder.build(aContract);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void should_build_throw_an_IllegalArgumentException_if_no_contract_is_set() throws Exception {
-        engineContractBuilder.build(null);
+        userTaskengineContractBuilder.build(null);
     }
 
     @Test
@@ -142,7 +175,7 @@ public class ContractEngineDefinitionBuilderTest {
         final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
         nameInput.setMandatory(false);
         aContract.getConstraints().add(ContractConstraintUtil.createConstraint("myConstraint", "name.length < 50", "name is too long", nameInput));
-        engineContractBuilder.build(aContract);
+        userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
         verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
         verify(contractDefBuilder).addConstraint("myConstraint", "name.length < 50", "name is too long", nameInput.getName());
@@ -152,7 +185,7 @@ public class ContractEngineDefinitionBuilderTest {
     public void should_build_create_a_contract_with_mandatory_constraint() throws Exception {
         final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
         nameInput.setMandatory(true);
-        engineContractBuilder.build(aContract);
+        userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
         verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
         verify(contractDefBuilder).addMandatoryConstraint("name");
@@ -170,7 +203,7 @@ public class ContractEngineDefinitionBuilderTest {
         textData.setName("employeeName");
         mapping.setData(textData);
         nameInput.setMapping(mapping);
-        engineContractBuilder.build(aContract);
+        userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
         verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
         verify(contractDefBuilder).addMandatoryConstraint("name");
@@ -189,7 +222,7 @@ public class ContractEngineDefinitionBuilderTest {
         addInput(skillsInput, "name", ContractInputType.TEXT, "name of the skills");
         addInput(skillsInput, "rate", ContractInputType.INTEGER, "rate of the skill");
 
-        engineContractBuilder.build(aContract);
+        userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
 
         verify(contractDefBuilder).addComplexInput(eq(employeeInput.getName()), eq(employeeInput.getDescription()), eq(employeeInput.isMultiple()), anyList(),
@@ -210,7 +243,7 @@ public class ContractEngineDefinitionBuilderTest {
         addInput(skillsInput, "name", ContractInputType.TEXT, "name of the skills");
         addInput(skillsInput, "rate", ContractInputType.INTEGER, "rate of the skill");
 
-        final ComplexInputDefinition complexInput = engineContractBuilder.buildComplexInput(employeeInput, contractDefBuilder);
+        final ComplexInputDefinition complexInput = userTaskengineContractBuilder.buildComplexInput(employeeInput, contractDefBuilder);
         assertThat(complexInput.getName()).isEqualTo(employeeInput.getName());
         assertThat(complexInput.getDescription()).isEqualTo(employeeInput.getDescription());
         assertThat(complexInput.getSimpleInputs()).extracting("name", "type").contains(
@@ -222,11 +255,6 @@ public class ContractEngineDefinitionBuilderTest {
         assertThat(complexInputDefinition.getSimpleInputs()).extracting("name", "type").contains(
                 tuple("name", Type.TEXT),
                 tuple("rate", Type.INTEGER));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void should_setEngineBuilder_throw_IllegalArgumentExcpetion() throws Exception {
-        engineContractBuilder.setEngineBuilder(new FlowElementContainerBuilder(null, null));
     }
 
 }

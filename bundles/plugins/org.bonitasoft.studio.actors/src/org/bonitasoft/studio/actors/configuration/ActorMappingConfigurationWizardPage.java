@@ -88,7 +88,7 @@ public class ActorMappingConfigurationWizardPage extends WizardPage implements I
 
 
 	@Override
-	public void createControl(Composite parent) {
+	public void createControl(final Composite parent) {
 		final Composite mainComposite = new Composite(parent, SWT.NONE) ;
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(5,2).create()) ;
@@ -105,19 +105,39 @@ public class ActorMappingConfigurationWizardPage extends WizardPage implements I
 
 
 
-	private void createImportExportButtons(Composite mainComposite) {
+	private void createImportExportButtons(final Composite mainComposite) {
 		final Composite composite = new Composite(mainComposite, SWT.NONE) ;
 		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 		composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
-		final Button importButton = new Button(composite, SWT.PUSH);
+		createImportButton(composite);
+		createExportButton(composite);
+	}
+
+    protected void createExportButton(final Composite composite) {
+        final Button exportButton = new Button(composite, SWT.PUSH);
+		exportButton.setText(Messages.exportActorMappingFile);
+		exportButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create()) ;
+		exportButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				final ExportActorMappingAction action = new ExportActorMappingAction() ;
+				action.setConfiguration(configuration);
+				action.setProcess(process) ;
+				action.run() ;
+			}
+		}) ;
+    }
+
+    protected void createImportButton(final Composite composite) {
+        final Button importButton = new Button(composite, SWT.PUSH);
 		importButton.setText(Messages.importActorMappingFile);
 		importButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create());
 		importButton.addSelectionListener(new SelectionAdapter() {
 
-
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				final ImportActorMappingAction action = new ImportActorMappingAction() ;
 				action.setConfiguration(configuration);
 				action.setProcess(process) ;
@@ -126,34 +146,90 @@ public class ActorMappingConfigurationWizardPage extends WizardPage implements I
 				getContainer().updateMessage();
 			}
 		}) ;
+    }
 
-		final Button exportButton = new Button(composite, SWT.PUSH);
-		exportButton.setText(Messages.exportActorMappingFile);
-		exportButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create()) ;
-		exportButton.addSelectionListener(new SelectionAdapter() {
-
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				final ExportActorMappingAction action = new ExportActorMappingAction() ;
-				action.setConfiguration(configuration);
-				action.setProcess(process) ;
-				action.run() ;
-			}
-		}) ;
-	}
-
-
-	private void createMappingList(Composite parent) {
-		Composite listComposite = new Composite(parent, SWT.NONE) ;
+	private void createMappingList(final Composite parent) {
+		final Composite listComposite = new Composite(parent, SWT.NONE) ;
 		listComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
 		listComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 0).spacing(5, 3).create()) ;
 
-		mappingTree = new TreeViewer(listComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL) ;
+		createMappingTree(listComposite);
+
+		final Composite buttonComposite = new Composite(listComposite, SWT.NONE) ;
+		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create()) ;
+		buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create()) ;
+
+		createGroupButton(buttonComposite);
+		createRoleButton(buttonComposite);
+		createMembershipButton(buttonComposite);
+		createUserButton(buttonComposite);
+
+		updateButtons();
+	}
+
+
+    protected void createUserButton(final Composite buttonComposite) {
+        userButton = new Button(buttonComposite, SWT.FLAT) ;
+		userButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+		userButton.setText(Messages.addUser) ;
+		userButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				userAction() ;
+				getContainer().updateMessage() ;
+			}
+		}) ;
+    }
+
+
+    protected void createMembershipButton(final Composite buttonComposite) {
+        membershipButton = new Button(buttonComposite, SWT.FLAT) ;
+		membershipButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+		membershipButton.setText(Messages.addMembershipEtc) ;
+		membershipButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				membershipAction() ;
+				getContainer().updateMessage() ;
+			}
+		}) ;
+    }
+
+
+    protected void createRoleButton(final Composite buttonComposite) {
+        roleButton = new Button(buttonComposite, SWT.FLAT) ;
+		roleButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+		roleButton.setText(Messages.addRole) ;
+		roleButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				roleAction() ;
+				getContainer().updateMessage() ;
+			}
+		}) ;
+    }
+
+
+    protected void createGroupButton(final Composite buttonComposite) {
+        groupButton = new Button(buttonComposite, SWT.FLAT) ;
+		groupButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+		groupButton.setText(Messages.addGroup) ;
+		groupButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				groupAction() ;
+				getContainer().updateMessage() ;
+			}
+		}) ;
+    }
+
+
+    protected void createMappingTree(final Composite listComposite) {
+        mappingTree = new TreeViewer(listComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL) ;
 		mappingTree.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
 		mappingTree.setContentProvider(new AdapterFactoryContentProvider(adapterFactory){
 			@Override
-			public Object[] getElements(Object object) {
+			public Object[] getElements(final Object object) {
 				if(object instanceof Collection){
 					return ((Collection) object).toArray() ;
 				}
@@ -166,66 +242,17 @@ public class ActorMappingConfigurationWizardPage extends WizardPage implements I
 		mappingTree.addFilter(new ViewerFilter() {
 
 			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
+			public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
 				return (element instanceof String || element instanceof MembershipType) || ((ITreeContentProvider)mappingTree.getContentProvider()).hasChildren(element);
 			}
 		});
-
-		Composite buttonComposite = new Composite(listComposite, SWT.NONE) ;
-		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create()) ;
-		buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create()) ;
-
-		groupButton = new Button(buttonComposite, SWT.FLAT) ;
-		groupButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-		groupButton.setText(Messages.addGroup) ;
-		groupButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				groupAction() ;
-				getContainer().updateMessage() ;
-			}
-		}) ;
-		roleButton = new Button(buttonComposite, SWT.FLAT) ;
-		roleButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-		roleButton.setText(Messages.addRole) ;
-		roleButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				roleAction() ;
-				getContainer().updateMessage() ;
-			}
-		}) ;
-
-		membershipButton = new Button(buttonComposite, SWT.FLAT) ;
-		membershipButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-		membershipButton.setText(Messages.addMembershipEtc) ;
-		membershipButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				membershipAction() ;
-				getContainer().updateMessage() ;
-			}
-		}) ;
-
-		userButton = new Button(buttonComposite, SWT.FLAT) ;
-		userButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-		userButton.setText(Messages.addUser) ;
-		userButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				userAction() ;
-				getContainer().updateMessage() ;
-			}
-		}) ;
-
-		updateButtons();
-	}
+    }
 
 
 	protected void userAction() {
 		final ActorMapping mapping = getSelectedActor();
-		SelectUsersWizard wizard = new SelectUsersWizard(mapping) ;
-		WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard) ;
+		final SelectUsersWizard wizard = new SelectUsersWizard(mapping) ;
+		final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard) ;
 		dialog.open() ;
 		Display.getDefault().asyncExec(new Runnable() {
 
@@ -241,8 +268,8 @@ public class ActorMappingConfigurationWizardPage extends WizardPage implements I
 
 	protected void membershipAction() {
 		final ActorMapping mapping = getSelectedActor();
-		SelectMembershipsWizard wizard = new SelectMembershipsWizard(mapping) ;
-		WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard) ;
+		final SelectMembershipsWizard wizard = new SelectMembershipsWizard(mapping) ;
+		final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard) ;
 		dialog.open() ;
 		Display.getDefault().asyncExec(new Runnable() {
 
@@ -258,8 +285,8 @@ public class ActorMappingConfigurationWizardPage extends WizardPage implements I
 
 	protected void roleAction() {
 		final ActorMapping mapping = getSelectedActor();
-		SelectRolesWizard wizard = new SelectRolesWizard(mapping) ;
-		WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard) ;
+		final SelectRolesWizard wizard = new SelectRolesWizard(mapping) ;
+		final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard) ;
 		dialog.open() ;
 		Display.getDefault().asyncExec(new Runnable() {
 
@@ -275,8 +302,8 @@ public class ActorMappingConfigurationWizardPage extends WizardPage implements I
 
 	protected void groupAction() {
 		final ActorMapping mapping = getSelectedActor();
-		SelectGroupsWizard wizard = new SelectGroupsWizard(mapping) ;
-		WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard) ;
+		final SelectGroupsWizard wizard = new SelectGroupsWizard(mapping) ;
+		final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard) ;
 		dialog.open() ;
 		Display.getDefault().asyncExec(new Runnable() {
 
@@ -296,17 +323,17 @@ public class ActorMappingConfigurationWizardPage extends WizardPage implements I
 
 
 	@Override
-	public void selectionChanged(SelectionChangedEvent event) {
+	public void selectionChanged(final SelectionChangedEvent event) {
 		updateButtons() ;
 	}
 
 
 	@Override
-	public void updatePage(AbstractProcess process, Configuration configuration) {
+	public void updatePage(final AbstractProcess process, final Configuration configuration) {
 		this.configuration = configuration ;
 		this.process = process ;
 		if(this.configuration != null && mappingTree != null && !mappingTree.getTree().isDisposed() && this.configuration.getActorMappings() != null){
-			List<ActorMapping> mappings = this.configuration.getActorMappings().getActorMapping() ;
+			final List<ActorMapping> mappings = this.configuration.getActorMappings().getActorMapping() ;
 			mappingTree.setInput(mappings) ;
 			mappingTree.expandAll() ;
 			updateButtons() ;
@@ -315,7 +342,7 @@ public class ActorMappingConfigurationWizardPage extends WizardPage implements I
 	}
 
 	@Override
-	public void setVisible(boolean visible) {
+	public void setVisible(final boolean visible) {
 		super.setVisible(visible);
 		if(visible){
 			updateButtons();
@@ -331,9 +358,9 @@ public class ActorMappingConfigurationWizardPage extends WizardPage implements I
 
 
 	@Override
-	public String isConfigurationPageValid(Configuration conf) {
+	public String isConfigurationPageValid(final Configuration conf) {
 		if(conf != null && conf.getActorMappings() != null){
-			for(ActorMapping mapping : conf.getActorMappings().getActorMapping()){
+			for(final ActorMapping mapping : conf.getActorMappings().getActorMapping()){
 				if(mappingIsEmpty(mapping)){
 					return Messages.bind(Messages.actorHasNoMapping, mapping.getName()) ;
 				}
@@ -343,7 +370,7 @@ public class ActorMappingConfigurationWizardPage extends WizardPage implements I
 	}
 
 
-	private boolean mappingIsEmpty(ActorMapping mapping) {
+	private boolean mappingIsEmpty(final ActorMapping mapping) {
 		boolean hasGroup = false ;
 		if(mapping.getGroups() != null){
 			hasGroup = !mapping.getGroups().getGroup().isEmpty() ;
@@ -377,10 +404,10 @@ public class ActorMappingConfigurationWizardPage extends WizardPage implements I
 
 
 	@Override
-	public void doubleClick(DoubleClickEvent event) {
+	public void doubleClick(final DoubleClickEvent event) {
 		final TreePath treePath = ((ITreeSelection) event.getSelection()).getPaths()[0];
 		for(int i = treePath.getSegmentCount()-1 ; i >= 0 ; i--){
-			Object selection = treePath.getSegment(i);
+			final Object selection = treePath.getSegment(i);
 			if(selection instanceof Users){
 				userAction();
 			}else if(selection instanceof Membership){

@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,9 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
-import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.assertions.ContractConstraintAssert;
 import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
@@ -35,18 +33,18 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContra
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractInputRow;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractInputTab;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractPropertySection;
+import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ContractIT extends SWTBotGefTestCase {
@@ -72,8 +70,22 @@ public class ContractIT extends SWTBotGefTestCase {
     @Test
     public void create_expense_report_step_contract() {
         final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot).createNewDiagram();
-        final Task task = (Task) botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1")
+        final ContractContainer contractContainer = (ContractContainer) botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1")
                 .getSelectedSemanticElement();
+        createExpenseReport(botProcessDiagramPerspective, contractContainer);
+    }
+
+    @Test
+    @Ignore("Fix me when process contract merged properly")
+    public void create_expense_report_process_contract() {
+        final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot).createNewDiagram();
+        final BotGefProcessDiagramEditor activeProcessDiagramEditor = botProcessDiagramPerspective.activeProcessDiagramEditor();
+        final ContractContainer contractContainer = (ContractContainer) activeProcessDiagramEditor.getSelectedSemanticElement();
+        createExpenseReport(botProcessDiagramPerspective, contractContainer);
+
+    }
+
+    protected void createExpenseReport(final BotProcessDiagramPerspective botProcessDiagramPerspective, final ContractContainer contractContainer) {
         final BotContractPropertySection contractTabBot = botProcessDiagramPerspective
                 .getDiagramPropertiesPart()
                 .selectGeneralTab()
@@ -99,7 +111,7 @@ public class ContractIT extends SWTBotGefTestCase {
         childRow = inputTab.add();
         childRow.setName("expenseDate").setType("DATE").setDescription("When the expense was done").clickMandatory();
 
-        Contract contract = task.getContract();
+        Contract contract = contractContainer.getContract();
         final EList<ContractInput> rootInputs = contract.getInputs();
         assertThat(rootInputs).hasSize(1);
         final ContractInput expenseReportInput = rootInputs.get(0);
@@ -126,7 +138,7 @@ public class ContractIT extends SWTBotGefTestCase {
         constraintRow.setExpression("expenseReport.expenseLines.size() > 0");
         constraintRow.setErrorMessages("An expense report must have at lease one expense line");
 
-        contract = task.getContract();
+        contract = contractContainer.getContract();
         assertThat(contract.getConstraints()).hasSize(1);
         final ContractConstraint constraint = contract.getConstraints().get(0);
         ContractConstraintAssert.assertThat(constraint).hasName("Check empty report");
@@ -134,7 +146,6 @@ public class ContractIT extends SWTBotGefTestCase {
         ContractConstraintAssert.assertThat(constraint).hasInputNames("expenseReport");
         assertThat(constraint.getErrorMessage()).isNotNull();
         ContractConstraintAssert.assertThat(constraint).hasErrorMessage("An expense report must have at lease one expense line");
-
     }
 
 }

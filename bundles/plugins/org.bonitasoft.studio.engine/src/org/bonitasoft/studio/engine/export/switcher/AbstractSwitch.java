@@ -29,6 +29,7 @@ import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
@@ -40,6 +41,8 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
@@ -90,12 +93,12 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
         return result;
     }
 
-    protected IEngineDefinitionBuilder getEngineDefinitionBuilder(final EObject element){
+    protected IEngineDefinitionBuilder getEngineDefinitionBuilder(final EObject context, final EObject element) {
         if (engineDefinitionBuilders == null) {
             engineDefinitionBuilders = createEngineDefinitionBuilders();
         }
         for(final IEngineDefinitionBuilder builder : engineDefinitionBuilders){
-            if(builder.appliesTo(element)){
+            if (builder.appliesTo(context, element)) {
                 return builder;
             }
         }
@@ -220,6 +223,21 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     protected void addDescription(final DescriptionBuilder builder, final String description) {
         if (description != null && !description.isEmpty()) {
             builder.addDescription(description);
+        }
+    }
+
+    protected void addContract(final FlowElementBuilder builder, final ContractContainer contractContainer) {
+        if (contractContainer != null) {
+            final Contract contract = contractContainer.getContract();
+            if (contract != null) {
+                final IEngineDefinitionBuilder contractBuilder = getEngineDefinitionBuilder(contractContainer, contract);
+                contractBuilder.setEngineBuilder(builder);
+                try {
+                    contractBuilder.build(contract);
+                } catch (final BuildProcessDefinitionException e) {
+                    throw new RuntimeException("Failed to export contract definition for " + ((Element) contractContainer).getName(), e);
+                }
+            }
         }
     }
 

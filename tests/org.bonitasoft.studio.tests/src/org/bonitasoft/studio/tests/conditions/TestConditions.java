@@ -45,6 +45,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.engine.operation.ProcessSelector;
@@ -160,7 +161,13 @@ public class TestConditions {
         for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
             f.open();
         }
-        final MainProcess mainProcess = (MainProcess) op.getFileStoresToOpen().get(0).getContent();
-        return mainProcess;
+        MainProcess mainProcess;
+        try {
+            mainProcess = (MainProcess) op.getFileStoresToOpen().get(0).getContent();
+            return mainProcess;
+        } catch (final ReadFileStoreException e) {
+            BonitaStudioLog.error("Failed read diagram content", e);
+        }
+        return null;
     }
 }

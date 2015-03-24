@@ -232,10 +232,8 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
             final EObject context, final Expression inputExpression, final ViewerFilter[] filters, final ExpressionViewer expressionViewer) {
 
         final EObject finalContext = context;
-        if (context instanceof Widget) {
-            if (ModelHelper.getPageFlow((Widget) context) instanceof Pool) {
-                addExpressionButton.setEnabled(false);
-            }
+        if (context instanceof Widget && ModelHelper.getPageFlow((Widget) context) instanceof Pool) {
+            addExpressionButton.setEnabled(false);
         }
         final ViewerFilter[] finalFilters = filters;
         addExpressionButton.addSelectionListener(new SelectionAdapter() {
@@ -319,14 +317,17 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 
             @Override
             public Object convert(final Object dataList) {
-                final Data d = ((List<Data>) dataList).get(0);
-                final Collection<Data> inputData = (Collection<Data>) viewer
-                        .getInput();
-                for (final Data data : inputData) {
-                    if (data.getName().equals(d.getName())
-                            && data.getDataType().getName()
-                                    .equals(d.getDataType().getName())) {
-                        return data;
+                final List<Data> list = (List<Data>) dataList;
+                if (!list.isEmpty()) {
+                    final Data d = list.get(0);
+                    final Collection<Data> inputData = (Collection<Data>) viewer
+                            .getInput();
+                    for (final Data data : inputData) {
+                        if (data.getName().equals(d.getName())
+                                && data.getDataType().getName()
+                                        .equals(d.getDataType().getName())) {
+                            return data;
+                        }
                     }
                 }
                 return null;
@@ -356,39 +357,40 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
                 returnTypeObservable);
 
         if (context instanceof DateFormField) {
-
-            final ControlDecoration cd = new ControlDecoration(typeText,
-                    SWT.TOP | SWT.LEFT);
-            // cd.setImage(Pics.getImage(PicsConstants.error)) ;
-            cd.setImage(PlatformUI.getWorkbench().getSharedImages()
-                    .getImage(ISharedImages.IMG_OBJS_WARN_TSK));
-            cd.setDescriptionText("It is recommanded to use Return type ad String or Date for Date Widget");
-            cd.setShowOnlyOnFocus(false);
-            if (typeText.getText().equals(Date.class.getName())
-                    || typeText.getText().equals(String.class.getName())) {
-                cd.hide();
-            } else {
-                cd.show();
-            }
-
-            returnTypeObservable
-                    .addValueChangeListener(new IValueChangeListener() {
-
-                        @Override
-                        public void handleValueChange(final ValueChangeEvent event) {
-                            if (typeText.getText().equals(Date.class.getName())
-                                    || typeText.getText().equals(
-                                            String.class.getName())) {
-                                cd.hide();
-                            } else {
-                                cd.show();
-                            }
-
-                        }
-                    });
-
+            handleDateFormFieldBinding();
         }
 
+    }
+
+    protected void handleDateFormFieldBinding() {
+        final ControlDecoration cd = new ControlDecoration(typeText, SWT.TOP | SWT.LEFT);
+        // cd.setImage(Pics.getImage(PicsConstants.error)) ;
+        cd.setImage(PlatformUI.getWorkbench().getSharedImages()
+                .getImage(ISharedImages.IMG_OBJS_WARN_TSK));
+        cd.setDescriptionText("It is recommanded to use Return type ad String or Date for Date Widget");
+        cd.setShowOnlyOnFocus(false);
+        updateTypeTextControlDecorationVisibility(cd);
+
+        returnTypeObservable
+                .addValueChangeListener(new IValueChangeListener() {
+
+                    @Override
+                    public void handleValueChange(final ValueChangeEvent event) {
+                        updateTypeTextControlDecorationVisibility(cd);
+                    }
+
+                });
+    }
+
+    protected void updateTypeTextControlDecorationVisibility(final ControlDecoration cd) {
+        final String typeAsString = typeText.getText();
+        if (Date.class.getName().equals(typeAsString)
+                || String.class.getName().equals(
+                        typeAsString)) {
+            cd.hide();
+        } else {
+            cd.show();
+        }
     }
 
     @Override

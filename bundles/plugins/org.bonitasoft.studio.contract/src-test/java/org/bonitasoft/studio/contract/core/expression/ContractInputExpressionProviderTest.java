@@ -30,6 +30,8 @@ import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.emf.ecore.EObject;
@@ -78,9 +80,9 @@ public class ContractInputExpressionProviderTest {
     }
 
     @Test
-    public void should_isRelevant_returns_false_if_context_is_not_in_a_Task() throws Exception {
+    public void should_isRelevant_returns_true_if_context_is_a_Pool() throws Exception {
         final EObject context = ProcessFactory.eINSTANCE.createPool();
-        assertThat(contractInputExpressionProvider.isRelevantFor(context)).isFalse();
+        assertThat(contractInputExpressionProvider.isRelevantFor(context)).isTrue();
     }
 
     @Test
@@ -88,6 +90,24 @@ public class ContractInputExpressionProviderTest {
         final Task context = ProcessFactory.eINSTANCE.createTask();
         final Form form = FormFactory.eINSTANCE.createForm();
         final Widget texField = FormFactory.eINSTANCE.createTextFormField();;
+        form.getWidgets().add(texField);
+        context.getForm().add(form);
+        assertThat(contractInputExpressionProvider.isRelevantFor(texField)).isFalse();
+    }
+
+    @Test
+    public void should_isRelevant_returns_true_if_context_is_a_data_in_a_Pool() throws Exception {
+        final Pool context = ProcessFactory.eINSTANCE.createPool();
+        final Data data = ProcessFactory.eINSTANCE.createData();
+        context.getData().add(data);
+        assertThat(contractInputExpressionProvider.isRelevantFor(data)).isTrue();
+    }
+
+    @Test
+    public void should_isRelevant_returns_false_if_context_is_a_form_in_a_Pool() throws Exception {
+        final Pool context = ProcessFactory.eINSTANCE.createPool();
+        final Form form = FormFactory.eINSTANCE.createForm();
+        final Widget texField = FormFactory.eINSTANCE.createTextFormField();
         form.getWidgets().add(texField);
         context.getForm().add(form);
         assertThat(contractInputExpressionProvider.isRelevantFor(texField)).isFalse();
@@ -106,6 +126,19 @@ public class ContractInputExpressionProviderTest {
         assertThat(contractInputExpressionProvider.getExpressions(task)).isEmpty();
         task.setContract(creatContractWithInput("firstName", "lastName"));
         assertThat(contractInputExpressionProvider.getExpressions(task)).hasSize(2)
+                .extracting("name", "returnType")
+                .contains(
+                        tuple("firstName", String.class.getName()),
+                        tuple("lastName", String.class.getName()));
+    }
+
+    @Test
+    public void should_getExpressions_returns_available_contract_int_as_expressions_on_pool() throws Exception {
+        final Pool pool = ProcessFactory.eINSTANCE.createPool();
+        pool.setContract(createEmptyContract());
+        assertThat(contractInputExpressionProvider.getExpressions(pool)).isEmpty();
+        pool.setContract(creatContractWithInput("firstName", "lastName"));
+        assertThat(contractInputExpressionProvider.getExpressions(pool)).hasSize(2)
                 .extracting("name", "returnType")
                 .contains(
                         tuple("firstName", String.class.getName()),

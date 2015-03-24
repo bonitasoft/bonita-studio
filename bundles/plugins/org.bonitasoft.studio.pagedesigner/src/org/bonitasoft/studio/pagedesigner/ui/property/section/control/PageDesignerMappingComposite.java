@@ -14,19 +14,15 @@
  */
 package org.bonitasoft.studio.pagedesigner.ui.property.section.control;
 
-import java.net.MalformedURLException;
-
-import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
 import org.bonitasoft.studio.pagedesigner.ui.property.section.FormReferenceProposalLabelProvider;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
@@ -53,7 +49,7 @@ public class PageDesignerMappingComposite extends Composite implements BonitaPre
 
     private static final int WIDTH_HINT = 300;
     private final ExpressionViewer targetFormExpressionViewer;
-    private final IEclipsePreferences preferenceStore;
+    private final RepositoryAccessor repositoryAccessor;
 
     public PageDesignerMappingComposite(final Composite parent,
             final TabbedPropertySheetWidgetFactory widgetFactory,
@@ -61,7 +57,7 @@ public class PageDesignerMappingComposite extends Composite implements BonitaPre
             final RepositoryAccessor repositoryAccessor,
             final FormReferenceExpressionValidator formReferenceExpressionValidator) {
         super(parent, SWT.NONE);
-        this.preferenceStore = preferenceStore;
+        this.repositoryAccessor = repositoryAccessor;
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 0, 10, 0).create());
         final Label label = widgetFactory.createLabel(this, Messages.targetForm);
         label.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
@@ -102,14 +98,8 @@ public class PageDesignerMappingComposite extends Composite implements BonitaPre
     protected void editForm(final IObservableValue formMappingObservable) {
         final FormMapping mapping = (FormMapping) formMappingObservable.getValue();
         final Expression targetForm = mapping.getTargetForm();
-        if (targetForm.getContent() != null && !targetForm.getContent().isEmpty()) {
-            try {
-                new OpenBrowserOperation(new PageDesignerURLFactory(preferenceStore.get(CONSOLE_HOST, DEFAULT_HOST), preferenceStore
-                        .getInt(CONSOLE_PORT, DEFAULT_PORT)).openPage(targetForm.getContent())).execute();
-            } catch (final MalformedURLException e1) {
-                BonitaStudioLog.error(e1);
-            }
+        if (targetForm.hasContent()) {
+            repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent()).open();
         }
     }
-
 }

@@ -23,14 +23,14 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
 import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -40,10 +40,7 @@ public class OpenPageDesignerHandler extends AbstractHandler {
 
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
-        final IPreferenceStore preferenceStore = getPreferenceStore();
-        final String host = preferenceStore.getString(BonitaPreferenceConstants.CONSOLE_HOST);
-        final int port = preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT);
-        final PageDesignerURLFactory pageDesignerURLBuilder = new PageDesignerURLFactory(host, port);
+        final PageDesignerURLFactory pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
         try {
             createOpenBrowserOperation(pageDesignerURLBuilder.openPageDesignerHome()).execute();
         } catch (final MalformedURLException e) {
@@ -63,8 +60,8 @@ public class OpenPageDesignerHandler extends AbstractHandler {
         return new OpenBrowserOperation(url);
     }
 
-    protected IPreferenceStore getPreferenceStore() {
-        return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
+    protected IEclipsePreferences getPreferenceStore() {
+        return InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_PREFERENCE_SCOPE);
     }
 
 }
