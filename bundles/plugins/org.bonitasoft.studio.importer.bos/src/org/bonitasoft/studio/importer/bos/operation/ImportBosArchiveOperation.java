@@ -43,6 +43,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
+import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
@@ -75,12 +76,13 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     private static final String TMP_IMPORT_PROJECT = "tmpImport";
     private String archiveFile;
     private Repository currentRepository;
-    private Status validationStatus;
+    private IStatus validationStatus;
     private final IResourceImporter iResourceImporter;
     private final boolean launchValidationafterImport;
 
     private boolean validate = true;
     private MultiStatus status;
+    private SkippableProgressMonitorJobsDialog progressDialog;
 
     public ImportBosArchiveOperation() {
         this(true);
@@ -162,9 +164,17 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         cleanTmpProject();
     }
 
+    public void setProgressDialog(final SkippableProgressMonitorJobsDialog progressDialog) {
+        this.progressDialog = progressDialog;
+    }
+
     protected void validateAllAfterImport(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        if (progressDialog != null) {
+            progressDialog.canBeSkipped();
+        }
         final ImportBosArchiveStatusBuilder statusBuilder = new ImportBosArchiveStatusBuilder();
         if (validate) {
+            monitor.setTaskName("Validation");
             for (final IRepositoryFileStore diagramFileStore : iResourceImporter.getImportedProcesses()) {
                 final AbstractProcess process = (AbstractProcess) diagramFileStore.getContent();
                 final RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(
@@ -176,7 +186,9 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 statusBuilder.addStatus(process, validationAction.getStatus());
             }
         }
-        validationStatus = statusBuilder.done();
+        validationStatus = monitor.isCanceled() ? ValidationStatus.warning(org.bonitasoft.studio.importer.bos.i18n.Messages.skippedValidationMessage)
+                : statusBuilder
+                        .done();
     }
 
     public void setCurrentRepository(final Repository currentRepository) {
@@ -345,4 +357,5 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         return validationStatus;
 
     }
+
 }

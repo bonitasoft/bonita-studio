@@ -32,10 +32,13 @@ Require-Bundle: org.eclipse.ui,
  org.mockito;bundle-version="1.9.5";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.importer,org.bonitasoft.studio.i
- mporter.bonita4,org.bonitasoft.studio.importer.bpmn,org.bonitasoft.st
- udio.importer.builder,org.bonitasoft.studio.importer.handler,org.boni
- tasoft.studio.importer.processors
+Export-Package: org.bonitasoft.studio.importer,
+ org.bonitasoft.studio.importer.bonita4,
+ org.bonitasoft.studio.importer.bpmn,
+ org.bonitasoft.studio.importer.builder,
+ org.bonitasoft.studio.importer.handler,
+ org.bonitasoft.studio.importer.processors,
+ org.bonitasoft.studio.importer.ui.dialog
 Bundle-ClassPath: .
 Bundle-Localization: plugin
 Import-Package: org.bonitasoft.engine.bpm.connector
