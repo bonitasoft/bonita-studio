@@ -27,5 +27,6 @@ public class Messages extends NLS {
 
     public static String processesWithErrorAfterImport;
     public static String openDiagramWithErrors;
+    public static String skippedValidationMessage;
 
 }

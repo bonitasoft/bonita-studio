@@ -22,6 +22,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.importer.handler.DefaultImportStatusDialogHandler;
 import org.bonitasoft.studio.importer.handler.ImportStatusDialogHandler;
+import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -32,6 +33,7 @@ import org.eclipse.core.runtime.Status;
 public abstract class ToProcProcessor {
 
     protected String resourceName;
+    protected SkippableProgressMonitorJobsDialog progressDialog;
 
     public abstract File createDiagram(URL sourceFileURL, IProgressMonitor progressMonitor) throws Exception;
 
@@ -56,10 +58,9 @@ public abstract class ToProcProcessor {
 
     public abstract String getExtension();
 
-    //
-    //    public List<Object> getErrors() {
-    //        return new ArrayList<Object>();
-    //    }
+    public void setProgressDialog(final SkippableProgressMonitorJobsDialog progressDialog) {
+        this.progressDialog = progressDialog;
+    }
 
     public IStatus getStatus() {
         return Status.OK_STATUS;

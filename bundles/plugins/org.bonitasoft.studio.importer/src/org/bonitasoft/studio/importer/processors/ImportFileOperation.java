@@ -31,6 +31,7 @@ import org.bonitasoft.studio.importer.ImporterFactory;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.handler.ImportStatusDialogHandler;
 import org.bonitasoft.studio.importer.i18n.Messages;
+import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -46,6 +47,7 @@ public class ImportFileOperation implements IRunnableWithProgress {
     private final List<DiagramFileStore> fileStoresToOpen;
     private IStatus status;
     private ToProcProcessor processor;
+    private SkippableProgressMonitorJobsDialog progressDialog;
 
     public List<DiagramFileStore> getFileStoresToOpen() {
         return fileStoresToOpen;
@@ -58,6 +60,12 @@ public class ImportFileOperation implements IRunnableWithProgress {
         fileStoresToOpen = new ArrayList<DiagramFileStore>();
     }
 
+    public ImportFileOperation(final ImporterFactory importerFactory,
+            final File fileToImport, final SkippableProgressMonitorJobsDialog progressDialog) {
+        this(importerFactory, fileToImport);
+        this.progressDialog = progressDialog;
+    }
+
     /*
      * (non-Javadoc)
      * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -66,8 +74,8 @@ public class ImportFileOperation implements IRunnableWithProgress {
     public void run(final IProgressMonitor monitor) throws InvocationTargetException,
             InterruptedException {
         monitor.beginTask(Messages.importProcessProgressDialog, IProgressMonitor.UNKNOWN);
-
         processor = importerFactory.createProcessor(fileToImport.getName());
+        processor.setProgressDialog(progressDialog);
         try {
             processor.createDiagram(fileToImport.toURI().toURL(), monitor);
         } catch (final MalformedURLException e) {
