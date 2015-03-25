@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.gmf.tools.tree;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
 import static org.bonitasoft.studio.model.process.builders.MainProcessBuilder.aMainProcess;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
@@ -23,6 +24,7 @@ import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.junit.Before;
 import org.junit.Test;
+
 
 /**
  * @author Romain Bioteau
@@ -64,7 +66,7 @@ public class MainProcessFormMappingViewerFilterTest {
     }
 
     private FormMapping aFormMappingInAPageflow() {
-        return aPool().havingFormMapping(aFormMapping()).build().getFormMapping();
+        return aPool().havingFormMapping(aFormMapping().havingTargetForm(anExpression().withContent("form-id"))).build().getFormMapping();
     }
 
     private FormMapping aFormMappingInAMainProcess() {
