@@ -42,10 +42,6 @@ public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefin
         final Contract contract = (Contract) element;
 
         final ContractDefinitionBuilder contractBuilder = addContract();
-        //TODO Remove me when process contract merged
-        if (contractBuilder == null) {
-            return;
-        }
         for (final ContractInput input : contract.getInputs()) {
             if (input.getType() == ContractInputType.COMPLEX) {
                 addComplexInput(contractBuilder, input);

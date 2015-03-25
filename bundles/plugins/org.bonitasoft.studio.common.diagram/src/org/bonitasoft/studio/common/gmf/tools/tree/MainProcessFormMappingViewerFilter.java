@@ -34,7 +34,20 @@ public class MainProcessFormMappingViewerFilter extends ViewerFilter {
     }
 
     private boolean selectFormMapping(final FormMapping formMapping) {
-        return formMapping.eContainer() instanceof MainProcess ? false : true;
+        return formMapping.eContainer() instanceof MainProcess ? false : selectNonEmptyFormMapping(formMapping);
+    }
+
+    private boolean selectNonEmptyFormMapping(final FormMapping formMapping) {
+        switch (formMapping.getType()) {
+            case LEGACY:
+                return false;
+            case URL:
+                return true;
+            case INTERNAL:
+                return formMapping.getTargetForm() != null && formMapping.getTargetForm().hasContent();
+            default:
+                return false;
+        }
     }
 
 }

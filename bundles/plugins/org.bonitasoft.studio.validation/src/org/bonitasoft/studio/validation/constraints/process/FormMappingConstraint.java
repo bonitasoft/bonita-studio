@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -56,15 +57,31 @@ public class FormMappingConstraint extends AbstractLiveValidationMarkerConstrain
         final EObject eObj = ctx.getTarget();
         checkArgument(eObj instanceof FormMapping);
         final FormMapping formMapping = (FormMapping) eObj;
+        switch (formMapping.getType()) {
+            case INTERNAL:
+                return doValidateInternalMapping(ctx, formMapping);
+            case URL:
+                return doValidateURLMapping(ctx, formMapping);
+            default:
+                return ctx.createSuccessStatus();
+        }
+    }
+
+    private IStatus doValidateInternalMapping(final IValidationContext ctx, final FormMapping formMapping) {
         final Expression targetForm = formMapping.getTargetForm();
         if (targetForm.hasContent()) {
             final RepositoryAccessor repositoryAccessor = getRepositoryAccessor();
             final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
             if (repositoryStore.getChild(targetForm.getContent() + ".json") == null) {
-                return ctx.createFailureStatus(Messages.bind(Messages.invalidFormMapping, mappingKind(eObj), targetForm.getContent() + ".json"));
+                return ctx.createFailureStatus(Messages.bind(Messages.invalidInternalFormMapping, mappingKind(formMapping), targetForm.getContent() + ".json"));
             }
         }
         return ctx.createSuccessStatus();
+    }
+
+    private IStatus doValidateURLMapping(final IValidationContext ctx, final FormMapping formMapping) {
+        return isNullOrEmpty(formMapping.getUrl()) ? ctx.createFailureStatus(Messages.bind(Messages.invalidURLFormMapping, mappingKind(formMapping))) : ctx
+                .createSuccessStatus();
     }
 
     private String mappingKind(final EObject eObj) {
