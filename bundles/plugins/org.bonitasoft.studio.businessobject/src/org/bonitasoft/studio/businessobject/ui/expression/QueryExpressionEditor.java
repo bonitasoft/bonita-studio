@@ -14,6 +14,11 @@
  */
 package org.bonitasoft.studio.businessobject.ui.expression;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Iterables.removeIf;
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.util.List;
 
 import org.bonitasoft.studio.businessobject.core.expression.QueryExpressionProvider;
@@ -386,7 +391,14 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
     }
 
     private void synchronizeQueryParameterExpressions(final Expression inputExpression, final Expression exp) {
-        for (final EObject refElem : inputExpression.getReferencedElements()) {
+        final List<EObject> referencedElements = newArrayList(inputExpression.getReferencedElements());
+        inputExpression.getReferencedElements().clear();
+        inputExpression.getReferencedElements().addAll(recomputeDependencies(exp, referencedElements));
+    }
+
+    private List<EObject> recomputeDependencies(final Expression exp, final List<EObject> referencedElements) {
+        removeIf(referencedElements, not(instanceOf(Expression.class)));
+        for (final EObject refElem : referencedElements) {
             final Expression existingParam = (Expression) refElem;
             for (final EObject ref : exp.getReferencedElements()) {
                 final Expression queryParam = (Expression) ref;
@@ -398,6 +410,7 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
                 }
             }
         }
+        return referencedElements;
     }
 
     @Override
