@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.spy;
@@ -32,7 +33,6 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.junit.Before;
@@ -73,10 +73,8 @@ public class CreateBonitaBPMProjectOperationTest {
     public void setUp() throws Exception {
         createBonitaBPMProjectOperation = spy(new CreateBonitaBPMProjectOperation(workspace, "my project"));
         doReturn(root).when(workspace).getRoot();
+        doNothing().when(createBonitaBPMProjectOperation).createProjectManifest(monitor);
         doReturn(javaProject).when(createBonitaBPMProjectOperation).asJavaProject();
-        doReturn(metaInfFolder).when(project).getFolder("META-INF");
-        doReturn(manifestFile).when(metaInfFolder).getFile("MANIFEST.MF");
-        doReturn(Path.fromOSString("/aFakePath")).when(manifestFile).getLocation();
         doReturn("org.bonitasoft.studio.console.libs").when(createBonitaBPMProjectOperation).engineBundleSymbolicName();
     }
 
@@ -97,6 +95,7 @@ public class CreateBonitaBPMProjectOperationTest {
         verify(javaProject).setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
         verify(javaProject).setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
         verify(javaProject).setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
+        verify(createBonitaBPMProjectOperation).createProjectManifest(monitor);
     }
 
     @Test

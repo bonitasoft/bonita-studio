@@ -98,7 +98,7 @@ public class CreateBonitaBPMProjectOperation implements IWorkspaceRunnable {
         return this;
     }
 
-    private void createProjectManifest(final IProgressMonitor monitor) throws CoreException {
+    protected void createProjectManifest(final IProgressMonitor monitor) throws CoreException {
         final IFolder metaInf = project.getFolder(META_INF_FOLDER_NAME);
         metaInf.create(false, true, monitor);
         final IFile projectManifest = project.getFolder(META_INF_FOLDER_NAME).getFile("MANIFEST.MF");
