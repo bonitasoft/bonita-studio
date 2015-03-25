@@ -16,6 +16,7 @@ package org.bonitasoft.studio.common.repository.filestore;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -333,6 +334,11 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
     @Override
     public Set<IResource> getRelatedResources() {
         return new HashSet<IResource>();
+    }
+
+    @Override
+    public Set<IRepositoryFileStore> getRelatedFileStore() {
+        return Collections.emptySet();
     }
 
     public void setParameters(final Map<String, Object> parameters) {

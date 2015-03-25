@@ -82,7 +82,7 @@ import org.eclipse.swt.widgets.Display;
  * @author Romain Bioteau
  */
 public class DiagramRepositoryStore extends
-AbstractEMFRepositoryStore<DiagramFileStore> {
+        AbstractEMFRepositoryStore<DiagramFileStore> {
 
     private static final String STORE_NAME = "diagrams";
     private static final Set<String> extensions = new HashSet<String>();
@@ -285,9 +285,9 @@ AbstractEMFRepositoryStore<DiagramFileStore> {
             FileUtil.copy(is, fos);
             final Map<String, String[]> featureValueFromEObjectType = new EMFResourceUtil(
                     tmpFile).getFeatureValueFromEObjectType(
-                            "process:MainProcess",
-                            ProcessPackage.Literals.ELEMENT__NAME,
-                            ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
+                    "process:MainProcess",
+                    ProcessPackage.Literals.ELEMENT__NAME,
+                    ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
             if (featureValueFromEObjectType.size() == 1) {
                 final String[] next = featureValueFromEObjectType.values()
                         .iterator().next();
@@ -369,9 +369,9 @@ AbstractEMFRepositoryStore<DiagramFileStore> {
         final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
                 ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterFactory
-        .addAdapterFactory(new ResourceItemProviderAdapterFactory());
+                .addAdapterFactory(new ResourceItemProviderAdapterFactory());
         adapterFactory
-        .addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+                .addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new ProcessItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new NotationAdapterFactory());
         labelProvider = new AdapterFactoryLabelProvider(adapterFactory);
@@ -487,37 +487,15 @@ AbstractEMFRepositoryStore<DiagramFileStore> {
     private String getModelVersion(final Resource resource) {
         final Map<String, String[]> featureValueFromEObjectType = new EMFResourceUtil(
                 new File(resource.getURI().toFileString()))
-        .getFeatureValueFromEObjectType(
-                "process:MainProcess",
-                ProcessPackage.Literals.MAIN_PROCESS__BONITA_MODEL_VERSION);
+                .getFeatureValueFromEObjectType(
+                        "process:MainProcess",
+                        ProcessPackage.Literals.MAIN_PROCESS__BONITA_MODEL_VERSION);
         String modelVersion = null;
         for (final Entry<String, String[]> e : featureValueFromEObjectType
                 .entrySet()) {
             modelVersion = e.getValue()[0];
         }
         return modelVersion;
-    }
-
-    public String getLabelFor(final String processUUID) {
-        String label = eObjectIdToLabel.get(processUUID);
-        if (label == null) {
-            for (final DiagramFileStore fStore : getChildren()) {
-                final EMFResourceUtil emfResourceUtil = new EMFResourceUtil(
-                        fStore.getResource().getLocation().toFile());
-                final String[] featureValuesFromEObjectId = emfResourceUtil
-                        .getFeatureValuesFromEObjectId(
-                                processUUID,
-                                ProcessPackage.Literals.ELEMENT__NAME,
-                                ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
-                if (featureValuesFromEObjectId != null) {
-                    label = featureValuesFromEObjectId[0] + " ("
-                            + featureValuesFromEObjectId[1] + ")";
-                    updateProcessLabel(processUUID, label);
-                    break;
-                }
-            }
-        }
-        return label;
     }
 
     public void updateProcessLabel(final String processId,
@@ -530,4 +508,5 @@ AbstractEMFRepositoryStore<DiagramFileStore> {
         BonitaEditingDomainUtil.cleanEditingDomainRegistry();
         super.close();
     }
+
 }

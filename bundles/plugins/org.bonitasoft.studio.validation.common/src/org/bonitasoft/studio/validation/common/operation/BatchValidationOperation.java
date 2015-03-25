@@ -86,16 +86,17 @@ public class BatchValidationOperation implements IRunnableWithProgress {
             final DiagramEditPart diagramEp = entry.getValue();
             final Diagram diagram = entry.getKey();
             if (diagramEp != null) {
-                monitor.subTask(subTaskName(diagramEp.resolveSemanticElement()));
-                final TransactionalEditingDomain txDomain = TransactionUtil.getEditingDomain(diagram);
-                runWithConstraints(txDomain, new Runnable() {
+                if (!monitor.isCanceled()) {
+                    monitor.subTask(subTaskName(diagramEp.resolveSemanticElement()));
+                    final TransactionalEditingDomain txDomain = TransactionUtil.getEditingDomain(diagram);
+                    runWithConstraints(txDomain, new Runnable() {
 
-                    @Override
-                    public void run() {
-                        validate(diagramEp, diagram, monitor);
-
-                    }
-                });
+                        @Override
+                        public void run() {
+                            validate(diagramEp, diagram, monitor);
+                        }
+                    });
+                }
             }
         }
 

@@ -70,12 +70,6 @@
      </initializer>
   </extension>
   <extension
-        point="org.bonitasoft.studio.repositoryStore">
-     <repositoryStore
-           class="org.bonitasoft.studio.engine.store.DeploymentConfigurationRepositoryStore">
-     </repositoryStore>
-  </extension>
-  <extension
         point="org.eclipse.ui.menus">
      <menuContribution
            allPopups="false"

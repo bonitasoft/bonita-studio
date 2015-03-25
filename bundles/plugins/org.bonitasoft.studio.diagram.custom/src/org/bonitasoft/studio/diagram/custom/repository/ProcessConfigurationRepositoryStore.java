@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.diagram.custom.repository;
 
@@ -56,25 +54,30 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
- *
  */
-public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositoryStore<ProcessConfigurationFileStore>{
+public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositoryStore<ProcessConfigurationFileStore> {
 
-    public static final String STORE_NAME = "process_configurations" ;
-    private static final Set<String> extensions = new HashSet<String>() ;
+    public static final String STORE_NAME = "process_configurations";
+    private static final Set<String> extensions = new HashSet<String>();
     public static final String CONF_EXT = "conf";
 
-    static{
-        extensions.add(CONF_EXT) ;
+    static {
+        extensions.add(CONF_EXT);
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.IRepositoryStore#getName()
      */
     @Override
     public String getName() {
-        return STORE_NAME ;
+        return STORE_NAME;
     }
 
+    @Override
+    public boolean canBeExported() {
+        return false;
+    }
 
     @Override
     public String getDisplayName() {
@@ -86,12 +89,10 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
         return Pics.getImage(PicsConstants.configuration);
     }
 
-
     @Override
     public ProcessConfigurationFileStore createRepositoryFileStore(final String fileName) {
-        return new ProcessConfigurationFileStore(fileName,this) ;
+        return new ProcessConfigurationFileStore(fileName, this);
     }
-
 
     @Override
     public Set<String> getCompatibleExtensions() {
@@ -106,32 +107,32 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
     @Override
     protected ProcessConfigurationFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
         final IFile file = getResource().getFile(fileName);
-        try{
-            if(file.exists()){
+        try {
+            if (file.exists()) {
                 String fileNameLabel = fileName;
                 final String processUUID = fileName.substring(0, fileName.lastIndexOf("."));
                 final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
                 final AbstractProcess process = diagramStore.getProcessByUUID(processUUID);
-                if(process != null){
-                    fileNameLabel =Messages.bind(Messages.localConfigurationFor,process.getName() +" ("+process.getVersion()+")");
+                if (process != null) {
+                    fileNameLabel = Messages.bind(Messages.localConfigurationFor, process.getName() + " (" + process.getVersion() + ")");
                 }
-                if(FileActionDialog.overwriteQuestion(fileNameLabel)){
+                if (FileActionDialog.overwriteQuestion(fileNameLabel)) {
                     file.setContents(inputStream, true, false, Repository.NULL_PROGRESS_MONITOR);
-                }else{
+                } else {
                     return createRepositoryFileStore(fileName);
                 }
             } else {
                 final File f = file.getLocation().toFile();
-                if(!f.getParentFile().exists()){
+                if (!f.getParentFile().exists()) {
                     f.getParentFile().mkdirs();
                     refresh();
                 }
                 file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
             }
-        }catch(final Exception e){
-            BonitaStudioLog.error(e) ;
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
         }
-        return createRepositoryFileStore(fileName) ;
+        return createRepositoryFileStore(fileName);
     }
 
     @Override
@@ -139,30 +140,29 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
         final Map<Object, Object> loadOptions = new HashMap<Object, Object>();
         //Ignore unknown features
         loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
-        final XMLOptions options = new XMLOptionsImpl() ;
-        options.setProcessAnyXML(true) ;
+        final XMLOptions options = new XMLOptionsImpl();
+        options.setProcessAnyXML(true);
         loadOptions.put(XMLResource.OPTION_XML_OPTIONS, options);
         try {
             resource.load(loadOptions);
         } catch (final IOException e) {
-            BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
+            BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
         }
         final String modelVersion = getModelVersion(resource);
-        for(final Release release : targetMigrator.getReleases()){
-            if(release.getLabel().equals(modelVersion)){
+        for (final Release release : targetMigrator.getReleases()) {
+            if (release.getLabel().equals(modelVersion)) {
                 return release;
             }
         }
         return targetMigrator.getReleases().iterator().next(); //First release of all time
     }
 
-
     protected String getModelVersion(final Resource resource) {
         final String modelVersion = ModelVersion.VERSION_6_0_0_ALPHA;
-        for(final EObject root : resource.getContents()){
-            if(root instanceof Configuration){
+        for (final EObject root : resource.getContents()) {
+            if (root instanceof Configuration) {
                 final String version = ((Configuration) root).getVersion();
-                if(version != null){
+                if (version != null) {
                     return version;
                 }
             }
@@ -226,6 +226,6 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
 
     @Override
     protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
-        adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory()) ;
+        adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory());
     }
 }

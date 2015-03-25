@@ -16,7 +16,6 @@ package org.bonitasoft.studio.pagedesigner.core.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -48,11 +47,6 @@ public class WebWidgetRepositoryStore extends AbstractRepositoryStore<WebWidgetF
 
     @Override
     public Image getIcon() {
-        return null;
-    }
-
-    @Override
-    public Set<String> getCompatibleExtensions() {
         return null;
     }
 

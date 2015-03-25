@@ -37,7 +37,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.core.contexts,
  org.eclipse.e4.core.di;bundle-version="1.4.0",
  org.bonitasoft.studio.tests-utils;bundle-version="7.0.0";resolution:=optional,
- com.google.guava;bundle-version="11.0.1"
+ com.google.guava;bundle-version="11.0.1";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.apache.xbean.classloader,
