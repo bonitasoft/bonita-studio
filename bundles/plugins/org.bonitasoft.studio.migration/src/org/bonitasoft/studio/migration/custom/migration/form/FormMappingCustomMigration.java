@@ -58,6 +58,7 @@ public class FormMappingCustomMigration extends CustomMigration {
         final Instance newInstance = model.newInstance("process.FormMapping");
         final Instance targetFormExpression = newTargetFormExpressionInstance(model);
         newInstance.set("targetForm", targetFormExpression);
+        newInstance.set("type", model.getMetamodel().getEEnum("process.FormMappingType").getEEnumLiteral("LEGACY"));
         input.set(featureName, newInstance);
     }
 

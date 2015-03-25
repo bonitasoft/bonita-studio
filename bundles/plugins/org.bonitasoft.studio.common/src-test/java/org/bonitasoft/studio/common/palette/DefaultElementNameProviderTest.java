@@ -61,7 +61,7 @@ public class DefaultElementNameProviderTest {
 
     @Test
     public void should_getNameFor_a_widget() throws Exception {
-        assertThat(defaultElementNameProvider.getNameFor(FileWidgetBuilder.createFileWidgetBuilder().build())).isEqualTo(
+        assertThat(defaultElementNameProvider.getNameFor(FileWidgetBuilder.aFileWidget().build())).isEqualTo(
                 NamingUtils.toJavaIdentifier(Messages.File_title, true));
     }
 

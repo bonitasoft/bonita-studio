@@ -261,7 +261,7 @@ public class StringToExpressionConverter {
                     content, returnType, expressionType, fixedReturnType);
             if (ExpressionConstants.VARIABLE_TYPE.equals(expressionType)
                     || ExpressionConstants.SIMULATION_VARIABLE_TYPE
-                    .equals(expressionType)) {
+                            .equals(expressionType)) {
                 resolveDataDependencies(exp);
             } else if (ExpressionConstants.FORM_FIELD_TYPE
                     .equals(expressionType)) {
@@ -298,7 +298,7 @@ public class StringToExpressionConverter {
                             .get("referencedElements");
                     if (!dependancyAlreadyExists(instList, dependencyInstance)) {
                         expression
-                        .add("referencedElements", dependencyInstance);
+                                .add("referencedElements", dependencyInstance);
                     }
                 }
             }
@@ -478,7 +478,7 @@ public class StringToExpressionConverter {
             if (defaultValue != null
                     && defaultValue instanceof Instance
                     && ((Instance) defaultValue)
-                    .instanceOf("expression.Expression")) {
+                            .instanceOf("expression.Expression")) {
                 model.delete((Instance) defaultValue);
                 copy.set("defaultValue", null);
             }
@@ -550,6 +550,9 @@ public class StringToExpressionConverter {
             return List.class.getName();
         }
         final Instance dataype = data.get("dataType");
+        if (dataype == null) {
+            return String.class.getName();
+        }
         if (dataype.instanceOf("process.IntegerType")) {
             return Integer.class.getName();
         } else if (dataype.instanceOf("process.BooleanType")) {

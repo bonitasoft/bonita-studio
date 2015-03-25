@@ -165,7 +165,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
     private void addFilters(final TreeViewer treeViewer) {
         treeViewer.addFilter(new DatatypesViewFilter());
         treeViewer.addFilter(new DecisionTableViewFilter());
-        treeViewer.addFilter(new TextAnnotationLinkViewFilter());
+        treeViewer.addFilter(new TextAnnotationAttachmentViewFilter());
         treeViewer.addFilter(new EmptyExpressionViewFilter());
         treeViewer.addFilter(new EmptySearchIndexViewFilter());
         treeViewer.addFilter(new EmptyOperationViewFilter());

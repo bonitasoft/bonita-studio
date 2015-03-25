@@ -687,13 +687,13 @@ public class Repository implements IRepository, IJavaContainer {
     }
 
     @Override
-    public JDTTypeHierarchyManager getJdtTypeHierarchyManager() {
-        return jdtTypeHierarchyManager;
+    public boolean exists() {
+        return project.exists();
     }
 
     @Override
-    public boolean exists() {
-        return project.exists();
+    public JDTTypeHierarchyManager getJdtTypeHierarchyManager() {
+        return jdtTypeHierarchyManager;
     }
 
     @Override

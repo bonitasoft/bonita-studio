@@ -454,6 +454,11 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//EntryPageFlowType/SKIP"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//EntryPageFlowType/REDIRECT"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//FormMappingType">
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//FormMappingType/INTERNAL"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//FormMappingType/URL"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//FormMappingType/LEGACY"/>
+    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//GatewayType">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//GatewayType/XOR"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//GatewayType/OR"/>
@@ -655,7 +660,7 @@
     </genClasses>
     <genClasses ecoreClass="process.ecore#//FormMapping">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//FormMapping/targetForm"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//FormMapping/external"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//FormMapping/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//FormMapping/url"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Gateway">
