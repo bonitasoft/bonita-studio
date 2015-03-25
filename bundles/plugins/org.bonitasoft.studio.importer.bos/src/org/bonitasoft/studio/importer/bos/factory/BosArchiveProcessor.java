@@ -36,10 +36,6 @@ public class BosArchiveProcessor extends ToProcProcessor {
 
     private ImportBosArchiveOperation operation;
 
-    public BosArchiveProcessor(final String resourceName) {
-
-    }
-
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.importer.ToProcProcessor#createDiagram(java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
@@ -54,6 +50,7 @@ public class BosArchiveProcessor extends ToProcProcessor {
 
     protected ImportBosArchiveOperation createOperation(final File archiveFile) {
         operation = new ImportBosArchiveOperation();
+        operation.setProgressDialog(progressDialog);
         operation.setArchiveFile(archiveFile.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         return operation;

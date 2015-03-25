@@ -29,7 +29,7 @@ public class BosArchiveImporterFactory extends ImporterFactory {
 
     @Override
     public ToProcProcessor createProcessor(final String resourceName) {
-        return new BosArchiveProcessor(resourceName);
+        return new BosArchiveProcessor();
     }
 
 }

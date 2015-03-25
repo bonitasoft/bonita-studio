@@ -27,13 +27,12 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.importer.processors.ImportFileOperation;
+import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 
 import com.google.common.base.Strings;
 
@@ -57,8 +56,8 @@ public class ImportHandler extends AbstractHandler {
             return null;
         }
         final File selectedFile = new File(absoluteFilePath);
-        final ImportFileOperation operation = new ImportFileOperation(importFileWizard.getSelectedTransfo(), selectedFile);
-        final IProgressService progressManager = PlatformUI.getWorkbench().getProgressService();
+        final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(Display.getDefault().getActiveShell());
+        final ImportFileOperation operation = new ImportFileOperation(importFileWizard.getSelectedTransfo(), selectedFile, progressManager);
         try {
             progressManager.run(true, false, operation);
         } catch (final InvocationTargetException e) {

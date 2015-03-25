@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -14,14 +14,15 @@
  */
 package org.bonitasoft.studio.common.gmf.tools.tree;
 
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * @author Romain Bioteau
  */
-public class ParametersViewFilter extends ViewerFilter {
+public class MainProcessFormMappingViewerFilter extends ViewerFilter {
 
     /*
      * (non-Javadoc)
@@ -29,7 +30,11 @@ public class ParametersViewFilter extends ViewerFilter {
      */
     @Override
     public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-        return !(element instanceof ConnectorParameter);
+        return element instanceof FormMapping ? selectFormMapping((FormMapping) element) : true;
+    }
+
+    private boolean selectFormMapping(final FormMapping formMapping) {
+        return formMapping.eContainer() instanceof MainProcess ? false : true;
     }
 
 }
