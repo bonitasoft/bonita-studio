@@ -15,8 +15,10 @@
 package org.bonitasoft.studio.diagram.custom.repository;
 
 import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Sets.newHashSet;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,6 +91,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicates;
 
 /**
  * @author Romain Bioteau
@@ -402,8 +405,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                     , ProcessConfigurationRepositoryStore.CONF_EXT)));
             result.add(appResourceRepositoryStore.getChild(uuid));
         }
-        result.remove(null);
-        return result;
+        return newHashSet(filter(result, Predicates.notNull()));
     }
 
     private Function<AbstractProcess, String> toUUID() {

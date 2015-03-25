@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.common.repository.store;
 
+import static com.google.common.base.Predicates.notNull;
+import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
@@ -237,8 +239,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
     @Override
     public List<T> getChildren() {
         try {
-            final List<T> result = newArrayList(transform(listChildren(), toFileStore()));
-            result.remove(null);
+            final List<T> result = newArrayList(filter(transform(listChildren(), toFileStore()), notNull()));
             Collections.sort(result, new RepositoryFileStoreComparator());
             return result;
         } catch (final CoreException e1) {
