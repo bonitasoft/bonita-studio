@@ -17,11 +17,11 @@ package org.bonitasoft.studio.pagedesigner.core.bos;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Predicates.containsPattern;
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.regex.Pattern.compile;
-import static org.assertj.core.util.Strings.isNullOrEmpty;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAllItemsOfType;
 
 import java.io.ByteArrayInputStream;
