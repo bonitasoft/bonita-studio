@@ -125,7 +125,7 @@ public class Messages extends NLS {
 	public static String testConnectorPOJOWarning;
 	public static String exceptionFound;
 	public static String successMessage;
-	public static String connectorExpressionViewerLabel; 			
+	public static String connectorExpressionViewerLabel;
 	public static String connectorExpressionViewerMessage;
 	public static String connectorTypeValidationMessage;
 	public static String connectorTypeIsExpressionValidationMessage;
@@ -174,14 +174,17 @@ public class Messages extends NLS {
 	public static String configurationChangedTitle;
 	public static String configurationChangedMsg;
 
+    public static String noImplementationFoundErrorTitle;
+    public static String noImplementationFoundErrorMessage;
+
     /**
      * @param event
      * @return
      */
-    public static String getValue(String event) {
+    public static String getValue(final String event) {
         try {
             return (String) Messages.class.getField(event).get(null);
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             return "";
         }
     }

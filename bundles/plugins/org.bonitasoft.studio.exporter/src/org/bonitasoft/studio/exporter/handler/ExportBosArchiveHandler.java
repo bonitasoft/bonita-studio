@@ -87,17 +87,18 @@ public class ExportBosArchiveHandler extends AbstractHandler {
                     }
                 }
             }
-
-            final ExportRepositoryWizard wizard = new ExportRepositoryWizard(RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores(),true,selectedFiles,getDefaultName(),Messages.ExportButtonLabel) ;
-            final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard){
-                @Override
-                protected void initializeBounds() {
-                    super.initializeBounds();
-                    getShell().setSize(600, 500);
+            if (selectedFiles != null){
+                final ExportRepositoryWizard wizard = new ExportRepositoryWizard(RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores(),true,selectedFiles,getDefaultName(),Messages.ExportButtonLabel) ;
+                final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard){
+                    @Override
+                    protected void initializeBounds() {
+                        super.initializeBounds();
+                        getShell().setSize(600, 500);
                 }
             };
             dialog.setTitle(Messages.ExportButtonLabel);
             dialog.open() ;
+            }
         }
         return null;
     }
@@ -118,7 +119,12 @@ public class ExportBosArchiveHandler extends AbstractHandler {
         for(final Pool p : processes){
             final Configuration conf = getConfiguration(p, ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON) ;
             for(final IBOSArchiveFileStoreProvider provider : fileStoreProvider){
-                result.addAll(provider.getFileStoreForConfiguration(p, conf)) ;
+
+                final Set<IRepositoryFileStore> fileStoreForConfiguration = provider.getFileStoreForConfiguration(p, conf);
+                if (fileStoreForConfiguration == null){
+                    return null;
+                }
+                result.addAll(fileStoreForConfiguration) ;
                 for(final Configuration config : p.getConfigurations()){
                     result.addAll(provider.getFileStoreForConfiguration(p, config)) ;
                 }
