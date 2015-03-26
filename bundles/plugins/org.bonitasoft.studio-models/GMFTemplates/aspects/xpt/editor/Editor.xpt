@@ -232,7 +232,7 @@ protected org.eclipse.emf.transaction.TransactionalEditingDomain createEditingDo
  */
 @Override
 public void dispose() {
-  	final org.eclipse.emf.transaction.TransactionalEditingDomain domain = getEditingDomain();
+  	org.eclipse.emf.transaction.TransactionalEditingDomain domain = getEditingDomain();
  	processPref.removePropertyChangeListener(paletteChangeListener);
 	org.eclipse.core.commands.operations.IOperationHistory history = (org.eclipse.core.commands.operations.IOperationHistory) getAdapter(org.eclipse.core.commands.operations.IOperationHistory.class);
 	if(history != null){
