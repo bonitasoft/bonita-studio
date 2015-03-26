@@ -48,6 +48,7 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.codehaus.groovy.eclipse.launchers.GroovyConsoleLineTracker;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -356,6 +357,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         if (PlatformUtil.isHeadless()) {
             return;
         }
+      //Avoid deadlock when starting engine caused by ProcessConsoleManger triggering some UI dependent code in a non UI thread.
+        new GroovyConsoleLineTracker();
         final StartEngineJob job = new StartEngineJob("Starting BOS Engine");
         job.setPriority(Job.DECORATE);
         job.setUser(false);
