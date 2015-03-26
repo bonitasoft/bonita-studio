@@ -27,12 +27,14 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
+import javax.inject.Inject;
+
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
@@ -43,16 +45,15 @@ import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.jobs.IJobManager;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
  */
 public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
+
+    @Inject
+    private RepositoryAccessor repositoryAccessor;
 
     /*
      * (non-Javadoc)
@@ -65,8 +66,6 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
         final List<BarResource> classpathResources = new ArrayList<BarResource>();
         final List<BarResource> resources = new ArrayList<BarResource>();
         if (configuration != null) {
-            final IJobManager jobManager = Job.getJobManager();
-            jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
             addGroovyScriptDependencies(configuration, classpathResources, configuration.getProcessDependencies(), "");
             addGroovyScriptDependencies(configuration, resources, configuration.getApplicationDependencies(), BARResourcesProvider.FORMS_FOLDER_IN_BAR
                     + "/lib/");
@@ -75,7 +74,7 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
             }
         }
         final List<File> providedscripts = new ArrayList<File>();
-        final ProvidedGroovyRepositoryStore providedStore = RepositoryManager.getInstance().getRepositoryStore(ProvidedGroovyRepositoryStore.class);
+        final ProvidedGroovyRepositoryStore providedStore = repositoryAccessor.getRepositoryStore(ProvidedGroovyRepositoryStore.class);
         for (final IRepositoryFileStore file : providedStore.getChildren()) {
             final List<IFile> classFiles = ((GroovyFileStore) file).getClassFiles();
             if (!classFiles.isEmpty()) {
@@ -117,7 +116,7 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
     protected void addGroovyScriptDependencies(final Configuration configuration, final List<BarResource> resources, final List<FragmentContainer> containers,
             final String barPath) throws Exception, IOException, FileNotFoundException {
         final Set<File> scripts = new HashSet<File>();
-        final GroovyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class);
+        final GroovyRepositoryStore store = repositoryAccessor.getRepositoryStore(GroovyRepositoryStore.class);
         if (configuration != null) {
             for (final FragmentContainer fc : containers) {
                 for (final EObject fragment : ModelHelper.getAllItemsOfType(fc, ConfigurationPackage.Literals.FRAGMENT)) {
