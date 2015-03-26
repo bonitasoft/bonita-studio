@@ -1,10 +1,6 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2.0 of the License, or
- * (at your option) any later version.
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -87,8 +83,6 @@ public class Messages extends NLS {
     public static String SequenceFlow_Expression_ReturnBoolean;
 
     public static String targetProcessNotSet;
-
-    public static String validating;
 
     public static String pageTemplateNotValid;
 
@@ -202,6 +196,15 @@ public class Messages extends NLS {
     public static String queryParameterDoesNotExistInExpression;
 
     public static String businessObjectDefinitionNotFound;
+    public static String invalidContractDefinition;
+
+    public static String invalidInternalFormMapping;
+
+    public static String entryFormMapping;
+
+    public static String overviewFormMapping;
+
+    public static String invalidURLFormMapping;
 
     static {
         // initialize resource bundle

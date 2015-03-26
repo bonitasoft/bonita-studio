@@ -15,7 +15,10 @@
 package org.bonitasoft.studio.common.emf.tools;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -31,6 +34,8 @@ import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.GroupIterator;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.EnumType;
@@ -44,6 +49,7 @@ import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
+
 /**
  * @author Romain Bioteau
  */
@@ -51,6 +57,16 @@ public class ExpressionHelper {
 
     protected static final String EMPTY_LIST_NAME = Messages.emptyListExpressionName;
     protected static final String EMPTY_LIST_CONTENT = "[]";
+    protected static final Map<ContractInputType, String> returnTypeForInputType;
+    static {
+        returnTypeForInputType = new HashMap<ContractInputType, String>();
+        returnTypeForInputType.put(ContractInputType.TEXT, String.class.getName());
+        returnTypeForInputType.put(ContractInputType.BOOLEAN, Boolean.class.getName());
+        returnTypeForInputType.put(ContractInputType.DATE, Date.class.getName());
+        returnTypeForInputType.put(ContractInputType.INTEGER, Long.class.getName());
+        returnTypeForInputType.put(ContractInputType.DECIMAL, Double.class.getName());
+        returnTypeForInputType.put(ContractInputType.COMPLEX, Map.class.getName());
+    }
 
     private ExpressionHelper() {
 
@@ -126,11 +142,20 @@ public class ExpressionHelper {
         return exp;
     }
 
+    public static Expression createFormReferenceExpression(final String formName, final String formId) {
+        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+        exp.setType(ExpressionConstants.FORM_REFERENCE_TYPE);
+        exp.setName(formName);
+        exp.setContent(formId);
+        exp.setReturnType(String.class.getName());
+        exp.setReturnTypeFixed(true);
+        return exp;
+    }
 
-    public static Expression createConstantExpression(final String name,final String content, final String returnClassName) {
+    public static Expression createConstantExpression(final String name, final String content, final String returnClassName) {
         final Expression exp = createConstantExpression(content, returnClassName);
         exp.setName(name);
-        return  exp;
+        return exp;
     }
 
     public static EObject createDependencyFromEObject(final EObject dependency) {
@@ -265,19 +290,43 @@ public class ExpressionHelper {
             return createWidgetExpression((Widget) element);
         } else if (element instanceof Document) {
             return createDocumentReferenceExpression((Document) element);
-        }else if (element instanceof GroupIterator) {
+        } else if (element instanceof GroupIterator) {
             return createGroupIteratorExpression((GroupIterator) element);
+        } else if (element instanceof ContractInput) {
+            return createContractInputExpression((ContractInput) element);
         }
         throw new IllegalArgumentException("element argument is not supported: " + element);
     }
 
+
+    public static Expression createContractInputExpression(final ContractInput input) {
+        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+        exp.setType(ExpressionConstants.CONTRACT_INPUT_TYPE);
+        exp.setContent(input.getName());
+        exp.setName(input.getName());
+        exp.setReturnType(getContractInputReturnType(input));
+        exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(input));
+        return exp;
+    }
+
+    public static String getContractInputReturnType(final ContractInput input) {
+        if(input == null){
+            return null;
+        }
+        String returnType = returnTypeForInputType.get(input.getType());
+        if (input.isMultiple()) {
+            returnType = List.class.getName();
+        }
+        return returnType;
+    }
+
     public static Expression createGroupIteratorExpression(final GroupIterator iterator) {
-        final Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
+        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
         final String iteratorName = iterator.getName();
         exp.setName(iteratorName);
         exp.setContent(iteratorName);
         String className = Object.class.getName();
-        if(iterator.getClassName() != null){
+        if (iterator.getClassName() != null) {
             className = iterator.getClassName();
         }
         exp.setReturnType(className);

@@ -485,16 +485,17 @@ public class FlowElementSwitch extends AbstractSwitch {
             }
         }
 
-        addUserFilterToTask(task, actor, filter);
+        final UserTaskDefinitionBuilder taskBuilder = builder.addUserTask(task.getName(), actor);
+        taskBuilder.addPriority(TaskPriority.values()[task.getPriority()].name());
+        addExpectedDuration(taskBuilder, task);
+        addUserFilterToTask(taskBuilder, actor, filter);
+        addContract(taskBuilder, task);
+
+        handleCommonActivity(task, taskBuilder);
         return task;
     }
 
-    void addUserFilterToTask(final Task task, final String actor, final ActorFilter filter) {
-
-        final UserTaskDefinitionBuilder taskBuilder = builder.addUserTask(task.getName(), actor);
-        handleCommonActivity(task, taskBuilder);
-        taskBuilder.addPriority(TaskPriority.values()[task.getPriority()].name());
-        addExpectedDuration(taskBuilder, task);
+    protected void addUserFilterToTask(final UserTaskDefinitionBuilder taskBuilder, final String actor, final ActorFilter filter) {
         if (filter != null) {
             final UserFilterDefinitionBuilder filterBuilder = taskBuilder.addUserFilter(filter.getName(), filter.getDefinitionId(),
                     filter.getDefinitionVersion());

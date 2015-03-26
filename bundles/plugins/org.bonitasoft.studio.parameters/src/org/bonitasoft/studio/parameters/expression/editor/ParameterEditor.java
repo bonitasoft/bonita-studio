@@ -1,11 +1,17 @@
-/*******************************************************************************
- * Copyright (C) 2009, 2013 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- * BonitaSoft, 32 rue Gustave Eiffel – 38000 Grenoble
- * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.parameters.expression.editor;
 
 import java.util.Collection;
@@ -64,7 +70,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class ParameterEditor extends SelectionAwareExpressionEditor implements
         IExpressionEditor {
@@ -84,7 +90,7 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
     private boolean isPageFlowContext = false;
 
     @Override
-    public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx) {
+    public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
 
         createTableViewer(parent);
 
@@ -95,7 +101,7 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
         return mainComposite;
     }
 
-    private void createTableViewer(Composite parent) {
+    private void createTableViewer(final Composite parent) {
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true).create());
@@ -103,17 +109,17 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
         mainComposite.setLayout(gridLayout);
         viewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER
                 | SWT.SINGLE | SWT.V_SCROLL);
-        TableLayout layout = new TableLayout();
+        final TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(100, false));
         viewer.getTable().setLayout(layout);
         viewer.getTable().setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).create());
 
-        TableViewerColumn columnViewer = new TableViewerColumn(viewer, SWT.NONE);
-        TableColumn column = columnViewer.getColumn();
+        final TableViewerColumn columnViewer = new TableViewerColumn(viewer, SWT.NONE);
+        final TableColumn column = columnViewer.getColumn();
         column.setText(Messages.name);
 
-        TableColumnSorter sorter = new TableColumnSorter(viewer);
+        final TableColumnSorter sorter = new TableColumnSorter(viewer);
         sorter.setColumn(column);
 
         viewer.getTable().setHeaderVisible(true);
@@ -123,7 +129,7 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
         viewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 if (!event.getSelection().isEmpty()) {
                     ParameterEditor.this.fireSelectionChanged();
                 }
@@ -131,23 +137,23 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
         });
     }
 
-    private void createAddExpressionButton(Composite parent) {
+    private void createAddExpressionButton(final Composite parent) {
         addExpressionButton = new Button(parent, SWT.FLAT);
         addExpressionButton.setLayoutData(GridDataFactory.fillDefaults()
                 .align(SWT.LEFT, SWT.CENTER).hint(85, SWT.DEFAULT).create());
         addExpressionButton.setText(Messages.addData);
     }
 
-    protected void createReturnTypeComposite(Composite parent) {
-        Composite typeComposite = new Composite(parent, SWT.NONE);
+    protected void createReturnTypeComposite(final Composite parent) {
+        final Composite typeComposite = new Composite(parent, SWT.NONE);
         typeComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, false).create());
-        GridLayout gl = new GridLayout(2, false);
+        final GridLayout gl = new GridLayout(2, false);
         gl.marginWidth = 0;
         gl.marginHeight = 0;
         typeComposite.setLayout(gl);
 
-        Label typeLabel = new Label(typeComposite, SWT.NONE);
+        final Label typeLabel = new Label(typeComposite, SWT.NONE);
         typeLabel.setText(Messages.returnType);
         typeLabel.setLayoutData(GridDataFactory.fillDefaults()
                 .align(SWT.FILL, SWT.CENTER).create());
@@ -158,7 +164,7 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
 
     }
 
-    protected void handleSpecificDatatypeEdition(Data data) {
+    protected void handleSpecificDatatypeEdition(final Data data) {
         if (gridLayout.numColumns > 1) {
             mainComposite.getChildren()[1].dispose();
             gridLayout.numColumns--;
@@ -169,11 +175,11 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
 
     }
 
-    private void fillViewerInput(EObject context) {
-        Set<Parameter> input = new HashSet<Parameter>();
-        IExpressionProvider provider = ExpressionEditorService.getInstance()
+    private void fillViewerInput(final EObject context) {
+        final Set<Parameter> input = new HashSet<Parameter>();
+        final IExpressionProvider provider = ExpressionEditorService.getInstance()
                 .getExpressionProvider(ExpressionConstants.PARAMETER_TYPE);
-        for (Expression e : provider.getExpressions(context)) {
+        for (final Expression e : provider.getExpressions(context)) {
             if (editorInputExpression.isReturnTypeFixed()) {
                 if (compatibleReturnType(editorInputExpression, e)) {
                     input.add((Parameter) e.getReferencedElements().get(0));
@@ -185,8 +191,8 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
         viewer.setInput(input);
     }
 
-    private void expressionButtonListener(EObject context) {
-        ParameterWizardDialog parameterDialog = new ParameterWizardDialog(
+    private void expressionButtonListener(final EObject context) {
+        final ParameterWizardDialog parameterDialog = new ParameterWizardDialog(
                 Display.getCurrent().getActiveShell(), new AddParameterWizard(ModelHelper.getParentProcess(context), TransactionUtil.getEditingDomain(context)));
         if (parameterDialog.open() == Dialog.OK) {
             fillViewerInput(context);
@@ -194,13 +200,13 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
     }
 
     @Override
-    public void bindExpression(EMFDataBindingContext dataBindingContext,
-            EObject context, Expression inputExpression, ViewerFilter[] filters, ExpressionViewer expressionViewer) {
+    public void bindExpression(final EMFDataBindingContext dataBindingContext,
+            final EObject context, final Expression inputExpression, final ViewerFilter[] filters, final ExpressionViewer expressionViewer) {
         final EObject finalContext = context;
         addExpressionButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 super.widgetSelected(e);
                 expressionButtonListener(finalContext);
             }
@@ -208,80 +214,82 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
         editorInputExpression = inputExpression;
         fillViewerInput(context);
 
-        IObservableValue contentObservable = EMFObservables
+        final IObservableValue contentObservable = EMFObservables
                 .observeValue(inputExpression,
                         ExpressionPackage.Literals.EXPRESSION__CONTENT);
-        IObservableValue nameObservable = EMFObservables.observeValue(
+        final IObservableValue nameObservable = EMFObservables.observeValue(
                 inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
-        IObservableValue returnTypeObservable = EMFObservables.observeValue(
+        final IObservableValue returnTypeObservable = EMFObservables.observeValue(
                 inputExpression,
                 ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
-        IObservableValue referenceObservable = EMFObservables.observeValue(
+        final IObservableValue referenceObservable = EMFObservables.observeValue(
                 inputExpression,
                 ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
 
-        UpdateValueStrategy selectionToName = new UpdateValueStrategy();
-        IConverter nameConverter = new Converter(Parameter.class, String.class) {
+        final UpdateValueStrategy selectionToName = new UpdateValueStrategy();
+        final IConverter nameConverter = new Converter(Parameter.class, String.class) {
 
             @Override
-            public Object convert(Object parameter) {
+            public Object convert(final Object parameter) {
                 return ((Parameter) parameter).getName();
             }
 
         };
         selectionToName.setConverter(nameConverter);
 
-        UpdateValueStrategy selectionToContent = new UpdateValueStrategy();
-        IConverter contentConverter = new Converter(Parameter.class,
+        final UpdateValueStrategy selectionToContent = new UpdateValueStrategy();
+        final IConverter contentConverter = new Converter(Parameter.class,
                 String.class) {
 
             @Override
-            public Object convert(Object parameter) {
+            public Object convert(final Object parameter) {
                 return ((Parameter) parameter).getName();
             }
 
         };
         selectionToContent.setConverter(contentConverter);
 
-        UpdateValueStrategy selectionToReturnType = new UpdateValueStrategy();
-        IConverter returnTypeConverter = new Converter(Parameter.class,
+        final UpdateValueStrategy selectionToReturnType = new UpdateValueStrategy();
+        final IConverter returnTypeConverter = new Converter(Parameter.class,
                 String.class) {
 
             @Override
-            public Object convert(Object parameter) {
+            public Object convert(final Object parameter) {
                 return ((Parameter) parameter).getTypeClassname();
             }
 
         };
         selectionToReturnType.setConverter(returnTypeConverter);
 
-        UpdateValueStrategy selectionToReferencedData = new UpdateValueStrategy();
-        IConverter referenceConverter = new Converter(Parameter.class,
+        final UpdateValueStrategy selectionToReferencedData = new UpdateValueStrategy();
+        final IConverter referenceConverter = new Converter(Parameter.class,
                 List.class) {
 
             @Override
-            public Object convert(Object parameter) {
+            public Object convert(final Object parameter) {
                 return Collections.singletonList(parameter);
             }
 
         };
         selectionToReferencedData.setConverter(referenceConverter);
 
-        UpdateValueStrategy referencedDataToSelection = new UpdateValueStrategy();
-        IConverter referencetoDataConverter = new Converter(List.class,
+        final UpdateValueStrategy referencedDataToSelection = new UpdateValueStrategy();
+        final IConverter referencetoDataConverter = new Converter(List.class,
                 Parameter.class) {
 
             @SuppressWarnings("unchecked")
             @Override
-            public Object convert(Object parameterList) {
-                Parameter p = ((List<Parameter>) parameterList).get(0);
-                Collection<Parameter> inputParameters = (Collection<Parameter>) viewer
-                        .getInput();
-                for (Parameter param : inputParameters) {
-                    if (param.getName().equals(p.getName())
-                            && param.getTypeClassname().equals(
-                                    p.getTypeClassname())) {
-                        return param;
+            public Object convert(final Object parameterList) {
+                if (!((List<Parameter>) parameterList).isEmpty()) {
+                    final Parameter p = ((List<Parameter>) parameterList).get(0);
+                    final Collection<Parameter> inputParameters = (Collection<Parameter>) viewer
+                            .getInput();
+                    for (final Parameter param : inputParameters) {
+                        if (param.getName().equals(p.getName())
+                                && param.getTypeClassname().equals(
+                                        p.getTypeClassname())) {
+                            return param;
+                        }
                     }
                 }
                 return null;
@@ -336,7 +344,7 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
     }
 
     @Override
-    public void setIsPageFlowContext(boolean isPageFlowContext) {
+    public void setIsPageFlowContext(final boolean isPageFlowContext) {
         this.isPageFlowContext = isPageFlowContext;
 
     }
@@ -355,7 +363,7 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override
-    public void setIsOverviewContext(boolean isOverviewContext) {
+    public void setIsOverviewContext(final boolean isOverviewContext) {
     }
 
 }

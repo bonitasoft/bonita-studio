@@ -18,6 +18,7 @@ package org.bonitasoft.studio.expression.editor.viewer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -93,6 +94,18 @@ public class PatternExpressionViewer extends Composite {
     private EObject contextInput;
     private Binding patternBinding;
     private ControlDecoration helpDecoration;
+    private Object input;
+    private static Set<String> compatibleTypes;
+    static {
+        compatibleTypes = new HashSet<String>();
+        compatibleTypes.add(String.class.getName());
+        compatibleTypes.add(Integer.class.getName());
+        compatibleTypes.add(Long.class.getName());
+        compatibleTypes.add(Double.class.getName());
+        compatibleTypes.add(Float.class.getName());
+        compatibleTypes.add(Date.class.getName());
+        compatibleTypes.add(Boolean.class.getName());
+    }
 
     public PatternExpressionViewer(final Composite parent, final int style) {
         super(parent, style);
@@ -191,7 +204,7 @@ public class PatternExpressionViewer extends Composite {
 
     private void bindExpressionViewer() {
         expressionViewer.setContext(contextInput);
-        expressionViewer.setInput(contextInput);
+        expressionViewer.setInput(input);
         if(mandatoryFieldLabel != null){
             expressionViewer.setMandatoryField(mandatoryFieldLabel, context);
         }
@@ -315,11 +328,11 @@ public class PatternExpressionViewer extends Composite {
 
     public void setContextInput(final EObject input){
         contextInput = input;
-        manageNatureProviderAndAutocompletionProposal(input) ;
     }
 
     public void setExpression(final Expression expression){
         this.expression = expression;
+        manageNatureProviderAndAutocompletionProposal(contextInput);
         initializeEditorType();
     }
 
@@ -370,8 +383,11 @@ public class PatternExpressionViewer extends Composite {
             if (contextInput != null) {
                 for(final Expression exp : expressions) {
                     for(final ViewerFilter filter : filters){
-                        if (filter != null && !filter.select(viewer, contextInput, exp)) {
+                        if (filter != null && !filter.select(expressionViewer, input, exp)) {
                             filteredExpressions.remove(exp) ;
+                        }
+                        if (!compatibleTypes.contains(exp.getReturnType())) {
+                            filteredExpressions.remove(exp);
                         }
                     }
                 }
@@ -403,5 +419,10 @@ public class PatternExpressionViewer extends Composite {
 
     public void setMandatoryField(final String mandatoryFieldLabel) {
         this.mandatoryFieldLabel = mandatoryFieldLabel;
+    }
+
+    public void setInput(final Object input) {
+        this.input = input;
+        expressionViewer.setInput(input);
     }
 }

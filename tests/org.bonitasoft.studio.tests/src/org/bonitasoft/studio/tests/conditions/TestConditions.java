@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
@@ -44,10 +45,11 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.engine.operation.ProcessSelector;
+import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.util.test.EngineAPIUtil;
@@ -61,7 +63,6 @@ import org.junit.Test;
 
 /**
  * @author Aurelie Zara
- *
  */
 public class TestConditions {
 
@@ -151,7 +152,7 @@ public class TestConditions {
         return tasks;
     }
 
-    private MainProcess importProcessToTest() throws IOException {
+    private MainProcess importProcessToTest() throws IOException, InvocationTargetException, InterruptedException {
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
         final URL fileURL1 = FileLocator.toFileURL(TestConditions.class.getResource("testConditions-2.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
@@ -160,7 +161,13 @@ public class TestConditions {
         for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
             f.open();
         }
-        final MainProcess mainProcess = (MainProcess) op.getFileStoresToOpen().get(0).getContent();
-        return mainProcess;
+        MainProcess mainProcess;
+        try {
+            mainProcess = (MainProcess) op.getFileStoresToOpen().get(0).getContent();
+            return mainProcess;
+        } catch (final ReadFileStoreException e) {
+            BonitaStudioLog.error("Failed read diagram content", e);
+        }
+        return null;
     }
 }

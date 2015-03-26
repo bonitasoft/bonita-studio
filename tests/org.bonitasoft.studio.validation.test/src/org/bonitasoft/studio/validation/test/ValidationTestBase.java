@@ -4,14 +4,15 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -41,9 +42,9 @@ public class ValidationTestBase {
      * Helper method to find the status matching a constraint ID.
      *
      * @param statuses
-     *            the statuses to search
+     *        the statuses to search
      * @param id
-     *            the constraint ID to look for
+     *        the constraint ID to look for
      * @return the matching status, or <code>null</code> if it's not found
      */
     protected IStatus getStatus(final IStatus[] statuses, final String id) {
@@ -64,11 +65,10 @@ public class ValidationTestBase {
      * Helper method to find multiple statuses matching a constraint ID.
      *
      * @param statuses
-     *            the statuses to search
+     *        the statuses to search
      * @param id
-     *            the constraint ID to look for
+     *        the constraint ID to look for
      * @return the matching statuses, or empty array if none found
-     *
      * @since 1.1
      */
     protected IStatus[] getStatuses(final IStatus[] statuses, final String id) {
@@ -92,10 +92,10 @@ public class ValidationTestBase {
      * were evaluated results in an empty array being returned.
      *
      * @param status
-     *            the status, which may be multi or not
+     *        the status, which may be multi or not
      * @return all of the statuses represented by the incoming <code>status</code>
      */
-    protected IStatus[] getStatuses(final IStatus status) {
+    public IStatus[] getStatuses(final IStatus status) {
         if (status.getCode() == EMFModelValidationStatusCodes.NO_CONSTRAINTS_EVALUATED) {
             return new IStatus[0];
         }
@@ -131,7 +131,7 @@ public class ValidationTestBase {
     }
 
     protected MainProcess getDiagramFromArchive(final String archiveName, final String diagramName,
-            final String diagramVersion) throws IOException {
+            final String diagramVersion) throws IOException, InvocationTargetException, InterruptedException {
         final URL url = TestValidationConstraints.class.getResource(archiveName);
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
         op.disableValidation();

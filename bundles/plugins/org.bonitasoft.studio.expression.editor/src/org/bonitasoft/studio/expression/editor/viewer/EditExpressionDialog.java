@@ -230,7 +230,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             expressionTypeViewer.setFilters(viewerTypeFilters);
         }
         ColumnViewerToolTipSupport.enableFor(expressionTypeViewer, ToolTip.NO_RECREATE);
-        expressionTypeViewer.setInput(context);
+        expressionTypeViewer.setInput(expressionViewer.getInput());
         expressionTypeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override

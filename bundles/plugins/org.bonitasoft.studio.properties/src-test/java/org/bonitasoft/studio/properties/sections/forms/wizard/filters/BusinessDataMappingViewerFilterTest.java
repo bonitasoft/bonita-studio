@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.properties.sections.forms.wizard.filters;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.process.Data;
@@ -26,7 +26,6 @@ import org.junit.Test;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class BusinessDataMappingViewerFilterTest {
 

@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -57,16 +58,16 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 	public AbstractOpenConsoleCommand() {
 		super();
 	}
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		try{
 			refreshTheme = (Boolean) (event != null &&  event.getParameters() != null &&  event.getParameters().get(REFRESH_THEME_PARAMETER) != null  ? event.getParameters().get(REFRESH_THEME_PARAMETER) : true) ;
 			//close intro
 			executeJob();
 
 
-		}catch (Exception e) {
+		}catch (final Exception e) {
 			BonitaStudioLog.error(e);
 			ErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					"error",
@@ -83,24 +84,24 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 
 			final IRunnableWithProgress runnable = new IRunnableWithProgress(){
 				@Override
-				public void run(IProgressMonitor monitor)
+				public void run(final IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException {
 					try{
 						monitor.beginTask(Messages.initializingUserXP, IProgressMonitor.UNKNOWN);
 						BOSEngineManager.getInstance().start();
 						setURL(getURLBuilder().toURL(monitor));
 						if(refreshTheme){
-							String currentTheme = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_USERXP_THEME) ;
-							String installedTheme = BonitaUserXpPreferencePage.getInstalledThemeId()  ;
+							final String currentTheme = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_USERXP_THEME) ;
+							final String installedTheme = BonitaUserXpPreferencePage.getInstalledThemeId()  ;
 							if(installedTheme != null && !installedTheme.equals(currentTheme)){
 								BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, currentTheme) ;
 								BonitaUserXpPreferencePage.updateBonitaHome() ;
 							}
 						}
 						if (!runSynchronously) {
-							new OpenBrowserCommand(url,BonitaPreferenceConstants.CONSOLE_BROWSER_ID,"Bonita User Experience").execute(null); //$NON-NLS-1$
+                            new OpenBrowserOperation(url).execute(); //$NON-NLS-1$
 						}
-					}catch(Exception e){
+					}catch(final Exception e){
 						BonitaStudioLog.error(e);
 					}finally{
 						monitor.done();
@@ -118,7 +119,7 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 					public void run() {
 						try{
 							progressManager.run(true, false, runnable) ;
-						}  catch (Exception e) {
+						}  catch (final Exception e) {
 							BonitaStudioLog.error(e);
 						}
 
@@ -127,7 +128,7 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 
 			}
 
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			BonitaStudioLog.error(e);
 		}
 
@@ -142,7 +143,7 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 	}
 
 
-	public void setURL(URL url) throws MalformedURLException {
+	public void setURL(final URL url) throws MalformedURLException {
 		this.url = url;
 	}
 

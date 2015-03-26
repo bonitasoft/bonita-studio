@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
@@ -37,52 +34,55 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
  * @author Baptiste Mesta
- *
  */
 public class UniqueContainerIdConstraint extends AbstractLiveValidationMarkerConstraint {
 
+    @Override
+    protected IStatus performLiveValidation(final IValidationContext ctx) {
+        return ctx.createSuccessStatus();
+    }
 
-	@Override
-	protected IStatus performLiveValidation(final IValidationContext ctx) {
-		return ctx.createSuccessStatus();
-	}
+    @Override
+    protected IStatus performBatchValidation(final IValidationContext ctx) {
+        final EObject eObj = ctx.getTarget();
+        if (eObj instanceof Pool) {
+            for (final Element el : ((Container) eObj.eContainer()).getElements()) {
+                if (!el.equals(eObj) && el.getName().equals(((Element) eObj).getName())
+                        && ((AbstractProcess) el).getVersion().equals(((AbstractProcess) eObj).getVersion())) {
+                    return ctx.createFailureStatus(new Object[] { Messages.Validation_Element_SameName + ": " + el.getName() });
+                }
+            }
 
-	@Override
-	protected IStatus performBatchValidation(final IValidationContext ctx) {
-		final EObject eObj = ctx.getTarget();
-		if(eObj instanceof Pool){
-			for (final Element el : ((Container) eObj.eContainer()).getElements()) {
-				if(!el.equals(eObj) && el.getName().equals(((Element) eObj).getName()) && ((AbstractProcess) el).getVersion().equals(((AbstractProcess) eObj).getVersion())){
-					return ctx.createFailureStatus(new Object[] { Messages.Validation_Element_SameName + ": " + el.getName() });
-				}
-			}
-
-			final Pool p = (Pool) eObj;
-			final DiagramRepositoryStore diagramStore =  RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-			final List<AbstractProcess> allProcesses = diagramStore.getAllProcesses();
-			for (final AbstractProcess other_p : allProcesses) {
+            final Pool p = (Pool) eObj;
+            final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+            final List<AbstractProcess> allProcesses = diagramStore.getAllProcesses();
+            for (final AbstractProcess other_p : allProcesses) {
                 if (!EcoreUtil.equals(p, other_p)
-                        && !ModelHelper.getEObjectID(p).equals(ModelHelper.getEObjectID(other_p))
+                        && !sameEObjectId(p, other_p)
                         && p.getName().equals(other_p.getName())
                         && p.getVersion().equals(other_p.getVersion())) {
-					return ctx.createFailureStatus(new Object[] { Messages.bind(Messages.Validation_Duplicate_Process , p.getName(), p.getVersion())});
-				}
-			}
-		}
+                    return ctx.createFailureStatus(new Object[] { Messages.bind(Messages.Validation_Duplicate_Process, p.getName(), p.getVersion()) });
+                }
+            }
+        }
 
+        return ctx.createSuccessStatus();
+    }
 
-		return ctx.createSuccessStatus();
-	}
+    protected boolean sameEObjectId(final Pool p, final AbstractProcess other_p) {
+        final String eObjectID = ModelHelper.getEObjectID(p);
+        final String eObjectID2 = ModelHelper.getEObjectID(other_p);
+        return eObjectID != null && eObjectID.equals(eObjectID2);
+    }
 
+    @Override
+    protected String getMarkerType(final DiagramEditor editor) {
+        return ProcessMarkerNavigationProvider.MARKER_TYPE;
+    }
 
-	@Override
-	protected String getMarkerType(final DiagramEditor editor) {
-		return ProcessMarkerNavigationProvider.MARKER_TYPE;
-	}
-
-	@Override
-	protected String getConstraintId() {
-		return "org.bonitasoft.studio.validation.constraints.uniquecontainerid";
-	}
+    @Override
+    protected String getConstraintId() {
+        return "org.bonitasoft.studio.validation.constraints.uniquecontainerid";
+    }
 
 }

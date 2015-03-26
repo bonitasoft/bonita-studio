@@ -5,59 +5,57 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.repository.model;
 
-import java.io.File;
-import java.net.URLClassLoader;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
- *
  */
 public interface IRepository extends IFileStoreChangeListener {
 
-    void createRepository(String repositoryName) ;
+    void createRepository(String repositoryName, boolean migrationEnabled);
 
-    String getName() ;
+    boolean exists();
 
-    boolean isShared() ;
+    boolean isLoaded();
 
-    IProject getProject() ;
+    String getName();
 
-    void create(boolean migrateStoreIfNeeded);
+    boolean isShared();
 
-    void delete() ;
+    IProject getProject();
 
-    void open() ;
+    void delete(IProgressMonitor monitor);
 
-    void close() ;
+    Repository open(IProgressMonitor monitor);
+
+    void close();
 
     <T> T getRepositoryStore(final Class<T> repositoryStoreClass);
 
-    List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() ;
+    IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStoreByName(String storeName) throws CoreException;
 
-    void refresh(IProgressMonitor monitor) ;
+    List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores();
 
-    String getVersion() ;
+    String getVersion();
 
     List<IRepositoryStore<? extends IRepositoryFileStore>> getAllSharedStores();
 
@@ -65,9 +63,7 @@ public interface IRepository extends IFileStoreChangeListener {
 
     String getDisplayName();
 
-    Image getIcon() ;
-
-    void importFromArchive(File archiveFile, boolean askOverwrite, boolean validateAfterImport);
+    Image getIcon();
 
     void exportToArchive(String file);
 
@@ -75,24 +71,14 @@ public interface IRepository extends IFileStoreChangeListener {
 
     IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(IResource resource);
 
-    boolean isBuildEnable() ;
-
-    void disableBuild();
-    void enableBuild();
-
-    IJavaProject getJavaProject();
-
     List<IRepositoryStore<? extends IRepositoryFileStore>> getAllShareableStores();
 
-    URLClassLoader createProjectClassloader() ;
+    IRepositoryFileStore asRepositoryFileStore(Path path) throws IOException, CoreException;
 
-    IRepositoryFileStore asRepositoryFileStore(IFile res);
+    void migrate(IProgressMonitor monitor) throws CoreException, MigrationException;
 
-	void migrate() throws CoreException, MigrationException;
-
-    void create();
-
-    void updateStudioShellText();
+    IRepository create(IProgressMonitor monitor);
 
     boolean isOnline();
+
 }

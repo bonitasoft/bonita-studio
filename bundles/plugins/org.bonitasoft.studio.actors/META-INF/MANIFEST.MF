@@ -65,5 +65,7 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.profile,
  org.bonitasoft.engine.search,
  org.bonitasoft.engine.session,
+ org.bonitasoft.studio.common.jface,
+ org.bonitasoft.studio.common.jface.databinding.validator,
  org.bonitasoft.studio.expression.editor.filter
 Bundle-Activator: org.bonitasoft.studio.actors.ActorsPlugin

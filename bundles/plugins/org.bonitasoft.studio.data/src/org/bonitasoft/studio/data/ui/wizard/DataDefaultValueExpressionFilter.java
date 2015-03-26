@@ -44,7 +44,8 @@ public class DataDefaultValueExpressionFilter extends AvailableExpressionTypeFil
                 ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.SCRIPT_TYPE,
                 ExpressionConstants.PARAMETER_TYPE,
-                ExpressionConstants.QUERY_TYPE });
+                ExpressionConstants.QUERY_TYPE,
+                ExpressionConstants.CONTRACT_INPUT_TYPE });
         this.wizardPage = wizardPage;
         this.container = container;
         this.isOverviewContext = isOverviewContext;
@@ -55,15 +56,24 @@ public class DataDefaultValueExpressionFilter extends AvailableExpressionTypeFil
         final boolean selected = super.select(viewer, context, element);
         final Set<String> availableDataNames = wizardPage.refreshDataNames();
         final String expressionType = getExpressionType(element);
-        if (element instanceof Expression && ExpressionConstants.VARIABLE_TYPE.equals(((Expression) element).getType())) {
+        if (ExpressionConstants.CONTRACT_INPUT_TYPE.equals(expressionType)) {
+            return container instanceof Pool;
+        }
+        if (isExpressionOfVariableType(element)) {
             return availableDataNames.contains(((Expression) element).getName());
-        } else {
-            if (element instanceof IExpressionProvider
-                    && ExpressionConstants.VARIABLE_TYPE.equals(expressionType)) {
-                return !(container instanceof AbstractProcess) || container instanceof Pool && isOverviewContext;
-            }
+        } else if (isExpressionProviderForVariableType(element, expressionType)) {
+            return !(container instanceof AbstractProcess) || container instanceof Pool && isOverviewContext;
         }
         return selected;
+    }
+
+    protected boolean isExpressionProviderForVariableType(final Object element, final String expressionType) {
+        return element instanceof IExpressionProvider
+                    && ExpressionConstants.VARIABLE_TYPE.equals(expressionType);
+    }
+
+    protected boolean isExpressionOfVariableType(final Object element) {
+        return element instanceof Expression && ExpressionConstants.VARIABLE_TYPE.equals(((Expression) element).getType());
     }
 
     protected String getExpressionType(final Object element) {

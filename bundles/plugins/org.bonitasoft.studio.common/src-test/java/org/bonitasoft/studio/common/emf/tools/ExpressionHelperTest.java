@@ -18,6 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.expression.assertions.ExpressionAssert.assertThat;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -35,6 +37,8 @@ import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.parameter.ParameterFactory;
+import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.Document;
@@ -342,4 +346,62 @@ public class ExpressionHelperTest {
         assertThat(expression).isNotEqualTo(inputExpression);
         assertThat(EcoreUtil.equals(expression, inputExpression)).isTrue();
     }
+
+
+    @Test
+    public void should_createExpressionFromEObject_Returns_a_ContractInputExpression_if_EObject_is_a_ContractInput() throws Exception {
+        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
+        input.setName("inputName");
+        input.setType(ContractInputType.TEXT);
+        final Expression expression = ExpressionHelper.createExpressionFromEObject(input);
+        assertThat(expression).hasContent(input.getName()).
+                hasInterpreter("").
+                hasType(ExpressionConstants.CONTRACT_INPUT_TYPE).
+                hasName(input.getName()).
+                hasReturnType(String.class.getName());
+        assertThat(expression.getReferencedElements()).hasSize(1);
+        final EObject refElement = expression.getReferencedElements().get(0);
+        assertThat(EcoreUtil.equals(input, refElement)).isTrue();
+    }
+
+    @Test
+    public void should_createExpressionFromEObject_Returns_a_ContractInputExpression_of_type_List_if_EObject_is_a_multiple_ContractInput() throws Exception {
+        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
+        input.setName("inputName");
+        input.setMultiple(true);
+        input.setType(ContractInputType.TEXT);
+        final Expression expression = ExpressionHelper.createExpressionFromEObject(input);
+        assertThat(expression).hasContent(input.getName()).
+                hasInterpreter("").
+                hasType(ExpressionConstants.CONTRACT_INPUT_TYPE).
+                hasName(input.getName()).
+                hasReturnType(List.class.getName());
+        assertThat(expression.getReferencedElements()).hasSize(1);
+        final EObject refElement = expression.getReferencedElements().get(0);
+        assertThat(EcoreUtil.equals(input, refElement)).isTrue();
+    }
+
+    @Test
+    public void should_createExpressionFromEObject_Returns_a_ContractInputExpression_of_type_Map_if_EObject_is_a_complex_ContractInput() throws Exception {
+        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
+        input.setName("inputName");
+        input.setType(ContractInputType.COMPLEX);
+        final Expression expression = ExpressionHelper.createExpressionFromEObject(input);
+        assertThat(expression).hasContent(input.getName()).
+                hasInterpreter("").
+                hasType(ExpressionConstants.CONTRACT_INPUT_TYPE).
+                hasName(input.getName()).
+                hasReturnType(Map.class.getName());
+        assertThat(expression.getReferencedElements()).hasSize(1);
+        final EObject refElement = expression.getReferencedElements().get(0);
+        assertThat(EcoreUtil.equals(input, refElement)).isTrue();
+    }
+
+    @Test
+    public void returnTypeForInputType_contains_all_ContractInputType() throws Exception {
+        for (final ContractInputType type : ContractInputType.values()) {
+            assertThat(ExpressionHelper.returnTypeForInputType).containsKey(type);
+        }
+    }
+
 }

@@ -4,7 +4,6 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
  * IBM Corporation - initial API and implementation
  * Hannes Erven <hannes@erven.at> - Bug 293841 - [FieldAssist] NumLock keyDown event should not close the proposal popup [with patch]
@@ -18,6 +17,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.provider.DataExpressionNatureProvider;
@@ -28,9 +28,10 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -141,7 +142,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                                 // the popup shell on the Mac.
                                 // Check the active shell.
                                 final Shell activeShell = e.display.getActiveShell();
-                                if (activeShell == getShell() || (infoPopup != null && infoPopup.getShell() == activeShell) || linkClicked) {
+                                if (activeShell == getShell() || infoPopup != null && infoPopup.getShell() == activeShell || linkClicked) {
                                     return;
                                 }
                                 /*
@@ -268,7 +269,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
                 if (key == 0) {
                     int newSelection = proposalTable.getSelectionIndex();
-                    final int visibleRows = (proposalTable.getSize().y / proposalTable.getItemHeight()) - 1;
+                    final int visibleRows = proposalTable.getSize().y / proposalTable.getItemHeight() - 1;
                     switch (e.keyCode) {
                         case SWT.ARROW_UP:
                             newSelection -= 1;
@@ -336,10 +337,10 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                             }
                             break;
 
-                            // If received as a Traverse, these should propagate
-                            // to the control as keydown. If received as a keydown,
-                            // proposals should be recomputed since the cursor
-                            // position has changed.
+                        // If received as a Traverse, these should propagate
+                        // to the control as keydown. If received as a keydown,
+                        // proposals should be recomputed since the cursor
+                        // position has changed.
                         case SWT.ARROW_LEFT:
                         case SWT.ARROW_RIGHT:
                             if (e.type == SWT.Traverse) {
@@ -357,12 +358,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                             }
                             break;
 
-                            // Any unknown keycodes will cause the popup to close.
-                            // Modifier keys are explicitly checked and ignored because
-                            // they are not complete yet (no character).
+                        // Any unknown keycodes will cause the popup to close.
+                        // Modifier keys are explicitly checked and ignored because
+                        // they are not complete yet (no character).
                         default:
                             if (e.keyCode != SWT.CAPS_LOCK && e.keyCode != SWT.NUM_LOCK && e.keyCode != SWT.MOD1
-                            && e.keyCode != SWT.MOD2 && e.keyCode != SWT.MOD3 && e.keyCode != SWT.MOD4) {
+                                    && e.keyCode != SWT.MOD2 && e.keyCode != SWT.MOD3 && e.keyCode != SWT.MOD4) {
                                 close();
                             }
                             return;
@@ -620,7 +621,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
          * obtained and displayed.
          *
          * @param infoText
-         *            Text to be shown in a lower info area, or <code>null</code> if there is no info area.
+         *        Text to be shown in a lower info area, or <code>null</code> if there is no info area.
          */
         ContentProposalPopup(final String infoText, final IContentProposal[] proposals) {
             // IMPORTANT: Use of SWT.ON_TOP is critical here for ensuring
@@ -719,12 +720,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
         }
 
         private void createVariableCreationZone(final Composite parent) {
-            if (context != null && context.eResource() != null) {
+            if (shouldCreateShortcutZone()) {
                 final Composite creationZoneComposite = new Composite(parent, SWT.NONE);
                 creationZoneComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
                 creationZoneComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
                 Link createDataLink;
-
+                final ExtensionContextInjectionFactory extensionContextInjectionFactory = new ExtensionContextInjectionFactory();
                 for (final IConfigurationElement element : getProposalListeners()) {
                     final String expressionTypeLink = element.getAttribute("type");
                     if (!filteredExpressionType.contains(expressionTypeLink)) {
@@ -732,7 +733,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                         final String name = element.getAttribute("name");
                         createDataLink.setText(name);
                         try {
-                            final IProposalListener listener = (IProposalListener) element.createExecutableExtension("providerClass");
+                            final IProposalListener listener = extensionContextInjectionFactory.make(element, "providerClass", IProposalListener.class);
                             createDataLink.addSelectionListener(new SelectionAdapter() {
 
                                 @Override
@@ -743,14 +744,22 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                                 }
 
                             });
-                        } catch (final CoreException e) {
-                            BonitaStudioLog.error(e);
+                        } catch (final InjectionException e1) {
+                            BonitaStudioLog.error(e1);
+                        } catch (final ClassNotFoundException e1) {
+                            BonitaStudioLog.error(e1);
+                        } catch (final InvalidRegistryObjectException e1) {
+                            BonitaStudioLog.error(e1);
                         }
                         linkList.add(createDataLink);
                     }
                 }
                 creationZoneComposite.getParent().layout(true, true);
             }
+        }
+
+        private boolean shouldCreateShortcutZone() {
+            return createShortcutZone;
         }
 
         private IConfigurationElement[] getProposalListeners() {
@@ -781,7 +790,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                     final IContentProposalListener listener = (IContentProposalListener) listenerArray[i];
                     if (listener instanceof ExpressionViewer) {
                         ((ExpressionViewer) listener)
-                        .manageNatureProviderAndAutocompletionProposal(((ExpressionViewer) listener).getInput());
+                                .manageNatureProviderAndAutocompletionProposal(((ExpressionViewer) listener).getInput());
                     }
                 }
                 if (proposalProvider != null) {
@@ -1026,7 +1035,6 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
          * secondary popup if applicable.
          *
          * @return the return code
-         *
          * @see org.eclipse.jface.window.Window#open()
          */
         @Override
@@ -1408,39 +1416,41 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
     protected EObject context;
 
-    protected ArrayList<String> filteredExpressionType;
+    protected List<String> filteredExpressionType;
 
     private boolean isPageFlowContext;
+
+    private boolean createShortcutZone;
 
     /**
      * Construct a content proposal adapter that can assist the user with
      * choosing content for the field.
      *
      * @param control
-     *            the control for which the adapter is providing content assist.
-     *            May not be <code>null</code>.
+     *        the control for which the adapter is providing content assist.
+     *        May not be <code>null</code>.
      * @param controlContentAdapter
-     *            the <code>IControlContentAdapter</code> used to obtain and
-     *            update the control's contents as proposals are accepted. May
-     *            not be <code>null</code>.
+     *        the <code>IControlContentAdapter</code> used to obtain and
+     *        update the control's contents as proposals are accepted. May
+     *        not be <code>null</code>.
      * @param proposalProvider
-     *            the <code>IContentProposalProvider</code> used to obtain
-     *            content proposals for this control, or <code>null</code> if no
-     *            content proposal is available.
+     *        the <code>IContentProposalProvider</code> used to obtain
+     *        content proposals for this control, or <code>null</code> if no
+     *        content proposal is available.
      * @param keyStroke
-     *            the keystroke that will invoke the content proposal popup. If
-     *            this value is <code>null</code>, then proposals will be
-     *            activated automatically when any of the auto activation
-     *            characters are typed.
+     *        the keystroke that will invoke the content proposal popup. If
+     *        this value is <code>null</code>, then proposals will be
+     *        activated automatically when any of the auto activation
+     *        characters are typed.
      * @param autoActivationCharacters
-     *            An array of characters that trigger auto-activation of content
-     *            proposal. If specified, these characters will trigger
-     *            auto-activation of the proposal popup, regardless of whether
-     *            an explicit invocation keyStroke was specified. If this
-     *            parameter is <code>null</code>, then only a specified
-     *            keyStroke will invoke content proposal. If this parameter is <code>null</code> and the keyStroke parameter is <code>null</code>, then all
-     *            alphanumeric characters will
-     *            auto-activate content proposal.
+     *        An array of characters that trigger auto-activation of content
+     *        proposal. If specified, these characters will trigger
+     *        auto-activation of the proposal popup, regardless of whether
+     *        an explicit invocation keyStroke was specified. If this
+     *        parameter is <code>null</code>, then only a specified
+     *        keyStroke will invoke content proposal. If this parameter is <code>null</code> and the keyStroke parameter is <code>null</code>, then all
+     *        alphanumeric characters will
+     *        auto-activate content proposal.
      */
     public BonitaContentProposalAdapter(final Control control, final IControlContentAdapter controlContentAdapter,
             final IContentProposalProvider proposalProvider, final KeyStroke keyStroke, final char[] autoActivationCharacters) {
@@ -1463,6 +1473,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
     public void setContext(final EObject context) {
         this.context = context;
+        setCreateShortcutZone(context != null && context.eResource() != null);
     }
 
     /**
@@ -1498,7 +1509,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * dispose the label provider when it is no longer needed.
      *
      * @param labelProvider
-     *            the (@link ILabelProvider} used to show proposals.
+     *        the (@link ILabelProvider} used to show proposals.
      */
     public void setLabelProvider(final ILabelProvider labelProvider) {
         this.labelProvider = labelProvider;
@@ -1520,7 +1531,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * Set the content proposal provider that is used to show proposals.
      *
      * @param proposalProvider
-     *            the {@link IContentProposalProvider} used to show proposals
+     *        the {@link IContentProposalProvider} used to show proposals
      */
     public void setContentProposalProvider(final IContentProposalProvider proposalProvider) {
         this.proposalProvider = proposalProvider;
@@ -1549,15 +1560,14 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * popup.
      *
      * @param autoActivationCharacters
-     *            An array of characters that trigger auto-activation of content
-     *            proposal. If specified, these characters will trigger
-     *            auto-activation of the proposal popup, regardless of whether
-     *            an explicit invocation keyStroke was specified. If this
-     *            parameter is <code>null</code>, then only a specified
-     *            keyStroke will invoke content proposal. If this parameter is <code>null</code> and the keyStroke value is <code>null</code> , then all
-     *            alphanumeric characters will auto-activate content
-     *            proposal.
-     *
+     *        An array of characters that trigger auto-activation of content
+     *        proposal. If specified, these characters will trigger
+     *        auto-activation of the proposal popup, regardless of whether
+     *        an explicit invocation keyStroke was specified. If this
+     *        parameter is <code>null</code>, then only a specified
+     *        keyStroke will invoke content proposal. If this parameter is <code>null</code> and the keyStroke value is <code>null</code> , then all
+     *        alphanumeric characters will auto-activate content
+     *        proposal.
      */
     public void setAutoActivationCharacters(final char[] autoActivationCharacters) {
         if (autoActivationCharacters == null) {
@@ -1583,8 +1593,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * Set the delay, in milliseconds, used before autoactivation is triggered.
      *
      * @param delay
-     *            the time in milliseconds that will pass before a popup is
-     *            automatically opened
+     *        the time in milliseconds that will pass before a popup is
+     *        automatically opened
      */
     public void setAutoActivationDelay(final int delay) {
         autoActivationDelay = delay;
@@ -1608,9 +1618,9 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * control's content.
      *
      * @param acceptance
-     *            a constant indicating how an accepted proposal should affect
-     *            the control's content. Should be one of <code>PROPOSAL_INSERT</code>, <code>PROPOSAL_REPLACE</code>,
-     *            or <code>PROPOSAL_IGNORE</code>
+     *        a constant indicating how an accepted proposal should affect
+     *        the control's content. Should be one of <code>PROPOSAL_INSERT</code>, <code>PROPOSAL_REPLACE</code>,
+     *        or <code>PROPOSAL_IGNORE</code>
      */
     public void setProposalAcceptanceStyle(final int acceptance) {
         proposalAcceptanceStyle = acceptance;
@@ -1644,15 +1654,15 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * by the supplied {@link IContentProposalProvider}.
      *
      * @param filterStyle
-     *            a constant indicating how keystrokes received in the proposal
-     *            popup affect filtering of the proposals shown. <code>FILTER_NONE</code> specifies that no automatic filtering
-     *            of the content proposal list will occur as keys are typed in
-     *            the popup. <code>FILTER_CHARACTER</code> specifies that the
-     *            content of the popup will be filtered by the most recently
-     *            typed character. <code>FILTER_CUMULATIVE</code> is deprecated
-     *            and no longer recommended. It specifies that the content of
-     *            the popup will be filtered by a string containing all the
-     *            characters typed since the popup has been open.
+     *        a constant indicating how keystrokes received in the proposal
+     *        popup affect filtering of the proposals shown. <code>FILTER_NONE</code> specifies that no automatic filtering
+     *        of the content proposal list will occur as keys are typed in
+     *        the popup. <code>FILTER_CHARACTER</code> specifies that the
+     *        content of the popup will be filtered by the most recently
+     *        typed character. <code>FILTER_CUMULATIVE</code> is deprecated
+     *        and no longer recommended. It specifies that the content of
+     *        the popup will be filtered by a string containing all the
+     *        characters typed since the popup has been open.
      */
     public void setFilterStyle(final int filterStyle) {
         this.filterStyle = filterStyle;
@@ -1673,8 +1683,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * used the next time the content proposal popup is opened.
      *
      * @param size
-     *            a Point specifying the desired width and height, in pixels, of
-     *            the content proposal popup.
+     *        a Point specifying the desired width and height, in pixels, of
+     *        the content proposal popup.
      */
     public void setPopupSize(final Point size) {
         popupSize = size;
@@ -1701,9 +1711,9 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * open.
      *
      * @param propagateKeys
-     *            a boolean that indicates whether key events (including
-     *            auto-activation characters) should be propagated to the
-     *            adapted control when the proposal popup is open.
+     *        a boolean that indicates whether key events (including
+     *        auto-activation characters) should be propagated to the
+     *        adapted control when the proposal popup is open.
      */
     public void setPropagateKeys(final boolean propagateKeys) {
         this.propagateKeys = propagateKeys;
@@ -1726,9 +1736,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * Set the boolean flag that determines whether the adapter is enabled.
      *
      * @param enabled
-     *            <code>true</code> if the adapter is enabled and responding to
-     *            user input, <code>false</code> if it is ignoring user input.
-     *
+     *        <code>true</code> if the adapter is enabled and responding to
+     *        user input, <code>false</code> if it is ignoring user input.
      */
     public void setEnabled(final boolean enabled) {
         // If we are disabling it while it's proposing content, close the
@@ -1746,11 +1755,10 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * are notified when content proposals are chosen. </p>
      *
      * @param listener
-     *            the IContentProposalListener to be added as a listener. Must
-     *            not be <code>null</code>. If an attempt is made to register an
-     *            instance which is already registered with this instance, this
-     *            method has no effect.
-     *
+     *        the IContentProposalListener to be added as a listener. Must
+     *        not be <code>null</code>. If an attempt is made to register an
+     *        instance which is already registered with this instance, this
+     *        method has no effect.
      * @see org.eclipse.jface.fieldassist.IContentProposalListener
      */
     public void addContentProposalListener(final IContentProposalListener listener) {
@@ -1762,10 +1770,9 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * listeners that are notified when content proposals are chosen. </p>
      *
      * @param listener
-     *            the IContentProposalListener to be removed as a listener. Must
-     *            not be <code>null</code>. If the listener has not already been
-     *            registered, this method has no effect.
-     *
+     *        the IContentProposalListener to be removed as a listener. Must
+     *        not be <code>null</code>. If the listener has not already been
+     *        registered, this method has no effect.
      * @since 3.3
      * @see org.eclipse.jface.fieldassist.IContentProposalListener
      */
@@ -1778,11 +1785,10 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * are notified when a content proposal popup is opened or closed. </p>
      *
      * @param listener
-     *            the IContentProposalListener2 to be added as a listener. Must
-     *            not be <code>null</code>. If an attempt is made to register an
-     *            instance which is already registered with this instance, this
-     *            method has no effect.
-     *
+     *        the IContentProposalListener2 to be added as a listener. Must
+     *        not be <code>null</code>. If an attempt is made to register an
+     *        instance which is already registered with this instance, this
+     *        method has no effect.
      * @since 3.3
      * @see org.eclipse.jface.fieldassist.IContentProposalListener2
      */
@@ -1795,10 +1801,9 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * that are notified when a content proposal popup is opened or closed. </p>
      *
      * @param listener
-     *            the IContentProposalListener2 to be removed as a listener.
-     *            Must not be <code>null</code>. If the listener has not already
-     *            been registered, this method has no effect.
-     *
+     *        the IContentProposalListener2 to be removed as a listener.
+     *        Must not be <code>null</code>. If the listener has not already
+     *        been registered, this method has no effect.
      * @since 3.3
      * @see org.eclipse.jface.fieldassist.IContentProposalListener2
      */
@@ -1875,12 +1880,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                         if (triggerKeyStroke != null) {
                             // Either there are no modifiers for the trigger and we
                             // check the character field...
-                            if ((triggerKeyStroke.getModifierKeys() == KeyStroke.NO_KEY && triggerKeyStroke.getNaturalKey() == e.character)
+                            if (triggerKeyStroke.getModifierKeys() == KeyStroke.NO_KEY && triggerKeyStroke.getNaturalKey() == e.character
                                     ||
                                     // ...or there are modifiers, in which case the
                                     // keycode and state must match
-                                    (triggerKeyStroke.getNaturalKey() == e.keyCode && ((triggerKeyStroke.getModifierKeys() & e.stateMask) == triggerKeyStroke
-                                    .getModifierKeys()))) {
+                                    triggerKeyStroke.getNaturalKey() == e.keyCode && (triggerKeyStroke.getModifierKeys() & e.stateMask) == triggerKeyStroke
+                                            .getModifierKeys()) {
                                 // We never propagate the keystroke for an explicit
                                 // keystroke invocation of the popup
                                 e.doit = false;
@@ -1924,13 +1929,13 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                         }
                         break;
 
-                        // There are times when we want to monitor content changes
-                        // rather than individual keystrokes to determine whether
-                        // the popup should be closed or opened based on the entire
-                        // content of the control.
-                        // The watchModify flag ensures that we don't autoactivate if
-                        // the content change was caused by something other than typing.
-                        // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=183650
+                    // There are times when we want to monitor content changes
+                    // rather than individual keystrokes to determine whether
+                    // the popup should be closed or opened based on the entire
+                    // content of the control.
+                    // The watchModify flag ensures that we don't autoactivate if
+                    // the content change was caused by something other than typing.
+                    // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=183650
                     case SWT.Modify:
                         if (allowsAutoActivate() && watchModify) {
                             if (DEBUG) {
@@ -1981,9 +1986,9 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
              * Dump the given events to "standard" output.
              *
              * @param who
-             *            who is dumping the event
+             *        who is dumping the event
              * @param e
-             *            the event
+             *        the event
              */
             private void dump(final String who, final Event e) {
                 final StringBuffer sb = new StringBuffer("--- [ContentProposalAdapter]\n"); //$NON-NLS-1$
@@ -2017,8 +2022,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * popup to open or a proposal to be selected.
      *
      * @param autoActivated
-     *            a boolean indicating whether the popup was autoactivated. If
-     *            false, a beep will sound when no proposals can be shown.
+     *        a boolean indicating whether the popup was autoactivated. If
+     *        false, a beep will sound when no proposals can be shown.
      */
     private void openProposalPopup(final boolean autoActivated) {
         if (isValid()) {
@@ -2081,12 +2086,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      */
     private void proposalAccepted(final IContentProposal proposal) {
         switch (proposalAcceptanceStyle) {
-            case (PROPOSAL_REPLACE):
+            case PROPOSAL_REPLACE:
                 setControlContent(proposal.getContent(), proposal.getCursorPosition());
-            break;
-            case (PROPOSAL_INSERT):
+                break;
+            case PROPOSAL_INSERT:
                 insertControlContent(proposal.getContent(), proposal.getCursorPosition());
-            break;
+                break;
             default:
                 // do nothing. Typically a listener is installed to handle this in
                 // a custom way.
@@ -2317,13 +2322,13 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * characters or by any characters.
      */
     private boolean allowsAutoActivate() {
-        return (autoActivateString != null && autoActivateString.length() > 0) // there
+        return autoActivateString != null && autoActivateString.length() > 0 // there
                 // are
                 // specific
                 // autoactivation
                 // chars
                 // supplied
-                || (autoActivateString == null && triggerKeyStroke == null); // we
+                || autoActivateString == null && triggerKeyStroke == null; // we
         // autoactivate
         // on
         // everything
@@ -2346,7 +2351,6 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * Answers a boolean indicating whether the main proposal popup is open.
      *
      * @return <code>true</code> if the proposal popup is open, and <code>false</code> if it is not.
-     *
      * @since 3.6
      */
     public boolean isProposalPopupOpen() {
@@ -2360,7 +2364,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
         openProposalPopup(false);
     }
 
-    public void setFilteredExpressionType(final ArrayList<String> filteredExpressionType) {
+    public void setFilteredExpressionType(final List<String> filteredExpressionType) {
         this.filteredExpressionType = filteredExpressionType;
     }
 
@@ -2395,6 +2399,14 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
             proposalListener.setEStructuralFeature(dataFeature);
         }
         return proposalListener.handleEvent(context, fixedReturnType);
+    }
+
+    public boolean createShortcutZone() {
+        return createShortcutZone;
+    }
+
+    public void setCreateShortcutZone(final boolean createShortcutZone) {
+        this.createShortcutZone = createShortcutZone;
     }
 
 }

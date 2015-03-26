@@ -71,7 +71,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Mickael Istria
@@ -86,7 +85,6 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
     private Composite inputMappingControl;
     private Composite outputMappingControl;
     private Composite parent;
-    private TabbedPropertySheetPage tabbedPropertySheetPage;
     private final DiagramRepositoryStore diagramStore;
 
     public ParametersMappingSection(){
@@ -124,10 +122,8 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
     }
 
     @Override
-    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        tabbedPropertySheetPage = aTabbedPropertySheetPage;
-        super.createControls(parent, aTabbedPropertySheetPage);
-        final Composite mainComposite = tabbedPropertySheetPage.getWidgetFactory().createComposite(parent);
+    protected void createContent(final Composite parent) {
+        final Composite mainComposite = getWidgetFactory().createComposite(parent);
         doCreateControls(mainComposite);
     }
 
@@ -167,15 +163,14 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         final List<Data> accessibleData = ModelHelper.getAccessibleData(getCallActivity(),false);
         final List<Data> mappedOutputData = new ArrayList<Data>();
         final List<Data> mappedInputData = new ArrayList<Data>();
-        for(final OutputMapping existingMapping : getCallActivity().getOutputMappings()){
-            mappedOutputData.add(existingMapping.getProcessTarget());
-        }
+
         for(final InputMapping existingMapping : getCallActivity().getInputMappings()){
             final EList<EObject> referencedElements = existingMapping.getProcessSource().getReferencedElements();
             if (!referencedElements.isEmpty()) {
                 mappedInputData.add((Data) referencedElements.get(0));
             }
         }
+
         for (final Data data : accessibleData) {
             if (!mappedOutputData.contains(data) || !mappedInputData.contains(data)) {
                 String subprocessDataString = null;
@@ -237,7 +232,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
      */
     private void refreshScrolledComposite(final Composite parent) {
         parent.getParent().getParent().layout(true ,true);
-        tabbedPropertySheetPage.resizeScrolledComposite();
+        getTabbedPropertySheetPage().resizeScrolledComposite();
     }
     private void createOutputMapping(final Data target, final String source) {
         final OutputMapping outputMapping = ProcessFactory.eINSTANCE.createOutputMapping();
@@ -277,7 +272,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
                 deleteButton.setVisible(false);
                 parent.layout();
                 parent.getParent().layout();
-                tabbedPropertySheetPage.resizeScrolledComposite();
+                getTabbedPropertySheetPage().resizeScrolledComposite();
             }
         });
     }
@@ -301,11 +296,11 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         if (mapping.getSubprocessSource() != null) {
             subprocessSourceCombo.setText(mapping.getSubprocessSource());
         }
-		return subprocessSourceCombo;
-	}
+        return subprocessSourceCombo;
+    }
 
-	private ComboViewer createProcessTargetCombo(final Composite outputMappingControl, final OutputMapping mapping) {
-		final ComboViewer processTargetCombo = new ComboViewer(getWidgetFactory().createCCombo(outputMappingControl, SWT.READ_ONLY | SWT.BORDER));
+    private ComboViewer createProcessTargetCombo(final Composite outputMappingControl, final OutputMapping mapping) {
+        final ComboViewer processTargetCombo = new ComboViewer(getWidgetFactory().createCCombo(outputMappingControl, SWT.READ_ONLY | SWT.BORDER));
         processTargetCombo.setContentProvider(new IStructuredContentProvider() {
             @Override
             public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
@@ -334,8 +329,8 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         if (mapping.getProcessTarget() != null) {
             processTargetCombo.setSelection(new StructuredSelection(mapping.getProcessTarget()));
         }
-		return processTargetCombo;
-	}
+        return processTargetCombo;
+    }
 
     /**
      * @param parent
@@ -434,13 +429,13 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
                 deleteButton.setVisible(false);
                 parent.layout();
                 parent.getParent().layout();
-                tabbedPropertySheetPage.resizeScrolledComposite();
+                getTabbedPropertySheetPage().resizeScrolledComposite();
             }
         });
     }
 
-	private ComboViewer createInputMappingSourceCombo(final Composite outputMappingControl, final InputMapping mapping) {
-		final ComboViewer srcCombo = new ComboViewer(getWidgetFactory().createCCombo(outputMappingControl, SWT.READ_ONLY | SWT.BORDER));
+    private ComboViewer createInputMappingSourceCombo(final Composite outputMappingControl, final InputMapping mapping) {
+        final ComboViewer srcCombo = new ComboViewer(getWidgetFactory().createCCombo(outputMappingControl, SWT.READ_ONLY | SWT.BORDER));
         srcCombo.setComparer(new IElementComparer() {
 
             @Override
@@ -469,12 +464,13 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         if (mapping.getProcessSource() != null) {
             srcCombo.setSelection(new StructuredSelection(mapping.getProcessSource()));
         }
-		return srcCombo;
-	}
+        return srcCombo;
+    }
 
     /**
      * @return
      */
+
     private List<String> getCallActivityData() {
         final List<String> res = new ArrayList<String>();
         String subprocessName = null;

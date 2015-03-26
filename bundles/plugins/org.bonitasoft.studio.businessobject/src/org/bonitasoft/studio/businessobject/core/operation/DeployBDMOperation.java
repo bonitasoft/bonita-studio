@@ -197,7 +197,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
                 depFileStore.delete();
             }
             store.importInputStream(fileStore.getDependencyName(), is);
-            RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
+            RepositoryManager.getInstance().getCurrentRepository().build(Repository.NULL_PROGRESS_MONITOR);
         } finally {
             if (is != null) {
                 try {

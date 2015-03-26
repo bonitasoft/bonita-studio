@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.repository.filestore;
 
@@ -48,6 +46,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -55,10 +54,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class SourceFileStore extends AbstractFileStore {
 
@@ -67,14 +64,14 @@ public class SourceFileStore extends AbstractFileStore {
 
     public SourceFileStore(final String qualifiedClassName, final IRepositoryStore<?> parentStore) {
         super("", parentStore);
-        this.qualifiedClassName = qualifiedClassName ;
+        this.qualifiedClassName = qualifiedClassName;
     }
 
     @Override
     public String getName() {
-        if(getResource() != null){
+        if (getResource() != null) {
             return getResource().getName();
-        }else{
+        } else {
             return qualifiedClassName;
         }
 
@@ -82,10 +79,11 @@ public class SourceFileStore extends AbstractFileStore {
 
     @Override
     public String getDisplayName() {
-        return getName() ;
+        return getName();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
      */
     @Override
@@ -93,47 +91,50 @@ public class SourceFileStore extends AbstractFileStore {
         return Pics.getImage("java.gif", CommonRepositoryPlugin.getDefault());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
      */
     @Override
     public InputStream getContent() {
         try {
-            return getResource().getContents() ;
+            return getResource().getContents();
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getResource()
      */
     @Override
     public IFile getResource() {
-        final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
+        final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
         IType type;
         try {
             type = project.findType(qualifiedClassName);
-            if(type != null && type.getCompilationUnit() != null){
-                return (IFile) type.getCompilationUnit().getResource() ;
+            if (type != null && type.getCompilationUnit() != null) {
+                return (IFile) type.getCompilationUnit().getResource();
             }
         } catch (final JavaModelException e) {
-            BonitaStudioLog.error(e) ;
+            BonitaStudioLog.error(e);
         }
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
      */
     @Override
     protected void doSave(final Object content) {
 
-
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doOpen()
      */
     @Override
@@ -147,15 +148,24 @@ public class SourceFileStore extends AbstractFileStore {
                 try {
                     editorPart = IDE.openEditor(page, new FileEditorInput(getResource()), "org.eclipse.jdt.ui.CompilationUnitEditor");
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveEditor(editorPart, false);
+                    editorPart.addPropertyListener(new IPropertyListener() {
+
+                        @Override
+                        public void propertyChanged(final Object source, final int propId) {
+                            System.out.println(propId);
+
+                        }
+                    });
                 } catch (final PartInitException e) {
                 }
 
             }
-        }) ;
+        });
         return editorPart;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doClose()
      */
     @Override
@@ -164,106 +174,106 @@ public class SourceFileStore extends AbstractFileStore {
     }
 
     public void exportAsJar(final String absoluteTargetFilePath, final boolean includeSources) throws InvocationTargetException, InterruptedException {
-    	try {
-			checkWritePermission(new File(absoluteTargetFilePath));
-		} catch (final IOException e) {
-			throw new InvocationTargetException(e);
-		}
-    	final JarPackageData jarPackakeData = createJarPackageData() ;
-        final IFile[] elements = Collections.singletonList(getResource()).toArray(new IFile[1]) ;
-        jarPackakeData.setJarLocation(new Path(absoluteTargetFilePath)) ;
+        try {
+            checkWritePermission(new File(absoluteTargetFilePath));
+        } catch (final IOException e) {
+            throw new InvocationTargetException(e);
+        }
+        final JarPackageData jarPackakeData = createJarPackageData();
+        final IFile[] elements = Collections.singletonList(getResource()).toArray(new IFile[1]);
+        jarPackakeData.setJarLocation(new Path(absoluteTargetFilePath));
         jarPackakeData.setBuildIfNeeded(true);
-        jarPackakeData.setElements(elements) ;
-        jarPackakeData.setExportWarnings(true) ;
-        jarPackakeData.setComment(SourceRepositoryStore.SIGNATURE_FILE_NAME) ;
-        jarPackakeData.setExportClassFiles(true) ;
-        jarPackakeData.setExportJavaFiles(includeSources) ;
-        jarPackakeData.setGenerateManifest(true) ;
-        jarPackakeData.setUsesManifest(true) ;
-        jarPackakeData.setOverwrite(true) ;
-        jarPackakeData.setUseSourceFolderHierarchy(includeSources) ;
-        final IJarExportRunnable runnable = jarPackakeData.createJarExportRunnable(null) ;
-        runnable.run(Repository.NULL_PROGRESS_MONITOR) ;
+        jarPackakeData.setElements(elements);
+        jarPackakeData.setExportWarnings(true);
+        jarPackakeData.setComment(SourceRepositoryStore.SIGNATURE_FILE_NAME);
+        jarPackakeData.setExportClassFiles(true);
+        jarPackakeData.setExportJavaFiles(includeSources);
+        jarPackakeData.setGenerateManifest(true);
+        jarPackakeData.setUsesManifest(true);
+        jarPackakeData.setOverwrite(true);
+        jarPackakeData.setUseSourceFolderHierarchy(includeSources);
+        final IJarExportRunnable runnable = jarPackakeData.createJarExportRunnable(null);
+        runnable.run(Repository.NULL_PROGRESS_MONITOR);
     }
 
-	protected JarPackageData createJarPackageData() {
-		return new JarPackageData();
-	}
+    protected JarPackageData createJarPackageData() {
+        return new JarPackageData();
+    }
 
     @Override
     public void rename(final String newQualifiedClassName) {
-        final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
-        String packageName = "" ;
-        String className = newQualifiedClassName ;
+        final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        String packageName = "";
+        String className = newQualifiedClassName;
 
-        if(newQualifiedClassName.indexOf(".") != -1){
-            packageName = newQualifiedClassName.substring(0,newQualifiedClassName.lastIndexOf(".")) ;
-            className = newQualifiedClassName.substring(newQualifiedClassName.lastIndexOf(".")+1,newQualifiedClassName.length()) ;
+        if (newQualifiedClassName.indexOf(".") != -1) {
+            packageName = newQualifiedClassName.substring(0, newQualifiedClassName.lastIndexOf("."));
+            className = newQualifiedClassName.substring(newQualifiedClassName.lastIndexOf(".") + 1, newQualifiedClassName.length());
         }
 
         try {
-            final IRepositoryStore<?> store = getParentStore() ;
+            final IRepositoryStore<?> store = getParentStore();
             final IPackageFragmentRoot root = project.findPackageFragmentRoot(store.getResource().getFullPath());
-            root.createPackageFragment(packageName, true, Repository.NULL_PROGRESS_MONITOR) ;
-            final IPackageFragment targetContainer = project.findPackageFragment(store.getResource().getFullPath().append(packageName.replace(".","/"))) ;
-            final IType type = project.findType(qualifiedClassName) ;
-            if(type != null){
-                type.getCompilationUnit().move(targetContainer, null, className+".java", true, Repository.NULL_PROGRESS_MONITOR) ;
-                qualifiedClassName = newQualifiedClassName ;
+            root.createPackageFragment(packageName, true, Repository.NULL_PROGRESS_MONITOR);
+            final IPackageFragment targetContainer = project.findPackageFragment(store.getResource().getFullPath().append(packageName.replace(".", "/")));
+            final IType type = project.findType(qualifiedClassName);
+            if (type != null) {
+                type.getCompilationUnit().move(targetContainer, null, className + ".java", true, Repository.NULL_PROGRESS_MONITOR);
+                qualifiedClassName = newQualifiedClassName;
             }
         } catch (final Exception e) {
-            BonitaStudioLog.error(e) ;
+            BonitaStudioLog.error(e);
         }
     }
 
     @Override
     protected void doDelete() {
-    	final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
-    	try {
-    		final IType type = project.findType(qualifiedClassName);
-    		if(type != null){
-    			final IPackageFragment packageFragment = type.getPackageFragment();
-    			final ICompilationUnit compilationUnit = type.getCompilationUnit();
-    			if(compilationUnit != null){
-    				closeRelatedEditorIfOpened(compilationUnit);//the editor need to be closed here, otherwise the PackageFragment are not refreshed correctly
-    				compilationUnit.delete(true, new NullProgressMonitor());
-    				deleteRecursivelyEmptyPackages(project, packageFragment);
-    			}
-    		} else {
-    			super.doDelete();
-    		}
-    	} catch (final JavaModelException e1) {
-    		BonitaStudioLog.error(e1);
-    		super.doDelete();
-    	} catch (final CoreException e) {
-    		BonitaStudioLog.error(e);
-    	}
+        final IJavaProject project = getRepository().getJavaProject();
+        try {
+            final IType type = project.findType(qualifiedClassName);
+            if (type != null) {
+                final IPackageFragment packageFragment = type.getPackageFragment();
+                final ICompilationUnit compilationUnit = type.getCompilationUnit();
+                if (compilationUnit != null) {
+                    closeRelatedEditorIfOpened(compilationUnit);//the editor need to be closed here, otherwise the PackageFragment are not refreshed correctly
+                    compilationUnit.delete(true, new NullProgressMonitor());
+                    deleteRecursivelyEmptyPackages(project, packageFragment);
+                }
+            } else {
+                super.doDelete();
+            }
+        } catch (final JavaModelException e1) {
+            BonitaStudioLog.error(e1);
+            super.doDelete();
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e);
+        }
     }
 
-	private void deleteRecursivelyEmptyPackages(final IJavaProject project, IPackageFragment packageFragment) throws JavaModelException {
-		if(packageFragment != null){
-			while(!packageFragment.hasChildren()){
-				//I don't find another way than passing through IResource, directly using IJavaElement seems not possible.
-				final IPath pathOfParentPackageFragment = packageFragment.getResource().getParent().getFullPath();
-				final IPackageFragment parent = project.findPackageFragment(pathOfParentPackageFragment);
-				packageFragment.delete(true, new NullProgressMonitor());
-				if(parent instanceof IPackageFragment && !parent.isDefaultPackage()){
-					packageFragment = parent;
-				} else {
-					return;
-				}
-			}
-		}
-	}
+    private void deleteRecursivelyEmptyPackages(final IJavaProject project, IPackageFragment packageFragment) throws JavaModelException {
+        if (packageFragment != null) {
+            while (!packageFragment.hasChildren()) {
+                //I don't find another way than passing through IResource, directly using IJavaElement seems not possible.
+                final IPath pathOfParentPackageFragment = packageFragment.getResource().getParent().getFullPath();
+                final IPackageFragment parent = project.findPackageFragment(pathOfParentPackageFragment);
+                packageFragment.delete(true, new NullProgressMonitor());
+                if (parent instanceof IPackageFragment && !parent.isDefaultPackage()) {
+                    packageFragment = parent;
+                } else {
+                    return;
+                }
+            }
+        }
+    }
 
-	private void closeRelatedEditorIfOpened(final ICompilationUnit compilationUnit) throws PartInitException {
-		final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if(editorPart != null){
-			if(PlatformUI.isWorkbenchRunning()){
-				activePage.closeEditor(editorPart, false);
-			}
-		} else {
-			if(PlatformUI.isWorkbenchRunning()){
+    private void closeRelatedEditorIfOpened(final ICompilationUnit compilationUnit) throws PartInitException {
+        final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        if (editorPart != null) {
+            if (PlatformUI.isWorkbenchRunning()) {
+                activePage.closeEditor(editorPart, false);
+            }
+        } else {
+            if (PlatformUI.isWorkbenchRunning()) {
                 for (final IEditorReference editorReference : activePage.getEditorReferences()) {
                     final IEditorInput editorInput = editorReference.getEditorInput();
                     if (compilationUnit.getResource().equals(EditorUtil.retrieveResourceFromEditorInput(editorInput))) {
@@ -271,7 +281,7 @@ public class SourceFileStore extends AbstractFileStore {
                         break;
                     }
                 }
-			}
-		}
-	}
+            }
+        }
+    }
 }

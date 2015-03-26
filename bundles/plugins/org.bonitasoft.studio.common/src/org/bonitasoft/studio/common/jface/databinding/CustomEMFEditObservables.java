@@ -22,7 +22,10 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.masterdetail.MasterDetailObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.databinding.EObjectObservableList;
+import org.eclipse.emf.databinding.EObjectObservableValue;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
+import org.eclipse.emf.databinding.edit.EditingDomainEObjectObservableList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -58,8 +61,14 @@ public class CustomEMFEditObservables extends EMFEditObservables {
             @Override
             public IObservable createObservable(final Object target)
             {
-                final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(target);
-                return observeValue(realm, editingDomain, (EObject) target, eStructuralFeature);
+                if (((EObject) target).eResource() != null) {
+                    final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(target);
+                    if (editingDomain != null) {
+                        return observeValue(realm, editingDomain, (EObject) target, eStructuralFeature);
+                    }
+                }
+                return new EObjectObservableValue(realm, (EObject) target, eStructuralFeature);
+
             }
         };
     }
@@ -78,10 +87,43 @@ public class CustomEMFEditObservables extends EMFEditObservables {
             @Override
             public IObservable createObservable(final Object target)
             {
-                final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(target);
-                return observeList(realm, domain, (EObject) target, eStructuralFeature);
+                if (((EObject) target).eResource() != null) {
+                    final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(target);
+                    if (domain != null) {
+                        return observeList(realm, domain, (EObject) target, eStructuralFeature);
+                    }
+                }
+
+                return observeList(realm, (EObject) target, eStructuralFeature);
+
             }
         };
+    }
+
+    public static IObservableList observeList(final EObject eObject, final EStructuralFeature eStructuralFeature)
+    {
+        if (eObject.eResource() != null) {
+            final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(eObject);
+            if (domain != null) {
+                return new EditingDomainEObjectObservableList(domain, eObject, eStructuralFeature);
+            }
+        }
+        return new EObjectObservableList(eObject, eStructuralFeature);
+
+    }
+
+    public static IObservableList observeList(final Realm realm, final EObject eObject, final EStructuralFeature eStructuralFeature)
+    {
+        if (eObject.eResource() != null) {
+            final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(eObject);
+            if (domain != null) {
+                return new EditingDomainEObjectObservableList(realm, domain, eObject, eStructuralFeature);
+
+            }
+        }
+        return new EObjectObservableList(realm, eObject, eStructuralFeature);
+
+
     }
 
 }

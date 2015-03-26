@@ -482,6 +482,11 @@
             id="org.bonitasoft.studio.application.command.rename"
             name="Rename Command">
       </command>
+      <command
+            defaultHandler="org.bonitasoft.studio.application.handler.ImportArtifactsFromZipHandler"
+            id="org.bonitasoft.studio.repository.importArtifacts"
+            name="import artifacts">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -543,6 +548,13 @@
             icon="icons/overview.png"
             id="org.bonitasoft.studio.views.overview.tree"
             name="%TreeOverView"
+            restorable="true">
+      </view>
+      <view
+            category="org.bonitasoft.studio.application.bonita"
+            class="org.bonitasoft.studio.application.views.process.BonitaFormMappingPropertiesView"
+            id="org.bonitasoft.studio.views.properties.process.formMapping"
+            name="Form Mapping"
             restorable="true">
       </view>
    </extension>
@@ -779,9 +791,6 @@
    <extension
          point="org.bonitasoft.studio.common.poststartup">
       <contribution
-            class="org.bonitasoft.studio.application.contribution.StartEnginePostStartupContribution">
-      </contribution>
-      <contribution
             class="org.bonitasoft.studio.application.contribution.StudioPropertiesContributor"
             priority="0">
       </contribution>
@@ -823,7 +832,17 @@
       </key>
       <key
             commandId="org.eclipse.ui.views.showView"
-            contextId="org.eclipse.ui.contexts.dialogAndWindow"
+            contextId="org.bonitasoft.studio.model.process.diagram.form.ui.diagramContext"
+            schemeId="org.bonitasoft.studio.application.scheme"
+            sequence="M1+F">
+         <parameter
+               id="org.eclipse.ui.views.showView.viewId"
+               value="org.bonitasoft.studio.views.overview.tree">
+         </parameter>
+      </key>
+      <key
+            commandId="org.eclipse.ui.views.showView"
+            contextId="org.bonitasoft.studio.model.process.diagram.ui.diagramContext"
             schemeId="org.bonitasoft.studio.application.scheme"
             sequence="M1+F">
          <parameter

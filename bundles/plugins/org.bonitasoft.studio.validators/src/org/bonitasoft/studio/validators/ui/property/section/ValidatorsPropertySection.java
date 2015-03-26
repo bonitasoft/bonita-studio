@@ -89,7 +89,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Aurelien Pupier
@@ -156,10 +155,10 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 
     private EMFDataBindingContext expressionContext;
 
+
     @Override
-    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
-        validatorStore = RepositoryManager.getInstance().getRepositoryStore(ValidatorDescriptorRepositoryStore.class) ;
+    protected void createContent(final Composite parent) {
+        validatorStore = RepositoryManager.getInstance().getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
         doCreateControls(parent);
     }
 
@@ -235,13 +234,13 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
         defaultValidator = getWidgetFactory().createButton(defaultValidatorComposite, Messages.Validator_defaultValidator, SWT.CHECK);
 
 
-        positionComp = 	getWidgetFactory().createComposite(defaultValidatorComposite);
+        positionComp =  getWidgetFactory().createComposite(defaultValidatorComposite);
         positionComp.setLayout(new GridLayout(3,false)) ;
         getWidgetFactory().createLabel(positionComp, Messages.Validator_isBelow);
         defaultValidatorIsBelow = getWidgetFactory().createButton(positionComp, Messages.Validator_Below, SWT.RADIO);
         defaultValidatorIsAbove = getWidgetFactory().createButton(positionComp, Messages.Validator_Above, SWT.RADIO);
 
-        positionComp.setLayoutData(	GridDataFactory.fillDefaults().indent(15, 0).create()) ;
+        positionComp.setLayoutData( GridDataFactory.fillDefaults().indent(15, 0).create()) ;
         defaultValidator.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent e) {
@@ -452,21 +451,21 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
                     }
 
 
-                    //					for(Validator validator :((Validable)lastEObject).getValidators()){
-                    //						if(validator.getValidatorClass() != null){
-                    //							boolean stilExists = false ;
-                    //							for(IRepositoryFileStore file : validatorStore.getChildren()){
-                    //								ValidatorDescriptor desc = (ValidatorDescriptor) file.getContent() ;
-                    //								if(desc.getClassName().equals(validator.getValidatorClass())){
-                    //									stilExists = true ;
-                    //									break ;
-                    //								}
-                    //							}
-                    //							if(!stilExists){
-                    //								getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), validator, FormPackage.Literals.VALIDATOR__VALIDATOR_CLASS, null)) ;
-                    //							}
-                    //						}
-                    //					}
+                    //                  for(Validator validator :((Validable)lastEObject).getValidators()){
+                    //                      if(validator.getValidatorClass() != null){
+                    //                          boolean stilExists = false ;
+                    //                          for(IRepositoryFileStore file : validatorStore.getChildren()){
+                    //                              ValidatorDescriptor desc = (ValidatorDescriptor) file.getContent() ;
+                    //                              if(desc.getClassName().equals(validator.getValidatorClass())){
+                    //                                  stilExists = true ;
+                    //                                  break ;
+                    //                              }
+                    //                          }
+                    //                          if(!stilExists){
+                    //                              getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), validator, FormPackage.Literals.VALIDATOR__VALIDATOR_CLASS, null)) ;
+                    //                          }
+                    //                      }
+                    //                  }
 
                     comboViewerForValidatorClass.setInput(validatorStore.getValidatorDescriptors());
 
@@ -497,8 +496,8 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
                      * Use pattern master-detail databinding in order to be up to date with the selection in the FilteredTreeViewer
                      * */
 
-                    //		labelField.setElement((Element) lastEObject);
-                    //		labelField.reset();
+                    //      labelField.setElement((Element) lastEObject);
+                    //      labelField.reset();
 
                     /*Observe change in selection*/
                     final IViewerObservableValue treeViewerObservaleValue = ViewersObservables.observeSingleSelection(tableViewer);
@@ -683,12 +682,12 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
         } catch (final ExecutionException e) {
             BonitaStudioLog.error(e);
         }
-        //		EObject eobject = getEObject();
-        //		while(!(eobject instanceof AbstractProcess)){
-        //			eobject = eobject.eContainer();
-        //		}
-        //		AbstractProcess ap = (AbstractProcess) eobject;
-        //		getEditingDomain().getCommandStack().execute(new AddCommand(getEditingDomain(), ap.getResourceValidators(), ValidatorRepositoryArtifact.ID_BASE+validatorClass));
+        //      EObject eobject = getEObject();
+        //      while(!(eobject instanceof AbstractProcess)){
+        //          eobject = eobject.eContainer();
+        //      }
+        //      AbstractProcess ap = (AbstractProcess) eobject;
+        //      getEditingDomain().getCommandStack().execute(new AddCommand(getEditingDomain(), ap.getResourceValidators(), ValidatorRepositoryArtifact.ID_BASE+validatorClass));
     }
 
     /**

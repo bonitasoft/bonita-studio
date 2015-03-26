@@ -3,8 +3,8 @@
  * BonitaSoft is a trademark of Bonitasoft SA.
  * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
  * For commercial licensing information, contact:
- *      BonitaSoft, 32 rue Gustave Eiffel – 38000 Grenoble
- *      or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
+ * BonitaSoft, 32 rue Gustave Eiffel – 38000 Grenoble
+ * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
 package org.bonitasoft.studio.tests.parameter;
 
@@ -21,11 +21,11 @@ import org.bonitasoft.studio.application.actions.UndoCommandHandler;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
+import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -48,7 +48,6 @@ import org.junit.Test;
 
 /**
  * @author Aurelie Zara
- *
  */
 public class TestParametersRefactoring {
 
@@ -78,7 +77,7 @@ public class TestParametersRefactoring {
         removeParameter(pools, pool1Parameters, pool1Operations);
     }
 
-    public MainProcess importDiagramAndOpen() throws IOException {
+    public MainProcess importDiagramAndOpen() throws IOException, InvocationTargetException, InterruptedException {
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
         final URL fileURL1 = FileLocator.toFileURL(TestParametersRefactoring.class.getResource("testParametersRefactoring-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
@@ -100,7 +99,8 @@ public class TestParametersRefactoring {
         return operations;
     }
 
-    private void refactorParameter(final List<Pool> pools, final List<Parameter> pool1Parameters, final List<Parameter> pool2Parameters, final List<Operation> pool1Operations,
+    private void refactorParameter(final List<Pool> pools, final List<Parameter> pool1Parameters, final List<Parameter> pool2Parameters,
+            final List<Operation> pool1Operations,
             final List<Operation> pool2Operations) throws InvocationTargetException, InterruptedException {
         final Parameter parameterToRefactor = pool1Parameters.get(0);
         final Parameter parameterWithSameName = pool2Parameters.get(0);
@@ -126,7 +126,8 @@ public class TestParametersRefactoring {
         assertEquals("refactored parameter has no value anymore", parameterValue, localeConfiguration.getParameters().get(0).getValue());
     }
 
-    private void removeParameter(final List<Pool> pools, final List<Parameter> pool1Parameters, final List<Operation> operations) throws InvocationTargetException,
+    private void removeParameter(final List<Pool> pools, final List<Parameter> pool1Parameters, final List<Operation> operations)
+            throws InvocationTargetException,
             InterruptedException {
         final RemoveParametersOperation op = new RemoveParametersOperation(pool1Parameters.get(0), pools.get(0));
         op.setEditingDomain(TransactionUtil.getEditingDomain(pools.get(0)));
@@ -138,7 +139,8 @@ public class TestParametersRefactoring {
         assertEquals("parameter has not been removed correctly in ", 1, localeConfiguration.getParameters().size());
     }
 
-    private void undoParameterRefactoring(final List<Pool> pools, final List<Parameter> pool1Parameters, final List<Operation> operations) throws ExecutionException {
+    private void undoParameterRefactoring(final List<Pool> pools, final List<Parameter> pool1Parameters, final List<Operation> operations)
+            throws ExecutionException {
         final UndoCommandHandler undoCommand = new UndoCommandHandler();
         undoCommand.execute(new ExecutionEvent());
         assertEquals("undo was not performed correctly", parameterName, pool1Parameters.get(0).getName());

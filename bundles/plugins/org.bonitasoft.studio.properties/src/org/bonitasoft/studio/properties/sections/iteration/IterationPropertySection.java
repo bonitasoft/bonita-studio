@@ -14,19 +14,20 @@
  */
 package org.bonitasoft.studio.properties.sections.iteration;
 
-import static com.google.common.collect.Iterables.find;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.groovyReferenceValidator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
+import javax.inject.Inject;
+
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.properties.EObjectSelectionProviderSection;
+import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.provider.DataExpressionProvider;
 import org.bonitasoft.studio.data.ui.property.section.DataLabelProvider;
@@ -37,7 +38,6 @@ import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.groovy.DisplayEngineExpressionWithName;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
@@ -87,14 +87,13 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -109,41 +108,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.progress.ProgressManager;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
-
-import com.google.common.base.Predicate;
 
 /**
  * @author Romain Bioteau
  */
-public class IterationPropertySection extends EObjectSelectionProviderSection implements ISelectionProvider {
-
-    /**
-     * @author Aurelien
-     *         Display only Process data, it filters out step data. The step requires to be the context of the expressionviewer
-     */
-    private final class StepDataViewerFilter extends ViewerFilter {
-
-        @Override
-        public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-            if (parentElement instanceof Activity
-                    && element instanceof Expression
-                    && ExpressionConstants.VARIABLE_TYPE.equals(((Expression) element).getType())) {
-                final String expressionName = ((Expression) element).getName();
-                final Data foundData = find(((Activity) parentElement).getData(), new Predicate<Data>() {
-
-                    @Override
-                    public boolean apply(final Data data) {
-                        return expressionName.equals(data.getName());
-                    }
-                });
-                return foundData == null;
-            }
-            return true;
-        }
-    }
+public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 
     private EMFDataBindingContext context;
 
@@ -152,6 +124,9 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
     private ComboViewer returnTypeCombo;
 
     private IObservableValue expressionReturnTypeDetailValue;
+
+    @Inject
+    private MultiInstantiableAdaptableSelectionProvider selectionProvider;
 
     /*
      * (non-Javadoc)
@@ -163,11 +138,9 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
     }
 
     @Override
-    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
-
+    protected void createContent(final Composite parent) {
         context = new EMFDataBindingContext();
-        final TabbedPropertySheetWidgetFactory widgetFactory = aTabbedPropertySheetPage.getWidgetFactory();
+        final TabbedPropertySheetWidgetFactory widgetFactory = getWidgetFactory();
 
         final Composite composite = widgetFactory.createPlainComposite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 5).create());
@@ -191,18 +164,15 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
                 switch (type) {
                     case NONE:
                         stackLayout.topControl = noneComposite;
-                        stackedComposite.layout();
                         break;
                     case STANDARD:
                         stackLayout.topControl = standardLoopContent;
-                        stackedComposite.layout();
                         break;
                     default:
                         stackLayout.topControl = multiInstanceContent;
-                        stackedComposite.layout();
                         break;
                 }
-
+                stackedComposite.layout();
             }
         });
 
@@ -224,8 +194,10 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         testEventObservable.addOption(Boolean.FALSE, SWTObservables.observeSelection(testAfterButton));
         testEventObservable.addOption(Boolean.TRUE, SWTObservables.observeSelection(testBefore));
 
-        context.bindValue(testEventObservable, CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
-                ProcessPackage.Literals.MULTI_INSTANTIABLE__TEST_BEFORE));
+        final IObservableValue selectionObservable = ViewersObservables.observeSingleSelection(selectionProvider);
+        context.bindValue(testEventObservable,
+                CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), selectionObservable,
+                        ProcessPackage.Literals.MULTI_INSTANTIABLE__TEST_BEFORE));
 
         widgetFactory.createLabel(standardLoopComposite, Messages.loopConditionLabel).setLayoutData(
                 GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
@@ -240,11 +212,11 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         loopConditionExpressionViewer.addFilter(new DisplayEngineExpressionWithName(
                 new String[] { org.bonitasoft.engine.expression.ExpressionConstants.LOOP_COUNTER
                         .getEngineConstantName() }));
-        loopConditionExpressionViewer.addFilter(new StepDataViewerFilter());
+        loopConditionExpressionViewer.addFilter(new OnlyProcessDataViewerFilter());
 
-        context.bindValue(ViewersObservables.observeInput(loopConditionExpressionViewer), getEObjectObservable());
+        context.bindValue(ViewersObservables.observeInput(loopConditionExpressionViewer), selectionObservable);
         context.bindValue(ViewersObservables.observeSingleSelection(loopConditionExpressionViewer), CustomEMFEditObservables.observeDetailValue(
-                Realm.getDefault(), getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_CONDITION));
+                Realm.getDefault(), selectionObservable, ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_CONDITION));
 
         widgetFactory.createLabel(standardLoopComposite, Messages.maximumLoopLabel).setLayoutData(
                 GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
@@ -256,11 +228,11 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
                 ExpressionConstants.PARAMETER_TYPE,
                 ExpressionConstants.SCRIPT_TYPE }));
         maximumLoopExpressionViewer.setMessage(Messages.optionalLabel, IStatus.INFO);
-        maximumLoopExpressionViewer.addFilter(new StepDataViewerFilter());
+        maximumLoopExpressionViewer.addFilter(new OnlyProcessDataViewerFilter());
 
-        context.bindValue(ViewersObservables.observeInput(maximumLoopExpressionViewer), getEObjectObservable());
+        context.bindValue(ViewersObservables.observeInput(maximumLoopExpressionViewer), selectionObservable);
         context.bindValue(ViewersObservables.observeSingleSelection(maximumLoopExpressionViewer), CustomEMFEditObservables.observeDetailValue(
-                Realm.getDefault(), getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_MAXIMUM));
+                Realm.getDefault(), selectionObservable, ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_MAXIMUM));
 
         return standardLoopComposite;
     }
@@ -284,8 +256,9 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         cardinalityObservable.addOption(Boolean.FALSE, SWTObservables.observeSelection(dataBasedInstanceButton));
         cardinalityObservable.addOption(Boolean.TRUE, SWTObservables.observeSelection(definedNumberOfInstancesButton));
 
-        context.bindValue(cardinalityObservable, CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
-                ProcessPackage.Literals.MULTI_INSTANTIABLE__USE_CARDINALITY));
+        context.bindValue(cardinalityObservable,
+                CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), ViewersObservables.observeSingleSelection(selectionProvider),
+                        ProcessPackage.Literals.MULTI_INSTANTIABLE__USE_CARDINALITY));
 
         final Composite dataContainerComposite = widgetFactory.createPlainComposite(multiInstanceComposite, SWT.NONE);
         dataContainerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(3, 1).create());
@@ -334,9 +307,11 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
                 org.bonitasoft.engine.expression.ExpressionConstants.NUMBER_OF_TERMINATED_INSTANCES.getEngineConstantName() }));
         completionConditionViewer.setMessage(Messages.multiInstance_completionConditionDescription, IStatus.INFO);
 
-        context.bindValue(ViewersObservables.observeInput(completionConditionViewer), getEObjectObservable());
+        final IObservableValue selectionObservable = ViewersObservables.observeSingleSelection(selectionProvider);
+        context.bindValue(ViewersObservables.observeInput(completionConditionViewer), selectionObservable);
         context.bindValue(ViewersObservables.observeSingleSelection(completionConditionViewer), CustomEMFEditObservables.observeDetailValue(
-                Realm.getDefault(), getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__COMPLETION_CONDITION));
+                Realm.getDefault(), selectionObservable,
+                ProcessPackage.Literals.MULTI_INSTANTIABLE__COMPLETION_CONDITION));
     }
 
     private Composite createDataContent(final Composite dataContainerComposite, final TabbedPropertySheetWidgetFactory widgetFactory) {
@@ -369,8 +344,9 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         storeOutputButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         final ISWTObservableValue observeStoreOutputSelection = SWTObservables.observeSelection(storeOutputButton);
+        final IObservableValue selectionObservable = ViewersObservables.observeSingleSelection(selectionProvider);
         context.bindValue(observeStoreOutputSelection, CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__STORE_OUTPUT));
+                selectionObservable, ProcessPackage.Literals.MULTI_INSTANTIABLE__STORE_OUTPUT));
 
         final Group outputGroup = widgetFactory.createGroup(outputComposite, Messages.output);
         outputGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -386,8 +362,9 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(outputDataComboViewer);
 
         final IObservableValue observeDataValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__OUTPUT_DATA);
-        getEObjectObservable().addValueChangeListener(createInputValueChanged(outputDataComboViewer, observeSingleSelection, observeDataValue, true));
+                selectionObservable, ProcessPackage.Literals.MULTI_INSTANTIABLE__OUTPUT_DATA);
+        selectionObservable.addValueChangeListener(
+                createInputValueChanged(outputDataComboViewer, observeSingleSelection, observeDataValue, true));
         context.bindValue(observeSingleSelection, observeDataValue);
 
         outputDataComboViewer.addSelectionChangedListener(createComboSelectionListener(outputDataComboViewer, true));
@@ -404,10 +381,11 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         outputListComboViewer.setSorter(new DataViewerSorter());
 
         final IObservableValue observeDetailValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__LIST_DATA_CONTAINING_OUTPUT_RESULTS);
+                selectionObservable, ProcessPackage.Literals.MULTI_INSTANTIABLE__LIST_DATA_CONTAINING_OUTPUT_RESULTS);
         final IViewerObservableValue observeSingleSelection2 = ViewersObservables.observeSingleSelection(outputListComboViewer);
 
-        getEObjectObservable().addValueChangeListener(createInputValueChanged(outputListComboViewer, observeSingleSelection2, observeDetailValue, false));
+        selectionObservable.addValueChangeListener(
+                createInputValueChanged(outputListComboViewer, observeSingleSelection2, observeDetailValue, false));
         context.bindValue(observeSingleSelection2, observeDetailValue);
 
         context.bindValue(PojoObservables.observeValue(new RecursiveControlEnablement(outputGroup), "enabled"),
@@ -451,10 +429,11 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         inputListComboViewer.addFilter(new ListDataFilter());
         inputListComboViewer.setSorter(new DataViewerSorter());
         final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(inputListComboViewer);
+        final IObservableValue selectionObservable = ViewersObservables.observeSingleSelection(selectionProvider);
         final IObservableValue observeInputCollectionValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__COLLECTION_DATA_TO_MULTI_INSTANTIATE);
+                selectionObservable, ProcessPackage.Literals.MULTI_INSTANTIABLE__COLLECTION_DATA_TO_MULTI_INSTANTIATE);
 
-        getEObjectObservable()
+        selectionObservable
                 .addValueChangeListener(createInputValueChanged(inputListComboViewer, observeSingleSelection, observeInputCollectionValue, false));
 
         inputListComboViewer.addSelectionChangedListener(createComboSelectionListener(inputListComboViewer, false));
@@ -502,7 +481,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
     protected boolean isCurrentIteratorExpressiontObserved(final DetailObservableValue detailObservableValue) {
         final Object observed = ((DetailObservableValue) expressionReturnTypeDetailValue).getObserved();
-        final MultiInstantiable multiInstantiable = (MultiInstantiable) getEObjectObservable().getValue();
+        final MultiInstantiable multiInstantiable = (MultiInstantiable) ViewersObservables.observeSingleSelection(selectionProvider).getValue();
         return observed != null && observed.equals(multiInstantiable.getIteratorExpression());
     }
 
@@ -513,7 +492,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
             public void selectionChanged(final SelectionChangedEvent event) {
                 final Object selection = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 if (selection instanceof IProposalListener) {
-                    EObject value = (EObject) getEObjectObservable().getValue();
+                    EObject value = (EObject) ViewersObservables.observeSingleSelection(selectionProvider).getValue();
                     if (!stepData) {
                         value = ModelHelper.getParentProcess(value);
                     }
@@ -592,9 +571,10 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
                 ExpressionConstants.PARAMETER_TYPE,
                 ExpressionConstants.SCRIPT_TYPE }));
 
-        context.bindValue(ViewersObservables.observeInput(cardinalityExpression), getEObjectObservable());
+        final IObservableValue selectionObservable = ViewersObservables.observeSingleSelection(selectionProvider);
+        context.bindValue(ViewersObservables.observeInput(cardinalityExpression), selectionObservable);
         context.bindValue(ViewersObservables.observeSingleSelection(cardinalityExpression), CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__CARDINALITY_EXPRESSION));
+                selectionObservable, ProcessPackage.Literals.MULTI_INSTANTIABLE__CARDINALITY_EXPRESSION));
     }
 
     protected void createReturnTypeCombo(final TabbedPropertySheetWidgetFactory widgetFactory, final Composite parent,
@@ -606,7 +586,8 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         final Text instanceDataNameText = widgetFactory.createText(iteratorComposite, "", SWT.BORDER);
         instanceDataNameText.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
 
-        final IObservableValue iteratorObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
+        final IObservableValue iteratorObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
+                ViewersObservables.observeSingleSelection(selectionProvider),
                 ProcessPackage.Literals.MULTI_INSTANTIABLE__ITERATOR_EXPRESSION);
         final IObservableValue expressionNameDetailValue = EMFEditWithRefactorObservables.observeDetailValueWithRefactor(Realm.getDefault(),
                 iteratorObservable,
@@ -763,14 +744,6 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         }
     }
 
-    protected Object getReturnTypeInput() {
-        final MultiInstantiable instantiable = (MultiInstantiable) getEObjectObservable().getValue();
-        if (instantiable instanceof MultiInstantiable && instantiable.getCollectionDataToMultiInstantiate() != null) {
-            return getQualifiedNameFromMultipleData(instantiable.getCollectionDataToMultiInstantiate());
-        }
-        return new Object();
-    }
-
     /**
      * @param classText
      */
@@ -860,7 +833,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         recurrenceTypeObservable.addOption(MultiInstanceType.SEQUENTIAL, SWTObservables.observeSelection(sequentialMultiRadio));
 
         context.bindValue(recurrenceTypeObservable,
-                CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
+                CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), ViewersObservables.observeSingleSelection(selectionProvider),
                         ProcessPackage.Literals.MULTI_INSTANTIABLE__TYPE));
 
         return recurrenceTypeObservable;
@@ -882,6 +855,12 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
             return technicalTypeFor;
         }
         return Object.class.getName();
+    }
+
+    @Override
+    public void setInput(final IWorkbenchPart part, final ISelection selection) {
+        super.setInput(part, selection);
+        selectionProvider.setSelection(selection);
     }
 
 }

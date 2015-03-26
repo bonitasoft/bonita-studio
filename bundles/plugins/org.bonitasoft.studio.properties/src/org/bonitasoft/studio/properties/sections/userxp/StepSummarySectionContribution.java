@@ -82,7 +82,8 @@ public class StepSummarySectionContribution extends AbstractPropertySectionContr
         composite.setLayout(new GridLayout(1, true));
         composite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
         expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, ProcessPackage.Literals.FLOW_ELEMENT__STEP_SUMMARY);
-        expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.SCRIPT_TYPE}));
+        expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
+                ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.CONTRACT_INPUT_TYPE }));
         expressionViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
         expressionViewer.setInput(eObject) ;
         expressionViewer.setMessage(Messages.stepSummaryHint,IStatus.INFO) ;

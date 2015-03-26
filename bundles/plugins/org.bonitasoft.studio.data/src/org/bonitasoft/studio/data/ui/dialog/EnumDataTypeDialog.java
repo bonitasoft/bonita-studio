@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -84,28 +84,28 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
     private EnumType selectedType;
 
 
-    public EnumDataTypeDialog(Shell parentShell,MainProcess mainProc) {
+    public EnumDataTypeDialog(final Shell parentShell,final MainProcess mainProc) {
         super(parentShell);
         this.mainProc = mainProc ;
         enumTypes = new HashMap<EnumType,EnumType>() ;
-        for(EnumType enumType : ModelHelper.getAllUserDatatype(mainProc)){
+        for(final EnumType enumType : ModelHelper.getAllUserDatatype(mainProc)){
             enumTypes.put(EcoreUtil.copy(enumType),enumType) ;
         }
     }
 
     @Override
-    protected void configureShell(Shell newShell) {
+    protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(Messages.listOfOptionsTitle) ;
     }
 
     @Override
-    protected void setShellStyle(int newShellStyle) {
+    protected void setShellStyle(final int newShellStyle) {
         super.setShellStyle(newShellStyle  | SWT.SHEET);
     }
 
     @Override
-    protected Control createDialogArea(Composite parent) {
+    protected Control createDialogArea(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).hint(SWT.DEFAULT, 250).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 15).spacing(20, 5).equalWidth(true).create());
@@ -118,7 +118,7 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
     }
 
 
-    protected void createEnumOptionsTable(Composite parent) {
+    protected void createEnumOptionsTable(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
@@ -129,13 +129,13 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
 
         optionsList = new TableViewer(composite,SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION) ;
         optionsList.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
-        TableLayout layout = new TableLayout() ;
+        final TableLayout layout = new TableLayout() ;
         layout.addColumnData(new ColumnWeightData(1)) ;
         optionsList.getTable().setLayout(layout) ;
         optionsList.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 updateButtons() ;
             }
         }) ;
@@ -143,7 +143,7 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
         optionsList.setContentProvider(new ArrayContentProvider()) ;
         optionsList.setSorter(null) ;
 
-        TableViewerColumn columnNameViewer = new TableViewerColumn(optionsList,SWT.NONE) ;
+        final TableViewerColumn columnNameViewer = new TableViewerColumn(optionsList,SWT.NONE) ;
         columnNameViewer.setLabelProvider(new ColumnLabelProvider()) ;
         literalEditingSupport = new LiteralEditingSupport(optionsList) ;
         columnNameViewer.setEditingSupport(literalEditingSupport) ;
@@ -159,10 +159,10 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
         addOptionButton.setText(Messages.Add) ;
         addOptionButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 getShell().setFocus();
-                EnumType type = (EnumType) ((IStructuredSelection) typeList.getSelection()).getFirstElement() ;
-                String newOption = generateLiteral(type) ;
+                final EnumType type = (EnumType) ((IStructuredSelection) typeList.getSelection()).getFirstElement() ;
+                final String newOption = generateLiteral(type) ;
                 type.getLiterals().add(newOption) ;
                 optionsList.refresh();
                 optionsList.editElement(newOption, 0) ;
@@ -174,15 +174,15 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
         upButton.setText(Messages.up) ;
         upButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                int sel = optionsList.getTable().getSelectionIndex();
+            public void widgetSelected(final SelectionEvent e) {
+                final int sel = optionsList.getTable().getSelectionIndex();
                 getShell().setFocus();
                 optionsList.getTable().setFocus();
                 optionsList.getTable().select(sel);
-                EnumType enumType = (EnumType)((IStructuredSelection) typeList.getSelection()).getFirstElement();
-                String selected = (String) ((StructuredSelection) optionsList.getSelection()).getFirstElement();
+                final EnumType enumType = (EnumType)((IStructuredSelection) typeList.getSelection()).getFirstElement();
+                final String selected = (String) ((StructuredSelection) optionsList.getSelection()).getFirstElement();
                 if (selected != null) {
-                    int i = enumType.getLiterals().indexOf(selected);
+                    final int i = enumType.getLiterals().indexOf(selected);
                     if (i > 0) {
                         ((EDataTypeUniqueEList<String>) enumType.getLiterals()).move(i - 1, selected);
                         optionsList.refresh();
@@ -197,15 +197,15 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
         downButton.setText(Messages.down) ;
         downButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                int sel = optionsList.getTable().getSelectionIndex();
+            public void widgetSelected(final SelectionEvent e) {
+                final int sel = optionsList.getTable().getSelectionIndex();
                 getShell().setFocus();
                 optionsList.getTable().setFocus();
                 optionsList.getTable().select(sel);
-                EnumType enumType = (EnumType)((IStructuredSelection) typeList.getSelection()).getFirstElement();
-                String selected = (String) ((StructuredSelection) optionsList.getSelection()).getFirstElement();
+                final EnumType enumType = (EnumType)((IStructuredSelection) typeList.getSelection()).getFirstElement();
+                final String selected = (String) ((StructuredSelection) optionsList.getSelection()).getFirstElement();
                 if (selected != null) {
-                    int i = enumType.getLiterals().indexOf(selected);
+                    final int i = enumType.getLiterals().indexOf(selected);
                     if (i < enumType.getLiterals().size() - 1) {
                         ((EDataTypeUniqueEList<String>) enumType.getLiterals()).move(i + 1, selected);
                         optionsList.refresh();
@@ -221,9 +221,9 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
         removeOptionButton.setText(Messages.removeLiteralLabel) ;
         removeOptionButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                EnumType type = (EnumType) ((IStructuredSelection) typeList.getSelection()).getFirstElement() ;
-                String literal = (String) ((IStructuredSelection) optionsList.getSelection()).getFirstElement() ;
+            public void widgetSelected(final SelectionEvent e) {
+                final EnumType type = (EnumType) ((IStructuredSelection) typeList.getSelection()).getFirstElement() ;
+                final String literal = (String) ((IStructuredSelection) optionsList.getSelection()).getFirstElement() ;
                 type.getLiterals().remove(literal) ;
                 optionsList.refresh();
             }
@@ -232,9 +232,9 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
     }
 
 
-    private String generateLiteral(EnumType type) {
+    private String generateLiteral(final EnumType type) {
         int cpt = 1 ;
-        for(String e : type.getLiterals()){
+        for(final String e : type.getLiterals()){
             if(e.startsWith(Messages.defaultLiteral)){
                 cpt++;
                 while(e.equals(Messages.defaultLiteral + cpt)){
@@ -245,7 +245,7 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
         return Messages.defaultLiteral + cpt ;
     }
 
-    protected void createEnumTypeTable(Composite parent) {
+    protected void createEnumTypeTable(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
@@ -257,35 +257,35 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
         typeList = new TableViewer(composite,SWT.BORDER | SWT.SINGLE) ;
         typeList.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,true).hint(300, SWT.DEFAULT).create()) ;
         typeList.addSelectionChangedListener(this) ;
-        TableLayout layout = new TableLayout() ;
+        final TableLayout layout = new TableLayout() ;
         layout.addColumnData(new ColumnWeightData(30)) ;
         layout.addColumnData(new ColumnWeightData(70)) ;
         typeList.getTable().setLayout(layout) ;
         typeList.setContentProvider(new ArrayContentProvider()) ;
         typeList.setSorter(new ViewerSorter(){
             @Override
-            public int compare(Viewer viewer, Object e1, Object e2) {
-                EnumType t1 = (EnumType) e1 ;
-                EnumType t2 = (EnumType) e2 ;
+            public int compare(final Viewer viewer, final Object e1, final Object e2) {
+                final EnumType t1 = (EnumType) e1 ;
+                final EnumType t2 = (EnumType) e2 ;
                 return t1.getName().toLowerCase().compareTo(t2.getName().toLowerCase());
             }
         }) ;
 
-        TableViewerColumn columnNameViewer = new TableViewerColumn(typeList,SWT.NONE) ;
+        final TableViewerColumn columnNameViewer = new TableViewerColumn(typeList,SWT.NONE) ;
         columnNameViewer.setEditingSupport(new DataTypeNameEditingSupport(typeList, enumTypes.keySet())) ;
         columnNameViewer.setLabelProvider(new ColumnLabelProvider(){
             @Override
-            public String getText(Object element) {
+            public String getText(final Object element) {
                 return ((DataType)element).getName() ;
             }
         }) ;
         columnNameViewer.getColumn().setText(Messages.name) ;
 
-        TableViewerColumn columnDescriptionViewer = new TableViewerColumn(typeList,SWT.NONE) ;
+        final TableViewerColumn columnDescriptionViewer = new TableViewerColumn(typeList,SWT.NONE) ;
         columnDescriptionViewer.setEditingSupport(new DataTypeDescriptionEditingSupport(typeList)) ;
         columnDescriptionViewer.setLabelProvider(new ColumnLabelProvider(){
             @Override
-            public String getText(Object element) {
+            public String getText(final Object element) {
                 return ((DataType)element).getDocumentation() ;
             }
         }) ;
@@ -304,8 +304,8 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
         addButton.setText(Messages.Add) ;
         addButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                EnumType newType = ProcessFactory.eINSTANCE.createEnumType() ;
+            public void widgetSelected(final SelectionEvent e) {
+                final EnumType newType = ProcessFactory.eINSTANCE.createEnumType() ;
                 newType.setName(generateTypeName()) ;
                 enumTypes.put(newType,null) ;
                 typeList.setInput(enumTypes.keySet()) ;
@@ -318,8 +318,8 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
         removeButton.setText(Messages.removeLiteralLabel) ;
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                IStructuredSelection selection = (IStructuredSelection) typeList.getSelection() ;
+            public void widgetSelected(final SelectionEvent e) {
+                final IStructuredSelection selection = (IStructuredSelection) typeList.getSelection() ;
                 enumTypes.remove(selection.getFirstElement());
                 typeList.setInput(enumTypes.keySet()) ;
                 typeList.setSelection(new StructuredSelection()) ;
@@ -332,29 +332,29 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
         getShell().setFocus();
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(mainProc) ;
 
-        for(EnumType orignialType : ModelHelper.getAllUserDatatype(mainProc)){
+        for(final EnumType orignialType : ModelHelper.getAllUserDatatype(mainProc)){
             if(!enumTypes.values().contains(orignialType)){
                 editingDomain.getCommandStack().execute(RemoveCommand.create(editingDomain, mainProc, ProcessPackage.Literals.ABSTRACT_PROCESS__DATATYPES, orignialType)) ;
             }
         }
 
-        for(Entry<EnumType,EnumType> type : enumTypes.entrySet()){
-            EnumType workingCopy = type.getKey() ;
-            EnumType existingCopy = type.getValue() ;
+        for(final Entry<EnumType,EnumType> type : enumTypes.entrySet()){
+            final EnumType workingCopy = type.getKey() ;
+            final EnumType existingCopy = type.getValue() ;
 
             if(existingCopy == null){//New Type
                 editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, mainProc, ProcessPackage.Literals.ABSTRACT_PROCESS__DATATYPES, workingCopy)) ;
             }else{ //Update Type
-                CompoundCommand cc = new CompoundCommand() ;
+                final CompoundCommand cc = new CompoundCommand() ;
                 cc.append(SetCommand.create(editingDomain, existingCopy, ProcessPackage.Literals.ELEMENT__NAME, workingCopy.getName())) ;
                 cc.append(SetCommand.create(editingDomain, existingCopy, ProcessPackage.Literals.ELEMENT__DOCUMENTATION, workingCopy.getDocumentation())) ;
                 cc.append(SetCommand.create(editingDomain, existingCopy, ProcessPackage.Literals.ENUM_TYPE__LITERALS, workingCopy.getLiterals())) ;
                 editingDomain.getCommandStack().execute(cc) ;
             }
         }
-        EnumType selected = (EnumType) ((IStructuredSelection) typeList.getSelection()).getFirstElement();
+        final EnumType selected = (EnumType) ((IStructuredSelection) typeList.getSelection()).getFirstElement();
         if(selected != null){
-            for(DataType t : mainProc.getDatatypes()){
+            for(final DataType t : mainProc.getDatatypes()){
                 if(t instanceof EnumType && t.getName().equals(selected.getName())){
                     selectedType = (EnumType) t;
                 }
@@ -365,7 +365,7 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
 
     private String generateTypeName() {
         int cpt = 1 ;
-        for(EnumType e : enumTypes.keySet()){
+        for(final EnumType e : enumTypes.keySet()){
             if(e.getName().startsWith(Messages.defaultTypeName)){
                 cpt++;
             }
@@ -374,9 +374,9 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
     }
 
     @Override
-    public void selectionChanged(SelectionChangedEvent event) {
+    public void selectionChanged(final SelectionChangedEvent event) {
         if(!event.getSelection().isEmpty()){
-            EnumType enumType = (EnumType)((IStructuredSelection) event.getSelection()).getFirstElement();
+            final EnumType enumType = (EnumType)((IStructuredSelection) event.getSelection()).getFirstElement();
             optionsList.setInput(enumType.getLiterals()) ;
             literalEditingSupport.setEnumType(enumType) ;
         }else{
@@ -386,20 +386,16 @@ public class EnumDataTypeDialog extends Dialog implements ISelectionChangedListe
     }
 
     private void updateButtons() {
-        if(removeButton != null && !removeButton.isDisposed()){
-            removeButton.setEnabled(!typeList.getSelection().isEmpty()) ;
-        }
-        if(addOptionButton != null && !addOptionButton.isDisposed()){
-            addOptionButton.setEnabled(!typeList.getSelection().isEmpty()) ;
-        }
-        if(removeOptionButton != null && !removeOptionButton.isDisposed()){
-            removeOptionButton.setEnabled(!optionsList.getSelection().isEmpty()) ;
-        }
-        if(downButton != null && !downButton.isDisposed()){
-            downButton.setEnabled(!optionsList.getSelection().isEmpty()) ;
-        }
-        if(upButton != null && !upButton.isDisposed()){
-            upButton.setEnabled(!optionsList.getSelection().isEmpty()) ;
+        updateButtonEnablementReversedToEmptinessOfList(removeButton, typeList);
+        updateButtonEnablementReversedToEmptinessOfList(addOptionButton, typeList);
+        updateButtonEnablementReversedToEmptinessOfList(removeOptionButton, optionsList);
+        updateButtonEnablementReversedToEmptinessOfList(downButton, optionsList);
+        updateButtonEnablementReversedToEmptinessOfList(upButton, optionsList);
+    }
+
+    protected void updateButtonEnablementReversedToEmptinessOfList(final Button button, final TableViewer list) {
+        if (button != null && !button.isDisposed()) {
+            button.setEnabled(!list.getSelection().isEmpty());
         }
     }
 

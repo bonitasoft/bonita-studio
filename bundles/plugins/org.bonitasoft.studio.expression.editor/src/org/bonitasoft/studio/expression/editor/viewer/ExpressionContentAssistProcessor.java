@@ -47,7 +47,7 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
     private Set<Expression> expressions;
     private final ExpressionLabelProvider labelProvider;
 
-    public ExpressionContentAssistProcessor(IDocument document){
+    public ExpressionContentAssistProcessor(final IDocument document){
         super();
         contextInfoValidator = new ContextInformationValidator(this);
         labelProvider = new ExpressionLabelProvider();
@@ -58,7 +58,7 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
      * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#computeCompletionProposals(org.eclipse.jface.text.ITextViewer, int)
      */
     @Override
-    public ICompletionProposal[] computeCompletionProposals(ITextViewer textViewer, int documentOffset) {
+    public ICompletionProposal[] computeCompletionProposals(final ITextViewer textViewer, final int documentOffset) {
         if(expressions == null){
             return new ICompletionProposal[0];
         }
@@ -70,11 +70,11 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
     }
 
 
-    private ICompletionProposal[] buildProposals(Set<Expression> expressions, int offset, ITextViewer textViewer) {
-        List<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
-        List<Expression> sortedExpressions = new ArrayList<Expression>(expressions);
+    private ICompletionProposal[] buildProposals(final Set<Expression> expressions, final int offset, final ITextViewer textViewer) {
+        final List<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
+        final List<Expression> sortedExpressions = new ArrayList<Expression>(expressions);
         Collections.sort(sortedExpressions,new ExpressionComparator());
-        String content = textViewer.getDocument().get();
+        final String content = textViewer.getDocument().get();
         boolean showAllProposals = false;
         if(offset == 0 || !Character.isLetterOrDigit(content.charAt(offset-1))){
             showAllProposals = true ;
@@ -89,7 +89,7 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
                 previousString.append(content.charAt(i));
             }
         }
-        for (Expression expression : sortedExpressions) {
+        for (final Expression expression : sortedExpressions) {
             if(isSupportedType(expression.getType())){
                 if(!showAllProposals && expression.getName().startsWith(previousString.toString())){
                     final String pContent = expression.getName();
@@ -104,13 +104,14 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
         return proposals.toArray(new ICompletionProposal[proposals.size()]);
     }
 
-    protected String addDelimiters(String pContent) {
+    protected String addDelimiters(final String pContent) {
 		return DEL_PREFIX + pContent + DEL_SUFFIX;
 	}
 
 
-	private boolean isSupportedType(String type) {
-        return ExpressionConstants.VARIABLE_TYPE.equals(type) || ExpressionConstants.PARAMETER_TYPE.equals(type) || ExpressionConstants.FORM_FIELD_TYPE.equals(type);
+	private boolean isSupportedType(final String type) {
+        return ExpressionConstants.VARIABLE_TYPE.equals(type) || ExpressionConstants.PARAMETER_TYPE.equals(type)
+                || ExpressionConstants.FORM_FIELD_TYPE.equals(type) || ExpressionConstants.CONTRACT_INPUT_TYPE.equals(type);
     }
 
 
@@ -118,7 +119,7 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
      * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#computeContextInformation(org.eclipse.jface.text.ITextViewer, int)
      */
     @Override
-    public IContextInformation[] computeContextInformation(ITextViewer arg0, int arg1) {
+    public IContextInformation[] computeContextInformation(final ITextViewer arg0, final int arg1) {
         return null;
     }
 
@@ -155,7 +156,7 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
     }
 
 
-    public void setExpressions(Set<Expression> expressions) {
+    public void setExpressions(final Set<Expression> expressions) {
         this.expressions = expressions ;
     }
 

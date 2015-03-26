@@ -8757,5 +8757,978 @@
           featureName="eType" referenceValue="expression.ecore#//Expression" oldReferenceValue="process.ecore#//Data"/>
     </changes>
   </releases>
+  <releases date="2015-02-27T14:49:24.161+0100" label="7.0.0-001">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.contract.CreateContractCustomMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+            element="process.ecore#//Contract">
+          <changes xsi:type="history:Set" element="process.ecore#//Contract" featureName="name"
+              dataValue="Contract"/>
+        </changes>
+        <operation name="newClass">
+          <parameters name="ePackage">
+            <referenceValue element="process.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>Contract</dataValue>
+          </parameters>
+          <parameters name="superClasses"/>
+          <parameters name="abstr">
+            <dataValue>false</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+            element="process.ecore#//ContractInput">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput"
+              featureName="name" dataValue="ContractInput"/>
+        </changes>
+        <operation name="newClass">
+          <parameters name="ePackage">
+            <referenceValue element="process.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>ContractInput</dataValue>
+          </parameters>
+          <parameters name="superClasses"/>
+          <parameters name="abstr">
+            <dataValue>false</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+            element="process.ecore#//ContractConstraint">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractConstraint"
+              featureName="name" dataValue="ContractConstraint"/>
+        </changes>
+        <operation name="newClass">
+          <parameters name="ePackage">
+            <referenceValue element="process.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>ContractConstraint</dataValue>
+          </parameters>
+          <parameters name="superClasses"/>
+          <parameters name="abstr">
+            <dataValue>false</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+            element="process.ecore#//ContractInputType">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType"
+              featureName="name" dataValue="ContractInputType"/>
+        </changes>
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInputType"
+            referenceName="eLiterals" element="process.ecore#//ContractInputType/TEXT">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/TEXT"
+              featureName="name" dataValue="TEXT"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/TEXT"
+              featureName="literal" dataValue="TEXT"/>
+        </changes>
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInputType"
+            referenceName="eLiterals" element="process.ecore#//ContractInputType/INTEGER">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/INTEGER"
+              featureName="name" dataValue="INTEGER"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/INTEGER"
+              featureName="literal" dataValue="INTEGER"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/INTEGER"
+              featureName="value" dataValue="1" oldDataValue="0"/>
+        </changes>
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInputType"
+            referenceName="eLiterals" element="process.ecore#//ContractInputType/DECIMAL">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/DECIMAL"
+              featureName="name" dataValue="DECIMAL"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/DECIMAL"
+              featureName="literal" dataValue="DECIMAL"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/DECIMAL"
+              featureName="value" dataValue="2" oldDataValue="0"/>
+        </changes>
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInputType"
+            referenceName="eLiterals" element="process.ecore#//ContractInputType/BOOLEAN">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/BOOLEAN"
+              featureName="name" dataValue="BOOLEAN"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/BOOLEAN"
+              featureName="literal" dataValue="BOOLEAN"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/BOOLEAN"
+              featureName="value" dataValue="3" oldDataValue="0"/>
+        </changes>
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInputType"
+            referenceName="eLiterals" element="process.ecore#//ContractInputType/DATE">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/DATE"
+              featureName="name" dataValue="DATE"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/DATE"
+              featureName="literal" dataValue="DATE"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/DATE"
+              featureName="value" dataValue="4" oldDataValue="0"/>
+        </changes>
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInputType"
+            referenceName="eLiterals" element="process.ecore#//ContractInputType/COMPLEX">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/COMPLEX"
+              featureName="value" dataValue="5" oldDataValue="0"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/COMPLEX"
+              featureName="name" dataValue="Complex"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/COMPLEX"
+              featureName="literal" dataValue="COMPLEX"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/COMPLEX"
+              featureName="name" dataValue="COMPLEX" oldDataValue="Complex"/>
+        </changes>
+        <operation name="createEnumeration">
+          <parameters name="ePackage">
+            <referenceValue element="process.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>ContractInputType</dataValue>
+          </parameters>
+          <parameters name="literals">
+            <dataValue>TEXT</dataValue>
+            <dataValue>INTEGER</dataValue>
+            <dataValue>DECIMAL</dataValue>
+            <dataValue>BOOLEAN</dataValue>
+            <dataValue>DATE</dataValue>
+            <dataValue>COMPLEX</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInput"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractInput/name">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/name"
+              featureName="name" dataValue="name"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/name"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractInput"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>name</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInput"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractInput/type">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/type"
+              featureName="name" dataValue="type"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/type"
+              featureName="eType" referenceValue="process.ecore#//ContractInputType"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractInput"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>type</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//ContractInputType"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInput"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractInput/description">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/description"
+              featureName="name" dataValue="description"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/description"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractInput"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>description</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//Contract" referenceName="eStructuralFeatures"
+            element="process.ecore#//Contract/inputs">
+          <changes xsi:type="history:Set" element="process.ecore#//Contract/inputs"
+              featureName="name" dataValue="inputs"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Contract/inputs"
+              featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Contract/inputs"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Contract/inputs"
+              featureName="eType" referenceValue="process.ecore#//ContractInput"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//Contract"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>inputs</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//ContractInput"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>-1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//Contract" referenceName="eStructuralFeatures"
+            element="process.ecore#//Contract/constraints">
+          <changes xsi:type="history:Set" element="process.ecore#//Contract/constraints"
+              featureName="name" dataValue="constraints"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Contract/constraints"
+              featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Contract/constraints"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Contract/constraints"
+              featureName="eType" referenceValue="process.ecore#//ContractConstraint"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//Contract"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>constraints</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//ContractConstraint"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>-1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractConstraint"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractConstraint/expression">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractConstraint/expression"
+              featureName="name" dataValue="expression"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractConstraint/expression"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractConstraint"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>expression</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractConstraint"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractConstraint/errorMessage">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractConstraint/errorMessage"
+              featureName="name" dataValue="errorMessage"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractConstraint/errorMessage"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractConstraint"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>errorMessage</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractConstraint"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractConstraint/inputNames">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractConstraint/inputNames"
+              featureName="name" dataValue="inputNames"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractConstraint/inputNames"
+              featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractConstraint/inputNames"
+              featureName="defaultValueLiteral" dataValue=""/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractConstraint/inputNames"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractConstraint"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>inputNames</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>-1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue></dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//Task" referenceName="eStructuralFeatures"
+            element="process.ecore#//ContractContainer/contract">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractContainer/contract"
+              featureName="name" dataValue="contract"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractContainer/contract"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractContainer/contract"
+              featureName="eType" referenceValue="process.ecore#//Contract"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//Task"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>contract</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//Contract"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInput"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractInput/multiple">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/multiple"
+              featureName="name" dataValue="multiple"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/multiple"
+              featureName="defaultValueLiteral" dataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/multiple"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractInput"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>multiple</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue>false</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInput"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractInput/mandatory">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/mandatory"
+              featureName="name" dataValue="mandatory"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/mandatory"
+              featureName="defaultValueLiteral" dataValue="true"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/mandatory"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractInput"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>mandatory</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue>true</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+            element="process.ecore#//ContractInputMapping">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputMapping"
+              featureName="name" dataValue="ContractInputMapping"/>
+        </changes>
+        <operation name="newClass">
+          <parameters name="ePackage">
+            <referenceValue element="process.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>ContractInputMapping</dataValue>
+          </parameters>
+          <parameters name="superClasses"/>
+          <parameters name="abstr">
+            <dataValue>false</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInputMapping"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractInputMapping/data">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputMapping/data"
+              featureName="name" dataValue="data"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputMapping/data"
+              featureName="eType" referenceValue="process.ecore#//Data"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractInputMapping"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>data</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//Data"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>false</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInputMapping"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractInputMapping/setterName">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputMapping/setterName"
+              featureName="name" dataValue="path"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputMapping/setterName"
+              featureName="name" dataValue="setterName" oldDataValue="path"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputMapping/setterName"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractInputMapping"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>path</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInput"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractInput/mapping">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/mapping"
+              featureName="name" dataValue="mapping"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/mapping"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/mapping"
+              featureName="eType" referenceValue="process.ecore#//ContractInputMapping"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractInput"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>mapping</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//ContractInputMapping"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInputMapping"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractInputMapping/setterParamType">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputMapping/setterParamType"
+              featureName="name" dataValue="setterParamType"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInputMapping/setterParamType"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractInputMapping"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>setterParamType</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractConstraint"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractConstraint/name">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractConstraint/name"
+              featureName="name" dataValue="name"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractConstraint/name"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractConstraint"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>name</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractInput"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractInput/inputs">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/inputs"
+              featureName="name" dataValue="inputs"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/inputs"
+              featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/inputs"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/inputs"
+              featureName="eType" referenceValue="process.ecore#//ContractInput"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractInput"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>inputs</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//ContractInput"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>-1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+    </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FormMappingCustomMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+            element="process.ecore#//FormMapping">
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping" featureName="name"
+              dataValue="FormMapping"/>
+        </changes>
+        <operation name="newClass">
+          <parameters name="ePackage">
+            <referenceValue element="process.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>FormMapping</dataValue>
+          </parameters>
+          <parameters name="superClasses"/>
+          <parameters name="abstr">
+            <dataValue>false</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//FormMapping" referenceName="eStructuralFeatures"
+            element="process.ecore#//FormMapping/targetForm">
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/targetForm"
+              featureName="name" dataValue="targetForm"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/targetForm"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/targetForm"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//FormMapping"/>
+            <referenceValue element="process.ecore#//FormMapping"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>targetForm</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//FormMapping" referenceName="eStructuralFeatures"
+            element="process.ecore#//FormMapping/type">
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/type"
+              featureName="name" dataValue="external"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/type"
+              featureName="defaultValueLiteral" dataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/type"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//FormMapping"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>external</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue>false</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//FormMapping" referenceName="eStructuralFeatures"
+            element="process.ecore#//FormMapping/url">
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/url"
+              featureName="name" dataValue="url"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMapping/url"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//FormMapping"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>url</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
+            element="process.ecore#//PageFlow/formMapping">
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/formMapping"
+              featureName="name" dataValue="formMapping"/>
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/formMapping"
+              featureName="eType" referenceValue="process.ecore#//FormMapping"/>
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/formMapping"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//PageFlow"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>formMapping</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//FormMapping"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//RecapFlow" referenceName="eStructuralFeatures"
+            element="process.ecore#//RecapFlow/overviewFormMapping">
+          <changes xsi:type="history:Set" element="process.ecore#//RecapFlow/overviewFormMapping"
+              featureName="name" dataValue="overviewFormMapping"/>
+          <changes xsi:type="history:Set" element="process.ecore#//RecapFlow/overviewFormMapping"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//RecapFlow/overviewFormMapping"
+              featureName="eType" referenceValue="process.ecore#//FormMapping"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//RecapFlow"/>
+            <referenceValue element="process.ecore#//RecapFlow"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>overviewFormMapping</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//FormMapping"/>
+            <referenceValue element="process.ecore#//FormMapping"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+            element="process.ecore#//FormMappingType">
+          <changes xsi:type="history:Set" element="process.ecore#//FormMappingType"
+              featureName="name" dataValue="FormMappingType"/>
+        </changes>
+        <changes xsi:type="history:Create" target="process.ecore#//FormMappingType"
+            referenceName="eLiterals" element="process.ecore#//FormMappingType/INTERNAL">
+          <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/INTERNAL"
+              featureName="name" dataValue="INTERNAL"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/INTERNAL"
+              featureName="literal" dataValue="INTERNAL"/>
+        </changes>
+        <changes xsi:type="history:Create" target="process.ecore#//FormMappingType"
+            referenceName="eLiterals" element="process.ecore#//FormMappingType/URL">
+          <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/URL"
+              featureName="name" dataValue="URL"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/URL"
+              featureName="literal" dataValue="URL"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/URL"
+              featureName="value" dataValue="1" oldDataValue="0"/>
+        </changes>
+        <changes xsi:type="history:Create" target="process.ecore#//FormMappingType"
+            referenceName="eLiterals" element="process.ecore#//FormMappingType/LEGACY">
+          <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/LEGACY"
+              featureName="name" dataValue="LEGACY"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/LEGACY"
+              featureName="literal" dataValue="LEGACY"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/LEGACY"
+              featureName="value" dataValue="2" oldDataValue="0"/>
+        </changes>
+        <operation name="createEnumeration">
+          <parameters name="ePackage">
+            <referenceValue element="process.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>FormMappingType</dataValue>
+          </parameters>
+          <parameters name="literals">
+            <dataValue>INTERNAL</dataValue>
+            <dataValue>URL</dataValue>
+            <dataValue>LEGACY</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Set" element="process.ecore#//FormMapping/type"
+            featureName="name" dataValue="type" oldDataValue="external"/>
+        <operation name="rename">
+          <parameters name="element">
+            <referenceValue element="process.ecore#//FormMapping/type"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>type</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Set" element="process.ecore#//FormMapping/type"
+            featureName="eType" referenceValue="process.ecore#//FormMappingType" oldReferenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        <changes xsi:type="history:Set" element="process.ecore#//FormMapping/type"
+            featureName="defaultValueLiteral" dataValue="INTERNAL" oldDataValue="false"/>
+        <operation name="changeAttributeType">
+          <parameters name="attribute">
+            <referenceValue element="process.ecore#//FormMapping/type"/>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//FormMappingType"/>
+          </parameters>
+        </operation>
+      </changes>
+    </changes>
+  </releases>
+  <releases date="2015-03-17T16:47:07.422+0100" label="7.0.0-002">
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+          element="process.ecore#//ContractContainer">
+        <changes xsi:type="history:Set" element="process.ecore#//ContractContainer"
+            featureName="name" dataValue="ContractContainer"/>
+        <changes xsi:type="history:Set" element="process.ecore#//ContractContainer"
+            featureName="abstract" dataValue="true" oldDataValue="false"/>
+      </changes>
+      <changes xsi:type="history:Add" element="process.ecore#//Task" featureName="eSuperTypes"
+          referenceValue="process.ecore#//ContractContainer"/>
+      <changes xsi:type="history:Move" target="process.ecore#//ContractContainer"
+          referenceName="eStructuralFeatures" element="process.ecore#//ContractContainer/contract"
+          source="process.ecore#//Task"/>
+      <operation name="extractSuperClass2">
+        <parameters name="subClasses">
+          <referenceValue element="process.ecore#//Task"/>
+        </parameters>
+        <parameters name="toExtract">
+          <referenceValue element="process.ecore#//ContractContainer/contract"/>
+        </parameters>
+        <parameters name="ePackage">
+          <referenceValue element="process.ecore#/"/>
+        </parameters>
+        <parameters name="superClassName">
+          <dataValue>ContractContainer</dataValue>
+        </parameters>
+        <parameters name="abstr">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="superSuperClasses"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Add" element="process.ecore#//Pool" featureName="eSuperTypes"
+          referenceValue="process.ecore#//ContractContainer"/>
+    </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.contract.CreatePoolContractCustomMigration"/>
+  </releases>
   <releases/>
 </history:History>
