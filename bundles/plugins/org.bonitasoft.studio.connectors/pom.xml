@@ -285,49 +285,49 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-googlecalendar-createevent-impl</artifactId>
-									<version>1.0.0</version>
+									<version>2.0.0</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-googlecalendar-createeventwithwebcontent-impl</artifactId>
-									<version>1.0.0</version>
+									<version>2.0.0</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-googlecalendar-deleteevents-impl</artifactId>
-									<version>1.0.0</version>
+									<version>2.0.0</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-googlecalendar-deleteeventbylink-impl</artifactId>
-									<version>1.0.0</version>
+									<version>2.0.0</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-googlecalendar-retrieveevent-impl</artifactId>
-									<version>1.0.0</version>
+									<version>2.0.0</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-googlecalendar-retrieveeventsbydaterange-impl</artifactId>
-									<version>1.0.0</version>
+									<version>2.0.0</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-googlecalendar-updateevent-impl</artifactId>
-									<version>1.0.0</version>
+									<version>2.0.0</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
                             	</artifactItem>
