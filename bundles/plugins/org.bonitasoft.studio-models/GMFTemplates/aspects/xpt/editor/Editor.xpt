@@ -247,7 +247,6 @@ public void dispose() {
             if (eventBroker != null) {
                 org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker.stopListening(domain);
             }
-            domain.dispose();
             domain = null;
         }
 	
