@@ -59,8 +59,9 @@ public class OverlapSetBoundsCommand extends SetBoundsCommand {
         final View view = (View) adapter.getAdapter(View.class);
         final Point location = bounds.getLocation();
         if (location != null) {
-            final Point newLoc = location;
+            Point newLoc = location.getCopy();
             if (FiguresHelper.AVOID_OVERLAP_ENABLE) {
+                newLoc = findValidLocation(newLoc);
                 if (!newLoc.equals(handleMargins(newLoc))) { //Still overlapping
                     return CommandResult.newCancelledCommandResult();
                 }
@@ -74,6 +75,16 @@ public class OverlapSetBoundsCommand extends SetBoundsCommand {
             ViewUtil.setStructuralFeatureValue(view, NotationPackage.eINSTANCE.getSize_Height(), Integer.valueOf(size.height));
         }
         return CommandResult.newOKCommandResult();
+    }
+
+    protected Point findValidLocation(Point location) {
+        int retry = 0;
+        do {
+            location = handleMargins(location);
+            retry++;
+        } while (retry < 20);
+
+        return location;
     }
 
     protected Point handleMargins(final Point newLoc) {
