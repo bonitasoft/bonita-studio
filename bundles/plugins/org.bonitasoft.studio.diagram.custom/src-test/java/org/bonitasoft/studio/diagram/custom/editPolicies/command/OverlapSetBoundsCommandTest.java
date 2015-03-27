@@ -40,9 +40,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-/**
- * @author Romain Bioteau
- */
 @RunWith(MockitoJUnitRunner.class)
 public class OverlapSetBoundsCommandTest {
 
@@ -82,7 +79,7 @@ public class OverlapSetBoundsCommandTest {
         //Given
         final Rectangle bounds = new Rectangle(10, 10, 100, 50);
         final OverlapSetBoundsCommand overlapSetBoundsCommand = spy(new OverlapSetBoundsCommand(null, editPart, host, adapter, bounds));
-        doReturn(new Point(10, 15)).when(overlapSetBoundsCommand).handleMargins(bounds.getLocation());
+        doReturn(new Point(10, 15)).when(overlapSetBoundsCommand).findValidLocation(bounds.getLocation());
 
         //When
         final CommandResult commandResult = overlapSetBoundsCommand.doExecuteWithResult(null, null);
