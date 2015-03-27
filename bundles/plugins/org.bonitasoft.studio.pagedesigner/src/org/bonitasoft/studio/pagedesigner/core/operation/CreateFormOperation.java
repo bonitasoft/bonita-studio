@@ -24,6 +24,7 @@ import java.util.Arrays;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.pagedesigner.i18n.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.json.JSONException;
@@ -55,7 +56,7 @@ public class CreateFormOperation implements IRunnableWithProgress {
      */
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.beginTask("Creating a new form...", IProgressMonitor.UNKNOWN);
+        monitor.beginTask(Messages.creatingNewForm, IProgressMonitor.UNKNOWN);
         responseObject = null;
         JSONObject jsonObject;
         try {

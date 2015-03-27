@@ -16,6 +16,7 @@ package org.bonitasoft.studio.pagedesigner.core.expression;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
+import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.pagedesigner.core.operation.CreateFormOperation;
@@ -84,19 +86,49 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
 
     @Test
     public void should_handleEvent_returns_new_pageid_and_open_page_designer_with_new_id() throws Exception {
+        //When
         final String pageId = createNewFormProposal.handleEvent(null, null);
 
+        //Then
         assertThat(pageId).isEqualTo("page-id");
         verify(progressService).busyCursorWhile(any(CreateFormOperation.class));
         verify(formFileStore).open();
     }
 
     @Test
-    public void should_handleEvent_setFormName_on_CreateFormOperation() throws Exception {
+    public void should_set_form_ame_on_CreateFormOperation() throws Exception {
+        //Given
         final Task task = aTask().withName("Step1").havingFormMapping(aFormMapping()).build();
+
+        //When
         createNewFormProposal.handleEvent(task.getFormMapping(), null);
 
+        //Then
         verify(createFormOperation).setFormName("Step1");
+    }
+
+    @Test
+    public void should_prefix_form_name_for_overview_form() throws Exception {
+        //Given
+        final Pool pool = aPool().withName("Pool1").havingOverviewFormMapping(aFormMapping()).build();
+
+        //When
+        createNewFormProposal.handleEvent(pool.getOverviewFormMapping(), null);
+
+        //Then
+        verify(createFormOperation).setFormName("Pool1Overview");
+    }
+
+    @Test
+    public void should_rewrite_form_name_for_names_with_illegal_characters() throws Exception {
+        //Given
+        final Task task = aTask().withName("Step1 & Stép2").havingFormMapping(aFormMapping()).build();
+
+        //When
+        createNewFormProposal.handleEvent(task.getFormMapping(), null);
+
+        //Then
+        verify(createFormOperation).setFormName("Step1___Step2");
     }
 
 }
