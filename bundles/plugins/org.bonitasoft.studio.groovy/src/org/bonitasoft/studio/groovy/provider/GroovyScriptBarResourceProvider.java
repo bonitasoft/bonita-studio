@@ -43,6 +43,7 @@ import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.ICompilationUnit;
 
@@ -81,9 +82,11 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
             final File targetJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), ProvidedGroovyRepositoryStore.EXPORTED_PROVIDED_JAR_NAME);
             final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar, toArray(compilationUnits, ICompilationUnit.class));
             createJarOperation.run(Repository.NULL_PROGRESS_MONITOR);
-            if (createJarOperation.getStatus().isOK()) {
-                builder.addClasspathResource(new BarResource(targetJar.getName(), toByteArray(targetJar)));
+            final IStatus status = createJarOperation.getStatus();
+            if (!status.isOK()) {
+                throw new IOException(status.getMessage(), status.getException());
             }
+            builder.addClasspathResource(new BarResource(targetJar.getName(), toByteArray(targetJar)));
             targetJar.delete();
         }
     }
@@ -97,9 +100,11 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
             final File targetJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), GroovyRepositoryStore.EXPORTED_JAR_NAME);
             final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar, compilationUnits);
             createJarOperation.run(Repository.NULL_PROGRESS_MONITOR);
-            if (createJarOperation.getStatus().isOK()) {
-                builder.addClasspathResource(new BarResource(targetJar.getName(), toByteArray(targetJar)));
+            final IStatus status = createJarOperation.getStatus();
+            if (!status.isOK()) {
+                throw new IOException(status.getMessage(), status.getException());
             }
+            builder.addClasspathResource(new BarResource(targetJar.getName(), toByteArray(targetJar)));
             targetJar.delete();
         }
     }
@@ -113,9 +118,11 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
             final File targetJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), GroovyRepositoryStore.EXPORTED_JAR_NAME);
             final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar, compilationUnits);
             createJarOperation.run(Repository.NULL_PROGRESS_MONITOR);
-            if (createJarOperation.getStatus().isOK()) {
-                builder.addExternalResource(new BarResource(EXTERNAL_LIB_BAR_LOCATION + targetJar.getName(), toByteArray(targetJar)));
+            final IStatus status = createJarOperation.getStatus();
+            if (!status.isOK()) {
+                throw new IOException(status.getMessage(), status.getException());
             }
+            builder.addExternalResource(new BarResource(EXTERNAL_LIB_BAR_LOCATION + targetJar.getName(), toByteArray(targetJar)));
             targetJar.delete();
         }
     }
