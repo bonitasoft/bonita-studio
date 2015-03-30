@@ -18,7 +18,6 @@ import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.gr
 import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
 import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.uniqueValidator;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import org.bonitasoft.studio.common.DataUtil;
@@ -143,8 +142,6 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
             return true;
         }
     }
-
-    private final MutexRule mutexRule = new MutexRule();
 
     private EMFDataBindingContext context;
 
@@ -626,12 +623,10 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         expressionReturnTypeDetailValue = EMFEditWithRefactorObservables.observeDetailValueWithRefactor(Realm.getDefault(), iteratorObservable,
                 ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
 
-
         final ISWTObservableValue observeinstanceDataNameText = SWTObservables.observeText(instanceDataNameText, SWT.Modify);
         final ISWTObservableValue observeDelayedValue = SWTObservables.observeDelayedValue(200, observeinstanceDataNameText);
         context.bindValue(observeDelayedValue, expressionNameDetailValue,
                 refactorNameStrategy(expressionNameDetailValue, iteratorObservable), null);
-
 
         final MultiValidator groovyReferenceValidatorStatusProvider = new MultiValidator() {
 
@@ -648,18 +643,18 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         ControlDecorationSupport.create(groovyReferenceValidatorStatusProvider, SWT.LEFT, iteratorComposite.getParent(),
                 new ControlDecorationUpdater() {
 
-            @Override
-            protected void update(final ControlDecoration decoration, final IStatus status) {
-                if (status.isOK()) {
-                    ieratorLabelDecoration.show();
-                } else {
-                    ieratorLabelDecoration.hide();
-                }
-                decoration.setMarginWidth(2);
-                super.update(decoration, status);
-            }
+                    @Override
+                    protected void update(final ControlDecoration decoration, final IStatus status) {
+                        if (status.isOK()) {
+                            ieratorLabelDecoration.show();
+                        } else {
+                            ieratorLabelDecoration.hide();
+                        }
+                        decoration.setMarginWidth(2);
+                        super.update(decoration, status);
+                    }
 
-        });
+                });
 
         final Label iteratorTypeLabel = widgetFactory.createLabel(iteratorComposite, Messages.type + " *");
         iteratorTypeLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
@@ -705,7 +700,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
     }
 
     private Iterable<?> visibleData() {
-        return ModelHelper.getAccessibleData(ModelHelper.getParentPool(getEObject()));
+        return ModelHelper.getAccessibleData(ModelHelper.getParentProcess(getEObject()));
     }
 
     private UpdateValueStrategy refactorReturnTypeStrategy(final IObservableValue expressionReturnTypeDetailValue, final IObservableValue iteratorObservable) {
@@ -780,7 +775,6 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
     /**
      * @param classText
      */
-    @SuppressWarnings("restriction")
     private String openClassSelectionDialog() {
         final JavaSearchScope scope = new JavaSearchScope();
         try {

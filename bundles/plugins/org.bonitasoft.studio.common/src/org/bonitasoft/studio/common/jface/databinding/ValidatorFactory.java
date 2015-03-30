@@ -21,7 +21,6 @@ import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInpu
 import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.UniqueValidator;
 import org.eclipse.core.databinding.validation.IValidator;
-// github.com/bonitasoft/bonita-studio.git
 
 /**
  * @author Romain Bioteau
