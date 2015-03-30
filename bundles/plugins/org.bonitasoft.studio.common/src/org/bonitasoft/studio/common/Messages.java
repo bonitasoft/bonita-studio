@@ -18,7 +18,6 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Mickael Istria
- *
  */
 public class Messages extends NLS {
 
@@ -352,5 +351,7 @@ public class Messages extends NLS {
     public static String endWarningMessage;
     public static String createVariable;
     public static String createAndNewButton;
+
+    public static String unicityErrorMessage;
 
 }
