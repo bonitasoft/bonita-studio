@@ -28,9 +28,9 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.data.operation.RefactorDataOperation;
-import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
@@ -202,19 +202,17 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
     protected void refreshXtextReferences() {
         try {
             RepositoryManager.getInstance().getCurrentRepository().getProject()
-            .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
+                    .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
         }
     }
 
     protected RefactorDataOperation createRefactorOperation(final TransactionalEditingDomain editingDomain, final Data workingCopy) {
-        final AbstractProcess process = ModelHelper.getParentProcess(container);
         final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
         op.setEditingDomain(editingDomain);
-        op.setContainer(process);
         op.addItemToRefactor(workingCopy, originalData);
-        op.setDirectDataContainer(container);
+        op.setDataContainer((DataAware) container);
         op.setDataContainmentFeature(dataContainmentFeature);
         op.setAskConfirmation(true);
         return op;

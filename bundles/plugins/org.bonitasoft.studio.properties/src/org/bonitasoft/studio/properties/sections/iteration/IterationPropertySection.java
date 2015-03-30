@@ -730,7 +730,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
     protected CompoundCommand getRefactorCommand(final Data oldItem, final Data newItem, final MultiInstantiable container) {
         final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
-        op.setContainer((DataAware) container);
+        op.setDataContainer((DataAware) container);
         op.addItemToRefactor(newItem, oldItem);
         op.setEditingDomain(getEditingDomain());
         try {

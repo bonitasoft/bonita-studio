@@ -205,7 +205,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
         }
     }
 
-    public void setContainer(final DataAware dataContainer) {
+    public void setDataContainer(final DataAware dataContainer) {
         this.dataContainer = dataContainer;
     }
 
