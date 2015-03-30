@@ -16,6 +16,8 @@ package org.bonitasoft.studio.properties.sections.iteration;
 
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.groovyReferenceValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.uniqueValidator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
@@ -38,6 +40,7 @@ import org.bonitasoft.studio.groovy.DisplayEngineExpressionWithName;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -604,9 +607,13 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
             @Override
             protected IStatus validate() {
-                return groovyReferenceValidator(Messages.iterator, true, true).validate(observeDelayedValue.getValue());
+                return multiValidator()
+                        .addValidator(groovyReferenceValidator(Messages.iterator, true, true))
+                        .addValidator(uniqueValidator().in(visibleData()).onProperty("name").create()).create()
+                        .validate(observeDelayedValue.getValue());
             }
         };
+
         context.addValidationStatusProvider(groovyReferenceValidatorStatusProvider);
         ControlDecorationSupport.create(groovyReferenceValidatorStatusProvider, SWT.LEFT, iteratorComposite.getParent(),
                 new ControlDecorationUpdater() {
@@ -667,6 +674,10 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
     }
 
+    private Iterable<?> visibleData() {
+        return ModelHelper.getAccessibleData(ModelHelper.getParentProcess(getEObject()));
+    }
+
     private UpdateValueStrategy refactorReturnTypeStrategy(final IObservableValue expressionReturnTypeDetailValue, final IObservableValue iteratorObservable) {
         final UpdateValueStrategy strategy = new UpdateValueStrategy();
         strategy.setConverter(new Converter(String.class, String.class) {
@@ -719,7 +730,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
     protected CompoundCommand getRefactorCommand(final Data oldItem, final Data newItem, final MultiInstantiable container) {
         final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
-        op.setContainer(ModelHelper.getParentProcess(container));
+        op.setContainer((DataAware) container);
         op.addItemToRefactor(newItem, oldItem);
         op.setEditingDomain(getEditingDomain());
         try {

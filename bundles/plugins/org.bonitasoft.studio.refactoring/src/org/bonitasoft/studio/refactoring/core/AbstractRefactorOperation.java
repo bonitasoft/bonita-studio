@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -54,9 +52,8 @@ import org.eclipse.text.edits.MultiTextEdit;
 
 /**
  * @author Romain Bioteau
- *
  */
-public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>> implements IRunnableWithProgress {
+public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, Z>> implements IRunnableWithProgress {
 
     private static final int MIN_MONITOR_WORK = 3;
     private TransactionalEditingDomain domain;
@@ -119,7 +116,7 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
 
     protected void updateReferencesInScripts(final IProgressMonitor monitor) throws InterruptedException {
         final Set<Expression> scriptExpressionsSetToRefactor = new HashSet<Expression>();
-        for(final RefactorPair<Y,Z> pairRefactor : pairsToRefactor){
+        for (final RefactorPair<Y, Z> pairRefactor : pairsToRefactor) {
             if (shouldUpdateReferencesInScripts(pairRefactor)) {
                 final Z oldValue = pairRefactor.getOldValue();
                 if (oldValue instanceof EObject) {
@@ -172,7 +169,7 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
                 newExpr.setContent(performGroovyRefactoring(expr.getContent()));
             } else {
                 String textRefactored = expr.getContent();
-                for(final RefactorPair<Y, Z> pairToRefactor : pairsToRefactor){
+                for (final RefactorPair<Y, Z> pairToRefactor : pairsToRefactor) {
                     textRefactored = performTextReplacement(pairToRefactor.getOldValueName(), pairToRefactor.getNewValueName(), textRefactored);
                 }
                 newExpr.setContent(textRefactored);
@@ -234,7 +231,7 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
         if (astNode != null) {
             final ProcessVariableRenamer variableRenamer = new ProcessVariableRenamer();
             final Map<String, String> variableToRename = new HashMap<String, String>();
-            for(final RefactorPair<Y,Z> pairToRefactor : pairsToRefactor){
+            for (final RefactorPair<Y, Z> pairToRefactor : pairsToRefactor) {
                 variableToRename.put(pairToRefactor.getOldValueName(), pairToRefactor.getNewValueName());
             }
             final MultiTextEdit rename = variableRenamer.rename(astNode, variableToRename);
@@ -259,7 +256,9 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
 
     protected void forceDelete(final GroovyCompilationUnit compilationUnit) {
         try {
-            compilationUnit.delete(true, new NullProgressMonitor());
+            if (compilationUnit.exists()) {
+                compilationUnit.delete(true, new NullProgressMonitor());
+            }
         } catch (final JavaModelException e) {
             BonitaStudioLog.error(e);
         }
@@ -277,7 +276,7 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
      * if you are using it surely means that you are doing things in several transactions
      * and it is bad as it breaks undo/redo
      */
-    @Deprecated ()
+    @Deprecated()
     public void setCompoundCommand(final CompoundCommand compoundCommand) {
         this.compoundCommand = compoundCommand;
     }
@@ -317,6 +316,5 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
     protected void setCancelled(final boolean isCancelled) {
         this.isCancelled = isCancelled;
     }
-
 
 }
