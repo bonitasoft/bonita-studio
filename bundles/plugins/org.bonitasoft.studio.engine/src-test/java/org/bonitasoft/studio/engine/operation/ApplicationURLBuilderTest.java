@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 import java.net.URL;
 import java.net.URLEncoder;
@@ -50,12 +51,10 @@ public class ApplicationURLBuilderTest {
         final AbstractProcess process = ProcessFactory.eINSTANCE.createPool();
         process.setName("testPool");
         process.setVersion("1.0");
-        final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
         applicationURLBuilder = spy(new ApplicationURLBuilder(process, ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION));
         doReturn("fr").when(applicationURLBuilder).getWebLocale();
         doReturn("william.jobs").when(applicationURLBuilder).getDefaultUsername();
         doReturn("bpm").when(applicationURLBuilder).getDefaultPassword();
-        doReturn(configuration).when(applicationURLBuilder).getConfiguration();
         loginURL = "http://fakeLoginURL";
         doReturn(loginURL).when(applicationURLBuilder).buildLoginUrl(anyString(),anyString());
     }
@@ -65,11 +64,34 @@ public class ApplicationURLBuilderTest {
      */
     @Test
     public void shouldToURL_RetursAValidURL() throws Exception {
+        final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
+        doReturn(configuration).when(applicationURLBuilder).getConfiguration();
+
         final URL url = applicationURLBuilder.toURL(Repository.NULL_PROGRESS_MONITOR);
         assertThat(url).isNotNull();
         final String validApplicationPath = URLEncoder.encode("portal/form/","UTF-8");
         final String validProcessReference = URLEncoder.encode("testPool/1.0","UTF-8");
         final String validLocale = URLEncoder.encode("locale=fr","UTF-8");
+        assertThat(url.toString()).contains(validApplicationPath).contains(validProcessReference).contains(validLocale).startsWith(loginURL);
+        verify(applicationURLBuilder).buildLoginUrl("william.jobs", "bpm");
+    }
+
+    /**
+     * Test method for {@link org.bonitasoft.studio.engine.operation.ApplicationURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}.
+     */
+    @Test
+    public void shouldToURL_RetursAValidURLForSpecifConf() throws Exception {
+        final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
+        configuration.setUsername("userInAconf");
+        configuration.setPassword("passwordInCOnf");
+        doReturn(configuration).when(applicationURLBuilder).getConfiguration();
+
+        final URL url = applicationURLBuilder.toURL(Repository.NULL_PROGRESS_MONITOR);
+        assertThat(url).isNotNull();
+        final String validApplicationPath = URLEncoder.encode("portal/form/", "UTF-8");
+        final String validProcessReference = URLEncoder.encode("testPool/1.0", "UTF-8");
+        final String validLocale = URLEncoder.encode("locale=fr", "UTF-8");
+        verify(applicationURLBuilder).buildLoginUrl("userInAconf", "passwordInCOnf");
         assertThat(url.toString()).contains(validApplicationPath).contains(validProcessReference).contains(validLocale).startsWith(loginURL);
     }
 
