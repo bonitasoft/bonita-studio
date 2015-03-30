@@ -1,18 +1,16 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 BonitaSoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.form.preview;
@@ -22,6 +20,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Collections;
@@ -38,8 +37,14 @@ import org.bonitasoft.engine.bpm.process.ProcessDefinition;
 import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoCriterion;
+import org.bonitasoft.engine.bpm.process.ProcessExecutionException;
 import org.bonitasoft.engine.bpm.process.ProcessInstance;
+import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.DeletionException;
+import org.bonitasoft.engine.exception.ServerAPIException;
+import org.bonitasoft.engine.exception.UnknownAPITypeException;
+import org.bonitasoft.engine.exception.UpdateException;
+import org.bonitasoft.engine.identity.UserNotFoundException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
@@ -59,7 +64,6 @@ import org.bonitasoft.studio.engine.operation.ApplicationURLBuilder;
 import org.bonitasoft.studio.form.preview.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
@@ -89,8 +93,6 @@ import org.eclipse.ui.internal.browser.IBrowserDescriptor;
  */
 public class FormPreviewOperation implements IRunnableWithProgress {
 
-	private final Form form;
-	private Form formCopy;
 	private final ApplicationLookNFeelFileStore lookNFeel;
 	private final IBrowserDescriptor browser;
 	private static String lastProcessDeployed;
@@ -102,7 +104,6 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 
 	public FormPreviewOperation(final AbstractFormPreviewInitialization formPreviewInit){
 		this.formPreviewInit = formPreviewInit;
-		form = formPreviewInit.getForm();
 		lookNFeel = formPreviewInit.getLookNFeel();
 		browser = formPreviewInit.getBrowser();
 
@@ -143,37 +144,11 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 				procId = def.getId();
 				processApi.enableProcess(procId) ;
 
-
 				final ExternalBrowserInstance browserInstance = new ExternalBrowserInstance(null, browser);
 				if (!formPreviewInit.isOnTask()){
-					final ApplicationURLBuilder builder = new ApplicationURLBuilder(proc,procId,configuration.getName(),ApplicationURLBuilder.MODE_FORM);
-					final URL url = builder.toURL(monitor);
-                    final OpenBrowserOperation openCmd = new OpenBrowserOperation(url);
-					if(browser.getLocation() != null){
-						openCmd.setExternalBrowser(browserInstance);
-					}
-                    openCmd.execute();
+                    handleProcessForm(monitor, configuration, proc, browserInstance);
 				} else {
-					final IdentityAPI identityApi = BOSEngineManager.getInstance().getIdentityAPI(session);
-					final long userId = identityApi.getUserByUserName(BonitaConstants.STUDIO_TECHNICAL_USER_NAME).getId();
-					final ProcessInstance procInstance = processApi.startProcess(procId);
-					boolean isAvailable = false;
-					int it = 0;
-					while(!isAvailable && it<MAX_IT){
-						isAvailable = !processApi.getOpenActivityInstances(procInstance.getId(), 0, 1, null).isEmpty();
-						it++;
-						Thread.sleep(100);
-					}
-					if (it<MAX_IT && !processApi.getPendingHumanTaskInstances(userId, 0, 20, null).isEmpty() ){
-						final HumanTaskInstance task = processApi.getPendingHumanTaskInstances(userId,0, 20, null).get(0);
-						processApi.assignUserTask(task.getId(), userId);
-						final URL taskURL = toTaskURL(configuration,proc,procId,task,monitor);
-                        final OpenBrowserOperation openCmd = new OpenBrowserOperation(taskURL);
-						if(browser.getLocation() != null){
-							openCmd.setExternalBrowser(browserInstance);
-						}
-                        openCmd.execute();
-					}
+					handleTaskForm(monitor, session, processApi, procId, configuration, proc, browserInstance);
 				}
 			} catch (final Exception e) {
 				BonitaStudioLog.error(e);
@@ -185,34 +160,73 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 				}
 			}
 		}
-
 	}
-
+    protected void handleTaskForm(final IProgressMonitor monitor, APISession session, ProcessAPI processApi, long procId, final Configuration configuration,
+            final AbstractProcess proc, final ExternalBrowserInstance browserInstance) throws BonitaHomeNotSetException, ServerAPIException,
+            UnknownAPITypeException, UserNotFoundException, ProcessDefinitionNotFoundException, ProcessActivationException, ProcessExecutionException,
+            InterruptedException, UpdateException, UnsupportedEncodingException, MalformedURLException {
+        final IdentityAPI identityApi = BOSEngineManager.getInstance().getIdentityAPI(session);
+        final long userId = identityApi.getUserByUserName(BonitaConstants.STUDIO_TECHNICAL_USER_NAME).getId();
+        final ProcessInstance procInstance = processApi.startProcess(procId);
+        boolean isAvailable = false;
+        int it = 0;
+        while(!isAvailable && it<MAX_IT){
+        	isAvailable = !processApi.getOpenActivityInstances(procInstance.getId(), 0, 1, null).isEmpty();
+        	it++;
+        	Thread.sleep(100);
+        }
+        if (it<MAX_IT && !processApi.getPendingHumanTaskInstances(userId, 0, 20, null).isEmpty() ){
+        	final HumanTaskInstance task = processApi.getPendingHumanTaskInstances(userId,0, 20, null).get(0);
+        	processApi.assignUserTask(task.getId(), userId);
+        	final URL taskURL = toTaskURL(configuration,proc,procId,task,monitor);
+            final OpenBrowserOperation openCmd = new OpenBrowserOperation(taskURL);
+        	if(browser.getLocation() != null){
+        		openCmd.setExternalBrowser(browserInstance);
+        	}
+            openCmd.execute();
+        }
+    }
+    protected void handleProcessForm(final IProgressMonitor monitor, final Configuration configuration, final AbstractProcess proc,
+            final ExternalBrowserInstance browserInstance) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
+        final ApplicationURLBuilder builder = new ApplicationURLBuilder(proc, configuration.getName());
+        final URL url = builder.toURL(monitor);
+        final OpenBrowserOperation openCmd = new OpenBrowserOperation(url);
+        if(browser.getLocation() != null){
+        	openCmd.setExternalBrowser(browserInstance);
+        }
+        openCmd.execute();
+    }
 
 	public URL toTaskURL(final Configuration configuration,final AbstractProcess process,final long procId,final HumanTaskInstance task,final IProgressMonitor monitor) throws UnsupportedEncodingException, MalformedURLException{
-		final IPreferenceStore store =  BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore() ;
+        final String loginURL = getLoginURL(configuration);
+        final String runUrl = getRunURL(process, procId, task);
+        return new URL(loginURL + "&redirectUrl=" + URLEncoder.encode(runUrl, "UTF-8"));
+    }
+
+    protected String getRunURL(final AbstractProcess process, final long procId, final HumanTaskInstance task) throws UnsupportedEncodingException {
+        final IPreferenceStore store = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
 		final String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE) ;
-		final String port = store.getString(BonitaPreferenceConstants.CONSOLE_PORT);
-		final String host = store.getString(BonitaPreferenceConstants.CONSOLE_HOST) ;
 		final String token = "" ;
-		String userName = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_NAME) ;
-		String password = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_PASSWORD) ;
-		if(configuration != null && configuration.getUsername() != null){
-			userName = configuration.getUsername() ;
-			password = configuration.getPassword() ;
-		}
 		final String taskName=((Task)process.getElements().get(0)).getName();
-		final String loginURL = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
-		final String runUrl = ApplicationURLBuilder.APPLI_PATH + token +"ui=form&theme="+procId+"&locale="+locale+"#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion()+"--"+taskName, "UTF-8")+"$entry&task="+task.getId()+"&mode=form";
-		return new URL(loginURL+"&redirectUrl="+URLEncoder.encode(runUrl, "UTF-8"));
+        final String runUrl = "portal/homepage?" + token
+                + "ui=form&theme=" + procId
+                + "&locale=" + locale
+                + "#form=" + URLEncoder.encode(process.getName() + "--" + process.getVersion() + "--" + taskName, "UTF-8")
+                + "$entry&task=" + task.getId()
+                + "&mode=form";
+        return runUrl;
+    }
 
-	}
-
-
-
-
-
-
+    protected String getLoginURL(final Configuration configuration) {
+        String userName = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_NAME);
+        String password = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_PASSWORD);
+        if (configuration != null && configuration.getUsername() != null) {
+            userName = configuration.getUsername();
+            password = configuration.getPassword();
+        }
+        final String loginURL = BOSWebServerManager.getInstance().generateLoginURL(userName, password);
+        return loginURL;
+    }
 
 	private Resource doCreateEMFResource(final AbstractProcess proc,final IProgressMonitor monitor) throws IOException, ExecutionException{
 		final URI uri = URI.createFileURI(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath()+File.separator+proc.getName()+".proc");
@@ -242,13 +256,6 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 		editingDomain.getCommandStack().execute(cc);
 	}
 
-
-
-
-
-
-
-
 	protected void undeployProcess(final AbstractProcess process, final ProcessAPI processApi) throws InvalidSessionException,   ProcessDefinitionNotFoundException,  IllegalProcessStateException, DeletionException {
 		final long nbDeployedProcesses = processApi.getNumberOfProcessDeploymentInfos() ;
 		if(nbDeployedProcesses > 0){
@@ -265,13 +272,10 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 					}catch (final ProcessActivationException e) {
 						BonitaStudioLog.error(e);
 					}
-					processApi.deleteProcess(info.getProcessId()) ;
+                    processApi.deleteProcessDefinition(info.getProcessId());
 				}
 			}
 		}
 	}
-
-
-
 
 }

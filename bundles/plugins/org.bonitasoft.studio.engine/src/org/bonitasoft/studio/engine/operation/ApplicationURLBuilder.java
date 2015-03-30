@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 BonitaSoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -33,7 +33,6 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -43,27 +42,14 @@ import org.eclipse.jface.preference.IPreferenceStore;
 public class ApplicationURLBuilder {
 
     private static final String ENCODING = "UTF-8";
-    public static final String APPLI_PATH = "portal/homepage?"; //$NON-NLS-1$
-    public static final String MODE_APP = "app";
-    public static final String MODE_FORM = "form";
+    private static final String APPLI_PATH = "portal/form"; //$NON-NLS-1$
 
     private final AbstractProcess process;
-    private final Long processId;
     private String configurationId;
-    private final String mode;
 
-    public ApplicationURLBuilder(final AbstractProcess process,
-            final Long processId, final String configurationId) {
-        this(process, processId, configurationId, MODE_APP);
-    }
-
-    public ApplicationURLBuilder(final AbstractProcess process,
-            final Long processId, final String configurationId,
-            final String mode) {
+    public ApplicationURLBuilder(final AbstractProcess process, final String configurationId) {
         this.process = process;
-        this.processId = processId;
         this.configurationId = configurationId;
-        this.mode = mode;
     }
 
     public URL toURL(final IProgressMonitor monitor)
@@ -88,27 +74,18 @@ public class ApplicationURLBuilder {
     protected String getRedirectURL(final String locale)
             throws UnsupportedEncodingException {
         return APPLI_PATH
-                + "ui=form&"
-                + getLocaleParameter(locale)
-                + "#form="
-                + URLEncoder.encode(
-                        process.getName() + "--" + process.getVersion(),
-                        ENCODING) + "$entry&process=" + processId + "&"
-                + getModeParameter();
+                + "/process"
+                + "/" + URLEncoder.encode(process.getName(), ENCODING)
+                + "/" + URLEncoder.encode(process.getVersion(),ENCODING)
+                + "/?" + getLocaleParameter(locale);
     }
 
     protected String getLocaleParameter(final String locale) {
         return "locale=" + locale;
     }
 
-    protected String getModeParameter() {
-        Assert.isNotNull(mode);
-        return "mode=" + mode;
-    }
-
     protected String buildLoginUrl(final String userName, final String password) {
-        return BOSWebServerManager.getInstance().generateLoginURL(userName,
-                password);
+        return BOSWebServerManager.getInstance().generateLoginURL(userName, password);
     }
 
     protected IPreferenceStore getPreferenceStore() {
@@ -116,25 +93,21 @@ public class ApplicationURLBuilder {
     }
 
     protected String getWebLocale() {
-        return getPreferenceStore().getString(
-                BonitaPreferenceConstants.CURRENT_UXP_LOCALE);
+        return getPreferenceStore().getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE);
     }
 
     protected String getDefaultPassword() {
-        return getPreferenceStore().getString(
-                BonitaPreferenceConstants.USER_PASSWORD);
+        return getPreferenceStore().getString(BonitaPreferenceConstants.USER_PASSWORD);
     }
 
     protected String getDefaultUsername() {
-        return getPreferenceStore().getString(
-                BonitaPreferenceConstants.USER_NAME);
+        return getPreferenceStore().getString(BonitaPreferenceConstants.USER_NAME);
     }
 
     protected Configuration getConfiguration() {
         if (process != null) {
             initConfigurationId();
-            if (ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON
-                    .equals(configurationId)) {
+            if (ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON.equals(configurationId)) {
                 return retrieveConfigurationForLocalConf();
             } else {
                 return retrieveConfigurationInsideProcess();
@@ -163,7 +136,6 @@ public class ApplicationURLBuilder {
     }
 
     private Configuration retrieveConfigurationForLocalConf() {
-        Configuration configuration;
         final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager
                 .getInstance().getRepositoryStore(
                         ProcessConfigurationRepositoryStore.class);
@@ -174,7 +146,7 @@ public class ApplicationURLBuilder {
             return null;
         }
         try {
-            return configuration = (Configuration) file.getContent();
+            return (Configuration) file.getContent();
         } catch (final ReadFileStoreException e) {
             BonitaStudioLog.error("Failed to read process configuration", e);
         }

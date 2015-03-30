@@ -30,7 +30,6 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,7 +51,7 @@ public class ApplicationURLBuilderTest {
         process.setName("testPool");
         process.setVersion("1.0");
         final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
-        applicationURLBuilder = spy(new ApplicationURLBuilder(process, 1L, ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION));
+        applicationURLBuilder = spy(new ApplicationURLBuilder(process, ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION));
         doReturn("fr").when(applicationURLBuilder).getWebLocale();
         doReturn("william.jobs").when(applicationURLBuilder).getDefaultUsername();
         doReturn("bpm").when(applicationURLBuilder).getDefaultPassword();
@@ -62,24 +61,16 @@ public class ApplicationURLBuilderTest {
     }
 
     /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    /**
      * Test method for {@link org.bonitasoft.studio.engine.operation.ApplicationURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}.
      */
     @Test
     public void shouldToURL_RetursAValidURL() throws Exception {
         final URL url = applicationURLBuilder.toURL(Repository.NULL_PROGRESS_MONITOR);
         assertThat(url).isNotNull();
-        final String validApplicationPath = URLEncoder.encode("portal/homepage","UTF-8");
-        final String validProcessReference = URLEncoder.encode("form=","UTF-8");
-        final String validMode = URLEncoder.encode("mode=app","UTF-8");
+        final String validApplicationPath = URLEncoder.encode("portal/form/","UTF-8");
+        final String validProcessReference = URLEncoder.encode("testPool/1.0","UTF-8");
         final String validLocale = URLEncoder.encode("locale=fr","UTF-8");
-        assertThat(url.toString()).contains(validApplicationPath).contains(validProcessReference).contains(validMode).contains(validLocale).startsWith(loginURL);
+        assertThat(url.toString()).contains(validApplicationPath).contains(validProcessReference).contains(validLocale).startsWith(loginURL);
     }
 
 }
