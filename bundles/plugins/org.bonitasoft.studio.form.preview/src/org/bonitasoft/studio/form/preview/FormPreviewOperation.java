@@ -136,7 +136,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 				processApi = BOSEngineManager.getInstance().getProcessAPI(session);
 				Assert.isNotNull(processApi) ;
 
-				undeployProcess(proc, processApi);
+				undeployDeployedProcess(proc, processApi);
 
 				final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc,configuration,Collections.EMPTY_SET,false);
 				cleanResources(proc, resource);
@@ -161,7 +161,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 			}
 		}
 	}
-    protected void handleTaskForm(final IProgressMonitor monitor, APISession session, ProcessAPI processApi, long procId, final Configuration configuration,
+    protected void handleTaskForm(final IProgressMonitor monitor, final APISession session, final ProcessAPI processApi, final long procId, final Configuration configuration,
             final AbstractProcess proc, final ExternalBrowserInstance browserInstance) throws BonitaHomeNotSetException, ServerAPIException,
             UnknownAPITypeException, UserNotFoundException, ProcessDefinitionNotFoundException, ProcessActivationException, ProcessExecutionException,
             InterruptedException, UpdateException, UnsupportedEncodingException, MalformedURLException {
@@ -199,11 +199,11 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 
 	public URL toTaskURL(final Configuration configuration,final AbstractProcess process,final long procId,final HumanTaskInstance task,final IProgressMonitor monitor) throws UnsupportedEncodingException, MalformedURLException{
         final String loginURL = getLoginURL(configuration);
-        final String runUrl = getRunURL(process, procId, task);
+        final String runUrl = getRunURLForTask(process, procId, task);
         return new URL(loginURL + "&redirectUrl=" + URLEncoder.encode(runUrl, "UTF-8"));
     }
 
-    protected String getRunURL(final AbstractProcess process, final long procId, final HumanTaskInstance task) throws UnsupportedEncodingException {
+    protected String getRunURLForTask(final AbstractProcess process, final long procId, final HumanTaskInstance task) throws UnsupportedEncodingException {
         final IPreferenceStore store = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
 		final String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE) ;
 		final String token = "" ;
@@ -218,27 +218,29 @@ public class FormPreviewOperation implements IRunnableWithProgress {
     }
 
     protected String getLoginURL(final Configuration configuration) {
-        String userName = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_NAME);
-        String password = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_PASSWORD);
+        String userName;
+        String password;
         if (configuration != null && configuration.getUsername() != null) {
             userName = configuration.getUsername();
             password = configuration.getPassword();
+        } else {
+            userName = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_NAME);
+            password = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_PASSWORD);
         }
-        final String loginURL = BOSWebServerManager.getInstance().generateLoginURL(userName, password);
-        return loginURL;
+        return BOSWebServerManager.getInstance().generateLoginURL(userName, password);
     }
 
 	private Resource doCreateEMFResource(final AbstractProcess proc,final IProgressMonitor monitor) throws IOException, ExecutionException{
 		final URI uri = URI.createFileURI(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath()+File.separator+proc.getName()+".proc");
 
-		final XMLResourceImpl resource =	new XMLResourceImpl(uri){
+        final XMLResourceImpl resource = new XMLResourceImpl(uri) {
 			@Override
             protected boolean useUUIDs() {
 				return true;
 			};
 		};
 		resource.getContents().add(proc);
-		resource.save(ProcessDiagramEditorUtil.getSaveOptions()) ;
+        resource.save(ProcessDiagramEditorUtil.getSaveOptions());
 		return resource;
 	}
 
@@ -256,7 +258,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 		editingDomain.getCommandStack().execute(cc);
 	}
 
-	protected void undeployProcess(final AbstractProcess process, final ProcessAPI processApi) throws InvalidSessionException,   ProcessDefinitionNotFoundException,  IllegalProcessStateException, DeletionException {
+	protected void undeployDeployedProcess(final AbstractProcess process, final ProcessAPI processApi) throws InvalidSessionException,   ProcessDefinitionNotFoundException,  IllegalProcessStateException, DeletionException {
 		final long nbDeployedProcesses = processApi.getNumberOfProcessDeploymentInfos() ;
 		if(nbDeployedProcesses > 0){
 			if(lastProcessDeployed == null){
@@ -264,18 +266,21 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 			}
 			final List<ProcessDeploymentInfo> processes = processApi.getProcessDeploymentInfos(0, (int) nbDeployedProcesses, ProcessDeploymentInfoCriterion.DEFAULT) ;
 			for(final ProcessDeploymentInfo info : processes){
-				if(info.getName().equals(lastProcessDeployed) && info.getVersion().equals(formPreviewInit.VERSION)){
-					try{
-						if (processApi.getProcessDeploymentInfo(info.getProcessId()).getActivationState() == ActivationState.ENABLED){
-							processApi.disableProcess(info.getProcessId()) ;
-						}
-					}catch (final ProcessActivationException e) {
-						BonitaStudioLog.error(e);
-					}
-                    processApi.deleteProcessDefinition(info.getProcessId());
-				}
+				undeployProcess(processApi, info);
 			}
 		}
 	}
+    protected void undeployProcess(final ProcessAPI processApi, final ProcessDeploymentInfo info) throws ProcessDefinitionNotFoundException, DeletionException {
+        if(info.getName().equals(lastProcessDeployed) && info.getVersion().equals(formPreviewInit.VERSION)){
+        	try{
+        		if (processApi.getProcessDeploymentInfo(info.getProcessId()).getActivationState() == ActivationState.ENABLED){
+        			processApi.disableProcess(info.getProcessId()) ;
+        		}
+        	}catch (final ProcessActivationException e) {
+        		BonitaStudioLog.error(e);
+        	}
+            processApi.deleteProcessDefinition(info.getProcessId());
+        }
+    }
 
 }

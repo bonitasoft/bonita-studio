@@ -41,7 +41,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 public class ApplicationURLBuilder {
 
-    private static final String ENCODING = "UTF-8";
+    private static final String ENCODING_UTF8 = "UTF-8";
     private static final String APPLI_PATH = "portal/form"; //$NON-NLS-1$
 
     private final AbstractProcess process;
@@ -67,7 +67,7 @@ public class ApplicationURLBuilder {
 
         final String loginURL = buildLoginUrl(userName, password);
         return new URL(loginURL + "&redirectUrl="
-                + URLEncoder.encode(getRedirectURL(locale), ENCODING));
+                + URLEncoder.encode(getRedirectURL(locale), ENCODING_UTF8));
 
     }
 
@@ -75,8 +75,8 @@ public class ApplicationURLBuilder {
             throws UnsupportedEncodingException {
         return APPLI_PATH
                 + "/process"
-                + "/" + URLEncoder.encode(process.getName(), ENCODING)
-                + "/" + URLEncoder.encode(process.getVersion(),ENCODING)
+                + "/" + URLEncoder.encode(process.getName(), ENCODING_UTF8)
+                + "/" + URLEncoder.encode(process.getVersion(),ENCODING_UTF8)
                 + "/?" + getLocaleParameter(locale);
     }
 
