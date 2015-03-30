@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -90,7 +88,6 @@ import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
- *
  * @author Romain Bioteau
  */
 public abstract class AbstractDataSection extends AbstractBonitaDescriptionSection implements IDoubleClickListener, IBonitaVariableContext {
@@ -205,16 +202,16 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     protected void removeData(final IStructuredSelection structuredSelection) {
         final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
-        final OutlineDialog dialog = new OutlineDialog(Display.getDefault().getActiveShell(), removalConfirmationDialogTitle, Display.getCurrent().getSystemImage(
-                SWT.ICON_WARNING), createMessage(structuredSelection), MessageDialog.CONFIRM, buttonList, 1, structuredSelection.toList());
+        final OutlineDialog dialog = new OutlineDialog(Display.getDefault().getActiveShell(), removalConfirmationDialogTitle, Display.getCurrent()
+                .getSystemImage(
+                        SWT.ICON_WARNING), createMessage(structuredSelection), MessageDialog.CONFIRM, buttonList, 1, structuredSelection.toList());
         if (dialog.open() == Dialog.OK) {
             final IProgressService service = PlatformUI.getWorkbench().getProgressService();
             final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.REMOVE);
             for (final Object d : structuredSelection.toList()) {
-                op.setContainer(ModelHelper.getParentProcess(eObject));
+                op.setDataContainer((DataAware) getEObject());
                 op.setEditingDomain(getEditingDomain());
                 op.addItemToRefactor(null, (Data) d);
-                op.setDirectDataContainer(getEObject());
                 op.setDataContainmentFeature(getDataFeature());
                 op.setAskConfirmation(true);
             }
