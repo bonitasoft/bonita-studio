@@ -50,9 +50,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
 
     private EStructuralFeature dataContainmentFeature;
 
-    private EObject directContainer;
-
-    private DataAware container;
+    private DataAware dataContainer;
 
     public RefactorDataOperation(final RefactoringOperationType operationType) {
         super(operationType);
@@ -60,7 +58,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
 
     @Override
     protected CompoundCommand doBuildCompoundCommand(final CompoundCommand compoundCommand, final IProgressMonitor monitor) {
-        Assert.isNotNull(container);
+        Assert.isNotNull(dataContainer);
         final CompoundCommand deleteCommands = new CompoundCommand("Compound commands conating all delete operations to do at last step");
         for (final DataRefactorPair pairToRefactor : pairsToRefactor) {
             Assert.isNotNull(pairToRefactor.getOldValue());
@@ -69,10 +67,10 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
                 updateDataReferenceInExpressions(compoundCommand);
                 if (updateDataReferences) {
                     updateDataReferenceInMultinstanciation(compoundCommand);
-                    final List<?> dataList = (List<?>) container.eGet(dataContainmentFeature);
+                    final List<?> dataList = (List<?>) dataContainer.eGet(dataContainmentFeature);
                     final int index = dataList.indexOf(pairToRefactor.getOldValue());
-                    compoundCommand.append(RemoveCommand.create(getEditingDomain(), directContainer, dataContainmentFeature, pairToRefactor.getOldValue()));
-                    compoundCommand.append(AddCommand.create(getEditingDomain(), directContainer, dataContainmentFeature, pairToRefactor.getNewValue(), index));
+                    compoundCommand.append(RemoveCommand.create(getEditingDomain(), dataContainer, dataContainmentFeature, pairToRefactor.getOldValue()));
+                    compoundCommand.append(AddCommand.create(getEditingDomain(), dataContainer, dataContainmentFeature, pairToRefactor.getNewValue(), index));
                 } else {
                     for (final EStructuralFeature feature : pairToRefactor.getOldValue().eClass().getEAllStructuralFeatures()) {
                         if (pairToRefactor.getNewValue().eClass().getEAllStructuralFeatures().contains(feature)) {
@@ -93,7 +91,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
     }
 
     private void updateDataReferenceInExpressions(final CompoundCommand finalCommand) {
-        final List<Expression> expressions = ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION);
+        final List<Expression> expressions = ModelHelper.getAllItemsOfType(dataContainer, ExpressionPackage.Literals.EXPRESSION);
         for (final Expression exp : expressions) {
             if (!ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())
                     && !ExpressionConstants.PATTERN_TYPE.equals(exp.getType())
@@ -134,7 +132,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
             final DataRefactorPair pairToRefactor) {
         List<Expression> expressions = null;
         if (pairToRefactor.getOldValue().eContainer() instanceof Pool) {
-            expressions = ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION);
+            expressions = ModelHelper.getAllItemsOfType(dataContainer, ExpressionPackage.Literals.EXPRESSION);
         } else {
             expressions = ModelHelper.getAllItemsOfType(pairToRefactor.getOldValue().eContainer(), ExpressionPackage.Literals.EXPRESSION);
         }
@@ -142,7 +140,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
     }
 
     protected void updateDataInListsOfData(final CompoundCommand cc) {
-        final List<Data> data = ModelHelper.getAllItemsOfType(container, ProcessPackage.Literals.DATA);
+        final List<Data> data = ModelHelper.getAllItemsOfType(dataContainer, ProcessPackage.Literals.DATA);
         for (final DataRefactorPair pairToRefactor : pairsToRefactor) {
             for (final Data d : data) {
                 if (!d.equals(pairToRefactor.getNewValue()) && d.getName().equals(pairToRefactor.getOldValue().getName())) {
@@ -163,7 +161,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
     }
 
     protected void updateDataReferenceInVariableExpressions(final CompoundCommand cc) {
-        final List<Expression> expressions = ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION);
+        final List<Expression> expressions = ModelHelper.getAllItemsOfType(dataContainer, ExpressionPackage.Literals.EXPRESSION);
         for (final DataRefactorPair pairToRefactor : pairsToRefactor) {
             for (final Expression exp : expressions) {
                 if (ExpressionConstants.VARIABLE_TYPE.equals(exp.getType()) && exp.getName().equals(pairToRefactor.getOldValue().getName())) {
@@ -180,7 +178,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
     }
 
     protected void updateDataReferenceInMultinstanciation(final CompoundCommand cc) {
-        final List<MultiInstantiable> multiInstanciations = ModelHelper.getAllItemsOfType(container, ProcessPackage.Literals.MULTI_INSTANTIABLE);
+        final List<MultiInstantiable> multiInstanciations = ModelHelper.getAllItemsOfType(dataContainer, ProcessPackage.Literals.MULTI_INSTANTIABLE);
         for (final DataRefactorPair pairToRefactor : pairsToRefactor) {
             for (final MultiInstantiable multiInstantiation : multiInstanciations) {
                 final Data outputData = multiInstantiation.getOutputData();
@@ -204,8 +202,8 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
         }
     }
 
-    public void setContainer(final DataAware container) {
-        this.container = container;
+    public void setDataContainer(final DataAware dataContainer) {
+        this.dataContainer = dataContainer;
     }
 
     public void setUpdateDataReferences(final boolean updateDataReferences) {
@@ -223,15 +221,11 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
 
     @Override
     protected EObject getContainer(final Data oldValue) {
-        return container;
+        return dataContainer;
     }
 
     public void setDataContainmentFeature(final EStructuralFeature dataContainmentFeature) {
         this.dataContainmentFeature = dataContainmentFeature;
-    }
-
-    public void setDirectDataContainer(final EObject container) {
-        directContainer = container;
     }
 
     @Override
