@@ -134,7 +134,7 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
     @Test
     public void should_rewrite_form_name_for_names_with_illegal_characters() throws Exception {
         //Given
-        final Task task = aTask().withName("Step1 & Stép2").havingFormMapping(aFormMapping()).build();
+        final Task task = aTask().withName("Step1 & StÃ©p2").havingFormMapping(aFormMapping()).build();
 
         //When
         createNewFormProposal.handleEvent(task.getFormMapping(), null);
