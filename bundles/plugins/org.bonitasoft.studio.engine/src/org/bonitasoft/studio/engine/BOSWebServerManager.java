@@ -15,6 +15,8 @@
 
 package org.bonitasoft.studio.engine;
 
+import static org.bonitasoft.studio.engine.server.ClientBonitaHomeBuildler.newClientBonitaHomeBuilder;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -24,7 +26,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.Date;
-import java.util.NoSuchElementException;
 
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
@@ -35,8 +36,8 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.engine.server.PortConfigurator;
 import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
 import org.bonitasoft.studio.pagedesigner.core.WorkspaceResourceServerManager;
 import org.bonitasoft.studio.pagedesigner.core.WorkspaceSystemProperties;
@@ -55,23 +56,15 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.internal.core.IInternalDebugCoreConstants;
-import org.eclipse.debug.internal.ui.DebugUIPlugin;
-import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServer;
-import org.eclipse.jst.server.tomcat.core.internal.Tomcat70Configuration;
-import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
-import org.eclipse.jst.server.tomcat.core.internal.command.ModifyPortCommand;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IRuntime;
@@ -81,9 +74,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
-import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.core.util.SocketUtil;
 
 /**
@@ -94,7 +85,11 @@ import org.eclipse.wst.server.core.util.SocketUtil;
  */
 public class BOSWebServerManager {
 
-    private static final String SERVER_CONFIGURATION_PROJECT = "server_configuration";
+    private static final String BONITA_TOMCAT_SERVER_ID = "bonita-tomcat-server-id";
+
+    private static final String BONITA_TOMCAT_RUNTIME_ID = "bonita-tomcat-runtime-id";
+
+    public static final String SERVER_CONFIGURATION_PROJECT = "server_configuration";
 
     private static final String LOGINSERVICE_PATH = "/bonita/loginservice?";
 
@@ -118,10 +113,6 @@ public class BOSWebServerManager {
     protected static final String WATCHDOG_PORT_PROPERTY = "org.bonitasoft.studio.watchdog.port";
 
     private static final String WATCHDOG_TIMER = "org.bonitasoft.studio.watchdog.timer";
-
-    private static final int MIN_PORT_NUMBER = 1024;
-
-    private static final int MAX_PORT_NUMBER = 65535;
 
     private static final int MAX_SERVER_START_TIME = 300000;
 
@@ -215,16 +206,14 @@ public class BOSWebServerManager {
                     BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
                 }
             }
-            configureConsolePreferences();
             updateRuntimeLocationIfNeeded();
             final IRuntimeType type = ServerCore.findRuntimeType(TOMCAT_RUNTIME_TYPE);
 
             try {
                 final IProject confProject = createServerConfigurationProject(monitor);
-                final IRuntime runtime = createServerRuntime(type);
+                final IRuntime runtime = createServerRuntime(type, monitor);
                 tomcat = createServer(monitor, confProject, runtime);
                 createLaunchConfiguration(tomcat, monitor);
-                reloadConfiguration(monitor);
                 confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
                 tomcat.start("run", monitor);
                 waitServerRunning(monitor);
@@ -235,28 +224,13 @@ public class BOSWebServerManager {
         }
     }
 
-    @SuppressWarnings("restriction")
-    protected void reloadConfiguration(final IProgressMonitor monitor) throws CoreException {
-        final TomcatServer tomcatServer = (TomcatServer) tomcat.loadAdapter(ServerDelegate.class, monitor);
-        final Tomcat70Configuration tomcat70Configuration = (Tomcat70Configuration) tomcatServer.getTomcatConfiguration();
-        final IFolder tomcatServerConfFolder = tomcatServer.getServer().getServerConfiguration();
-        tomcat70Configuration.load(tomcatServerConfFolder, monitor);
-    }
-
     private void handleCoreExceptionWhileStartingTomcat(final CoreException e) {
         BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
         Display.getDefault().syncExec(new Runnable() {
 
             @Override
             public void run() {
-                MessageDialog
-                        .openInformation(
-                                PlatformUI.getWorkbench()
-                                        .getActiveWorkbenchWindow()
-                                        .getShell(),
-                                "",
-                                "Tomcat cannot be launched:\nthe port might be already used by another application.\nPossible causes are that another Studio or another Tomcat is already running.");
-
+                MessageDialog.openWarning(Display.getDefault().getActiveShell(), "Tomcat server startup error", e.getMessage());
             }
         });
     }
@@ -356,7 +330,7 @@ public class BOSWebServerManager {
                     Repository.NULL_PROGRESS_MONITOR);
             workingCopy = conf.getWorkingCopy();
         }
-        RepositoryManager.getInstance().getCurrentRepository().getAllStores();
+
         workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
                 getVMArgs());
@@ -371,19 +345,6 @@ public class BOSWebServerManager {
         return new File(parentDir, TOMCAT_LOG_FILE).getAbsolutePath();
     }
 
-    protected void configureConsolePreferences() {
-        DebugUIPlugin.getDefault().getPreferenceStore()
-                .setValue(IDebugPreferenceConstants.CONSOLE_OPEN_ON_OUT, false);
-        DebugUIPlugin.getDefault().getPreferenceStore()
-                .setValue(IDebugPreferenceConstants.CONSOLE_OPEN_ON_ERR, false);
-        DebugPlugin
-                .getDefault()
-                .getPluginPreferences()
-                .setValue(
-                        IInternalDebugCoreConstants.PREF_ENABLE_STATUS_HANDLERS,
-                        false);
-    }
-
     protected IServer createServer(final IProgressMonitor monitor, final IProject confProject, final IRuntime runtime) throws CoreException {
         final IServerType sType = ServerCore.findServerType(TOMCAT_SERVER_TYPE);
         final IFile file = confProject.getFile("bonitaTomcatServerSerialization");
@@ -391,110 +352,59 @@ public class BOSWebServerManager {
         final IFolder configurationFolder = confProject
                 .getFolder("tomcat_conf");
         final File sourceFolder = new File(tomcatInstanceLocation, "conf");
-
         PlatformUtil.copyResource(configurationFolder.getLocation().toFile(),
                 sourceFolder, Repository.NULL_PROGRESS_MONITOR);
         configurationFolder.refreshLocal(IResource.DEPTH_INFINITE,
                 Repository.NULL_PROGRESS_MONITOR);
-        IServerWorkingCopy wcServer = configureServer(runtime, sType, file,
-                configurationFolder);
-        wcServer.save(true, null);
-        ServerPort tomcatPort = null;
-        ServerPort adminPortServer = null;
-        ServerPort ajpConnectorPort = null;
-        final ServerPort[] serverPorts = wcServer.getServerPorts(Repository.NULL_PROGRESS_MONITOR);
-        for (final ServerPort p : serverPorts) {
-            final String serverPortId = p.getId();
-            if ("server".equals(serverPortId)) {
-                adminPortServer = p;
-            } else if ("0".equals(serverPortId)) {
-                tomcatPort = p;
-            } else if ("1".equals(serverPortId)) {
-                ajpConnectorPort = p;
-            }
+        final IServer server = configureServer(runtime, sType, file,
+                configurationFolder, monitor);
+        final PortConfigurator portConfigurator = newPortConfigurator(server);
+        final IStatus h2ServerStatus = portConfigurator.canStartH2Server(monitor);
+        if (!h2ServerStatus.isOK()) {
+            throw new CoreException(h2ServerStatus);
         }
-        if (serverPorts.length > 0) {
-            final int port = tomcatPort.getPort();
-            int serverPortNumber = adminPortServer.getPort();
-            int ajpConnectorPortNumber = ajpConnectorPort.getPort();
-            if (!isPortAvailable(port)) {
-                updatePortConfiguration(serverPortNumber, serverPortNumber + 1);
-                serverPortNumber++;
-                updatePortConfiguration(ajpConnectorPortNumber,
-                        ajpConnectorPortNumber + 1);
-                ajpConnectorPortNumber++;
-                wcServer = updatePort(tomcatPort.getId(), port, wcServer, runtime, sType, file,
-                        configurationFolder);
-                wcServer = updatePort(ajpConnectorPort.getId(), ajpConnectorPortNumber, wcServer, runtime, sType, file,
-                        configurationFolder);
-            }
-            if (!isPortAvailable(serverPortNumber)) {
-                wcServer = updatePort(adminPortServer.getId(), serverPortNumber, wcServer, runtime, sType, file,
-                        configurationFolder);
-            }
-
-            if (!isPortAvailable(ajpConnectorPortNumber)) {
-                wcServer = updatePort(ajpConnectorPort.getId(), ajpConnectorPortNumber, wcServer, runtime, sType,
-                        file, configurationFolder);
-            }
-        }
-        return wcServer.saveAll(true, Repository.NULL_PROGRESS_MONITOR);
-    }
-
-    private IServerWorkingCopy updatePort(final String portId, int port, final IServerWorkingCopy server, final IRuntime runtime, final IServerType sType,
-            final IFile file,
-            final IFolder configurationFolder)
-            throws CoreException {
-        final int oldPort = port;
-        port = getNextAvailable(oldPort);
-        updatePortConfiguration(oldPort, port);
-
-        final IServer iServer = ServerCore.findServer(server.getId());
-        final TomcatServer loadAdapter = (TomcatServer) iServer.loadAdapter(ServerDelegate.class, null);
-        final Tomcat70Configuration tomcat70Configuration0 = (Tomcat70Configuration) loadAdapter.getTomcatConfiguration();
-        new ModifyPortCommand(tomcat70Configuration0, portId, port).execute();
-
-        final TomcatServer tomcatServer = (TomcatServer) server.loadAdapter(ServerDelegate.class, null);
-        final Tomcat70Configuration tomcat70Configuration = (Tomcat70Configuration) tomcatServer.getTomcatConfiguration();
-        new ModifyPortCommand(tomcat70Configuration, portId, port).execute();
-        server.saveAll(true, new NullProgressMonitor());
-        BonitaStudioLog.debug("Port " + oldPort
-                + " is not available, studio will use next available port : "
-                + port, EnginePlugin.PLUGIN_ID);
-        if ("0".equals(portId)) {
-            BonitaHomeUtil.configureBonitaClient(BonitaHomeUtil.HTTP,
-                    "localhost", port);
-            BonitaStudioPreferencesPlugin
-                    .getDefault()
-                    .getPreferenceStore()
-                    .setValue(BonitaPreferenceConstants.CONSOLE_PORT,
-                            port);
-        }
+        portConfigurator
+                .configureServerPort(Repository.NULL_PROGRESS_MONITOR);
         return server;
     }
 
-    protected IServerWorkingCopy configureServer(final IRuntime runtime, final IServerType sType, final IFile file, final IFolder configurationFolder)
+    private PortConfigurator newPortConfigurator(final IServer server) {
+        return new PortConfigurator(server, newClientBonitaHomeBuilder(), BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
+    }
+
+    protected IServer configureServer(final IRuntime runtime, final IServerType sType, final IFile file, final IFolder configurationFolder,
+            final IProgressMonitor monitor)
             throws CoreException {
-        final IServerWorkingCopy server = sType.createServer("bonitaTomcatServer", file, runtime, null);
-        server.setServerConfiguration(configurationFolder);
-        server.setAttribute(ITomcatServer.PROPERTY_INSTANCE_DIR,
+        final IServer server = ServerCore.findServer(BONITA_TOMCAT_SERVER_ID);
+        IServerWorkingCopy serverWC = null;
+        if (server != null) {
+            serverWC = server.createWorkingCopy();
+        }
+        if (serverWC == null) {
+            serverWC = sType.createServer(BONITA_TOMCAT_SERVER_ID, file, runtime, monitor);
+        }
+        serverWC.setServerConfiguration(configurationFolder);
+        serverWC.setAttribute(ITomcatServer.PROPERTY_INSTANCE_DIR,
                 tomcatInstanceLocation);
-        server.setAttribute(ITomcatServer.PROPERTY_DEPLOY_DIR,
+        serverWC.setAttribute(ITomcatServer.PROPERTY_DEPLOY_DIR,
                 tomcatInstanceLocation + File.separatorChar + "webapps");
-        server.setAttribute(START_TIMEOUT, 300);
-        return server;
+        serverWC.setAttribute(START_TIMEOUT, 300);
+        return serverWC.save(true, monitor);
     }
 
-    protected IRuntime createServerRuntime(final IRuntimeType type) throws CoreException {
-        final IRuntimeWorkingCopy tomcatRuntime = type.createRuntime("bonitaTomcatRuntime", null);
-        tomcatRuntime.setLocation(Path.fromOSString(tomcatInstanceLocation));
-        final IStatus status = tomcatRuntime.validate(null);
+    protected IRuntime createServerRuntime(final IRuntimeType type, final IProgressMonitor monitor) throws CoreException {
+        IRuntime runtime = ServerCore.findRuntime(BONITA_TOMCAT_RUNTIME_ID);
+        if (runtime == null) {
+            runtime = type.createRuntime(BONITA_TOMCAT_RUNTIME_ID, monitor);
+        }
+        final IRuntimeWorkingCopy tomcatRuntimeWC = runtime.createWorkingCopy();
+        tomcatRuntimeWC.setLocation(Path.fromOSString(tomcatInstanceLocation));
+        final IStatus status = tomcatRuntimeWC.validate(null);
         if (!status.isOK()) {
             throw new RuntimeException("Failed to create a tomcat server : "
                     + status.getMessage());
         }
-        final IRuntime runtime = tomcatRuntime.save(true, null);
-        return runtime;
+        return tomcatRuntimeWC.save(true, monitor);
     }
 
     protected IProject createServerConfigurationProject(final IProgressMonitor monitor) throws CoreException {
@@ -511,8 +421,8 @@ public class BOSWebServerManager {
                     projectProperties.setServerProject(true, monitor);
                 }
             }, monitor);
-
         }
+        confProject.open(Repository.NULL_PROGRESS_MONITOR);
         return confProject;
     }
 
@@ -583,9 +493,9 @@ public class BOSWebServerManager {
                 @Override
                 public void run() {
                     try {
-                        if (!isPortAvailable(WATCHDOG_PORT)) {
+                        if (SocketUtil.isPortInUse(WATCHDOG_PORT)) {
                             final int oldPort = WATCHDOG_PORT;
-                            WATCHDOG_PORT = getNextAvailable(WATCHDOG_PORT);
+                            WATCHDOG_PORT = SocketUtil.findUnusedPort(PortConfigurator.MIN_PORT_NUMBER, PortConfigurator.MAX_PORT_NUMBER);
                             BonitaStudioLog
                                     .debug("Port "
                                             + oldPort
@@ -763,49 +673,6 @@ public class BOSWebServerManager {
             }
         }
         return lastLogFile;
-    }
-
-    public static boolean isPortAvailable(final int port) {
-        if (port < MIN_PORT_NUMBER || port > MAX_PORT_NUMBER) {
-            throw new IllegalArgumentException("Invalid start port: " + port);
-        }
-        return !SocketUtil.isPortInUse(port);
-    }
-
-    public static int getNextAvailable(final int fromPort) {
-        if (fromPort < MIN_PORT_NUMBER || fromPort > MAX_PORT_NUMBER) {
-            throw new IllegalArgumentException("Invalid start port: "
-                    + fromPort);
-        }
-
-        for (int i = fromPort; i <= MAX_PORT_NUMBER; i++) {
-            if (isPortAvailable(i)) {
-                return i;
-            }
-        }
-
-        throw new NoSuchElementException("Could not find an available port "
-                + "above " + fromPort);
-    }
-
-    public void updatePortConfiguration(final Integer oldPort, final Integer newPort) throws CoreException {
-        final File confFile = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toString(), "tomcat" + File.separatorChar + "conf"
-                + File.separatorChar + "server.xml");
-        final String oldPortString = "port=\"" + oldPort + "\"";
-        final String newPortString = "port=\"" + newPort + "\"";
-        FileUtil.replaceStringInFile(confFile, oldPortString, newPortString);
-
-        final IProject confProject = ResourcesPlugin.getWorkspace().getRoot()
-                .getProject(SERVER_CONFIGURATION_PROJECT);
-        final IFolder configurationFolder = confProject
-                .getFolder("tomcat_conf");
-        try {
-            FileUtil.copy(confFile, configurationFolder.getFile("server.xml").getLocation().toFile());
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-        }
-        configurationFolder.refreshLocal(IResource.DEPTH_INFINITE,
-                Repository.NULL_PROGRESS_MONITOR);
     }
 
 }

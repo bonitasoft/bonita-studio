@@ -120,6 +120,18 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
     }
 
     @Test
+    public void should_not_prefix_form_name_for_case_start_form() throws Exception {
+        //Given
+        final Pool pool = aPool().withName("Pool1").havingFormMapping(aFormMapping()).build();
+
+        //When
+        createNewFormProposal.handleEvent(pool.getFormMapping(), null);
+
+        //Then
+        verify(createFormOperation).setFormName("Pool1");
+    }
+
+    @Test
     public void should_rewrite_form_name_for_names_with_illegal_characters() throws Exception {
         //Given
         final Task task = aTask().withName("Step1 & Stép2").havingFormMapping(aFormMapping()).build();

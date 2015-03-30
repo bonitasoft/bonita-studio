@@ -26,7 +26,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.expression.editor.provider.IProposalAdapter;
 import org.bonitasoft.studio.model.process.PageFlow;
-import org.bonitasoft.studio.model.process.RecapFlow;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.pagedesigner.core.operation.CreateFormOperation;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
@@ -68,7 +68,7 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
     @Override
     public String handleEvent(final EObject context, final String fixedReturnType) {
         final CreateFormOperation operation = doCreateFormOperation(pageDesignerURLFactory);
-        operation.setFormName(context != null ? toFormName(pageFlowFor(context)) : null);
+        operation.setFormName(context != null ? toFormName(context) : null);
         try {
             progressService.busyCursorWhile(operation);
         } catch (InvocationTargetException | InterruptedException e) {
@@ -80,10 +80,12 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
         return newPageId;
     }
 
-    private String toFormName(final PageFlow pageFlow) {
+    private String toFormName(final EObject context) {
+        final PageFlow pageFlow = pageFlowFor(context);
         String name = pageFlow.getName();
         name = !isNullOrEmpty(name) ? NamingUtils.convertToId(name) : null;
-        return name != null && pageFlow instanceof RecapFlow ? String.format("%sOverview", name) : name;
+        return name != null && ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING.equals(context.eContainmentFeature()) ? String.format("%sOverview",
+                name) : name;
     }
 
     private static PageFlow pageFlowFor(final EObject context) {
