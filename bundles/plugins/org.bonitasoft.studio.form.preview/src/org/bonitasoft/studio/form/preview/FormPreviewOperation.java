@@ -100,14 +100,10 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 	private TransactionalEditingDomain editingDomain;
 	private final AbstractFormPreviewInitialization formPreviewInit;
 
-
-
 	public FormPreviewOperation(final AbstractFormPreviewInitialization formPreviewInit){
 		this.formPreviewInit = formPreviewInit;
 		lookNFeel = formPreviewInit.getLookNFeel();
 		browser = formPreviewInit.getBrowser();
-
-
 	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -204,8 +200,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
     }
 
     protected String getRunURLForTask(final AbstractProcess process, final long procId, final HumanTaskInstance task) throws UnsupportedEncodingException {
-        final IPreferenceStore store = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
-		final String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE) ;
+        final String locale = getPortalLocale();
 		final String token = "" ;
 		final String taskName=((Task)process.getElements().get(0)).getName();
         final String runUrl = "portal/homepage?" + token
@@ -215,6 +210,11 @@ public class FormPreviewOperation implements IRunnableWithProgress {
                 + "$entry&task=" + task.getId()
                 + "&mode=form";
         return runUrl;
+    }
+
+    protected String getPortalLocale() {
+        final IPreferenceStore store = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
+        return store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE);
     }
 
     protected String getLoginURL(final Configuration configuration) {
@@ -227,6 +227,9 @@ public class FormPreviewOperation implements IRunnableWithProgress {
             userName = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_NAME);
             password = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_PASSWORD);
         }
+        return generateLoginUrl(userName, password);
+    }
+    protected String generateLoginUrl(final String userName, final String password) {
         return BOSWebServerManager.getInstance().generateLoginURL(userName, password);
     }
 
