@@ -73,4 +73,5 @@ Export-Package: org.bonitasoft.studio.common,org.bonitasoft.studio.com
  o.common.properties,org.bonitasoft.studio.common.views,org.bonitasoft
  .studio.common.widgets
 Bundle-ClassPath: .,
- lib/imgscalr-lib-3.2.jar
+ lib/imgscalr-lib-3.2.jar,
+ lib/guava-18.0.jar
