@@ -193,7 +193,6 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
             editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, dataContainmentFeature, workingCopy));
         }
         refreshXtextReferences();
-
         return true;
     }
 
