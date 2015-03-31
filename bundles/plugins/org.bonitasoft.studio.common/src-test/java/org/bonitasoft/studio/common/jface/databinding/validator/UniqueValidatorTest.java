@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.common.jface.databinding.validator;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.uniqueValidator;
 
 import org.eclipse.core.runtime.IStatus;
@@ -35,7 +35,7 @@ public class UniqueValidatorTest {
         final IStatus status = validator.validate("Robert");
 
         //Then
-        assertThat(status).isOK();
+        assertThat(status.isOK()).isTrue();
     }
 
     @Test
@@ -47,7 +47,7 @@ public class UniqueValidatorTest {
         final IStatus status = validator.validate("Colin");
 
         //Then
-        assertThat(status).isNotOK();
+        assertThat(status.isOK()).isFalse();
     }
 
     @Test
@@ -59,7 +59,7 @@ public class UniqueValidatorTest {
         final IStatus status = validator.validate(4);
 
         //Then
-        assertThat(status).isOK();
+        assertThat(status.isOK()).isTrue();
     }
 
     @Test
@@ -71,7 +71,7 @@ public class UniqueValidatorTest {
         final IStatus status = validator.validate(3);
 
         //Then
-        assertThat(status).isNotOK();
+        assertThat(status.isOK()).isFalse();
     }
 
     @Test
@@ -85,7 +85,7 @@ public class UniqueValidatorTest {
         final IStatus status = validator.validate("Bryant");
 
         //Then
-        assertThat(status).isNotOK();
+        assertThat(status.isOK()).isFalse();
     }
 
     @Test
@@ -99,7 +99,7 @@ public class UniqueValidatorTest {
         final IStatus status = validator.validate("Dwayne");
 
         //Then
-        assertThat(status).isOK();
+        assertThat(status.isOK()).isTrue();
     }
 
     @SuppressWarnings("unused")
