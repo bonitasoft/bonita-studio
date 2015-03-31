@@ -65,6 +65,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.internal.databinding.observable.masterdetail.DetailObservableValue;
 import org.eclipse.core.runtime.IStatus;
@@ -624,37 +625,24 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
                 ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
 
         final ISWTObservableValue observeinstanceDataNameText = SWTObservables.observeText(instanceDataNameText, SWT.Modify);
-        final ISWTObservableValue observeDelayedValue = SWTObservables.observeDelayedValue(200, observeinstanceDataNameText);
-        context.bindValue(observeDelayedValue, expressionNameDetailValue,
-                refactorNameStrategy(expressionNameDetailValue, iteratorObservable), null);
 
-        final MultiValidator groovyReferenceValidatorStatusProvider = new MultiValidator() {
-
-            @Override
-            protected IStatus validate() {
-                return multiValidator()
-                        .addValidator(groovyReferenceValidator(Messages.iterator, true, true))
-                        .addValidator(uniqueValidator().in(visibleData()).onProperty("name").create()).create()
-                        .validate(observeDelayedValue.getValue());
-            }
-        };
-
-        context.addValidationStatusProvider(groovyReferenceValidatorStatusProvider);
-        ControlDecorationSupport.create(groovyReferenceValidatorStatusProvider, SWT.LEFT, iteratorComposite.getParent(),
+        ControlDecorationSupport.create(context.bindValue(SWTObservables.observeDelayedValue(200, observeinstanceDataNameText), expressionNameDetailValue,
+                refactorNameStrategy(expressionNameDetailValue, iteratorObservable), null), SWT.LEFT, iteratorComposite.getParent(),
                 new ControlDecorationUpdater() {
 
-                    @Override
-                    protected void update(final ControlDecoration decoration, final IStatus status) {
-                        if (status.isOK()) {
-                            ieratorLabelDecoration.show();
-                        } else {
-                            ieratorLabelDecoration.hide();
-                        }
-                        decoration.setMarginWidth(2);
-                        super.update(decoration, status);
-                    }
+            @Override
+            protected void update(final ControlDecoration decoration, final IStatus status) {
+                if (status.isOK()) {
+                    ieratorLabelDecoration.show();
+                } else {
+                    ieratorLabelDecoration.hide();
+                }
+                decoration.setMarginWidth(2);
+                super.update(decoration, status);
+            }
 
-                });
+        });
+        
 
         final Label iteratorTypeLabel = widgetFactory.createLabel(iteratorComposite, Messages.type + " *");
         iteratorTypeLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
@@ -731,7 +719,16 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
     private UpdateValueStrategy refactorNameStrategy(final IObservableValue expressionNameDetailValue, final IObservableValue iteratorObservable) {
         final UpdateValueStrategy strategy = new UpdateValueStrategy();
-        strategy.setAfterGetValidator(new GroovyReferenceValidator(Messages.iterator, true, true));
+        strategy.setAfterGetValidator(new IValidator() {
+            
+            @Override
+            public IStatus validate(Object value) {
+               return multiValidator()
+                .addValidator(groovyReferenceValidator(Messages.iterator, true, true))
+                .addValidator(uniqueValidator().in(visibleData()).onProperty("name").create()).create()
+                .validate(value);
+            }
+        });
         strategy.setConverter(new Converter(String.class, String.class) {
 
             @Override
