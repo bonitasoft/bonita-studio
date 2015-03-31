@@ -72,7 +72,10 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
         if (compoundCommand == null) {
             compoundCommand = new CompoundCommand("Refactor Operation");
         }
-        updateReferencesInScripts(monitor);
+        if (canExecute()) {
+            updateReferencesInScripts(monitor);
+        }
+
         if (canExecute()) {
             compoundCommand = doBuildCompoundCommand(compoundCommand, monitor);
         }
@@ -103,7 +106,10 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
         if (monitor == null) {
             monitor = new NullProgressMonitor();
         }
-        compoundCommand = buildCompoundCommand(monitor);
+        if (canExecute()) {
+            compoundCommand = buildCompoundCommand(monitor);
+        }
+
         if (canExecute()) {
             domain.getCommandStack().execute(compoundCommand);
             compoundCommand.dispose();
@@ -297,7 +303,7 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
         return canExecute;
     }
 
-    protected void setCanExecute(final boolean canExecute) {
+    public void setCanExecute(final boolean canExecute) {
         this.canExecute = canExecute;
     }
 

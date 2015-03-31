@@ -52,6 +52,7 @@ import org.bonitasoft.studio.refactoring.core.emf.DetailObservableValueWithRefac
 import org.bonitasoft.studio.refactoring.core.emf.EMFEditWithRefactorObservables;
 import org.bonitasoft.studio.refactoring.core.emf.EditingDomainEObjectObservableValueWithRefactoring;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -453,7 +454,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         ieratorLabelDecoration.setImage(Pics.getImage(PicsConstants.hint));
         ieratorLabelDecoration.setMarginWidth(-3);
 
-        createReturnTypeCombo(widgetFactory, inputGroup, ieratorLabelDecoration);
+        createIteratorControl(widgetFactory, inputGroup, ieratorLabelDecoration);
     }
 
     protected void updateReturnTypeFromSelectedInputCollection(final ComboViewer inputListComboViewer) {
@@ -570,7 +571,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
                 getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__CARDINALITY_EXPRESSION));
     }
 
-    protected void createReturnTypeCombo(final TabbedPropertySheetWidgetFactory widgetFactory, final Composite parent,
+    protected void createIteratorControl(final TabbedPropertySheetWidgetFactory widgetFactory, final Composite parent,
             final ControlDecoration ieratorLabelDecoration) {
         final Composite iteratorComposite = widgetFactory.createPlainComposite(parent, SWT.NONE);
         iteratorComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(6, 0).create());
@@ -592,7 +593,6 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
             @Override
             public void handleValueChange(final ValueChangeEvent event) {
                 expressionContentDetailValue.setValue(event.diff.getNewValue());
-
             }
         });
         expressionReturnTypeDetailValue = EMFEditWithRefactorObservables.observeDetailValueWithRefactor(Realm.getDefault(), iteratorObservable,
@@ -730,6 +730,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
     protected CompoundCommand getRefactorCommand(final Data oldItem, final Data newItem, final MultiInstantiable container) {
         final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
+        op.setCanExecute(validContext());
         op.setDataContainer((DataAware) container);
         op.addItemToRefactor(newItem, oldItem);
         op.setEditingDomain(getEditingDomain());
@@ -750,6 +751,18 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
             return getQualifiedNameFromMultipleData(instantiable.getCollectionDataToMultiInstantiate());
         }
         return new Object();
+    }
+
+    protected boolean validContext() {
+        final Iterator<?> iterator = context.getValidationStatusProviders().iterator();
+        while (iterator.hasNext()) {
+            final ValidationStatusProvider object = (ValidationStatusProvider) iterator.next();
+            final IStatus status = (IStatus) object.getValidationStatus().getValue();
+            if (!status.isOK()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
