@@ -164,6 +164,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         final List<IConfigurationElement> sortedConfigElems = retrievePreStartupContribution();
         sortConfigurationElementsByPriority(sortedConfigElems);
         executeConfigurationElement(sortedConfigElems);
+
         doInitWorkspace();
         doStartEngine();
         executeContributions();

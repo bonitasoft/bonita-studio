@@ -55,7 +55,7 @@ public class ContractEngineDefinitionBuilderTest {
     private ProcessDefinitionBuilder processBuilder;
 
     private ContractEngineDefinitionBuilder<UserTaskDefinitionBuilder> userTaskengineContractBuilder;
-    //    private ContractEngineDefinitionBuilder<ProcessDefinitionBuilder> processengineContractBuilder;
+    private ContractEngineDefinitionBuilder<ProcessDefinitionBuilder> processengineContractBuilder;
 
     private Contract aContract;
 
@@ -67,10 +67,10 @@ public class ContractEngineDefinitionBuilderTest {
      */
     @Before
     public void setUp() throws Exception {
-        //        when(processBuilder.addContract()).thenReturn(contractDefBuilder);
-        //        aContract = ProcessFactory.eINSTANCE.createContract();
-        //        processengineContractBuilder = new ProcessContractEngineBuilder();
-        //        processengineContractBuilder.setEngineBuilder(processBuilder);
+        when(processBuilder.addContract()).thenReturn(contractDefBuilder);
+        aContract = ProcessFactory.eINSTANCE.createContract();
+        processengineContractBuilder = new ProcessContractEngineBuilder();
+        processengineContractBuilder.setEngineBuilder(processBuilder);
 
         when(taskBuilder.addContract()).thenReturn(contractDefBuilder);
         aContract = ProcessFactory.eINSTANCE.createContract();
@@ -103,11 +103,11 @@ public class ContractEngineDefinitionBuilderTest {
         verify(taskBuilder).addContract();
     }
 
-    //    @Test
-    //    public void should_build_build_an_empty_contract_for_process() throws Exception {
-    //        processengineContractBuilder.build(aContract);
-    //        verify(processBuilder).addContract();
-    //    }
+    @Test
+    public void should_build_build_an_empty_contract_for_process() throws Exception {
+        processengineContractBuilder.build(aContract);
+        verify(processBuilder).addContract();
+    }
 
     @Test
     public void should_build_create_a_contract_with_simple_input() throws Exception {
@@ -125,21 +125,21 @@ public class ContractEngineDefinitionBuilderTest {
         verify(contractDefBuilder).addSimpleInput("isMarried", Type.BOOLEAN, null, false);
     }
 
-    //    @Test
-    //    public void should_build_create_a_contract_with_simple_input_for_process() throws Exception {
-    //        addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
-    //        addInput(aContract, "birthDate", ContractInputType.DATE, "Birth date of an employee");
-    //        addInput(aContract, "age", ContractInputType.INTEGER, null);
-    //        addInput(aContract, "salary", ContractInputType.DECIMAL, null);
-    //        addInput(aContract, "isMarried", ContractInputType.BOOLEAN, null);
-    //        processengineContractBuilder.build(aContract);
-    //        verify(processBuilder).addContract();
-    //        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", false);
-    //        verify(contractDefBuilder).addSimpleInput("birthDate", Type.DATE, "Birth date of an employee", false);
-    //        verify(contractDefBuilder).addSimpleInput("age", Type.INTEGER, null, false);
-    //        verify(contractDefBuilder).addSimpleInput("salary", Type.DECIMAL, null, false);
-    //        verify(contractDefBuilder).addSimpleInput("isMarried", Type.BOOLEAN, null, false);
-    //    }
+    @Test
+    public void should_build_create_a_contract_with_simple_input_for_process() throws Exception {
+        addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
+        addInput(aContract, "birthDate", ContractInputType.DATE, "Birth date of an employee");
+        addInput(aContract, "age", ContractInputType.INTEGER, null);
+        addInput(aContract, "salary", ContractInputType.DECIMAL, null);
+        addInput(aContract, "isMarried", ContractInputType.BOOLEAN, null);
+        processengineContractBuilder.build(aContract);
+        verify(processBuilder).addContract();
+        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", false);
+        verify(contractDefBuilder).addSimpleInput("birthDate", Type.DATE, "Birth date of an employee", false);
+        verify(contractDefBuilder).addSimpleInput("age", Type.INTEGER, null, false);
+        verify(contractDefBuilder).addSimpleInput("salary", Type.DECIMAL, null, false);
+        verify(contractDefBuilder).addSimpleInput("isMarried", Type.BOOLEAN, null, false);
+    }
 
     private ContractInput addInput(final Contract contract, final String inputName, final ContractInputType type, final String description) {
         final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();

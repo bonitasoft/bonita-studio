@@ -22,6 +22,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -64,37 +65,73 @@ public class FormMappingConstraintTest {
 
     @Test
     public void should_return_an_error_if_form_doesnt_exists_in_repository() throws Exception {
+        //Given
         doReturn(
-                aTask().withName("t1").havingFormMapping(aFormMapping().internal().havingTargetForm(anExpression().withContent("an_id_that_doesnt_esists")))
+                aTask().withName("t1").havingFormMapping(aFormMapping().havingTargetForm(anExpression().withContent("an_id_that_doesnt_esists")))
                         .build().getFormMapping()).when(ctx).getTarget();
 
+        //When
         final IStatus status = formMappingConstraint.performBatchValidation(ctx);
 
+        //Then
         assertThat(status).isNotOK();
     }
 
     @Test
     public void should_return_a_valid_status_if_form_exists_in_repository() throws Exception {
-        doReturn(aFormMapping().internal().havingTargetForm(anExpression().withContent("an_id_that_esists")).build()).when(ctx).getTarget();
+        //Given
+        doReturn(aFormMapping().havingTargetForm(anExpression().withContent("an_id_that_esists")).build()).when(ctx).getTarget();
         doReturn(fileStore).when(webPageRepositoryStore).getChild("an_id_that_esists.json");
 
+        //When
         final IStatus status = formMappingConstraint.performBatchValidation(ctx);
 
+        //Then
         assertThat(status).isOK();
     }
 
     @Test
     public void should_return_a_valid_status_if_no_target_form_on_mapping() throws Exception {
-        doReturn(aFormMapping().internal().havingTargetForm(anExpression()).build()).when(ctx).getTarget();
+        //Given
+        doReturn(aFormMapping().havingTargetForm(anExpression()).build()).when(ctx).getTarget();
 
+        //When
         final IStatus status = formMappingConstraint.performBatchValidation(ctx);
 
+        //Then
         assertThat(status).isOK();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void should_throw_an_IllegalArgumentException_if_target_is_not_a_FormMapping() throws Exception {
+        //Given
         doReturn(anExpression().build()).when(ctx).getTarget();
+
+        //When
         formMappingConstraint.performBatchValidation(ctx);
+    }
+
+    @Test
+    public void should_return_a_valid_status_for_legacy_type() throws Exception {
+        //Given
+        doReturn(aFormMapping().withType(FormMappingType.LEGACY).havingTargetForm(anExpression()).build()).when(ctx).getTarget();
+
+        //When
+        final IStatus status = formMappingConstraint.performBatchValidation(ctx);
+
+        //Then
+        assertThat(status).isOK();
+    }
+
+    @Test
+    public void should_return_an__error_status_if_not_url_set_for_URL_type() throws Exception {
+        //Given
+        doReturn(aTask().withName("t1").havingFormMapping(aFormMapping().withType(FormMappingType.URL)).build().getFormMapping()).when(ctx).getTarget();
+
+        //When
+        final IStatus status = formMappingConstraint.performBatchValidation(ctx);
+
+        //Then
+        assertThat(status).isNotOK();
     }
 }

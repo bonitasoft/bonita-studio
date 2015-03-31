@@ -110,6 +110,7 @@ public class WorkspaceResourceServerManagerTest {
     @Test(expected = BindException.class)
     public void should_throw_an_exception_if_port_already_in_use() throws Exception {
         workspaceResourceServerManager.stop();
+        final int port = SocketUtil.findFreePort();
         new Thread(new Runnable() {
 
             @Override
