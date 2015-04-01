@@ -5,8 +5,9 @@ Bundle-SymbolicName: org.bonitasoft.studio.tests;singleton:=true
 Bundle-Version: 7.0.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Eclipse-BundleShape: dir
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ClassPath: .,
+ lib/org.restlet.ext.html-2.2.3.jar
 Require-Bundle: org.junit;bundle-version="4.11.0",
  org.eclipse.core.runtime,
  org.bonitasoft.studio.engine.test,
@@ -110,6 +111,7 @@ Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.processzoo,
  org.bonitasoft.studio.tests.processzoo.examples,
  org.bonitasoft.studio.tests.refactoring.widget,
+ org.bonitasoft.studio.tests.repository,
  org.bonitasoft.studio.tests.stress,
  org.bonitasoft.studio.tests.subprocess,
  org.bonitasoft.studio.tests.timer
