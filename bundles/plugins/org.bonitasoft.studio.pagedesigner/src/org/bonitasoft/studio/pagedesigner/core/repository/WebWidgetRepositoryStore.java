@@ -92,6 +92,11 @@ public class WebWidgetRepositoryStore extends AbstractRepositoryStore<WebWidgetF
     }
 
     @Override
+    public boolean canBeExported() {
+        return false;
+    }
+
+    @Override
     public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
         //NOTHING TO MIGRATE
     }

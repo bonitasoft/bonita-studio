@@ -40,6 +40,14 @@ public class CustomPageBarResourceFactory {
     @Inject
     private PageDesignerURLFactory pageDesignerURLFactory;
 
+    public CustomPageBarResourceFactory() {
+
+    }
+
+    CustomPageBarResourceFactory(final PageDesignerURLFactory pageDesignerURLFactory) {
+        this.pageDesignerURLFactory = pageDesignerURLFactory;
+    }
+
     public BarResource newBarResource(final String targetFormCustomPageId, final String formPageTechnicalUUID) throws BarResourceCreationException {
         try {
             return new BarResource(BAR_CUSTOMPAGES_LOCATION + "/" + targetFormCustomPageId + ".zip",

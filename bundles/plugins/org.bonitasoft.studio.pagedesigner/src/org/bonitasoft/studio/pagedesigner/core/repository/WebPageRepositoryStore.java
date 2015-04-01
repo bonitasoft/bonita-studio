@@ -17,7 +17,10 @@ package org.bonitasoft.studio.pagedesigner.core.repository;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
+import org.bonitasoft.studio.pagedesigner.core.bos.WebFormBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -32,6 +35,9 @@ public class WebPageRepositoryStore extends AbstractRepositoryStore<WebPageFileS
     private final static Set<String> extensions = new HashSet<String>();
     public static final String JSON_EXTENSION = "json";
     public static final String WEB_FORM_REPOSITORY_NAME = "web_page";
+
+    @Inject
+    private WebFormBOSArchiveFileStoreProvider filseStoreProvider;
 
     static {
         extensions.add(JSON_EXTENSION);
@@ -59,7 +65,9 @@ public class WebPageRepositoryStore extends AbstractRepositoryStore<WebPageFileS
 
     @Override
     public WebPageFileStore createRepositoryFileStore(final String fileName) {
-        return new WebPageFileStore(fileName, this);
+        final WebPageFileStore webPageFileStore = new WebPageFileStore(fileName, this);
+        webPageFileStore.setWebFormBOSArchiveFileStoreProvider(filseStoreProvider);
+        return webPageFileStore;
     }
 
     @Override

@@ -99,7 +99,7 @@ public class PageDesignerMappingComposite extends Composite implements BonitaPre
         final FormMapping mapping = (FormMapping) formMappingObservable.getValue();
         final Expression targetForm = mapping.getTargetForm();
         if (targetForm.hasContent()) {
-            repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent()).open();
+            repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent() + ".json").open();
         }
     }
 }

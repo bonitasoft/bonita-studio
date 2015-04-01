@@ -16,11 +16,13 @@ package org.bonitasoft.studio.pagedesigner.core.repository;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -49,4 +51,13 @@ public class WebWidgetFileStore extends NamedJSONFileStore {
         return toJSONObject(jsonFile);
     }
 
+    @Override
+    public boolean canBeExported() {
+        try {
+            return getBooleanAttribute("custom");
+        } catch (JSONException | ReadFileStoreException e) {
+            BonitaStudioLog.error(String.format("Failed to retrieve 'custom' attribute in widget %s", getName()), e);
+        }
+        return super.canBeExported();
+    }
 }

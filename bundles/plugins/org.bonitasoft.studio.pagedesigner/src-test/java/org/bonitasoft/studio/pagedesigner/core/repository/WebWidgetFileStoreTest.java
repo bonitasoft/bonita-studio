@@ -88,4 +88,22 @@ public class WebWidgetFileStoreTest {
 
         webWidgetFileStore.getContent();
     }
+
+    @Test
+    public void should_be_exportable_only_if_a_custom_widget() throws Exception {
+        doReturn(true).when(webWidgetFileStore).getBooleanAttribute("custom");
+
+        final boolean canBeExported = webWidgetFileStore.canBeExported();
+
+        assertThat(canBeExported).isTrue();
+    }
+
+    @Test
+    public void should_not_be_exportable_if_a_not_custom_widget() throws Exception {
+        doReturn(false).when(webWidgetFileStore).getBooleanAttribute("custom");
+
+        final boolean canBeExported = webWidgetFileStore.canBeExported();
+
+        assertThat(canBeExported).isFalse();
+    }
 }

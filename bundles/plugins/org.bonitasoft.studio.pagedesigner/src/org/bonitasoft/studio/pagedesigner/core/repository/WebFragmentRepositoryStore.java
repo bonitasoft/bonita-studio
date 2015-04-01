@@ -63,6 +63,11 @@ public class WebFragmentRepositoryStore extends AbstractRepositoryStore<WebFragm
     }
 
     @Override
+    public boolean canBeExported() {
+        return false;
+    }
+
+    @Override
     public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
         //NOTHING TO MIGRATE
     }
