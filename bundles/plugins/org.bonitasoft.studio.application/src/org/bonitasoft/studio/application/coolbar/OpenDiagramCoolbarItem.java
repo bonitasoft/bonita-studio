@@ -23,13 +23,10 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.jface.action.IContributionManager;
+import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
@@ -38,53 +35,11 @@ import org.eclipse.ui.commands.ICommandService;
 /**
  * @author Romain Bioteau
  */
-public class OpenDiagramCoolbarItem implements IBonitaContributionItem {
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#dispose()
-     */
-    @Override
-    public void dispose() {
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Composite)
-     */
-    @Override
-    public void fill(final Composite parent) {
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Menu, int)
-     */
-    @Override
-    public void fill(final Menu parent, final int index) {
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.ToolBar, int)
-     */
-    @Override
-    public void fill(final ToolBar parent, final int index) {
-
-    }
+public class OpenDiagramCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
     private Command getCommand() {
         final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-        final Command cmd = service.getCommand("org.bonitasoft.studio.diagram.command.openDiagram");
-        return cmd;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.CoolBar, int)
-     */
-    @Override
-    public void fill(final CoolBar parent, final int index) {
+        return service.getCommand("org.bonitasoft.studio.diagram.command.openDiagram");
     }
 
     /*
@@ -102,98 +57,7 @@ public class OpenDiagramCoolbarItem implements IBonitaContributionItem {
      */
     @Override
     public boolean isEnabled() {
-        final DiagramRepositoryStore diagramSotre = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        return !diagramSotre.isEmpty();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isDirty()
-     */
-    @Override
-    public boolean isDirty() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isDynamic()
-     */
-    @Override
-    public boolean isDynamic() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isGroupMarker()
-     */
-    @Override
-    public boolean isGroupMarker() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isSeparator()
-     */
-    @Override
-    public boolean isSeparator() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-        return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#saveWidgetState()
-     */
-    @Override
-    public void saveWidgetState() {
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#setParent(org.eclipse.jface.action.IContributionManager)
-     */
-    @Override
-    public void setParent(final IContributionManager parent) {
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#setVisible(boolean)
-     */
-    @Override
-    public void setVisible(final boolean visible) {
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#update()
-     */
-    @Override
-    public void update() {
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#update(java.lang.String)
-     */
-    @Override
-    public void update(final String id) {
-
+        return !RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class).isEmpty();
     }
 
     @Override

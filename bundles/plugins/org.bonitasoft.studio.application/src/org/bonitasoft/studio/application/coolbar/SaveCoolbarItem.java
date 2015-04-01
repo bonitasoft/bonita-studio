@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.application.coolbar;
 
@@ -26,15 +24,12 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.jface.action.IContributionManager;
+import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorPart;
@@ -46,59 +41,15 @@ import org.eclipse.ui.internal.handlers.DirtyStateTracker;
 
 /**
  * @author Romain Bioteau
- *
  */
-public class SaveCoolbarItem implements IBonitaContributionItem, ISelectionChangedListener {
+public class SaveCoolbarItem extends ContributionItem implements IBonitaContributionItem, ISelectionChangedListener {
 
     private ToolItem item;
     private DirtyStateTracker dirtyStateTracker;
 
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#dispose()
-     */
-    @Override
-    public void dispose() {
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Composite)
-     */
-    @Override
-    public void fill(final Composite parent) {
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Menu, int)
-     */
-    @Override
-    public void fill(final Menu parent, final int index) {
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.ToolBar, int)
-     */
-    @Override
-    public void fill(final ToolBar parent, final int index) {
-
-    }
-
     private Command getCommand() {
         final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-        final Command cmd = service.getCommand("org.eclipse.ui.file.save");
-        return cmd;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.CoolBar, int)
-     */
-    @Override
-    public void fill(final CoolBar parent, final int index) {
+        return service.getCommand("org.eclipse.ui.file.save");
     }
 
     /*
@@ -118,100 +69,6 @@ public class SaveCoolbarItem implements IBonitaContributionItem, ISelectionChang
     public boolean isEnabled() {
         final Command cmd = getCommand();
         return cmd.isEnabled();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isDirty()
-     */
-    @Override
-    public boolean isDirty() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isDynamic()
-     */
-    @Override
-    public boolean isDynamic() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isGroupMarker()
-     */
-    @Override
-    public boolean isGroupMarker() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isSeparator()
-     */
-    @Override
-    public boolean isSeparator() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-        return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#saveWidgetState()
-     */
-    @Override
-    public void saveWidgetState() {
-
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#setParent(org.eclipse.jface.action.IContributionManager)
-     */
-    @Override
-    public void setParent(final IContributionManager parent) {
-
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#setVisible(boolean)
-     */
-    @Override
-    public void setVisible(final boolean visible) {
-
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#update()
-     */
-    @Override
-    public void update() {
-
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#update(java.lang.String)
-     */
-    @Override
-    public void update(final String id) {
-
     }
 
     @Override
