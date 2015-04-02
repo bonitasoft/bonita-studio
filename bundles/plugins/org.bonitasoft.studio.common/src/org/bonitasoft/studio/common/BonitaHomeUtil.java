@@ -134,14 +134,14 @@ public class BonitaHomeUtil {
 		FileInputStream inStream = null;
 		FileOutputStream out = null;
 		try{
-			inStream = new FileInputStream(bonitaClientFile);
+			inStream = new FileInputStream(defaultBonitaClientFile);
 			p.load(inStream);
 			p.setProperty(API_TYPE, apiType);
 			if(HTTP.equals(apiType)){
 				p.setProperty(SERVER_URL, "http://"+host+":"+serverPort);
 				p.setProperty(APPLICATION_NAME, BONITA_APPLICATION);
 			}
-			out = new FileOutputStream(bonitaClientFile);
+			out = new FileOutputStream(customBonitaClientFile);
 			p.store(out, null);
 			APITypeManager.refresh();
 		}catch (final Exception e) {
