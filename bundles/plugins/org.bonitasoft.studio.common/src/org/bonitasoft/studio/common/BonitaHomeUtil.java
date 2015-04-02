@@ -126,7 +126,7 @@ public class BonitaHomeUtil {
 		final File customBonitaClientFile = new File(clientConfFolder,"bonita-client-custom.properties");
 		if(!bonitaClientFile.exists()){
             initBonitaHome();
-            if (!bonitaClientFile.exists()) {
+            if (!defaultBonitaClientFile.exists()) {
                 throw new RuntimeException("bonita-client.properties not found in the bonita home");
             }
 		}
