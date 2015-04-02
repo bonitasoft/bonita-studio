@@ -24,6 +24,6 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
  */
 public interface IFileStoreChangeListener {
 	
-	void notifyFileStoreEvent(FileStoreChangeEvent event) ;
+	void handleFileStoreEvent(FileStoreChangeEvent event) ;
 	
 }

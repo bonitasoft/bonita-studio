@@ -26,7 +26,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class ConnectorBuilder extends ElementBuilder<Connector, ConnectorBuilder> {
 
-    public static ConnectorBuilder createConnectorBuilder() {
+    public static ConnectorBuilder aConnector() {
         return new ConnectorBuilder();
     }
 

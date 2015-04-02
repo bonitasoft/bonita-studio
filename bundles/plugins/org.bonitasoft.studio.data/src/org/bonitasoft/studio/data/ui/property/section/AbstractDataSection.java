@@ -550,12 +550,42 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
             context.dispose();
         }
         context = new EMFDataBindingContext();
-        if (getEObject() != null) {
-            if (dataTableViewer != null) {
-                final IObservableList dataObservableList = EMFEditObservables.observeList(getEditingDomain(), getEObject(), getDataFeature());
-                dataTableViewer.setInput(dataObservableList);
-                final UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
-                enableStrategy.setConverter(new Converter(Data.class, Boolean.class) {
+        if (getEObject() != null && dataTableViewer != null) {
+            final IObservableList dataObservableList = EMFEditObservables.observeList(getEditingDomain(), getEObject(), getDataFeature());
+            dataTableViewer.setInput(dataObservableList);
+            final UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
+            enableStrategy.setConverter(new Converter(Data.class, Boolean.class) {
+
+                @Override
+                public Object convert(final Object fromObject) {
+                    return fromObject != null;
+                }
+
+            });
+
+            context.bindValue(SWTObservables.observeEnabled(updateDataButton), ViewersObservables.observeSingleSelection(dataTableViewer),
+                    new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy);
+            context.bindValue(SWTObservables.observeEnabled(removeDataButton), ViewersObservables.observeSingleSelection(dataTableViewer),
+                    new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy);
+
+            if (promoteDataButton != null) {
+                final UpdateValueStrategy enableMoveStrategy = new UpdateValueStrategy();
+                enableMoveStrategy.setConverter(new Converter(Data.class, Boolean.class) {
+
+                    @Override
+                    public Object convert(final Object fromObject) {
+                        return fromObject != null && ModelHelper.getParentProcess(getEObject()) != null && !((Data) fromObject).isTransient();
+                    }
+
+                });
+                context.bindValue(SWTObservables.observeEnabled(promoteDataButton), ViewersObservables.observeSingleSelection(dataTableViewer),
+                        new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableMoveStrategy);
+            }
+
+            if (businessDataComposite != null) {
+                businessDataComposite.setVisible(getEObject() instanceof Pool);
+                final UpdateValueStrategy enableStrategy2 = new UpdateValueStrategy();
+                enableStrategy2.setConverter(new Converter(Data.class, Boolean.class) {
 
                     @Override
                     public Object convert(final Object fromObject) {
@@ -564,47 +594,15 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
                 });
 
-                context.bindValue(SWTObservables.observeEnabled(updateDataButton), ViewersObservables.observeSingleSelection(dataTableViewer),
-                        new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy);
-                context.bindValue(SWTObservables.observeEnabled(removeDataButton), ViewersObservables.observeSingleSelection(dataTableViewer),
-                        new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy);
+                final IObservableList businessDataObservableList = EMFEditObservables.observeList(getEditingDomain(), getEObject(), getDataFeature());
+                businessDataTableViewer.setInput(businessDataObservableList);
 
-                if (promoteDataButton != null) {
-                    final UpdateValueStrategy enableMoveStrategy = new UpdateValueStrategy();
-                    enableMoveStrategy.setConverter(new Converter(Data.class, Boolean.class) {
-
-                        @Override
-                        public Object convert(final Object fromObject) {
-                            return fromObject != null && ModelHelper.getParentProcess(getEObject()) != null && !((Data) fromObject).isTransient();
-                        }
-
-                    });
-                    context.bindValue(SWTObservables.observeEnabled(promoteDataButton), ViewersObservables.observeSingleSelection(dataTableViewer),
-                            new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableMoveStrategy);
-                }
-
-                if (businessDataComposite != null) {
-                    businessDataComposite.setVisible(getEObject() instanceof Pool);
-                    final UpdateValueStrategy enableStrategy2 = new UpdateValueStrategy();
-                    enableStrategy2.setConverter(new Converter(Data.class, Boolean.class) {
-
-                        @Override
-                        public Object convert(final Object fromObject) {
-                            return fromObject != null;
-                        }
-
-                    });
-
-                    final IObservableList businessDataObservableList = EMFEditObservables.observeList(getEditingDomain(), getEObject(), getDataFeature());
-                    businessDataTableViewer.setInput(businessDataObservableList);
-
-                    context.bindValue(SWTObservables.observeEnabled(updateBusinessDataButton),
-                            ViewersObservables.observeSingleSelection(businessDataTableViewer),
-                            new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy2);
-                    context.bindValue(SWTObservables.observeEnabled(removeBusinessDataButton),
-                            ViewersObservables.observeSingleSelection(businessDataTableViewer),
-                            new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy2);
-                }
+                context.bindValue(SWTObservables.observeEnabled(updateBusinessDataButton),
+                        ViewersObservables.observeSingleSelection(businessDataTableViewer),
+                        new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy2);
+                context.bindValue(SWTObservables.observeEnabled(removeBusinessDataButton),
+                        ViewersObservables.observeSingleSelection(businessDataTableViewer),
+                        new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy2);
             }
         }
     }

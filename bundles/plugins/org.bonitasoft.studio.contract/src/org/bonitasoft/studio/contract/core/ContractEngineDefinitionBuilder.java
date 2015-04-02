@@ -30,7 +30,6 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
- *
  */
 public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefinitionBuilder<T> {
 

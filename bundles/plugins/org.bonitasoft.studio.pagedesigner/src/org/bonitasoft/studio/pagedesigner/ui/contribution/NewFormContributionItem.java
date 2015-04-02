@@ -18,25 +18,22 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.expression.provider.ExpressionItemProvider;
-import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory;
 import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.provider.FormMappingItemProvider;
-import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
+import org.bonitasoft.studio.pagedesigner.core.command.UpdateFormMappingCommand;
 import org.bonitasoft.studio.pagedesigner.core.expression.CreateNewFormProposalListener;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -88,7 +85,7 @@ public class NewFormContributionItem extends ContributionItem {
         final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
         if (pageFlow != null) {
             final FormMapping formMapping = pageFlow.getFormMapping();
-            return formMapping.isExternal() ? isNullOrEmpty(formMapping.getUrl()) : !formMapping.getTargetForm().hasName();
+            return formMapping.getType() == FormMappingType.URL ? isNullOrEmpty(formMapping.getUrl()) : !formMapping.getTargetForm().hasName();
         }
         return false;
     }
@@ -123,20 +120,9 @@ public class NewFormContributionItem extends ContributionItem {
         repositoryStore.refresh();
         final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId + ".json");
         if (webPageFileStore != null) {
-            final FormMappingItemProvider formMappingItemProvider = new FormMappingItemProvider(new ProcessItemProviderAdapterFactory());
-            final ExpressionItemProvider expressionItemProvider = new ExpressionItemProvider(new ExpressionItemProviderAdapterFactory());
-            final Expression targetForm = pageflow.getFormMapping().getTargetForm();
-            expressionItemProvider.setPropertyValue(targetForm,
-                    ExpressionPackage.Literals.EXPRESSION__NAME.getName(), webPageFileStore.getDisplayName());
-            expressionItemProvider.setPropertyValue(targetForm,
-                    ExpressionPackage.Literals.EXPRESSION__CONTENT.getName(), newPageId);
-            expressionItemProvider.setPropertyValue(targetForm,
-                    ExpressionPackage.Literals.EXPRESSION__TYPE.getName(), ExpressionConstants.FORM_REFERENCE_TYPE);
-            expressionItemProvider.setPropertyValue(targetForm,
-                    ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE.getName(), String.class.getName());
-            expressionItemProvider.setPropertyValue(targetForm,
-                    ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE_FIXED.getName(), true);
-            formMappingItemProvider.setPropertyValue(pageflow.getFormMapping(), ProcessPackage.Literals.FORM_MAPPING__EXTERNAL.getName(), false);
+            final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(pageflow);
+            editingDomain.getCommandStack().execute(new UpdateFormMappingCommand(editingDomain, pageflow.getFormMapping(),
+                    ExpressionHelper.createFormReferenceExpression(webPageFileStore.getDisplayName(), newPageId)));
             toolItem.setEnabled(false);
         }
     }

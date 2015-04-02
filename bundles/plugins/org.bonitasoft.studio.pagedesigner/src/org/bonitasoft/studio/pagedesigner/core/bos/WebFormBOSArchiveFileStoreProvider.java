@@ -17,11 +17,11 @@ package org.bonitasoft.studio.pagedesigner.core.bos;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Predicates.containsPattern;
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.regex.Pattern.compile;
-import static org.assertj.core.util.Strings.isNullOrEmpty;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAllItemsOfType;
 
 import java.io.ByteArrayInputStream;
@@ -44,6 +44,7 @@ import org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProv
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pagedesigner.core.bar.BarResourceCreationException;
 import org.bonitasoft.studio.pagedesigner.core.bar.CustomPageBarResourceFactory;
@@ -182,7 +183,7 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
 
             @Override
             public boolean apply(final FormMapping mapping) {
-                return !mapping.isExternal() && mapping.getTargetForm().hasContent();
+                return mapping.getType() == FormMappingType.INTERNAL && mapping.getTargetForm().hasContent();
             }
         };
     }

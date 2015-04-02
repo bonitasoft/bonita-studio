@@ -261,7 +261,7 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
     public void fireFileStoreEvent(final FileStoreChangeEvent event) {
         final IRepository repository = RepositoryManager.getInstance().getCurrentRepository();
         if (repository != null) {
-            repository.notifyFileStoreEvent(event);
+            repository.handleFileStoreEvent(event);
         }
     }
 

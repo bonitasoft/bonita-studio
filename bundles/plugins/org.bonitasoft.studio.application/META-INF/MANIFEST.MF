@@ -65,8 +65,8 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  assertj-core;bundle-version="1.5.0";resolution:=optional,
  org.bonitasoft.studio.tests-utils;bundle-version="6.4.1";resolution:=optional,
  org.eclipse.debug.ui,
- org.codehaus.groovy.eclipse.ui;bundle-version="2.9.1"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+ org.codehaus.groovy.eclipse.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.1.0",
  javax.inject;version="1.0.0",

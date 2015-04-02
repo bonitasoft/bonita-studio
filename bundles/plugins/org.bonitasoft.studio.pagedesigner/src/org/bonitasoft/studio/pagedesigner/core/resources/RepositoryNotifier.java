@@ -31,32 +31,32 @@ public class RepositoryNotifier {
     }
 
     public void postImport() {
-        repository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
+        repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
     }
 
     public void preImport() {
-        repository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
+        repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
     }
 
     public void postDelete(final IRepositoryFileStore fileStore) throws ResourceNotFoundException {
         fileStore.getParentStore().refresh();
-        repository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_DELETE, fileStore));
+        repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_DELETE, fileStore));
     }
 
     public void postClose(final IRepositoryFileStore fileStore) throws ResourceNotFoundException {
         checkExists(fileStore);
-        repository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_CLOSE, fileStore));
+        repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_CLOSE, fileStore));
     }
 
     public void preOpen(final IRepositoryFileStore fileStore) throws LockedResourceException, ResourceNotFoundException {
         fileStore.getParentStore().refresh();
         checkExists(fileStore);
-        repository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, fileStore));
+        repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, fileStore));
     }
 
     public void postSave(final IRepositoryFileStore fileStore) {
         fileStore.getParentStore().refresh();
-        repository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, fileStore));
+        repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, fileStore));
     }
 
     private void checkExists(final IRepositoryFileStore fileStore) throws ResourceNotFoundException {
