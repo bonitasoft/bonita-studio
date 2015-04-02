@@ -44,19 +44,19 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     }
 
     public URL openPageDesignerHome() throws MalformedURLException {
-        return new URL("http://" + host() + ":" + port() + "/" + PAGE_BUILDER_ROOT);
+        return new URL(baseURL());
     }
 
     public URL openPage(final String pageId) throws MalformedURLException {
-        return new URL("http://" + host() + ":" + port() + "/" + PAGE_BUILDER_ROOT + "/#/" + Locale.getDefault().getLanguage() + "/pages/" + pageId);
+        return new URL(baseURL() + "/#/" + Locale.getDefault().getLanguage() + "/pages/" + pageId);
     }
 
     public URL newPage() throws MalformedURLException {
-        return new URL("http://" + host() + ":" + port() + "/" + PAGE_BUILDER_ROOT + "/api/rest/pages/");
+        return new URL(baseURL() + "/api/rest/pages/");
     }
 
     public URL exportPage(final String pageId) throws MalformedURLException {
-        return new URL("http://" + host() + ":" + port() + "/" + PAGE_BUILDER_ROOT + "/api/export/page/" + pageId);
+        return new URL(baseURL() + "/api/export/page/" + pageId);
     }
 
     private String host() {
@@ -69,5 +69,9 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
         final int port = preferenceStore.getInt(CONSOLE_PORT, DEFAULT_PORT);
         checkArgument(port > 0);
         return String.valueOf(port);
+    }
+
+    private String baseURL() {
+        return "http://" + host() + ":" + port() + "/" + PAGE_BUILDER_ROOT;
     }
 }

@@ -1,27 +1,25 @@
 /**
  * Copyright (C) 2010-2011 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.groovy.tests;
+package org.bonitasoft.studio.tests.groovy;
 
 import static org.bonitasoft.studio.dependencies.i18n.Messages.selectMissingJarTitle;
 
 import java.io.IOException;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.groovy.ui.Messages;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
@@ -34,6 +32,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 /**
  * @author Aurelien Pupier
  */
@@ -43,15 +42,15 @@ public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
     @Override
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         //WORKAROUND : we need to load bonitasoft groovy ui plugin before start of the test.
         // There are issues with access to PreferenceStore of Groovy plugin in Activator of BonitaSoft Grooy UI plugin.
         System.out.println(Messages.add);
         FileActionDialog.setDisablePopup(true);
+        BOSEngineManager.getInstance().start();
     }
 
     @Test
-    public void testOpenBonitaGroovyEditorDialog() throws ExecutionException, CoreException, IOException{
+    public void testOpenBonitaGroovyEditorDialog() throws ExecutionException, CoreException, IOException {
         bot.menu("Development").menu("Manage Groovy scripts...").click();
         bot.waitUntil(Conditions.shellIsActive("Manage Groovy scripts"));
         bot.tree().setFocus();
@@ -65,30 +64,30 @@ public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
         bot.button("Evaluate").click();
         bot.waitUntil(Conditions.shellIsActive(selectMissingJarTitle));
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.waitUntil(Conditions.shellIsActive("Evaluation results"), 30000);
-        boolean groovyEvaluateOK = "test me".equals(bot.text().getText());
-        if(!groovyEvaluateOK){
-        	bot.button(IDialogConstants.CANCEL_LABEL).click();
+        bot.waitUntil(Conditions.shellIsActive("Evaluation results"), 60000);
+        final boolean groovyEvaluateOK = "test me".equals(bot.text().getText());
+        if (!groovyEvaluateOK) {
+            bot.button(IDialogConstants.CANCEL_LABEL).click();
             bot.button(IDialogConstants.OK_LABEL).click();
         }
         assertTrue("Error while evaluating groovy script", groovyEvaluateOK);
         bot.button(IDialogConstants.OK_LABEL).click();
-        if(!FileActionDialog.getDisablePopup()){
+        if (!FileActionDialog.getDisablePopup()) {
             bot.button(IDialogConstants.OK_LABEL).click();
         }
         bot.button(IDialogConstants.CANCEL_LABEL);
     }
-    
+
     @After
-    public void closeDialog() throws Exception{
-    	SWTBotButton button = bot.button(IDialogConstants.CANCEL_LABEL);
-		if(button.isEnabled()){
-    		button.click();
-    	}
-		button = bot.button(IDialogConstants.CANCEL_LABEL);
-		if(button.isEnabled()){
-    		button.click();
-    	}
+    public void closeDialog() throws Exception {
+        SWTBotButton button = bot.button(IDialogConstants.CANCEL_LABEL);
+        if (button.isEnabled()) {
+            button.click();
+        }
+        button = bot.button(IDialogConstants.CANCEL_LABEL);
+        if (button.isEnabled()) {
+            button.click();
+        }
     }
 
 }
