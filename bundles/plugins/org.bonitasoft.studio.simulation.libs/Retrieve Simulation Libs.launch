@@ -16,5 +16,5 @@
 <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
 <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 </listAttribute>
-<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="C:/git/bonita-studio/bundles/plugins/org.bonitasoft.studio.simulation.libs"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:/org.bonitasoft.studio.simulation.libs}"/>
 </launchConfiguration>
