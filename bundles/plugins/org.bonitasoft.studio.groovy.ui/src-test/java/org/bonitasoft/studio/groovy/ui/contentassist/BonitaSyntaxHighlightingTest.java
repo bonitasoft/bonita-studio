@@ -15,25 +15,22 @@
 package org.bonitasoft.studio.groovy.ui.contentassist;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
-import org.bonitasoft.engine.bdm.dao.BusinessObjectDAO;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.IRegion;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.ITypeHierarchy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Romain Bioteau
@@ -41,26 +38,27 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class BonitaSyntaxHighlightingTest {
 
-    @Spy
     private BonitaSyntaxHighlighting bonitaSyntaxHighlighting;
+
     @Mock
     private IJavaProject javaProject;
-    @Mock
-    private IClasspathEntry repositoryDependenies;
-    @Mock
-    private IPackageFragmentRoot packageFragmentRoot;
-    @Mock
-    private ITypeHierarchy typeHierarchy;
-    @Mock
-    private IType daoType;
+
     @Mock
     private IType employeeDAOType;
+
+    @Mock
+    private RepositoryAccessor repositoryAccessor;
+
+    @Mock
+    private BusinessObjectModelRepositoryStore boRepoStore;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
+        bonitaSyntaxHighlighting = spy(new BonitaSyntaxHighlighting(repositoryAccessor));
+        when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(boRepoStore);
         doReturn(javaProject).when(bonitaSyntaxHighlighting).currentJavaProject();
     }
 
@@ -72,20 +70,8 @@ public class BonitaSyntaxHighlightingTest {
     }
 
     @Test
-    public void should_create_a_region_with_bdm_jar() throws Exception {
-        doReturn(new Path("repositoryDependencies")).when(repositoryDependenies).getPath();
-        doReturn(new IClasspathEntry[] { repositoryDependenies }).when(javaProject).getRawClasspath();
-        doReturn("bdm-client-pojo.jar").when(packageFragmentRoot).getElementName();
-        doReturn(new IPackageFragmentRoot[] { packageFragmentRoot }).when(javaProject).findPackageFragmentRoots(repositoryDependenies);
-
-        assertThat(bonitaSyntaxHighlighting.regionWithBDM(javaProject).contains(packageFragmentRoot)).isTrue();
-    }
-
-    @Test
     public void should_add_business_object_dao() throws Exception {
-        doReturn(daoType).when(javaProject).findType(BusinessObjectDAO.class.getName());
-        doReturn(typeHierarchy).when(javaProject).newTypeHierarchy(eq(daoType), notNull(IRegion.class), notNull(IProgressMonitor.class));
-        doReturn(new IType[] { employeeDAOType }).when(typeHierarchy).getAllSubtypes(daoType);
+        doReturn(Lists.newArrayList(employeeDAOType)).when(boRepoStore).allBusinessObjectDao(javaProject);
         doReturn("EmployeeDAO").when(employeeDAOType).getElementName();
 
         assertThat(bonitaSyntaxHighlighting.getAdditionalGJDKKeywords()).contains("employeeDAO");

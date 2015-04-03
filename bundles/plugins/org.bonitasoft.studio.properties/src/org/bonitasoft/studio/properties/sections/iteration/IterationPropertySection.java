@@ -16,6 +16,8 @@ package org.bonitasoft.studio.properties.sections.iteration;
 
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.groovyReferenceValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.uniqueValidator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
@@ -39,6 +41,7 @@ import org.bonitasoft.studio.groovy.DisplayEngineExpressionWithName;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -51,6 +54,7 @@ import org.bonitasoft.studio.refactoring.core.emf.DetailObservableValueWithRefac
 import org.bonitasoft.studio.refactoring.core.emf.EMFEditWithRefactorObservables;
 import org.bonitasoft.studio.refactoring.core.emf.EditingDomainEObjectObservableValueWithRefactoring;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -459,7 +463,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
         ieratorLabelDecoration.setImage(Pics.getImage(PicsConstants.hint));
         ieratorLabelDecoration.setMarginWidth(-3);
 
-        createReturnTypeCombo(widgetFactory, inputGroup, ieratorLabelDecoration);
+        createIteratorControl(widgetFactory, inputGroup, ieratorLabelDecoration);
     }
 
     protected void updateReturnTypeFromSelectedInputCollection(final ComboViewer inputListComboViewer) {
@@ -577,7 +581,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
                 selectionObservable, ProcessPackage.Literals.MULTI_INSTANTIABLE__CARDINALITY_EXPRESSION));
     }
 
-    protected void createReturnTypeCombo(final TabbedPropertySheetWidgetFactory widgetFactory, final Composite parent,
+    protected void createIteratorControl(final TabbedPropertySheetWidgetFactory widgetFactory, final Composite parent,
             final ControlDecoration ieratorLabelDecoration) {
         final Composite iteratorComposite = widgetFactory.createPlainComposite(parent, SWT.NONE);
         iteratorComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(6, 0).create());
@@ -600,7 +604,6 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
             @Override
             public void handleValueChange(final ValueChangeEvent event) {
                 expressionContentDetailValue.setValue(event.diff.getNewValue());
-
             }
         });
         expressionReturnTypeDetailValue = EMFEditWithRefactorObservables.observeDetailValueWithRefactor(Realm.getDefault(), iteratorObservable,
@@ -615,9 +618,13 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 
             @Override
             protected IStatus validate() {
-                return groovyReferenceValidator(Messages.iterator, true, true).validate(observeDelayedValue.getValue());
+                return multiValidator()
+                        .addValidator(groovyReferenceValidator(Messages.iterator, true, true))
+                        .addValidator(uniqueValidator().in(visibleData()).onProperty("name").create()).create()
+                        .validate(observeDelayedValue.getValue());
             }
         };
+
         context.addValidationStatusProvider(groovyReferenceValidatorStatusProvider);
         ControlDecorationSupport.create(groovyReferenceValidatorStatusProvider, SWT.LEFT, iteratorComposite.getParent(),
                 new ControlDecorationUpdater() {
@@ -678,6 +685,10 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 
     }
 
+    private Iterable<?> visibleData() {
+        return ModelHelper.getAccessibleData(ModelHelper.getParentPool(getEObject()));
+    }
+
     private UpdateValueStrategy refactorReturnTypeStrategy(final IObservableValue expressionReturnTypeDetailValue, final IObservableValue iteratorObservable) {
         final UpdateValueStrategy strategy = new UpdateValueStrategy();
         strategy.setConverter(new Converter(String.class, String.class) {
@@ -730,7 +741,8 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 
     protected CompoundCommand getRefactorCommand(final Data oldItem, final Data newItem, final MultiInstantiable container) {
         final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
-        op.setContainer(ModelHelper.getParentProcess(container));
+        op.setCanExecute(validContext());
+        op.setDataContainer((DataAware) container);
         op.addItemToRefactor(newItem, oldItem);
         op.setEditingDomain(getEditingDomain());
         try {
@@ -742,6 +754,18 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
             BonitaStudioLog.error(e);
             return null;
         }
+    }
+
+    protected boolean validContext() {
+        final Iterator<?> iterator = context.getValidationStatusProviders().iterator();
+        while (iterator.hasNext()) {
+            final ValidationStatusProvider object = (ValidationStatusProvider) iterator.next();
+            final IStatus status = (IStatus) object.getValidationStatus().getValue();
+            if (!status.isOK()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

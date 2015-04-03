@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.jdt.CreateJarOperation;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
@@ -31,13 +32,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.ui.jarpackager.IJarExportRunnable;
-import org.eclipse.jdt.ui.jarpackager.JarPackageData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -101,34 +98,12 @@ public class PackageFileStore extends AbstractFileStore {
         } catch (final IOException e) {
             throw new InvocationTargetException(e);
         }
-        final JarPackageData jarPackakeData = new JarPackageData();
         final IPackageFragment packageFragment = getPackageFragment();
-        if (packageFragment == null) {
-            throw new RuntimeException("Error while exporting as JAR : package Fragment is null");
-        }
-
-        final List<Object> toExport = new ArrayList<Object>();
         try {
-            for (final ICompilationUnit cunit : packageFragment.getCompilationUnits()) {
-                toExport.add(cunit);
-            }
-        } catch (final Exception e2) {
-            BonitaStudioLog.error(e2);
+            new CreateJarOperation(new File(absoluteTargetFilePath), packageFragment.getCompilationUnits()).run(Repository.NULL_PROGRESS_MONITOR);
+        } catch (final JavaModelException e) {
+            throw new InvocationTargetException(e, "Failed to retrieve compilation units from package frgament");
         }
-
-        jarPackakeData.setBuildIfNeeded(true);
-        jarPackakeData.setJarLocation(Path.fromOSString(absoluteTargetFilePath));
-        jarPackakeData.setCompress(true);
-        jarPackakeData.setElements(toExport.toArray(new Object[toExport.size()]));
-        jarPackakeData.setExportErrors(true);
-        jarPackakeData.setExportWarnings(true);
-        jarPackakeData.setDeprecationAware(true);
-        jarPackakeData.setExportClassFiles(true);
-        jarPackakeData.setExportJavaFiles(includeSources);
-        jarPackakeData.setGenerateManifest(true);
-        jarPackakeData.setOverwrite(true);
-        final IJarExportRunnable runnable = jarPackakeData.createJarExportRunnable(null);
-        runnable.run(Repository.NULL_PROGRESS_MONITOR);
     }
 
     public IPackageFragment getPackageFragment() {

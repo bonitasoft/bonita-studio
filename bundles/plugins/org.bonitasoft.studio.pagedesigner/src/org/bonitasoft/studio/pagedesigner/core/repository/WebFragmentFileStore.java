@@ -16,6 +16,7 @@ package org.bonitasoft.studio.pagedesigner.core.repository;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
@@ -24,6 +25,11 @@ public class WebFragmentFileStore extends NamedJSONFileStore {
 
     public WebFragmentFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
+    }
+
+    @Override
+    public Image getIcon() {
+        return getParentStore().getIcon();
     }
 
 }

@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,7 +24,6 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ActivityBuilder<T extends Activity, B extends ActivityBuilder<T, B>> extends FlowElementBuilder<T, B> {
 
@@ -118,6 +115,15 @@ public class ActivityBuilder<T extends Activity, B extends ActivityBuilder<T, B>
         if (data != null) {
             for (final DataBuilder<?, ?> dataBuilder : data) {
                 getBuiltInstance().getData().add(dataBuilder.build());
+            }
+        }
+        return getThis();
+    }
+
+    public B havingData(final Data... data) {
+        if (data != null) {
+            for (final Data d : data) {
+                getBuiltInstance().getData().add(d);
             }
         }
         return getThis();

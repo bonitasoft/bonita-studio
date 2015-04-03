@@ -48,9 +48,9 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
 
     public static final String DEFAULT_BDM_FILENAME = "bdm.zip";
 
-    public BusinessObjectModelConverter converter;
+    private final BusinessObjectModelConverter converter;
 
-    public Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<Long, BusinessObjectModel>();
+    private final Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<Long, BusinessObjectModel>();
 
     public BusinessObjectModelFileStore(final String fileName, final IRepositoryStore<BusinessObjectModelFileStore> store) {
         super(fileName, store);

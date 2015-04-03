@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.swt.graphics.Image;
 import org.json.JSONObject;
 
 /**
@@ -30,6 +31,11 @@ public class WebWidgetFileStore extends NamedJSONFileStore {
 
     public WebWidgetFileStore(final String folderName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(folderName, parentStore);
+    }
+
+    @Override
+    public Image getIcon() {
+        return getParentStore().getIcon();
     }
 
     @Override
