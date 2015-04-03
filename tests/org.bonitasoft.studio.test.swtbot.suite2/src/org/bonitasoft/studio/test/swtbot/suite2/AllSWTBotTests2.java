@@ -73,6 +73,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         CopyPasteTests.class,
         DeleteCommandTest.class,
+        TestBonitaGroovyEditorDialog.class,
         TestBug1640.class,
         NewRunTest.class,
         DeleteWidgetWithContextMenuIT.class,
@@ -103,7 +104,6 @@ import org.junit.runners.Suite;
         TestMoveBetweenLane.class,
         MigrationReporTest.class,
         TestTimer.class,
-        TestBonitaGroovyEditorDialog.class,
         TestProcessDependencies.class,
         ContractIT.class,
         RefactorWidgetIT.class,
