@@ -19,8 +19,7 @@ import static org.bonitasoft.studio.dependencies.i18n.Messages.selectMissingJarT
 import java.io.IOException;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.engine.BOSEngineManager;
-import org.bonitasoft.studio.groovy.ui.Messages;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -29,7 +28,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -39,15 +38,8 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
 
-    @Override
-    @Before
-    public void setUp() throws Exception {
-        //WORKAROUND : we need to load bonitasoft groovy ui plugin before start of the test.
-        // There are issues with access to PreferenceStore of Groovy plugin in Activator of BonitaSoft Grooy UI plugin.
-        System.out.println(Messages.add);
-        FileActionDialog.setDisablePopup(true);
-        BOSEngineManager.getInstance().start();
-    }
+    @Rule
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Test
     public void testOpenBonitaGroovyEditorDialog() throws ExecutionException, CoreException, IOException {
