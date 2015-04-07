@@ -51,7 +51,7 @@ public class ApplicationURLBuilderTest {
         final AbstractProcess process = ProcessFactory.eINSTANCE.createPool();
         process.setName("testPool");
         process.setVersion("1.0");
-        applicationURLBuilder = spy(new ApplicationURLBuilder(process, ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION));
+        applicationURLBuilder = spy(new ApplicationURLBuilder(process, ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, 12L));
         doReturn("fr").when(applicationURLBuilder).getWebLocale();
         doReturn("william.jobs").when(applicationURLBuilder).getDefaultUsername();
         doReturn("bpm").when(applicationURLBuilder).getDefaultPassword();
@@ -69,10 +69,16 @@ public class ApplicationURLBuilderTest {
 
         final URL url = applicationURLBuilder.toURL(Repository.NULL_PROGRESS_MONITOR);
         assertThat(url).isNotNull();
-        final String validApplicationPath = URLEncoder.encode("portal/form/","UTF-8");
-        final String validProcessReference = URLEncoder.encode("testPool/1.0","UTF-8");
+        final String validApplicationPath = URLEncoder.encode("portal/resource/process/", "UTF-8");
+        final String validProcessReference = URLEncoder.encode("testPool/1.0/content", "UTF-8");
+        final String validProcDefId = URLEncoder.encode("id=12", "UTF-8");
         final String validLocale = URLEncoder.encode("locale=fr","UTF-8");
-        assertThat(url.toString()).contains(validApplicationPath).contains(validProcessReference).contains(validLocale).startsWith(loginURL);
+        assertThat(url.toString())
+                .contains(validApplicationPath)
+                .contains(validProcessReference)
+                .contains(validLocale)
+                .contains(validProcDefId)
+                .startsWith(loginURL);
         verify(applicationURLBuilder).buildLoginUrl("william.jobs", "bpm");
     }
 
@@ -88,11 +94,17 @@ public class ApplicationURLBuilderTest {
 
         final URL url = applicationURLBuilder.toURL(Repository.NULL_PROGRESS_MONITOR);
         assertThat(url).isNotNull();
-        final String validApplicationPath = URLEncoder.encode("portal/form/", "UTF-8");
-        final String validProcessReference = URLEncoder.encode("testPool/1.0", "UTF-8");
+        final String validApplicationPath = URLEncoder.encode("portal/resource/process/", "UTF-8");
+        final String validProcessReference = URLEncoder.encode("testPool/1.0/content", "UTF-8");
+        final String validProcDefId = URLEncoder.encode("id=12", "UTF-8");
         final String validLocale = URLEncoder.encode("locale=fr", "UTF-8");
         verify(applicationURLBuilder).buildLoginUrl("userInAconf", "passwordInCOnf");
-        assertThat(url.toString()).contains(validApplicationPath).contains(validProcessReference).contains(validLocale).startsWith(loginURL);
+        assertThat(url.toString())
+                .contains(validApplicationPath)
+                .contains(validProcessReference)
+                .contains(validLocale)
+                .contains(validProcDefId)
+                .startsWith(loginURL);
     }
 
 }
