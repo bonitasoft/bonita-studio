@@ -174,7 +174,7 @@ public class BonitaHomeUtil {
 	}
 
 	public static File getDefaultTenantSecurityConfigStudioFile() {
-		final URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita");
+		final URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita-home");
 		File bonitaFolder = null;
 		try {
 			bonitaFolder = new File(FileLocator.toFileURL(url).getFile());
