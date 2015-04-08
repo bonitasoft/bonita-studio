@@ -6,7 +6,7 @@
       <propertyTabs
             contributorId="org.bonitasoft.studio.diagram">
          <propertyTab
-               afterTab="tab.connectors"
+               afterTab="tab.document"
                category="domain"
                id="tab.parameter"
                label="%Parameter">
@@ -23,7 +23,7 @@
                filter="org.bonitasoft.studio.parameters.property.section.AbstractProcessFilter"
                id="parameter.section"
                tab="tab.parameter"
-               viewID="org.bonitasoft.studio.views.properties.process.general">
+               viewID="org.bonitasoft.studio.views.properties.process.data">
          </propertySection>
       </propertySections>
    </extension>

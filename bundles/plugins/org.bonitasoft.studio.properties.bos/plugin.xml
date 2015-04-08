@@ -12,7 +12,7 @@
               filter="org.bonitasoft.studio.properties.filters.HasDataFilter"
               id="DataSection"
               tab="tab.data"
-              viewID="org.bonitasoft.studio.views.properties.process.general">
+              viewID="org.bonitasoft.studio.views.properties.process.data">
         </propertySection>
         <propertySection
               class="org.bonitasoft.studio.properties.sections.forms.EntryPageFlowTabbedSection"
@@ -36,7 +36,7 @@
               filter="org.bonitasoft.studio.properties.filters.ThrowMessageEventFilter"
               id="ThrowMessageSection"
               tab="tab.throwMessage"
-              viewID="org.bonitasoft.studio.views.properties.process.general">
+              viewID="org.bonitasoft.studio.views.properties.process.data">
         </propertySection>
         <propertySection
               class="org.bonitasoft.studio.properties.sections.forms.ProcessEntryPageFlowTabbedSection"

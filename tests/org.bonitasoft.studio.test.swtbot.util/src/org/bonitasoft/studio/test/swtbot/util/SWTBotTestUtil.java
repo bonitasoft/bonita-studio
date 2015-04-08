@@ -698,6 +698,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
             treeItem.expand();
         }
         treeItem.select("Sequence Flow");
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         selectTabbedPropertyView(bot, "General");
         bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Condition")));
         bot.textWithLabel("Name").setText(name);

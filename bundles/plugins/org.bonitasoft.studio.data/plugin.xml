@@ -15,7 +15,6 @@
       <propertyTabs
             contributorId="org.bonitasoft.studio.diagram">
                <propertyTab
-               afterTab="tab.contract"
                category="domain"
                id="tab.data"
                label="%tab.data.label">

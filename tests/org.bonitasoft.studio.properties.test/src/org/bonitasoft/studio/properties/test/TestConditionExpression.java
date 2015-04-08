@@ -54,7 +54,8 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 
 	@Test
 	public void testConditionExpressions() throws Exception{
-		SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
+		SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES);
         bot.button(Messages.Add).click();
 		SWTBotTestUtil.addNewData(bot, "myData","Text" , false, null);
 
@@ -117,6 +118,7 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 
 
 	private void configurePool(final String poolName,final String version){
+		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
 		SWTBotTestUtil.selectTabbedPropertyView(bot,"Pool");
 		bot.button(org.bonitasoft.studio.common.Messages.edit).click();
 		bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));

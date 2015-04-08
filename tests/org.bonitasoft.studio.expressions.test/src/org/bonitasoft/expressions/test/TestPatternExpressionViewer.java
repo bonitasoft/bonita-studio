@@ -63,7 +63,7 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 	@Test
     public void testPatternExpressionViewer(){
 		SWTBotTestUtil.createNewDiagram(bot);
-		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
 		createData(DATA_NAME_1);
 		createData(DATA_NAME_2);
 		createData(DATA_NAME_3);
@@ -125,6 +125,7 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 
 	private void addDBConnectorWithPatternExpression(String connectorLabel,
 			String connectorVersion, String[] dbCategoryLabel,String connectorName) {
+		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION).show();
 		SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
 		bot.button("Add...").click();
 		bot.text().setText(connectorLabel);
@@ -214,7 +215,7 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
     }
     
     private void createData(String dataName) {
-		SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+		SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES);
 		bot.button("Add...").click();
 		assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
 				.button(IDialogConstants.FINISH_LABEL).isEnabled());
