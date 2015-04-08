@@ -56,26 +56,28 @@ public class ValidatorBarResourceProvider implements BARResourcesProvider {
                 ValidatorDescriptorRepositoryStore.class);
         final ValidatorSourceRepositorySotre validatorSourceStore = RepositoryManager.getInstance().getRepositoryStore(ValidatorSourceRepositorySotre.class);
         final FragmentContainer validatorContainer = getContainer(configuration);
-        for (final FragmentContainer validator : validatorContainer.getChildren()) {
+        if (validatorContainer != null) {
+            for (final FragmentContainer validator : validatorContainer.getChildren()) {
 
-            final String validatorId = validator.getId();
-            final ValidatorDescriptorFileStore defFile = (ValidatorDescriptorFileStore) validatorDescStore.getChild(validatorId + "."
-                    + ValidatorDescriptorRepositoryStore.VALIDATOR_EXT);
-            if (defFile == null) {
-                throw new RuntimeException("Validator descriptor not found for id " + validatorId + "!");
-            }
-            if (defFile != null && defFile.canBeShared()) {
-                final ValidatorDescriptor descriptor = defFile.getContent();
-                final SourceFileStore file = (SourceFileStore) validatorSourceStore.getChild(descriptor.getClassName());
-                if (file == null) {
-                    throw new RuntimeException("Validator class " + descriptor.getClassName() + " not found for validator definition " + validatorId + "!");
+                final String validatorId = validator.getId();
+                final ValidatorDescriptorFileStore defFile = validatorDescStore.getChild(validatorId + "."
+                        + ValidatorDescriptorRepositoryStore.VALIDATOR_EXT);
+                if (defFile == null) {
+                    throw new RuntimeException("Validator descriptor not found for id " + validatorId + "!");
                 }
+                if (defFile != null && defFile.canBeShared()) {
+                    final ValidatorDescriptor descriptor = defFile.getContent();
+                    final SourceFileStore file = (SourceFileStore) validatorSourceStore.getChild(descriptor.getClassName());
+                    if (file == null) {
+                        throw new RuntimeException("Validator class " + descriptor.getClassName() + " not found for validator definition " + validatorId + "!");
+                    }
 
-                try {
-                    final byte[] content = createJarContentAsByteArray(file);
-                    resources.add(new BarResource(ValidatorSourceRepositorySotre.VALIDATOR_PATH_IN_BAR + descriptor.getClassName() + ".jar", content));
-                } catch (final Exception e) {
-                    BonitaStudioLog.error(e);
+                    try {
+                        final byte[] content = createJarContentAsByteArray(file);
+                        resources.add(new BarResource(ValidatorSourceRepositorySotre.VALIDATOR_PATH_IN_BAR + descriptor.getClassName() + ".jar", content));
+                    } catch (final Exception e) {
+                        BonitaStudioLog.error(e);
+                    }
                 }
             }
         }

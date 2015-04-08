@@ -71,9 +71,9 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaTestSuite.class)
 @Suite.SuiteClasses({
+        TestBonitaGroovyEditorDialog.class,
         CopyPasteTests.class,
         DeleteCommandTest.class,
-        TestBonitaGroovyEditorDialog.class,
         TestBug1640.class,
         NewRunTest.class,
         DeleteWidgetWithContextMenuIT.class,
