@@ -490,9 +490,20 @@ public class FlowElementSwitch extends AbstractSwitch {
         addExpectedDuration(taskBuilder, task);
         addUserFilterToTask(taskBuilder, actor, filter);
         addContract(taskBuilder, task);
+        addContext(taskBuilder, task);
 
         handleCommonActivity(task, taskBuilder);
         return task;
+    }
+
+    protected void addContext(final UserTaskDefinitionBuilder taskBuilder, final Task task) {
+        final Pool pool = ModelHelper.getParentPool(task);
+        for (final Data data : pool.getData()) {
+            if (data instanceof BusinessObjectData) {
+                taskBuilder.addContextEntry("ctxt_" + data.getName(),
+                        EngineExpressionUtil.createBusinessObjectDataReferenceExpression((BusinessObjectData) data));
+            }
+        }
     }
 
     protected void addUserFilterToTask(final UserTaskDefinitionBuilder taskBuilder, final String actor, final ActorFilter filter) {

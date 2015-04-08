@@ -716,4 +716,13 @@ public class EngineExpressionUtil {
         }
         return true;
     }
+
+    public static Expression createBusinessObjectDataReferenceExpression(final BusinessObjectData data) {
+        try {
+            return new ExpressionBuilder().createBusinessDataExpression(data.getName(), data.getClassName());
+        } catch (final InvalidExpressionException e) {
+            BonitaStudioLog.error(e);
+            throw new RuntimeException(e);
+        }
+    }
 }
