@@ -31,6 +31,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
+import com.google.common.io.ByteStreams;
+
 /**
  * @author Romain Bioteau
  */
@@ -219,4 +221,10 @@ public class URLFileStore implements IRepositoryFileStore {
         return Collections.emptySet();
     }
 
+    @Override
+    public byte[] toByteArray() throws IOException {
+        try (final InputStream inputStream = getContent();) {
+            return ByteStreams.toByteArray(inputStream);
+        }
+    }
 }

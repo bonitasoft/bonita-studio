@@ -59,4 +59,6 @@ public interface IRepositoryFileStore extends IDisplayable {
 
     void export(String targetAbsoluteFilePath) throws IOException;
 
+    byte[] toByteArray() throws IOException;
+
 }
