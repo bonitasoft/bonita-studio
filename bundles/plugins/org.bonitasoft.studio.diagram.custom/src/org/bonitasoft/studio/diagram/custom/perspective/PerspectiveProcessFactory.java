@@ -48,7 +48,6 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
         bottomRight.addView("org.bonitasoft.studio.views.properties.process.general");
         bottomRight.addView("org.bonitasoft.studio.views.properties.process.data");
         bottomRight.addView("org.bonitasoft.studio.views.properties.process.execution");
-        bottomRight.addView("org.bonitasoft.studio.views.properties.process.formMapping");
         bottomRight.addView("org.bonitasoft.studio.views.properties.application");
         bottomRight.addView("org.bonitasoft.studio.views.properties.process.appearance");
 
