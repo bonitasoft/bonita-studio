@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 BonitaSoft S.A.
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,14 +73,17 @@ public class ApplicationURLBuilder {
 
     }
 
-    protected String getRedirectURL(final String locale)
-            throws UnsupportedEncodingException {
+    protected String getRedirectURL(final String locale) throws UnsupportedEncodingException {
         return APPLI_PATH
                 + "/process"
-                + "/" + URLEncoder.encode(process.getName(), ENCODING_UTF8)
-                + "/" + URLEncoder.encode(process.getVersion(),ENCODING_UTF8)
+                + "/" + encodeForPathURL(process.getName())
+                + "/" + encodeForPathURL(process.getVersion())
                 + "/content/?id=" + procDefId
                 + "&" + getLocaleParameter(locale);
+    }
+
+    private String encodeForPathURL(final String toEncode) throws UnsupportedEncodingException {
+        return URLEncoder.encode(toEncode, ENCODING_UTF8).replaceAll("\\+", "%20");
     }
 
     protected String getLocaleParameter(final String locale) {
