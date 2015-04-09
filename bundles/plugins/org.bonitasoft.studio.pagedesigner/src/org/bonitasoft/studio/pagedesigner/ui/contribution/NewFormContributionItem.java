@@ -118,7 +118,7 @@ public class NewFormContributionItem extends ContributionItem {
 
         final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
         repositoryStore.refresh();
-        final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId + ".json");
+        final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId);
         if (webPageFileStore != null) {
             final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(pageflow);
             editingDomain.getCommandStack().execute(new UpdateFormMappingCommand(editingDomain, pageflow.getFormMapping(),

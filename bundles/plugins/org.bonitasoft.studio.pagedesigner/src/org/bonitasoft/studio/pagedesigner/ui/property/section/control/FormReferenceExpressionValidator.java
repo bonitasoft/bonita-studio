@@ -36,8 +36,12 @@ public class FormReferenceExpressionValidator implements IExpressionValidator {
 
     private Expression inputExpression;
 
+    private final RepositoryAccessor repositoryAccessor;
+
     @Inject
-    private RepositoryAccessor repositoryAccessor;
+    public FormReferenceExpressionValidator(final RepositoryAccessor repositoryAccessor) {
+        this.repositoryAccessor = repositoryAccessor;
+    }
 
     /*
      * (non-Javadoc)
@@ -47,10 +51,8 @@ public class FormReferenceExpressionValidator implements IExpressionValidator {
     public IStatus validate(final Object value) {
         final String content = inputExpression.getContent();
         final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
-        if (repositoryStore.getChild(String.format("%s.json", content)) == null) {
-            return ValidationStatus.error(Messages.bind(Messages.pageDoesntExists, String.format("%s -- %s", inputExpression.getName(), content)));
-        }
-        return ValidationStatus.ok();
+        return repositoryStore.getChild(content) == null ? ValidationStatus.error(Messages.bind(Messages.pageDoesntExists,
+                String.format("%s (%s)", inputExpression.getName(), content))) : ValidationStatus.ok();
     }
 
     /*

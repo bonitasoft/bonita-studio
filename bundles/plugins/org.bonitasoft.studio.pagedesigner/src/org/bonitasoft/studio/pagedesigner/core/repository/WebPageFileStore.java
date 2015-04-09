@@ -28,7 +28,7 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * @author Romain Bioteau
  */
-public class WebPageFileStore extends NamedJSONFileStore {
+public class WebPageFileStore extends InFolderJSONFileStore {
 
     public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);

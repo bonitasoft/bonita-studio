@@ -36,19 +36,13 @@ import org.eclipse.ui.progress.IProgressService;
 @Creatable
 public class CreateNewFormProposalListener extends IProposalAdapter implements BonitaPreferenceConstants {
 
-    @Inject
-    private IProgressService progressService;
+    private final IProgressService progressService;
+
+    private final PageDesignerURLFactory pageDesignerURLFactory;
+
+    private final RepositoryAccessor repositoryAccessor;
 
     @Inject
-    private PageDesignerURLFactory pageDesignerURLFactory;
-
-    @Inject
-    private RepositoryAccessor repositoryAccessor;
-
-    CreateNewFormProposalListener() {
-
-    }
-
     public CreateNewFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory, final IProgressService progressService,
             final RepositoryAccessor repositoryAccessor) {
         this.progressService = progressService;
@@ -74,7 +68,7 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
         }
 
         final String newPageId = operation.getNewPageId();
-        repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newPageId + ".json").open();
+        repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newPageId).open();
         return newPageId;
     }
 

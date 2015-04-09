@@ -62,12 +62,11 @@ public class PageDesignerMappingComposite extends Composite implements BonitaPre
         final Label label = widgetFactory.createLabel(this, Messages.targetForm);
         label.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
 
-        targetFormExpressionViewer = new ExpressionViewer(this, SWT.BORDER, widgetFactory);
+        targetFormExpressionViewer = new FormReferenceExpressionViewer(this, SWT.BORDER, widgetFactory);
         targetFormExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(WIDTH_HINT, SWT.DEFAULT).create());
         targetFormExpressionViewer.setExpressionProposalLableProvider(new FormReferenceProposalLabelProvider());
         targetFormExpressionViewer.addExpressionValidator(formReferenceExpressionValidator);
         targetFormExpressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.FORM_REFERENCE_TYPE }));
-
         widgetFactory.adapt(this);
     }
 

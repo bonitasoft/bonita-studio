@@ -17,17 +17,13 @@ package org.bonitasoft.studio.pagedesigner.core.repository;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
  */
-public class WebFragmentRepositoryStore extends AbstractRepositoryStore<WebFragmentFileStore> {
+public class WebFragmentRepositoryStore extends AbstractFolderRepositoryStore<WebFragmentFileStore> {
 
     private final static Set<String> extensions = new HashSet<String>();
     public static final String JSON_EXTENSION = "json";
@@ -60,11 +56,6 @@ public class WebFragmentRepositoryStore extends AbstractRepositoryStore<WebFragm
     @Override
     public WebFragmentFileStore createRepositoryFileStore(final String fileName) {
         return new WebFragmentFileStore(fileName, this);
-    }
-
-    @Override
-    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
-        //NOTHING TO MIGRATE
     }
 
 }

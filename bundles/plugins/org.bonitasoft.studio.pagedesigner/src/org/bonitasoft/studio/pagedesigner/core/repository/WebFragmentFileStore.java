@@ -20,7 +20,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 /**
  * @author Romain Bioteau
  */
-public class WebFragmentFileStore extends NamedJSONFileStore {
+public class WebFragmentFileStore extends InFolderJSONFileStore {
 
     public WebFragmentFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);

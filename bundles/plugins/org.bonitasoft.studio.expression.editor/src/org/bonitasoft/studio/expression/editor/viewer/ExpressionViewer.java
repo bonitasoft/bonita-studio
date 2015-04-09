@@ -811,6 +811,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                 final boolean isXPathType = from.toString().equals(ExpressionConstants.XPATH_TYPE);
                 final boolean isJavaType = from.toString().equals(ExpressionConstants.JAVA_TYPE);
                 final boolean isQueryType = from.toString().equals(ExpressionConstants.QUERY_TYPE);
+                final boolean isFormReference = from.toString().equals(ExpressionConstants.FORM_REFERENCE_TYPE);
                 if (isScriptType) {
                     textTooltip.setText(Messages.editScriptExpressionTooltip);
                 } else if (isXPathType) {
@@ -824,7 +825,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                 } else {
                     textTooltip.setText(null);
                 }
-                return !(isScriptType || isConnectorType || isJavaType || isXPathType || isQueryType);
+                return !(isScriptType || isConnectorType || isJavaType || isXPathType || isQueryType || isFormReference);
             }
 
         });
