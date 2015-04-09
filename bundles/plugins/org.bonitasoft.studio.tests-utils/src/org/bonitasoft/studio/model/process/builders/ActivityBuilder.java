@@ -19,6 +19,7 @@ package org.bonitasoft.studio.model.process.builders;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.expression.builders.OperationBuilder;
+import org.bonitasoft.studio.model.kpi.AbstractKPIBinding;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
@@ -136,6 +137,15 @@ public class ActivityBuilder<T extends Activity, B extends ActivityBuilder<T, B>
         if (operations != null) {
             for (final Operation operation : operations) {
                 getBuiltInstance().getOperations().add(operation);
+            }
+        }
+        return getThis();
+    }
+
+    public B havingKPI(final AbstractKPIBinding... kpiBindings) {
+        if (kpiBindings != null) {
+            for (final AbstractKPIBinding abstractKPIBinding : kpiBindings) {
+                getBuiltInstance().getKpis().add(abstractKPIBinding);
             }
         }
         return getThis();

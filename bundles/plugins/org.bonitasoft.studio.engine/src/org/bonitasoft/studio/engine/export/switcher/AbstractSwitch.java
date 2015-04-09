@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2015 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -133,6 +133,9 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
             if (kpiBinding instanceof DatabaseKPIBinding) {
                 final ConnectorDefinitionBuilder connectorBuilder = builder.addConnector(kpiBinding.getName(), DB_CONNECTOR_FOR_KPI_ID, DB_CONNECTOR_VERSION,
                         ConnectorEvent.valueOf(kpiBinding.getEvent()));
+                if (kpiBinding.isIgnoreError()) {
+                    connectorBuilder.ignoreError();
+                }
                 final DatabaseKPIBinding dbKPI = (DatabaseKPIBinding) kpiBinding;
                 connectorBuilder.addInput(DB_DRIVER, EngineExpressionUtil.createExpression(dbKPI.getDriverclassName()));
                 connectorBuilder.addInput(DB_URL, EngineExpressionUtil.createExpression(dbKPI.getJdbcUrl()));
