@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 /**
  * @author Romain Bioteau
+ *         Give access to the json file contained in the current file store represented by a folder
  */
 public class InFolderJSONFileStore extends NamedJSONFileStore {
 
