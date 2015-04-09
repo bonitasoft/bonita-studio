@@ -14,9 +14,11 @@
  */
 package org.bonitasoft.studio.refactoring.core;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class RefactorPair<T, Y> {
 
-    protected static final String EMPTY_VALUE = "     ";
+    public static final String EMPTY_VALUE = "     ";
     private final T newValue;
     private final Y oldValue;
 
@@ -25,6 +27,7 @@ public class RefactorPair<T, Y> {
      * @param oldValue
      */
     public RefactorPair(final T newValue, final Y oldValue) {
+        checkArgument(oldValue != null);
         this.newValue = newValue;
         this.oldValue = oldValue;
     }
