@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Romain Bioteau
  */
-public class WebFragmentFileStore extends NamedJSONFileStore {
+public class WebFragmentFileStore extends InFolderJSONFileStore {
 
     public WebFragmentFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);

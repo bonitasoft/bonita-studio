@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,7 +75,7 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
     @Before
     public void setUp() throws Exception {
         doReturn(formRepository).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
-        doReturn(formFileStore).when(formRepository).getChild("page-id.json");
+        doReturn(formFileStore).when(formRepository).getChild("page-id");
 
         createNewFormProposal = spy(new CreateNewFormProposalListener(pageDesignerURLFactory, progressService, repositoryAccessor));
         doReturn(createFormOperation).when(createNewFormProposal).doCreateFormOperation(any(PageDesignerURLFactory.class));
