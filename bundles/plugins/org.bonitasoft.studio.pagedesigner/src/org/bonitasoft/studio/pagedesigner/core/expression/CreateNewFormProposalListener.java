@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,19 +36,13 @@ import org.eclipse.ui.progress.IProgressService;
 @Creatable
 public class CreateNewFormProposalListener extends IProposalAdapter implements BonitaPreferenceConstants {
 
-    @Inject
-    private IProgressService progressService;
+    private final IProgressService progressService;
+
+    private final PageDesignerURLFactory pageDesignerURLFactory;
+
+    private final RepositoryAccessor repositoryAccessor;
 
     @Inject
-    private PageDesignerURLFactory pageDesignerURLFactory;
-
-    @Inject
-    private RepositoryAccessor repositoryAccessor;
-
-    CreateNewFormProposalListener() {
-
-    }
-
     public CreateNewFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory, final IProgressService progressService,
             final RepositoryAccessor repositoryAccessor) {
         this.progressService = progressService;
@@ -74,7 +68,7 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
         }
 
         final String newPageId = operation.getNewPageId();
-        repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newPageId + ".json").open();
+        repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newPageId).open();
         return newPageId;
     }
 
