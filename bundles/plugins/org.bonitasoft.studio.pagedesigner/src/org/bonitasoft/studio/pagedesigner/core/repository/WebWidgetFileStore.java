@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,39 +14,16 @@
  */
 package org.bonitasoft.studio.pagedesigner.core.repository;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.json.JSONObject;
 
 /**
  * @author Romain Bioteau
  */
-public class WebWidgetFileStore extends NamedJSONFileStore {
+public class WebWidgetFileStore extends InFolderJSONFileStore {
 
     public WebWidgetFileStore(final String folderName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(folderName, parentStore);
-    }
-
-    @Override
-    public IFolder getResource() {
-        return getParentStore().getResource().getFolder(getName());
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-     */
-    @Override
-    public JSONObject getContent() throws ReadFileStoreException {
-        checkState(getResource().exists());
-        final IFile jsonFile = getResource().getFile(getName() + ".json");
-        checkState(jsonFile.exists());
-        return toJSONObject(jsonFile);
     }
 
 }

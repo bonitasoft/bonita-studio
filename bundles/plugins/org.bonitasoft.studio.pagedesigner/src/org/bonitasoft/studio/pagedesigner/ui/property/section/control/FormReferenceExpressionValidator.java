@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,8 +36,12 @@ public class FormReferenceExpressionValidator implements IExpressionValidator {
 
     private Expression inputExpression;
 
+    private final RepositoryAccessor repositoryAccessor;
+
     @Inject
-    private RepositoryAccessor repositoryAccessor;
+    public FormReferenceExpressionValidator(final RepositoryAccessor repositoryAccessor) {
+        this.repositoryAccessor = repositoryAccessor;
+    }
 
     /*
      * (non-Javadoc)
@@ -47,10 +51,8 @@ public class FormReferenceExpressionValidator implements IExpressionValidator {
     public IStatus validate(final Object value) {
         final String content = inputExpression.getContent();
         final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
-        if (repositoryStore.getChild(String.format("%s.json", content)) == null) {
-            return ValidationStatus.error(Messages.bind(Messages.pageDoesntExists, String.format("%s -- %s", inputExpression.getName(), content)));
-        }
-        return ValidationStatus.ok();
+        return repositoryStore.getChild(content) == null ? ValidationStatus.error(Messages.bind(Messages.pageDoesntExists,
+                String.format("%s (%s)", inputExpression.getName(), content))) : ValidationStatus.ok();
     }
 
     /*
