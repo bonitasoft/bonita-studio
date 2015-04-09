@@ -23,7 +23,7 @@
                     <outputImageFormat>bmp</outputImageFormat>
                     <xLocation>240</xLocation>
                     <yLocation>188</yLocation>
-                    <versionLabel>${project.version}</versionLabel>
+                    <versionLabel>7.0.0</versionLabel>
                 </configuration>
                 <executions>
                     <execution>
