@@ -59,6 +59,10 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
         return new URL("http://" + host() + ":" + port() + "/" + PAGE_BUILDER_ROOT + "/api/export/page/" + pageId);
     }
 
+    public URL newPageFromContract(final String formName) throws MalformedURLException {
+        return new URL("http://" + host() + ":" + port() + "/" + PAGE_BUILDER_ROOT + "/api/export/page/contract/" + formName);
+    }
+
     private String host() {
         final String host = preferenceStore.get(CONSOLE_HOST, DEFAULT_HOST);
         checkNotNull(host);
@@ -70,4 +74,5 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
         checkArgument(port > 0);
         return String.valueOf(port);
     }
+
 }
