@@ -86,7 +86,7 @@ public class PageDesignerWorkspaceIntegrationIT {
         service.run(true, false, createFormOperation);
 
         final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(WebPageRepositoryStore.class);
-        newPageResource = repositoryStore.getResource().getFile(createFormOperation.getNewPageId() + ".json");
+        newPageResource = repositoryStore.getChild(createFormOperation.getNewPageId()).getResource().getFile(createFormOperation.getNewPageId() + ".json");
         assertThat(newPageResource.exists()).overridingErrorMessage(
                 "Workspace should be in sync with new page file").isTrue();
     }
@@ -98,8 +98,9 @@ public class PageDesignerWorkspaceIntegrationIT {
         new ClientResource(String.format("http://localhost:%s/page-designer/api/import/page", tomcatPort())).post(formDataSetWithCustomPageZipFile());
 
         final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(WebPageRepositoryStore.class);
-        assertThat(repositoryStore.getResource().getFile("ceecadf9-af7c-4fd6-b9f4-3c88475bf6ac.json").exists()).overridingErrorMessage(
-                "Workspace should be in sync with imported page file").isTrue();
+        assertThat(repositoryStore.getChild("886c0557-9ba4-4521-8f29-f66fe7901126").getResource().getFile("886c0557-9ba4-4521-8f29-f66fe7901126.json").exists())
+                .overridingErrorMessage(
+                        "Workspace should be in sync with imported page file").isTrue();
     }
 
     private FormDataSet formDataSetWithCustomPageZipFile() throws URISyntaxException, IOException {
@@ -114,7 +115,7 @@ public class PageDesignerWorkspaceIntegrationIT {
     }
 
     private File customPageToImport() throws URISyntaxException, IOException {
-        return Paths.get(FileLocator.toFileURL(PageDesignerWorkspaceIntegrationIT.class.getResource("/page-TestImport.zip")).toURI()).toFile();
+        return Paths.get(FileLocator.toFileURL(PageDesignerWorkspaceIntegrationIT.class.getResource("/page-APageToImport.zip")).toURI()).toFile();
     }
 
     private void waitForServer() {
