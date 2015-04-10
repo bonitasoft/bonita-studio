@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.pagedesigner.core.operation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -43,6 +46,9 @@ public class CreateFormFromContractOperation implements IRunnableWithProgress {
     private final Contract contract;
 
     public CreateFormFromContractOperation(final PageDesignerURLFactory pageDesignerURLBuilder, final String formName, final Contract contract) {
+        checkArgument(pageDesignerURLBuilder != null);
+        checkArgument(!isNullOrEmpty(formName));
+        checkArgument(contract != null);
         this.pageDesignerURLBuilder = pageDesignerURLBuilder;
         this.contract = contract;
         this.formName = formName;
@@ -57,7 +63,7 @@ public class CreateFormFromContractOperation implements IRunnableWithProgress {
         monitor.beginTask("Creating a new form...", IProgressMonitor.UNKNOWN);
         responseObject = null;
         try {
-            final String source = doPost(pageDesignerURLBuilder.newPageFromContract(formName), createContract(contract));
+            final String source = doPost(pageDesignerURLBuilder.newPageFromContract(formName), new ToWebContract().apply(contract));
             responseObject = new JSONObject(source);
         } catch (ResourceException | IOException | JSONException | URISyntaxException e) {
             throw new InvocationTargetException(e, "Failed to post request to create a new page.");
@@ -91,10 +97,6 @@ public class CreateFormFromContractOperation implements IRunnableWithProgress {
             BonitaStudioLog.error(e);
             return null;
         }
-    }
-
-    private com.bonitasoft.web.designer.model.contract.Contract createContract(final Contract contract) {
-        return new ToWebContract().apply(contract);
     }
 
 }
