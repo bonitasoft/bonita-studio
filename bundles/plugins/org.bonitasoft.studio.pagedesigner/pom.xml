@@ -66,7 +66,7 @@
                         <configuration>
                             <target>
                                 <delete dir="${webapp.dir}" />
-                                 <delete dir="${lib.dir}" />
+                                <delete dir="${lib.dir}" />
                             </target>
                         </configuration>
                         <goals>
@@ -90,6 +90,12 @@
                                     <groupId>com.bonitasoft.web</groupId>
                                     <artifactId>page-designer-model</artifactId>
                                     <version>${page.designer.version}</version>
+                                    <overWrite>true</overWrite>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.fasterxml.jackson.core</groupId>
+                                    <artifactId>jackson-core</artifactId>
+                                    <version>2.5.2</version>
                                     <overWrite>true</overWrite>
                                 </artifactItem>
                             </artifactItems>

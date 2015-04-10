@@ -82,7 +82,7 @@ public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
     @Test
     public void should_exportPageFromContract_return_URL_to_create_the_page_with_given_name_from_a_contract() throws Exception {
         assertThat(pageDesignerURLBuilder.newPageFromContract("myPageName")).isEqualTo(
-                new URL("http://localhost:8080/page-designer/api/export/page/contract/myPageName"));
+                new URL("http://localhost:8080/page-designer/api/rest/pages/contract/myPageName"));
     }
 
 }

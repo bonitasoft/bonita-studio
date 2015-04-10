@@ -23,6 +23,7 @@ import java.net.URL;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.pagedesigner.core.converter.ToWebContract;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.json.JSONException;
@@ -93,7 +94,7 @@ public class CreateFormFromContractOperation implements IRunnableWithProgress {
     }
 
     private com.bonitasoft.web.designer.model.contract.Contract createContract(final Contract contract) {
-        return new com.bonitasoft.web.designer.model.contract.Contract();
+        return new ToWebContract().apply(contract);
     }
 
 }

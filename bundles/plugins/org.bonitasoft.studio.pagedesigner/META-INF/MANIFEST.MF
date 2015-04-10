@@ -11,6 +11,7 @@ Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.pagedesigner,
  org.bonitasoft.studio.pagedesigner.core,
  org.bonitasoft.studio.pagedesigner.core.expression,
+ org.bonitasoft.studio.pagedesigner.core.operation,
  org.bonitasoft.studio.pagedesigner.core.repository,
  org.bonitasoft.studio.pagedesigner.core.resources,
  org.bonitasoft.studio.pagedesigner.ui.contribution

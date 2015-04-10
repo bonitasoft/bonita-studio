@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.emf.converter;
+package org.bonitasoft.studio.common.jface.databinding.converter;
 
 import org.assertj.core.api.Assertions;
+import org.bonitasoft.studio.common.jface.databinding.converter.BooleanInverserConverter;
 import org.junit.Test;
 
 
