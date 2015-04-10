@@ -14,38 +14,42 @@
  */
 package org.bonitasoft.studio.pagedesigner.core.repository;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.json.JSONException;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.json.JSONObject;
 
 /**
  * @author Romain Bioteau
+ *         Give access to the json file contained in the current file store represented by a folder
  */
-public class NamedJSONFileStore extends JSONFileStore {
+public class InFolderJSONFileStore extends NamedJSONFileStore {
 
-    private static final String NAME_KEY = "name";
-    private static final String ID_KEY = "id";
+    private static final String JSON_EXTENSION = ".json";
 
-    public NamedJSONFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
-        super(fileName, parentStore);
-    }
-
-    public String getId() {
-        try {
-            return getStringAttribute(ID_KEY);
-        } catch (final JSONException | ReadFileStoreException e) {
-            throw new IllegalAccessError(String.format("Failed to retrieve id in JSON file %s, with key %s.", getName(), ID_KEY));
-        }
+    public InFolderJSONFileStore(final String folderName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
+        super(folderName, parentStore);
     }
 
     @Override
-    public String getDisplayName() {
-        try {
-            return getStringAttribute(NAME_KEY);
-        } catch (final JSONException | ReadFileStoreException e) {
-            throw new IllegalAccessError(String.format("Failed to retrieve name in JSON file %s, with key %s.", getName(), NAME_KEY));
-        }
+    public IFolder getResource() {
+        return getParentStore().getResource().getFolder(getName());
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
+     */
+    @Override
+    public JSONObject getContent() throws ReadFileStoreException {
+        checkState(getResource().exists());
+        final IFile jsonFile = getResource().getFile(getName() + JSON_EXTENSION);
+        checkState(jsonFile.exists());
+        return toJSONObject(jsonFile);
     }
 
 }
