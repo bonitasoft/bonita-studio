@@ -81,7 +81,7 @@ public class FormMappingConstraintTest {
     public void should_return_a_valid_status_if_form_exists_in_repository() throws Exception {
         //Given
         doReturn(aFormMapping().havingTargetForm(anExpression().withContent("an_id_that_esists")).build()).when(ctx).getTarget();
-        doReturn(fileStore).when(webPageRepositoryStore).getChild("an_id_that_esists.json");
+        doReturn(fileStore).when(webPageRepositoryStore).getChild("an_id_that_esists");
 
         //When
         final IStatus status = formMappingConstraint.performBatchValidation(ctx);

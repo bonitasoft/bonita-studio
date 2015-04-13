@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,19 +65,14 @@ import com.google.common.io.ByteStreams;
 public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreProvider {
 
     private static final String WIDGET_ENTRY_REGEXP = "^resources/widgets/(.*)/.*\\.json";
-    private static final String FRAGMENT_ENTRY_REGEXP = "^resources/fragments/(.*\\.json)";
+    private static final String FRAGMENT_ENTRY_REGEXP = "^resources/fragments/(.*)/.*\\.json";
+
+    private final RepositoryAccessor repositoryAccessor;
+
+    private final CustomPageBarResourceFactory customPageBarResourceFactory;
 
     @Inject
-    private RepositoryAccessor repositoryAccessor;
-
-    @Inject
-    private CustomPageBarResourceFactory customPageBarResourceFactory;
-
-    public WebFormBOSArchiveFileStoreProvider() {
-        //NEEDED FOR EXTENSION FRAMEWORK INSTANTIATION
-    }
-
-    WebFormBOSArchiveFileStoreProvider(final RepositoryAccessor repositoryAccessor, final CustomPageBarResourceFactory customPageBarResourceFactory) {
+    public WebFormBOSArchiveFileStoreProvider(final RepositoryAccessor repositoryAccessor, final CustomPageBarResourceFactory customPageBarResourceFactory) {
         this.repositoryAccessor = repositoryAccessor;
         this.customPageBarResourceFactory = customPageBarResourceFactory;
     }
@@ -175,7 +170,7 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
 
     private WebPageFileStore fileStoreFromFormUUID(final String formUUID) {
         checkArgument(!isNullOrEmpty(formUUID));
-        return repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(String.format("%s.json", formUUID));
+        return repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(formUUID);
     }
 
     private Predicate<FormMapping> withInternalType() {
