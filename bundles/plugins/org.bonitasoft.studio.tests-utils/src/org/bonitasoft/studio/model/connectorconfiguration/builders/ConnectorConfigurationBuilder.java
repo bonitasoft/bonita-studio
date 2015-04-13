@@ -25,7 +25,7 @@ import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration
  */
 public class ConnectorConfigurationBuilder {
 
-    public static ConnectorConfigurationBuilder create() {
+    public static ConnectorConfigurationBuilder aConnectorConfiguration() {
         return new ConnectorConfigurationBuilder();
     }
 
