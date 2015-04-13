@@ -310,6 +310,9 @@ public class EngineExpressionUtil {
     }
 
     public static Expression createExpression(final org.bonitasoft.studio.model.expression.AbstractExpression expression) {
+        if (expression == null) {
+            return null;
+        }
         if (expression instanceof org.bonitasoft.studio.model.expression.Expression) {
             return buildSimpleEngineExpressionWithName(((org.bonitasoft.studio.model.expression.Expression) expression).getName(),
                     (org.bonitasoft.studio.model.expression.Expression) expression);
