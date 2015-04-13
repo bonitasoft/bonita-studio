@@ -392,7 +392,6 @@ public class EngineExpressionUtilTest {
         final org.bonitasoft.engine.expression.Expression expression = EngineExpressionUtil.createBusinessObjectDataReferenceExpression(data);
 
         assertThat(expression.getName()).isEqualTo("bName");
-        assertThat(expression.getReturnType()).isEqualTo("my.classname");
         assertThat(expression.getExpressionType()).isEqualTo(ExpressionType.TYPE_BUSINESS_DATA.name());
 
     }
