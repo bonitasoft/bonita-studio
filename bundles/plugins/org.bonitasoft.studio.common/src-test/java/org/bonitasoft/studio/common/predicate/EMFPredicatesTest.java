@@ -33,8 +33,8 @@ public class EMFPredicatesTest {
         assertThat(featureNotNull(ProcessPackage.Literals.ELEMENT__NAME).apply(aPool().withName("Pool").build())).isTrue();
     }
 
-    @Test
-    public void eobject_feature_is_null_if_feature_is_not_found() throws Exception {
-        assertThat(featureNotNull(ProcessPackage.Literals.ACTIVITY__DURATION).apply(aPool().build())).isFalse();
+    @Test(expected = AssertionError.class)
+    public void throw_AssertionError_if_feature_is_not_found() throws Exception {
+        featureNotNull(ProcessPackage.Literals.ACTIVITY__DURATION).apply(aPool().build());
     }
 }
