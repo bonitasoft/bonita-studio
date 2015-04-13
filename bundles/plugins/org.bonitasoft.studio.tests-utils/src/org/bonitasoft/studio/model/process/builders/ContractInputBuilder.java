@@ -75,7 +75,6 @@ public class ContractInputBuilder implements Buildable<ContractInput> {
         return this;
     }
 
-    @SafeVarargs
     public ContractInputBuilder havingInput(final Buildable<ContractInput>... input) {
         for (final Buildable<ContractInput> buildable : input) {
             contractInput.getInputs().add(buildable.build());
