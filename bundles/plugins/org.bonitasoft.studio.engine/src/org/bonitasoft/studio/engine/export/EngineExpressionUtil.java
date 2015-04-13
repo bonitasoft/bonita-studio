@@ -390,51 +390,50 @@ public class EngineExpressionUtil {
 
     protected static Expression buildSimpleEngineExpression(final ExpressionBuilder expressionBuilder,
             final org.bonitasoft.studio.model.expression.Expression expression) {
-        final String content = expression.getContent();
-        if (content != null && !content.isEmpty()) {
-            final IExpressionConverter converter = getConverter(expression);
-            if (converter != null) {
-                try {
-                    return converter.convert(expression);
-                } catch (final InvalidExpressionException e) {
-                    BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-                    throw new RuntimeException(e);
-                }
-            }
-            final String type = expression.getType();
-            if (ExpressionConstants.PATTERN_TYPE.equals(type)) {
-                return createPatternExpression(expressionBuilder, expression);
-            }
-            if (ExpressionConstants.DOCUMENT_TYPE.equals(type)) {
-                return createDocumentExpression(expressionBuilder, expression);
-            }
-            if (ExpressionConstants.DOCUMENT_LIST_TYPE.equals(type)) {
-                return createDocumentListExpression(expressionBuilder, expression);
-            }
-            if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(type)) {
-                return createEngineExpressionForDocumentRef(expressionBuilder, expression);
-            }
-            if (ExpressionConstants.XPATH_TYPE.equals(type)) {
-                return createXPATHExpression(expressionBuilder, expression);
-            }
-            if (ExpressionConstants.QUERY_TYPE.equals(type)) {
-                return createQueryExpression(expressionBuilder, expression);
-            } else {
-                expressionBuilder.setContent(content.replace("\r", "\n"));
-                final ExpressionType engineExpressionType = toEngineExpressionType(expression);
-                expressionBuilder.setExpressionType(engineExpressionType);
-                expressionBuilder.setInterpreter(ExpressionType.TYPE_READ_ONLY_SCRIPT.equals(engineExpressionType) ? expression.getInterpreter() : "");
-                expressionBuilder.setReturnType(expression.getReturnType());
-                try {
-                    expressionBuilder.setDependencies(createDependenciesList(expression));
-                    return expressionBuilder.done();
-                } catch (final InvalidExpressionException e) {
-                    BonitaStudioLog.error(e);
-                    throw new RuntimeException(e);
-                }
+        if (!expression.hasContent()) {
+            return null;
+        }
+        final IExpressionConverter converter = getConverter(expression);
+        if (converter != null) {
+            try {
+                return converter.convert(expression);
+            } catch (final InvalidExpressionException e) {
+                BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
+                throw new RuntimeException(e);
             }
         }
-        throw new IllegalArgumentException("Unsupported expression convertion for expression: " + expression);
+        final String type = expression.getType();
+        if (ExpressionConstants.PATTERN_TYPE.equals(type)) {
+            return createPatternExpression(expressionBuilder, expression);
+        }
+        if (ExpressionConstants.DOCUMENT_TYPE.equals(type)) {
+            return createDocumentExpression(expressionBuilder, expression);
+        }
+        if (ExpressionConstants.DOCUMENT_LIST_TYPE.equals(type)) {
+            return createDocumentListExpression(expressionBuilder, expression);
+        }
+        if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(type)) {
+            return createEngineExpressionForDocumentRef(expressionBuilder, expression);
+        }
+        if (ExpressionConstants.XPATH_TYPE.equals(type)) {
+            return createXPATHExpression(expressionBuilder, expression);
+        }
+        if (ExpressionConstants.QUERY_TYPE.equals(type)) {
+            return createQueryExpression(expressionBuilder, expression);
+        } else {
+            expressionBuilder.setContent(expression.getContent().replace("\r", "\n"));
+            final ExpressionType engineExpressionType = toEngineExpressionType(expression);
+            expressionBuilder.setExpressionType(engineExpressionType);
+            expressionBuilder.setInterpreter(ExpressionType.TYPE_READ_ONLY_SCRIPT.equals(engineExpressionType) ? expression.getInterpreter() : "");
+            expressionBuilder.setReturnType(expression.getReturnType());
+            try {
+                expressionBuilder.setDependencies(createDependenciesList(expression));
+                return expressionBuilder.done();
+            } catch (final InvalidExpressionException e) {
+                BonitaStudioLog.error(e);
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private static IExpressionConverter getConverter(final org.bonitasoft.studio.model.expression.Expression expression) {
