@@ -38,6 +38,7 @@ public class Messages extends NLS {
     public static String pool;
     public static String task;
     public static String legacyForm;
+    public static String creatingNewForm;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
