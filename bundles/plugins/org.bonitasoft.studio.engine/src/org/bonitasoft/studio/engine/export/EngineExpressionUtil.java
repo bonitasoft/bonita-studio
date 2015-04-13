@@ -719,7 +719,7 @@ public class EngineExpressionUtil {
 
     public static Expression createBusinessObjectDataReferenceExpression(final BusinessObjectData data) {
         try {
-            return new ExpressionBuilder().createBusinessDataExpression(data.getName(), data.getClassName());
+            return new ExpressionBuilder().createBusinessDataReferenceExpression(data.getName());
         } catch (final InvalidExpressionException e) {
             BonitaStudioLog.error(e);
             throw new RuntimeException(e);

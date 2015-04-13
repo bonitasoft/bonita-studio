@@ -170,10 +170,9 @@ public class FlowElementSwitchTest {
         flowElementSwitch.addContext(taskBuilder, (Task) pool.getElements().get(0));
 
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
-        verify(taskBuilder).addContextEntry(eq("ctxt_myBData"), argument.capture());
+        verify(taskBuilder).addContextEntry(eq("myBData_ref"), argument.capture());
         assertThat(argument.getValue().getName()).isEqualTo("myBData");
-        assertThat(argument.getValue().getReturnType()).isEqualTo("my.classname");
-        assertThat(argument.getValue().getExpressionType()).isEqualTo(ExpressionType.TYPE_BUSINESS_DATA.name());
+        assertThat(argument.getValue().getExpressionType()).isEqualTo(ExpressionType.TYPE_BUSINESS_DATA_REFERENCE.name());
     }
 
 }

@@ -500,7 +500,7 @@ public class FlowElementSwitch extends AbstractSwitch {
         final Pool pool = ModelHelper.getParentPool(task);
         for (final Data data : pool.getData()) {
             if (data instanceof BusinessObjectData) {
-                taskBuilder.addContextEntry("ctxt_" + data.getName(),
+                taskBuilder.addContextEntry(data.getName() + "_ref",
                         EngineExpressionUtil.createBusinessObjectDataReferenceExpression((BusinessObjectData) data));
             }
         }
