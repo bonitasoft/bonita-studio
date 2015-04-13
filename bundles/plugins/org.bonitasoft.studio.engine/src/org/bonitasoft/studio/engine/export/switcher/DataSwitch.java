@@ -153,8 +153,7 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
     }
 
     @Override
-    public DataDefinitionBuilder caseBusinessObjectType(
-            final BusinessObjectType object) {
+    public DataDefinitionBuilder caseBusinessObjectType(final BusinessObjectType object) {
         final BusinessObjectData bod = (BusinessObjectData) getData();
         final BusinessDataDefinitionBuilder businessDataBuilder = getProcessBuilder().addBusinessData(bod.getName(),
                 bod.getClassName(), getDefaultValueExpression());

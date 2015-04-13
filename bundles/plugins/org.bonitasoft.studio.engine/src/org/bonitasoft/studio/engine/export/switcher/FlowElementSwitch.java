@@ -126,7 +126,7 @@ public class FlowElementSwitch extends AbstractSwitch {
     @Override
     public Element caseSubProcessEvent(final SubProcessEvent subProcessEvent) {
         final SubProcessDefinitionBuilder subProcessBuilder = builder.addSubProcess(subProcessEvent.getName(), true).getSubProcessBuilder();
-        final FlowElementSwitch subProcessSwitch = new FlowElementSwitch(subProcessBuilder, eObjectNotExported);
+        final AbstractSwitch subProcessSwitch = new FlowElementSwitch(subProcessBuilder, eObjectNotExported);
         final List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(subProcessEvent, ProcessPackage.Literals.FLOW_ELEMENT);
         for (final FlowElement flowElement : flowElements) {
             if (!eObjectNotExported.contains(flowElement)) {
@@ -494,16 +494,6 @@ public class FlowElementSwitch extends AbstractSwitch {
 
         handleCommonActivity(task, taskBuilder);
         return task;
-    }
-
-    protected void addContext(final UserTaskDefinitionBuilder taskBuilder, final Task task) {
-        final Pool pool = ModelHelper.getParentPool(task);
-        for (final Data data : pool.getData()) {
-            if (data instanceof BusinessObjectData) {
-                taskBuilder.addContextEntry(data.getName() + "_ref",
-                        EngineExpressionUtil.createBusinessObjectDataReferenceExpression((BusinessObjectData) data));
-            }
-        }
     }
 
     protected void addUserFilterToTask(final UserTaskDefinitionBuilder taskBuilder, final String actor, final ActorFilter filter) {
