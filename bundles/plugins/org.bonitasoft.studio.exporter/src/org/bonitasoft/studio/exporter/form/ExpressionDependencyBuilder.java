@@ -21,7 +21,7 @@ import java.util.List;
 import org.bonitasoft.forms.server.builder.IFormBuilder;
 import org.bonitasoft.forms.server.exception.InvalidFormDefinitionException;
 
-public class ExpressionDependecyBuilder {
+public class ExpressionDependencyBuilder {
 
     public void buildExpressionDependency(final IFormBuilder builder, final org.bonitasoft.engine.expression.Expression expression)
             throws InvalidFormDefinitionException {

@@ -140,10 +140,10 @@ public class FormsExporter {
 
     protected Set<EObject> excludedObject;
 
-    protected final ExpressionDependecyBuilder expressionDependecyBuilder;
+    protected final ExpressionDependencyBuilder expressionDependecyBuilder;
 
     public FormsExporter() {
-        expressionDependecyBuilder = new ExpressionDependecyBuilder();
+        expressionDependecyBuilder = new ExpressionDependencyBuilder();
     }
 
     public File createXmlForms(final AbstractProcess studioProcess,

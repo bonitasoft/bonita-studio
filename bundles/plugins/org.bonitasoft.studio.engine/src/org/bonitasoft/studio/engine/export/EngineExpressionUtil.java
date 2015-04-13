@@ -58,7 +58,6 @@ public class EngineExpressionUtil {
 
     private static List<IExpressionConverter> converters;
 
-
     public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation) {
         return createOperation(operation, createLeftOperand(operation.getLeftOperand()));
     }
@@ -174,9 +173,9 @@ public class EngineExpressionUtil {
                     result.add(createWidgetExpression((Widget) element));
                 } else if (element instanceof Document) {
                     if (((Document) element).isMultiple()) {
-                        result.add(createDocumentListExpression((Document) element));
+                        result.add(expBuilder.createDocumentListExpression(((Document) element).getName()));
                     } else {
-                        result.add(createDocumentExpression((Document) element));
+                        result.add(expBuilder.createDocumentReferenceExpression(((Document) element).getName()));
                     }
                 } else if (element instanceof GroupIterator) {
                     result.add(createGroupIteratorExpression((GroupIterator) element));
@@ -205,26 +204,6 @@ public class EngineExpressionUtil {
         } catch (final InvalidExpressionException e) {
             BonitaStudioLog.error(e);
             throw new RuntimeException(e);
-        }
-    }
-
-    private static Expression createDocumentExpression(final Document element) {
-        final ExpressionBuilder exp = new ExpressionBuilder();
-        try {
-            return exp.createDocumentReferenceExpression(element.getName());
-        } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
-            return null;
-        }
-    }
-
-    private static Expression createDocumentListExpression(final Document element) {
-        final ExpressionBuilder exp = new ExpressionBuilder();
-        try {
-            return exp.createDocumentListExpression(element.getName());
-        } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
-            return null;
         }
     }
 
@@ -338,9 +317,8 @@ public class EngineExpressionUtil {
             return buildListEngineExpression(expression);
         } else if (expression instanceof TableExpression) {
             return buildTableEngineExpression(expression);
-        } else {
-            return null;
         }
+        throw new IllegalArgumentException("Unsupported expression convertion");
     }
 
     protected static Expression buildTableEngineExpression(final org.bonitasoft.studio.model.expression.AbstractExpression expression) {
@@ -409,7 +387,7 @@ public class EngineExpressionUtil {
 
     protected static Expression buildSimpleEngineExpression(final ExpressionBuilder expressionBuilder,
             final org.bonitasoft.studio.model.expression.Expression expression) {
-        String content = expression.getContent();
+        final String content = expression.getContent();
         if (content != null && !content.isEmpty()) {
             final IExpressionConverter converter = getConverter(expression);
             if (converter != null) {
@@ -439,16 +417,10 @@ public class EngineExpressionUtil {
             if (ExpressionConstants.QUERY_TYPE.equals(type)) {
                 return createQueryExpression(expressionBuilder, expression);
             } else {
-                content = content.replace("\r", "\n");
-                expressionBuilder.setContent(content);
+                expressionBuilder.setContent(content.replace("\r", "\n"));
                 final ExpressionType engineExpressionType = toEngineExpressionType(expression);
                 expressionBuilder.setExpressionType(engineExpressionType);
-                if (ExpressionType.TYPE_READ_ONLY_SCRIPT.equals(engineExpressionType)) {
-                    expressionBuilder.setInterpreter(expression.getInterpreter());
-                } else {
-                    expressionBuilder.setInterpreter("");
-                }
-
+                expressionBuilder.setInterpreter(ExpressionType.TYPE_READ_ONLY_SCRIPT.equals(engineExpressionType) ? expression.getInterpreter() : "");
                 expressionBuilder.setReturnType(expression.getReturnType());
                 try {
                     expressionBuilder.setDependencies(createDependenciesList(expression));
@@ -458,17 +430,16 @@ public class EngineExpressionUtil {
                     throw new RuntimeException(e);
                 }
             }
-        } else {
-            return null;
         }
+        throw new IllegalArgumentException("Unsupported expression convertion for expression: " + expression);
     }
 
     private static IExpressionConverter getConverter(final org.bonitasoft.studio.model.expression.Expression expression) {
         if (converters == null) {
             converters = new ArrayList<IExpressionConverter>();
             if (ConditionModelActivator.getInstance() != null) {
-            converters.add(new ComparisonExpressionConverter(new XtextComparisonExpressionLoader(ConditionModelActivator.getInstance().getInjector(
-                    ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL))));
+                converters.add(new ComparisonExpressionConverter(new XtextComparisonExpressionLoader(ConditionModelActivator.getInstance().getInjector(
+                        ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL))));
             }
         }
         for (final IExpressionConverter converter : converters) {
@@ -582,7 +553,6 @@ public class EngineExpressionUtil {
         }
     }
 
-
     static ExpressionType toEngineExpressionType(final org.bonitasoft.studio.model.expression.Expression expression) {
         final String type = expression.getType();
         if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(type) || ExpressionConstants.URL_ATTRIBUTE_TYPE.equals(type)) {
@@ -677,7 +647,6 @@ public class EngineExpressionUtil {
             throw new RuntimeException(e);
         }
     }
-
 
     public static Expression createEmptyListExpression() {
         final ExpressionBuilder exp = new ExpressionBuilder();
