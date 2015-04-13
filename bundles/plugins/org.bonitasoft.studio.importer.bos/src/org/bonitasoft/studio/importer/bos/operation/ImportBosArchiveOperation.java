@@ -348,12 +348,14 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         this.archiveFile = archiveFile;
     }
 
-    public void disableValidation() {
+    public ImportBosArchiveOperation disableValidation() {
         validate = false;
+        return this;
     }
 
-    public void enableValidation() {
+    public ImportBosArchiveOperation enableValidation() {
         validate = true;
+        return this;
     }
 
     public IStatus getStatus() {

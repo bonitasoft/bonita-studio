@@ -217,6 +217,7 @@ public class Repository implements IRepository, IJavaContainer {
             BonitaStudioLog.error(e);
         }
         initRepositoryStores(monitor);
+        enableBuild();
         return this;
     }
 
