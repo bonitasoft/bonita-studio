@@ -102,9 +102,6 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
             engineDefinitionBuilders = createEngineDefinitionBuilders();
         }
         for (final IEngineDefinitionBuilder<?> builder : engineDefinitionBuilders) {
-
-        for (final IEngineDefinitionBuilder builder : engineDefinitionBuilders) {
-	refs/remotes/origin/BS-12895_DefaultValueBizData
             if (builder.appliesTo(context, element)) {
                 return builder;
             }
@@ -217,7 +214,11 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     protected void addData(final FlowElementBuilder dataContainerBuilder,
             final DataAware dataAwareContainer) {
         for (final Data data : dataAwareContainer.getData()) {
-            final ProcessSwitch<DataDefinitionBuilder> dataSwitch = getDataSwitch(dataContainerBuilder, data);
+            Expression expr = EngineExpressionUtil.createExpression(data.getDefaultValue());
+            if (expr == null && data.isMultiple()) {
+                expr = EngineExpressionUtil.createEmptyListExpression();
+            }
+            final ProcessSwitch<DataDefinitionBuilder> dataSwitch = getDataSwitch(dataContainerBuilder, data, expr);
             final DataDefinitionBuilder dataBuilder = dataSwitch.doSwitch(data.getDataType());
             if (data.isTransient() && dataBuilder != null) {
                 dataBuilder.isTransient();
@@ -226,8 +227,9 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     }
 
     protected DataSwitch getDataSwitch(
-            final FlowElementBuilder dataContainerBuilder, final Data data) {
-        return new DataSwitch(data, dataContainerBuilder);
+            final FlowElementBuilder dataContainerBuilder, final Data data,
+            final Expression defaultValueExpression) {
+        return new DataSwitch(data, defaultValueExpression, dataContainerBuilder);
     }
 
     protected void addDescription(final DescriptionBuilder builder, final String description) {
