@@ -91,9 +91,7 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         bot.textWithLabel(Messages.name).setText("Web Purchase");
         bot.textWithLabel(Messages.version).setText("1.6");
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+        selectDataVariablesTabbedPropertyView();
         bot.button(Messages.Add).click();
         SWTBotTestUtil.addNewData(bot, "customerEmail", "Text", false, null);
         bot.button(Messages.Add).click();
@@ -133,12 +131,12 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         bot.textWithLabel("Name").setText("Sales Review");
         bot.sleep(1000);
         bot.comboBoxWithLabel("Task type").setSelection("Human");
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Actors");
         bot.radio(useTaskActors).click();
         bot.comboBoxWithLabel(selectActorTitle).setSelection(0);
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+        selectDataVariablesTabbedPropertyView();
         final Map<String, List<String>> options = new HashMap<String, List<String>>();
         final List<String> choices = new ArrayList<String>();
         choices.add("Approve");
@@ -151,6 +149,12 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         bot.editorByTitle(diagramTitle).show();
         bot.editorByTitle(diagramTitle).setFocus();
         SWTBotTestUtil.configureSequenceFlow(bot, "customerOrder", "Web Purchase", false, "true", ExpressionConstants.SCRIPT_TYPE);
+    }
+
+    protected void selectDataVariablesTabbedPropertyView() {
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
+        SWTBotTestUtil.selectTabbedPropertyView(bot, "Variables");
     }
 
     private void createSalesReviewForm(final SWTBotGefEditor gmfEditor) {
@@ -211,9 +215,7 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Actors");
         bot.radio(useTaskActors).click();
         bot.comboBoxWithLabel(selectActorTitle).setSelection(0);
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+        selectDataVariablesTabbedPropertyView();
         bot.button("Add...").click();
         SWTBotTestUtil.addNewData(bot, "comment", "Text", false, "add a comment");
         createMoreInfoForm(gmfEditor);
@@ -280,9 +282,7 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Actors");
         bot.radio(useTaskActors).click();
         bot.comboBoxWithLabel(selectActorTitle).setSelection("Actor1");
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+        selectDataVariablesTabbedPropertyView();
         bot.button("Add...").click();
         SWTBotTestUtil.addNewData(bot, "chooseExpressDelivery", "Boolean", false, "true");
         bot.button("Add...").click();
