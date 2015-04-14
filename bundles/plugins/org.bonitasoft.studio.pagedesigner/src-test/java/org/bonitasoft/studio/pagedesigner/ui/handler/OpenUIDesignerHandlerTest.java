@@ -37,9 +37,9 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class OpenPageDesignerHandlerTest {
+public class OpenUIDesignerHandlerTest {
 
-    private OpenPageDesignerHandler openPageDesignerHandler;
+    private OpenUIDesignerHandler openPageDesignerHandler;
     @Mock
     private IEclipsePreferences preferenceStore;
     @Mock
@@ -53,7 +53,7 @@ public class OpenPageDesignerHandlerTest {
     public void setUp() throws Exception {
         disablePopup = FileActionDialog.getDisablePopup();
         FileActionDialog.setDisablePopup(true);
-        openPageDesignerHandler = spy(new OpenPageDesignerHandler());
+        openPageDesignerHandler = spy(new OpenUIDesignerHandler());
         when(preferenceStore.get(BonitaPreferenceConstants.CONSOLE_HOST, BonitaPreferenceConstants.DEFAULT_HOST)).thenReturn("localhost");
         when(preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT, BonitaPreferenceConstants.DEFAULT_PORT)).thenReturn(8080);
 

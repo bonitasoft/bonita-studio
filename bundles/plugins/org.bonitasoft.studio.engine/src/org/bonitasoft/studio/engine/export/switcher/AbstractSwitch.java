@@ -102,14 +102,13 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
         if (engineDefinitionBuilders == null) {
             engineDefinitionBuilders = createEngineDefinitionBuilders();
         }
-        for(final IEngineDefinitionBuilder builder : engineDefinitionBuilders){
+        for (final IEngineDefinitionBuilder builder : engineDefinitionBuilders) {
             if (builder.appliesTo(context, element)) {
                 return builder;
             }
         }
         return null;
     }
-
 
     protected void addActors(final ProcessDefinitionBuilder builder, final AbstractProcess process) {
         for (final Actor a : process.getActors()) {
@@ -183,6 +182,7 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
             }
         }
     }
+
     protected void addKPIBinding(final FlowElementBuilder builder, final ConnectableElement element) {
         for (final AbstractKPIBinding kpiBinding : element.getKpis()) {
             if (kpiBinding instanceof DatabaseKPIBinding) {
@@ -207,11 +207,7 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     protected void addData(final FlowElementBuilder dataContainerBuilder,
             final DataAware dataAwareContainer) {
         for (final Data data : dataAwareContainer.getData()) {
-            Expression expr = EngineExpressionUtil.createExpression(data.getDefaultValue());
-            if (expr == null && data.isMultiple()) {
-                expr = EngineExpressionUtil.createEmptyListExpression();
-            }
-            final ProcessSwitch<DataDefinitionBuilder> dataSwitch = getDataSwitch(dataContainerBuilder, data, expr);
+            final ProcessSwitch<DataDefinitionBuilder> dataSwitch = getDataSwitch(dataContainerBuilder, data);
             final DataDefinitionBuilder dataBuilder = dataSwitch.doSwitch(data.getDataType());
             if (data.isTransient() && dataBuilder != null) {
                 dataBuilder.isTransient();
@@ -220,9 +216,8 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     }
 
     protected DataSwitch getDataSwitch(
-            final FlowElementBuilder dataContainerBuilder, final Data data,
-            final Expression defaultValueExpression) {
-        return new DataSwitch(data, defaultValueExpression, dataContainerBuilder);
+            final FlowElementBuilder dataContainerBuilder, final Data data) {
+        return new DataSwitch(data, dataContainerBuilder);
     }
 
     protected void addDescription(final DescriptionBuilder builder, final String description) {

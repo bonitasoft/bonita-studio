@@ -14,12 +14,13 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard;
 
-import java.util.Set;
-
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.DataTypeLabels;
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -42,27 +43,43 @@ public class AddBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
 
     private final TransactionalEditingDomain editingDomain;
 
-    private final Set<String> existingNames;
-
     private BusinessObjectData businessObjectData;
 
     public AddBusinessObjectDataWizard(final DataAware container,
             final BusinessObjectModelRepositoryStore businessObjectDefinitionStore,
             final TransactionalEditingDomain editingDomain) {
         this.container = container;
-        businessObjectData = ProcessFactory.eINSTANCE.createBusinessObjectData();
-        businessObjectData.setDataType(ModelHelper.getDataTypeForID(container, DataTypeLabels.businessObjectType));
+        businessObjectData = newBusinessData(container);
         this.businessObjectDefinitionStore = businessObjectDefinitionStore;
         this.editingDomain = editingDomain;
-        existingNames = computeExistingNames(container);
         setDefaultPageImageDescriptor(Pics.getWizban());
     }
 
-    public AddBusinessObjectDataWizard(final DataAware container, final BusinessObjectData wc,
+    public AddBusinessObjectDataWizard(final DataAware container, final BusinessObjectData workingCopy,
             final BusinessObjectModelRepositoryStore businessObjectDefinitionStore,
             final TransactionalEditingDomain editingDomain) {
         this(container, businessObjectDefinitionStore, editingDomain);
-        businessObjectData = wc;
+        businessObjectData = workingCopy;
+        if (businessObjectData.getDefaultValue() == null) {
+            businessObjectData.setDefaultValue(defaultValueExpression());
+        }
+    }
+
+    private BusinessObjectData newBusinessData(final DataAware container) {
+        final BusinessObjectData businessObjectData = ProcessFactory.eINSTANCE.createBusinessObjectData();
+        businessObjectData.setDataType(ModelHelper.getDataTypeForID(container, DataTypeLabels.businessObjectType));
+        businessObjectData.setDefaultValue(defaultValueExpression());
+        return businessObjectData;
+    }
+
+    private Expression defaultValueExpression() {
+        final Expression defaultValueExpression = ExpressionFactory.eINSTANCE.createExpression();
+        defaultValueExpression.setType(ExpressionConstants.SCRIPT_TYPE);
+        defaultValueExpression.setInterpreter(ExpressionConstants.GROOVY);
+        defaultValueExpression.setName("");
+        defaultValueExpression.setContent("");
+        defaultValueExpression.setReturnType(Object.class.getName());
+        return defaultValueExpression;
     }
 
     @Override
@@ -72,7 +89,8 @@ public class AddBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
     }
 
     protected BusinessObjectDataWizardPage createAddBusinessObjectDataWizardPage() {
-        final BusinessObjectDataWizardPage page = new BusinessObjectDataWizardPage(businessObjectData, businessObjectDefinitionStore, existingNames);
+        final BusinessObjectDataWizardPage page = new BusinessObjectDataWizardPage(container, businessObjectData, businessObjectDefinitionStore,
+                computeExistingNames(container));
         page.setTitle(Messages.bind(Messages.addBusinessObjectDataTitle, ModelHelper.getParentProcess(container).getName()));
         page.setDescription(Messages.addBusinessObjectDataDescription);
         return page;
@@ -84,13 +102,13 @@ public class AddBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
      */
     @Override
     public boolean performFinish() {
-        final BusinessObjectData data = addBusinessObjectDataWizardPage.getBusinessObjectData();
-        final Command addCommand = AddCommand.create(editingDomain, container, ProcessPackage.Literals.DATA_AWARE__DATA, data);
+        final Command addCommand = AddCommand.create(editingDomain, container, ProcessPackage.Literals.DATA_AWARE__DATA,
+                businessObjectData);
         editingDomain.getCommandStack().execute(addCommand);
         return !addCommand.getResult().isEmpty();
     }
 
     public BusinessObjectData getBusinessObjectData() {
-        return addBusinessObjectDataWizardPage.getBusinessObjectData();
+        return businessObjectData;
     }
 }
