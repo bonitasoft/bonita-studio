@@ -74,11 +74,15 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private ContractConstraintController constraintController;
 
-    @Inject
-    private ContractContainerAdaptableSelectionProvider selectionProvider;
+    private final ContractContainerAdaptableSelectionProvider selectionProvider;
+
+    private final IEclipseContext eclipseContext;
 
     @Inject
-    private IEclipseContext eclipseContext;
+    public ContractPropertySection(final IEclipseContext eclipseContext, final ContractContainerAdaptableSelectionProvider selectionProvider) {
+        this.eclipseContext = eclipseContext;
+        this.selectionProvider = selectionProvider;
+    }
 
     @Override
     public String getSectionDescription() {
