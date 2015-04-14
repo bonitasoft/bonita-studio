@@ -6,7 +6,7 @@ Bundle-SymbolicName: org.bonitasoft.studio.businessobject;singleton:=true
 Bundle-Version: 7.0.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.businessobject.BusinessObjectPlugin
 Bundle-Vendor: BonitaSoft S.A.
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.bonitasoft.studio.model;bundle-version="1.0.0",

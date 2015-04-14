@@ -21,7 +21,9 @@ import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
@@ -120,6 +122,17 @@ public class FormBarResourceProviderTest {
         verify(builder).addExternalResource(taskFormCustomPage);
     }
 
+    @Test
+    public void should_not_add_form_custom_page_if_target_form_is_empty() throws Exception {
+        //When
+        formMappingBarResourceProvider.addResourcesForConfiguration(builder, aPoolWithEmptyFormMappings(), aConfiguration()
+                .build(),
+                Collections.<EObject> emptySet());
+
+        //Then
+        verify(builder, never()).addExternalResource(any(BarResource.class));
+    }
+
     private Pool aPoolAndTaskWithAllTypeOfFormMappings() {
         return aPool()
                 .withName("Pool1")
@@ -130,6 +143,16 @@ public class FormBarResourceProviderTest {
                 .havingElements(
                         aTask().withName("Step1").havingFormMapping(
                                 aFormMapping().havingTargetForm(anExpression().withName("StepForm").withContent("step-form-id"))))
+                .build();
+    }
+
+    private Pool aPoolWithEmptyFormMappings() {
+        return aPool()
+                .withName("Pool1")
+                .withVersion("1.0")
+                .havingFormMapping(
+                        aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.INTERNAL)
+                                .havingTargetForm(anExpression().withContent("")))
                 .build();
     }
 
