@@ -15,11 +15,16 @@
       <propertyTabs
             contributorId="org.bonitasoft.studio.diagram">
                <propertyTab
-               afterTab="tab.contract"
-               category="domain"
-               id="tab.data"
-               label="%tab.data.label">
+                     afterTab="tab.poolData"
+                     category="domain"
+                     id="tab.data"
+                     label="%tab.data.label">
          </propertyTab>
+               <propertyTab
+                     category="domain"
+                     id="tab.poolData"
+                     label="%poolVariables">
+               </propertyTab>
       </propertyTabs>
    </extension>
    <extension

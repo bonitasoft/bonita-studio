@@ -14,26 +14,23 @@
  */
 package org.bonitasoft.studio.refactoring.core;
 
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.bonitasoft.studio.refactoring.core.groovy.ReferenceDiff.newReferenceDiff;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
-import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.codehaus.groovy.eclipse.codeassist.requestor.CompletionNodeFinder;
-import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
-import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
+import org.bonitasoft.studio.refactoring.core.groovy.GroovyScriptRefactoringOperation;
+import org.bonitasoft.studio.refactoring.core.groovy.ReferenceDiff;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -42,13 +39,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
-import org.eclipse.text.edits.MalformedTreeException;
-import org.eclipse.text.edits.MultiTextEdit;
+
+import com.google.common.base.Function;
 
 /**
  * @author Romain Bioteau
@@ -68,7 +61,7 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
         this.operationType = operationType;
     }
 
-    protected CompoundCommand buildCompoundCommand(final IProgressMonitor monitor) throws InterruptedException {
+    protected CompoundCommand buildCompoundCommand(final IProgressMonitor monitor) throws InterruptedException, InvocationTargetException {
         if (compoundCommand == null) {
             compoundCommand = new CompoundCommand("Refactor Operation");
         }
@@ -120,7 +113,7 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
 
     protected abstract CompoundCommand doBuildCompoundCommand(CompoundCommand cc, IProgressMonitor monitor);
 
-    protected void updateReferencesInScripts(final IProgressMonitor monitor) throws InterruptedException {
+    protected void updateReferencesInScripts(final IProgressMonitor monitor) throws InterruptedException, InvocationTargetException {
         final Set<Expression> scriptExpressionsSetToRefactor = new HashSet<Expression>();
         for (final RefactorPair<Y, Z> pairRefactor : pairsToRefactor) {
             if (shouldUpdateReferencesInScripts(pairRefactor)) {
@@ -159,7 +152,7 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
             List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand, EditingDomain domain, RefactoringOperationType operationType);
 
     protected List<Expression> performRefactoringForAllScripts(final List<Expression> groovyScriptExpressions, final IProgressMonitor monitor)
-            throws InterruptedException {
+            throws InterruptedException, InvocationTargetException {
         final List<Expression> newExpressions = new ArrayList<Expression>(groovyScriptExpressions.size());
         for (final Expression expr : groovyScriptExpressions) {
             if (groovyScriptExpressions.size() > MIN_MONITOR_WORK) {
@@ -172,7 +165,10 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
             }
             final Expression newExpr = EcoreUtil.copy(expr);
             if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())) {
-                newExpr.setContent(performGroovyRefactoring(expr.getContent()));
+                final GroovyScriptRefactoringOperation groovyScriptRefactoringOperation = new GroovyScriptRefactoringOperation(expr.getContent(),
+                        newArrayList(transform(pairsToRefactor, toRefDiff())));
+                groovyScriptRefactoringOperation.run(monitor);
+                newExpr.setContent(groovyScriptRefactoringOperation.getScript());
             } else {
                 String textRefactored = expr.getContent();
                 for (final RefactorPair<Y, Z> pairToRefactor : pairsToRefactor) {
@@ -184,6 +180,16 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
             monitor.worked(1);
         }
         return newExpressions;
+    }
+
+    private Function<RefactorPair<Y, Z>, ReferenceDiff> toRefDiff() {
+        return new Function<RefactorPair<Y, Z>, ReferenceDiff>() {
+
+            @Override
+            public ReferenceDiff apply(final RefactorPair<Y, Z> input) {
+                return newReferenceDiff(input.getOldValueName(), input.getNewValueName());
+            }
+        };
     }
 
     private String performTextReplacement(final String elementNameToUpdate, final String newElementName, final String script) {
@@ -219,55 +225,6 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
         }
         m.appendTail(buf);
         return buf.toString();
-    }
-
-    private String performGroovyRefactoring(final String script) {
-        final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ProvidedGroovyRepositoryStore.class);
-        final GroovyFileStore tmpGroovyFileStore = store.createRepositoryFileStore("script" + System.currentTimeMillis() + ".groovy");
-        tmpGroovyFileStore.save(script);
-        final GroovyCompilationUnit compilationUnitFrom = (GroovyCompilationUnit) JavaCore.createCompilationUnitFrom(tmpGroovyFileStore.getResource());
-
-        final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
-        final ContentAssistContext assistContext = finder.findContentAssistContext(compilationUnitFrom);
-
-        org.codehaus.groovy.ast.ASTNode astNode = null;
-        if (assistContext != null) {
-            astNode = assistContext.containingCodeBlock;
-        }
-        if (astNode != null) {
-            final ProcessVariableRenamer variableRenamer = new ProcessVariableRenamer();
-            final Map<String, String> variableToRename = new HashMap<String, String>();
-            for (final RefactorPair<Y, Z> pairToRefactor : pairsToRefactor) {
-                variableToRename.put(pairToRefactor.getOldValueName(), pairToRefactor.getNewValueName());
-            }
-            final MultiTextEdit rename = variableRenamer.rename(astNode, variableToRename);
-            if (rename.getChildrenSize() > 0) {
-                final Document document = new Document(script);
-                try {
-                    rename.apply(document);
-                } catch (final MalformedTreeException e) {
-                    BonitaStudioLog.error(e);
-                } catch (final BadLocationException e) {
-                    BonitaStudioLog.error(e);
-                }
-                final String scriptRefactored = document.get();
-                forceDelete(compilationUnitFrom);
-                return scriptRefactored;
-            }
-        }
-        tmpGroovyFileStore.delete();
-        forceDelete(compilationUnitFrom);
-        return script;
-    }
-
-    protected void forceDelete(final GroovyCompilationUnit compilationUnit) {
-        try {
-            if (compilationUnit.exists()) {
-                compilationUnit.delete(true, new NullProgressMonitor());
-            }
-        } catch (final JavaModelException e) {
-            BonitaStudioLog.error(e);
-        }
     }
 
     public void setEditingDomain(final TransactionalEditingDomain domain) {

@@ -23,7 +23,7 @@
                       filter="org.bonitasoft.studio.document.ui.DocumentSectionFilter"
                       id="section.general.tab.document"
                       tab="tab.document"
-                      viewID="org.bonitasoft.studio.views.properties.process.general">
+                      viewID="org.bonitasoft.studio.views.properties.process.data">
                 </propertySection>
       </propertySections>
    </extension>

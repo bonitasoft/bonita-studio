@@ -86,7 +86,7 @@ public class ContractIT extends SWTBotGefTestCase {
     protected void createExpenseReport(final BotProcessDiagramPerspective botProcessDiagramPerspective, final ContractContainer contractContainer) {
         final BotContractPropertySection contractTabBot = botProcessDiagramPerspective
                 .getDiagramPropertiesPart()
-                .selectGeneralTab()
+                .selectExecutionTab()
                 .selectContractTab();
         final BotContractInputTab inputTab = contractTabBot.selectInputTab();
         final BotContractInputRow contractInputRow = inputTab.add();

@@ -56,12 +56,13 @@
    <propertyTabs
          contributorId="org.bonitasoft.studio.diagram">
       <propertyTab
+            afterTab="tab.contract"
             category="domain"
             id="tab.form.mapping.entry"
             label="%EntryFormMapping">
       </propertyTab>
       <propertyTab
-            afterTab="tab.form.mapping.entry"
+            afterTab="tab.contract"
             category="domain"
             id="tab.form.mapping.caseStart"
             label="%CaseStartFormMapping">
@@ -84,7 +85,7 @@
             filter="org.bonitasoft.studio.pagedesigner.ui.property.filter.TaskFilter"
             id="TaskEntryFormMapping"
             tab="tab.form.mapping.entry"
-            viewID="org.bonitasoft.studio.views.properties.process.formMapping">
+            viewID="org.bonitasoft.studio.views.properties.process.execution">
       </propertySection>
       <propertySection
             class="org.bonitasoft.studio.pagedesigner.ui.property.section.CaseStartFormMappingPropertySection"
@@ -92,14 +93,14 @@
             filter="org.bonitasoft.studio.pagedesigner.ui.property.filter.PoolOrLaneFilter"
             id="PoolEntryFormMapping"
             tab="tab.form.mapping.caseStart"
-            viewID="org.bonitasoft.studio.views.properties.process.formMapping">
+            viewID="org.bonitasoft.studio.views.properties.process.execution">
       </propertySection>
       <propertySection
             class="org.bonitasoft.studio.pagedesigner.ui.property.section.CaseOverviewFormMappingPropertySection"
             filter="org.bonitasoft.studio.pagedesigner.ui.property.filter.PoolOrLaneFilter"
             id="PoolOverviewFormMapping"
             tab="tab.form.mapping.overview"
-            viewID="org.bonitasoft.studio.views.properties.process.formMapping">
+            viewID="org.bonitasoft.studio.views.properties.process.execution">
       </propertySection>
    </propertySections>
 </extension>
