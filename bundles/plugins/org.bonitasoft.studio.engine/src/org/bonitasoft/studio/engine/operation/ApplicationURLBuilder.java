@@ -84,7 +84,7 @@ public class ApplicationURLBuilder {
     }
 
     private String encodeForPathURL(final String toEncode) throws UnsupportedEncodingException {
-        return URLEncoder.encode(toEncode, ENCODING_UTF8).replaceAll("\\+", "%20");
+        return URLEncoder.encode(toEncode, ENCODING_UTF8).replaceAll("\\+", "%20").replaceAll("%2F", "/");
     }
 
     protected String getLocaleParameter(final String locale) {

@@ -47,7 +47,7 @@ public class ApplicationURLBuilderTest {
     @Before
     public void setUp() throws Exception {
         final AbstractProcess process = ProcessFactory.eINSTANCE.createPool();
-        process.setName("testPool with space");
+        process.setName("testPool with space /and slash");
         process.setVersion("1.0");
         applicationURLBuilder = spy(new ApplicationURLBuilder(process, ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, 12L));
         doReturn("fr").when(applicationURLBuilder).getWebLocale();
@@ -68,7 +68,7 @@ public class ApplicationURLBuilderTest {
         final URL url = applicationURLBuilder.toURL(Repository.NULL_PROGRESS_MONITOR);
         assertThat(url).isNotNull();
         final String validApplicationPath = URLEncoder.encode("portal/resource/process/", "UTF-8");
-        final String validProcessReference = "testPool%2520with%2520space%2F1.0%2Fcontent";
+        final String validProcessReference = "testPool%2520with%2520space%2520%2Fand%2520slash%2F1.0%2Fcontent";
         final String validProcDefId = URLEncoder.encode("id=12", "UTF-8");
         final String validLocale = URLEncoder.encode("locale=fr","UTF-8");
         assertThat(url.toString())
@@ -93,7 +93,7 @@ public class ApplicationURLBuilderTest {
         final URL url = applicationURLBuilder.toURL(Repository.NULL_PROGRESS_MONITOR);
         assertThat(url).isNotNull();
         final String validApplicationPath = URLEncoder.encode("portal/resource/process/", "UTF-8");
-        final String validProcessReference = "testPool%2520with%2520space%2F1.0%2Fcontent";
+        final String validProcessReference = "testPool%2520with%2520space%2520%2Fand%2520slash%2F1.0%2Fcontent";
         final String validProcDefId = URLEncoder.encode("id=12", "UTF-8");
         final String validLocale = URLEncoder.encode("locale=fr", "UTF-8");
         verify(applicationURLBuilder).buildLoginUrl("userInAconf", "passwordInCOnf");
