@@ -74,9 +74,15 @@ public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
     }
 
     @Test
-    public void should_exportPage_return_URL_to_that_export_the_page_with_given_id() throws Exception {
+    public void should_exportPage_return_URL_to_export_the_page_with_given_id() throws Exception {
         assertThat(pageDesignerURLBuilder.exportPage("my-page-id")).isEqualTo(
                 new URL("http://localhost:8080/page-designer/api/export/page/my-page-id"));
+    }
+
+    @Test
+    public void should_exportPageFromContract_return_URL_to_create_the_page_with_given_name_from_a_contract() throws Exception {
+        assertThat(pageDesignerURLBuilder.newPageFromContract("myPageName")).isEqualTo(
+                new URL("http://localhost:8080/page-designer/api/rest/pages/contract/myPageName"));
     }
 
 }

@@ -14,13 +14,17 @@
  */
 package org.bonitasoft.studio.model.process.builders;
 
+import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractConstraint;
+import org.bonitasoft.studio.model.process.ContractContainer;
+import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 
 /**
  * @author Romain Bioteau
  */
-public class ContractBuilder {
+public class ContractBuilder implements Buildable<Contract> {
 
     public static ContractBuilder aContract() {
         return new ContractBuilder(ProcessFactory.eINSTANCE.createContract());
@@ -32,21 +36,27 @@ public class ContractBuilder {
         this.contract = contract;
     }
 
-    public ContractBuilder havingInput(final ContractInputBuilder... contractInput) {
-        for (final ContractInputBuilder cb : contractInput) {
+    public ContractBuilder havingInput(final Buildable<ContractInput>... contractInput) {
+        for (final Buildable<ContractInput> cb : contractInput) {
             contract.getInputs().add(cb.build());
         }
         return this;
     }
 
-    public ContractBuilder havingConstraint(final ContractConstraintBuilder... contractConstraints) {
-        for (final ContractConstraintBuilder cc : contractConstraints) {
+    public ContractBuilder havingConstraint(final Buildable<ContractConstraint>... contractConstraints) {
+        for (final Buildable<ContractConstraint> cc : contractConstraints) {
             contract.getConstraints().add(cc.build());
         }
         return this;
     }
 
+    @Override
     public Contract build() {
         return contract;
+    }
+
+    public ContractBuilder in(final Buildable<? extends ContractContainer> contractContainerBuildable) {
+        contractContainerBuildable.build().setContract(contract);
+        return this;
     }
 }

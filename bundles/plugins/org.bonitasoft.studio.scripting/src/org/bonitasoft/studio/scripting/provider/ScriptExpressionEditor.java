@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.scripting.provider;
 
-import org.bonitasoft.studio.common.emf.converter.BooleanInverserConverter;
+import org.bonitasoft.studio.common.jface.databinding.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;

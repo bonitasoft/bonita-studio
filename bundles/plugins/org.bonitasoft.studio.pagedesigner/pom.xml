@@ -7,13 +7,14 @@
         <artifactId>plugins</artifactId>
         <version>7.0.0-SNAPSHOT</version>
     </parent>
-    
+
     <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
     <artifactId>org.bonitasoft.studio.pagedesigner</artifactId>
     <packaging>eclipse-plugin</packaging>
 
     <properties>
         <webapp.dir>${basedir}/webapp</webapp.dir>
+        <lib.dir>${basedir}/lib</lib.dir>
         <page.designer.version>1.0.0-SNAPSHOT</page.designer.version>
     </properties>
 
@@ -65,11 +66,46 @@
                         <configuration>
                             <target>
                                 <delete dir="${webapp.dir}" />
+                                <delete dir="${lib.dir}" />
                             </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Retrieve contract model</id>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.bonitasoft.web</groupId>
+                                    <artifactId>page-designer-model</artifactId>
+                                    <version>${page.designer.version}</version>
+                                    <overWrite>true</overWrite>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.fasterxml.jackson.core</groupId>
+                                    <artifactId>jackson-core</artifactId>
+                                    <version>2.5.2</version>
+                                    <overWrite>true</overWrite>
+                                </artifactItem>
+                            </artifactItems>
+                            <stripVersion>true</stripVersion>
+                            <stripClassifier>true</stripClassifier>
+                            <outputDirectory>${lib.dir}</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.model.process.builders;
 
+import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -22,7 +23,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 /**
  * @author Romain Bioteau
  */
-public class ContractInputBuilder {
+public class ContractInputBuilder implements Buildable<ContractInput> {
 
     public static ContractInputBuilder aContractInput() {
         return new ContractInputBuilder(ProcessFactory.eINSTANCE.createContractInput());
@@ -74,6 +75,14 @@ public class ContractInputBuilder {
         return this;
     }
 
+    public ContractInputBuilder havingInput(final Buildable<ContractInput>... input) {
+        for (final Buildable<ContractInput> buildable : input) {
+            contractInput.getInputs().add(buildable.build());
+        }
+        return this;
+    }
+
+    @Override
     public ContractInput build() {
         return contractInput;
     }
