@@ -1025,6 +1025,9 @@ public class ModelHelper {
     private static boolean isElementIsReferencedInScript(final Expression expr, final EObject element) {
         if (!expr.getReferencedElements().isEmpty()) {
             for (final EObject o : expr.getReferencedElements()) {
+                if (EcoreUtil.equals(element, o)) {
+                    return true;
+                }
                 if (element instanceof Element && o instanceof Element && isSameElement(element, o)) {
                     return true && !isReferencedElementIsInExpression(expr);
                 } else {
@@ -1740,24 +1743,19 @@ public class ModelHelper {
 
     public static <T extends EObject> List<T> getAllItemsOfType(final EObject container, final EClass eClass) {
         final List<T> res = new ArrayList<T>();
-        addAllWidgetsOfContainer(container, res, eClass);
+        addAllElementOfContainer(container, res, eClass);
         return res;
     }
 
-    /**
-     * @param container
-     * @param res
-     */
-    private static <T extends EObject> void addAllWidgetsOfContainer(final EObject container, final List<T> res, final EClass eClass) {
+    private static <T extends EObject> void addAllElementOfContainer(final EObject container, final List<T> res, final EClass eClass) {
         if (container != null) {
             if (eClass.isSuperTypeOf(container.eClass())) {
                 res.add((T) container);
             }
             for (final EObject child : container.eContents()) {
-                addAllWidgetsOfContainer(child, res, eClass);
+                addAllElementOfContainer(child, res, eClass);
             }
         }
-
     }
 
     public static Set<String> getExistingConnectorsName(final Element eObject) {
@@ -2134,4 +2132,23 @@ public class ModelHelper {
         }
         return (T) current;
     }
+
+    public static <T extends EObject> List<T> getAllElementOfTypeIn(final EObject container, final Class<T> type) {
+        final List<T> res = new ArrayList<T>();
+        addAllItemsOfContainer(container, res, type);
+        return res;
+    }
+
+    private static <T extends EObject> void addAllItemsOfContainer(final EObject container, final List<T> res, final Class<T> type) {
+        if (container != null) {
+            if (type.isAssignableFrom(container.getClass())) {
+                res.add((T) container);
+            }
+            for (final EObject child : container.eContents()) {
+                addAllItemsOfContainer(child, res, type);
+            }
+        }
+
+    }
+
 }

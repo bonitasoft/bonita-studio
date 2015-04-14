@@ -40,6 +40,7 @@ public class Messages extends NLS {
     public static String legacyForm;
     public static String openUIDesigner;
     public static String uiDesignerLabel;
+    public static String creatingNewForm;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

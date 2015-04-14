@@ -69,7 +69,7 @@ public class SWTBOTTestConditions extends SWTBotGefTestCase{
 		diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectPoolTab().editPool(poolName, "1.0");
 
 		//add a data on pool
-		final BotAddDataWizardPage addDataBot = diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab().addData();
+		final BotAddDataWizardPage addDataBot = diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab().addData();
 		addDataBot.setName("myData");
 		addDataBot.finish();
 		//add a new task

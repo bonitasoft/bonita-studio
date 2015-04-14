@@ -40,14 +40,14 @@ public class TestConditionWithUTF8 extends SWTBotGefTestCase {
 
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
-        final BotAddDataWizardPage botAddDataWizardPage = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab().addData();
-        botAddDataWizardPage.setName("管理者");
+        final BotAddDataWizardPage botAddDataWizardPage = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab().addData();
+        botAddDataWizardPage.setName("ç®¡ç�†è€…");
         botAddDataWizardPage.finish();
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectFlowBetween("Start1", "Step1");
         botProcessDiagramPerspective.getDiagramPropertiesPart().selectApplicationTab();
         final BotGeneralPropertySection botGeneralPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab()
                 .selectGeneralTab();
-        botGeneralPropertySection.setConditionExpression("管理者 == \"test\"");
+        botGeneralPropertySection.setConditionExpression("ç®¡ç�†è€… == \"test\"");
         final BotValidationPropertiesView validationPropertiesTab = botProcessDiagramPerspective.getDiagramPropertiesPart().selectValidationStatusTab();
         botApplicationWorkbenchWindow.save();
         bot.sleep(1000);

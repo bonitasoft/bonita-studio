@@ -25,7 +25,6 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.junit.Before;
 import org.junit.Test;
 
-
 /**
  * @author Romain Bioteau
  */

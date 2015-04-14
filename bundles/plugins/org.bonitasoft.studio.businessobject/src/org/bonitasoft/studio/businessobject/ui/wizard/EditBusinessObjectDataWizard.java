@@ -125,9 +125,8 @@ public class EditBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
     private RefactorDataOperation newRefactorOperation(final Data updatedData, final AbstractProcess process) {
         final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
         op.setEditingDomain(editingDomain);
-        op.setContainer(process);
         op.addItemToRefactor(updatedData, data);
-        op.setDirectDataContainer(container);
+        op.setDataContainer(container);
         op.setAskConfirmation(true);
         op.setDataContainmentFeature(ProcessPackage.Literals.DATA_AWARE__DATA);
         return op;

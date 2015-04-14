@@ -63,5 +63,6 @@ public class Messages extends NLS {
     public static String editContentToConstraint;
     public static String emptyExpressionContent;
     public static String noContractInputReferencedInExpression;
+    public static String nullable;
 
 }

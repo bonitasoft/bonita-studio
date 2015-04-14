@@ -6,7 +6,6 @@
       <propertyTabs
             contributorId="org.bonitasoft.studio.diagram">
          <propertyTab
-               afterTab="tab.lane"
                category="domain"
                id="tab.contract"
                label="%tab.contract.label">
@@ -23,7 +22,7 @@
                filter="org.bonitasoft.studio.contract.ui.property.ContractContainerFilter"
                id="InputsSection"
                tab="tab.contract"
-               viewID="org.bonitasoft.studio.views.properties.process.general">
+               viewID="org.bonitasoft.studio.views.properties.process.execution">
          </propertySection>
       </propertySections>
    </extension>

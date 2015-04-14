@@ -53,7 +53,7 @@
       <propertyTabs
             contributorId="org.bonitasoft.studio.diagram">
          <propertyTab
-               afterTab="tab.actors"
+               afterTab="tab.operations"
                category="domain"
                id="tab.connectors"
                label="%tab.connectors">
@@ -70,7 +70,7 @@
               filter="org.bonitasoft.studio.connectors.ui.property.filter.ConnectableElementWithoutSendTaskAndSubProcessEvent"
               id="ConnectorsSection"
               tab="tab.connectors"
-              viewID="org.bonitasoft.studio.views.properties.process.general">
+              viewID="org.bonitasoft.studio.views.properties.process.execution">
          </propertySection>
       </propertySections>
    </extension>

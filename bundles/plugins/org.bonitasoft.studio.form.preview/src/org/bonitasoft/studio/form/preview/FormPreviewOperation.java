@@ -142,7 +142,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 
 				final ExternalBrowserInstance browserInstance = new ExternalBrowserInstance(null, browser);
 				if (!formPreviewInit.isOnTask()){
-                    handleProcessForm(monitor, configuration, proc, browserInstance);
+                    handleProcessForm(monitor, configuration, proc, browserInstance, procId);
 				} else {
 					handleTaskForm(monitor, session, processApi, procId, configuration, proc, browserInstance);
 				}
@@ -183,8 +183,8 @@ public class FormPreviewOperation implements IRunnableWithProgress {
         }
     }
     protected void handleProcessForm(final IProgressMonitor monitor, final Configuration configuration, final AbstractProcess proc,
-            final ExternalBrowserInstance browserInstance) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
-        final ApplicationURLBuilder builder = new ApplicationURLBuilder(proc, configuration.getName());
+            final ExternalBrowserInstance browserInstance, final long procId) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
+        final ApplicationURLBuilder builder = new ApplicationURLBuilder(proc, configuration.getName(), procId);
         final URL url = builder.toURL(monitor);
         final OpenBrowserOperation openCmd = new OpenBrowserOperation(url);
         if(browser.getLocation() != null){

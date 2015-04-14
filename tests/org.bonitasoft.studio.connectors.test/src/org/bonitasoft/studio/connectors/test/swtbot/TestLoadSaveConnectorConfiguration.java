@@ -80,9 +80,10 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 		final String saveName="testLoadConnectorConfig";
 		createConnector(connectorDefId);
 		SWTBotTestUtil.createNewDiagram(bot);
-		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
 		createData(dataName);
 		//SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorDefId,version, new String[]{"Uncategorized"},name);
+		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION).show();
 		SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
 		bot.button("Add...").click();
 		bot.text().setText(connectorDefId);
@@ -183,7 +184,7 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 
 
 	private void createData(final String dataName) {
-		SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+		SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES);
 		bot.button("Add...").click();
 		assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
 				.button(IDialogConstants.FINISH_LABEL).isEnabled());

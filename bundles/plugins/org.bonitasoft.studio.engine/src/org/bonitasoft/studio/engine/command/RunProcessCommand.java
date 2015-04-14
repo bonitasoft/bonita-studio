@@ -89,7 +89,6 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         if (installedTheme != null && !installedTheme.equals(currentTheme)) {
             BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, currentTheme);
-            BonitaUserXpPreferencePage.updateBonitaHome();
         }
 
         final Set<AbstractProcess> executableProcesses = new ProcessSelector(event).getExecutableProcesses();
