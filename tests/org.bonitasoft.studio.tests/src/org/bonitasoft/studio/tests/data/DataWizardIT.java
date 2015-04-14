@@ -135,7 +135,9 @@ public class DataWizardIT extends SWTBotGefTestCase {
         final MainProcess model = (MainProcess)part.resolveSemanticElement();
         final Pool pool = (Pool)model.getElements().get(0);
         gmfEditor.select(pool.getName());
-        final BotDataPropertySection dataTab = diagramPropertiesPart.selectGeneralTab().selectDataTab();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
+        final BotDataPropertySection dataTab = diagramPropertiesPart.selectDataTab().selectDataTab();
         dataTab.dataList().select(1);
         final BotEditDataDialog editDataDialog = dataTab.edit();
         editDataDialog.setName("anewName");
@@ -249,8 +251,8 @@ public class DataWizardIT extends SWTBotGefTestCase {
      * @param dataName
      */
     private void addDataOnSelectedElementWithName(final String dataName) {
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
+        SWTBotTestUtil.selectTabbedPropertyView(bot,SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES);
 
         bot.button("Add...").click();
         // Shell "New variable"
@@ -276,9 +278,9 @@ public class DataWizardIT extends SWTBotGefTestCase {
         final Pool pool = (Pool)model.getElements().get(0);
 
         gmfEditor.getEditPart(pool.getName()).parent().select();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
 
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES);
 
         bot.button("Add...").click();
         // Shell "New variable"
@@ -346,7 +348,7 @@ public class DataWizardIT extends SWTBotGefTestCase {
             }
         });
 
-        final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab();
+        final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab();
         final BotAddDataWizardPage addData = botDataPropertySection.addData();
         addData.editDefaultValueExpression().selectContractInputType().selectContractInput("input1 -- TEXT").ok();
         bot.button(IDialogConstants.CANCEL_LABEL).click();
@@ -382,7 +384,7 @@ public class DataWizardIT extends SWTBotGefTestCase {
             }
         });
 
-        final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab();
+        final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab();
         final BotAddDataWizardPage addData = botDataPropertySection.addData();
         final BotExpressionEditorDialog editDefaultValueExpression = addData.editDefaultValueExpression();
         Assertions
@@ -404,7 +406,7 @@ public class DataWizardIT extends SWTBotGefTestCase {
 
         // add data to Process
         diagramPerspective.activeProcessDiagramEditor().selectElement(proc.getName());
-        BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab();
+        BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab();
         BotAddDataWizardPage addData = botDataPropertySection.addData();
         addData.setName("procVar_1").setType("Text").finishAndAdd().setName("procVar_2").setType("Integer").finish();
 
@@ -412,20 +414,20 @@ public class DataWizardIT extends SWTBotGefTestCase {
 
         // set data on step1 Task
         diagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
-        botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab();
+        botDataPropertySection =diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab();
         addData = botDataPropertySection.addData();
         addData.setName("varS1_1").setType("Text").finishAndAdd().setName("varS1_2").setType("Integer").finish();
 
         // set data on step2 Task
         diagramPerspective.activeProcessDiagramEditor().selectElement("Step2");
-        botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab();
+        botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab();
         addData = botDataPropertySection.addData();
         addData.setName("varS2_1").setType("Text").finishAndAdd().setName("varS2_2").setType("Integer").finish();
         botApplicationWorkbenchWindow.save();
 
         // check only process variables are available in tasks data edit expression
         diagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
-        botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab();
+        botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab();
 
         // Test on var varS1_1
         botDataPropertySection.dataList().select("varS1_1" + " -- " + "Text");
@@ -480,7 +482,9 @@ public class DataWizardIT extends SWTBotGefTestCase {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = diagramPerspective.getDiagramPropertiesPart();
-        final BotDataPropertySection dataTab = diagramPropertiesPart.selectGeneralTab().selectDataTab();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
+        final BotDataPropertySection dataTab = diagramPropertiesPart.selectDataTab().selectDataTab();
 
         final BotAddDataWizardPage addDataDialog = dataTab.addData();
 
@@ -513,7 +517,9 @@ public class DataWizardIT extends SWTBotGefTestCase {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = diagramPerspective.getDiagramPropertiesPart();
-        final BotDataPropertySection dataTab = diagramPropertiesPart.selectGeneralTab().selectDataTab();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
+        final BotDataPropertySection dataTab = diagramPropertiesPart.selectDataTab().selectDataTab();
 
         BotAddDataWizardPage addDataDialog = dataTab.addData();
 
@@ -522,7 +528,7 @@ public class DataWizardIT extends SWTBotGefTestCase {
 
         //try to add a data myData on step
         diagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
-        addDataDialog = dataTab.addData();
+        addDataDialog = diagramPropertiesPart.selectDataTab().selectDataTab().addData();;
         addDataDialog.setName(dataName);
         assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isFalse();
         addDataDialog.setName(dataName1);
@@ -531,14 +537,14 @@ public class DataWizardIT extends SWTBotGefTestCase {
 
         //add a second task and add a data named myData1
         diagramPerspective.activeProcessDiagramEditor().addElement("Step1", "Human", PositionConstants.EAST);
-        addDataDialog = dataTab.addData();
+        addDataDialog = diagramPropertiesPart.selectDataTab().selectDataTab().addData();
         addDataDialog.setName(dataName1);
         addDataDialog.finish();
     }
 
     public static void getDataSection(final SWTGefBot bot ){
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
     }
 

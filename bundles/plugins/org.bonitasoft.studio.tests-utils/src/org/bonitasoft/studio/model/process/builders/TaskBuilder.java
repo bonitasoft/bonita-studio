@@ -38,6 +38,11 @@ public class TaskBuilder extends ActivityBuilder<Task, TaskBuilder> {
         return this;
     }
 
+    public TaskBuilder havingContract(final ContractBuilder contract) {
+        getBuiltInstance().setContract(contract.build());
+        return this;
+    }
+
     public TaskBuilder overrideActorsOfTheLane() {
         getBuiltInstance().setOverrideActorsOfTheLane(true);
         return this;
