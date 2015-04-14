@@ -7,12 +7,13 @@
             contributorId="org.bonitasoft.studio.diagram">
          <!-- FORMS TAB -->
         <propertySection
+              afterSection="tab.poolData"
               class="org.bonitasoft.studio.properties.bos.sections.data.DataSectionBOS.DataSectionBOS"
               enablesFor="1"
               filter="org.bonitasoft.studio.properties.filters.HasDataFilter"
               id="DataSection"
               tab="tab.data"
-              viewID="org.bonitasoft.studio.views.properties.process.general">
+              viewID="org.bonitasoft.studio.views.properties.process.data">
         </propertySection>
         <propertySection
               class="org.bonitasoft.studio.properties.sections.forms.EntryPageFlowTabbedSection"
@@ -45,6 +46,13 @@
               id="section.forms.entry.process"
               tab="tab.forms.entry"
               viewID="org.bonitasoft.studio.views.properties.application">
+        </propertySection>
+        <propertySection
+              class="org.bonitasoft.studio.properties.bos.sections.data.DataSectionBOS.PoolDataSectionBOS"
+              filter="org.bonitasoft.studio.properties.filters.TaskFilter"
+              id="PoolDataSection"
+              tab="tab.poolData"
+              viewID="org.bonitasoft.studio.views.properties.process.data">
         </propertySection>
       </propertySections>
    </extension>

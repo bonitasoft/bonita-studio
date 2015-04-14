@@ -213,14 +213,14 @@ public class TestDocument extends SWTBotGefTestCase {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective.getDiagramPropertiesPart();
-        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectGeneralTab().selectDocumentsTab();
+        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab().selectDocumentsTab();
         final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
         botAddDocumentDialog.setName("doc1");
         botAddDocumentDialog.finish();
 
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
 
-        final BotOperationsPropertySection botOperationsPropertySection = botProcessDiagramPropertiesViewFolder.selectGeneralTab().selectOperationTab();
+        final BotOperationsPropertySection botOperationsPropertySection = botProcessDiagramPropertiesViewFolder.selectExecutionTab().selectOperationTab();
         botOperationsPropertySection.addOperation();
         final BotOperationComposite botOperationComposite = botOperationsPropertySection.getOperation(0);
         botOperationComposite.selectLeftOperand("doc1", String.class.getName());
@@ -238,7 +238,7 @@ public class TestDocument extends SWTBotGefTestCase {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective.getDiagramPropertiesPart();
-        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectGeneralTab().selectDocumentsTab();
+        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab().selectDocumentsTab();
         return botDocumentsPropertySection;
     }
 
@@ -297,7 +297,7 @@ public class TestDocument extends SWTBotGefTestCase {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective.getDiagramPropertiesPart();
-        BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectGeneralTab().selectDocumentsTab();
+        BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab().selectDocumentsTab();
 
         final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
         botAddDocumentDialog.setName("doc1");
@@ -336,7 +336,7 @@ public class TestDocument extends SWTBotGefTestCase {
 
         // change name of the document
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Pool");
-        botDocumentsPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDocumentsTab();
+        botDocumentsPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDocumentsTab();
 
         final BotEditDocumentDialog editDocDialog = botDocumentsPropertySection.editDocument("doc1");
         editDocDialog.setName("docEdited");

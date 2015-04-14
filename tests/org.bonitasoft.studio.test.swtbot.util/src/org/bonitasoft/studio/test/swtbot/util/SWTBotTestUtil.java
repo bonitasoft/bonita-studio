@@ -47,15 +47,18 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.matchers.WidgetMatcherFactory;
@@ -162,7 +165,36 @@ public class SWTBotTestUtil implements SWTBotConstants {
         Assert.assertFalse(runnableEPs.isEmpty());
         gmfEditor.select(runnableEPs.get(0));
         final RunProcessCommand cmd = new RunProcessCommand(true);
-        return (IStatus) cmd.execute(null);
+        final RunnableWithResult<IStatus> runnable = new RunnableWithResult<IStatus>() {
+
+            IStatus status = null;
+
+            @Override
+            public void run() {
+                try {
+                    status = (IStatus) cmd.execute(null);
+                } catch (final ExecutionException e) {
+                    BonitaStudioLog.error(e);
+                    status = new Status(Status.ERROR, "org.bonitasoft.studio.tests.ex", "Error during execution");
+                }
+            }
+
+            @Override
+            public IStatus getResult() {
+                return status;
+            }
+
+            @Override
+            public void setStatus(final IStatus status) {
+            }
+
+            @Override
+            public IStatus getStatus() {
+                return status;
+            }
+        };
+        Display.getDefault().syncExec(runnable);
+        return runnable.getResult();
     }
 
     public static boolean testingBosSp() {
@@ -698,6 +730,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
             treeItem.expand();
         }
         treeItem.select("Sequence Flow");
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         selectTabbedPropertyView(bot, "General");
         bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Condition")));
         bot.textWithLabel("Name").setText(name);

@@ -63,7 +63,7 @@ public class TestDecisionTable extends SWTBotGefTestCase {
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
         gmfEditor.getEditPart("sf1").click();
-
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
 
         bot.radio(useDecisionTable).click();

@@ -102,12 +102,16 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
             engineDefinitionBuilders = createEngineDefinitionBuilders();
         }
         for (final IEngineDefinitionBuilder<?> builder : engineDefinitionBuilders) {
+
+        for (final IEngineDefinitionBuilder builder : engineDefinitionBuilders) {
+	refs/remotes/origin/BS-12895_DefaultValueBizData
             if (builder.appliesTo(context, element)) {
                 return builder;
             }
         }
         return Iterables.find(engineDefinitionBuilders, builderApplyingTo(context, element), null);
     }
+
 
     private Predicate<? super IEngineDefinitionBuilder<?>> builderApplyingTo(final EObject context, final EObject element) {
         return new Predicate<IEngineDefinitionBuilder<?>>() {
@@ -213,11 +217,7 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     protected void addData(final FlowElementBuilder dataContainerBuilder,
             final DataAware dataAwareContainer) {
         for (final Data data : dataAwareContainer.getData()) {
-            Expression expr = EngineExpressionUtil.createExpression(data.getDefaultValue());
-            if (expr == null && data.isMultiple()) {
-                expr = EngineExpressionUtil.createEmptyListExpression();
-            }
-            final ProcessSwitch<DataDefinitionBuilder> dataSwitch = getDataSwitch(dataContainerBuilder, data, expr);
+            final ProcessSwitch<DataDefinitionBuilder> dataSwitch = getDataSwitch(dataContainerBuilder, data);
             final DataDefinitionBuilder dataBuilder = dataSwitch.doSwitch(data.getDataType());
             if (data.isTransient() && dataBuilder != null) {
                 dataBuilder.isTransient();
@@ -226,9 +226,8 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     }
 
     protected DataSwitch getDataSwitch(
-            final FlowElementBuilder dataContainerBuilder, final Data data,
-            final Expression defaultValueExpression) {
-        return new DataSwitch(data, defaultValueExpression, dataContainerBuilder);
+            final FlowElementBuilder dataContainerBuilder, final Data data) {
+        return new DataSwitch(data, dataContainerBuilder);
     }
 
     protected void addDescription(final DescriptionBuilder builder, final String description) {
