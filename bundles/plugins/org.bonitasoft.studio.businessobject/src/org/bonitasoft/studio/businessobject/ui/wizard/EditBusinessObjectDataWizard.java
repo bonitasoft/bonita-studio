@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -39,7 +37,6 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class EditBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
 
@@ -49,25 +46,31 @@ public class EditBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
 
     private final TransactionalEditingDomain editingDomain;
 
-    private final Set<String> existingNames;
-
     private final BusinessObjectData data;
 
     private final DataAware container;
 
-    private final BusinessObjectData dataWorkingCopy;
+    private BusinessObjectData businessObjectDataWorkingCopy;
 
     public EditBusinessObjectDataWizard(final BusinessObjectData data,
             final BusinessObjectModelRepositoryStore businessObjectDefinitionStore,
             final TransactionalEditingDomain editingDomain) {
         this.data = data;
-        dataWorkingCopy = EcoreUtil.copy(data);
         container = (DataAware) data.eContainer();
         this.businessObjectDefinitionStore = businessObjectDefinitionStore;
         this.editingDomain = editingDomain;
-        existingNames = computeExistingNames(container);
-        existingNames.remove(data.getName());
         setDefaultPageImageDescriptor(Pics.getWizban());
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.businessobject.ui.wizard.AbstractBusinessObjectWizard#computeExistingNames(org.bonitasoft.studio.model.process.DataAware)
+     */
+    @Override
+    protected Set<String> computeExistingNames(final DataAware container) {
+        final Set<String> existingNames = super.computeExistingNames(container);
+        existingNames.remove(data.getName());
+        return existingNames;
     }
 
     @Override
@@ -77,14 +80,12 @@ public class EditBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
     }
 
     protected BusinessObjectDataWizardPage createEditBusinessObjectDataWizardPage() {
-        final BusinessObjectDataWizardPage page = new BusinessObjectDataWizardPage(dataWorkingCopy, businessObjectDefinitionStore, getExistingNames());
+        businessObjectDataWorkingCopy = EcoreUtil.copy(data);
+        final BusinessObjectDataWizardPage page = new BusinessObjectDataWizardPage(container, businessObjectDataWorkingCopy, businessObjectDefinitionStore,
+                computeExistingNames(container));
         page.setTitle(Messages.bind(Messages.editBusinessObjectDataTitle, ModelHelper.getParentProcess(container).getName()));
         page.setDescription(Messages.editBusinessObjectDataDescription);
         return page;
-    }
-
-    public Set<String> getExistingNames() {
-        return existingNames;
     }
 
     /*
@@ -93,8 +94,35 @@ public class EditBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
      */
     @Override
     public boolean performFinish() {
-        final Data updatedData = editBusinessObjectDataWizardPage.getBusinessObjectData();
         final AbstractProcess process = ModelHelper.getParentProcess(container);
+        if (refactorBusinessData(process, businessObjectDataWorkingCopy)) {
+            final CompoundCommand cc = new CompoundCommand();
+            for (final EStructuralFeature feature : data.eClass().getEAllStructuralFeatures()) {
+                cc.append(SetCommand.create(editingDomain, data, feature, businessObjectDataWorkingCopy.eGet(feature)));
+            }
+            editingDomain.getCommandStack().execute(cc);
+            return !cc.getResult().isEmpty();
+        }
+        return false;
+    }
+
+    private boolean refactorBusinessData(final AbstractProcess process, final Data updatedData) {
+        final RefactorDataOperation op = newRefactorOperation(updatedData, process);
+        if (op.canExecute()) {
+            try {
+                getContainer().run(true, false, op);
+                if (op.isCancelled()) {
+                    return false;
+                }
+            } catch (final InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private RefactorDataOperation newRefactorOperation(final Data updatedData, final AbstractProcess process) {
         final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
         op.setEditingDomain(editingDomain);
         op.setContainer(process);
@@ -102,27 +130,6 @@ public class EditBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
         op.setDirectDataContainer(container);
         op.setAskConfirmation(true);
         op.setDataContainmentFeature(ProcessPackage.Literals.DATA_AWARE__DATA);
-        if (op.canExecute()) {
-            try {
-                getContainer().run(true, false, op);
-            } catch (final InvocationTargetException e) {
-                BonitaStudioLog.error(e);
-                return false;
-            } catch (final InterruptedException e) {
-                BonitaStudioLog.error(e);
-                return false;
-            }
-        }
-        if (op.isCancelled()) {
-            return false;
-        }
-        final CompoundCommand cc = new CompoundCommand();
-
-        for (final EStructuralFeature feature : data.eClass().getEAllStructuralFeatures()) {
-            cc.append(SetCommand.create(editingDomain, data, feature, updatedData.eGet(feature)));
-        }
-        editingDomain.getCommandStack().execute(cc);
-        return !cc.getResult().isEmpty();
+        return op;
     }
-
 }

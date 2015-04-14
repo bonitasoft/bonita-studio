@@ -5,19 +5,17 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.expression.editor.filter;
 
-import java.util.Arrays;
-import java.util.HashSet;
+import static com.google.common.collect.Sets.newHashSet;
+
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -28,14 +26,13 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class AvailableExpressionTypeFilter extends ViewerFilter {
 
     private final Set<String> contentTypes;
 
-    public AvailableExpressionTypeFilter(final String[] contentTypes) {
-        this.contentTypes = new HashSet<String>(Arrays.asList(contentTypes));
+    public AvailableExpressionTypeFilter(final String... contentTypes) {
+        this.contentTypes = newHashSet(contentTypes);
     }
 
     /*
@@ -47,18 +44,23 @@ public class AvailableExpressionTypeFilter extends ViewerFilter {
         return isExpressionAllowed(element, getContentTypes());
     }
 
-    protected boolean isExpressionAllowed(final Object element, final Set<String> allowedExpressionTypes) {
-        if (allowedExpressionTypes.contains(ExpressionConstants.VARIABLE_TYPE)) {
-            allowedExpressionTypes.add(ExpressionConstants.JAVA_TYPE);
-            allowedExpressionTypes.add(ExpressionConstants.XPATH_TYPE);
-            allowedExpressionTypes.add(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE);
-        }
+    protected boolean isExpressionAllowed(final Object element, Set<String> allowedExpressionTypes) {
+        allowedExpressionTypes = variableRelativeTypes(allowedExpressionTypes);
         if (element instanceof Expression) {
             return allowedExpressionTypes.contains(((Expression) element).getType());
         } else if (element instanceof IExpressionProvider) {
             return allowedExpressionTypes.contains(((IExpressionProvider) element).getExpressionType());
         }
         return true;
+    }
+
+    private Set<String> variableRelativeTypes(final Set<String> allowedExpressionTypes) {
+        if (allowedExpressionTypes.contains(ExpressionConstants.VARIABLE_TYPE)) {
+            allowedExpressionTypes.add(ExpressionConstants.JAVA_TYPE);
+            allowedExpressionTypes.add(ExpressionConstants.XPATH_TYPE);
+            allowedExpressionTypes.add(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE);
+        }
+        return allowedExpressionTypes;
     }
 
     public Set<String> getContentTypes() {

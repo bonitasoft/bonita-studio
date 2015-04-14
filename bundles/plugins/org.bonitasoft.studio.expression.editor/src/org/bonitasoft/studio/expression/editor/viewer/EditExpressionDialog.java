@@ -5,16 +5,17 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.expression.editor.viewer;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
@@ -68,7 +69,6 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class EditExpressionDialog extends TrayDialog implements IBonitaVariableContext {
 
@@ -115,6 +115,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
     private final ExpressionViewer expressionViewer;
 
+    private Set<String> filteredEditor = new HashSet<String>();
+
     @Override
     public void openTray(final DialogTray tray) throws IllegalStateException, UnsupportedOperationException {
         super.openTray(tray);
@@ -122,7 +124,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         getShell().removeListener(SWT.Resize, getShell().getListeners(SWT.Resize)[0]);
     }
 
-    protected EditExpressionDialog(final Shell parentShell, final boolean isPassword, final Expression inputExpression, final EObject context, final EditingDomain domain,
+    protected EditExpressionDialog(final Shell parentShell, final boolean isPassword, final Expression inputExpression, final EObject context,
+            final EditingDomain domain,
             final ViewerFilter[] viewerTypeFilters, final ExpressionViewer expressionViewer) {
         super(parentShell);
         this.inputExpression = inputExpression;
@@ -229,6 +232,9 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         if (viewerTypeFilters != null) {
             expressionTypeViewer.setFilters(viewerTypeFilters);
         }
+        if (!filteredEditor.isEmpty()) {
+            expressionTypeViewer.addFilter(filterEditor());
+        }
         ColumnViewerToolTipSupport.enableFor(expressionTypeViewer, ToolTip.NO_RECREATE);
         expressionTypeViewer.setInput(expressionViewer.getInput());
         expressionTypeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -255,6 +261,21 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
                 getShell().layout(true, true);
             }
         });
+    }
+
+    private ViewerFilter filterEditor() {
+        return new ViewerFilter() {
+
+            @Override
+            public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+                if (element instanceof IExpressionProvider) {
+                    if (filteredEditor.contains(((IExpressionProvider) element).getExpressionType())) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        };
     }
 
     @Override
@@ -433,6 +454,10 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
      */
     @Override
     public void setIsOverviewContext(final boolean isOverviewContext) {
+    }
+
+    public void setEditorFilters(final Set<String> filteredEditor) {
+        this.filteredEditor = filteredEditor;
     }
 
 }
