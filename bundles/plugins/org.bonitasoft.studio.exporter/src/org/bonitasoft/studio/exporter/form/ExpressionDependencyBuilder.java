@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.exporter.form;
 
-import static org.assertj.core.util.Strings.isNullOrEmpty;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.util.List;
 
