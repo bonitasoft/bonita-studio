@@ -24,14 +24,14 @@ import org.bonitasoft.studio.model.process.ContractInput;
  * @author Romain Bioteau
  *
  */
-public class MandatoryInputCheckboxLabelProvider extends AbstractCheckboxLabelProvider {
+public class NotNullableInputCheckboxLabelProvider extends AbstractCheckboxLabelProvider {
 
     @Override
     protected boolean isSelected(final Object element) {
         if (element instanceof ContractInput) {
-            return ((ContractInput) element).isMandatory();
+            return !((ContractInput) element).isMandatory();
         }
-        return false;
+        return true;
     }
 
 }
