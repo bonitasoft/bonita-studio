@@ -19,7 +19,7 @@
       <coolbarItem
             class="org.bonitasoft.studio.debug.coolbar.DebugCoolbarItem"
             priority="0"
-            toolbarPosition="11">
+            toolbarPosition="12">
       </coolbarItem>
    </extension>
    <extension
