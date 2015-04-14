@@ -58,7 +58,7 @@ public class AbstractProcessSwitchTest {
     @Test
     public void testAddContext() {
         final Pool pool = PoolBuilder.aPool()
-                .havingData(BusinessObjectDataBuilder.createBusinessObjectDataBuilder().withName("myBData").withClassname("my.classname"))
+                .havingData(BusinessObjectDataBuilder.aBusinessData().withName("myBData").withClassname("my.classname"))
                 .build();
         processSwitch.caseAbstractProcess(pool);
 

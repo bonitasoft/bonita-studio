@@ -22,7 +22,9 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -32,6 +34,11 @@ public class WebPageFileStore extends InFolderJSONFileStore {
 
     public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
+    }
+
+    @Override
+    public Image getIcon() {
+        return getParentStore().getIcon();
     }
 
     @Override
@@ -49,7 +56,6 @@ public class WebPageFileStore extends InFolderJSONFileStore {
     }
 
     protected PageDesignerURLFactory urlFactory() {
-        return new PageDesignerURLFactory(
-                InstanceScope.INSTANCE.getNode("org.bonitasoft.studio.preferences"));
+        return new PageDesignerURLFactory(InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID));
     }
 }

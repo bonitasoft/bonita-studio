@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,7 +27,6 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
-import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -39,10 +36,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class RefactorDataOperationTest {
 
@@ -97,7 +92,7 @@ public class RefactorDataOperationTest {
         final RefactorDataOperation refacorDataOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
         refacorDataOperation.setAskConfirmation(false);// Skip UI
         refacorDataOperation.setEditingDomain(domain);
-        refacorDataOperation.setContainer(parentProcess);
+        refacorDataOperation.setDataContainer(parentProcess);
         refacorDataOperation.addItemToRefactor(newData, myData);
         refacorDataOperation.run(null);
         ExpressionAssert.assertThat(leftOperand).hasName(newData.getName());
@@ -121,7 +116,7 @@ public class RefactorDataOperationTest {
         final RefactorDataOperation refacorDataOperation = new RefactorDataOperation(RefactoringOperationType.REMOVE);
         refacorDataOperation.setAskConfirmation(false);// Skip UI
         refacorDataOperation.setEditingDomain(domain);
-        refacorDataOperation.setContainer(parentProcess);
+        refacorDataOperation.setDataContainer(parentProcess);
         refacorDataOperation.addItemToRefactor(null, myData);
         refacorDataOperation.run(null);
         ExpressionAssert.assertThat(rightOperand).hasContent("hello ${     }");

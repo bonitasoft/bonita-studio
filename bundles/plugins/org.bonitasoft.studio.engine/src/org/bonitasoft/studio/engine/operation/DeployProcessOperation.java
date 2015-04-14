@@ -95,8 +95,15 @@ public class DeployProcessOperation {
         this.configurationId = configurationId;
     }
 
-    public URL getUrlFor(final AbstractProcess process, final IProgressMonitor monitor) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
-        return new ApplicationURLBuilder(process, configurationId).toURL(monitor);
+    public URL getUrlFor(final AbstractProcess process, final IProgressMonitor monitor) throws MalformedURLException,
+            UnsupportedEncodingException, URISyntaxException {
+        long pId = 0;
+        for (final AbstractProcess p : processIdsMap.keySet()) {
+            if (p.getName().equals(process.getName()) && p.getVersion().equals(process.getVersion())) {
+                pId = processIdsMap.get(p);
+            }
+        }
+        return new ApplicationURLBuilder(process, configurationId, pId).toURL(monitor);
     }
 
     public IStatus run(final IProgressMonitor monitor) {

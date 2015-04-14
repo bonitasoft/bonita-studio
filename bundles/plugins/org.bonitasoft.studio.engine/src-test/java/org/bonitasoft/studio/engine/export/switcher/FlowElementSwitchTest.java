@@ -165,7 +165,7 @@ public class FlowElementSwitchTest {
     public void testAddContext(){
         final Pool pool = PoolBuilder.aPool()
                 .havingElements(TaskBuilder.aTask().withName("taskName"))
-                .havingData(BusinessObjectDataBuilder.createBusinessObjectDataBuilder().withName("myBData").withClassname("my.classname"))
+                .havingData(BusinessObjectDataBuilder.aBusinessData().withName("myBData").withClassname("my.classname"))
                 .build();
         flowElementSwitch.addContext(taskBuilder, (Task) pool.getElements().get(0));
 

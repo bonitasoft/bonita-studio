@@ -387,7 +387,7 @@ public class EngineExpressionUtilTest {
 
     @Test
     public void testCreateBusinessDataObjectReference() {
-        final BusinessObjectData data = BusinessObjectDataBuilder.createBusinessObjectDataBuilder().withName("bName").withClassname("my.classname").build();
+        final BusinessObjectData data = BusinessObjectDataBuilder.aBusinessData().withName("bName").withClassname("my.classname").build();
 
         final org.bonitasoft.engine.expression.Expression expression = EngineExpressionUtil.createBusinessObjectDataReferenceExpression(data);
 
