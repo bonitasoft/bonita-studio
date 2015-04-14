@@ -79,7 +79,8 @@ public class ApplicationURLBuilder {
                 + "/" + encodeForPathURL(process.getName())
                 + "/" + encodeForPathURL(process.getVersion())
                 + "/content/?id=" + procDefId
-                + "&" + getLocaleParameter(locale);
+                + "&" + getLocaleParameter(locale)
+                + "&mode=app";
     }
 
     private String encodeForPathURL(final String toEncode) throws UnsupportedEncodingException {
