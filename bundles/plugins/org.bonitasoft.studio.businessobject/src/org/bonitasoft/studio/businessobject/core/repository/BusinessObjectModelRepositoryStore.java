@@ -16,7 +16,7 @@ package org.bonitasoft.studio.businessobject.core.repository;
 
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterators.forArray;
-import static org.assertj.core.util.Lists.newArrayList;
+import static com.google.common.collect.Lists.newArrayList;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
