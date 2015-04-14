@@ -47,7 +47,7 @@ public class RealmWithDisplay extends ExternalResource {
     }
 
     protected void createDisplayAndRealm() {
-        display = new Display();
+        display = Display.getDefault();
         headlessShell = new Shell(display);
         headlessShell.setLayout(new GridLayout(1, true));
         final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
