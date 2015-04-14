@@ -57,7 +57,7 @@ public class GeneralExtensibleGridPropertySection extends ExtensibleGridProperty
 		addContribution(new CatchEventEventSelectionContribution());
 		addContribution(new SignalEventEventSelectionContribution());
 		addContribution(new SubProcessPropertySectionContribution());
-		addContribution(new TransitionCondition());
+		addContribution(new TransitionConditionContribution());
 		GatewayTypeSelectionGridPropertySectionContribution gatewayTypeContrib = new GatewayTypeSelectionGridPropertySectionContribution(getTabbedPropertySheetPage());
 		addContribution(gatewayTypeContrib);
 		addContribution(new TaskPriorityPropertySection());

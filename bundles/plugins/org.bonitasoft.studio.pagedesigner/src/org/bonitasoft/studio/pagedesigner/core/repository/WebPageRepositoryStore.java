@@ -19,8 +19,10 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
 import org.bonitasoft.studio.pagedesigner.core.bos.WebFormBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -51,7 +53,7 @@ public class WebPageRepositoryStore extends AbstractFolderRepositoryStore<WebPag
 
     @Override
     public Image getIcon() {
-        return null;
+        return Pics.getImage("page.png", PageDesignerPlugin.getDefault());
     }
 
     @Override

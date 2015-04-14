@@ -28,6 +28,7 @@ import org.bonitasoft.studio.pagedesigner.core.bar.BarResourceCreationException;
 import org.bonitasoft.studio.pagedesigner.core.bos.WebFormBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -46,6 +47,11 @@ public class WebPageFileStore extends InFolderJSONFileStore {
     }
 
     @Override
+    public Image getIcon() {
+        return getParentStore().getIcon();
+    }
+
+    @Override
     protected IWorkbenchPart doOpen() {
         try {
             openBrowserOperation(urlFactory().openPage(getId())).execute();
@@ -60,8 +66,7 @@ public class WebPageFileStore extends InFolderJSONFileStore {
     }
 
     protected PageDesignerURLFactory urlFactory() {
-        return new PageDesignerURLFactory(
-                InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID));
+        return new PageDesignerURLFactory(InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID));
     }
 
     @Override

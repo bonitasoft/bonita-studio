@@ -1740,24 +1740,19 @@ public class ModelHelper {
 
     public static <T extends EObject> List<T> getAllItemsOfType(final EObject container, final EClass eClass) {
         final List<T> res = new ArrayList<T>();
-        addAllWidgetsOfContainer(container, res, eClass);
+        addAllElementOfContainer(container, res, eClass);
         return res;
     }
 
-    /**
-     * @param container
-     * @param res
-     */
-    private static <T extends EObject> void addAllWidgetsOfContainer(final EObject container, final List<T> res, final EClass eClass) {
+    private static <T extends EObject> void addAllElementOfContainer(final EObject container, final List<T> res, final EClass eClass) {
         if (container != null) {
             if (eClass.isSuperTypeOf(container.eClass())) {
                 res.add((T) container);
             }
             for (final EObject child : container.eContents()) {
-                addAllWidgetsOfContainer(child, res, eClass);
+                addAllElementOfContainer(child, res, eClass);
             }
         }
-
     }
 
     public static Set<String> getExistingConnectorsName(final Element eObject) {

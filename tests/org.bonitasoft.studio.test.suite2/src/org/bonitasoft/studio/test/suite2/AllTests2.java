@@ -42,6 +42,7 @@ import org.bonitasoft.studio.simulation.tests.TestSimulationResourceRepository;
 import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.api.TestBonitaAPI;
+import org.bonitasoft.studio.tests.bar.ExportBarIT;
 import org.bonitasoft.studio.tests.bug.TestBugs;
 import org.bonitasoft.studio.tests.businessobject.DeployBDROperationIT;
 import org.bonitasoft.studio.tests.connectors.GroovyConnectorIT;
@@ -55,6 +56,7 @@ import org.bonitasoft.studio.tests.perspectives.TestAutomaticSwitchPerspective;
 import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
 import org.bonitasoft.studio.tests.refactoring.widget.TestRefactorWidgetOperation;
 import org.bonitasoft.studio.tests.refactoring.widget.TestRemoveWidgetReferencesOperation;
+import org.bonitasoft.studio.tests.repository.PageDesignerWorkspaceIntegrationIT;
 import org.bonitasoft.studio.tests.timer.TestNonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.themes.tests.TestCSSModel;
 import org.bonitasoft.studio.themes.tests.TestDirtyState;
@@ -114,6 +116,8 @@ import org.junit.runners.Suite;
         DeployBDROperationIT.class,
         TestProcessParameters.class,
         TestParametersRefactoring.class,
+        ExportBarIT.class,
+        PageDesignerWorkspaceIntegrationIT.class,
         CloseAllEditors.class
 })
 public class AllTests2 extends TestSuite {
