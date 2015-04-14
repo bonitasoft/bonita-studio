@@ -175,6 +175,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     private IExpressionProposalLabelProvider expressionProposalLableProvider;
     private ContentAssistText contentAssistText;
     private ISelection selection;
+    private final ExpressionEditorService expressionEditorService;
+    private final Set<String> filteredEditor = new HashSet<String>();
 
     public ExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
         this(composite, style, widgetFactory, null);
@@ -234,6 +236,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     public ExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory,
             final EditingDomain editingDomain, final EReference expressionReference, final boolean withConnector) {
         Assert.isNotNull(composite, "composite");
+        expressionEditorService = ExpressionEditorService.getInstance();
         filters = new HashSet<ViewerFilter>();
         this.withConnector = withConnector;
         createControl(composite, style, widgetFactory);
@@ -525,8 +528,10 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     protected EditExpressionDialog createEditDialog(final EObject editInput) {
-        return new EditExpressionDialog(control.getShell(), isPassword, EcoreUtil.copy(getSelectedExpression()), editInput,
+        final EditExpressionDialog dialog = new EditExpressionDialog(control.getShell(), isPassword, EcoreUtil.copy(getSelectedExpression()), editInput,
                 getEditingDomain(), filters.toArray(new ViewerFilter[filters.size()]), this);
+        dialog.setEditorFilters(filteredEditor);
+        return dialog;
     }
 
     protected void fireExpressionEditorChanged(final SelectionChangedEvent selectionChangedEvent) {
@@ -644,8 +649,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
         exp.setName("");
-        if (filters != null && expressionNatureProvider != null && context != null) {
-            final Set<IExpressionProvider> expressionProviders = ExpressionEditorService.getInstance().getExpressionProviders();
+        if (filters != null && expressionNatureProvider != null && context != null && expressionEditorService != null) {
+            final Set<IExpressionProvider> expressionProviders = expressionEditorService.getExpressionProviders();
             for (final IExpressionProvider provider : expressionProviders) {
                 for (final ViewerFilter viewerFilter : fitlers) {
                     exp.setType(provider.getExpressionType());
@@ -1383,4 +1388,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         return getInput() != null && input instanceof EObject && getInput().equals(context);
     }
 
+    public void addEditorFilter(final String... expressionTypes) {
+        for (final String type : expressionTypes) {
+            filteredEditor.add(type);
+        }
+    }
 }

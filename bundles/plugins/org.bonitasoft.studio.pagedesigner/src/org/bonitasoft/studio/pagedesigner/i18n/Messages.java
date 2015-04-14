@@ -38,6 +38,8 @@ public class Messages extends NLS {
     public static String pool;
     public static String task;
     public static String legacyForm;
+    public static String openUIDesigner;
+    public static String uiDesignerLabel;
     public static String creatingNewForm;
 
     static {
