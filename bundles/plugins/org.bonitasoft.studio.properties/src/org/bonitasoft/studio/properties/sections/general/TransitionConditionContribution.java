@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.properties.sections.general;
 
@@ -84,14 +81,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
-
 /**
  * @author Mickael Istria
  * @author Aurelien Pupier
  * @author Romain Bioteau
  */
-public class TransitionCondition implements IExtensibleGridPropertySectionContribution {
-
+public class TransitionConditionContribution implements IExtensibleGridPropertySectionContribution {
 
     private TransactionalEditingDomain editingDomain;
     private SequenceFlow transition;
@@ -105,76 +100,73 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
     private Section conditionSection;
     private Button updateTableButton;
 
-
     @Override
-    public void createControl(final Composite mainComposite,final TabbedPropertySheetWidgetFactory widgetFactory,
+    public void createControl(final Composite mainComposite, final TabbedPropertySheetWidgetFactory widgetFactory,
             final ExtensibleGridPropertySection extensibleGridPropertySection) {
 
-        this.widgetFactory = widgetFactory ;
+        this.widgetFactory = widgetFactory;
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 5).create());
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
-
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         defaultCheckBox = widgetFactory.createButton(mainComposite, Messages.defaultFlowLabel, SWT.CHECK);
-        defaultCheckBox.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create());
+        defaultCheckBox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        final Composite radioComposite = widgetFactory.createComposite(mainComposite) ;
-        radioComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL,SWT.CENTER).grab(true, false).create());
-        radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create()) ;
+        final Composite radioComposite = widgetFactory.createComposite(mainComposite);
+        radioComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
+        radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
 
-        useExpressionCondition = widgetFactory.createButton(radioComposite, Messages.useExpression, SWT.RADIO) ;
-        useDecisionTable = widgetFactory.createButton(radioComposite, Messages.useDecisionTable, SWT.RADIO) ;
+        useExpressionCondition = widgetFactory.createButton(radioComposite, Messages.useExpression, SWT.RADIO);
+        useDecisionTable = widgetFactory.createButton(radioComposite, Messages.useDecisionTable, SWT.RADIO);
 
+        conditionSection = widgetFactory.createSection(mainComposite, Section.NO_TITLE | Section.CLIENT_INDENT);
+        conditionSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 20).create());
+        conditionSection.setExpanded(true);
 
-        conditionSection = widgetFactory.createSection(mainComposite, Section.NO_TITLE | Section.CLIENT_INDENT) ;
-        conditionSection.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-        conditionSection.setExpanded(true) ;
-
-        if(transition.getConditionType() == SequenceFlowConditionType.EXPRESSION){
-            conditionSection.setClient(createExpressionComposite(conditionSection, widgetFactory)) ;
-        }else{
-            conditionSection.setClient(createDecisionTableComposite(conditionSection, widgetFactory)) ;
+        if (transition.getConditionType() == SequenceFlowConditionType.EXPRESSION) {
+            conditionSection.setClient(createExpressionComposite(conditionSection, widgetFactory));
+        } else {
+            conditionSection.setClient(createDecisionTableComposite(conditionSection, widgetFactory));
         }
 
-        refreshBindings() ;
+        refreshBindings();
     }
-
 
     protected Composite createExpressionComposite(final Composite parent,
             final TabbedPropertySheetWidgetFactory widgetFactory) {
 
-        final Composite client = widgetFactory.createComposite(parent) ;
-        client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0,0).spacing(0, 0).create()) ;
-        client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+        final Composite client = widgetFactory.createComposite(parent);
+        client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
+        client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        conditionViewer = new ExpressionViewer(client,SWT.BORDER, widgetFactory,editingDomain, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION);
-        conditionViewer.setMessage(Messages.conditionExpresssionHelpMessage,IStatus.INFO);
+        conditionViewer = new ExpressionViewer(client, SWT.BORDER, widgetFactory, editingDomain, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION);
+        conditionViewer.setMessage(Messages.conditionExpresssionHelpMessage, IStatus.INFO);
         conditionViewer.addExpressionValidator(new ComparisonExpressionValidator());
-        conditionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.CONDITION_TYPE}));
-        if(transition.getCondition() == null){
-            final Expression expression =  ExpressionFactory.eINSTANCE.createExpression() ;
-            expression.setReturnType(Boolean.class.getName()) ;
-            expression.setReturnTypeFixed(true) ;
+        conditionViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.PARAMETER_TYPE,
+                ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.VARIABLE_TYPE, ExpressionConstants.CONDITION_TYPE }));
+        if (transition.getCondition() == null) {
+            final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
+            expression.setReturnType(Boolean.class.getName());
+            expression.setReturnTypeFixed(true);
             expression.setType(ExpressionConstants.CONDITION_TYPE);
-            editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION,expression)) ;
+            editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION, expression));
         }
         conditionViewer.setContext(transition);
-        conditionViewer.setInput(transition) ;
-        conditionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL,SWT.CENTER).grab(false, false).hint(350, SWT.DEFAULT).create());
+        conditionViewer.setInput(transition);
+        conditionViewer.getControl().setLayoutData(
+                GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).hint(350, SWT.DEFAULT).create());
 
-        return client ;
+        return client;
     }
 
     protected Composite createDecisionTableComposite(final Composite parent,
             final TabbedPropertySheetWidgetFactory widgetFactory) {
-        final Composite client = widgetFactory.createComposite(parent) ;
-        client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create()) ;
-        client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+        final Composite client = widgetFactory.createComposite(parent);
+        client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+        client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-
-
-        updateTableButton = widgetFactory.createButton(client, Messages.editDecisionTable ,SWT.PUSH) ;
+        updateTableButton = widgetFactory.createButton(client, Messages.editDecisionTable, SWT.PUSH);
         updateTableButton.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(final SelectionEvent e) {
 
@@ -187,6 +179,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
                 wizard.setAvailableTableActions(new DecisionTableAction[] { dontTakeTransitionAction, takeTransitionAction });
                 wizard.setActionsLabelProvider(new TakeTransitionLabelProvider());
                 wizard.setActionsComparer(new IElementComparer() {
+
                     @Override
                     public int hashCode(final Object element) {
                         return element.hashCode();
@@ -195,7 +188,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
                     @Override
                     public boolean equals(final Object a, final Object b) {
                         if (a instanceof TakeTransitionAction && b instanceof TakeTransitionAction) {
-                            return ((TakeTransitionAction)a).isTakeTransition() == ((TakeTransitionAction)b).isTakeTransition();
+                            return ((TakeTransitionAction) a).isTakeTransition() == ((TakeTransitionAction) b).isTakeTransition();
                         } else {
                             return a.equals(b);
                         }
@@ -209,63 +202,60 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
                     final CompoundCommand cmd = new CompoundCommand();
                     cmd.append(new SetCommand(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__DECISION_TABLE, table));
                     editingDomain.getCommandStack().execute(cmd);
-                    conditionSection.getClient().dispose() ;
-                    conditionSection.setClient(createDecisionTableComposite(conditionSection, TransitionCondition.this.widgetFactory)) ;
-                    conditionSection.setExpanded(true) ;
+                    conditionSection.getClient().dispose();
+                    conditionSection.setClient(createDecisionTableComposite(conditionSection, TransitionConditionContribution.this.widgetFactory));
+                    conditionSection.setExpanded(true);
                 }
             }
-        }) ;
+        });
 
+        final Composite tableComposite = widgetFactory.createComposite(client);
+        tableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        tableComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
 
-        final Composite tableComposite = widgetFactory.createComposite(client) ;
-        tableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-        tableComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0,0).spacing(0, 3).create()) ;
-
-        final DecisionTable table = transition.getDecisionTable() ;
-        if(table != null && !table.getLines().isEmpty()){
-            for(final DecisionTableLine line : table.getLines()){
-                if(!line.getConditions().isEmpty()){
-                    createLine(tableComposite,line.getConditions(),line.getAction()) ;
+        final DecisionTable table = transition.getDecisionTable();
+        if (table != null && !table.getLines().isEmpty()) {
+            for (final DecisionTableLine line : table.getLines()) {
+                if (!line.getConditions().isEmpty()) {
+                    createLine(tableComposite, line.getConditions(), line.getAction());
                 }
             }
         }
 
-        return client ;
+        return client;
     }
 
     private void createLine(final Composite parent, final List<Expression> conditions, final DecisionTableAction decisionTableAction) {
-        final Composite row = widgetFactory.createComposite(parent) ;
-        row.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-        row.setLayout(RowLayoutFactory.fillDefaults().spacing(0).type(SWT.HORIZONTAL).create()) ;
+        final Composite row = widgetFactory.createComposite(parent);
+        row.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        row.setLayout(RowLayoutFactory.fillDefaults().spacing(0).type(SWT.HORIZONTAL).create());
 
-        for(final Expression condition : conditions){
-            widgetFactory.createLabel(row,	condition.getContent(), SWT.NONE) ;
-            if(conditions.indexOf(condition) != conditions.size()-1){
-                widgetFactory.createLabel(row, " ", SWT.NONE) ;
-                widgetFactory.createLabel(row, Messages.and, SWT.NONE) ;
-                widgetFactory.createLabel(row, " ", SWT.NONE) ;
+        for (final Expression condition : conditions) {
+            widgetFactory.createLabel(row, condition.getContent(), SWT.NONE);
+            if (conditions.indexOf(condition) != conditions.size() - 1) {
+                widgetFactory.createLabel(row, " ", SWT.NONE);
+                widgetFactory.createLabel(row, Messages.and, SWT.NONE);
+                widgetFactory.createLabel(row, " ", SWT.NONE);
             }
         }
 
-        widgetFactory.createLabel(row,"  ",SWT.NONE) ;
-        final Label image = widgetFactory.createLabel(row, "", SWT.NONE) ;
-        image.setImage(Pics.getImage(PicsConstants.arrowRight)) ;
-        if(decisionTableAction instanceof TakeTransitionAction){
-            if(((TakeTransitionAction) decisionTableAction).isTakeTransition()){
-                widgetFactory.createLabel(row,"  ",SWT.NONE) ;
-                widgetFactory.createLabel(row, Messages.takeTransition,SWT.NONE) ;
-            }else{
-                widgetFactory.createLabel(row,"  ",SWT.NONE) ;
-                widgetFactory.createLabel(row, Messages.dontTakeTransition,SWT.NONE) ;
+        widgetFactory.createLabel(row, "  ", SWT.NONE);
+        final Label image = widgetFactory.createLabel(row, "", SWT.NONE);
+        image.setImage(Pics.getImage(PicsConstants.arrowRight));
+        if (decisionTableAction instanceof TakeTransitionAction) {
+            if (((TakeTransitionAction) decisionTableAction).isTakeTransition()) {
+                widgetFactory.createLabel(row, "  ", SWT.NONE);
+                widgetFactory.createLabel(row, Messages.takeTransition, SWT.NONE);
+            } else {
+                widgetFactory.createLabel(row, "  ", SWT.NONE);
+                widgetFactory.createLabel(row, Messages.dontTakeTransition, SWT.NONE);
             }
         }
 
     }
 
-
     /*
      * (non-Javadoc)
-     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution#getLabel()
      */
@@ -276,28 +266,26 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
     /*
      * (non-Javadoc)
-     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution
      * #isRelevantFor(org.eclipse.emf.ecore.EObject)
      */
     @Override
     public boolean isRelevantFor(final EObject eObject) {
-        if(eObject instanceof SequenceFlow && BonitaProfilesManager.getInstance().isEnabled(IBonitaActivitiesCategory.DATA_MANAGEMENT)){
-            final SourceElement source =  ((SequenceFlow)eObject).getSource() ;
-            final boolean sourceIdAndGateway = source instanceof ANDGateway ;
-            final TargetElement target =  ((SequenceFlow)eObject).getTarget() ;
+        if (eObject instanceof SequenceFlow && BonitaProfilesManager.getInstance().isEnabled(IBonitaActivitiesCategory.DATA_MANAGEMENT)) {
+            final SourceElement source = ((SequenceFlow) eObject).getSource();
+            final boolean sourceIdAndGateway = source instanceof ANDGateway;
+            final TargetElement target = ((SequenceFlow) eObject).getTarget();
             final boolean targetIsAndGateway = target instanceof ANDGateway && !(source instanceof XORGateway);
-            return !(source instanceof BoundaryEvent) &&  !sourceIdAndGateway && !targetIsAndGateway;
+            return !(source instanceof BoundaryEvent) && !sourceIdAndGateway && !targetIsAndGateway;
 
         }
-        return false ;
+        return false;
 
     }
 
     /*
      * (non-Javadoc)
-     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution#refresh()
      */
@@ -308,7 +296,6 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
     /*
      * (non-Javadoc)
-     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution
      * #setEObject(org.eclipse.emf.ecore.EObject)
@@ -320,167 +307,168 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
     }
 
     private void refreshBindings() {
-        if(conditionSection != null && !conditionSection.isDisposed()){
+        if (conditionSection != null && !conditionSection.isDisposed()) {
             if (dataBindingContext != null) {
                 dataBindingContext.dispose();
             }
 
-            final IConverter conditionConverter = new Converter(Boolean.class,Boolean.class) {
+            final IConverter conditionConverter = new Converter(Boolean.class, Boolean.class) {
 
                 @Override
                 public Object convert(final Object fromObject) {
-                    if(transition != null && transition.getSource() instanceof CatchLinkEvent){
-                        return false ;
+                    if (transition != null && transition.getSource() instanceof CatchLinkEvent) {
+                        return false;
                     }
 
-                    return !(Boolean)fromObject;
+                    return !(Boolean) fromObject;
                 }
             };
 
-            final IConverter defaultConverter = new Converter(Boolean.class,Boolean.class) {
+            final IConverter defaultConverter = new Converter(Boolean.class, Boolean.class) {
 
                 @Override
                 public Object convert(final Object fromObject) {
-                    if(transition != null && transition.getSource() instanceof CatchLinkEvent){
-                        return false ;
-                    }else{
-                        final SourceElement elem = transition.getSource() ;
-                        boolean alreadyExistDefault = false ;
-                        for(final Connection c  :elem.getOutgoing()){
-                            if(c instanceof SequenceFlow ){
-                                if(((SequenceFlow) c).isIsDefault() && !c.equals(transition)){
-                                    alreadyExistDefault = true ;
+                    if (transition != null && transition.getSource() instanceof CatchLinkEvent) {
+                        return false;
+                    } else {
+                        final SourceElement elem = transition.getSource();
+                        boolean alreadyExistDefault = false;
+                        for (final Connection c : elem.getOutgoing()) {
+                            if (c instanceof SequenceFlow) {
+                                if (((SequenceFlow) c).isIsDefault() && !c.equals(transition)) {
+                                    alreadyExistDefault = true;
                                 }
                             }
                         }
-                        if(alreadyExistDefault){
-                            return false ;
-                        }else{
-                            return true ;
+                        if (alreadyExistDefault) {
+                            return false;
+                        } else {
+                            return true;
                         }
                     }
 
                 }
             };
 
-            final UpdateValueStrategy useExpressionTargetToModel = new UpdateValueStrategy() ;
-            useExpressionTargetToModel.setConverter(new Converter(Boolean.class,SequenceFlowConditionType.class){
+            final UpdateValueStrategy useExpressionTargetToModel = new UpdateValueStrategy();
+            useExpressionTargetToModel.setConverter(new Converter(Boolean.class, SequenceFlowConditionType.class) {
 
                 @Override
                 public Object convert(final Object fromObject) {
-                    if((Boolean)fromObject){
-                        return SequenceFlowConditionType.EXPRESSION ;
-                    }else{
+                    if ((Boolean) fromObject) {
+                        return SequenceFlowConditionType.EXPRESSION;
+                    } else {
                         return SequenceFlowConditionType.DECISION_TABLE;
                     }
                 }
             });
 
-            final UpdateValueStrategy useDescisionTargetToModel = new UpdateValueStrategy() ;
-            useDescisionTargetToModel.setConverter(new Converter(Boolean.class,SequenceFlowConditionType.class){
+            final UpdateValueStrategy useDescisionTargetToModel = new UpdateValueStrategy();
+            useDescisionTargetToModel.setConverter(new Converter(Boolean.class, SequenceFlowConditionType.class) {
 
                 @Override
                 public Object convert(final Object fromObject) {
-                    if((Boolean)fromObject){
-                        return SequenceFlowConditionType.DECISION_TABLE ;
-                    }else{
+                    if ((Boolean) fromObject) {
+                        return SequenceFlowConditionType.DECISION_TABLE;
+                    } else {
                         return SequenceFlowConditionType.EXPRESSION;
                     }
                 }
             });
 
-            final UpdateValueStrategy useExpressionModelToTarget = new UpdateValueStrategy() ;
-            useExpressionModelToTarget.setConverter(new Converter(SequenceFlowConditionType.class,Boolean.class){
+            final UpdateValueStrategy useExpressionModelToTarget = new UpdateValueStrategy();
+            useExpressionModelToTarget.setConverter(new Converter(SequenceFlowConditionType.class, Boolean.class) {
 
                 @Override
                 public Object convert(final Object fromObject) {
-                    if(fromObject == SequenceFlowConditionType.EXPRESSION){
-                        return true ;
-                    }else{
-                        return false  ;
+                    if (fromObject == SequenceFlowConditionType.EXPRESSION) {
+                        return true;
+                    } else {
+                        return false;
                     }
                 }
             });
 
-            final UpdateValueStrategy useDecisionModelToTarget = new UpdateValueStrategy() ;
-            useDecisionModelToTarget.setConverter(new Converter(SequenceFlowConditionType.class,Boolean.class){
+            final UpdateValueStrategy useDecisionModelToTarget = new UpdateValueStrategy();
+            useDecisionModelToTarget.setConverter(new Converter(SequenceFlowConditionType.class, Boolean.class) {
 
                 @Override
                 public Object convert(final Object fromObject) {
-                    if(fromObject == SequenceFlowConditionType.DECISION_TABLE){
-                        return true ;
-                    }else{
-                        return false  ;
-                    }
+                    return fromObject == SequenceFlowConditionType.DECISION_TABLE;
                 }
             });
-
 
             dataBindingContext = new EMFDataBindingContext();
 
-            final IObservableValue typeValue = EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION_TYPE);
+            final IObservableValue typeValue = EMFEditObservables
+                    .observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION_TYPE);
             typeValue.addValueChangeListener(new IValueChangeListener() {
 
                 @Override
                 public void handleValueChange(final ValueChangeEvent event) {
-                    if(conditionSection != null && !conditionSection.isDisposed()){
-                        if(event.diff.getNewValue() == SequenceFlowConditionType.EXPRESSION && (conditionViewer == null || conditionViewer.getControl().isDisposed())){
-                            if(conditionSection.getClient() != null){
-                                conditionSection.getClient().dispose() ;
+                    if (conditionSection != null && !conditionSection.isDisposed()) {
+                        if (event.diff.getNewValue() == SequenceFlowConditionType.EXPRESSION
+                                && (conditionViewer == null || conditionViewer.getControl().isDisposed())) {
+                            if (conditionSection.getClient() != null) {
+                                conditionSection.getClient().dispose();
                             }
-                            conditionSection.setClient(createExpressionComposite(conditionSection, widgetFactory)) ;
-                            conditionSection.setExpanded(true) ;
-                        }else if(event.diff.getNewValue() == SequenceFlowConditionType.DECISION_TABLE &&  conditionViewer != null && !conditionViewer.getControl().isDisposed()){
-                            if(conditionSection.getClient() != null){
-                                conditionSection.getClient().dispose() ;
+                            conditionSection.setClient(createExpressionComposite(conditionSection, widgetFactory));
+                            conditionSection.setExpanded(true);
+                        } else if (event.diff.getNewValue() == SequenceFlowConditionType.DECISION_TABLE && conditionViewer != null
+                                && !conditionViewer.getControl().isDisposed()) {
+                            if (conditionSection.getClient() != null) {
+                                conditionSection.getClient().dispose();
                             }
-                            conditionSection.setClient(createDecisionTableComposite(conditionSection, widgetFactory)) ;
-                            conditionSection.setExpanded(true) ;
+                            conditionSection.setClient(createDecisionTableComposite(conditionSection, widgetFactory));
+                            conditionSection.setExpanded(true);
                         }
-                        refreshBindings() ;
+                        refreshBindings();
                     }
                 }
-            }) ;
+            });
 
             dataBindingContext.bindValue(SWTObservables.observeSelection(useExpressionCondition),
-                    typeValue,useExpressionTargetToModel,useExpressionModelToTarget);
+                    typeValue, useExpressionTargetToModel, useExpressionModelToTarget);
             dataBindingContext.bindValue(SWTObservables.observeSelection(useDecisionTable),
-                    typeValue,useDescisionTargetToModel,useDecisionModelToTarget);
-
+                    typeValue, useDescisionTargetToModel, useDecisionModelToTarget);
 
             dataBindingContext.bindValue(SWTObservables.observeSelection(defaultCheckBox),
                     EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT));
 
             dataBindingContext.bindValue(SWTObservables.observeEnabled(defaultCheckBox),
-                    EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(defaultConverter),new UpdateValueStrategy().setConverter(defaultConverter));
+                    EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),
+                    new UpdateValueStrategy().setConverter(defaultConverter), new UpdateValueStrategy().setConverter(defaultConverter));
 
-            if(conditionViewer != null && !conditionViewer.getControl().isDisposed()){
+            if (conditionViewer != null && !conditionViewer.getControl().isDisposed()) {
                 dataBindingContext.bindValue(SWTObservables.observeEnabled(conditionViewer.getControl()),
-                        EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
+                        EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),
+                        new UpdateValueStrategy().setConverter(conditionConverter), new UpdateValueStrategy().setConverter(conditionConverter));
 
                 //                dataBindingContext.bindValue(SWTObservables.observeEnabled(conditionViewer.getToolbar()),
                 //                        EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
 
-                conditionViewer.setEditingDomain(editingDomain) ;
+                conditionViewer.setEditingDomain(editingDomain);
                 dataBindingContext.bindValue(
                         ViewerProperties.singleSelection().observe(conditionViewer),
                         EMFEditProperties.value(editingDomain, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION).observe(transition));
-                conditionViewer.setInput(transition) ;
+                conditionViewer.setInput(transition);
 
-                dataBindingContext.bindValue(SWTObservables.observeSelection(useExpressionCondition),SWTObservables.observeEnabled(conditionViewer.getControl()));
+                dataBindingContext.bindValue(SWTObservables.observeSelection(useExpressionCondition),
+                        SWTObservables.observeEnabled(conditionViewer.getControl()));
             }
 
             dataBindingContext.bindValue(SWTObservables.observeEnabled(useExpressionCondition),
-                    EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
-
-
+                    EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),
+                    new UpdateValueStrategy().setConverter(conditionConverter), new UpdateValueStrategy().setConverter(conditionConverter));
 
             dataBindingContext.bindValue(SWTObservables.observeEnabled(useDecisionTable),
-                    EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
+                    EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),
+                    new UpdateValueStrategy().setConverter(conditionConverter), new UpdateValueStrategy().setConverter(conditionConverter));
 
-            if(updateTableButton != null && !updateTableButton.isDisposed()){
+            if (updateTableButton != null && !updateTableButton.isDisposed()) {
                 dataBindingContext.bindValue(SWTObservables.observeEnabled(updateTableButton),
-                        EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
+                        EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),
+                        new UpdateValueStrategy().setConverter(conditionConverter), new UpdateValueStrategy().setConverter(conditionConverter));
 
             }
         }
@@ -488,7 +476,6 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
     /*
      * (non-Javadoc)
-     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution
      * #setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
@@ -503,7 +490,6 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
     /*
      * (non-Javadoc)
-     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution
      * #setSelection(org.eclipse.jface.viewers.ISelection)
@@ -513,12 +499,13 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
      */
     @Override
     public void dispose() {
-        if(color != null && !color.isDisposed()){
+        if (color != null && !color.isDisposed()) {
             color.dispose();
         }
         if (dataBindingContext != null) {

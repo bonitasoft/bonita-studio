@@ -25,7 +25,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class BusinessObjectDataTypeBuilder extends DataTypeBuilder<BusinessObjectType, BusinessObjectDataTypeBuilder> {
 
-    public static BusinessObjectDataTypeBuilder createBusinessObjectDataType() {
+    public static BusinessObjectDataTypeBuilder aBusinessObjectDataType() {
         return new BusinessObjectDataTypeBuilder();
     }
 

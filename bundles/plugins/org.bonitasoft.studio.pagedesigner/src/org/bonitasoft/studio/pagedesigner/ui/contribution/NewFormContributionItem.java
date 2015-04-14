@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -118,7 +118,7 @@ public class NewFormContributionItem extends ContributionItem {
 
         final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
         repositoryStore.refresh();
-        final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId + ".json");
+        final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId);
         if (webPageFileStore != null) {
             final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(pageflow);
             editingDomain.getCommandStack().execute(new UpdateFormMappingCommand(editingDomain, pageflow.getFormMapping(),
