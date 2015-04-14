@@ -5,8 +5,9 @@ Bundle-SymbolicName: org.bonitasoft.studio.tests;singleton:=true
 Bundle-Version: 7.0.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Eclipse-BundleShape: dir
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ClassPath: .,
+ lib/org.restlet.ext.html-2.2.3.jar
 Require-Bundle: org.junit;bundle-version="4.11.0",
  org.eclipse.core.runtime,
  org.bonitasoft.studio.engine.test,
@@ -25,12 +26,14 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bdm.model.field,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,
+ org.bonitasoft.engine.bpm.bar.form.model,
  org.bonitasoft.engine.bpm.connector,
  org.bonitasoft.engine.bpm.data,
  org.bonitasoft.engine.bpm.document,
  org.bonitasoft.engine.bpm.flownode,
  org.bonitasoft.engine.bpm.process,
  org.bonitasoft.engine.exception,
+ org.bonitasoft.engine.form,
  org.bonitasoft.engine.identity,
  org.bonitasoft.engine.platform,
  org.bonitasoft.engine.search,
@@ -88,6 +91,7 @@ Require-Bundle: org.eclipse.ui.workbench,
  org.bonitasoft.studio.contract;bundle-version="7.0.0"
 Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.api,
+ org.bonitasoft.studio.tests.bar,
  org.bonitasoft.studio.tests.bug,
  org.bonitasoft.studio.tests.businessobject,
  org.bonitasoft.studio.tests.conditions,
@@ -107,6 +111,7 @@ Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.processzoo,
  org.bonitasoft.studio.tests.processzoo.examples,
  org.bonitasoft.studio.tests.refactoring.widget,
+ org.bonitasoft.studio.tests.repository,
  org.bonitasoft.studio.tests.stress,
  org.bonitasoft.studio.tests.subprocess,
  org.bonitasoft.studio.tests.timer

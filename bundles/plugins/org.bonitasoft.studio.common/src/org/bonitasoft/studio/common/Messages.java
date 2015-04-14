@@ -277,5 +277,6 @@ public class Messages extends NLS {
     public static String Image_desc;
     public static String hideHelp;
     public static String toggleHelp;
+    public static String unicityErrorMessage;
 
 }

@@ -10,9 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-public class MandatoryInputCheckboxLabelProviderTest extends AbstractSWTTestCase {
+public class NullableInputCheckboxLabelProviderTest extends AbstractSWTTestCase {
 
-    private MandatoryInputCheckboxLabelProvider labelProviderUnderTest;
+    private NotNullableInputCheckboxLabelProvider labelProviderUnderTest;
 
     /**
      * @throws java.lang.Exception
@@ -20,7 +20,7 @@ public class MandatoryInputCheckboxLabelProviderTest extends AbstractSWTTestCase
     @Before
     public void setUp() throws Exception {
         createDisplayAndRealm();
-        labelProviderUnderTest = new MandatoryInputCheckboxLabelProvider();
+        labelProviderUnderTest = new NotNullableInputCheckboxLabelProvider();
     }
 
     /**
@@ -34,16 +34,16 @@ public class MandatoryInputCheckboxLabelProviderTest extends AbstractSWTTestCase
 
     @Test
     public void shouldIsSelected_ReturnsFalse() throws Exception {
-        assertThat(labelProviderUnderTest.isSelected(null)).isFalse();
         final ContractInput optionalInput = ProcessFactory.eINSTANCE.createContractInput();
-        optionalInput.setMandatory(false);
+        optionalInput.setMandatory(true);
         assertThat(labelProviderUnderTest.isSelected(optionalInput)).isFalse();
     }
 
     @Test
     public void shouldIsSelected_ReturnsTrue() throws Exception {
+        assertThat(labelProviderUnderTest.isSelected(null)).isTrue();
         final ContractInput mandatoryInput = ProcessFactory.eINSTANCE.createContractInput();
-        mandatoryInput.setMandatory(true);
+        mandatoryInput.setMandatory(false);
         assertThat(labelProviderUnderTest.isSelected(mandatoryInput)).isTrue();
     }
 

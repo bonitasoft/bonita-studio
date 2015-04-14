@@ -165,8 +165,8 @@ public class ContractInputTreeViewer extends TreeViewer {
     }
 
     protected void createMandatoryColumn() {
-        final TreeViewerColumn mandatoryColumnViewer = createColumnViewer(Messages.mandatory, SWT.CENTER);
-        mandatoryColumnViewer.setLabelProvider(new MandatoryInputCheckboxLabelProvider());
+        final TreeViewerColumn mandatoryColumnViewer = createColumnViewer(Messages.nullable, SWT.CENTER);
+        mandatoryColumnViewer.setLabelProvider(new NotNullableInputCheckboxLabelProvider());
         mandatoryColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, this,
                 ProcessPackage.Literals.CONTRACT_INPUT__MANDATORY.getName()));
     }

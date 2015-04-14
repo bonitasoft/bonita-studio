@@ -26,7 +26,7 @@ import org.bonitasoft.studio.model.process.builders.ElementBuilder;
  */
 public class FormBuilder extends ElementBuilder<Form, FormBuilder> {
 
-    public static FormBuilder createFormBuilder() {
+    public static FormBuilder aForm() {
         return new FormBuilder();
     }
 

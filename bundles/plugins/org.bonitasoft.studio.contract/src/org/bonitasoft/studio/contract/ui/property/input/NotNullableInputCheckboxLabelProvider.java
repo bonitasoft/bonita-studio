@@ -14,31 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.properties.sections.iteration;
+package org.bonitasoft.studio.contract.ui.property.input;
 
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider;
+import org.bonitasoft.studio.model.process.ContractInput;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class MutexRule implements ISchedulingRule {
+public class NotNullableInputCheckboxLabelProvider extends AbstractCheckboxLabelProvider {
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.jobs.ISchedulingRule#contains(org.eclipse.core.runtime.jobs.ISchedulingRule)
-     */
     @Override
-    public boolean contains(final ISchedulingRule rule) {
-        return rule == this;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.jobs.ISchedulingRule#isConflicting(org.eclipse.core.runtime.jobs.ISchedulingRule)
-     */
-    @Override
-    public boolean isConflicting(final ISchedulingRule rule) {
-        return rule == this;
+    protected boolean isSelected(final Object element) {
+        if (element instanceof ContractInput) {
+            return !((ContractInput) element).isMandatory();
+        }
+        return true;
     }
 
 }
