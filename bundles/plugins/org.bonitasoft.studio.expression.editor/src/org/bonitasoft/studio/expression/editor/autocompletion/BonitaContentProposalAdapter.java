@@ -2085,13 +2085,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * @param proposal the accepted proposal
      */
     private void proposalAccepted(final IContentProposal proposal) {
-        final String proposalValue = proposal.getLabel() != null ? proposal.getLabel() : proposal.getContent();
         switch (proposalAcceptanceStyle) {
             case PROPOSAL_REPLACE:
-                setControlContent(proposalValue, proposal.getCursorPosition());
+                setControlContent(proposal.getContent(), proposal.getCursorPosition());
                 break;
             case PROPOSAL_INSERT:
-                insertControlContent(proposalValue, proposal.getCursorPosition());
+                insertControlContent(proposal.getContent(), proposal.getCursorPosition());
                 break;
             default:
                 // do nothing. Typically a listener is installed to handle this in

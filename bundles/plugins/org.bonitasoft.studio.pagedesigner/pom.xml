@@ -15,7 +15,7 @@
     <properties>
         <webapp.dir>${basedir}/webapp</webapp.dir>
         <lib.dir>${basedir}/lib</lib.dir>
-        <page.designer.version>1.0.0-SNAPSHOT</page.designer.version>
+        <page.designer.version>1.0.0-beta</page.designer.version>
     </properties>
 
     <dependencies>
@@ -43,7 +43,7 @@
                         </overlay>
                     </overlays>
                     <workDirectory>target/overlay-war-folder</workDirectory>
-                    <warName>page-designer</warName>
+                    <warName>designer</warName>
                     <outputDirectory>${webapp.dir}</outputDirectory>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>

@@ -64,7 +64,7 @@ public class OpenUIDesignerHandler extends AbstractHandler {
     }
 
     protected IEclipsePreferences getPreferenceStore() {
-        return InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_PREFERENCE_SCOPE);
+        return InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID);
     }
 
 }

@@ -115,4 +115,19 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
             }
         };
     }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.swt.widgets.Widget#dispose()
+     */
+    @Override
+    public void dispose() {
+        if (pageDesignerMappingComposite != null) {
+            pageDesignerMappingComposite.dispose();
+        }
+        if (urlMappingComposite != null) {
+            urlMappingComposite.dispose();
+        }
+        super.dispose();
+    }
 }

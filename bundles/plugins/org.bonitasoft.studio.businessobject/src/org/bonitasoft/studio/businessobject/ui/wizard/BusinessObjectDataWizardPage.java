@@ -118,9 +118,9 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         defaultValueContentObservable = EMFObservables.observeValue(businessObjectData.getDefaultValue(),
                 ExpressionPackage.Literals.EXPRESSION__CONTENT);
         ctx.addValidationStatusProvider(defaultValueReturnTypeValidator());
-
-        setControl(mainComposite);
         WizardPageSupport.create(this, ctx);
+        setControl(mainComposite);
+
     }
 
     private MultiValidator defaultValueReturnTypeValidator() {

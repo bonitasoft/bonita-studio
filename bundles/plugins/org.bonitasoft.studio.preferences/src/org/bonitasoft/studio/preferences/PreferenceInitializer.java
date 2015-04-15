@@ -69,7 +69,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         store.setDefault(TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION, MessageDialogWithToggle.NEVER);
         store.setDefault(PUBLISH_ORGANIZATION, false);
 
-        Locale defaultStudioLocal = Locale.getDefault();
+        Locale defaultStudioLocal = Locale.ENGLISH;
         boolean defaultLocalExists = false;
         for (final Locale locale : LocaleUtil.getStudioLocales()) {
             if (locale.getLanguage().equals(defaultStudioLocal.getLanguage())) {
@@ -79,17 +79,17 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
             }
         }
 
-        String defaultLocaleValue = store.getString(DEFAULT_STUDIO_LOCALE);// Default value is compute on the first the studio is run
-                                                                           // only because Locale.getDefault() is based on osgi.nl
-                                                                           // property
-        if (defaultLocaleValue == null || defaultLocaleValue.isEmpty()) {
-            store.setValue(DEFAULT_STUDIO_LOCALE,
-                    defaultLocalExists ? defaultStudioLocal.getLanguage() : Locale.ENGLISH.getLanguage());
-            defaultLocaleValue = store.getString(DEFAULT_STUDIO_LOCALE);
-        }
+//        String defaultLocaleValue = store.getString(DEFAULT_STUDIO_LOCALE);// Default value is compute on the first the studio is run
+//                                                                           // only because Locale.getDefault() is based on osgi.nl
+//                                                                           // property
+//        if (defaultLocaleValue == null || defaultLocaleValue.isEmpty()) {
+//            store.setValue(DEFAULT_STUDIO_LOCALE,
+//                    defaultLocalExists ? defaultStudioLocal.getLanguage() : Locale.ENGLISH.getLanguage());
+//            defaultLocaleValue = store.getString(DEFAULT_STUDIO_LOCALE);
+//        }
 
-        store.setDefault(CURRENT_UXP_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
-        store.setDefault(CURRENT_STUDIO_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
+        store.setDefault(CURRENT_UXP_LOCALE, Locale.ENGLISH.getLanguage());
+        store.setDefault(CURRENT_STUDIO_LOCALE, Locale.ENGLISH.getLanguage());
 
         store.setDefault(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE, BonitaCoolBarPreferenceConstant.NORMAL);
         store.setDefault(APLLICATION_DEPLOYMENT_MODE, ALL_IN_BAR);

@@ -17,7 +17,6 @@ package org.bonitasoft.studio.pagedesigner.core.expression;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -29,7 +28,6 @@ import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.pagedesigner.core.operation.CreateFormFromContractOperation;
@@ -103,7 +101,7 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
     }
 
     @Test
-    public void should_set_form_ame_on_CreateFormOperation() throws Exception {
+    public void should_force_page_name_to_newForm() throws Exception {
         //Given
         final Task task = aTask().withName("Step1").havingFormMapping(aFormMapping()).havingContract(aContract()).build();
 
@@ -111,42 +109,7 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
         createNewFormProposal.handleEvent(task.getFormMapping(), null);
 
         //Then
-        verify(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory), eq("Step1"), any(Contract.class));
+        verify(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory), eq("newForm"), any(Contract.class));
     }
 
-    @Test
-    public void should_prefix_form_name_for_overview_form() throws Exception {
-        //Given
-        final Pool pool = aPool().withName("Pool1").havingOverviewFormMapping(aFormMapping()).havingContract(aContract()).build();
-
-        //When
-        createNewFormProposal.handleEvent(pool.getOverviewFormMapping(), null);
-
-        //Then
-        verify(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory), eq("Pool1Overview"), any(Contract.class));
-    }
-
-    @Test
-    public void should_not_prefix_form_name_for_case_start_form() throws Exception {
-        //Given
-        final Pool pool = aPool().withName("Pool1").havingFormMapping(aFormMapping()).havingContract(aContract()).build();
-
-        //When
-        createNewFormProposal.handleEvent(pool.getFormMapping(), null);
-
-        //Then
-        verify(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory), eq("Pool1"), any(Contract.class));
-    }
-
-    @Test
-    public void should_rewrite_form_name_for_names_with_illegal_characters() throws Exception {
-        //Given
-        final Task task = aTask().withName("Step1 & Stép2").havingFormMapping(aFormMapping()).havingContract(aContract()).build();
-
-        //When
-        createNewFormProposal.handleEvent(task.getFormMapping(), null);
-
-        //Then
-        verify(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory), eq("Step1___Step2"), any(Contract.class));
-    }
 }

@@ -64,7 +64,7 @@ public class PageDesignerMappingCompositeTest {
     @Test
     public void should_open_file_store_on_edit() throws Exception {
         final PageDesignerMappingComposite pageDesignerMappingComposite = makeComposite();
-        when(webPageRepositoryStore.getChild("a-page-id.json")).thenReturn(selectedPage);
+        when(webPageRepositoryStore.getChild("a-page-id")).thenReturn(selectedPage);
 
         pageDesignerMappingComposite.editForm(new WritableValue(aFormMapping().havingTargetForm(anExpression().withContent("a-page-id")).build(),
                 FormMapping.class));
