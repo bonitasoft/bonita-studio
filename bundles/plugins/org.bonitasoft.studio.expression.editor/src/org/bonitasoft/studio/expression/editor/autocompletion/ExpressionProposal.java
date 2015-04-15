@@ -83,4 +83,13 @@ public class ExpressionProposal implements IContentProposal {
         return expression;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return content;
+    }
+
 }
