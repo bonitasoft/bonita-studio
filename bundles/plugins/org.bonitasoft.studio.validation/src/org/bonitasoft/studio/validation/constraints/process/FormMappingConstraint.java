@@ -15,11 +15,20 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Lists.newArrayList;
 
+import java.util.List;
+
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
@@ -29,6 +38,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
+
+import com.google.common.base.Predicate;
 
 /**
  * @author Romain Bioteau
@@ -75,8 +86,63 @@ public class FormMappingConstraint extends AbstractLiveValidationMarkerConstrain
             if (repositoryStore.getChild(targetForm.getContent()) == null) {
                 return ctx.createFailureStatus(Messages.bind(Messages.invalidInternalFormMapping, mappingKind(formMapping), targetForm.getContent()));
             }
+            final List<FormMapping> duplicatedMappings = findDuplicatedNameMappings(formMapping, repositoryStore);
+            if (!duplicatedMappings.isEmpty()) {
+                return ctx
+                        .createFailureStatus(Messages.bind(Messages.duplicatedFormName, mappingKind(formMapping), listDuplicatedMappings(duplicatedMappings)));
+            }
         }
         return ctx.createSuccessStatus();
+    }
+
+    private String listDuplicatedMappings(final List<FormMapping> duplicatedMappings) {
+        final StringBuilder sb = new StringBuilder();
+        for (final FormMapping form : duplicatedMappings) {
+            sb.append(((Element) form.eContainer()).getName());
+            sb.append(", ");
+        }
+        if (sb.length() > 2) {
+            sb.delete(sb.length() - 2, sb.length());
+        }
+        return sb.toString();
+    }
+
+    private List<FormMapping> findDuplicatedNameMappings(final FormMapping formMapping, final WebPageRepositoryStore repositoryStore) {
+        final List<FormMapping> allInternalFormMapping = newArrayList(filter(
+                ModelHelper.getAllElementOfTypeIn(ModelHelper.getParentPool(formMapping), FormMapping.class),
+                withInternalType()));
+        allInternalFormMapping.remove(formMapping);
+        return newArrayList(filter(allInternalFormMapping, and(withSameName(formMapping), not(withSameId(formMapping)))));
+    }
+
+    private Predicate<FormMapping> withInternalType() {
+        return new Predicate<FormMapping>() {
+
+            @Override
+            public boolean apply(final FormMapping input) {
+                return input.getType() == FormMappingType.INTERNAL;
+            }
+        };
+    }
+
+    private Predicate<FormMapping> withSameName(final FormMapping formMapping) {
+        return new Predicate<FormMapping>() {
+
+            @Override
+            public boolean apply(final FormMapping input) {
+                return formMapping.getTargetForm().getName().equals(input.getTargetForm().getName());
+            }
+        };
+    }
+
+    private Predicate<FormMapping> withSameId(final FormMapping formMapping) {
+        return new Predicate<FormMapping>() {
+
+            @Override
+            public boolean apply(final FormMapping input) {
+                return formMapping.getTargetForm().getContent().equals(input.getTargetForm().getContent());
+            }
+        };
     }
 
     private IStatus doValidateURLMapping(final IValidationContext ctx, final FormMapping formMapping) {
