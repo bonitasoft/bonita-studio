@@ -33,7 +33,6 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -112,11 +111,11 @@ public class PageDesignerMappingComposite extends Composite implements BonitaPre
     }
 
     private void addResourceChangeListener(final IResourceChangeListener resourceChangeListener) {
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener);
+        repositoryAccessor.getWorkspace().addResourceChangeListener(resourceChangeListener);
     }
 
     private void removeResourceChangeListener(final IResourceChangeListener resourceChangeListener) {
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
+        repositoryAccessor.getWorkspace().removeResourceChangeListener(resourceChangeListener);
     }
 
     public void doBindControl(final DataBindingContext context, final IObservableValue formMappingObservable) {

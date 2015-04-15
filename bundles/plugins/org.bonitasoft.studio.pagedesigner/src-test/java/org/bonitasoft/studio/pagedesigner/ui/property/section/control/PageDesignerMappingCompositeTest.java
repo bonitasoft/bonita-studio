@@ -25,6 +25,7 @@ import org.bonitasoft.studio.pagedesigner.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.junit.Before;
@@ -52,6 +53,8 @@ public class PageDesignerMappingCompositeTest {
     private WebPageRepositoryStore webPageRepositoryStore;
     @Mock
     private WebPageFileStore selectedPage;
+    @Mock
+    private IWorkspace workspace;
 
     /**
      * @throws java.lang.Exception
@@ -59,6 +62,7 @@ public class PageDesignerMappingCompositeTest {
     @Before
     public void setUp() throws Exception {
         when(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)).thenReturn(webPageRepositoryStore);
+        when(repositoryAccessor.getWorkspace()).thenReturn(workspace);
     }
 
     @Test
