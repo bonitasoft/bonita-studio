@@ -95,7 +95,7 @@ public class PageDesignerWorkspaceIntegrationIT {
     public void import_a_custom_page_trigger_a_refresh_on_the_workspace() throws Exception {
         waitForServer();
 
-        new ClientResource(String.format("http://localhost:%s/page-designer/api/import/page", tomcatPort())).post(formDataSetWithCustomPageZipFile());
+        new ClientResource(String.format("http://localhost:%s/designer/api/import/page", tomcatPort())).post(formDataSetWithCustomPageZipFile());
 
         final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(WebPageRepositoryStore.class);
         assertThat(repositoryStore.getChild("886c0557-9ba4-4521-8f29-f66fe7901126").getResource().getFile("886c0557-9ba4-4521-8f29-f66fe7901126.json").exists())
