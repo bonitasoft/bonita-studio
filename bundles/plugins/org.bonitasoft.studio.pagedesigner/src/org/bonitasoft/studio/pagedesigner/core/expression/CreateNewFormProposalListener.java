@@ -15,13 +15,11 @@
 package org.bonitasoft.studio.pagedesigner.core.expression;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.lang.reflect.InvocationTargetException;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -29,7 +27,6 @@ import org.bonitasoft.studio.expression.editor.provider.IProposalAdapter;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.PageFlow;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.pagedesigner.core.operation.CreateFormFromContractOperation;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
@@ -66,7 +63,7 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
     public String handleEvent(final EObject context, final String fixedReturnType) {
         final PageFlow pageFlow = pageFlowFor(context);
         checkState(pageFlow != null);
-        final CreateFormFromContractOperation operation = doCreateFormOperation(pageDesignerURLFactory, toFormName(context), contractFor(context));
+        final CreateFormFromContractOperation operation = doCreateFormOperation(pageDesignerURLFactory, "newForm", contractFor(context));
 
         try {
             progressService.busyCursorWhile(operation);
@@ -77,14 +74,6 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
         final String newPageId = operation.getNewPageId();
         repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newPageId).open();
         return newPageId;
-    }
-
-    private String toFormName(final EObject context) {
-        final PageFlow pageFlow = pageFlowFor(context);
-        String name = pageFlow.getName();
-        name = !isNullOrEmpty(name) ? NamingUtils.convertToId(name) : null;
-        return name != null && ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING.equals(context.eContainmentFeature()) ? String.format("%sOverview",
-                name) : name;
     }
 
     private static PageFlow pageFlowFor(final EObject context) {
