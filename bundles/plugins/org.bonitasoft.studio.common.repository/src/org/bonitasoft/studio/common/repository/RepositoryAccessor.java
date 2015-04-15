@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.repository.core.job.WorkspaceInitializationJ
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -73,6 +74,10 @@ public class RepositoryAccessor {
             return repository.create(monitor);
         }
         return repository.open(monitor);
+    }
+
+    public IWorkspace getWorkspace() {
+        return getCurrentRepository().getProject().getWorkspace();
     }
 
 }
