@@ -69,7 +69,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         store.setDefault(TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION, MessageDialogWithToggle.NEVER);
         store.setDefault(PUBLISH_ORGANIZATION, false);
 
-        Locale defaultStudioLocal = Locale.getDefault();
+        Locale defaultStudioLocal = Locale.ENGLISH;
         boolean defaultLocalExists = false;
         for (final Locale locale : LocaleUtil.getStudioLocales()) {
             if (locale.getLanguage().equals(defaultStudioLocal.getLanguage())) {
