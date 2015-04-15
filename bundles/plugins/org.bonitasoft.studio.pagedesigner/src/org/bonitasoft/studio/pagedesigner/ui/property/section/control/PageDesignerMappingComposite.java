@@ -67,6 +67,7 @@ public class PageDesignerMappingComposite extends Composite implements BonitaPre
         targetFormExpressionViewer.setExpressionProposalLableProvider(new FormReferenceProposalLabelProvider());
         targetFormExpressionViewer.addExpressionValidator(formReferenceExpressionValidator);
         targetFormExpressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.FORM_REFERENCE_TYPE }));
+        targetFormExpressionViewer.setProposalsFiltering(false);
         widgetFactory.adapt(this);
     }
 
