@@ -171,11 +171,11 @@ public class BOSWebServerManager {
     }
 
     protected void addPageBuilderWar(final File targetFolder, final IProgressMonitor monitor) throws IOException {
-        BonitaStudioLog.debug("Copying Page Designer war in tomcat/webapps...", EnginePlugin.PLUGIN_ID);
+        BonitaStudioLog.debug("Copying Designer war in tomcat/webapps...", EnginePlugin.PLUGIN_ID);
         final URL url = Platform.getBundle(PageDesignerPlugin.PLUGIN_ID).getResource("webapp");
-        final File pageBuilderWarFile = new File(FileLocator.toFileURL(url).getFile(), "page-designer.war");
+        final File pageBuilderWarFile = new File(FileLocator.toFileURL(url).getFile(), "designer.war");
         PlatformUtil.copyResource(new File(targetFolder, "webapps"), pageBuilderWarFile, monitor);
-        BonitaStudioLog.debug("Page Designer war copied in tomcat/webapps.",
+        BonitaStudioLog.debug("Designer war copied in tomcat/webapps.",
                 EnginePlugin.PLUGIN_ID);
     }
 

@@ -33,7 +33,7 @@ import org.eclipse.e4.core.di.extensions.Preference;
 @Singleton
 public class PageDesignerURLFactory implements BonitaPreferenceConstants {
 
-    private static final String PAGE_BUILDER_ROOT = "page-designer";
+    private static final String PAGE_BUILDER_ROOT = "designer";
 
     private final IEclipsePreferences preferenceStore;
 

@@ -42,7 +42,7 @@
                         </overlay>
                     </overlays>
                     <workDirectory>target/overlay-war-folder</workDirectory>
-                    <warName>page-designer</warName>
+                    <warName>designer</warName>
                     <outputDirectory>${webapp.dir}</outputDirectory>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
