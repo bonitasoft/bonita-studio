@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.engine.export.switcher;
 
+import static com.google.common.collect.Iterables.find;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -54,7 +56,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 
 /**
  * @author Romain Bioteau
@@ -101,12 +102,7 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
         if (engineDefinitionBuilders == null) {
             engineDefinitionBuilders = createEngineDefinitionBuilders();
         }
-        for (final IEngineDefinitionBuilder<?> builder : engineDefinitionBuilders) {
-            if (builder.appliesTo(context, element)) {
-                return builder;
-            }
-        }
-        return Iterables.find(engineDefinitionBuilders, builderApplyingTo(context, element), null);
+        return find(engineDefinitionBuilders, builderApplyingTo(context, element), null);
     }
 
     private Predicate<? super IEngineDefinitionBuilder<?>> builderApplyingTo(final EObject context, final EObject element) {
@@ -213,11 +209,7 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     protected void addData(final FlowElementBuilder dataContainerBuilder,
             final DataAware dataAwareContainer) {
         for (final Data data : dataAwareContainer.getData()) {
-            Expression expr = EngineExpressionUtil.createExpression(data.getDefaultValue());
-            if (expr == null && data.isMultiple()) {
-                expr = EngineExpressionUtil.createEmptyListExpression();
-            }
-            final ProcessSwitch<DataDefinitionBuilder> dataSwitch = getDataSwitch(dataContainerBuilder, data, expr);
+            final ProcessSwitch<DataDefinitionBuilder> dataSwitch = getDataSwitch(dataContainerBuilder, data);
             final DataDefinitionBuilder dataBuilder = dataSwitch.doSwitch(data.getDataType());
             if (data.isTransient() && dataBuilder != null) {
                 dataBuilder.isTransient();
@@ -226,9 +218,8 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     }
 
     protected DataSwitch getDataSwitch(
-            final FlowElementBuilder dataContainerBuilder, final Data data,
-            final Expression defaultValueExpression) {
-        return new DataSwitch(data, defaultValueExpression, dataContainerBuilder);
+            final FlowElementBuilder dataContainerBuilder, final Data data) {
+        return new DataSwitch(data, dataContainerBuilder);
     }
 
     protected void addDescription(final DescriptionBuilder builder, final String description) {

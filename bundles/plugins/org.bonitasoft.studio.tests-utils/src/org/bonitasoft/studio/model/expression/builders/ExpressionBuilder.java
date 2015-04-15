@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.model.expression.builders;
 
+import org.bonitasoft.engine.expression.ExpressionInterpreter;
 import org.bonitasoft.engine.expression.ExpressionType;
 import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -42,6 +43,11 @@ public class ExpressionBuilder {
 
     public static ExpressionBuilder aVariableExpression() {
         return new ExpressionBuilder(ExpressionFactory.eINSTANCE.createExpression()).withExpressionType(ExpressionType.TYPE_VARIABLE.name());
+    }
+
+    public static ExpressionBuilder aGroovyScriptExpression() {
+        return new ExpressionBuilder(ExpressionFactory.eINSTANCE.createExpression()).withExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name())
+                .withInterpreter(ExpressionInterpreter.GROOVY.name());
     }
 
     public ExpressionBuilder withName(final String name) {

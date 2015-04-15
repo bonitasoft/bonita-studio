@@ -308,6 +308,10 @@ public class Messages extends NLS {
 
     public static String warning_reservedPackagePrefix;
 
+    public static String defaultValue;
+
+    public static String defaultValueReturnTypeValidationMessage;
+
     private Messages() {
     }
 

@@ -36,10 +36,15 @@ import org.eclipse.swt.widgets.Display;
 /**
  * @author Romain Bioteau
  */
-public class OpenPageDesignerHandler extends AbstractHandler {
+public class OpenUIDesignerHandler extends AbstractHandler {
 
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
+        execute();
+        return null;
+    }
+
+    public void execute() throws ExecutionException {
         final PageDesignerURLFactory pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
         try {
             createOpenBrowserOperation(pageDesignerURLBuilder.openPageDesignerHome()).execute();
@@ -50,10 +55,8 @@ public class OpenPageDesignerHandler extends AbstractHandler {
                         Messages.invalidURLMsg,
                         new Status(IStatus.ERROR, PageDesignerPlugin.PLUGIN_ID, e.getMessage(), e));
             }
-
             throw new ExecutionException("Failed to open web browser", e);
         }
-        return null;
     }
 
     protected OpenBrowserOperation createOpenBrowserOperation(final URL url) throws MalformedURLException {
@@ -61,7 +64,7 @@ public class OpenPageDesignerHandler extends AbstractHandler {
     }
 
     protected IEclipsePreferences getPreferenceStore() {
-        return InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID);
+        return InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_PREFERENCE_SCOPE);
     }
 
 }
