@@ -85,7 +85,7 @@ public class EditBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
             businessObjectDataWorkingCopy.setDefaultValue(defaultValueExpression());
         }
         final BusinessObjectDataWizardPage page = new BusinessObjectDataWizardPage(container, businessObjectDataWorkingCopy, businessObjectDefinitionStore,
-                computeExistingNames(container));
+                computeExistingNames(container), new HintImageProvider());
         page.setTitle(Messages.bind(Messages.editBusinessObjectDataTitle, ModelHelper.getParentProcess(container).getName()));
         page.setDescription(Messages.editBusinessObjectDataDescription);
         return page;

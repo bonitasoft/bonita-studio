@@ -41,8 +41,6 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.list.WritableList;
@@ -94,14 +92,18 @@ public class BusinessObjectDataWizardPage extends WizardPage {
 
     private IObservableValue defaultValueContentObservable;
 
+    private final HintImageProvider imageProvider;
+
     protected BusinessObjectDataWizardPage(final DataAware container, final BusinessObjectData businessObjectData,
             final BusinessObjectModelRepositoryStore businessObjectDefinitionStore,
-            final Set<String> existingNames) {
+            final Set<String> existingNames,
+            final HintImageProvider imageProvider) {
         super(BusinessObjectDataWizardPage.class.getName());
         this.container = container;
         businessObjectModelStore = businessObjectDefinitionStore;
         this.existingNames = existingNames;
         this.businessObjectData = businessObjectData;
+        this.imageProvider = imageProvider;
     }
 
     /*
@@ -160,7 +162,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
 
         final ControlDecoration hint = new ControlDecoration(defaultValueExpressionViewer.getTextControl(), SWT.LEFT);//TODO: remove me for 7.0.0 GA
         hint.setShowOnlyOnFocus(false);
-        hint.setImage(Pics.getImage(PicsConstants.hint));
+        hint.setImage(imageProvider.getHintImage());
         hint.setDescriptionText(
                 "Business data can be initialized with existing Busines Objects using a query\nor by creating a new one using a Groovy Script and the provided dao variable (XXXDAO.newInstance()).");
 
@@ -171,6 +173,8 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         return defaultValueExpressionViewer;
 
     }
+
+
 
     protected void createIsMultipleControl(final Composite mainComposite, final EMFDataBindingContext ctx) {
         new Label(mainComposite, SWT.NONE);

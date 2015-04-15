@@ -19,6 +19,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -66,6 +67,9 @@ public class BusinessObjectDataWizardPageTest {
     @Mock
     private IWizardContainer wizardContainer;
 
+    @Mock
+    private HintImageProvider hintImageProvider;
+
     /**
      * @throws java.lang.Exception
      */
@@ -76,7 +80,8 @@ public class BusinessObjectDataWizardPageTest {
         final BusinessObjectData data = aBusinessData().havingDataType(BusinessObjectDataTypeBuilder.aBusinessObjectDataType()).build();
         final Pool pool = aPool().build();
         pool.getData().add(data);
-        wizardPageUnderTest = new BusinessObjectDataWizardPage(pool, data, store, newHashSet("data1"));
+        wizardPageUnderTest = new BusinessObjectDataWizardPage(pool, data, store, newHashSet("data1"), hintImageProvider);
+        doReturn(realmWithDisplay.createImage()).when(hintImageProvider).getHintImage();
         wizardPageUnderTest.setWizard(wizardWithContainer);
         when(wizardWithContainer.getContainer()).thenReturn(wizardContainer);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
