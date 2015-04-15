@@ -19,7 +19,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,7 +32,7 @@ import org.eclipse.e4.core.di.extensions.Preference;
 @Singleton
 public class PageDesignerURLFactory implements BonitaPreferenceConstants {
 
-    private static final String PAGE_BUILDER_ROOT = "designer";
+    private static final String WAR_CONTEXT_NAME = "designer";
 
     private final IEclipsePreferences preferenceStore;
 
@@ -44,11 +43,11 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     }
 
     public URL openPageDesignerHome() throws MalformedURLException {
-        return new URL(baseURL());
+        return new URL(baseURL() + "/#/" + locale());
     }
 
     public URL openPage(final String pageId) throws MalformedURLException {
-        return new URL(baseURL() + "/#/" + Locale.getDefault().getLanguage() + "/pages/" + pageId);
+        return new URL(baseURL() + "/#/" + locale() + "/pages/" + pageId);
     }
 
     public URL newPage() throws MalformedURLException {
@@ -56,7 +55,7 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     }
 
     public URL newPageFromContract(final String formName) throws MalformedURLException {
-        return new URL("http://" + host() + ":" + port() + "/" + PAGE_BUILDER_ROOT + "/api/rest/pages/contract/" + formName);
+        return new URL("http://" + host() + ":" + port() + "/" + WAR_CONTEXT_NAME + "/api/rest/pages/contract/" + formName);
     }
 
     public URL exportPage(final String pageId) throws MalformedURLException {
@@ -69,6 +68,12 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
         return host;
     }
 
+    private String locale() {
+        final String locale = preferenceStore.get(CURRENT_STUDIO_LOCALE, "en");
+        checkNotNull(locale);
+        return locale;
+    }
+
     private String port() {
         final int port = preferenceStore.getInt(CONSOLE_PORT, DEFAULT_PORT);
         checkArgument(port > 0);
@@ -76,6 +81,6 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     }
 
     private String baseURL() {
-        return "http://" + host() + ":" + port() + "/" + PAGE_BUILDER_ROOT;
+        return "http://" + host() + ":" + port() + "/" + WAR_CONTEXT_NAME;
     }
 }
