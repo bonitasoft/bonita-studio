@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.bonitasoft.studio.application.i18n.Messages;
@@ -73,6 +74,7 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
      */
     @Override
     public Object start(final IApplicationContext context) {
+        Locale.setDefault(Locale.ENGLISH);
         START_TIME = System.currentTimeMillis();
         //avoid the execution of AutoBuild job during startup
         addBuildJobListener();
