@@ -16,6 +16,7 @@ package org.bonitasoft.studio.validation.constraints.process;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Iterables.filter;
@@ -101,26 +102,23 @@ public class FormMappingConstraint extends AbstractLiveValidationMarkerConstrain
             sb.append(((Element) form.eContainer()).getName());
             sb.append(", ");
         }
-        if (sb.length() > 2) {
-            sb.delete(sb.length() - 2, sb.length());
-        }
+        sb.delete(sb.length() - 2, sb.length());
         return sb.toString();
     }
 
     private List<FormMapping> findDuplicatedNameMappings(final FormMapping formMapping, final WebPageRepositoryStore repositoryStore) {
         final List<FormMapping> allInternalFormMapping = newArrayList(filter(
                 ModelHelper.getAllElementOfTypeIn(ModelHelper.getParentPool(formMapping), FormMapping.class),
-                withInternalType()));
-        allInternalFormMapping.remove(formMapping);
+                and(withType(FormMappingType.INTERNAL), not(equalTo(formMapping)))));
         return newArrayList(filter(allInternalFormMapping, and(withSameName(formMapping), not(withSameId(formMapping)))));
     }
 
-    private Predicate<FormMapping> withInternalType() {
+    private Predicate<FormMapping> withType(final FormMappingType type) {
         return new Predicate<FormMapping>() {
 
             @Override
             public boolean apply(final FormMapping input) {
-                return input.getType() == FormMappingType.INTERNAL;
+                return input.getType() == type;
             }
         };
     }
@@ -130,7 +128,7 @@ public class FormMappingConstraint extends AbstractLiveValidationMarkerConstrain
 
             @Override
             public boolean apply(final FormMapping input) {
-                return formMapping.getTargetForm().getName().equals(input.getTargetForm().getName());
+                return formMapping.getTargetForm().getName() == input.getTargetForm().getName();
             }
         };
     }
@@ -140,7 +138,7 @@ public class FormMappingConstraint extends AbstractLiveValidationMarkerConstrain
 
             @Override
             public boolean apply(final FormMapping input) {
-                return formMapping.getTargetForm().getContent().equals(input.getTargetForm().getContent());
+                return formMapping.getTargetForm().getContent() == input.getTargetForm().getContent();
             }
         };
     }
