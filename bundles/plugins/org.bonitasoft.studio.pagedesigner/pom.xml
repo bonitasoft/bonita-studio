@@ -25,6 +25,11 @@
             <version>${page.designer.version}</version>
             <type>war</type>
         </dependency>
+         <dependency>
+            <groupId>com.bonitasoft.web</groupId>
+            <artifactId>page-designer-model</artifactId>
+            <version>${page.designer.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
