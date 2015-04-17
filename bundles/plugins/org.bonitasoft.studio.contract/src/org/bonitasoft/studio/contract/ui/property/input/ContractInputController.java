@@ -148,4 +148,7 @@ public class ContractInputController implements IViewerController {
         //Not implemented yet
     }
 
+    public void validate(final Contract contract) {
+        contractValidator.validate(contract);
+    }
 }

@@ -55,13 +55,10 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -147,7 +144,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final Composite inputComposite = getWidgetFactory().createComposite(tabFolder);
         inputComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         inputComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 15, 10, 5).create());
-        
+
         createInputTabContent(inputComposite, observeContractValue);
 
         inputTabItem.setControl(inputComposite);
@@ -189,11 +186,12 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
     }
 
     private void createInputTabContent(final Composite parent, final IObservableValue observeContractValue) {
-    	Composite labelComposite = getWidgetFactory().createComposite(parent);
-    	final CLabel warning = getWidgetFactory().createCLabel(labelComposite, "For 7.0 Beta only Text can be used at runtime."); //TODO move for ga
-    	warning.setImage(Display.getCurrent().getSystemImage(SWT.ICON_WARNING));
-    	labelComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-    	labelComposite.setLayoutData(GridDataFactory.fillDefaults().span(2,1).create());
+        //    	Composite labelComposite = getWidgetFactory().createComposite(parent);
+        //    	final CLabel warning = getWidgetFactory().createCLabel(labelComposite, "For 7.0 Beta only Text can be used at runtime."); //TODO move for ga
+        //    	warning.setImage(Display.getCurrent().getSystemImage(SWT.ICON_WARNING));
+        //    	labelComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        //    	labelComposite.setLayoutData(GridDataFactory.fillDefaults().span(2,1).create());
+
         final Composite buttonsComposite = createButtonContainer(parent);
         final Button addButton = createButton(buttonsComposite, Messages.add);
         final Button addChildButton = createButton(buttonsComposite, Messages.addChild);
