@@ -76,8 +76,8 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     protected void addConnector(final FlowElementBuilder builder, final ConnectableElement element) {
         for (Connector connector : element.getConnectors()) {
             if (!eObjectNotExported.contains(connector)) {
-                if (isGroovyConnector(connector)) {
-                    final GroovyConnectorConfigurationConverter groovyConnectorConfigurationConverter = new GroovyConnectorConfigurationConverter();
+                final GroovyConnectorConfigurationConverter groovyConnectorConfigurationConverter = new GroovyConnectorConfigurationConverter();
+                if (groovyConnectorConfigurationConverter.appliesTo(connector)) {
                     connector = groovyConnectorConfigurationConverter.convert(connector);
                 }
                 final ConnectorDefinitionBuilder connectorBuilder = builder.addConnector(connector.getName(), connector.getDefinitionId(),
@@ -87,11 +87,6 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
                 handleConnectorOutputs(connector, connectorBuilder);
             }
         }
-    }
-
-
-    private boolean isGroovyConnector(final Connector connector) {
-        return "scripting-groovy-script".equals(connector.getDefinitionId());
     }
 
     private void handleConnectorBehaviorOnFailure(final Connector connector, final ConnectorDefinitionBuilder connectorBuilder) {
