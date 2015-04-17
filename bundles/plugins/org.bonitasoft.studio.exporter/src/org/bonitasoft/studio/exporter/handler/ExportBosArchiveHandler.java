@@ -73,11 +73,12 @@ public class ExportBosArchiveHandler extends AbstractHandler {
         if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(true)) {
             Set<Object> selectedFiles = new HashSet<Object>();
             final MainProcess diagram = getDiagramInEditor();
+            final List<IRepositoryStore<? extends IRepositoryFileStore>> exportableStores = RepositoryManager.getInstance().getCurrentRepository()
+                    .getAllExportableStores();
             if (diagram != null) {
                 selectedFiles = getAllDiagramRelatedFiles(diagram);
             } else {
-                for (final IRepositoryStore<? extends IRepositoryFileStore> store : RepositoryManager.getInstance().getCurrentRepository()
-                        .getAllExportableStores()) {
+                for (final IRepositoryStore<? extends IRepositoryFileStore> store : exportableStores) {
                     final List<? extends IRepositoryFileStore> files = store.getChildren();
                     if (files != null) {
                         for (final IRepositoryFileStore fStore : files) {
@@ -89,7 +90,7 @@ public class ExportBosArchiveHandler extends AbstractHandler {
                 }
             }
 
-            final ExportRepositoryWizard wizard = new ExportRepositoryWizard(RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores(),
+            final ExportRepositoryWizard wizard = new ExportRepositoryWizard(exportableStores,
                     true, selectedFiles, getDefaultName(), Messages.ExportButtonLabel);
             final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard) {
 

@@ -126,7 +126,7 @@ public class FlowElementSwitch extends AbstractSwitch {
     @Override
     public Element caseSubProcessEvent(final SubProcessEvent subProcessEvent) {
         final SubProcessDefinitionBuilder subProcessBuilder = builder.addSubProcess(subProcessEvent.getName(), true).getSubProcessBuilder();
-        final FlowElementSwitch subProcessSwitch = new FlowElementSwitch(subProcessBuilder, eObjectNotExported);
+        final AbstractSwitch subProcessSwitch = new FlowElementSwitch(subProcessBuilder, eObjectNotExported);
         final List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(subProcessEvent, ProcessPackage.Literals.FLOW_ELEMENT);
         for (final FlowElement flowElement : flowElements) {
             if (!eObjectNotExported.contains(flowElement)) {
@@ -490,6 +490,7 @@ public class FlowElementSwitch extends AbstractSwitch {
         addExpectedDuration(taskBuilder, task);
         addUserFilterToTask(taskBuilder, actor, filter);
         addContract(taskBuilder, task);
+        addContext(taskBuilder, task);
 
         handleCommonActivity(task, taskBuilder);
         return task;

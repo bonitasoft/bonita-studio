@@ -14,8 +14,11 @@
  */
 package org.bonitasoft.studio.pagedesigner.core.repository;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.json.JSONException;
 
 /**
  * @author Romain Bioteau
@@ -26,4 +29,13 @@ public class WebWidgetFileStore extends InFolderJSONFileStore {
         super(folderName, parentStore);
     }
 
+    @Override
+    public boolean canBeExported() {
+        try {
+            return getBooleanAttribute("custom");
+        } catch (JSONException | ReadFileStoreException e) {
+            BonitaStudioLog.error(String.format("Failed to retrieve 'custom' attribute in widget %s", getName()), e);
+        }
+        return super.canBeExported();
+    }
 }

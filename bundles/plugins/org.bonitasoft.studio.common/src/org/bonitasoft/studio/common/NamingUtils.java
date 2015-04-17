@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common;
 
@@ -68,21 +65,21 @@ public class NamingUtils {
 
     public static NamingUtils getInstance(final Element element) {
         final MainProcess process = ModelHelper.getMainProcess(element);
-        if(process != null){
+        if (process != null) {
             return new NamingUtils(process);
         }
         return new NamingUtils();
     }
 
-    public static Expression generateConstantExpression(final String name){
-        return generateConstantExpression( name, false);
+    public static Expression generateConstantExpression(final String name) {
+        return generateConstantExpression(name, false);
     }
 
-    public static Expression generateConstantExpression(final String name, final boolean returnTypeFixed){
+    public static Expression generateConstantExpression(final String name, final boolean returnTypeFixed) {
         return generateConstantExpression(name, String.class.getName(), returnTypeFixed);
     }
 
-    public static Expression generateConstantExpression(final String name, final String typeName, final boolean returnTypeFixed){
+    public static Expression generateConstantExpression(final String name, final String typeName, final boolean returnTypeFixed) {
         final Expression constantExpression = ExpressionHelper.createConstantExpression(name, name, typeName);
         constantExpression.setReturnTypeFixed(returnTypeFixed);
         return constantExpression;
@@ -124,7 +121,7 @@ public class NamingUtils {
             mainContainer = process;
         }
 
-        if(mainContainer != null){
+        if (mainContainer != null) {
             int number = getMaxElements((Element) mainContainer, defaultName);
             number++;
             defaultName += number;
@@ -133,7 +130,6 @@ public class NamingUtils {
 
         return defaultName;
     }
-
 
     /**
      * get the max number of elements prefixed if label
@@ -205,7 +201,7 @@ public class NamingUtils {
         if (label != null) {
             while (i < label.length()) {
                 car = label.charAt(i);
-                car = StringOperation.sansAccent(car) ;
+                car = StringOperation.sansAccent(car);
                 toAppendChar = Character.isJavaIdentifierPart(car) ? car : '_';
 
                 if (i == 0) {
@@ -237,9 +233,9 @@ public class NamingUtils {
 
     }
 
-
     /**
      * Think to use JavaConventions.validateXXX() instead of this one when possible
+     *
      * @param text
      * @param uppercaseFirst
      * @return
@@ -274,10 +270,10 @@ public class NamingUtils {
     public static String getEventDefaultId(final MessageFlow self) {
         if (self.getTarget() != null && self.getTarget().getEvent() != null) {
             final Message event = ModelHelper.findEvent(self.getSource(), self.getTarget().getEvent());
-            if(event != null){
+            if (event != null) {
                 self.setName(event.getName());
                 return event.getName();
-            }else{
+            } else {
                 self.setName("");
                 return "";
             }
@@ -293,75 +289,76 @@ public class NamingUtils {
         return name + "_" + version.replace(".", "_");
     }
 
-
     public static String generateNewName(final Set<String> existingNames, final String defaultName) {
-        int cpt = 1 ;
-        while(existingNames.contains(defaultName+cpt)){
+        int cpt = 1;
+        while (existingNames.contains(defaultName + cpt)) {
             cpt++;
         }
-        return defaultName+cpt;
+        return defaultName + cpt;
     }
 
-
     /**
-     *
      * @param existingNames must ba a list in lowerCase
      * @param defaultName
      * @return
      */
     public static String generateNewNameCaseInsensitive(final Set<String> existingNames, final String defaultName) {
-        int cpt = 1 ;
-        while(existingNames.contains((defaultName+cpt).toLowerCase())){
+        int cpt = 1;
+        while (existingNames.contains((defaultName + cpt).toLowerCase())) {
             cpt++;
         }
-        return defaultName+cpt;
+        return defaultName + cpt;
     }
 
-    public static String toConnectorDefinitionFilename(final String definitionId,final String defVersion, final boolean inculdeExtension) {
-        if(!inculdeExtension){
-            return definitionId+VERSION_SEPARATOR+defVersion;
-        }else{
-            return definitionId+VERSION_SEPARATOR+defVersion+".def";
+    public static String toConnectorDefinitionFilename(final String definitionId, final String defVersion, final boolean inculdeExtension) {
+        if (!inculdeExtension) {
+            return definitionId + VERSION_SEPARATOR + defVersion;
+        } else {
+            return definitionId + VERSION_SEPARATOR + defVersion + ".def";
         }
     }
 
     public static String toConnectorImplementationFilename(final String implementationId, final String implementationVersion, final boolean inculdeExtension) {
-        if(!inculdeExtension){
-            return implementationId+VERSION_SEPARATOR+implementationVersion;
-        }else{
-            return implementationId+VERSION_SEPARATOR+implementationVersion+".impl";
+        if (!inculdeExtension) {
+            return implementationId + VERSION_SEPARATOR + implementationVersion;
+        } else {
+            return implementationId + VERSION_SEPARATOR + implementationVersion + ".impl";
         }
     }
 
     public static boolean isUTF8String(final String inputString) throws UnsupportedEncodingException {
-        final String encoded = URLEncoder.encode(inputString,UTF8)  ;
-        final String decoded = URLDecoder.decode(encoded,UTF8) ;
+        final String encoded = URLEncoder.encode(inputString, UTF8);
+        final String decoded = URLDecoder.decode(encoded, UTF8);
         return inputString.equals(decoded);
     }
 
     public static String toDiagramFilename(final MainProcess diagram) {
-        return toDiagramFilename(diagram.getName(),diagram.getVersion());
+        return toDiagramFilename(diagram.getName(), diagram.getVersion());
     }
 
     public static String toDiagramFilename(final String processName, final String baseVersion) {
-        return NamingUtils.convertToValidURI(processName)+VERSION_SEPARATOR+NamingUtils.convertToValidURI(baseVersion) + ".proc" ;
+        return toDiagramFilenameWithoutFileExtension(processName, baseVersion) + ".proc";
+    }
+
+    public static String toDiagramFilenameWithoutFileExtension(final String name, final String version) {
+        return String.format("%s%s%s", convertToValidURI(name), VERSION_SEPARATOR, convertToValidURI(version));
     }
 
     private static String convertToValidURI(final String input) {
         String result = new String(input);
-        for(final String invalidChar :   URLEncodableInputValidator.reservedChars){
-            if(input.contains(invalidChar)){
+        for (final String invalidChar : URLEncodableInputValidator.reservedChars) {
+            if (input.contains(invalidChar)) {
                 result = result.replace(invalidChar, "_");
             }
         }
         return result;
     }
 
-    public static String getEResourceFileName(final EObject eObject,final boolean includeExtension) {
+    public static String getEResourceFileName(final EObject eObject, final boolean includeExtension) {
         final Resource resource = eObject.eResource();
-        if(resource != null){
+        if (resource != null) {
             URI uri = resource.getURI();
-            if(!includeExtension){
+            if (!includeExtension) {
                 uri = uri.trimFileExtension();
             }
             return URI.decode(uri.lastSegment());
@@ -369,23 +366,21 @@ public class NamingUtils {
         return null;
     }
 
-
     public static String getSimpleName(final String qualifiedName) {
         Assert.isNotNull(qualifiedName);
         String simpleName = qualifiedName;
-        if(simpleName.contains(".")){
+        if (simpleName.contains(".")) {
             final String[] split = simpleName.split("\\.");
-            simpleName = split[split.length-1];
+            simpleName = split[split.length - 1];
         }
         return simpleName;
     }
 
-
     public static String getPackageName(final String qualifiedName) {
         Assert.isNotNull(qualifiedName);
         String packageName = "";
-        if(qualifiedName.contains(".")){
-            packageName = qualifiedName.substring(0,qualifiedName.lastIndexOf("."));
+        if (qualifiedName.contains(".")) {
+            packageName = qualifiedName.substring(0, qualifiedName.lastIndexOf("."));
         }
         return packageName;
     }

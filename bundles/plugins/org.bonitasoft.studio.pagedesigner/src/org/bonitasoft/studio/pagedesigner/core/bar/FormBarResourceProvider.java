@@ -47,8 +47,12 @@ public class FormBarResourceProvider implements BARResourcesProvider {
 
     private static final String CUSTOMPAGE_PREFIX = "custompage_";
 
+    private final CustomPageBarResourceFactory customPageBarResourceFactory;
+
     @Inject
-    private CustomPageBarResourceFactory customPageBarResourceFactory;
+    public FormBarResourceProvider(final CustomPageBarResourceFactory customPageBarResourceFactory) {
+        this.customPageBarResourceFactory = customPageBarResourceFactory;
+    }
 
     @Override
     public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,

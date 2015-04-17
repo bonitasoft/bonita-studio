@@ -3,7 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Page Designer Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.pagedesigner;singleton:=true
 Bundle-Version: 7.0.0.qualifier
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/page-designer-model.jar
 Bundle-Activator: org.bonitasoft.studio.pagedesigner.PageDesignerPlugin
 Bundle-Vendor: Bonitasoft S.A.
 Bundle-Localization: plugin
@@ -45,10 +46,20 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.databinding.beans;bundle-version="1.2.200",
  org.eclipse.core.databinding.property;bundle-version="1.4.200",
  org.bonitasoft.studio.model.edit,
- org.bonitasoft.studio.pics
+ org.bonitasoft.studio.pics,
+ org.eclipse.e4.core.contexts,
+ org.restlet.ext.jackson;bundle-version="2.2.3",
+ com.fasterxml.jackson.core.jackson-annotations;bundle-version="2.4.4",
+ com.fasterxml.jackson.core.jackson-core;bundle-version="2.4.4",
+ com.fasterxml.jackson.core.jackson-databind;bundle-version="2.4.4",
+ com.fasterxml.jackson.dataformat.jackson-dataformat-csv;bundle-version="2.4.4",
+ com.fasterxml.jackson.dataformat.jackson-dataformat-smile;bundle-version="2.4.4",
+ com.fasterxml.jackson.dataformat.jackson-dataformat-xml;bundle-version="2.4.4",
+ com.fasterxml.jackson.dataformat.jackson-dataformat-yaml;bundle-version="2.4.4",
+ com.fasterxml.jackson.module.jackson-module-jaxb-annotations;bundle-version="2.4.4",
+ stax2-api;bundle-version="3.1.4"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.bar.form.model,
- org.bonitasoft.engine.form,
- org.bonitasoft.studio.pagedesigner.core.repository
+ org.bonitasoft.engine.form

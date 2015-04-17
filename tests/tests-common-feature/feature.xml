@@ -85,13 +85,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.groovy.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.importer.jpdl.tests"
          download-size="0"
          install-size="0"

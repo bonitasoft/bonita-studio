@@ -24,4 +24,5 @@ Require-Bundle: assertj-core,
  org.eclipse.core.runtime,
  org.junit;bundle-version="4.11.0",
  org.eclipse.core.resources
-Import-Package: org.bonitasoft.engine.expression
+Import-Package: org.bonitasoft.engine.expression,
+ org.bonitasoft.engine.operation

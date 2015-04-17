@@ -85,8 +85,8 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
     @Override
     public void dispose() {
         super.dispose();
-        if (section != null) {
-            section.dispose();
+        if (form != null) {
+            form.dispose();
         }
     }
 

@@ -36,6 +36,7 @@ import org.apache.xbean.classloader.NonLockingJarFileClassLoader;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectClasspath;
 import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
@@ -104,7 +105,9 @@ public class Repository implements IRepository, IJavaContainer {
 
     private JDTTypeHierarchyManager jdtTypeHierarchyManager;
 
-    private boolean migrationEnabled = false;;
+    private boolean migrationEnabled = false;
+
+    private ExtensionContextInjectionFactory extensionContextInjectionFactory;;
 
     public Repository() {
 
@@ -116,6 +119,7 @@ public class Repository implements IRepository, IJavaContainer {
         project = ResourcesPlugin.getWorkspace().getRoot().getProject(repositoryName);
         jdtTypeHierarchyManager = new JDTTypeHierarchyManager();
         this.migrationEnabled = migrationEnabled;
+        extensionContextInjectionFactory = new ExtensionContextInjectionFactory();
     }
 
     @Override
@@ -131,7 +135,6 @@ public class Repository implements IRepository, IJavaContainer {
                 workspace.run(newProjectWorkspaceOperation(name, workspace), monitor);
             }
             open(monitor);
-            //initRepositoryStores(migrateStoreIfNeeded, monitor);
             new BonitaBPMProjectClasspath(project, this).create(monitor);
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
@@ -302,13 +305,19 @@ public class Repository implements IRepository, IJavaContainer {
         return migrationEnabled;
     }
 
+    @SuppressWarnings("unchecked")
     protected IRepositoryStore<? extends IRepositoryFileStore> createRepositoryStore(
             final IConfigurationElement configuration, final IProgressMonitor monitor) throws CoreException {
-        final IRepositoryStore<? extends IRepositoryFileStore> store = (IRepositoryStore<?>) configuration.createExecutableExtension(CLASS);
-        monitor.subTask(Messages.bind(Messages.creatingStore, store.getDisplayName()));
-        store.createRepositoryStore(this);
-        monitor.worked(1);
-        return store;
+        final IRepositoryStore<? extends IRepositoryFileStore> store;
+        try {
+            store = extensionContextInjectionFactory.make(configuration, CLASS, IRepositoryStore.class);
+            monitor.subTask(Messages.bind(Messages.creatingStore, store.getDisplayName()));
+            store.createRepositoryStore(this);
+            monitor.worked(1);
+            return store;
+        } catch (final ClassNotFoundException e) {
+            throw new CoreException(new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, "Failed to instantiate Repository store", e));
+        }
     }
 
     @Override

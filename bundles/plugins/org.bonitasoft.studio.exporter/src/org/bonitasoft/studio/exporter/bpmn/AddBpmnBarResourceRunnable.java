@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.exporter.bpmn;
 
+import static com.google.common.io.Files.toByteArray;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +24,6 @@ import java.util.List;
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.extension.BarResourcesProviderUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN;
@@ -93,7 +94,7 @@ public class AddBpmnBarResourceRunnable implements RunnableWithResult<List<BarRe
         try {
             destFile = File.createTempFile(process.getName() + "-" + process.getVersion(), ".bpmn");
             new BonitaToBPMN().transform(new BonitaModelExporterImpl(mped), destFile, new NullProgressMonitor());
-            BarResourcesProviderUtil.addFileContents(res, destFile, "process.bpmn");
+            res.add(new BarResource("process.bpmn", toByteArray(destFile)));
         } catch (final IOException e) {
             BonitaStudioLog.error(e);
         } finally {

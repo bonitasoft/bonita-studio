@@ -47,9 +47,13 @@ public class InFolderJSONFileStore extends NamedJSONFileStore {
     @Override
     public JSONObject getContent() throws ReadFileStoreException {
         checkState(getResource().exists());
-        final IFile jsonFile = getResource().getFile(getName() + JSON_EXTENSION);
+        final IFile jsonFile = getJSONIFile();
         checkState(jsonFile.exists());
         return toJSONObject(jsonFile);
+    }
+
+    public IFile getJSONIFile() {
+        return getResource().getFile(getName() + JSON_EXTENSION);
     }
 
 }

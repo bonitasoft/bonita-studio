@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.pagedesigner.core.repository;
 
-import java.util.Set;
-
 import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
@@ -41,11 +39,6 @@ public class WebWidgetRepositoryStore extends AbstractFolderRepositoryStore<WebW
     @Override
     public Image getIcon() {
         return Pics.getImage("custom_widget.png", PageDesignerPlugin.getDefault());
-    }
-
-    @Override
-    public Set<String> getCompatibleExtensions() {
-        return null;
     }
 
     @Override

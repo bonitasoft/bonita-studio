@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -39,19 +37,17 @@ import org.bonitasoft.studio.model.process.builders.BooleanDataTypeBuilder;
 import org.bonitasoft.studio.model.process.builders.DataBuilder;
 import org.bonitasoft.studio.model.process.builders.DoubleDataTypeBuilder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ComparisonExpressionConverterTest {
@@ -62,6 +58,9 @@ public class ComparisonExpressionConverterTest {
     private XtextComparisonExpressionLoader loader;
 
     @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
     private Data variable;
@@ -70,7 +69,6 @@ public class ComparisonExpressionConverterTest {
     private Data validVariable;
     private Expression notUnaryExpression;
     private Expression unaryExpression;
-
 
     /**
      * @throws java.lang.Exception
@@ -101,40 +99,32 @@ public class ComparisonExpressionConverterTest {
 
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public void should_appliesTo_Condition_expression_type() throws Exception {
         assertThat(comparisonExpressionConverter.appliesTo(binaryExpression)).isTrue();
         assertThat(comparisonExpressionConverter.appliesTo(null)).isFalse();
-        assertThat(comparisonExpressionConverter.appliesTo(ExpressionBuilder.anExpression().withExpressionType(ExpressionConstants.CONSTANT_TYPE).build())).isFalse();
+        assertThat(comparisonExpressionConverter.appliesTo(ExpressionBuilder.anExpression().withExpressionType(ExpressionConstants.CONSTANT_TYPE).build()))
+                .isFalse();
     }
 
     @Test
-    public void should_convert_a_studio_expression_into_an_engine_expression_returns_null_if_parsing_return_null() throws Exception {
+    public void should_throw_an_InvalidExpressionException_when_converting_a_studio_expression_into_an_engine_expression_if_parsing_return_null()
+            throws Exception {
         when(loader.loadConditionExpression(binaryExpression.getContent(), null)).thenReturn(null);
-        assertThat(comparisonExpressionConverter.convert(binaryExpression)).isNull();
 
-        when(loader.loadConditionExpression(binaryExpression.getContent(), null)).thenReturn(ConditionModelFactory.eINSTANCE.createOperation_Compare());
-        assertThat(comparisonExpressionConverter.convert(binaryExpression)).isNull();
+        thrown.expect(InvalidExpressionException.class);
 
-        final Operation_Compare compare = ConditionModelFactory.eINSTANCE.createOperation_Compare();
-        compare.setOp(ConditionModelFactory.eINSTANCE.createExpression_Integer());
-        when(loader.loadConditionExpression(binaryExpression.getContent(), null)).thenReturn(compare);
-        assertThat(comparisonExpressionConverter.convert(binaryExpression)).isNull();
-    }
-
-    @Test(expected=InvalidExpressionException.class)
-    public void should_convert_a_studio_expression_into_an_engine_expression_returns_null_if_parsing_fail() throws Exception {
-        when(loader.loadConditionExpression(binaryExpression.getContent(), null)).thenThrow(new ComparisonExpressionLoadException(""));
         comparisonExpressionConverter.convert(binaryExpression);
     }
 
+    @Test
+    public void should_convert_a_studio_expression_into_an_engine_expression_returns_null_if_parsing_fail() throws Exception {
+        when(loader.loadConditionExpression(binaryExpression.getContent(), null)).thenThrow(new ComparisonExpressionLoadException(""));
+
+        thrown.expect(InvalidExpressionException.class);
+
+        comparisonExpressionConverter.convert(binaryExpression);
+    }
 
     @Test
     public void should_convert_a_studio_expression_into_an_engine_expression_for_binary_operation() throws Exception {

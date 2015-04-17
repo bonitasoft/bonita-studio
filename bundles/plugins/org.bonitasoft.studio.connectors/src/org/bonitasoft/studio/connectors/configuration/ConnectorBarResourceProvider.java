@@ -26,7 +26,6 @@ import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
-import org.bonitasoft.studio.common.extension.BarResourcesProviderUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
@@ -44,6 +43,8 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+
+import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
@@ -97,9 +98,10 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
                                         for (final Fragment fragment : connector.getFragments()) {
                                             final String jarName = fragment.getValue();
                                             if (jarName.endsWith(".jar") && fragment.isExported()) {
-                                                final IRepositoryFileStore jarFile = libStore.getChild(jarName);
-                                                if (jarFile != null) {
-                                                    BarResourcesProviderUtil.addFileContents(resources, jarFile.getResource().getLocation().toFile());
+                                                final IRepositoryFileStore jarFileStore = libStore.getChild(jarName);
+                                                if (jarFileStore != null) {
+                                                    final File jarFile = jarFileStore.getResource().getLocation().toFile();
+                                                    resources.add(new BarResource(jarFile.getName(), Files.toByteArray(jarFile)));
                                                 }
                                             }
                                         }

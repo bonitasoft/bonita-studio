@@ -26,6 +26,7 @@ import org.bonitasoft.engine.bpm.process.impl.DocumentListDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.engine.export.switcher.AbstractProcessSwitch;
+import org.bonitasoft.studio.engine.export.switcher.AbstractSwitch;
 import org.bonitasoft.studio.engine.export.switcher.FlowElementSwitch;
 import org.bonitasoft.studio.engine.export.switcher.SequenceFlowSwitch;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -141,7 +142,7 @@ public class DesignProcessDefinitionBuilder {
     protected void processFlowElements(final AbstractProcess process,
             final ProcessDefinitionBuilder processBuilder) {
         final List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.FLOW_ELEMENT);
-        final FlowElementSwitch flowElementSwitch = createFlowElementSwitch(processBuilder);
+        final AbstractSwitch flowElementSwitch = createFlowElementSwitch(processBuilder);
         for (final FlowElement flowElement : flowElements) {
             if (!eObjectNotExported.contains(flowElement) && !ModelHelper.isInEvenementialSubProcessPool(flowElement)) {
                 flowElementSwitch.doSwitch(flowElement);
@@ -155,7 +156,7 @@ public class DesignProcessDefinitionBuilder {
         }
     }
 
-    protected FlowElementSwitch createFlowElementSwitch(
+    protected AbstractSwitch createFlowElementSwitch(
             final ProcessDefinitionBuilder processBuilder) {
         return new FlowElementSwitch(processBuilder, eObjectNotExported);
     }

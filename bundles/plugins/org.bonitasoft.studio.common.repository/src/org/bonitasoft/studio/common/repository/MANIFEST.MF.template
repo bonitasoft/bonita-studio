@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Bonita Plug-in workspace
-Bundle-SymbolicName: org.bonitasoft.studio.myextensions
-Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: BonitaSoft S.A.
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle:  javax.persistence;bundle-version="2.0.3",
- XXX_ENGINE_BUNDLE_XXX

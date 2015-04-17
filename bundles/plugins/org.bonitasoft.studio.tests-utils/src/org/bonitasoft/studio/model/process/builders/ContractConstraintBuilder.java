@@ -16,13 +16,14 @@ package org.bonitasoft.studio.model.process.builders;
 
 import static org.assertj.core.util.Lists.newArrayList;
 
+import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 
 /**
  * @author Romain Bioteau
  */
-public class ContractConstraintBuilder {
+public class ContractConstraintBuilder implements Buildable<ContractConstraint> {
 
     public static ContractConstraintBuilder aContractConstraint() {
         return new ContractConstraintBuilder(ProcessFactory.eINSTANCE.createContractConstraint());
@@ -54,6 +55,7 @@ public class ContractConstraintBuilder {
         return this;
     }
 
+    @Override
     public ContractConstraint build() {
         return contractConstraint;
     }

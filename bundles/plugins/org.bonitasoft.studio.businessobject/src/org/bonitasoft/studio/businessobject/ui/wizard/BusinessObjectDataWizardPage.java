@@ -56,6 +56,7 @@ import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -91,14 +92,18 @@ public class BusinessObjectDataWizardPage extends WizardPage {
 
     private IObservableValue defaultValueContentObservable;
 
+    private final HintImageProvider imageProvider;
+
     protected BusinessObjectDataWizardPage(final DataAware container, final BusinessObjectData businessObjectData,
             final BusinessObjectModelRepositoryStore businessObjectDefinitionStore,
-            final Set<String> existingNames) {
+            final Set<String> existingNames,
+            final HintImageProvider imageProvider) {
         super(BusinessObjectDataWizardPage.class.getName());
         this.container = container;
         businessObjectModelStore = businessObjectDefinitionStore;
         this.existingNames = existingNames;
         this.businessObjectData = businessObjectData;
+        this.imageProvider = imageProvider;
     }
 
     /*
@@ -118,9 +123,9 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         defaultValueContentObservable = EMFObservables.observeValue(businessObjectData.getDefaultValue(),
                 ExpressionPackage.Literals.EXPRESSION__CONTENT);
         ctx.addValidationStatusProvider(defaultValueReturnTypeValidator());
-
-        setControl(mainComposite);
         WizardPageSupport.create(this, ctx);
+        setControl(mainComposite);
+
     }
 
     private MultiValidator defaultValueReturnTypeValidator() {
@@ -155,6 +160,12 @@ public class BusinessObjectDataWizardPage extends WizardPage {
                 ExpressionConstants.CONTRACT_INPUT_TYPE, ExpressionConstants.PARAMETER_TYPE));
         defaultValueExpressionViewer.addEditorFilter(ExpressionConstants.CONTRACT_INPUT_TYPE, ExpressionConstants.PARAMETER_TYPE);
 
+        final ControlDecoration hint = new ControlDecoration(defaultValueExpressionViewer.getTextControl(), SWT.LEFT);//TODO: remove me for 7.0.0 GA
+        hint.setShowOnlyOnFocus(false);
+        hint.setImage(imageProvider.getHintImage());
+        hint.setDescriptionText(
+                "Business data can be initialized with existing Busines Objects using a query\nor by creating a new one using a Groovy Script and the provided dao variable (XXXDAO.newInstance()).");
+
         defaultValueExpressionViewer.setInput(container);
         ctx.bindValue(ViewersObservables.observeSingleSelection(defaultValueExpressionViewer),
                 EMFObservables.observeValue(businessObjectData, ProcessPackage.Literals.DATA__DEFAULT_VALUE));
@@ -162,6 +173,8 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         return defaultValueExpressionViewer;
 
     }
+
+
 
     protected void createIsMultipleControl(final Composite mainComposite, final EMFDataBindingContext ctx) {
         new Label(mainComposite, SWT.NONE);
