@@ -54,10 +54,12 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
     @Inject
     private FormReferenceExpressionValidator formReferenceExpressionValidator;
 
+    private FormMappingRadioGroup formMappingRadioGroup;
+
     @Override
     protected void createContent(final Composite parent) {
         context = new EMFDataBindingContext();
-        final FormMappingRadioGroup formMappingRadioGroup = new FormMappingRadioGroup(parent, getWidgetFactory(), preferenceStore,
+        formMappingRadioGroup = new FormMappingRadioGroup(parent, getWidgetFactory(), preferenceStore,
                 repositoryAccessor, formReferenceExpressionValidator);
         formMappingRadioGroup.doBindControl(context, CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(selectionProvider),
@@ -71,9 +73,13 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
 
     @Override
     public void dispose() {
+        if (formMappingRadioGroup != null) {
+            formMappingRadioGroup.dispose();
+        }
         if (context != null) {
             context.dispose();
         }
+        super.dispose();
     }
 
     @Override

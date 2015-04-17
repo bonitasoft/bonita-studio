@@ -5,5 +5,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="src-test/java"/>
 	<classpathentry kind="src" path="src-test/resources"/>
+	<classpathentry exported="true" kind="lib" path="lib/page-designer-model.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

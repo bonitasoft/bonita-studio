@@ -164,10 +164,21 @@
 <repository location="http://download.eclipse.org/modeling/emf/compare/updates/releases/3.0/R201408191310"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.restlet.feature.group" version="2.2.3.v20141127-1706"/>
-<unit id="org.restlet.ext.jackson.feature.group" version="2.2.3.v20141127-1706"/>
-<unit id="org.restlet.ext.json.feature.group" version="2.2.3.v20141127-1706"/>
-<repository location="http://p2.restlet.org/2.2"/>
+<unit id="org.restlet.ext.html.feature.group" version="2.3.0.v20141217-1730"/>
+<unit id="org.restlet.ext.jackson.feature.group" version="2.3.0.v20141217-1730"/>
+<unit id="org.restlet.ext.jaxb.feature.group" version="2.3.0.v20141217-1730"/>
+<unit id="org.restlet.ext.json.feature.group" version="2.3.0.v20141217-1730"/>
+<unit id="org.restlet.feature.group" version="2.3.0.v20141217-1730"/>
+<unit id="com.fasterxml.jackson.core.jackson-annotations" version="2.4.4"/>
+<unit id="com.fasterxml.jackson.core.jackson-databind" version="2.4.4"/>
+<unit id="com.fasterxml.jackson.core.jackson-core" version="2.4.4"/>
+<unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-csv" version="2.4.4"/>
+<unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-xml" version="2.4.4"/>
+<unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-yaml" version="2.4.4"/>
+<unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-smile" version="2.4.4"/>
+<unit id="com.fasterxml.jackson.module.jackson-module-jaxb-annotations" version="2.4.4"/>
+<unit id="stax2-api" version="3.1.4"/>
+<repository location="http://p2.restlet.org/2.3"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.babel.nls_tools.pdt_ja.feature.group" version="4.4.0.v20141223043836"/>

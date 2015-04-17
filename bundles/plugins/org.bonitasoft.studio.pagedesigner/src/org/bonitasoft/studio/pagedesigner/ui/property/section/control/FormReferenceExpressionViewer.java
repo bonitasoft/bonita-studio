@@ -18,6 +18,10 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.viewer.EditExpressionDialog;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.pagedesigner.core.repository.WebPageFileStore;
+import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
+import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
@@ -27,8 +31,12 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  */
 public class FormReferenceExpressionViewer extends ExpressionViewer {
 
-    public FormReferenceExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
+    private final WebPageRepositoryStore pageStore;
+
+    public FormReferenceExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory,
+            final WebPageRepositoryStore pageStore) {
         super(composite, style, widgetFactory);
+        this.pageStore = pageStore;
     }
 
     @Override
@@ -44,6 +52,36 @@ public class FormReferenceExpressionViewer extends ExpressionViewer {
     @Override
     protected String getDefaultExpressionType(final Expression selectedExpression) {
         return ExpressionConstants.FORM_REFERENCE_TYPE;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer#getNameConverter()
+     */
+    @Override
+    protected Converter getNameConverter() {
+        return new Converter(String.class, String.class) {
+
+            @Override
+            public Object convert(final Object fromObject) {
+                final String content = getSelectedExpression().getContent();
+                final WebPageFileStore webPageFileStore = pageStore.getChild(content);
+                if (webPageFileStore == null) {
+                    updateContent("");
+                    updateName("");
+                    return "";
+                }
+                final String displayName = webPageFileStore.getDisplayName();
+                if (!displayName.equals(fromObject)) {
+                    updateName(displayName);
+                }
+                return displayName;
+            }
+        };
+    }
+
+    protected void updateName(final String newName) {
+        expressionItemProvider.setPropertyValue(getSelectedExpression(), ExpressionPackage.Literals.EXPRESSION__NAME.getName(), newName);
     }
 
 }

@@ -7,14 +7,15 @@
         <artifactId>plugins</artifactId>
         <version>7.0.0-SNAPSHOT</version>
     </parent>
-    
+
     <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
     <artifactId>org.bonitasoft.studio.pagedesigner</artifactId>
     <packaging>eclipse-plugin</packaging>
 
     <properties>
         <webapp.dir>${basedir}/webapp</webapp.dir>
-        <page.designer.version>1.0.0-SNAPSHOT</page.designer.version>
+        <lib.dir>${basedir}/lib</lib.dir>
+        <page.designer.version>1.0.0-beta</page.designer.version>
     </properties>
 
     <dependencies>
@@ -23,6 +24,11 @@
             <artifactId>page-designer-backend</artifactId>
             <version>${page.designer.version}</version>
             <type>war</type>
+        </dependency>
+         <dependency>
+            <groupId>com.bonitasoft.web</groupId>
+            <artifactId>page-designer-model</artifactId>
+            <version>${page.designer.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -65,11 +71,40 @@
                         <configuration>
                             <target>
                                 <delete dir="${webapp.dir}" />
+                                <delete dir="${lib.dir}" />
                             </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Retrieve contract model</id>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.bonitasoft.web</groupId>
+                                    <artifactId>page-designer-model</artifactId>
+                                    <version>${page.designer.version}</version>
+                                    <overWrite>true</overWrite>
+                                </artifactItem>
+                            </artifactItems>
+                            <stripVersion>true</stripVersion>
+                            <stripClassifier>true</stripClassifier>
+                            <outputDirectory>${lib.dir}</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

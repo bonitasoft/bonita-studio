@@ -14,19 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.emf.converter;
+package org.bonitasoft.studio.businessobject.ui.wizard;
 
-import org.eclipse.core.databinding.conversion.Converter;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
+import org.eclipse.swt.graphics.Image;
 
-public class BooleanInverserConverter extends Converter {
+/**
+ * @author aurelien
+ *
+ */
+public class HintImageProvider {
 
-    public BooleanInverserConverter() {
-        super(Boolean.class, Boolean.class);
+    public Image getHintImage() {
+        return Pics.getImage(PicsConstants.hint);
     }
 
-    @Override
-    public Object convert(final Object arg0) {
-        return !((Boolean) arg0);
-    }
 }
-

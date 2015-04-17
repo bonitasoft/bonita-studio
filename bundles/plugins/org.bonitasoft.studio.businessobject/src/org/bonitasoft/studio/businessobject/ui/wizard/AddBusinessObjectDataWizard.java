@@ -90,7 +90,7 @@ public class AddBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
 
     protected BusinessObjectDataWizardPage createAddBusinessObjectDataWizardPage() {
         final BusinessObjectDataWizardPage page = new BusinessObjectDataWizardPage(container, businessObjectData, businessObjectDefinitionStore,
-                computeExistingNames(container));
+                computeExistingNames(container), new HintImageProvider());
         page.setTitle(Messages.bind(Messages.addBusinessObjectDataTitle, ModelHelper.getParentProcess(container).getName()));
         page.setDescription(Messages.addBusinessObjectDataDescription);
         return page;

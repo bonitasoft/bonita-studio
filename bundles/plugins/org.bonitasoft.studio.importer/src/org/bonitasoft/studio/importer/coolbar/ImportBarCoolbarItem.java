@@ -15,29 +15,26 @@
 package org.bonitasoft.studio.importer.coolbar;
 
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.importer.handler.ImportHandler;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 
 /**
  * @author Romain Bioteau
  */
 public class ImportBarCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
-    private Command getCommand() {
-        final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-        return service.getCommand("org.bonitasoft.studio.application.importCommand");
+    private final ImportHandler importHandler;
+
+    public ImportBarCoolbarItem() {
+        importHandler = new ImportHandler();
     }
 
     /*
@@ -65,12 +62,7 @@ public class ImportBarCoolbarItem extends ContributionItem implements IBonitaCon
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                final Command cmd = getCommand();
-                try {
-                    cmd.executeWithChecks(new ExecutionEvent());
-                } catch (final Exception ex) {
-                    BonitaStudioLog.error(ex);
-                }
+                importHandler.execute();
             }
         });
 

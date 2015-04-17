@@ -49,7 +49,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.connectors.model;bundle-version="6.4.0",
  org.eclipse.e4.core.services,
  org.eclipse.e4.core.di;bundle-version="1.4.0",
- com.google.guava;bundle-version="11.0.1"
+ com.google.guava;bundle-version="11.0.1";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar,
@@ -65,13 +65,13 @@ Export-Package: org.bonitasoft.studio.common,
  org.bonitasoft.studio.common.dialog,
  org.bonitasoft.studio.common.editingdomain,
  org.bonitasoft.studio.common.editor,
- org.bonitasoft.studio.common.emf.converter,
  org.bonitasoft.studio.common.emf.tools,
  org.bonitasoft.studio.common.exporter,
  org.bonitasoft.studio.common.extension,
  org.bonitasoft.studio.common.gmfgraph,
  org.bonitasoft.studio.common.jface,
  org.bonitasoft.studio.common.jface.databinding,
+ org.bonitasoft.studio.common.jface.databinding.converter,
  org.bonitasoft.studio.common.jface.databinding.observables,
  org.bonitasoft.studio.common.jface.databinding.validator,
  org.bonitasoft.studio.common.jface.dialog,

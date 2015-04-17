@@ -38,6 +38,8 @@ public class BusinessObjectDataBuilder extends JavaObjectDataBuilder<BusinessObj
 
     @Override
     protected BusinessObjectData newInstance() {
-        return ProcessFactory.eINSTANCE.createBusinessObjectData();
+        final BusinessObjectData data = ProcessFactory.eINSTANCE.createBusinessObjectData();
+        data.setDataType(ProcessFactory.eINSTANCE.createBusinessObjectType());
+        return data;
     }
 }

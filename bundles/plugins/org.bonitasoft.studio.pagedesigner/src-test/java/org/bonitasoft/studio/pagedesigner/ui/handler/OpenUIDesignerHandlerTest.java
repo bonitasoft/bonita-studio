@@ -56,7 +56,7 @@ public class OpenUIDesignerHandlerTest {
         openPageDesignerHandler = spy(new OpenUIDesignerHandler());
         when(preferenceStore.get(BonitaPreferenceConstants.CONSOLE_HOST, BonitaPreferenceConstants.DEFAULT_HOST)).thenReturn("localhost");
         when(preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT, BonitaPreferenceConstants.DEFAULT_PORT)).thenReturn(8080);
-
+        when(preferenceStore.get(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE, "en")).thenReturn("en");
         doReturn(preferenceStore).when(openPageDesignerHandler).getPreferenceStore();
         doReturn(openBrowserOperation).when(openPageDesignerHandler).createOpenBrowserOperation(any(URL.class));
     }

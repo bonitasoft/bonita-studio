@@ -27,7 +27,9 @@ import org.bonitasoft.engine.bpm.process.impl.DataDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.DescriptionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
+import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.EnginePlugin;
@@ -42,6 +44,7 @@ import org.bonitasoft.studio.model.kpi.DatabaseKPIBinding;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Contract;
@@ -49,6 +52,8 @@ import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -240,6 +245,30 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
                     throw new RuntimeException("Failed to export contract definition for " + ((Element) contractContainer).getName(), e);
                 }
             }
+        }
+    }
+
+    protected void addContext(final Object contextBuilder, final Task task) {
+        final Pool pool = ModelHelper.getParentPool(task);
+        addContext(contextBuilder, pool);
+    }
+
+    protected void addContext(final Object contextBuilder, final Pool pool) {
+        for (final Data data : pool.getData()) {
+            if (data instanceof BusinessObjectData) {
+                final String referenceName = data.getName() + "_ref";
+                final org.bonitasoft.engine.expression.Expression referenceExpression = EngineExpressionUtil.createBusinessObjectDataReferenceExpression((BusinessObjectData) data);
+                addContextEntry(contextBuilder, referenceName, referenceExpression);
+            }
+        }
+    }
+
+    protected void addContextEntry(final Object contextBuilder, final String referenceName,
+            final org.bonitasoft.engine.expression.Expression referenceExpression) {
+        if (contextBuilder instanceof UserTaskDefinitionBuilder) {
+            ((UserTaskDefinitionBuilder) contextBuilder).addContextEntry(referenceName, referenceExpression);
+        } else if (contextBuilder instanceof ProcessDefinitionBuilder) {
+            ((ProcessDefinitionBuilder) contextBuilder).addContextEntry(referenceName, referenceExpression);
         }
     }
 
