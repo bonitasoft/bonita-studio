@@ -30,7 +30,7 @@ Require-Bundle: org.eclipse.ui,
  com.google.guava;bundle-version="11.0.1",
  org.junit;resolution:=optional,
  org.mockito;bundle-version="1.9.5";resolution:=optional
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.importer,
  org.bonitasoft.studio.importer.bonita4,
