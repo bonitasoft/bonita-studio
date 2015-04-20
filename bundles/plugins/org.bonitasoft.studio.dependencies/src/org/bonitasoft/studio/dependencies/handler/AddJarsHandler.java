@@ -123,7 +123,7 @@ public class AddJarsHandler extends AbstractHandler {
                                 InputStream is = null;
                                 try {
                                     is = entry.getValue();
-                                    libStore.importInputStream(entry.getKey(), is);
+                                    libStore.createRepositoryFileStore(entry.getKey()).save(is);
                                     is.close();
                                 } catch (final Exception e) {
                                     BonitaStudioLog.error(e);
