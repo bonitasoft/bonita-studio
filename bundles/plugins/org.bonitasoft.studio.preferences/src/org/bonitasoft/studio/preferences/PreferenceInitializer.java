@@ -20,6 +20,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.internal.core.IInternalDebugCoreConstants;
+import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
@@ -97,6 +101,17 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         store.setDefault(ASK_RENAME_ON_FIRST_SAVE, true);
         store.setDefault(ALWAYS_USE_SCRIPTING_MODE, false);
         PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.DISABLE_OPEN_EDITOR_IN_PLACE, true);
+
+        DebugUIPlugin.getDefault().getPreferenceStore()
+                .setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_OUT, false);
+        DebugUIPlugin.getDefault().getPreferenceStore()
+                .setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_ERR, false);
+        DebugPlugin
+                .getDefault()
+                .getPluginPreferences()
+                .setDefault(
+                        IInternalDebugCoreConstants.PREF_ENABLE_STATUS_HANDLERS,
+                        false);
     }
 
 }

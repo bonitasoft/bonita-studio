@@ -43,6 +43,7 @@ public class AbstractProcessSwitch extends AbstractSwitch {
         addKPIBinding(builder, process);
         if (process instanceof Pool) {
             addContract(builder, (Pool) process);
+            addContext(builder, (Pool) process);
         }
         return process;
     }

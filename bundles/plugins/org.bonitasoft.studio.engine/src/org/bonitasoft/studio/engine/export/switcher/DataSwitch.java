@@ -21,6 +21,7 @@ import org.bonitasoft.engine.bpm.process.impl.DataDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
+import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.BusinessObjectType;
@@ -44,12 +45,15 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
 
     private final Data data;
     private final FlowElementBuilder builder;
-    private final Expression expr;
+    private Expression expr;
 
-    public DataSwitch(final Data data, final Expression defaultValue, final FlowElementBuilder flowElementBuilder) {
+    public DataSwitch(final Data data, final FlowElementBuilder flowElementBuilder) {
         builder = flowElementBuilder;
         this.data = data;
-        expr = defaultValue;
+        expr = EngineExpressionUtil.createExpression(data.getDefaultValue());
+        if (expr == null && data.isMultiple()) {
+            expr = EngineExpressionUtil.createEmptyListExpression();
+        }
     }
 
     public Expression getDefaultValueExpression() {
@@ -153,8 +157,7 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
     }
 
     @Override
-    public DataDefinitionBuilder caseBusinessObjectType(
-            final BusinessObjectType object) {
+    public DataDefinitionBuilder caseBusinessObjectType(final BusinessObjectType object) {
         final BusinessObjectData bod = (BusinessObjectData) getData();
         final BusinessDataDefinitionBuilder businessDataBuilder = getProcessBuilder().addBusinessData(bod.getName(),
                 bod.getClassName(), getDefaultValueExpression());

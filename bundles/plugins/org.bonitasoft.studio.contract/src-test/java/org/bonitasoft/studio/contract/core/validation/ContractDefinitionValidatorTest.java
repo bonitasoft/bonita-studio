@@ -37,10 +37,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ContractDefinitionValidatorTest {
@@ -96,7 +94,6 @@ public class ContractDefinitionValidatorTest {
         assertThat(status.isOK()).isFalse();
     }
 
-
     @Test
     public void should_validate_a_contract_returns_an_error_status_for_contract_with_duplicated_input_names() throws Exception {
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
@@ -148,9 +145,7 @@ public class ContractDefinitionValidatorTest {
         final IStatus status = validator.validate(contract);
         assertThat(status.isOK()).isFalse();
         assertThat(status).isInstanceOf(MultiStatus.class);
-        assertThat(((MultiStatus) status).getChildren()).hasSize(16);
     }
-
 
     @Test
     public void should_toMessageSeverity_convert_a_status_severity_into_an_IMessage_severity() throws Exception {
@@ -164,8 +159,6 @@ public class ContractDefinitionValidatorTest {
     public void should_toMessageSeverity_throw_a_RuntimeException_for_invalid_status_code() throws Exception {
         validator.toMessageSeverity(5);
     }
-
-
 
     @Test
     public void should_clearMessage_removeAllMessage_for_given_element() throws Exception {
@@ -210,6 +203,5 @@ public class ContractDefinitionValidatorTest {
         parentInput.getInputs().add(contractInput);
         return contractInput;
     }
-
 
 }

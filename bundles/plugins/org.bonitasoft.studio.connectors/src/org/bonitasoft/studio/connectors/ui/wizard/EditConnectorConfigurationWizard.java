@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -32,21 +30,21 @@ import org.eclipse.jface.wizard.IWizardPage;
 
 /**
  * @author Aurelie Zara
- * 
  */
 public class EditConnectorConfigurationWizard extends ConnectorWizard {
 
     private SelectConnectorConfigurationWizardPage selectConfigurationPage;
 
-    private ConnectorDefRepositoryStore connectorDefStore;
+    private final ConnectorDefRepositoryStore connectorDefStore;
 
-    private ConnectorConfRepositoryStore connectorConfStore;
+    private final ConnectorConfRepositoryStore connectorConfStore;
 
-    public EditConnectorConfigurationWizard(EObject container, EStructuralFeature connectorContainmentFeature, Set<EStructuralFeature> featureToCheckForUniqueID) {
+    public EditConnectorConfigurationWizard(final EObject container, final EStructuralFeature connectorContainmentFeature,
+            final Set<EStructuralFeature> featureToCheckForUniqueID) {
         super(container, connectorContainmentFeature, featureToCheckForUniqueID);
         setEditMode(false);
-        connectorDefStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-        connectorConfStore = (ConnectorConfRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
+        connectorDefStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        connectorConfStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
         setForcePreviousAndNextButtons(true);
     }
 
@@ -62,16 +60,13 @@ public class EditConnectorConfigurationWizard extends ConnectorWizard {
     }
 
     @Override
-    public IWizardPage getNextPage(IWizardPage page) {
+    public IWizardPage getNextPage(final IWizardPage page) {
         if (page.equals(selectConfigurationPage)) {
             final ConnectorConfiguration conf = selectConfigurationPage.getSelectedConfiguration();
             if (conf != null) {
-                ConnectorDefinition definition = connectorDefStore.getDefinition(conf.getDefinitionId(), conf.getVersion());
+                final ConnectorDefinition definition = connectorDefStore.getDefinition(conf.getDefinitionId(), conf.getVersion());
                 connectorWorkingCopy.setDefinitionId(definition.getId());
                 connectorWorkingCopy.setDefinitionVersion(definition.getVersion());
-
-                checkDefinitionDependencies(definition);
-
                 connectorWorkingCopy.setConfiguration(conf);
                 extension = findCustomWizardExtension(definition);
                 recreateConnectorConfigurationPages(definition, false);
@@ -90,14 +85,14 @@ public class EditConnectorConfigurationWizard extends ConnectorWizard {
      * @see org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard#addOuputPage(org.bonitasoft.studio.connector.model.definition.ConnectorDefinition)
      */
     @Override
-    protected void addOuputPage(ConnectorDefinition definition) {
+    protected void addOuputPage(final ConnectorDefinition definition) {
 
     }
 
     @Override
     public boolean performFinish() {
-        ConnectorConfiguration conf = connectorWorkingCopy.getConfiguration();
-        DefinitionConfigurationFileStore fileStore = connectorConfStore.getChild(conf.getName() + "." + ConnectorConfRepositoryStore.CONF_EXT);
+        final ConnectorConfiguration conf = connectorWorkingCopy.getConfiguration();
+        final DefinitionConfigurationFileStore fileStore = connectorConfStore.getChild(conf.getName() + "." + ConnectorConfRepositoryStore.CONF_EXT);
         fileStore.save(conf);
         return true;
 

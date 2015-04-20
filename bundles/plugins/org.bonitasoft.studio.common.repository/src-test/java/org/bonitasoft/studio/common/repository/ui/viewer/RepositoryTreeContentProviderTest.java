@@ -5,16 +5,17 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.repository.ui.viewer;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,12 +65,24 @@ public class RepositoryTreeContentProviderTest {
     }
 
     @Test
-    public void testHasChildren() {
-        Mockito.doReturn(Collections.emptyList()).when(repoStore).getChildren();
-        Assertions.assertThat(new RepositoryTreeContentProvider().hasChildren(repoStore)).isFalse();
+    public void should_have_no_child() {
+        //Given
+        final RepositoryTreeContentProvider repositoryTreeContentProvider = new RepositoryTreeContentProvider();
+        doReturn(true).when(repoStore).isEmpty();
 
-        Mockito.doReturn(Arrays.asList(new IRepositoryFileStore[] { repoFileStore })).when(repoStore).getChildren();
-        Assertions.assertThat(new RepositoryTreeContentProvider().hasChildren(repoStore)).isTrue();
+        //When Then
+        assertThat(repositoryTreeContentProvider.hasChildren(repoStore)).isFalse();
+    }
+
+    @Test
+    public void should_have_children() {
+        //Given
+        final RepositoryTreeContentProvider repositoryTreeContentProvider = new RepositoryTreeContentProvider();
+        doReturn(false).when(repoStore).isEmpty();
+
+        //When Then
+
+        assertThat(repositoryTreeContentProvider.hasChildren(repoStore)).isTrue();
     }
 
     @Test

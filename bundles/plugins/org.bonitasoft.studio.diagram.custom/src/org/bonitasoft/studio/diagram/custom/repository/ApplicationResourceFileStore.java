@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.diagram.custom.repository;
 
@@ -26,7 +24,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -52,16 +49,17 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ApplicationResourceFileStore extends AbstractFileStore implements IRepositoryFileStore {
 
     private final class FileNameFilterWithResults implements FilenameFilter {
-        private List<String> unmatchedFiles = new ArrayList<String>();
 
-        public boolean accept(File dir, String name) {
+        private final List<String> unmatchedFiles = new ArrayList<String>();
+
+        @Override
+        public boolean accept(final File dir, final String name) {
             if (name.startsWith(".")) {
-                if(!name.equals(".svn")){
+                if (!name.equals(".svn")) {
                     unmatchedFiles.add(name);
                 }
                 return false;
@@ -77,7 +75,6 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
             return unmatchedFiles;
         }
     }
-
 
     public enum ResourceType {
         RESOURCE,
@@ -105,53 +102,50 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
     private static final String CONSULTATION_TEMPLATE = "consultation.html";
     private static final String HOST_PAGE = "BonitaApplication.html";
 
-
-    public ApplicationResourceFileStore(String processUUID,IRepositoryStore<?> store){
-        super(processUUID, store) ;
-        if(!getResource().exists()){
+    public ApplicationResourceFileStore(final String processUUID, final IRepositoryStore<?> store) {
+        super(processUUID, store);
+        if (!getResource().exists()) {
             try {
-                getResource().create(true, true, Repository.NULL_PROGRESS_MONITOR) ;
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e) ;
+                getResource().create(true, true, Repository.NULL_PROGRESS_MONITOR);
+            } catch (final CoreException e) {
+                BonitaStudioLog.error(e);
             }
         }
     }
 
-
+    @Override
     public Image getIcon() {
-        return Pics.getImage("resources.gif",Activator.getDefault());
+        return Pics.getImage("resources.gif", Activator.getDefault());
     }
 
-
+    @Override
     public Object getContent() {
         return null;
     }
 
-
-    public void rename(String newName) {
+    @Override
+    public void rename(final String newName) {
 
     }
 
     @Override
     protected void doDelete() {
         try {
-            getResource().delete(true, Repository.NULL_PROGRESS_MONITOR) ;
-        } catch (CoreException e) {
-            BonitaStudioLog.error(e) ;
+            getResource().delete(true, Repository.NULL_PROGRESS_MONITOR);
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e);
         }
     }
 
     @Override
-    protected void doSave(Object content) {
+    protected void doSave(final Object content) {
 
     }
-
 
     @Override
     protected IWorkbenchPart doOpen() {
-        return null ;
+        return null;
     }
-
 
     @Override
     protected void doClose() {
@@ -160,69 +154,61 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
 
     @Override
     public String getDisplayName() {
-        String name = getName() ;
-        DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
-        String processLabel = store.getLabelFor(name);
-        return processLabel != null ? processLabel : super.getDisplayName();
+        return getName();
     }
 
-
     public List<IFile> getHTMLFiles() {
-        FindFilesResourceVisitor visitor = new FindFilesResourceVisitor(".*\\.html");
+        final FindFilesResourceVisitor visitor = new FindFilesResourceVisitor(".*\\.html");
         try {
             getParentStore().getResource().getFolder(HTML_FOLDER).accept(visitor);
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             BonitaStudioLog.error(ex);
         }
         return visitor.getFiles();
     }
 
-
     public String getResourceProjectRelativePath() {
-        return  getName() + "/" + RESOURCE_FOLDER;
+        return getName() + "/" + RESOURCE_FOLDER;
     }
 
-
     public String getProcessTemplateProjectRelativePath() {
-        return  getName() + "/" + HTML_FOLDER + "/" + PROCESS_TEMPLATE;
+        return getName() + "/" + HTML_FOLDER + "/" + PROCESS_TEMPLATE;
     }
 
     /**
      * only for provided template
-     * 
+     *
      * @return
      */
     public String getErrorTemplateProjectRelativePath() {
-        return  getName() + "/" + HTML_FOLDER + "/" + ERROR_TEMPLATE;
+        return getName() + "/" + HTML_FOLDER + "/" + ERROR_TEMPLATE;
     }
 
     /**
-     * 
      * only for provided template
-     * 
+     *
      * @return
      */
     public String getConfirmationTemplateRelativePath() {
-        return  getName() + "/" + HTML_FOLDER + "/" + CONFIRMATION_TEMPLATE;
+        return getName() + "/" + HTML_FOLDER + "/" + CONFIRMATION_TEMPLATE;
     }
 
     /**
-     * 
      * only for provided template
-     * 
+     *
      * @return
      */
     public String getGlobalPageTemplateRelativePath() {
-        return  getName() + "/" + HTML_FOLDER + "/" + GLOBAL_PAGE_TEMPLATE;
+        return getName() + "/" + HTML_FOLDER + "/" + GLOBAL_PAGE_TEMPLATE;
     }
 
     /**
      * only for provided template
-     * 
+     *
      * @return
      */
     public String getGlobalConsultationTemplateRelativePath() {
-        return  getName() + "/" + HTML_FOLDER + "/" + CONSULTATION_TEMPLATE;
+        return getName() + "/" + HTML_FOLDER + "/" + CONSULTATION_TEMPLATE;
     }
 
     public String getHostPageRelativePath() {
@@ -230,137 +216,142 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
     }
 
     /**
-     * 
+     *
      */
-    public String setGlobalPageTemplate(String path) {
-        return addResource(new File(path), ResourceType.GLOBAL_PAGE_TEMPLATE,null, Repository.NULL_PROGRESS_MONITOR);
+    public String setGlobalPageTemplate(final String path) {
+        return addResource(new File(path), ResourceType.GLOBAL_PAGE_TEMPLATE, null, Repository.NULL_PROGRESS_MONITOR);
     }
 
     /**
-     * 
+     *
      */
-    public String setErrorTemplate(String path) {
-        return addResource(new File(path),ResourceType.ERROR_TEMPLATE,null,Repository.NULL_PROGRESS_MONITOR );
+    public String setErrorTemplate(final String path) {
+        return addResource(new File(path), ResourceType.ERROR_TEMPLATE, null, Repository.NULL_PROGRESS_MONITOR);
     }
 
-    public String setProcessTemplate(String path){
-        return addResource(new File(path), ResourceType.PROCESS_TEMPLATE,null, Repository.NULL_PROGRESS_MONITOR);
+    public String setProcessTemplate(final String path) {
+        return addResource(new File(path), ResourceType.PROCESS_TEMPLATE, null, Repository.NULL_PROGRESS_MONITOR);
     }
-    public IFile getProcessTemplate(){
+
+    public IFile getProcessTemplate() {
         return getWebTemplateFolder().getFile(PROCESS_TEMPLATE);
     }
-    public IFile getErrorTemplate(){
+
+    public IFile getErrorTemplate() {
         return getWebTemplateFolder().getFile(ERROR_TEMPLATE);
     }
-    public IFile getGlobalPageTemplate(){
+
+    public IFile getGlobalPageTemplate() {
         return getWebTemplateFolder().getFile(GLOBAL_PAGE_TEMPLATE);
     }
-    public IFile getConfirmationTemplate(){
+
+    public IFile getConfirmationTemplate() {
         return getWebTemplateFolder().getFile(CONFIRMATION_TEMPLATE);
     }
-    public IFile getConsultationTemplate(){
+
+    public IFile getConsultationTemplate() {
         return getWebTemplateFolder().getFile(CONSULTATION_TEMPLATE);
     }
-    public IFile getWelcomePage(){
+
+    public IFile getWelcomePage() {
         return getWebTemplateFolder().getFile(WELCOME);
     }
 
     public String getWelcomePageRelativePath() {
-        return getName() +  "/" + HTML_FOLDER + "/" + WELCOME;
+        return getName() + "/" + HTML_FOLDER + "/" + WELCOME;
     }
 
-
-    public IFile getLoginPage(){
+    public IFile getLoginPage() {
         return getWebTemplateFolder().getFile(LOGIN_PAGE);
     }
 
     public String getLoginPageRelativePath() {
-        return  getName() +  "/" + HTML_FOLDER + "/" + LOGIN_PAGE;
+        return getName() + "/" + HTML_FOLDER + "/" + LOGIN_PAGE;
     }
 
     public IFile getHostPage() {
         return getResourcesApplicationFolder().getFolder("application").getFile(HOST_PAGE);
     }
 
-    public String setWelcomePage(String path){
-        return addResource(new File(path), ResourceType.WELCOME,null, Repository.NULL_PROGRESS_MONITOR);
+    public String setWelcomePage(final String path) {
+        return addResource(new File(path), ResourceType.WELCOME, null, Repository.NULL_PROGRESS_MONITOR);
     }
 
-    public String setLoginPage(String path){
-        return addResource(new File(path), ResourceType.LOGIN_PAGE,null, Repository.NULL_PROGRESS_MONITOR);
+    public String setLoginPage(final String path) {
+        return addResource(new File(path), ResourceType.LOGIN_PAGE, null, Repository.NULL_PROGRESS_MONITOR);
     }
 
-    public String setConfirmationTemplate(String path){
+    public String setConfirmationTemplate(final String path) {
         return setConfirmationTemplate(path, null);
     }
 
-    public String setConfirmationTemplate(String path, EObject element){
-        return addResource(new File(path), ResourceType.CONFIRMATION_TEMPLATE,element, Repository.NULL_PROGRESS_MONITOR);
+    public String setConfirmationTemplate(final String path, final EObject element) {
+        return addResource(new File(path), ResourceType.CONFIRMATION_TEMPLATE, element, Repository.NULL_PROGRESS_MONITOR);
     }
 
-    public String setPageTemplate(String path,Element element){
-        return addResource(new File(path), ResourceType.PAGE_TEMPLATE,element, Repository.NULL_PROGRESS_MONITOR);
+    public String setPageTemplate(final String path, final Element element) {
+        return addResource(new File(path), ResourceType.PAGE_TEMPLATE, element, Repository.NULL_PROGRESS_MONITOR);
     }
 
     public IFolder getWebTemplateFolder() {
-        IFolder folder = getResource().getFolder(HTML_FOLDER);
+        final IFolder folder = getResource().getFolder(HTML_FOLDER);
         if (!folder.exists()) {
             try {
                 folder.create(true, true, Repository.NULL_PROGRESS_MONITOR);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }
         return folder;
     }
 
+    @Override
     public IFolder getResource() {
         return getParentStore().getResource().getFolder(getName());
     }
 
-
-    public String setGlobalConsultationPage(String path) {
-        return addResource(new File(path), ResourceType.GLOBAL_CONSULTATION_TEMPLATE,null, Repository.NULL_PROGRESS_MONITOR);
+    public String setGlobalConsultationPage(final String path) {
+        return addResource(new File(path), ResourceType.GLOBAL_CONSULTATION_TEMPLATE, null, Repository.NULL_PROGRESS_MONITOR);
     }
 
-    public String setHostPage(String path) {
-        return addResource(new File(path), ResourceType.HOST_PAGE,null,Repository.NULL_PROGRESS_MONITOR);
+    public String setHostPage(final String path) {
+        return addResource(new File(path), ResourceType.HOST_PAGE, null, Repository.NULL_PROGRESS_MONITOR);
     }
 
-    public String setPreviewFile(File file){
-        File destFile = getResource().getFile(PREVIEW_JPG).getLocation().toFile();
+    public String setPreviewFile(final File file) {
+        final File destFile = getResource().getFile(PREVIEW_JPG).getLocation().toFile();
         PlatformUtil.copyResource(destFile.getParentFile(), file, Repository.NULL_PROGRESS_MONITOR);
-        new File(destFile.getParent()+File.separator+file.getName()).renameTo(destFile);
+        new File(destFile.getParent() + File.separator + file.getName()).renameTo(destFile);
 
         return destFile.getAbsolutePath();
     }
 
-    public String addResource(File file, IProgressMonitor monitor) {
-        return addResource(file, ResourceType.RESOURCE,null, monitor);
+    public String addResource(final File file, final IProgressMonitor monitor) {
+        return addResource(file, ResourceType.RESOURCE, null, monitor);
     }
 
-    public String createResourceFolder(String name){
+    public String createResourceFolder(final String name) {
         File destFile = null;
         destFile = getResourcesApplicationFolder().getFile(name).getLocation().toFile();
         destFile.mkdirs();
         try {
             getResource().refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
 
-        String templatePath = getParentStore().getResource().getLocation().toOSString();
+        final String templatePath = getParentStore().getResource().getLocation().toOSString();
         if (destFile.getAbsolutePath().startsWith(templatePath)) {
-            String substring = destFile.getAbsolutePath().substring(templatePath.length() + 1);
+            final String substring = destFile.getAbsolutePath().substring(templatePath.length() + 1);
             return Path.fromOSString(substring).toString();
         } else {
             return destFile.getAbsolutePath();
         }
     }
 
-    protected String addResource(final File file, ResourceType type, Object element, IProgressMonitor monitor) {
+    protected String addResource(final File file, final ResourceType type, final Object element, final IProgressMonitor monitor) {
         if (file.getName().startsWith(".")) {
-            List<String> files = new ArrayList<String>();
+            final List<String> files = new ArrayList<String>();
             files.add(file.getName());
             notifyInvalidFiles(files);
             return null;
@@ -369,12 +360,12 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
             File destFile = null;
             switch (type) {
                 case RESOURCE:
-                    if(element instanceof ResourceFolder){
-                        File file2 = WebTemplatesUtil.getFile(((AssociatedFile) element).getPath());
-                        destFile = new File(file2,file.getName());
-                    }else if(element instanceof File){
-                        destFile = new File((File) element,file.getName());
-                    }else{
+                    if (element instanceof ResourceFolder) {
+                        final File file2 = WebTemplatesUtil.getFile(((AssociatedFile) element).getPath());
+                        destFile = new File(file2, file.getName());
+                    } else if (element instanceof File) {
+                        destFile = new File((File) element, file.getName());
+                    } else {
                         destFile = getResourcesApplicationFolder().getFile(file.getName()).getLocation().toFile();
                     }
                     break;
@@ -394,13 +385,13 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
                     destFile = getResourcesApplicationFolder().getFolder("application").getFile(HOST_PAGE).getLocation().toFile();
                     break;
                 case PAGE_TEMPLATE:
-                    destFile = getWebTemplateFolder().getFile(ModelHelper.getEObjectID((EObject) element)+File_EXTENSION).getLocation().toFile();
+                    destFile = getWebTemplateFolder().getFile(ModelHelper.getEObjectID((EObject) element) + File_EXTENSION).getLocation().toFile();
                     break;
                 case CONFIRMATION_TEMPLATE:
-                    if(element == null){
+                    if (element == null) {
                         destFile = getWebTemplateFolder().getFile(CONFIRMATION_TEMPLATE).getLocation().toFile();
-                    }else{
-                        destFile = getWebTemplateFolder().getFile(ModelHelper.getEObjectID((EObject) element)+CONFIRMATION_TEMPLATE).getLocation().toFile();
+                    } else {
+                        destFile = getWebTemplateFolder().getFile(ModelHelper.getEObjectID((EObject) element) + CONFIRMATION_TEMPLATE).getLocation().toFile();
                     }
                     break;
                 case WELCOME:
@@ -420,13 +411,13 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
             }
             try {
                 getResource().refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
 
-            String templatePath = getParentStore().getResource().getLocation().toFile().getAbsolutePath();
+            final String templatePath = getParentStore().getResource().getLocation().toFile().getAbsolutePath();
             if (destFile.getAbsolutePath().startsWith(templatePath)) {
-                String substring = destFile.getAbsolutePath().substring(templatePath.length() + 1);
+                final String substring = destFile.getAbsolutePath().substring(templatePath.length() + 1);
                 return Path.fromOSString(substring).toString();
             } else {
                 return destFile.getAbsolutePath();
@@ -436,11 +427,11 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
     }
 
     public IFolder getResourcesApplicationFolder() {
-        IFolder folder = getResource().getFolder(RESOURCE_FOLDER);
+        final IFolder folder = getResource().getFolder(RESOURCE_FOLDER);
         if (!folder.exists()) {
             try {
                 folder.create(true, true, Repository.NULL_PROGRESS_MONITOR);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }
@@ -449,19 +440,21 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
 
     private void notifyInvalidFiles(final List<String> files) {
         BonitaStudioLog.log(".svn POP-UP !!!");
-        StringBuilder sb = new StringBuilder();
-        for (StackTraceElement item : Thread.currentThread().getStackTrace()) {
+        final StringBuilder sb = new StringBuilder();
+        for (final StackTraceElement item : Thread.currentThread().getStackTrace()) {
             sb.append(item.toString());
             sb.append("\n");
         }
         BonitaStudioLog.log(sb.toString());
 
         Display.getDefault().asyncExec(new Runnable() {
+
+            @Override
             public void run() {
-                Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-                StringBuilder builder = new StringBuilder(Messages.invalidResourceFileName_message);
+                final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+                final StringBuilder builder = new StringBuilder(Messages.invalidResourceFileName_message);
                 builder.append("\n");
-                for (String name : files) {
+                for (final String name : files) {
                     builder.append("* ");
                     builder.append(name);
                     builder.append("\n");
@@ -471,21 +464,20 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
         });
     }
 
-    public void removeResource(String resourceName) {
-        String path = getParentStore().getResource().getLocation().toOSString() + File.separator + resourceName;
-        File file = new File(path);
-        if(file.exists()){
-            if(file.isDirectory()){
+    public void removeResource(final String resourceName) {
+        final String path = getParentStore().getResource().getLocation().toOSString() + File.separator + resourceName;
+        final File file = new File(path);
+        if (file.exists()) {
+            if (file.isDirectory()) {
                 FileUtil.deleteDir(file);
-            }else{
-                PlatformUtil.delete(file, Repository.NULL_PROGRESS_MONITOR) ;
+            } else {
+                PlatformUtil.delete(file, Repository.NULL_PROGRESS_MONITOR);
             }
         }
 
-
         try {
             getResource().refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
     }
@@ -493,17 +485,17 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
     /**
      * @param temp
      */
-    public void removeResource(IResource temp) {
+    public void removeResource(final IResource temp) {
         try {
             temp.delete(true, Repository.NULL_PROGRESS_MONITOR);
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
     }
 
     public void clear() {
-        try{
-            for (IResource toDelete : getResourcesApplicationFolder().members()) {
+        try {
+            for (final IResource toDelete : getResourcesApplicationFolder().members()) {
                 toDelete.delete(true, Repository.NULL_PROGRESS_MONITOR);
             }
             deleteIfExists(getConfirmationTemplate());
@@ -514,28 +506,37 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
             deleteIfExists(getLoginPage());
             deleteIfExists(getProcessTemplate());
             deleteIfExists(getWelcomePage());
-        }catch(Exception e){
-            BonitaStudioLog.error(e) ;
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
         }
     }
 
-    private void deleteIfExists(IFile file) throws CoreException {
-        if(file.exists()){
+    private void deleteIfExists(final IFile file) throws CoreException {
+        if (file.exists()) {
             file.delete(true, Repository.NULL_PROGRESS_MONITOR);
         }
     }
 
-    public String setApplicationResource(ResourceType resource, String path) {
+    public String setApplicationResource(final ResourceType resource, final String path) {
         switch (resource) {
-            case CONFIRMATION_TEMPLATE: return setConfirmationTemplate(path);
-            case GLOBAL_CONSULTATION_TEMPLATE: return setGlobalConsultationPage(path);
-            case ERROR_TEMPLATE: return setErrorTemplate(path);
-            case GLOBAL_PAGE_TEMPLATE: return setGlobalPageTemplate(path);
-            case HOST_PAGE: return setHostPage(path);
-            case LOGIN_PAGE: return setLoginPage(path);
-            case PROCESS_TEMPLATE: return setProcessTemplate(path);
-            case WELCOME: return setWelcomePage(path);
-            default:return null;
+            case CONFIRMATION_TEMPLATE:
+                return setConfirmationTemplate(path);
+            case GLOBAL_CONSULTATION_TEMPLATE:
+                return setGlobalConsultationPage(path);
+            case ERROR_TEMPLATE:
+                return setErrorTemplate(path);
+            case GLOBAL_PAGE_TEMPLATE:
+                return setGlobalPageTemplate(path);
+            case HOST_PAGE:
+                return setHostPage(path);
+            case LOGIN_PAGE:
+                return setLoginPage(path);
+            case PROCESS_TEMPLATE:
+                return setProcessTemplate(path);
+            case WELCOME:
+                return setWelcomePage(path);
+            default:
+                return null;
         }
     }
 

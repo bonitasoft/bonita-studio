@@ -123,7 +123,7 @@
                label="%tab.catchMessageCorrelation">
          </propertyTab>
          <propertyTab
-               afterTab="tab.connectors"
+               afterTab="tab.form.mapping.overview"
                category="domain"
                id="tab.operations"
                label="%tab.operations.label">
@@ -141,7 +141,7 @@
                label="%tab.transitionordering.label">
          </propertyTab>
          <propertyTab
-               afterTab="tab.transitionordering"
+               afterTab="tab.data"
                category="domain"
                id="tab.document"
                label="%tab.document.label">
@@ -279,7 +279,7 @@
                       filter="org.bonitasoft.studio.properties.filters.OperationContainerFilter"
                       id="OperationsSection"
                       tab="tab.operations"
-                      viewID="org.bonitasoft.studio.views.properties.process.general">
+                      viewID="org.bonitasoft.studio.views.properties.process.execution">
                 </propertySection>
                 <propertySection
                       class="org.bonitasoft.studio.properties.sections.transitionordering.TransitionOrderingPropertySection"

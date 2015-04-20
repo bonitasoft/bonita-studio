@@ -17,9 +17,9 @@
 package org.bonitasoft.studio.actors.ui.section;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
-import org.bonitasoft.studio.common.emf.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
+import org.bonitasoft.studio.common.jface.databinding.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.Assignable;
 import org.bonitasoft.studio.model.process.Lane;

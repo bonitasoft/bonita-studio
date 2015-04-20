@@ -71,7 +71,7 @@ public class AttachmentDataImportTest   extends TestCase {
         assertTrue("document should be setted as internal", document.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL));
         assertNotNull("default value should have been setted",document.getDefaultValueIdOfDocumentStore());
         final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
-        assertTrue("a document file should have been imported", !store.getChildren().isEmpty());
+        assertTrue("a document file should have been imported", !store.isEmpty());
         final DocumentFileStore fileStore = store.getChildren().get(0);
         assertNotNull("no document name has been set", fileStore.getName());
     }

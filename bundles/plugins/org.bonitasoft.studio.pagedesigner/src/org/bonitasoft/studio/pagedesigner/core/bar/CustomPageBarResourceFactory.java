@@ -37,8 +37,12 @@ public class CustomPageBarResourceFactory {
 
     private static final String BAR_CUSTOMPAGES_LOCATION = "customPages";
 
+    private final PageDesignerURLFactory pageDesignerURLFactory;
+
     @Inject
-    private PageDesignerURLFactory pageDesignerURLFactory;
+    public CustomPageBarResourceFactory(final PageDesignerURLFactory pageDesignerURLFactory) {
+        this.pageDesignerURLFactory = pageDesignerURLFactory;
+    }
 
     public BarResource newBarResource(final String targetFormCustomPageId, final String formPageTechnicalUUID) throws BarResourceCreationException {
         try {
@@ -50,16 +54,11 @@ public class CustomPageBarResourceFactory {
     }
 
     private byte[] export(final String formPageTechnicalUUID) throws IOException, MalformedURLException {
-        final InputStream is = get(pageDesignerURLFactory.exportPage(formPageTechnicalUUID).toString());
-        if (is == null) {
-            throw new IOException(String.format("Failed to export custom page for form %s", formPageTechnicalUUID));
-        }
-        try {
-            return toByteArray(is);
-        } finally {
-            if (is != null) {
-                is.close();
+        try (final InputStream is = get(pageDesignerURLFactory.exportPage(formPageTechnicalUUID).toString());) {
+            if (is == null) {
+                throw new IOException(String.format("Failed to export custom page for form %s", formPageTechnicalUUID));
             }
+            return toByteArray(is);
         }
     }
 

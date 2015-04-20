@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.expression.editor.autocompletion;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.fieldassist.IContentProposal;
@@ -34,7 +35,7 @@ public class ExpressionProposal implements IContentProposal {
         this.expression = expression;
         content = labelProvider.getContent(expression);
         description = labelProvider.getDescription(expression);
-        label = (description == null || description.isEmpty()) ?
+        label = description == null || description.isEmpty() ?
                 labelProvider.getText(expression)
                 : String.format("%s -- %s", labelProvider.getText(expression), description);
     }
@@ -45,6 +46,9 @@ public class ExpressionProposal implements IContentProposal {
      */
     @Override
     public String getContent() {
+        if (expression.getType() == ExpressionConstants.FORM_REFERENCE_TYPE) {
+            return expression.getName();
+        }
         return content;
     }
 
@@ -77,6 +81,15 @@ public class ExpressionProposal implements IContentProposal {
 
     public Object getExpression() {
         return expression;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return content;
     }
 
 }

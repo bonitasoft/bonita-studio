@@ -158,7 +158,7 @@ public class CMISConnectorDefinitionConstraintTest {
         return aConnector().
                 withDefinitionId("cmis-createfolder").
                 withDefinitionVersion("1.0").
-                havingConfiguration(ConnectorConfigurationBuilder.create().
+                havingConfiguration(ConnectorConfigurationBuilder.aConnectorConfiguration().
                         havingParameters(aConnectorParameter("url", "http://some/url"))).build();
     }
 
@@ -166,7 +166,7 @@ public class CMISConnectorDefinitionConstraintTest {
         return aConnector().
                 withDefinitionId("cmis-createfolder").
                 withDefinitionVersion("1.0").
-                havingConfiguration(ConnectorConfigurationBuilder.create().
+                havingConfiguration(ConnectorConfigurationBuilder.aConnectorConfiguration().
                         havingParameters(aConnectorParameter("binding_type", "anotherType"),
                                 aConnectorParameter("url", "http://some/url"))).build();
     }
@@ -183,7 +183,7 @@ public class CMISConnectorDefinitionConstraintTest {
         return aConnector().
                 withDefinitionId("cmis-createfolder").
                 withDefinitionVersion("1.0").
-                havingConfiguration(ConnectorConfigurationBuilder.create().
+                havingConfiguration(ConnectorConfigurationBuilder.aConnectorConfiguration().
                         havingParameters(aConnectorParameter("binding_type", bindingContent),
                                 aConnectorParameter("url", urlContent))).build();
     }
@@ -192,7 +192,7 @@ public class CMISConnectorDefinitionConstraintTest {
         return aConnector().
                 withDefinitionId("cmis-createfolder").
                 withDefinitionVersion("1.0").
-                havingConfiguration(ConnectorConfigurationBuilder.create().
+                havingConfiguration(ConnectorConfigurationBuilder.aConnectorConfiguration().
                         havingParameters(aConnectorParameter("binding_type", bindingContent))).build();
     }
 
@@ -200,7 +200,7 @@ public class CMISConnectorDefinitionConstraintTest {
         return aConnector().
                 withDefinitionId("cmis-createfolder").
                 withDefinitionVersion("1.0").
-                havingConfiguration(ConnectorConfigurationBuilder.create().
+                havingConfiguration(ConnectorConfigurationBuilder.aConnectorConfiguration().
                         havingParameters(aConnectorParameter("binding_type", bindingContent),
                                 aConnectorParameter("wsServiceUrl", wsServiceUrl),
                                 aConnectorParameter("wsServiceEndpointUrl", wsServiceEndpointURL))).build();

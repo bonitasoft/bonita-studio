@@ -5,24 +5,23 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.model.process.builders;
 
+import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorConfigurationBuilder;
+import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ConnectorBuilder extends ElementBuilder<Connector, ConnectorBuilder> {
 
@@ -47,6 +46,13 @@ public class ConnectorBuilder extends ElementBuilder<Connector, ConnectorBuilder
 
     public ConnectorBuilder havingConfiguration(final ConnectorConfigurationBuilder connectorConfiguration) {
         getBuiltInstance().setConfiguration(connectorConfiguration.build());
+        return getThis();
+    }
+
+    public ConnectorBuilder havingOutput(final Buildable<Operation>... outputOperation) {
+        for (final Buildable<Operation> output : outputOperation) {
+            getBuiltInstance().getOutputs().add(output.build());
+        }
         return getThis();
     }
 

@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +58,8 @@ import org.bonitasoft.studio.expression.editor.widget.ContentAssistText;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.expression.provider.ExpressionItemProvider;
+import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory;
 import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
@@ -175,6 +179,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     private IExpressionProposalLabelProvider expressionProposalLableProvider;
     private ContentAssistText contentAssistText;
     private ISelection selection;
+    private final ExpressionEditorService expressionEditorService;
+    private final Set<String> filteredEditor = new HashSet<String>();
+    protected final ExpressionItemProvider expressionItemProvider = new ExpressionItemProvider(new ExpressionItemProviderAdapterFactory());
 
     public ExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
         this(composite, style, widgetFactory, null);
@@ -234,6 +241,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     public ExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory,
             final EditingDomain editingDomain, final EReference expressionReference, final boolean withConnector) {
         Assert.isNotNull(composite, "composite");
+        expressionEditorService = ExpressionEditorService.getInstance();
         filters = new HashSet<ViewerFilter>();
         this.withConnector = withConnector;
         createControl(composite, style, widgetFactory);
@@ -525,8 +533,10 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     protected EditExpressionDialog createEditDialog(final EObject editInput) {
-        return new EditExpressionDialog(control.getShell(), isPassword, EcoreUtil.copy(getSelectedExpression()), editInput,
+        final EditExpressionDialog dialog = new EditExpressionDialog(control.getShell(), isPassword, EcoreUtil.copy(getSelectedExpression()), editInput,
                 getEditingDomain(), filters.toArray(new ViewerFilter[filters.size()]), this);
+        dialog.setEditorFilters(filteredEditor);
+        return dialog;
     }
 
     protected void fireExpressionEditorChanged(final SelectionChangedEvent selectionChangedEvent) {
@@ -644,8 +654,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
         exp.setName("");
-        if (filters != null && expressionNatureProvider != null && context != null) {
-            final Set<IExpressionProvider> expressionProviders = ExpressionEditorService.getInstance().getExpressionProviders();
+        if (filters != null && expressionNatureProvider != null && context != null && expressionEditorService != null) {
+            final Set<IExpressionProvider> expressionProviders = expressionEditorService.getExpressionProviders();
             for (final IExpressionProvider provider : expressionProviders) {
                 for (final ViewerFilter viewerFilter : fitlers) {
                     exp.setType(provider.getExpressionType());
@@ -736,7 +746,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         final ISWTObservableValue observeDelayedValue = SWTObservables.observeDelayedValue(500,
                 SWTObservables.observeText(textControl, SWT.Modify));
         expressionBinding = internalDataBindingContext.bindValue(observeDelayedValue, nameObservable,
-                targetToModelNameStrategy, null);
+                targetToModelNameStrategy, updateValueStrategy().create());
         bindEditableText(typeObservable);
         if (externalDataBindingContext != null) {
             externalDataBindingContext.addBinding(expressionBinding);
@@ -837,42 +847,16 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     protected void updateContent(final String newContent) {
         final Expression selectedExpression = getSelectedExpression();
         if (newContent != null && !newContent.equals(selectedExpression.getContent())) {
-            final EditingDomain editingDomain = getEditingDomain();
-            if (editingDomain != null) {
-                editingDomain.getCommandStack().execute(
-                        SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT,
-                                newContent));
-            } else {
-                selectedExpression.setContent(newContent);
-            }
+            expressionItemProvider.setPropertyValue(selectedExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT.getName(), newContent);
         }
     }
 
     protected void updateContentType(final String newContentType) {
         final Expression selectedExpression = getSelectedExpression();
         if (!newContentType.equals(selectedExpression.getType())) {
-            final EditingDomain editingDomain = getEditingDomain();
-            if (editingDomain != null) {
-                editingDomain.getCommandStack().execute(
-                        SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE,
-                                newContentType));
-            } else {
-                selectedExpression.setType(newContentType);
-            }
-            updateInterpreter(newContentType);
-        }
-    }
-
-    private void updateInterpreter(final String newContentType) {
-        final Expression selectedExpression = getSelectedExpression();
-        if (!ExpressionConstants.SCRIPT_TYPE.equals(newContentType)) {
-            final EditingDomain editingDomain = getEditingDomain();
-            if (editingDomain != null) {
-                editingDomain.getCommandStack().execute(
-                        SetCommand.create(editingDomain, selectedExpression,
-                                ExpressionPackage.Literals.EXPRESSION__INTERPRETER, null));
-            } else {
-                selectedExpression.setInterpreter(null);
+            expressionItemProvider.setPropertyValue(getSelectedExpression(), ExpressionPackage.Literals.EXPRESSION__TYPE.getName(), newContentType);
+            if (!ExpressionConstants.SCRIPT_TYPE.equals(newContentType)) {
+                expressionItemProvider.setPropertyValue(getSelectedExpression(), ExpressionPackage.Literals.EXPRESSION__INTERPRETER.getName(), null);
             }
         }
     }
@@ -884,7 +868,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                 || ExpressionConstants.PATTERN_TYPE.equals(selectedExpressionType)
                 || ExpressionConstants.XPATH_TYPE.equals(selectedExpressionType)
                 || ExpressionConstants.JAVA_TYPE.equals(selectedExpressionType)
-                || ExpressionConstants.QUERY_TYPE.equals(selectedExpressionType)) {
+                || ExpressionConstants.QUERY_TYPE.equals(selectedExpressionType)
+                || ExpressionConstants.FORM_REFERENCE_TYPE.equals(selectedExpressionType)) {
             return selectedExpression.getContent(); // NO CONTENT UPDATE WHEN
             // THOSES TYPES
         }
@@ -1383,4 +1368,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         return getInput() != null && input instanceof EObject && getInput().equals(context);
     }
 
+    public void addEditorFilter(final String... expressionTypes) {
+        for (final String type : expressionTypes) {
+            filteredEditor.add(type);
+        }
+    }
 }

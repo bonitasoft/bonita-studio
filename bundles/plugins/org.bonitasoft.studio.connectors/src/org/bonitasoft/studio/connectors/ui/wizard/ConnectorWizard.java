@@ -5,19 +5,15 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connectors.ui.wizard;
 
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,7 +27,6 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.ExtensibleWizard;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -67,7 +62,6 @@ import org.bonitasoft.studio.connectors.ui.wizard.page.DatabaseConnectorOutputWi
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectAdvancedConnectorDefinitionWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectDatabaseOutputTypeWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectEventConnectorNameAndDescWizardPage;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
@@ -90,7 +84,6 @@ import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -102,13 +95,11 @@ import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefinitionContainer, IBonitaVariableContext {
 
@@ -156,7 +147,8 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
     protected List<ConnectorDefinition> definitions;
 
-    public ConnectorWizard(final EObject container, final EStructuralFeature connectorContainmentFeature, final Set<EStructuralFeature> featureToCheckForUniqueID) {
+    public ConnectorWizard(final EObject container, final EStructuralFeature connectorContainmentFeature,
+            final Set<EStructuralFeature> featureToCheckForUniqueID) {
         this.container = container;
         connectorWorkingCopy = ProcessFactory.eINSTANCE.createConnector();
         final ConnectorConfiguration configuration = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
@@ -171,7 +163,8 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
     }
 
-    public ConnectorWizard(final Connector connector, final EStructuralFeature connectorContainmentFeature, final Set<EStructuralFeature> featureToCheckForUniqueID) {
+    public ConnectorWizard(final Connector connector, final EStructuralFeature connectorContainmentFeature,
+            final Set<EStructuralFeature> featureToCheckForUniqueID) {
         Assert.isNotNull(connector);
         container = connector.eContainer();
         originalConnector = connector;
@@ -226,8 +219,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
             }
 
             @SuppressWarnings("unchecked")
-            final
-            List<EObject> connectors = (List<EObject>) containerCopy.eGet(connectorContainmentFeature);
+            final List<EObject> connectors = (List<EObject>) containerCopy.eGet(connectorContainmentFeature);
             connectors.clear();
             connectors.add(connectorWorkingCopy);
         }
@@ -246,7 +238,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
             addPage(selectionPage);
         }
         final IWizardPage nameAndDescriptionPage = getNameAndDescriptionPage();
-        if(nameAndDescriptionPage != null){
+        if (nameAndDescriptionPage != null) {
             addPage(nameAndDescriptionPage);
         }
 
@@ -270,7 +262,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
     }
 
     /**
-     *
      * @param definition
      * @return true if configuration has been modified
      */
@@ -408,38 +399,11 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
         if (page.equals(selectionPage)) {
             final ConnectorDefinition definition = selectionPage.getSelectedConnectorDefinition();
             if (definition != null) {
-                checkDefinitionDependencies(definition);
                 extension = findCustomWizardExtension(definition);
                 recreateConnectorConfigurationPages(definition, true);
             }
         }
         return super.getNextPage(page);
-    }
-
-    protected void checkDefinitionDependencies(final ConnectorDefinition definition) {
-        if (!definition.getJarDependency().isEmpty()) {
-            try {
-                getContainer().run(true, false, new IRunnableWithProgress() {
-
-                    @Override
-                    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        monitor.beginTask(Messages.addingDefinitionDependencies, IProgressMonitor.UNKNOWN);
-                        final DependencyRepositoryStore depStore = RepositoryManager.getInstance().getRepositoryStore(
-                                DependencyRepositoryStore.class);
-                        for (final String jarName : definition.getJarDependency()) {
-                            if (depStore.getChild(jarName) == null) {
-                                final InputStream is = messageProvider.getDependencyInputStream(jarName);
-                                if (is != null) {
-                                    depStore.importInputStream(jarName, is);
-                                }
-                            }
-                        }
-                    }
-                });
-            } catch (final Exception e) {
-                BonitaStudioLog.error(e);
-            }
-        }
     }
 
     protected CustomWizardExtension findCustomWizardExtension(final ConnectorDefinition definition) {

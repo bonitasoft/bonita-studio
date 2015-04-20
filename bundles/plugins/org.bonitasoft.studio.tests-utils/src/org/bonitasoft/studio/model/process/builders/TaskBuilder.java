@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.model.process.builders;
 
+import org.bonitasoft.studio.model.form.builders.FormBuilder;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
@@ -37,6 +38,11 @@ public class TaskBuilder extends ActivityBuilder<Task, TaskBuilder> {
         return this;
     }
 
+    public TaskBuilder havingContract(final ContractBuilder contract) {
+        getBuiltInstance().setContract(contract.build());
+        return this;
+    }
+
     public TaskBuilder overrideActorsOfTheLane() {
         getBuiltInstance().setOverrideActorsOfTheLane(true);
         return this;
@@ -49,6 +55,13 @@ public class TaskBuilder extends ActivityBuilder<Task, TaskBuilder> {
 
     public TaskBuilder withPriority(final int priority) {
         getBuiltInstance().setPriority(priority);
+        return this;
+    }
+
+    public TaskBuilder havingForm(final FormBuilder... forms) {
+        for (final FormBuilder formBuilder : forms) {
+            getBuiltInstance().getForm().add(formBuilder.build());
+        }
         return this;
     }
 

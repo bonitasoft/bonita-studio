@@ -15,7 +15,9 @@
 package org.bonitasoft.studio.common.repository.filestore;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -42,6 +44,8 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
+
+import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
@@ -333,6 +337,23 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
     @Override
     public Set<IResource> getRelatedResources() {
         return new HashSet<IResource>();
+    }
+
+    @Override
+    public Set<IRepositoryFileStore> getRelatedFileStore() {
+        return Collections.emptySet();
+    }
+
+    @Override
+    public byte[] toByteArray() throws IOException {
+        final IResource resource = getResource();
+        if (resource.exists()) {
+            final File file = resource.getLocation().toFile();
+            if (file.isFile()) {
+                return Files.toByteArray(file);
+            }
+        }
+        throw new FileNotFoundException(String.format("%s not found", resource.getLocation().toOSString()));
     }
 
     public void setParameters(final Map<String, Object> parameters) {

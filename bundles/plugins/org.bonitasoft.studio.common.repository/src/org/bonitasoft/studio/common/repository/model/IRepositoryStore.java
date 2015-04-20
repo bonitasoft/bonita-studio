@@ -23,12 +23,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
  */
-public interface IRepositoryStore<T extends IRepositoryFileStore> {
+public interface IRepositoryStore<T extends IRepositoryFileStore> extends IDisplayable {
 
     void createRepositoryStore(IRepository repository);
 
@@ -40,10 +39,6 @@ public interface IRepositoryStore<T extends IRepositoryFileStore> {
 
     String getName();
 
-    String getDisplayName();
-
-    Image getIcon();
-
     IFolder getResource();
 
     T getChild(String fileName);
@@ -51,6 +46,8 @@ public interface IRepositoryStore<T extends IRepositoryFileStore> {
     List<T> getChildren();
 
     boolean isShared();
+
+    boolean isEmpty();
 
     boolean canBeShared();
 

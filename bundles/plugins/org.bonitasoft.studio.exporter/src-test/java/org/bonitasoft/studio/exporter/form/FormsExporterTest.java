@@ -6,8 +6,6 @@ package org.bonitasoft.studio.exporter.form;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
-import org.assertj.core.api.Assertions;
-import org.bonitasoft.forms.client.model.ActionType;
 import org.bonitasoft.forms.server.builder.IFormBuilder;
 import org.bonitasoft.forms.server.exception.InvalidFormDefinitionException;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -33,11 +31,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class FormsExporterTest {
-
 
     @Mock
     private IFormBuilder formBuilder;
@@ -59,11 +55,10 @@ public class FormsExporterTest {
     public void tearDown() throws Exception {
     }
 
-
     @Test
     public void shouldAddSubmitButtonActions_NotAddActionIfLeffOperand_IsEmpty() throws Exception {
         final SubmitFormButton formButton = FormFactory.eINSTANCE.createSubmitFormButton();
-        formButton.getActions().add(createOperation("","value",ExpressionConstants.ASSIGNMENT_OPERATOR));
+        formButton.getActions().add(createOperation("", "value", ExpressionConstants.ASSIGNMENT_OPERATOR));
         formExporter.addSubmitButtonActions(formBuilder, formButton);
         verifyZeroInteractions(formBuilder);
     }
@@ -71,7 +66,7 @@ public class FormsExporterTest {
     @Test
     public void shouldAddSubmitButtonActions_NotAddActionIfRightOperand_IsEmpty() throws Exception {
         final SubmitFormButton formButton = FormFactory.eINSTANCE.createSubmitFormButton();
-        formButton.getActions().add(createOperation("data","",ExpressionConstants.ASSIGNMENT_OPERATOR));
+        formButton.getActions().add(createOperation("data", "", ExpressionConstants.ASSIGNMENT_OPERATOR));
         formExporter.addSubmitButtonActions(formBuilder, formButton);
         verifyZeroInteractions(formBuilder);
     }
@@ -79,12 +74,11 @@ public class FormsExporterTest {
     @Test
     public void shouldAddSubmitButtonActions_AddActionIfRightAndLeftOperand_NotEmpty() throws Exception {
         final SubmitFormButton formButton = FormFactory.eINSTANCE.createSubmitFormButton();
-        final Operation operation = createOperation("data","value", ExpressionConstants.ASSIGNMENT_OPERATOR);
+        final Operation operation = createOperation("data", "value", ExpressionConstants.ASSIGNMENT_OPERATOR);
         formButton.getActions().add(operation);
         formExporter.addSubmitButtonActions(formBuilder, formButton);
-        verify(formExporter).addAction(formBuilder,operation);
+        verify(formExporter).addAction(formBuilder, operation);
     }
-
 
     @Test
     public void should_addFileWidgetInitialValueExpression_whenTypeIsDocument() throws InvalidFormDefinitionException {
@@ -107,31 +101,19 @@ public class FormsExporterTest {
         verify(formExporter).addInitialValueExpression(formBuilder, documentExpr);
     }
 
-    @Test
-    public void getActionTypeFromStudioOperatorTypeReturnAssignmentForSetDocumentOperator() {
-        final ActionType actionTypeSetDoc = formExporter.getActionTypeFromStudioOperatorType(ExpressionConstants.SET_DOCUMENT_OPERATOR);
-        Assertions.assertThat(actionTypeSetDoc).isEqualTo(ActionType.ASSIGNMENT);
-    }
-
-    @Test
-    public void getActionTypeFromStudioOperatorTypeReturnAssignmentForSetDocumentListOperator() {
-        final ActionType actionTypeSetDoc = formExporter.getActionTypeFromStudioOperatorType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
-        Assertions.assertThat(actionTypeSetDoc).isEqualTo(ActionType.ASSIGNMENT);
-    }
-
-    private Operation createOperation(final String leftOpreand, final String rightOperand,final String operatorType) {
+    private Operation createOperation(final String leftOpreand, final String rightOperand, final String operatorType) {
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final Expression leftExpression= ExpressionFactory.eINSTANCE.createExpression();
+        final Expression leftExpression = ExpressionFactory.eINSTANCE.createExpression();
         leftExpression.setName(leftOpreand);
         leftExpression.setContent(leftOpreand);
         operation.setLeftOperand(leftExpression);
 
-        final Expression rightExpression= ExpressionFactory.eINSTANCE.createExpression();
+        final Expression rightExpression = ExpressionFactory.eINSTANCE.createExpression();
         rightExpression.setName(leftOpreand);
         rightExpression.setContent(rightOperand);
         operation.setRightOperand(rightExpression);
 
-        final Operator op =  ExpressionFactory.eINSTANCE.createOperator();
+        final Operator op = ExpressionFactory.eINSTANCE.createOperator();
         op.setType(operatorType);
         operation.setOperator(op);
 

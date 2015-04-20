@@ -47,8 +47,12 @@ public class FormBarResourceProvider implements BARResourcesProvider {
 
     private static final String CUSTOMPAGE_PREFIX = "custompage_";
 
+    private final CustomPageBarResourceFactory customPageBarResourceFactory;
+
     @Inject
-    private CustomPageBarResourceFactory customPageBarResourceFactory;
+    public FormBarResourceProvider(final CustomPageBarResourceFactory customPageBarResourceFactory) {
+        this.customPageBarResourceFactory = customPageBarResourceFactory;
+    }
 
     @Override
     public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
@@ -72,7 +76,7 @@ public class FormBarResourceProvider implements BARResourcesProvider {
         if (isValid(formMapping)) {
             final FormMappingDefinition mappingDefinition = newFormMappingDefinition(formMapping);
             formMappingModel.addFormMapping(mappingDefinition);
-            if (mappingDefinition.getTarget() == FormMappingTarget.INTERNAL) {
+            if (mappingDefinition.getTarget() == FormMappingTarget.INTERNAL && !isNullOrEmpty(formUUID(formMapping))) {
                 builder.addExternalResource(customPageBarResourceFactory.newBarResource(mappingDefinition.getForm(), formUUID(formMapping)));
             }
         }

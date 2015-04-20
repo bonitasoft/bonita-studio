@@ -14,24 +14,33 @@
  */
 package org.bonitasoft.studio.actors.configuration;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.tryFind;
+import static com.google.common.io.Files.toByteArray;
+
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
+import org.bonitasoft.studio.actors.repository.ActorFilterImplFileStore;
 import org.bonitasoft.studio.actors.repository.ActorFilterImplRepositoryStore;
 import org.bonitasoft.studio.actors.repository.ActorFilterSourceRepositoryStore;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
-import org.bonitasoft.studio.common.extension.BarResourcesProviderUtil;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
@@ -41,77 +50,46 @@ import org.bonitasoft.studio.model.configuration.DefinitionMapping;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 
 /**
  * @author Romain Bioteau
  */
 public class ActorFilterBarResourceProvider implements BARResourcesProvider {
 
+    private final RepositoryAccessor repositoryAccessor;
+
+    @Inject
+    public ActorFilterBarResourceProvider(final RepositoryAccessor repositoryAccessor) {
+        this.repositoryAccessor = repositoryAccessor;
+    }
+
     @Override
     public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
-            final Set<EObject> excludedObjects) {
-        if (configuration == null) {
-            return;
-        }
+            final Set<EObject> excludedObjects) throws Exception {
+        checkArgument(configuration != null);
 
         final List<BarResource> resources = new ArrayList<BarResource>();
-        final DependencyRepositoryStore libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
-        final ActorFilterImplRepositoryStore implStore = RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
-        for (final DefinitionMapping association : configuration.getDefinitionMappings()) {
-            if (association.getType().equals(FragmentTypes.ACTOR_FILTER)) {
-                final String implId = association.getImplementationId();
-                final String implVersion = association.getImplementationVersion();
-                if (implId != null && implVersion != null) {
-                    final ConnectorImplementation implementation = implStore.getImplementation(implId, implVersion);
-                    if (implementation == null) {
-                        throw new RuntimeException(implId + "(" + implVersion + ") not found in repository");
-                    }
-                    final String fileName = URI.decode(implementation.eResource().getURI().lastSegment());
-                    final EMFFileStore file = implStore.getChild(fileName);
-                    Assert.isNotNull(file);
-                    final boolean isUserImplementation = file.canBeShared();
-                    try {
-                        File implementationFile = file.getResource().getLocation().toFile();
-                        if (!implementationFile.exists()) {
-                            implementationFile = new File(URI.decode(file.getEMFResource().getURI().toFileString()));
-                        }
-                        final FileInputStream fis = new FileInputStream(implementationFile);
-                        final byte[] content = new byte[fis.available()];
-                        fis.read(content);
-                        fis.close();
-
-                        builder.addUserFilters(new BarResource(NamingUtils.toConnectorImplementationFilename(implId, implVersion, true), content));
-
-                        if (isUserImplementation) { //Generate jar from source file
-                            addImplementationJar(builder, implementation);
-                        }
-
-                        //Add jar dependencies
-                        for (final FragmentContainer fc : configuration.getProcessDependencies()) {
-                            if (fc.getId().equals(FragmentTypes.ACTOR_FILTER)) {
-                                for (final FragmentContainer connector : fc.getChildren()) {
-                                    if (connector.getId().equals(NamingUtils.toConnectorImplementationFilename(implId, implVersion, false))) {
-                                        for (final Fragment fragment : connector.getFragments()) {
-                                            final String jarName = fragment.getValue();
-                                            if (jarName.endsWith(".jar") && fragment.isExported()) {
-                                                final IRepositoryFileStore jarFile = libStore.getChild(jarName);
-                                                if (jarFile != null) {
-                                                    BarResourcesProviderUtil.addFileContents(resources, jarFile.getResource().getLocation().toFile());
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } catch (final Exception e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
+        final ActorFilterImplRepositoryStore implStore = repositoryAccessor.getRepositoryStore(ActorFilterImplRepositoryStore.class);
+        for (final DefinitionMapping association : filter(configuration.getDefinitionMappings(), and(actorFilterMappings(), withImplementation()))) {
+            final String connectorImplementationFilename = NamingUtils.toConnectorImplementationFilename(
+                    association.getImplementationId(),
+                    association.getImplementationVersion(), true);
+            final ActorFilterImplFileStore implementationFileStore = implStore.getChild(connectorImplementationFilename);
+            if (implementationFileStore == null) {
+                throw new FileNotFoundException(String.format("%s (%s) not found in repository", association.getImplementationId(),
+                        association.getImplementationVersion()));
             }
+            builder.addUserFilters(new BarResource(connectorImplementationFilename, implementationFileStore.toByteArray()));
+
+            final ConnectorImplementation connectorImplementation = implementationFileStore.getContent();
+            if (implementationFileStore.canBeShared()) { //Generate jar from source file
+                addImplementationJar(builder, connectorImplementation);
+            }
+            addProcessDependencies(configuration, resources, connectorImplementation);
         }
 
         for (final BarResource barResource : resources) {
@@ -119,8 +97,69 @@ public class ActorFilterBarResourceProvider implements BARResourcesProvider {
         }
     }
 
-    private void addImplementationJar(final BusinessArchiveBuilder builder, final ConnectorImplementation impl) {
-        final ActorFilterSourceRepositoryStore sourceStore = RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
+    private Predicate<DefinitionMapping> withImplementation() {
+        return new Predicate<DefinitionMapping>() {
+
+            @Override
+            public boolean apply(final DefinitionMapping mapping) {
+                return !isNullOrEmpty(mapping.getImplementationId()) && !isNullOrEmpty(mapping.getDefinitionVersion());
+            }
+        };
+    }
+
+    private Predicate<DefinitionMapping> actorFilterMappings() {
+        return new Predicate<DefinitionMapping>() {
+
+            @Override
+            public boolean apply(final DefinitionMapping mapping) {
+                return FragmentTypes.ACTOR_FILTER.equals(mapping.getType());
+            }
+        };
+    }
+
+    private void addProcessDependencies(final Configuration configuration, final List<BarResource> resources, final ConnectorImplementation implementation)
+            throws FileNotFoundException, IOException {
+        final DependencyRepositoryStore dependencyStore = repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class);
+        final Optional<FragmentContainer> actorFilterContainer = tryFind(configuration.getProcessDependencies(), containerWithId(FragmentTypes.ACTOR_FILTER));
+        if (actorFilterContainer.isPresent()) {
+            final Optional<FragmentContainer> implementationContainer = tryFind(
+                    actorFilterContainer.get().getChildren(),
+                    containerWithId(NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(),
+                            implementation.getImplementationVersion(),
+                            false)));
+            if (implementationContainer.isPresent()) {
+                for (final Fragment fragment : filter(implementationContainer.get().getFragments(), exportedJarFragment())) {
+                    final IRepositoryFileStore jarFile = dependencyStore.getChild(fragment.getValue());
+                    if (jarFile != null) {
+                        resources.add(new BarResource(jarFile.getName(), jarFile.toByteArray()));
+                    }
+                }
+            }
+        }
+    }
+
+    private Predicate<Fragment> exportedJarFragment() {
+        return new Predicate<Fragment>() {
+
+            @Override
+            public boolean apply(final Fragment input) {
+                return input.isExported() && input.getValue().endsWith(".jar");
+            }
+        };
+    }
+
+    private Predicate<FragmentContainer> containerWithId(final String containerId) {
+        return new Predicate<FragmentContainer>() {
+
+            @Override
+            public boolean apply(final FragmentContainer input) {
+                return containerId.equals(input.getId());
+            }
+        };
+    }
+
+    private void addImplementationJar(final BusinessArchiveBuilder builder, final ConnectorImplementation impl) throws Exception {
+        final ActorFilterSourceRepositoryStore sourceStore = repositoryAccessor.getRepositoryStore(ActorFilterSourceRepositoryStore.class);
         final String connectorJarName = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)
                 + ".jar";
         final String qualifiedClassName = impl.getImplementationClassname();
@@ -130,21 +169,20 @@ public class ActorFilterBarResourceProvider implements BARResourcesProvider {
         }
         final PackageFileStore file = (PackageFileStore) sourceStore.getChild(packageName);
         if (file != null) {
-            final File tmpFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), connectorJarName);
-            tmpFile.delete();
+            final File tmpFile = exportJar(connectorJarName, file);
             try {
-                file.exportAsJar(tmpFile.getAbsolutePath(), false);
-                final FileInputStream fis = new FileInputStream(tmpFile);
-                final byte[] content = new byte[fis.available()];
-                fis.read(content);
-                fis.close();
+                builder.addClasspathResource(new BarResource(connectorJarName, toByteArray(tmpFile)));
+            } finally {
                 tmpFile.delete();
-                builder.addClasspathResource(new BarResource(connectorJarName, content));
-            } catch (final Exception e) {
-                BonitaStudioLog.error(e);
             }
         }
+    }
 
+    private File exportJar(final String connectorJarName, final PackageFileStore file) throws InvocationTargetException, InterruptedException {
+        final File tmpFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), connectorJarName);
+        tmpFile.delete();
+        file.exportAsJar(tmpFile.getAbsolutePath(), false);
+        return tmpFile;
     }
 
 }

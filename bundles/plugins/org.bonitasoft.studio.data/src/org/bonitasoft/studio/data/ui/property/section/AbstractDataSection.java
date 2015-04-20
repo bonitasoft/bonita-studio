@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -48,6 +46,7 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.refactoring.core.RefactorDataOperation;
@@ -101,7 +100,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
- *
  * @author Romain Bioteau
  */
 public abstract class AbstractDataSection extends AbstractBonitaDescriptionSection implements IDoubleClickListener, IBonitaVariableContext {
@@ -137,7 +135,6 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         mainComposite = getWidgetFactory().createComposite(parent);
         mainComposite.setLayout(createMainCompositeLayout());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
 
         final Composite dataComposite = getWidgetFactory().createComposite(mainComposite);
         dataComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -177,7 +174,6 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
             final Wizard wizard, final String finishLabel) {
         return new CustomWizardDialog(getActiveShell(), wizard, finishLabel);
     }
-
 
     protected void createBusinessDataComposite(final Composite parent) {
         final Composite mainComposite = getWidgetFactory().createComposite(parent, SWT.NONE);
@@ -362,7 +358,6 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         return dataTableViewer;
     }
 
-
     protected Button createRemoveDataButton(final Composite parent) {
         final Button removeButton = getWidgetFactory().createButton(parent, Messages.removeData, SWT.FLAT);
         removeButton.setLayoutData(GridDataFactory.fillDefaults().minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
@@ -395,15 +390,14 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
         final OutlineDialog dialog = new OutlineDialog(Display.getDefault().getActiveShell(),
                 org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle, Display.getCurrent().getSystemImage(
-                SWT.ICON_WARNING), createMessage(structuredSelection), MessageDialog.CONFIRM, buttonList, 1, structuredSelection.toList());
+                        SWT.ICON_WARNING), createMessage(structuredSelection), MessageDialog.CONFIRM, buttonList, 1, structuredSelection.toList());
         if (dialog.open() == Dialog.OK) {
             final IProgressService service = PlatformUI.getWorkbench().getProgressService();
             final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.REMOVE);
             for (final Object d : structuredSelection.toList()) {
-                op.setContainer(ModelHelper.getParentProcess(eObject));
                 op.setEditingDomain(getEditingDomain());
                 op.addItemToRefactor(null, (Data) d);
-                op.setDirectDataContainer(getEObject());
+                op.setDataContainer((DataAware) getEObject());
                 op.setDataContainmentFeature(getDataFeature());
                 op.setAskConfirmation(true);
             }

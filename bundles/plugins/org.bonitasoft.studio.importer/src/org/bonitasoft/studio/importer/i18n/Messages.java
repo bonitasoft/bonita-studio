@@ -43,5 +43,6 @@ public class Messages extends NLS {
     public static String importSucessfulMessage;
     public static String importResultTitle;
     public static String openDiagram;
+    public static String skipValidation;
 
 }

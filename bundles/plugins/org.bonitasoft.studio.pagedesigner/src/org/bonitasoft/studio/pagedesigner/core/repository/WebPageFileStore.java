@@ -14,15 +14,21 @@
  */
 package org.bonitasoft.studio.pagedesigner.core.repository;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Set;
 
 import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.pagedesigner.core.bar.BarResourceCreationException;
+import org.bonitasoft.studio.pagedesigner.core.bos.WebFormBOSArchiveFileStoreProvider;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -30,8 +36,19 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public class WebPageFileStore extends InFolderJSONFileStore {
 
+    private WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider;
+
     public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
+    }
+
+    public void setWebFormBOSArchiveFileStoreProvider(final WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider) {
+        this.webFormBOSArchiveFileStoreProvider = webFormBOSArchiveFileStoreProvider;
+    }
+
+    @Override
+    public Image getIcon() {
+        return getParentStore().getIcon();
     }
 
     @Override
@@ -49,7 +66,18 @@ public class WebPageFileStore extends InFolderJSONFileStore {
     }
 
     protected PageDesignerURLFactory urlFactory() {
-        return new PageDesignerURLFactory(
-                InstanceScope.INSTANCE.getNode("org.bonitasoft.studio.preferences"));
+        return new PageDesignerURLFactory(InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID));
+    }
+
+    @Override
+    public Set<IRepositoryFileStore> getRelatedFileStore() {
+        if (webFormBOSArchiveFileStoreProvider != null) {
+            try {
+                return webFormBOSArchiveFileStoreProvider.getRelatedFileStore(this);
+            } catch (BarResourceCreationException | IOException e) {
+                BonitaStudioLog.error("Failed to retrieve page related file store", e);
+            }
+        }
+        return super.getRelatedFileStore();
     }
 }

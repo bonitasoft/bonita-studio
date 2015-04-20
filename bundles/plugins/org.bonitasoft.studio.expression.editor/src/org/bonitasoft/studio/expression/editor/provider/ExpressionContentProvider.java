@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,19 +24,19 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ExpressionContentProvider implements IExpressionNatureProvider {
 
     private static ExpressionContentProvider INSTANCE;
+    private final ExpressionEditorService expressionEditorService;
 
-    private ExpressionContentProvider() {
-        //Private Constructor
+    private ExpressionContentProvider(final ExpressionEditorService expressionEditorService) {
+        this.expressionEditorService = expressionEditorService;
     }
 
     public static ExpressionContentProvider getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new ExpressionContentProvider();
+            INSTANCE = new ExpressionContentProvider(ExpressionEditorService.getInstance());
         }
         return INSTANCE;
     }
@@ -46,8 +44,8 @@ public class ExpressionContentProvider implements IExpressionNatureProvider {
     @Override
     public Expression[] getExpressions(final EObject context) {
         final SortedSet<Expression> expressionsSet = new TreeSet<Expression>(new ExpressionComparator());
-        if (context != null) {
-            final Set<IExpressionProvider> providers = ExpressionEditorService.getInstance().getExpressionProviders();
+        if (context != null && expressionEditorService != null) {
+            final Set<IExpressionProvider> providers = expressionEditorService.getExpressionProviders();
             for (final IExpressionProvider provider : providers) {
                 if (provider.isRelevantFor(context)) {
                     final Set<Expression> expressions = provider.getExpressions(context);

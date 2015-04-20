@@ -43,12 +43,12 @@
      <coolbarItem
            class="org.bonitasoft.studio.engine.coolbar.RunCoolbarItem"
            priority="0"
-           toolbarPosition="10">
+           toolbarPosition="11">
      </coolbarItem>
      <coolbarItem
            class="org.bonitasoft.studio.engine.coolbar.OpenPortalCoolbarItem"
            priority="0"
-           toolbarPosition="12">
+           toolbarPosition="13">
      </coolbarItem>
   </extension>
      <extension
@@ -68,12 +68,6 @@
      <initializer
            class="org.bonitasoft.studio.engine.preferences.EnginePreferencesInitializer">
      </initializer>
-  </extension>
-  <extension
-        point="org.bonitasoft.studio.repositoryStore">
-     <repositoryStore
-           class="org.bonitasoft.studio.engine.store.DeploymentConfigurationRepositoryStore">
-     </repositoryStore>
   </extension>
   <extension
         point="org.eclipse.ui.menus">

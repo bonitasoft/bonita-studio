@@ -133,14 +133,14 @@ public abstract class AbstractManageDiagramWizardPage extends WizardPage impleme
                 if (target instanceof DiagramRepositoryStore) {
                     return new WritableList(((DiagramRepositoryStore) target).getChildren(), DiagramFileStore.class);
                 }
-                return null;
+                return new WritableList();
             }
         };
     }
 
     protected void defaultSelection(final IObservableList selectionObservable) {
         final DiagramRepositoryStore diagramRepositoryStore = (DiagramRepositoryStore) getViewer().getInput();
-        if (!diagramRepositoryStore.getChildren().isEmpty()) {
+        if (!diagramRepositoryStore.isEmpty()) {
             selectionObservable.add(diagramRepositoryStore.getChildren().get(0));
         }
     }

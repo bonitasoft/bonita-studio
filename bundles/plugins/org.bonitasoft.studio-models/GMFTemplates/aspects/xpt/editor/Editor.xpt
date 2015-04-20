@@ -232,12 +232,24 @@ protected org.eclipse.emf.transaction.TransactionalEditingDomain createEditingDo
  */
 @Override
 public void dispose() {
+  	org.eclipse.emf.transaction.TransactionalEditingDomain domain = getEditingDomain();
  	processPref.removePropertyChangeListener(paletteChangeListener);
 	org.eclipse.core.commands.operations.IOperationHistory history = (org.eclipse.core.commands.operations.IOperationHistory) getAdapter(org.eclipse.core.commands.operations.IOperationHistory.class);
 	if(history != null){
 		history.dispose(getUndoContext(), true, true, true);
 	}
 	super.dispose();
+	
+	 //Remove event broker listener for editingDomain
+        if (domain != null) {
+            final org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker eventBroker = org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker
+                    .getInstance(domain);
+            if (eventBroker != null) {
+                org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker.stopListening(domain);
+            }
+            domain = null;
+        }
+	
 	
 	//avoid Memory leak
 	if(getDiagramGraphicalViewer() != null){

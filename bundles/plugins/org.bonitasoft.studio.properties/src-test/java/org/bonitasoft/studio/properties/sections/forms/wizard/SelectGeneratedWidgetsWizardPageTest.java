@@ -278,8 +278,8 @@ public class SelectGeneratedWidgetsWizardPageTest {
 
     @Test
     public void should_a_widget_container_be_grayed_if_not_all_of_its_children_is_selected() throws Exception {
-        final WidgetMapping parent = new WidgetMapping(BusinessObjectDataBuilder.createBusinessObjectDataBuilder()
-                .havingDataType(BusinessObjectDataTypeBuilder.createBusinessObjectDataType()).build());
+        final WidgetMapping parent = new WidgetMapping(BusinessObjectDataBuilder.aBusinessData()
+                .havingDataType(BusinessObjectDataTypeBuilder.aBusinessObjectDataType()).build());
         final SimpleField modelElement = new SimpleField();
         modelElement.setType(FieldType.BOOLEAN);
         final WidgetMapping mapping1 = new WidgetMapping(modelElement);

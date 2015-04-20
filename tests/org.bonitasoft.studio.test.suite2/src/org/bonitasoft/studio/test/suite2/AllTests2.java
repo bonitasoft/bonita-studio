@@ -32,7 +32,6 @@ import org.bonitasoft.studio.exporter.tests.bpmn.BPMNDataExportImportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNImportExportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowConditionExportImportTest;
 import org.bonitasoft.studio.exporter.tests.form.TestFormsExporter;
-import org.bonitasoft.studio.groovy.ui.test.TestGroovyScriptExpressionEditor;
 import org.bonitasoft.studio.importer.test.bos.TestBOSArchiveImport;
 import org.bonitasoft.studio.migration.tests.MigrationReportPDFExportTest;
 import org.bonitasoft.studio.migration.tests.document.DocumentTypeMigrationIT;
@@ -43,18 +42,21 @@ import org.bonitasoft.studio.simulation.tests.TestSimulationResourceRepository;
 import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.api.TestBonitaAPI;
+import org.bonitasoft.studio.tests.bar.ExportBarIT;
 import org.bonitasoft.studio.tests.bug.TestBugs;
 import org.bonitasoft.studio.tests.businessobject.DeployBDROperationIT;
 import org.bonitasoft.studio.tests.connectors.GroovyConnectorIT;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorResulset;
 import org.bonitasoft.studio.tests.data.DataRefactorIT;
 import org.bonitasoft.studio.tests.form.TestCommands;
+import org.bonitasoft.studio.tests.groovy.TestGroovyScriptExpressionEditor;
 import org.bonitasoft.studio.tests.parameter.TestParametersRefactoring;
 import org.bonitasoft.studio.tests.parameter.TestProcessParameters;
 import org.bonitasoft.studio.tests.perspectives.TestAutomaticSwitchPerspective;
 import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
 import org.bonitasoft.studio.tests.refactoring.widget.TestRefactorWidgetOperation;
 import org.bonitasoft.studio.tests.refactoring.widget.TestRemoveWidgetReferencesOperation;
+import org.bonitasoft.studio.tests.repository.PageDesignerWorkspaceIntegrationIT;
 import org.bonitasoft.studio.tests.timer.TestNonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.themes.tests.TestCSSModel;
 import org.bonitasoft.studio.themes.tests.TestDirtyState;
@@ -114,6 +116,8 @@ import org.junit.runners.Suite;
         DeployBDROperationIT.class,
         TestProcessParameters.class,
         TestParametersRefactoring.class,
+        ExportBarIT.class,
+        PageDesignerWorkspaceIntegrationIT.class,
         CloseAllEditors.class
 })
 public class AllTests2 extends TestSuite {
