@@ -16,6 +16,7 @@ package org.bonitasoft.studio.dependencies.handler;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -63,6 +64,8 @@ public class AddJarsHandler extends AbstractHandler {
                         throws InvocationTargetException, InterruptedException {
                     monitor.beginTask(Messages.beginToAddJars, jars.length);
                     final Map<String, InputStream> jarsToImportMap = new HashMap<String, InputStream>();
+                    FileInputStream fis = null;
+                    ZipInputStreamIFileFriendly zip = null;
                     for (final String jar : jars) {
                         try {
                             if (monitor.isCanceled()) {
@@ -75,12 +78,12 @@ public class AddJarsHandler extends AbstractHandler {
                                 file = new File(fd.getFilterPath() + File.separator + jar);
                             }
 
-                            final FileInputStream fis = new FileInputStream(file);
+                            fis = new FileInputStream(file);
                             if (file.getName().endsWith(".jar")) { //$NON-NLS-1$
                                 monitor.setTaskName(Messages.addingJar + " " + file.getName());
                                 jarsToImportMap.put(file.getName(), fis);
                             } else if (file.getName().endsWith(".zip")) { //$NON-NLS-1$
-                                final ZipInputStreamIFileFriendly zip = new ZipInputStreamIFileFriendly(fis);
+                                zip = new ZipInputStreamIFileFriendly(fis);
                                 ZipEntry entry = zip.getNextEntry();
                                 if (entry == null) {
                                     throw new InvocationTargetException(new Exception(org.bonitasoft.studio.dependencies.i18n.Messages.zipFileIsCorrupted),
@@ -94,12 +97,21 @@ public class AddJarsHandler extends AbstractHandler {
                                     entry = zip.getNextEntry();
                                 }
                                 zip.forceClose();
-                                fis.close();
                             }
 
                         } catch (final Exception ex) {
                             BonitaStudioLog.error(ex);
                             throw new InvocationTargetException(ex);
+                        } finally {
+                            if (zip != null) {
+                                zip.close();
+                            }
+                            if (fis != null) {
+                                try {
+                                    fis.close();
+                                } catch (final IOException e) {
+                                }
+                            }
                         }
                     }
 
