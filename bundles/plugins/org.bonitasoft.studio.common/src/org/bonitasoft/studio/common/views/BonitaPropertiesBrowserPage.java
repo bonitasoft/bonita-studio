@@ -55,11 +55,15 @@ public abstract class BonitaPropertiesBrowserPage extends PropertiesBrowserPage 
 					}
 				}
 			}
-			return 0;
+			return defaultSelectedTabIndex();
 		} else {
 			return super.getLastTabSelection(part, input);
 		}
 	}
+
+    protected int defaultSelectedTabIndex() {
+        return 0;
+    }
 
 	protected void setInput(IWorkbenchPart part, ISelection selection) {
 		if(registry instanceof TabbedPropertyRegistryViewAware){
