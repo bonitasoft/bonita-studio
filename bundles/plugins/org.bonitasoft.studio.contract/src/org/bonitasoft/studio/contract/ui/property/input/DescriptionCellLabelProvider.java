@@ -25,6 +25,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
 
+/**
+ * @author Romain Bioteau
+ */
 public class DescriptionCellLabelProvider extends PropertyColumnLabelProvider {
 
     private final ColumnViewer viewer;
