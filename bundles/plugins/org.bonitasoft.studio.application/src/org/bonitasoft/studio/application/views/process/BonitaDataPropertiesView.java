@@ -7,16 +7,16 @@ import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributo
 
 public class BonitaDataPropertiesView extends BonitaPropertiesView {
 
-	public static final String VIEW_ID = "org.bonitasoft.studio.views.properties.process.data";
-	
-	  protected String getViewId() {
-	        return VIEW_ID;
-	    }
-	
-	@Override
-	protected BonitaPropertiesBrowserPage getBonitaPropertiesBrowserPage(
-			ITabbedPropertySheetPageContributor part) {
-		return new BonitaDataPropertiesBrowserPage(part);
-	}
+    public static final String VIEW_ID = "org.bonitasoft.studio.views.properties.process.data";
+
+    protected String getViewId() {
+        return VIEW_ID;
+    }
+
+    @Override
+    protected BonitaPropertiesBrowserPage getBonitaPropertiesBrowserPage(
+            final ITabbedPropertySheetPageContributor part) {
+        return new BonitaDataPropertiesBrowserPage(part);
+    }
 
 }

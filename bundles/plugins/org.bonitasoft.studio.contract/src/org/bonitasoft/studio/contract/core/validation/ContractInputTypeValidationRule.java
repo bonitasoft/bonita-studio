@@ -17,9 +17,9 @@ package org.bonitasoft.studio.contract.core.validation;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.jface.databinding.MultiValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.MultiValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -47,7 +47,7 @@ public class ContractInputTypeValidationRule extends MessageValidationRule imple
 
     public ContractInputTypeValidationRule() {
         inputNameValidator = new MultiValidator();
-        inputNameValidator.addValidator(new GroovyReferenceValidator(Messages.name, true));
+        inputNameValidator.addValidator(new GroovyReferenceValidator(Messages.name));
         inputNameValidator.addValidator(new InputLengthValidator(Messages.name, 50));
     }
 

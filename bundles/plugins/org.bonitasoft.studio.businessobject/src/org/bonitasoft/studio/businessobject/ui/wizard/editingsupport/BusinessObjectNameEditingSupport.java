@@ -16,9 +16,12 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 
-import org.bonitasoft.studio.businessobject.ui.wizard.listener.ColumnViewerUpdateListener;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.Query;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.BusinessObjectNameCellEditorValidator;
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -37,10 +40,6 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-
-import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import org.bonitasoft.engine.bdm.model.Query;
 
 /**
  * @author Romain Bioteau

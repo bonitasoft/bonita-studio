@@ -18,6 +18,9 @@ package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 
 import java.util.ArrayList;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.Query;
+import org.bonitasoft.engine.bdm.model.QueryParameter;
 import org.bonitasoft.studio.businessobject.ui.wizard.QueryWizard;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -29,10 +32,6 @@ import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
-import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.Query;
-import org.bonitasoft.engine.bdm.model.QueryParameter;
 
 /**
  * @author Romain Bioteau
