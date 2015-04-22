@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.parameters.wizard.page;
 
-import org.bonitasoft.studio.common.jface.ListContentProvider;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.model.configuration.Configuration;
@@ -30,6 +29,7 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
 import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
@@ -49,179 +49,175 @@ import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ParametersConfigurationWizardPage extends WizardPage implements IProcessConfigurationWizardPage {
 
-	private TableViewer parameterTableViewer;
-	private ParameterValueEditingSupport valueEditingSupport;
-	private AbstractProcess process;
-	private Configuration configuration;
-	public ParametersConfigurationWizardPage() {
-		super(ParametersConfigurationWizardPage.class.getName());
-		setTitle(Messages.parameters) ;
-		setDescription(Messages.parameterWizardDesc) ;
-	}
+    private TableViewer parameterTableViewer;
+    private ParameterValueEditingSupport valueEditingSupport;
+    private AbstractProcess process;
+    private Configuration configuration;
 
-	@Override
-	public void createControl(final Composite parent) {
-		final Composite mainComposite = new Composite(parent, SWT.NONE) ;
-		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create()) ;
+    public ParametersConfigurationWizardPage() {
+        super(ParametersConfigurationWizardPage.class.getName());
+        setTitle(Messages.parameters);
+        setDescription(Messages.parameterWizardDesc);
+    }
 
-		createParameterComposite(mainComposite);
-		createImportExportButtons(mainComposite);
-		setControl(mainComposite) ;
-	}
+    @Override
+    public void createControl(final Composite parent) {
+        final Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
-	protected void createParameterComposite(final Composite parent) {
-		final Composite parameterComposite = new Composite(parent,SWT.NONE);
-		parameterComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		parameterComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+        createParameterComposite(mainComposite);
+        createImportExportButtons(mainComposite);
+        setControl(mainComposite);
+    }
 
-		final Label descriptionLabel = new Label(parameterComposite,SWT.WRAP);
-		descriptionLabel.setText(getDescription());
-		descriptionLabel.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).create());
+    protected void createParameterComposite(final Composite parent) {
+        final Composite parameterComposite = new Composite(parent, SWT.NONE);
+        parameterComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        parameterComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 
-		parameterTableViewer = new TableViewer(parameterComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL) ;
-		parameterTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		parameterTableViewer.setContentProvider(new ListContentProvider());
-		final TableLayout tableLayout = new TableLayout() ;
-		tableLayout.addColumnData(new ColumnWeightData(25)) ;
-		tableLayout.addColumnData(new ColumnWeightData(25)) ;
-		tableLayout.addColumnData(new ColumnWeightData(50)) ;
-		parameterTableViewer.getTable().setLayout(tableLayout) ;
-		parameterTableViewer.getColumnViewerEditor().addEditorActivationListener(new ColumnViewerEditorActivationListener() {
+        final Label descriptionLabel = new Label(parameterComposite, SWT.WRAP);
+        descriptionLabel.setText(getDescription());
+        descriptionLabel.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).create());
 
-			@Override
-			public void beforeEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) { }
+        parameterTableViewer = new TableViewer(parameterComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+        parameterTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        parameterTableViewer.setContentProvider(ArrayContentProvider.getInstance());
+        final TableLayout tableLayout = new TableLayout();
+        tableLayout.addColumnData(new ColumnWeightData(25));
+        tableLayout.addColumnData(new ColumnWeightData(25));
+        tableLayout.addColumnData(new ColumnWeightData(50));
+        parameterTableViewer.getTable().setLayout(tableLayout);
+        parameterTableViewer.getColumnViewerEditor().addEditorActivationListener(new ColumnViewerEditorActivationListener() {
 
-			@Override
-			public void beforeEditorActivated(final ColumnViewerEditorActivationEvent event) { }
+            @Override
+            public void beforeEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) {
+            }
 
-			@Override
-			public void afterEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) {
-				if(getContainer() != null){
-					getContainer().updateMessage();
-				}
-			}
+            @Override
+            public void beforeEditorActivated(final ColumnViewerEditorActivationEvent event) {
+            }
 
-			@Override
-			public void afterEditorActivated(final ColumnViewerEditorActivationEvent event) {}
-		}) ;
+            @Override
+            public void afterEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) {
+                if (getContainer() != null) {
+                    getContainer().updateMessage();
+                }
+            }
 
+            @Override
+            public void afterEditorActivated(final ColumnViewerEditorActivationEvent event) {
+            }
+        });
 
-		final TableViewerColumn columnNameViewer = new TableViewerColumn(parameterTableViewer,SWT.NONE) ;
-		columnNameViewer.setLabelProvider(new ParameterNameLabelProvider()) ;
-		final TableColumn column = columnNameViewer.getColumn()  ;
-		column.setText(Messages.name) ;
+        final TableViewerColumn columnNameViewer = new TableViewerColumn(parameterTableViewer, SWT.NONE);
+        columnNameViewer.setLabelProvider(new ParameterNameLabelProvider());
+        final TableColumn column = columnNameViewer.getColumn();
+        column.setText(Messages.name);
 
+        final TableViewerColumn columnTypeViewer = new TableViewerColumn(parameterTableViewer, SWT.NONE);
+        columnTypeViewer.setLabelProvider(new ParameterTypeLabelProvider());
+        final TableColumn column3 = columnTypeViewer.getColumn();
+        column3.setText(Messages.type);
 
-		final TableViewerColumn columnTypeViewer = new TableViewerColumn(parameterTableViewer,SWT.NONE) ;
-		columnTypeViewer.setLabelProvider(new ParameterTypeLabelProvider()) ;
-		final TableColumn column3 = columnTypeViewer.getColumn() ;
-		column3.setText(Messages.type) ;
+        final TableViewerColumn columnValueViewer = new TableViewerColumn(parameterTableViewer, SWT.NONE);
+        columnValueViewer.setLabelProvider(new ParameterValueLabelProvider());
+        valueEditingSupport = new ParameterValueEditingSupport(columnValueViewer.getViewer(), this);
 
+        columnValueViewer.setEditingSupport(valueEditingSupport);
+        final TableColumn column2 = columnValueViewer.getColumn();
+        column2.setText(Messages.value);
 
-		final TableViewerColumn columnValueViewer = new TableViewerColumn(parameterTableViewer,SWT.NONE) ;
-		columnValueViewer.setLabelProvider(new ParameterValueLabelProvider()) ;
-		valueEditingSupport = new ParameterValueEditingSupport(columnValueViewer.getViewer(),this) ;
+        parameterTableViewer.getTable().setHeaderVisible(true);
+        parameterTableViewer.getTable().setLinesVisible(true);
 
-		columnValueViewer.setEditingSupport(valueEditingSupport) ;
-		final TableColumn column2 = columnValueViewer.getColumn() ;
-		column2.setText(Messages.value) ;
+        final TableColumnSorter sorter = new TableColumnSorter(parameterTableViewer);
+        sorter.setColumn(column);
 
-		parameterTableViewer.getTable().setHeaderVisible(true);
-		parameterTableViewer.getTable().setLinesVisible(true) ;
+    }
 
+    @Override
+    public void updatePage(final AbstractProcess process, final Configuration configuration) {
+        this.process = process;
+        this.configuration = configuration;
+        if (process != null && configuration != null && parameterTableViewer != null && !parameterTableViewer.getTable().isDisposed()) {
+            parameterTableViewer.setInput(configuration.getParameters());
+        }
+    }
 
-		final TableColumnSorter sorter = new TableColumnSorter(parameterTableViewer) ;
-		sorter.setColumn(column) ;
+    private void createImportExportButtons(final Composite mainComposite) {
+        final Composite composite = new Composite(mainComposite, SWT.NONE);
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
-	}
+        final Button importButton = new Button(composite, SWT.PUSH);
+        importButton.setText(Messages.importParameterFile);
+        importButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create());
+        importButton.addSelectionListener(new SelectionAdapter() {
 
-	@Override
-	public void updatePage(final AbstractProcess process,final Configuration configuration) {
-		this.process = process ;
-		this.configuration = configuration ;
-		if(process != null && configuration != null && parameterTableViewer != null && !parameterTableViewer.getTable().isDisposed()){
-			parameterTableViewer.setInput(configuration.getParameters()) ;
-		}
-	}
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                final ImportParametersAction action = new ImportParametersAction();
+                action.setConfiguration(configuration);
+                action.setProcess(process);
+                action.run();
+                parameterTableViewer.refresh();
+                getContainer().updateMessage();
+            }
+        });
 
-	private void createImportExportButtons(final Composite mainComposite) {
-		final Composite composite = new Composite(mainComposite, SWT.NONE) ;
-		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
-		composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        final Button exportButton = new Button(composite, SWT.PUSH);
+        exportButton.setText(Messages.exportParameterFile);
+        exportButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create());
+        exportButton.addSelectionListener(new SelectionAdapter() {
 
-		final Button importButton = new Button(composite, SWT.PUSH);
-		importButton.setText(Messages.importParameterFile);
-		importButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create());
-		importButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                final ExportParametersAction action = new ExportParametersAction();
+                action.setConfiguration(configuration);
+                action.setProcess(process);
+                action.run();
+            }
+        });
+    }
 
+    @Override
+    public String isConfigurationPageValid(final Configuration configuration) {
+        if (configuration != null) {
+            for (final Parameter p : configuration.getParameters()) {
+                final String input = p.getValue();
+                final String typeName = p.getTypeClassname();
+                if (input == null || input.isEmpty()) {
+                    return Messages.bind(Messages.missingParameterValue, p.getName());
+                } else if (typeName.equals(Integer.class.getName())) {
+                    try {
+                        Integer.parseInt(input);
+                    } catch (final NumberFormatException e) {
+                        return Messages.bind(Messages.invalidIntegerForParameter, p.getName());
+                    }
+                } else if (typeName.equals(Double.class.getName())) {
+                    try {
+                        Double.parseDouble(input);
+                    } catch (final NumberFormatException e) {
+                        return Messages.bind(Messages.invalidDoulbeForParameter, p.getName());
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				final ImportParametersAction action = new ImportParametersAction() ;
-				action.setConfiguration(configuration);
-				action.setProcess(process) ;
-				action.run() ;
-				parameterTableViewer.refresh();
-				getContainer().updateMessage();
-			}
-		}) ;
+    @Override
+    public Image getConfigurationImage() {
+        return Pics.getImage(PicsConstants.parameter);
+    }
 
-		final Button exportButton = new Button(composite, SWT.PUSH);
-		exportButton.setText(Messages.exportParameterFile);
-		exportButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create()) ;
-		exportButton.addSelectionListener(new SelectionAdapter() {
-
-
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				final ExportParametersAction action = new ExportParametersAction() ;
-				action.setConfiguration(configuration);
-				action.setProcess(process) ;
-				action.run() ;
-			}
-		}) ;
-	}
-
-	@Override
-	public String isConfigurationPageValid(final Configuration configuration) {
-		if(configuration != null){
-			for(final Parameter p :configuration.getParameters()){
-				final String input = p.getValue() ;
-				final String typeName = p.getTypeClassname() ;
-				if(input == null || input.isEmpty()){
-					return Messages.bind(Messages.missingParameterValue,p.getName()) ;
-				}else if(typeName.equals(Integer.class.getName())){
-					try{
-						Integer.parseInt(input) ;
-					}catch (final NumberFormatException e) {
-						return Messages.bind(Messages.invalidIntegerForParameter,p.getName()) ;
-					}
-				}else if(typeName.equals(Double.class.getName())){
-					try{
-						Double.parseDouble(input) ;
-					}catch (final NumberFormatException e) {
-						return Messages.bind(Messages.invalidDoulbeForParameter,p.getName()) ;
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-
-	@Override
-	public Image getConfigurationImage() {
-		return Pics.getImage(PicsConstants.parameter);
-	}
-
-	@Override
-	public boolean isDefault() {
-		return true;
-	}
+    @Override
+    public boolean isDefault() {
+        return true;
+    }
 
 }

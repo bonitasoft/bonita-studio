@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.data.provider;
 
@@ -46,25 +44,22 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class JavaSetterOperatorEditor implements IOperatorEditor {
 
     private TreeViewer javaTreeviewer;
     private final List<ISelectionChangedListener> listeners = new ArrayList<ISelectionChangedListener>();
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IOperatorEditor#appliesTo(java.lang.String)
      */
     @Override
     public boolean appliesTo(final String operatorType) {
         return ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operatorType);
     }
-
 
     @Override
     public boolean appliesTo(final Expression expression) {
@@ -76,7 +71,8 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
                 && expression.getReferencedElements().get(0) instanceof JavaObjectData;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IOperatorEditor#canFinish()
      */
     @Override
@@ -84,54 +80,58 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
         return isSetterOrDataSelected((ITreeSelection) javaTreeviewer.getSelection());
     }
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IOperatorEditor#createOpeartorEditor(org.eclipse.swt.widgets.Composite, org.bonitasoft.studio.model.expression.Operator, org.bonitasoft.studio.model.expression.Expression)
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IOperatorEditor#createOpeartorEditor(org.eclipse.swt.widgets.Composite,
+     * org.bonitasoft.studio.model.expression.Operator, org.bonitasoft.studio.model.expression.Expression)
      */
     @Override
     public Composite createOpeartorEditor(final Composite parent, final Operator operator, final Expression sourceExpression) {
-        final Composite client = new Composite(parent, SWT.NONE)  ;
+        final Composite client = new Composite(parent, SWT.NONE);
         client.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create()) ;
+        client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
 
-        final JavaObjectData data = (JavaObjectData) sourceExpression.getReferencedElements().get(0) ;
+        final JavaObjectData data = (JavaObjectData) sourceExpression.getReferencedElements().get(0);
 
         javaTreeviewer = new TreeViewer(client, SWT.SINGLE | SWT.BORDER);
         javaTreeviewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
         javaTreeviewer.setContentProvider(new JavaSetterContentProvider());
         javaTreeviewer.setLabelProvider(new JavaUILabelProvider() {
+
             @Override
             public String getText(final Object item) {
-                if(item instanceof IMethod){
+                if (item instanceof IMethod) {
                     try {
-                        return super.getText(item) + " - "+ SignatureUtil.stripSignatureToFQN(((IMethod) item).getReturnType());
+                        return super.getText(item) + " - " + SignatureUtil.stripSignatureToFQN(((IMethod) item).getReturnType());
                     } catch (final JavaModelException e) {
-                        BonitaStudioLog.error(e) ;
-                        return null ;
+                        BonitaStudioLog.error(e);
+                        return null;
                     }
-                }else{
-                    return super.getText(item) ;
+                } else {
+                    return super.getText(item);
                 }
             }
         });
 
         javaTreeviewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
             @Override
             public void selectionChanged(final SelectionChangedEvent event) {
                 final ITreeSelection selection = (ITreeSelection) event.getSelection();
-                if(!selection.isEmpty()){
-                    final boolean isValid =  isSetterOrDataSelected(selection) ;
-                    if(isValid){
+                if (!selection.isEmpty()) {
+                    final boolean isValid = isSetterOrDataSelected(selection);
+                    if (isValid) {
                         final TreePath path = selection.getPaths()[0];
                         final IMethod item = (IMethod) path.getSegment(path.getSegmentCount() - 1);
-                        operator.setExpression(item.getElementName()) ;
-                        operator.getInputTypes().clear() ;
-                        for(final String type : item.getParameterTypes()){
+                        operator.setExpression(item.getElementName());
+                        operator.getInputTypes().clear();
+                        for (final String type : item.getParameterTypes()) {
                             final String qualifiedType = retrieveQualifiedType(item, type);
-                            operator.getInputTypes().add(qualifiedType) ;
+                            operator.getInputTypes().add(qualifiedType);
                         }
                     }
                 }
-                fireSelectionChange(event) ;
+                fireSelectionChange(event);
             }
 
             protected String retrieveQualifiedType(final IMethod item, final String type) {
@@ -141,33 +141,32 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
             }
         });
 
-
-        String className = null ;
-        if(data.isMultiple()){
-            className = List.class.getName() ;
-        }else if(data instanceof JavaObjectData){
-            className = data.getClassName() ;
+        String className = null;
+        if (data.isMultiple()) {
+            className = List.class.getName();
+        } else if (data instanceof JavaObjectData) {
+            className = data.getClassName();
         }
-        if(className != null){
+        if (className != null) {
             javaTreeviewer.setInput(className);
-            javaTreeviewer.getTree().setFocus() ;
-            javaTreeviewer.expandAll() ;
-            final IMethod selectedMethod  = getJavaSelectionFromContent(data,operator) ;
-            if(selectedMethod != null){
-                javaTreeviewer.setSelection(new StructuredSelection(selectedMethod)) ;
+            javaTreeviewer.getTree().setFocus();
+            javaTreeviewer.expandAll();
+            final IMethod selectedMethod = getJavaSelectionFromContent(data, operator);
+            if (selectedMethod != null) {
+                javaTreeviewer.setSelection(new StructuredSelection(selectedMethod));
             }
         }
-        return client ;
+        return client;
     }
 
     protected void fireSelectionChange(final SelectionChangedEvent event) {
-        for(final ISelectionChangedListener l : listeners){
-            l.selectionChanged(event) ;
+        for (final ISelectionChangedListener l : listeners) {
+            l.selectionChanged(event);
         }
     }
 
     protected String generateJavaAdditionalPath(final ITreeSelection selection) {
-        if(selection == null){
+        if (selection == null) {
             return "";
         }
         final TreePath path = selection.getPaths()[0];
@@ -176,13 +175,13 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
         }
         final StringBuilder res = new StringBuilder();
         final Object item = path.getSegment(path.getSegmentCount() - 1);
-        res.append(((IJavaElement)item).getElementName());
+        res.append(((IJavaElement) item).getElementName());
         return res.toString();
     }
 
     private boolean isSetterOrDataSelected(final ITreeSelection selection) {
         if (selection.getFirstElement() instanceof IMethod) {
-            final IMethod method = (IMethod)selection.getFirstElement();
+            final IMethod method = (IMethod) selection.getFirstElement();
             try {
                 return method.getParameterNames().length == 1;
             } catch (final Exception ex) {
@@ -196,31 +195,30 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
         }
     }
 
-
-    private IMethod getJavaSelectionFromContent(final JavaObjectData data,final Operator operator) {
-        String className = null ;
-        if(data != null){
-            if(data.isMultiple()){
+    private IMethod getJavaSelectionFromContent(final JavaObjectData data, final Operator operator) {
+        String className = null;
+        if (data != null) {
+            if (data.isMultiple()) {
                 className = List.class.getName();
-            }else if( data instanceof JavaObjectData){
-                className = data.getClassName() ;
+            } else if (data instanceof JavaObjectData) {
+                className = data.getClassName();
             }
-            if(className != null){
-                final String content = operator.getExpression() ;
-                if(content != null && !content.isEmpty()){
+            if (className != null) {
+                final String content = operator.getExpression();
+                if (content != null && !content.isEmpty()) {
 
-                    final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
+                    final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
                     IType type = null;
                     try {
                         type = project.findType(className);
-                        for(final IMethod m : type.getMethods()){
-                            final String method = m.getElementName() ;
-                            if(method.equals(content)){
-                                return m ;
+                        for (final IMethod m : type.getMethods()) {
+                            final String method = m.getElementName();
+                            if (method.equals(content)) {
+                                return m;
                             }
                         }
                     } catch (final JavaModelException e) {
-                        BonitaStudioLog.error(e) ;
+                        BonitaStudioLog.error(e);
                     }
 
                 }
@@ -231,7 +229,7 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
 
     @Override
     public void addSelectionChangedListener(final ISelectionChangedListener listener) {
-        listeners .add(listener) ;
+        listeners.add(listener);
     }
 
     @Override
@@ -241,12 +239,12 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
 
     @Override
     public void removeSelectionChangedListener(final ISelectionChangedListener listener) {
-        listeners.remove(listener) ;
+        listeners.remove(listener);
     }
 
     @Override
     public void setSelection(final ISelection selection) {
-        javaTreeviewer.setSelection(selection) ;
+        javaTreeviewer.setSelection(selection);
     }
 
 }
