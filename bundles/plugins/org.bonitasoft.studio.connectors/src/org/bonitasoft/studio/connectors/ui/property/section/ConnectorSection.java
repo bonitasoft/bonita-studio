@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
@@ -116,6 +117,7 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
 
         tableViewer.setContentProvider(new EMFListFeatureTreeContentProvider(getConnectorFeature()));
         tableViewer.setLabelProvider(new StyledConnectorLabelProvider());
+        setTreeFilter();
 
     }
 
@@ -221,6 +223,7 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
                 final WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(Display.getCurrent().getActiveShell(), createAddConnectorWizard());
                 if(wizardDialog.open() == Dialog.OK){
                     tableViewer.refresh();
+                    
                 }
             }
 
@@ -310,6 +313,13 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
         updateButtons();
     }
 
+    protected void setTreeFilter(){
+    }
+    
+    protected TableViewer getTree(){
+    	return tableViewer;
+    }
+    
 
     protected void refreshTree() {
         if(!tableViewer.getTable().isDisposed()){
@@ -419,5 +429,16 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
         super.refresh();
         refreshTree();
     }
+    
+    protected ConnectorWizard createConnectorWizard(){
+		return new ConnectorWizard(getEObject(), getConnectorFeature(), getConnectorFeatureToCheckUniqueID());
+	}
+    
+    /**
+	 * @param connectorWizard
+	 */
+	protected void setConnectorEvent(ConnectorWizard connectorWizard,String connectorEvent) {
+		connectorWizard.setConnectorEvent(connectorEvent);
+	}
 
 }

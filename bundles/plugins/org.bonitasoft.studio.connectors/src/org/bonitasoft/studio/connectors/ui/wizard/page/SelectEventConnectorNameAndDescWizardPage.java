@@ -66,47 +66,10 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
     @Override
     protected Composite doCreateControl(final Composite parent, final EMFDataBindingContext context) {
         final Composite composite = super.doCreateControl(parent, context);
-        createLifecycle(composite) ;
         createConnectorFailsControls(composite,context);
         return composite ;
     }
 
-
-    protected void createLifecycle(final Composite composite) {
-        if (connector.eContainingFeature() != ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS) {
-            if (container != null && activityHasLifecycle()
-                    && !ProcessPackage.Literals.CATCH_MESSAGE_EVENT.isSuperTypeOf(container.eClass())
-                    && !ProcessPackage.Literals.CATCH_SIGNAL_EVENT.isSuperTypeOf(container.eClass())
-                    && !ProcessPackage.Literals.ERROR_EVENT.isSuperTypeOf(container.eClass())
-                    && !ProcessPackage.Literals.TIMER_EVENT.isSuperTypeOf(container.eClass())) {
-
-                final Label eventLabel = new Label(composite, SWT.NONE);
-                eventLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).create());
-                eventLabel.setText(Messages.selectActivityEvent);
-
-                lifeCycle = new LifeCycleWidget(composite, getEvent(), null);
-
-                final GridData gd1 = new GridData(lifeCycle.getWidth(), lifeCycle.getHeight());
-                gd1.horizontalIndent = 0;
-                lifeCycle.setLayoutData(gd1);
-                lifeCycle.addSelectionListener(new SelectionAdapter() {
-
-                    @Override
-                    public void widgetSelected(final SelectionEvent e) {
-                        setEvent(lifeCycle.getEvent());
-                    }
-                });
-
-                if (connector != null && connector.getEvent() != null) {
-                    setEvent(connector.getEvent());
-                } else {
-                    setEvent(ConnectorEvent.ON_FINISH.toString());
-                }
-            } else {
-                setEvent(ConnectorEvent.ON_FINISH.toString());
-            }
-        }
-    }
 
 
     protected void createConnectorFailsControls(final Composite composite,final EMFDataBindingContext context) {
