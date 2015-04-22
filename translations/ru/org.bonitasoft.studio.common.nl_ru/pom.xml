@@ -7,7 +7,7 @@
     <groupId>org.bonitasoft.studio.translations</groupId>
     <version>6.5.2-SNAPSHOT</version>
   </parent>
-  <groupId></groupId>
+  <groupId>org.bonitasoft.studio.translations.ru</groupId>
   <artifactId>org.bonitasoft.studio.common.nl_ru</artifactId>
   <version>6.5.2-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
