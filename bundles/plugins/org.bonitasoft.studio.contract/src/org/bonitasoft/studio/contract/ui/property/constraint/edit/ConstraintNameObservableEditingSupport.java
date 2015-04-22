@@ -12,14 +12,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property.input.edit;
+package org.bonitasoft.studio.contract.ui.property.constraint.edit;
 
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.collect.Iterables.removeIf;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAllElementOfTypeIn;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getFirstContainerOfType;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.convertUpdateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
@@ -30,36 +29,22 @@ import java.util.List;
 import org.bonitasoft.studio.common.jface.databinding.CustomTextEMFObservableValueEditingSupport;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IMessageManager;
-import org.eclipse.ui.progress.IProgressService;
 
-public class InputNameObservableEditingSupport extends CustomTextEMFObservableValueEditingSupport {
+public class ConstraintNameObservableEditingSupport extends CustomTextEMFObservableValueEditingSupport {
 
-    private static final int INPUT_NAME_MAX_LENGTH = 50;
-    private final IProgressService progressService;
+    private static final int CONSTRAINT_NAME_MAX_LENGTH = 50;
 
-    public InputNameObservableEditingSupport(final ColumnViewer viewer,
+    public ConstraintNameObservableEditingSupport(final ColumnViewer viewer,
             final IMessageManager messageManager,
-            final DataBindingContext dbc,
-            final IProgressService progressService) {
-        super(viewer, ProcessPackage.Literals.CONTRACT_INPUT__NAME, messageManager, dbc);
-        this.progressService = progressService;
-    }
-
-    @Override
-    protected TextCellEditor getCellEditor(final Object object) {
-        final TextCellEditor textCellEditor = super.getCellEditor(object);
-        final Text control = (Text) textCellEditor.getControl();
-        textCellEditor.addListener(new RefactorInputNameListener(progressService, (ContractInput) object, control));
-        return textCellEditor;
+            final DataBindingContext dbc) {
+        super(viewer, ProcessPackage.Literals.CONTRACT_CONSTRAINT__NAME, messageManager, dbc);
     }
 
     /*
@@ -72,13 +57,12 @@ public class InputNameObservableEditingSupport extends CustomTextEMFObservableVa
                 .withValidator(
                         multiValidator()
                                 .addValidator(mandatoryValidator(Messages.name))
-                                .addValidator(maxLengthValidator(Messages.name, INPUT_NAME_MAX_LENGTH))
-                                .addValidator(groovyReferenceValidator(Messages.name).startsWithLowerCase())
-                                .addValidator(uniqueValidator().in(allContractInput(element)).onProperty("name"))).create();
+                                .addValidator(maxLengthValidator(Messages.name, CONSTRAINT_NAME_MAX_LENGTH))
+                                .addValidator(uniqueValidator().in(allContractConstraint(element)).onProperty("name"))).create();
     }
 
-    private Iterable<ContractInput> allContractInput(final EObject element) {
-        final List<ContractInput> result = getAllElementOfTypeIn(getFirstContainerOfType(element, Contract.class), ContractInput.class);
+    private Iterable<ContractConstraint> allContractConstraint(final EObject element) {
+        final List<ContractConstraint> result = getAllElementOfTypeIn(getFirstContainerOfType(element, Contract.class), ContractConstraint.class);
         removeIf(result, equalTo(element));
         return result;
     }
