@@ -23,34 +23,34 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class Status2MessageSeverityTest {
+public class StatusToMessageSeverityTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void should_convert_error_status_severity_to_error_message_severity() throws Exception {
-        assertThat(new Status2MessageSeverity(ValidationStatus.error("an error message")).toMessageSeverity()).isEqualTo(IMessage.ERROR);
+        assertThat(new StatusToMessageSeverity(ValidationStatus.error("an error message")).toMessageSeverity()).isEqualTo(IMessage.ERROR);
     }
 
     @Test
     public void should_convert_warning_status_severity_to_warning_message_severity() throws Exception {
-        assertThat(new Status2MessageSeverity(ValidationStatus.warning("a warning message")).toMessageSeverity()).isEqualTo(IMessage.WARNING);
+        assertThat(new StatusToMessageSeverity(ValidationStatus.warning("a warning message")).toMessageSeverity()).isEqualTo(IMessage.WARNING);
     }
 
     @Test
     public void should_convert_info_status_severity_to_info_message_severity() throws Exception {
-        assertThat(new Status2MessageSeverity(ValidationStatus.info("an info message")).toMessageSeverity()).isEqualTo(IMessage.INFORMATION);
+        assertThat(new StatusToMessageSeverity(ValidationStatus.info("an info message")).toMessageSeverity()).isEqualTo(IMessage.INFORMATION);
     }
 
     @Test
     public void should_convert_ok_status_severity_to_none_message_severity() throws Exception {
-        assertThat(new Status2MessageSeverity(Status.OK_STATUS).toMessageSeverity()).isEqualTo(IMessage.NONE);
+        assertThat(new StatusToMessageSeverity(Status.OK_STATUS).toMessageSeverity()).isEqualTo(IMessage.NONE);
     }
 
     @Test
     public void should_throw_an_IllegalArgumentException_if_severity_code_is_unknown() throws Exception {
-        final Status2MessageSeverity status2MessageSeverity = new Status2MessageSeverity(Status.CANCEL_STATUS);
+        final StatusToMessageSeverity status2MessageSeverity = new StatusToMessageSeverity(Status.CANCEL_STATUS);
 
         thrown.expect(IllegalArgumentException.class);
 

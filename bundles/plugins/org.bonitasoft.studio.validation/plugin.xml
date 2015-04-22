@@ -1012,7 +1012,7 @@
                   {0}
                </message>
                <target
-                     class="Task:http://www.bonitasoft.org/ns/studio/process">
+                     class="ContractConstraint:http://www.bonitasoft.org/ns/studio/process">
                </target>
             </constraint>
          </constraints>

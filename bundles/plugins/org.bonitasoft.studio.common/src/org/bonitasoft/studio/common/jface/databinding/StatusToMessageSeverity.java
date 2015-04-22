@@ -17,11 +17,11 @@ package org.bonitasoft.studio.common.jface.databinding;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.forms.IMessage;
 
-public class Status2MessageSeverity {
+public class StatusToMessageSeverity {
 
     private final IStatus status;
 
-    public Status2MessageSeverity(final IStatus status) {
+    public StatusToMessageSeverity(final IStatus status) {
         this.status = status;
     }
 
