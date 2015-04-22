@@ -33,25 +33,29 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IMessageManager;
+import org.eclipse.ui.progress.IProgressService;
 
 public class InputNameObservableEditingSupport extends CustomTextEMFObservableValueEditingSupport {
 
     private static final int INPUT_NAME_MAX_LENGTH = 50;
     private final Contract contract;
+    private final IProgressService progressService;
 
     public InputNameObservableEditingSupport(final ColumnViewer viewer,
             final Contract contract,
             final IMessageManager messageManager,
-            final DataBindingContext dbc) {
+            final DataBindingContext dbc,
+            final IProgressService progressService) {
         super(viewer, ProcessPackage.Literals.CONTRACT_INPUT__NAME, messageManager, dbc);
         this.contract = contract;
+        this.progressService = progressService;
     }
 
     @Override
     protected TextCellEditor getCellEditor(final Object object) {
         final TextCellEditor textCellEditor = super.getCellEditor(object);
         final Text control = (Text) textCellEditor.getControl();
-        textCellEditor.addListener(new RefactorInputNameListener((ContractInput) object, control));
+        textCellEditor.addListener(new RefactorInputNameListener(progressService, (ContractInput) object, control));
         return textCellEditor;
     }
 
