@@ -12,14 +12,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.jface.databinding;
+package org.bonitasoft.studio.common.jface.databinding.validator;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.UniqueValidator;
 
 /**
  * @author Romain Bioteau
  */
-public class UniqueValidatorFactory {
+public class UniqueValidatorFactory implements IValidatorFactory {
 
     public static UniqueValidatorFactory uniqueValidator() {
         return new UniqueValidatorFactory(new UniqueValidator());
@@ -41,6 +40,7 @@ public class UniqueValidatorFactory {
         return this;
     }
 
+    @Override
     public UniqueValidator create() {
         return uniqueValidator;
     }

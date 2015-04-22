@@ -16,8 +16,8 @@
  */
 package org.bonitasoft.studio.contract.core.validation;
 
-import org.bonitasoft.studio.common.jface.databinding.MultiValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.MultiValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.eclipse.core.runtime.IStatus;

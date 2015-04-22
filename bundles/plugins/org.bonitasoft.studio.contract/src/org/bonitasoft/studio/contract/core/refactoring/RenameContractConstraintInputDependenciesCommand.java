@@ -33,9 +33,9 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 /**
  * @author Romain Bioteau
  */
-public class RenameContractConstraintInputNameCommand extends CompoundCommand implements ProcessPackage.Literals {
+public class RenameContractConstraintInputDependenciesCommand extends CompoundCommand implements ProcessPackage.Literals {
 
-    public RenameContractConstraintInputNameCommand(final EditingDomain editingDomain, final ContractConstraint owner,
+    public RenameContractConstraintInputDependenciesCommand(final EditingDomain editingDomain, final ContractConstraint owner,
             final GroovyScriptRefactoringOperation groovyScriptRefactoringOperation) {
         checkArgument(groovyScriptRefactoringOperation.getDiffs().size() == 1);
         final ReferenceDiff referenceDiff = groovyScriptRefactoringOperation.getDiffs().get(0);
