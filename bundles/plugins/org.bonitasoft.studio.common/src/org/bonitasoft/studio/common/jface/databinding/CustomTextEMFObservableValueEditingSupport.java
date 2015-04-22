@@ -39,7 +39,6 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.IMessage;
 import org.eclipse.ui.forms.IMessageManager;
 
 public abstract class CustomTextEMFObservableValueEditingSupport extends ObservableValueEditingSupport {
@@ -124,22 +123,7 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
         updateTextEditorFeedback(status);
         messageManager.removeAllMessages();
         if (!status.isOK()) {
-            messageManager.addMessage("", status.getMessage(), null, toMessageSeverity(status));
-        }
-    }
-
-    protected int toMessageSeverity(final IStatus status) {
-        switch (status.getSeverity()) {
-            case IStatus.OK:
-                return IMessage.NONE;
-            case IStatus.ERROR:
-                return IMessage.ERROR;
-            case IStatus.WARNING:
-                return IMessage.WARNING;
-            case IStatus.INFO:
-                return IMessage.INFORMATION;
-            default:
-                throw new IllegalArgumentException("Unsupported status severity code :" + status.getSeverity());
+            messageManager.addMessage("", status.getMessage(), null, new Status2MessageSeverity(status).toMessageSeverity());
         }
     }
 
