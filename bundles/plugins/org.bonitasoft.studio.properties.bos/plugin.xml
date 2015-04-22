@@ -49,7 +49,7 @@
         </propertySection>
         <propertySection
               class="org.bonitasoft.studio.properties.bos.sections.data.DataSectionBOS.PoolDataSectionBOS"
-              filter="org.bonitasoft.studio.properties.filters.TaskFilter"
+              filter="org.bonitasoft.studio.properties.filters.ActivityFilter"
               id="PoolDataSection"
               tab="tab.poolData"
               viewID="org.bonitasoft.studio.views.properties.process.data">
