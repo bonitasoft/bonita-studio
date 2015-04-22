@@ -12,14 +12,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.jface.databinding;
+package org.bonitasoft.studio.common.jface.databinding.validator;
 
 import org.eclipse.core.databinding.validation.IValidator;
 
 /**
  * @author Romain Bioteau
  */
-public class MultiValidatorFactory {
+public class MultiValidatorFactory implements IValidatorFactory {
 
     public static MultiValidatorFactory multiValidator() {
         return new MultiValidatorFactory(new MultiValidator());
@@ -36,6 +36,12 @@ public class MultiValidatorFactory {
         return this;
     }
 
+    public MultiValidatorFactory addValidator(final IValidatorFactory validatorFactory) {
+        multiValidator.addValidator(validatorFactory.create());
+        return this;
+    }
+
+    @Override
     public MultiValidator create() {
         return multiValidator;
     }

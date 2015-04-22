@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.forbiddenCharactersValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.maxLengthValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.utf8InputValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.forbiddenCharactersValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.utf8InputValidator;
 
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;

@@ -22,8 +22,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.bonitasoft.simulation.model.Period;
-import org.bonitasoft.studio.common.jface.databinding.MultiValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.MultiValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.properties.DynamicAddRemoveLineComposite;
 import org.bonitasoft.studio.common.repository.RepositoryManager;

@@ -46,6 +46,8 @@ public interface SWTBotConstants {
     public static final String VIEWS_TREE_OVERVIEW = "org.bonitasoft.studio.views.overview.tree";
     
     public static final String VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES = "Variables";
+    public static final String VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_IN = "Connectors in";
+    public static final String VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_OUT="Connectors out";
 
     public static final String SWTBOT_ID_EXPLORER_LEFT_TREE = "org.bonitasoft.studio.treeexplorer.left";
     public static final String SWTBOT_ID_EXPLORER_RIGHT_TABLE = "org.bonitasoft.studio.treeexplorer.right";

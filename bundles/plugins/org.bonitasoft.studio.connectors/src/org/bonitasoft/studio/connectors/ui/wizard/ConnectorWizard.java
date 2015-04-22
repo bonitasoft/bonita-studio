@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.ModelVersion;
@@ -324,7 +325,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
         return namePage;
     }
 
-    protected void setUseEvents(final boolean useEvents) {
+    public void setUseEvents(final boolean useEvents) {
         this.useEvents = useEvents;
     }
 
@@ -758,4 +759,10 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
     @Override
     public void setIsOverviewContext(final boolean isOverviewContext) {
     }
+    
+    public void setConnectorEvent(String event){
+    	Assert.isTrue(event.equals(ConnectorEvent.ON_FINISH.toString()) || event.equals(ConnectorEvent.ON_ENTER.toString()));
+    	connectorWorkingCopy.setEvent(event);
+    }
+    
 }

@@ -16,9 +16,9 @@ package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.engine.bdm.model.Index;
-import org.bonitasoft.studio.businessobject.ui.wizard.listener.ColumnViewerUpdateListener;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.IndexNameCellEditorValidator;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.UniqueConstraintNameCellEditorValidator;
+import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;

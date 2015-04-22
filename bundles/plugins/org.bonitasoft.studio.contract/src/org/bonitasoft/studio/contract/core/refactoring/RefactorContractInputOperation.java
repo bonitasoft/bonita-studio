@@ -75,7 +75,7 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
     private void updateContractInputReferenceInConstraints(final CompoundCommand cc) {
         for (final ContractInputRefactorPair refactorPair : pairsToRefactor) {
             for (final ContractConstraint constraint : filter(container.getContract().getConstraints(), constraintWithInputName(refactorPair.getOldValueName()))) {
-                cc.append(new RenameContractConstraintInputNameCommand(getEditingDomain(), constraint, createGroovyScriptRefactoringOperation(constraint,
+                cc.append(new RenameContractConstraintInputDependenciesCommand(getEditingDomain(), constraint, createGroovyScriptRefactoringOperation(constraint,
                         refactorPair)));
             }
         }

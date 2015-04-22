@@ -68,7 +68,7 @@ public class TestDatabaseConnectorOutputMode extends SWTBotGefTestCase implement
 			String connectorVersion, String[] dbCategoryLabel,String connectorName) {
 		//SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorLabel,connectorVersion,dbCategoryLabel, connectorName);
 		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION).show();
-		SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
+		SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_IN);
 		bot.button("Add...").click();
 		bot.text().setText(connectorLabel);
 		bot.table().select(0);

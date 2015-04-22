@@ -20,7 +20,7 @@ package org.bonitasoft.studio.simulation.properties.contributions;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.BonitaNumberFormat;
-import org.bonitasoft.studio.common.jface.databinding.WrappingValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.WrappingValidator;
 import org.bonitasoft.studio.common.properties.AbstractPropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;

@@ -53,6 +53,10 @@ public class ContractDefinitionValidator {
         validationRules.add(new ContractInputTypeValidationRule());
     }
 
+    public IMessageManager getMessageManager() {
+        return messageManager;
+    }
+
     public IStatus validate(final Contract contract) {
         messageManager.removeAllMessages();
         if (contract != null) {
