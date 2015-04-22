@@ -79,7 +79,9 @@ public class ContractInputController implements IViewerController {
 
             @Override
             public void run() {
-                viewer.editElement(defaultInput, 0);
+                if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
+                    viewer.editElement(defaultInput, 0);
+                }
             }
         });
 
