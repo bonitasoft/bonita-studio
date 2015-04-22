@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012-2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -62,7 +62,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
     @Override
     protected CompoundCommand doBuildCompoundCommand(final CompoundCommand compoundCommand, final IProgressMonitor monitor) {
         Assert.isNotNull(dataContainer);
-        final CompoundCommand deleteCommands = new CompoundCommand("Compound commands conating all delete operations to do at last step");
+        final CompoundCommand deleteCommands = new CompoundCommand("Compound commands containing all delete operations to do at last step");
         for (final DataRefactorPair pairToRefactor : pairsToRefactor) {
             Assert.isNotNull(pairToRefactor.getOldValue());
             if (pairToRefactor.getNewValue() != null) {
@@ -101,16 +101,20 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
                     && !ExpressionConstants.CONDITION_TYPE.equals(exp.getType())) {
                 for (final EObject dependency : exp.getReferencedElements()) {
                     if (dependency instanceof Data) {
-                        for (final DataRefactorPair pairToRefactor : pairsToRefactor) {
-                            if (((Data) dependency).getName().equals(pairToRefactor.getOldValue().getName())) {
-                                finalCommand.append(RemoveCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                                        dependency));
-                                finalCommand.append(AddCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                                        ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue())));
-                            }
-                        }
+                        updateDataReferenceInExpressions(finalCommand, exp, dependency);
                     }
                 }
+            }
+        }
+    }
+
+    private void updateDataReferenceInExpressions(final CompoundCommand finalCommand, final Expression exp, final EObject oldDependency) {
+        for (final DataRefactorPair pairToRefactor : pairsToRefactor) {
+            if (((Data) oldDependency).getName().equals(pairToRefactor.getOldValue().getName())
+                    && !isReturnFixedOnExpressionWithUpdatedType(pairToRefactor, exp)) {
+                finalCommand.append(RemoveCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, oldDependency));
+                final EObject newDependency = ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue());
+                finalCommand.append(AddCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, newDependency));
             }
         }
     }
@@ -168,16 +172,29 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
         for (final DataRefactorPair pairToRefactor : pairsToRefactor) {
             for (final Expression exp : expressions) {
                 if (ExpressionConstants.VARIABLE_TYPE.equals(exp.getType()) && exp.getName().equals(pairToRefactor.getOldValue().getName())) {
-                    // update name and content
-                    cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__NAME, pairToRefactor.getNewValue().getName()));
-                    cc.append(SetCommand
-                            .create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, pairToRefactor.getNewValue().getName()));
-                    // update return type
-                    cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
-                            DataUtil.getTechnicalTypeFor(pairToRefactor.getNewValue())));
+                    updateDataReferenceInVariableExpression(cc, pairToRefactor, exp);
                 }
             }
         }
+    }
+
+    private void updateDataReferenceInVariableExpression(final CompoundCommand cc, final DataRefactorPair pairToRefactor, final Expression exp) {
+        if (isReturnFixedOnExpressionWithUpdatedType(pairToRefactor, exp)) {
+            cc.append(ExpressionHelper.clearExpression(exp, getEditingDomain()));
+            setAskConfirmation(true);
+        } else {
+            // update name and content
+            final Data newValue = pairToRefactor.getNewValue();
+            final String newValueName = newValue.getName();
+            cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__NAME, newValueName));
+            cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, newValueName));
+            // update return type
+            cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, DataUtil.getTechnicalTypeFor(newValue)));
+        }
+    }
+
+    private boolean isReturnFixedOnExpressionWithUpdatedType(final DataRefactorPair pairToRefactor, final Expression exp) {
+        return exp.isReturnTypeFixed() && !exp.getReturnType().equals(DataUtil.getTechnicalTypeFor(pairToRefactor.getNewValue()));
     }
 
     protected void updateDataReferenceInMultinstanciation(final CompoundCommand cc) {

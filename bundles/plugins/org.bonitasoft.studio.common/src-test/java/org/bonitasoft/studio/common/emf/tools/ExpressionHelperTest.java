@@ -201,6 +201,54 @@ public class ExpressionHelperTest {
         assertThat(expression.getReturnType()).isEqualTo(String.class.getName());
     }
 
+    @Test
+    public void shouldClearExpressionWithEditingDomain_SetEmptyExpressionButKeeptFixedReturnType() throws Exception {
+        final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
+        expression.setName("Toto");
+        expression.setContent("Titi2014");
+        expression.setType(ExpressionConstants.SCRIPT_TYPE);
+        expression.setReturnType(DocumentValue.class.getName());
+        expression.setReturnTypeFixed(true);
+        expression.getReferencedElements().add(ProcessFactory.eINSTANCE.createData());
+
+        final CompoundCommand compoundCommand = ExpressionHelper.clearExpression(expression, new AdapterFactoryEditingDomain(
+                new ExpressionItemProviderAdapterFactory(), new BasicCommandStack()));
+        assertThat(compoundCommand).isNotNull();
+        assertThat(compoundCommand.canExecute()).isTrue();
+
+        compoundCommand.execute();
+
+        assertThat(expression.getName()).isEmpty();
+        assertThat(expression.getContent()).isEmpty();
+        assertThat(expression.getType()).isEqualTo(ExpressionConstants.CONSTANT_TYPE);
+        assertThat(expression.getReferencedElements()).isEmpty();
+        assertThat(expression.getReturnType()).isEqualTo(DocumentValue.class.getName());
+    }
+
+    @Test
+    public void shouldClearExpressionWithEditingDomain_SetEmptyExpressionKeepingConditionType() throws Exception {
+        final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
+        expression.setName("Toto");
+        expression.setContent("Titi2014");
+        expression.setType(ExpressionConstants.CONDITION_TYPE);
+        expression.setReturnType(DocumentValue.class.getName());
+        expression.setReturnTypeFixed(true);
+        expression.getReferencedElements().add(ProcessFactory.eINSTANCE.createData());
+
+        final CompoundCommand compoundCommand = ExpressionHelper.clearExpression(expression, new AdapterFactoryEditingDomain(
+                new ExpressionItemProviderAdapterFactory(), new BasicCommandStack()));
+        assertThat(compoundCommand).isNotNull();
+        assertThat(compoundCommand.canExecute()).isTrue();
+
+        compoundCommand.execute();
+
+        assertThat(expression.getName()).isEmpty();
+        assertThat(expression.getContent()).isEmpty();
+        assertThat(expression.getType()).isEqualTo(ExpressionConstants.CONDITION_TYPE);
+        assertThat(expression.getReferencedElements()).isEmpty();
+        assertThat(expression.getReturnType()).isEqualTo(DocumentValue.class.getName());
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void shouldClearExpression_ThrowIllegalArgumentException() throws Exception {
         ExpressionHelper.clearExpression(null);

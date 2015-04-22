@@ -391,27 +391,30 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     private void clearExpression(final Expression selectedExpression) {
-        final String defaultType = getDefaultExpressionType(selectedExpression);
         final EditingDomain editingDomain = getEditingDomain();
         if (editingDomain != null) {
             final CompoundCommand cc = ExpressionHelper.clearExpression(selectedExpression, editingDomain);
-            cc.append(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE, defaultType));
+            if(overrideDefaultReturnType() != null){
+                cc.append(SetCommand.create(editingDomain, selectedExpression,
+                        ExpressionPackage.Literals.EXPRESSION__TYPE, overrideDefaultReturnType()));
+            }
             final boolean hasBeenExecuted = executeRemoveOperation(cc);
             if (!hasBeenExecuted) {
                 editingDomain.getCommandStack().execute(cc);
             }
         } else {
             ExpressionHelper.clearExpression(selectedExpression);
-            selectedExpression.setType(defaultType);
+            if(overrideDefaultReturnType() != null){
+                selectedExpression.setReturnType(overrideDefaultReturnType());
+            }
         }
     }
 
-    protected String getDefaultExpressionType(final Expression selectedExpression) {
-        String type = ExpressionConstants.CONSTANT_TYPE;
-        if (ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())) {
-            type = ExpressionConstants.CONDITION_TYPE;
-        }
-        return type;
+    /**
+     * @return the overrided default return type for subtype or null otherwise
+     */
+    protected String overrideDefaultReturnType() {
+        return null;
     }
 
     public void setExpressionProposalLableProvider(final IExpressionProposalLabelProvider expressionProposalLableProvider) {
