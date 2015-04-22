@@ -133,7 +133,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         inputTabItem.setText(Messages.inputTabLabel);
         final Composite inputComposite = getWidgetFactory().createComposite(tabFolder);
         inputComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        inputComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 15, 10, 5).create());
+        inputComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 25, 10, 5).create());
 
         createInputTabContent(inputComposite, observeContractValue);
 
@@ -141,7 +141,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
         final Composite constraintComposite = getWidgetFactory().createComposite(tabFolder);
         constraintComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        constraintComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 15, 10, 5).create());
+        constraintComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 25, 10, 5).create());
 
         createConstraintTabContent(constraintComposite, observeContractValue);
 
@@ -159,11 +159,11 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final Button removeButton = createButton(buttonsComposite, Messages.remove);
 
         final ContractConstraintsTableViewer constraintsTableViewer = new ContractConstraintsTableViewer(parent, getWidgetFactory());
-        constraintsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, 180).create());
+        constraintsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         constraintsTableViewer.initialize(constraintController, getMessageManager(), context);
-
         constraintsTableViewer.setInput(CustomEMFEditObservables.observeDetailList(Realm.getDefault(), observeContractValue,
                 ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
+
         constraintsTableViewer.createAddListener(addButton);
         constraintsTableViewer.createMoveUpListener(upButton);
         constraintsTableViewer.createMoveDownListener(downButton);
@@ -182,9 +182,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final Button removeButton = createButton(buttonsComposite, Messages.remove);
 
         final ContractInputTreeViewer inputsTableViewer = new ContractInputTreeViewer(parent, getWidgetFactory(), progressService);
-        inputsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, 180).create());
+        inputsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         inputsTableViewer.initialize(inputController, getMessageManager(), context);
-
         inputsTableViewer.setInput(observeContractValue);
 
         inputsTableViewer.createAddListener(addButton);
