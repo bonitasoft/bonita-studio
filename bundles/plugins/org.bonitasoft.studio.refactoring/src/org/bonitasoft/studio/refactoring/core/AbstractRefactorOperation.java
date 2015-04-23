@@ -59,12 +59,10 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
 
     public AbstractRefactorOperation(final RefactoringOperationType operationType) {
         this.operationType = operationType;
+        compoundCommand = new CompoundCommand("Refactor Operation");
     }
 
     protected CompoundCommand buildCompoundCommand(final IProgressMonitor monitor) throws InterruptedException, InvocationTargetException {
-        if (compoundCommand == null) {
-            compoundCommand = new CompoundCommand("Refactor Operation");
-        }
         if (canExecute()) {
             updateReferencesInScripts(monitor);
         }

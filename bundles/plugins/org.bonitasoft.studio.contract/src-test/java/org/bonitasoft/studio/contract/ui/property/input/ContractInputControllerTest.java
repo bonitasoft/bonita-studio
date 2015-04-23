@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.contract.ui.property.input;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -25,15 +26,18 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.fakes.FakeProgressService;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.assertions.ContractAssert;
 import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
+import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.junit.After;
@@ -63,7 +67,8 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
     public void setUp() throws Exception {
         createDisplayAndRealm();
         FileActionDialog.setDisablePopup(true);
-        contractInputController = spy(new ContractInputController());
+        contractInputController = spy(new ContractInputController(new FakeProgressService()));
+        doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(contractInputController).editingDomain(anyList());
         observableValue = new WritableValue(Realm.getDefault());
         when(viewer.getInput()).thenReturn(observableValue);
     }
@@ -151,6 +156,7 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         contract.getInputs().add(input1);
         contract.getInputs().add(input2);
         contract.getInputs().add(input3);
+        aTask().build().setContract(contract);
         observableValue.setValue(contract);
 
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(input2, input3)));
@@ -168,6 +174,7 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         contract.getInputs().add(input1);
         input1.getInputs().add(child1);
         child1.getInputs().add(child2);
+        aTask().build().setContract(contract);
         observableValue.setValue(contract);
 
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(child1)));

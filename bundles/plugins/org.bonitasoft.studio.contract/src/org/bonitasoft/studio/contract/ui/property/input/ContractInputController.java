@@ -14,38 +14,60 @@
  */
 package org.bonitasoft.studio.contract.ui.property.input;
 
+import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAllElementOfTypeIn;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.contract.ContractPlugin;
+import org.bonitasoft.studio.contract.core.refactoring.RefactorContractInputOperation;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.IViewerController;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractConstraint;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.progress.IProgressService;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 
 /**
  * @author Romain Bioteau
  */
 public class ContractInputController implements IViewerController {
+
+    private final IProgressService progressService;
+
+    public ContractInputController(final IProgressService progressService) {
+        this.progressService = progressService;
+    }
 
     @Override
     public ContractInput add(final ColumnViewer viewer) {
@@ -56,12 +78,7 @@ public class ContractInputController implements IViewerController {
         final ContractInput defaultInput = createDefaultInput((Contract) contractObservable.getValue());
         if (parentInput != null) {
             final EObject eContainer = parentInput.eContainer();
-            if (eContainer instanceof ContractInput) {
-                CustomEMFEditObservables.observeList(eContainer, ProcessPackage.Literals.CONTRACT_INPUT__INPUTS).add(defaultInput);
-            } else {
-                Assert.isLegal(eContainer instanceof Contract);
-                CustomEMFEditObservables.observeList(eContainer, ProcessPackage.Literals.CONTRACT__INPUTS).add(defaultInput);
-            }
+            CustomEMFEditObservables.observeList(eContainer, inputContainerFeature(eContainer)).add(defaultInput);
         } else {
             CustomEMFEditObservables.observeList((EObject) contractObservable.getValue(), ProcessPackage.Literals.CONTRACT__INPUTS).add(defaultInput);
         }
@@ -118,6 +135,11 @@ public class ContractInputController implements IViewerController {
         final List<?> selectedInput = selection.toList();
         Contract contract = null;
         if (openConfirmation(selectedInput)) {
+            final RefactorContractInputOperation refactorOperation = newRefactorOperation(selectedInput);
+            final TransactionalEditingDomain editingDomain = editingDomain(selectedInput);
+            refactorOperation.setEditingDomain(editingDomain);
+            refactorOperation.setAskConfirmation(true);
+            final CompoundCommand compoundCommand = refactorOperation.getCompoundCommand();
             for (final Object input : selectedInput) {
                 final ContractInput contractInput = (ContractInput) input;
                 contract = ModelHelper.getFirstContainerOfType(contractInput, Contract.class);
@@ -125,18 +147,53 @@ public class ContractInputController implements IViewerController {
                 if (contract == null) {
                     continue;
                 }
+                refactorOperation.addItemToRefactor(null, contractInput);
                 final EObject eContainer = contractInput.eContainer();
-                if (eContainer instanceof ContractInput) {
-                    CustomEMFEditObservables.observeList(eContainer, ProcessPackage.Literals.CONTRACT_INPUT__INPUTS).remove(contractInput);
-                } else {
-                    Assert.isLegal(eContainer instanceof Contract);
-                    CustomEMFEditObservables.observeList(eContainer, ProcessPackage.Literals.CONTRACT__INPUTS).remove(contractInput);
+                compoundCommand.append(RemoveCommand.create(editingDomain, eContainer, inputContainerFeature(eContainer), contractInput));
+                final Collection<ContractConstraint> constraintsReferencingInput = constraintsReferencingSingleInput(contract, contractInput);
+                if (!constraintsReferencingInput.isEmpty()) {
+                    compoundCommand.append(RemoveCommand.create(editingDomain, eContainer, ProcessPackage.Literals.CONTRACT__CONSTRAINTS,
+                            constraintsReferencingInput));
                 }
+            }
+            try {
+                if (refactorOperation.canExecute()) {
+                    progressService.run(true, true, refactorOperation);
+                }
+            } catch (final InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e, ContractPlugin.PLUGIN_ID);
             }
             if (contract != null) {
                 viewer.refresh(true);
             }
         }
+    }
+
+    private Collection<ContractConstraint> constraintsReferencingSingleInput(final Contract contract, final ContractInput contractInput) {
+        return newHashSet(filter(contract.getConstraints(), havingInputReference(contractInput.getName())));
+    }
+
+    private Predicate<ContractConstraint> havingInputReference(final String inputName) {
+        return new Predicate<ContractConstraint>() {
+
+            @Override
+            public boolean apply(final ContractConstraint constraint) {
+                return constraint.getInputNames().contains(inputName) && constraint.getInputNames().size() == 1;
+            }
+        };
+    }
+
+    protected TransactionalEditingDomain editingDomain(final List<?> selectedInput) {
+        return TransactionUtil.getEditingDomain((ContractInput) selectedInput.get(0));
+    }
+
+    private RefactorContractInputOperation newRefactorOperation(final List<?> selectedInput) {
+        return new RefactorContractInputOperation(ModelHelper.getFirstContainerOfType(
+                (ContractInput) selectedInput.get(0), ContractContainer.class), RefactoringOperationType.REMOVE);
+    }
+
+    private EReference inputContainerFeature(final EObject eContainer) {
+        return eContainer instanceof ContractInput ? ProcessPackage.Literals.CONTRACT_INPUT__INPUTS : ProcessPackage.Literals.CONTRACT__INPUTS;
     }
 
     protected boolean openConfirmation(final List<?> selectedInput) {
