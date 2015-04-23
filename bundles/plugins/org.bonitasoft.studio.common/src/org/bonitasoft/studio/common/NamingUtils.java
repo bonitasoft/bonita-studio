@@ -344,7 +344,7 @@ public class NamingUtils {
         return String.format("%s%s%s", convertToValidURI(name), VERSION_SEPARATOR, convertToValidURI(version));
     }
 
-    private static String convertToValidURI(final String input) {
+    public static String convertToValidURI(final String input) {
         String result = new String(input);
         for (final String invalidChar : URLEncodableInputValidator.reservedChars) {
             if (input.contains(invalidChar)) {

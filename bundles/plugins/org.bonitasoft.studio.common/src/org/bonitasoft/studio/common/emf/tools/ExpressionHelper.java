@@ -214,20 +214,15 @@ public class ExpressionHelper {
             if (!expr.isReturnTypeFixed() || expr.getReturnType() == null) {
                 returnType = String.class.getName();
             }
-            final CompoundCommand cc = new CompoundCommand();
-            cc.append(SetCommand.create(editingDomain, expr,
-                    ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
-            cc.append(SetCommand.create(editingDomain, expr,
-                    ExpressionPackage.Literals.EXPRESSION__NAME, ""));
-            cc.append(SetCommand.create(editingDomain, expr,
-                    ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
-            cc.append(SetCommand.create(editingDomain, expr,
-                    ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, returnType));
-            cc.append(RemoveCommand.create(editingDomain, expr,
-                    ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                    expr.getReferencedElements()));
-            cc.append(RemoveCommand.create(editingDomain, expr,
-                    ExpressionPackage.Literals.EXPRESSION__CONNECTORS, expr.getConnectors()));
+            final CompoundCommand cc = new CompoundCommand("Clear Expression");
+            if (!ExpressionConstants.CONDITION_TYPE.equals(expr.getType())) {
+                cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
+            }
+            cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
+            cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
+            cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, returnType));
+            cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, expr.getReferencedElements()));
+            cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__CONNECTORS, expr.getConnectors()));
             return cc;
         } else {
             clearExpression(expr);
@@ -239,7 +234,9 @@ public class ExpressionHelper {
         Assert.isLegal(expr != null, "Expression cannot be null.");
         expr.setName("");
         expr.setContent("");
-        expr.setType(ExpressionConstants.CONSTANT_TYPE);
+        if (!ExpressionConstants.CONDITION_TYPE.equals(expr.getType())) {
+            expr.setType(ExpressionConstants.CONSTANT_TYPE);
+        }
         expr.getReferencedElements().clear();
         expr.getConnectors().clear();
         if (!expr.isReturnTypeFixed() || expr.getReturnType() == null) {
