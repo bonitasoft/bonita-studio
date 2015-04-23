@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.connectors.ui.property.section;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
@@ -31,33 +30,32 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectorOutSectionTest {
 
-
 	private ConnectorOutSection section;
 
 	@Rule
 	public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
 
-
 	@Before
-	public void setup(){
+	public void setup() {
 		section = new ConnectorOutSection();
 
 	}
 
-
 	@Test
-	public void should_setConnectorEvent_when_creating_aConnetorWizard(){
-		final ConnectorWizard wizard = section
-				.createAddConnectorWizard();
+	public void should_setConnectorEvent_when_creating_aConnetorWizard() {
+		final ConnectorWizard wizard = section.createAddConnectorWizard();
 		assertThat(wizard.getWorkingCopyConnector().getEvent()).isEqualTo(
 				ConnectorEvent.ON_FINISH.name());
 
 	}
 
 	@Test
-	public void should_return_OnFinish_ConnectorEventFilter(){
-		assertThat(section.getViewerFilter()).isInstanceOf(ConnectorEventFilter.class);
-		assertThat(((ConnectorEventFilter)section.getViewerFilter()).getEvent()).isEqualTo(ConnectorEvent.ON_FINISH.name());
+	public void should_return_OnFinish_ConnectorEventFilter() {
+		assertThat(section.getViewerFilter()).isInstanceOf(
+				ConnectorEventFilter.class);
+		assertThat(
+				((ConnectorEventFilter) section.getViewerFilter()).getEvent())
+				.isEqualTo(ConnectorEvent.ON_FINISH.name());
 	}
 
 }

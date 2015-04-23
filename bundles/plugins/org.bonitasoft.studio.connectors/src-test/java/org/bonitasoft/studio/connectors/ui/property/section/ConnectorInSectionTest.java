@@ -30,36 +30,32 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectorInSectionTest {
 
-
-
 	private ConnectorInSection section;
-
 
 	@Rule
 	public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
 
-
 	@Before
-	public void setup(){
+	public void setup() {
 		section = new ConnectorInSection();
 
 	}
 
-
 	@Test
-	public void should_setConnectorEvent_when_creating_aConnetorWizard(){
-		final ConnectorWizard wizard = section
-				.createAddConnectorWizard();
+	public void should_setConnectorEvent_when_creating_aConnetorWizard() {
+		final ConnectorWizard wizard = section.createAddConnectorWizard();
 		assertThat(wizard.getWorkingCopyConnector().getEvent()).isEqualTo(
 				ConnectorEvent.ON_ENTER.name());
 
 	}
 
 	@Test
-	public void should_return_OnEnter_ConnectorEventFilter(){
-		assertThat(section.getViewerFilter()).isInstanceOf(ConnectorEventFilter.class);
-		assertThat(((ConnectorEventFilter)section.getViewerFilter()).getEvent()).isEqualTo(ConnectorEvent.ON_ENTER.name());
+	public void should_return_OnEnter_ConnectorEventFilter() {
+		assertThat(section.getViewerFilter()).isInstanceOf(
+				ConnectorEventFilter.class);
+		assertThat(
+				((ConnectorEventFilter) section.getViewerFilter()).getEvent())
+				.isEqualTo(ConnectorEvent.ON_ENTER.name());
 	}
-
 
 }

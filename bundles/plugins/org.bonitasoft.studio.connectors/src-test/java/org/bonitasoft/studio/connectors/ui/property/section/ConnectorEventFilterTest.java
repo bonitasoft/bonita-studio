@@ -33,47 +33,43 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectorEventFilterTest {
 
+	@Mock
+	private Viewer viewer;
 
-	 @Mock
-	 private Viewer viewer;
+	private ConnectorEventFilter onFinishFilter;
 
-	 private ConnectorEventFilter onFinishFilter;
-
-
-
-	 @Before
-	 public void setup() {
-		 onFinishFilter = new ConnectorEventFilter(ConnectorEvent.ON_FINISH.toString());
-	 }
-
-
-	@Test
-	public void should_return_true_when_connectorEvent_isOnFinish(){
-		assertTrue(onFinishFilter.select(viewer, null, aConnector().onEvent(ConnectorEvent.ON_FINISH.name()).build()));
-	}
-
-
-	@Test
-	public void select_should_return_false_when_connectorEvent_isOnEnter(){
-		assertFalse(onFinishFilter.select(viewer, null, aConnector().onEvent(ConnectorEvent.ON_ENTER.name()).build()));
+	@Before
+	public void setup() {
+		onFinishFilter = new ConnectorEventFilter(
+				ConnectorEvent.ON_FINISH.toString());
 	}
 
 	@Test
-	public void select_shoud_return_false_when_notAConnector(){
+	public void should_return_true_when_connectorEvent_isOnFinish() {
+		assertTrue(onFinishFilter.select(viewer, null,
+				aConnector().onEvent(ConnectorEvent.ON_FINISH.name()).build()));
+	}
+
+	@Test
+	public void select_should_return_false_when_connectorEvent_isOnEnter() {
+		assertFalse(onFinishFilter.select(viewer, null,
+				aConnector().onEvent(ConnectorEvent.ON_ENTER.name()).build()));
+	}
+
+	@Test
+	public void select_shoud_return_false_when_notAConnector() {
 		assertFalse(onFinishFilter.select(viewer, null, aTask().build()));
 	}
 
-
 	@Test
-	public void should_create_connectorEventFilter_when_ConnectorEvent_isOnEnter(){
-		assertNotNull(new ConnectorEventFilter(ConnectorEvent.ON_ENTER.toString()));
+	public void should_create_connectorEventFilter_when_ConnectorEvent_isOnEnter() {
+		assertNotNull(new ConnectorEventFilter(
+				ConnectorEvent.ON_ENTER.toString()));
 	}
 
-	@Test (expected=IllegalArgumentException.class)
-	public void should_failed_when_event_isNot_ON_ENTER_Or_ON_FINISH(){
-		 new ConnectorEventFilter("a");
+	@Test(expected = IllegalArgumentException.class)
+	public void should_failed_when_event_isNot_ON_ENTER_Or_ON_FINISH() {
+		new ConnectorEventFilter("a");
 	}
-
-
 
 }

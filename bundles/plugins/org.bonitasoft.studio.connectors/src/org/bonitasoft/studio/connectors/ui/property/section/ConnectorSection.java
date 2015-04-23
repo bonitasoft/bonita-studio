@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.connectors.ui.property.section;
 
-
 import static org.bonitasoft.studio.common.Messages.bosProductName;
 
 import java.util.HashSet;
@@ -69,6 +68,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+
 /**
  *
  * @author Romain Bioteau
@@ -76,365 +76,426 @@ import org.eclipse.swt.widgets.Listener;
 public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
 		implements IDoubleClickListener, ISelectionChangedListener {
 
-    private Button removeConnectorButton;
-    private Button updateConnectorButton;
-    private Button upConnectorButton;
-    private Button downConnectorButton;
-    private Composite mainComposite;
-    private TableViewer tableViewer;
+	private Button removeConnectorButton;
+	private Button updateConnectorButton;
+	private Button upConnectorButton;
+	private Button downConnectorButton;
+	private Composite mainComposite;
+	private TableViewer tableViewer;
 
-    @Override
-    protected void createContent(final Composite parent) {
-        mainComposite = getWidgetFactory().createComposite(parent);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(20, 15).create());
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        final Composite viewerComposite = getWidgetFactory().createComposite(mainComposite);
-        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        viewerComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
-        createConnectorComposite(viewerComposite);
-    }
+	@Override
+	protected void createContent(final Composite parent) {
+		mainComposite = getWidgetFactory().createComposite(parent);
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1)
+				.margins(20, 15).create());
+		mainComposite.setLayoutData(GridDataFactory.fillDefaults()
+				.grab(true, true).create());
+		final Composite viewerComposite = getWidgetFactory().createComposite(
+				mainComposite);
+		viewerComposite.setLayoutData(GridDataFactory.fillDefaults()
+				.grab(true, true).create());
+		viewerComposite.setLayout(GridLayoutFactory.fillDefaults()
+				.numColumns(2).margins(0, 0).create());
+		createConnectorComposite(viewerComposite);
+	}
 
+	private void createConnectorComposite(final Composite parent) {
+		final Composite buttonsComposite = getWidgetFactory()
+				.createPlainComposite(parent, SWT.NONE);
+		buttonsComposite.setLayoutData(GridDataFactory.fillDefaults()
+				.grab(false, true).create());
+		buttonsComposite.setLayout(GridLayoutFactory.fillDefaults()
+				.numColumns(1).margins(5, 0).spacing(0, 3).create());
 
-    private void createConnectorComposite(final Composite parent) {
-        final Composite buttonsComposite = getWidgetFactory().createPlainComposite(parent, SWT.NONE);
-        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create()) ;
-        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5,0).spacing(0, 3).create());
+		createAddConnectorButton(buttonsComposite);
+		updateConnectorButton = createUpdateConnectorButton(buttonsComposite);
+		removeConnectorButton = createRemoveConnectorButton(buttonsComposite);
+		upConnectorButton = createUpConnectorButton(buttonsComposite);
+		downConnectorButton = createDownConnectorButton(buttonsComposite);
+		createMoveConnectorButton(buttonsComposite);
 
-        createAddConnectorButton(buttonsComposite);
-        updateConnectorButton = createUpdateConnectorButton(buttonsComposite);
-        removeConnectorButton = createRemoveConnectorButton(buttonsComposite);
-        upConnectorButton = createUpConnectorButton(buttonsComposite);
-        downConnectorButton = createDownConnectorButton(buttonsComposite);
-        createMoveConnectorButton(buttonsComposite);
+		tableViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI
+				| SWT.NO_FOCUS);
+		getWidgetFactory().adapt(tableViewer.getTable(), false, false);
+		tableViewer.getTable().setLayoutData(
+				GridDataFactory.fillDefaults().grab(true, true)
+						.hint(SWT.DEFAULT, 120).create());
 
+		tableViewer.addDoubleClickListener(this);
+		tableViewer.addSelectionChangedListener(this);
 
-
-        tableViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS);
-        getWidgetFactory().adapt(tableViewer.getTable(), false, false) ;
-        tableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 120).create());
-
-        tableViewer.addDoubleClickListener(this);
-        tableViewer.addSelectionChangedListener(this);
-
-        tableViewer.setContentProvider(new EMFListFeatureTreeContentProvider(getConnectorFeature()));
-        tableViewer.setLabelProvider(new StyledConnectorLabelProvider());
+		tableViewer.setContentProvider(new EMFListFeatureTreeContentProvider(
+				getConnectorFeature()));
+		tableViewer.setLabelProvider(new StyledConnectorLabelProvider());
 		tableViewer.addFilter(getViewerFilter());
 
-    }
+	}
 
+	private void updateButtons() {
+		if (tableViewer != null) {
+			final IStructuredSelection selection = (IStructuredSelection) tableViewer
+					.getSelection();
 
-    private void updateButtons() {
-        if (tableViewer != null) {
-            final IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
+			if (!removeConnectorButton.isDisposed()) {
+				removeConnectorButton.setEnabled(!selection.isEmpty());
+			}
 
-            if (!removeConnectorButton.isDisposed()) {
-                removeConnectorButton.setEnabled(!selection.isEmpty());
-            }
+			final boolean isAnElementSelected = selection.size() == 1;
+			final boolean hasMoreThanOneItemInTheTable = tableViewer.getTable()
+					.getItemCount() > 1;
+			if (!downConnectorButton.isDisposed()) {
+				downConnectorButton.setEnabled(isAnElementSelected
+						&& hasMoreThanOneItemInTheTable);
+			}
 
-            final boolean isAnElementSelected = selection.size() == 1;
-            final boolean hasMoreThanOneItemInTheTable = tableViewer.getTable().getItemCount() > 1;
-            if(!downConnectorButton.isDisposed()){
-                downConnectorButton.setEnabled(isAnElementSelected && hasMoreThanOneItemInTheTable) ;
-            }
+			if (!upConnectorButton.isDisposed()) {
+				upConnectorButton.setEnabled(isAnElementSelected
+						&& hasMoreThanOneItemInTheTable);
+			}
 
-            if(!upConnectorButton.isDisposed()){
-                upConnectorButton.setEnabled(isAnElementSelected && hasMoreThanOneItemInTheTable) ;
-            }
+			if (!updateConnectorButton.isDisposed()) {
+				if (isAnElementSelected) {
+					final Connector connector = (Connector) selection
+							.getFirstElement();
+					final ConnectorDefRepositoryStore connectorDefStore = RepositoryManager
+							.getInstance().getRepositoryStore(
+									ConnectorDefRepositoryStore.class);
+					final ConnectorDefinition def = connectorDefStore
+							.getDefinition(connector.getDefinitionId(),
+									connector.getDefinitionVersion());
+					updateConnectorButton.setEnabled(def != null);
+				} else {
+					updateConnectorButton.setEnabled(false);
+				}
 
-            if(!updateConnectorButton.isDisposed()){
-                if(isAnElementSelected){
-                    final Connector connector = (Connector) selection.getFirstElement() ;
-                    final ConnectorDefRepositoryStore connectorDefStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-                    final ConnectorDefinition def = connectorDefStore.getDefinition(connector.getDefinitionId(),connector.getDefinitionVersion()) ;
-                    updateConnectorButton.setEnabled(def!= null) ;
-                }else{
-                    updateConnectorButton.setEnabled(false) ;
-                }
+			}
+		}
+	}
 
-            }
-        }
-    }
+	/**
+	 * @param buttonsComposite
+	 * @return
+	 */
+	private Button createRemoveConnectorButton(final Composite buttonComposite) {
+		final Button removeButton = getWidgetFactory().createButton(
+				buttonComposite, Messages.removeData, SWT.FLAT);
+		removeButton.setLayoutData(GridDataFactory.fillDefaults()
+				.minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+		removeButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(final Event event) {
+				if (tableViewer != null
+						&& ((IStructuredSelection) tableViewer.getSelection())
+								.size() > 0) {
+					final List<?> selection = ((IStructuredSelection) tableViewer
+							.getSelection()).toList();
+					if (MessageDialog.openConfirm(buttonComposite.getShell(),
+							Messages.deleteDialogTitle, createMessage())) {
+						getEditingDomain().getCommandStack().execute(
+								new RemoveCommand(getEditingDomain(),
+										getEObject(), getConnectorFeature(),
+										selection));
+						tableViewer.refresh();
+					}
+				}
+			}
 
-    /**
-     * @param buttonsComposite
-     * @return
-     */
-    private Button createRemoveConnectorButton(final Composite buttonComposite) {
-        final Button removeButton = getWidgetFactory().createButton(buttonComposite, Messages.removeData, SWT.FLAT);
-        removeButton.setLayoutData(GridDataFactory.fillDefaults().minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
-        removeButton.addListener(SWT.Selection, new Listener() {
-            @Override
-            public void handleEvent(final Event event) {
-                if (tableViewer != null && ((IStructuredSelection) tableViewer.getSelection()).size() > 0) {
-                    final List<?> selection = ((IStructuredSelection) tableViewer.getSelection()).toList();
-                    if (MessageDialog.openConfirm(buttonComposite.getShell(), Messages.deleteDialogTitle, createMessage())) {
-                        getEditingDomain().getCommandStack().execute(new RemoveCommand(getEditingDomain(), getEObject(), getConnectorFeature(), selection));
-                        tableViewer.refresh() ;
-                    }
-                }
-            }
+			public String createMessage() {
+				final Object[] selection = ((IStructuredSelection) tableViewer
+						.getSelection()).toArray();
+				final StringBuilder res = new StringBuilder(
+						Messages.deleteDialogConfirmMessage);
+				res.append(' ');
+				res.append(((Connector) selection[0]).getName());
+				for (int i = 1; i < selection.length; i++) {
+					res.append(", ");res.append(((Connector) selection[i]).getName()); //$NON-NLS-1$
+				}
+				res.append(" ?"); //$NON-NLS-1$
+				return res.toString();
+			}
+		});
+		return removeButton;
+	}
 
-            public String createMessage() {
-                final Object[] selection = ((IStructuredSelection) tableViewer.getSelection()).toArray();
-                final StringBuilder res = new StringBuilder(Messages.deleteDialogConfirmMessage);
-                res.append(' ');
-                res.append(((Connector) selection[0]).getName());
-                for (int i = 1; i < selection.length; i++) {
-                    res.append(", ");res.append(((Connector) selection[i]).getName()); //$NON-NLS-1$
-                }
-                res.append(" ?"); //$NON-NLS-1$
-                return res.toString();
-            }
-        });
-        return removeButton;
-    }
+	protected Button createMoveConnectorButton(final Composite buttonsComposite) {
+		final Button switchContainerButton = getWidgetFactory().createButton(
+				buttonsComposite, Messages.move, SWT.FLAT);
+		switchContainerButton.setLayoutData(GridDataFactory.fillDefaults()
+				.minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+		switchContainerButton.addListener(SWT.Selection, new Listener() {
 
-    protected Button createMoveConnectorButton(final Composite buttonsComposite) {
-        final Button switchContainerButton = getWidgetFactory().createButton(buttonsComposite, Messages.move, SWT.FLAT);
-        switchContainerButton.setLayoutData(GridDataFactory.fillDefaults().minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
-        switchContainerButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(final Event event) {
 
-            @Override
-            public void handleEvent(final Event event) {
+				WizardDialog dialog = null;
 
-                WizardDialog dialog = null;
+				if (tableViewer.getTable().getSelectionCount() > 0) {
+					final Connector selectedConnector = (Connector) tableViewer
+							.getTable()
+							.getItem(tableViewer.getTable().getSelectionIndex())
+							.getData();
+					dialog = new WizardDialog(Display.getDefault()
+							.getActiveShell(),
+							new ConnectorContainerSwitchWizard(
+									getEditingDomain(), ModelHelper
+											.getParentProcess(getEObject()),
+									selectedConnector));
+				} else {
+					dialog = new WizardDialog(Display.getDefault()
+							.getActiveShell(),
+							new ConnectorContainerSwitchWizard(
+									getEditingDomain(), ModelHelper
+											.getParentProcess(getEObject())));
 
-                if(tableViewer.getTable().getSelectionCount()>0){
-                    final Connector selectedConnector = (Connector)tableViewer.getTable().getItem(tableViewer.getTable().getSelectionIndex()).getData();
-                    dialog =  new WizardDialog(Display.getDefault().getActiveShell(),new ConnectorContainerSwitchWizard(getEditingDomain(),ModelHelper.getParentProcess(getEObject()), selectedConnector));
-                } else {
-                    dialog =  new WizardDialog(Display.getDefault().getActiveShell(),new ConnectorContainerSwitchWizard(getEditingDomain(),ModelHelper.getParentProcess(getEObject())));
+				}
+				if (dialog.open() == Dialog.OK) {
+					tableViewer.refresh();
+				}
+			}
+		});
+		return switchContainerButton;
+	}
 
-                }
-                if(dialog.open() == Dialog.OK){
-                    tableViewer.refresh();
-                }
-            }
-        });
-        return switchContainerButton;
-    }
+	private Button createAddConnectorButton(final Composite parent) {
+		final Button addData = getWidgetFactory().createButton(parent,
+				Messages.add, SWT.FLAT);
+		addData.setLayoutData(GridDataFactory.fillDefaults()
+				.minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+		addData.addSelectionListener(new SelectionListener() {
 
-    private Button createAddConnectorButton(final Composite parent) {
-        final Button addData = getWidgetFactory().createButton(parent, Messages.add, SWT.FLAT);
-        addData.setLayoutData(GridDataFactory.fillDefaults().minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
-        addData.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				final WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(
+						Display.getCurrent().getActiveShell(),
+						createAddConnectorWizard());
+				if (wizardDialog.open() == Dialog.OK) {
+					tableViewer.refresh();
 
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                final WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(Display.getCurrent().getActiveShell(), createAddConnectorWizard());
-                if(wizardDialog.open() == Dialog.OK){
-                    tableViewer.refresh();
+				}
+			}
 
-                }
-            }
+			@Override
+			public void widgetDefaultSelected(final SelectionEvent e) {
 
-            @Override
-            public void widgetDefaultSelected(final SelectionEvent e) {
+			}
+		});
+		return addData;
+	}
 
-            }
-        });
-        return addData;
-    }
+	protected ConnectorWizard createAddConnectorWizard() {
+		return new ConnectorWizard(getEObject(), getConnectorFeature(),
+				getConnectorFeatureToCheckUniqueID());
+	}
 
-    protected ConnectorWizard createAddConnectorWizard() {
-        return new ConnectorWizard(getEObject(), getConnectorFeature(), getConnectorFeatureToCheckUniqueID());
-    }
+	private Button createUpdateConnectorButton(final Composite parent) {
+		final Button updateButton = getWidgetFactory().createButton(parent,
+				Messages.update, SWT.FLAT);
+		updateButton.setLayoutData(GridDataFactory.fillDefaults()
+				.minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+		updateButton.addListener(SWT.Selection, new Listener() {
 
-    private Button createUpdateConnectorButton(final Composite parent) {
-        final Button updateButton = getWidgetFactory().createButton(parent, Messages.update, SWT.FLAT);
-        updateButton.setLayoutData(GridDataFactory.fillDefaults().minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
-        updateButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(final Event event) {
+				updateConnectorAction();
+			}
+		});
+		return updateButton;
+	}
 
-            @Override
-            public void handleEvent(final Event event) {
-                updateConnectorAction();
-            }
-        });
-        return updateButton;
-    }
+	private void updateConnectorAction() {
+		final IStructuredSelection selection = (IStructuredSelection) tableViewer
+				.getSelection();
+		if (selection.size() != 1) {
+			MessageDialog.openInformation(
+					Display.getCurrent().getActiveShell(),
+					Messages.selectOnlyOneElementTitle,
+					Messages.selectOnlyOneElementMessage);
+		} else {
+			final Connector connector = (Connector) selection.getFirstElement();
+			final ConnectorDefRepositoryStore connectorDefStore = RepositoryManager
+					.getInstance().getRepositoryStore(
+							ConnectorDefRepositoryStore.class);
+			final ConnectorDefinition def = connectorDefStore.getDefinition(
+					connector.getDefinitionId(),
+					connector.getDefinitionVersion());
+			if (def != null) {
+				final WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(
+						Display.getCurrent().getActiveShell(),
+						createEditConnectorWizard(connector));
+				if (wizardDialog.open() == Dialog.OK) {
+					tableViewer.refresh();
+				}
+			}
+		}
+	}
 
+	protected ConnectorWizard createEditConnectorWizard(
+			final Connector connector) {
+		return new ConnectorWizard(connector, getConnectorFeature(),
+				getConnectorFeatureToCheckUniqueID());
+	}
 
-    private void updateConnectorAction() {
-        final IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
-        if (selection.size() != 1) {
-            MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.selectOnlyOneElementTitle, Messages.selectOnlyOneElementMessage);
-        } else {
-            final Connector connector = (Connector) selection.getFirstElement() ;
-            final ConnectorDefRepositoryStore connectorDefStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-            final ConnectorDefinition def = connectorDefStore.getDefinition(connector.getDefinitionId(),connector.getDefinitionVersion()) ;
-            if(def != null){
-                final WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(Display.getCurrent().getActiveShell(), createEditConnectorWizard(connector));
-                if(wizardDialog.open() == Dialog.OK){
-                    tableViewer.refresh() ;
-                }
-            }
-        }
-    }
+	protected boolean getShowAutoGenerateForm() {
+		return true;
+	}
 
+	protected EStructuralFeature getConnectorFeature() {
+		return ProcessPackage.Literals.CONNECTABLE_ELEMENT__CONNECTORS;
+	}
 
-    protected ConnectorWizard createEditConnectorWizard(final Connector connector) {
-        return new ConnectorWizard(connector,getConnectorFeature(),getConnectorFeatureToCheckUniqueID());
-    }
+	protected Set<EStructuralFeature> getConnectorFeatureToCheckUniqueID() {
+		final Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
+		res.add(ProcessPackage.Literals.CONNECTABLE_ELEMENT__CONNECTORS);
+		return res;
+	}
 
-    protected boolean getShowAutoGenerateForm() {
-        return true;
-    }
+	protected void refreshBindings() {
+		if (tableViewer != null && getEObject() != null) {
+			bindTree();
+		}
+	}
 
-    protected EStructuralFeature getConnectorFeature() {
-        return ProcessPackage.Literals.CONNECTABLE_ELEMENT__CONNECTORS;
-    }
+	private void bindTree() {
+		final IEMFEditListProperty list = EMFEditProperties.list(
+				getEditingDomain(), getConnectorFeature());
+		final IObservableList observeConnectorList = list.observe(getEObject());
+		observeConnectorList.addChangeListener(new IChangeListener() {
 
-    protected Set<EStructuralFeature> getConnectorFeatureToCheckUniqueID() {
-        final Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
-        res.add(ProcessPackage.Literals.CONNECTABLE_ELEMENT__CONNECTORS);
-        return res;
-    }
-
-
-    protected void refreshBindings() {
-        if (tableViewer != null && getEObject() != null) {
-            bindTree();
-        }
-    }
-
-
-    private void bindTree() {
-        final IEMFEditListProperty list = EMFEditProperties.list(getEditingDomain(), getConnectorFeature());
-        final IObservableList observeConnectorList = list.observe(getEObject());
-        observeConnectorList.addChangeListener(new IChangeListener() {
-
-            @Override
-            public void handleChange(final ChangeEvent event) {
-                if(!tableViewer.getTable().isDisposed()){
-                    tableViewer.setInput(getEObject());
-                }
-            }
-        });
-        tableViewer.setInput(getEObject());
-        updateButtons();
-    }
+			@Override
+			public void handleChange(final ChangeEvent event) {
+				if (!tableViewer.getTable().isDisposed()) {
+					tableViewer.setInput(getEObject());
+				}
+			}
+		});
+		tableViewer.setInput(getEObject());
+		updateButtons();
+	}
 
 	protected abstract ViewerFilter getViewerFilter();
 
-    protected TableViewer getTree(){
-    	return tableViewer;
-    }
+	protected TableViewer getTree() {
+		return tableViewer;
+	}
 
+	protected void refreshTree() {
+		if (!tableViewer.getTable().isDisposed()) {
+			tableViewer.setInput(getEObject());
+		}
+	}
 
-    protected void refreshTree() {
-        if(!tableViewer.getTable().isDisposed()){
-            tableViewer.setInput(getEObject());
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.
+	 * AbstractModelerPropertySection#setEObject(org.eclipse.emf.ecore.EObject)
+	 */
+	@Override
+	public void setEObject(final EObject object) {
+		super.setEObject(object);
+		refreshBindings();
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.
-     * AbstractModelerPropertySection#setEObject(org.eclipse.emf.ecore.EObject)
-     */
-    @Override
-    public void setEObject(final EObject object) {
-        super.setEObject(object);
-        refreshBindings();
-    }
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.
+	 * AbstractModelerPropertySection#getEObject()
+	 */
+	@Override
+	protected EObject getEObject() {
+		final EObject eObject = super.getEObject();
+		if (eObject instanceof Lane) {
+			return ModelHelper.getParentProcess(eObject);
+		}
+		return eObject;
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.
-     * AbstractModelerPropertySection#getEObject()
-     */
-    @Override
-    protected EObject getEObject() {
-        final EObject eObject = super.getEObject();
-        if (eObject instanceof Lane) {
-            return ModelHelper.getParentProcess(eObject);
-        }
-        return eObject;
-    }
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.
+	 * AbstractModelerPropertySection#dispose()
+	 */
+	@Override
+	public void dispose() {
+		super.dispose();
+	}
 
+	@Override
+	public void doubleClick(final DoubleClickEvent event) {
+		updateConnectorAction();
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection#dispose()
-     */
-    @Override
-    public void dispose() {
-        super.dispose() ;
-    }
+	@Override
+	public void selectionChanged(final SelectionChangedEvent event) {
+		updateButtons();
+	}
 
-    @Override
-    public void doubleClick(final DoubleClickEvent event) {
-        updateConnectorAction();
-    }
+	/**
+	 * @param buttonsComposite
+	 * @return
+	 */
+	protected Button createUpConnectorButton(final Composite buttonsComposite) {
+		final Button addConnectorButton = getWidgetFactory().createButton(
+				buttonsComposite, Messages.up, SWT.FLAT);
+		addConnectorButton.setLayoutData(GridDataFactory.fillDefaults()
+				.minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+		addConnectorButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(final Event event) {
+				moveSelectedConnector(-1);
+			}
+		});
+		return addConnectorButton;
+	}
 
-    @Override
-    public void selectionChanged(final SelectionChangedEvent event) {
-        updateButtons() ;
-    }
+	/**
+	 * @param buttonsComposite
+	 * @return
+	 */
+	protected Button createDownConnectorButton(final Composite buttonsComposite) {
+		final Button addConnectorButton = getWidgetFactory().createButton(
+				buttonsComposite, Messages.down, SWT.FLAT);
+		addConnectorButton.setLayoutData(GridDataFactory.fillDefaults()
+				.minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+		addConnectorButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(final Event event) {
+				moveSelectedConnector(+1);
+			}
+		});
+		return addConnectorButton;
+	}
 
-    /**
-     * @param buttonsComposite
-     * @return
-     */
-    protected Button createUpConnectorButton(final Composite buttonsComposite) {
-        final Button addConnectorButton = getWidgetFactory().createButton(buttonsComposite, Messages.up, SWT.FLAT);
-        addConnectorButton.setLayoutData(GridDataFactory.fillDefaults().minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
-        addConnectorButton.addListener(SWT.Selection, new Listener() {
-            @Override
-            public void handleEvent(final Event event) {
-                moveSelectedConnector(-1);
-            }
-        });
-        return addConnectorButton;
-    }
+	private void moveSelectedConnector(final int diff) {
+		final EObject selectConnector = (EObject) ((IStructuredSelection) tableViewer
+				.getSelection()).getFirstElement();
+		@SuppressWarnings("unchecked")
+		final EList<Connector> connectors = (EList<Connector>) getEObject()
+				.eGet(getConnectorFeature());
+		final int destIndex = connectors.indexOf(selectConnector) + diff;
+		final Command c = new MoveCommand(getEditingDomain(), connectors,
+				selectConnector, destIndex);
+		getEditingDomain().getCommandStack().execute(c);
+		refresh();
+	}
 
-    /**
-     * @param buttonsComposite
-     * @return
-     */
-    protected Button createDownConnectorButton(final Composite buttonsComposite) {
-        final Button addConnectorButton = getWidgetFactory().createButton(buttonsComposite, Messages.down, SWT.FLAT);
-        addConnectorButton.setLayoutData(GridDataFactory.fillDefaults().minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
-        addConnectorButton.addListener(SWT.Selection, new Listener() {
-            @Override
-            public void handleEvent(final Event event) {
-                moveSelectedConnector(+1);
-            }
-        });
-        return addConnectorButton;
-    }
+	@Override
+	public String getSectionDescription() {
+		return Messages.bind(Messages.connectorSectionDescription,
+				bosProductName);
+	}
 
-
-
-    private void moveSelectedConnector(final int diff) {
-        final EObject selectConnector = (EObject) ((IStructuredSelection) tableViewer.getSelection()).getFirstElement() ;
-        @SuppressWarnings("unchecked")
-        final
-        EList<Connector> connectors = (EList<Connector>) getEObject().eGet(getConnectorFeature());
-        final int destIndex = connectors.indexOf(selectConnector) + diff;
-        final Command c = new MoveCommand(getEditingDomain(), connectors, selectConnector, destIndex);
-        getEditingDomain().getCommandStack().execute(c);
-        refresh();
-    }
-
-
-    @Override
-    public String getSectionDescription() {
-        return Messages.bind(Messages.connectorSectionDescription, bosProductName);
-    }
-
-    @Override
-    public void refresh() {
-        super.refresh();
-        refreshTree();
-    }
+	@Override
+	public void refresh() {
+		super.refresh();
+		refreshTree();
+	}
 
 	protected ConnectorWizard createConnectorWizard(final String connectorEvent) {
 		return new ConnectorWizard(getEObject(), getConnectorFeature(),
 				getConnectorFeatureToCheckUniqueID(), connectorEvent);
 	}
-
-
 
 }

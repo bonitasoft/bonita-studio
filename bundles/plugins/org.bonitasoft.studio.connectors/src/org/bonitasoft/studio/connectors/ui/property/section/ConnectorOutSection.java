@@ -24,16 +24,14 @@ public class ConnectorOutSection extends ConnectorSection {
 
 	@Override
 	protected ConnectorWizard createAddConnectorWizard() {
-		final ConnectorWizard connectorWizard =createConnectorWizard(ConnectorEvent.ON_FINISH.toString());
+		final ConnectorWizard connectorWizard = createConnectorWizard(ConnectorEvent.ON_FINISH
+				.toString());
 		return connectorWizard;
 	}
-
 
 	@Override
 	protected ViewerFilter getViewerFilter() {
 		return new ConnectorEventFilter(ConnectorEvent.ON_FINISH.toString());
 	}
-
-
 
 }

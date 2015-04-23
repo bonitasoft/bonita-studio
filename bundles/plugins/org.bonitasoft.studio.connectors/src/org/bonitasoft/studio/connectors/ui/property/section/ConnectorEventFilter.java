@@ -28,20 +28,23 @@ public class ConnectorEventFilter extends ViewerFilter {
 	private final String event;
 
 	public ConnectorEventFilter(final String event) {
-		Preconditions.checkArgument(event.equals(ConnectorEvent.ON_ENTER.toString())||event.equals(ConnectorEvent.ON_FINISH.toString()));
+		Preconditions.checkArgument(event.equals(ConnectorEvent.ON_ENTER
+				.toString())
+				|| event.equals(ConnectorEvent.ON_FINISH.toString()));
 		this.event = event;
 	}
 
 	@Override
-	public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-		if (element instanceof Connector && ((Connector)element).getEvent().equals(event)){
+	public boolean select(final Viewer viewer, final Object parentElement,
+			final Object element) {
+		if (element instanceof Connector
+				&& ((Connector) element).getEvent().equals(event)) {
 			return true;
 		}
 		return false;
 	}
 
-
-	protected String getEvent(){
+	protected String getEvent() {
 		return event;
 	}
 
