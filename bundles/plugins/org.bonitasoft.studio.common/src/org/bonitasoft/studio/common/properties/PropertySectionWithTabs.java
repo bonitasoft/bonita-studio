@@ -62,7 +62,6 @@ public abstract class PropertySectionWithTabs extends AbstractModelerPropertySec
             final org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
         folder = getWidgetFactory().createTabFolder(parent, SWT.MULTI | SWT.TOP);
-        // folder.setLayout(GridLayoutFactory.fillDefaults().margins(0, 0).create());
         final Iterator<String> titlesIterator = titles.iterator();
         for (final AbstractModelerPropertySection section : sections) {
             final CTabItem item = getWidgetFactory().createTabItem(folder, SWT.NONE);
