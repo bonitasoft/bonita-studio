@@ -1,5 +1,6 @@
 package org.bonitasoft.studio.contract.core.refactoring;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createContractInputExpression;
@@ -10,6 +11,7 @@ import static org.bonitasoft.studio.refactoring.core.groovy.ReferenceDiff.newRef
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractContainer;
@@ -31,6 +33,7 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
 
     public RefactorContractInputOperation(final ContractContainer container, final RefactoringOperationType operationType) {
         super(operationType);
+        checkArgument(container != null);
         this.container = container;
     }
 
@@ -38,7 +41,9 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
     protected CompoundCommand doBuildCompoundCommand(final CompoundCommand cc,
             final IProgressMonitor monitor) {
         updateContractInputExpressions(cc);
-        updateContractInputReferenceInConstraints(cc);
+        if (operationType == RefactoringOperationType.UPDATE) {
+            updateContractInputReferenceInConstraints(cc);
+        }
         return cc;
     }
 
@@ -56,10 +61,17 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
     private void updateContractInputExpressions(final CompoundCommand cc) {
         for (final Expression exp : filter(getAllElementOfTypeIn(container, Expression.class), withExpressionType(ExpressionConstants.CONTRACT_INPUT_TYPE))) {
             for (final ContractInputRefactorPair pairToRefactor : filter(pairsToRefactor, matchingOldName(exp.getName()))) {
-                cc.append(new UpdateExpressionCommand(getEditingDomain(), exp, createContractInputExpression(pairToRefactor.getNewValue())));
+                final ContractInput newValue = pairToRefactor.getNewValue();
+                cc.append(new UpdateExpressionCommand(getEditingDomain(), exp, newValue != null ? createContractInputExpression(newValue)
+                        : createDefaultExpression(exp)));
             }
         }
 
+    }
+
+    private Expression createDefaultExpression(final Expression exp) {
+        return ExpressionHelper
+                .createConstantExpression("", exp.isReturnTypeFixed() ? exp.getReturnType() : String.class.getName());
     }
 
     private Predicate<ContractInputRefactorPair> matchingOldName(final String expressionName) {
@@ -75,7 +87,8 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
     private void updateContractInputReferenceInConstraints(final CompoundCommand cc) {
         for (final ContractInputRefactorPair refactorPair : pairsToRefactor) {
             for (final ContractConstraint constraint : filter(container.getContract().getConstraints(), constraintWithInputName(refactorPair.getOldValueName()))) {
-                cc.append(new RenameContractConstraintInputDependenciesCommand(getEditingDomain(), constraint, createGroovyScriptRefactoringOperation(constraint,
+                cc.append(new RenameContractConstraintInputDependenciesCommand(getEditingDomain(), constraint, createGroovyScriptRefactoringOperation(
+                        constraint,
                         refactorPair)));
             }
         }

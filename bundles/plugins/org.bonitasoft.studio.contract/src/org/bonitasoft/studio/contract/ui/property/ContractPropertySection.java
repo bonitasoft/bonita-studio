@@ -95,7 +95,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
     }
 
     protected void init(final IObservableValue observeContractValue) {
-        inputController = new ContractInputController();
+        inputController = new ContractInputController(progressService);
         constraintController = new ContractConstraintController(observeContractValue);
         context = new EMFDataBindingContext();
     }

@@ -15,15 +15,22 @@
 package org.bonitasoft.studio.contract.ui.property.input;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.fakes.FakeProgressService;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -61,7 +68,8 @@ public class ContractInputTreeViewerTest extends AbstractSWTTestCase {
         parent = createDisplayAndRealm();
         FileActionDialog.setDisablePopup(true);
         inputTreeViewer = new ContractInputTreeViewer(parent, new FormToolkit(display), progressService);
-        final ContractInputController inputController = new ContractInputController();
+        final ContractInputController inputController = spy(new ContractInputController(new FakeProgressService()));
+        doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(inputController).editingDomain(anyList());
         inputTreeViewer.initialize(inputController, messageManager, new EMFDataBindingContext());
         final WritableValue contractObservableValue = new WritableValue();
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
@@ -69,6 +77,7 @@ public class ContractInputTreeViewerTest extends AbstractSWTTestCase {
         input.setName("name");
         input.setType(ContractInputType.TEXT);
         contract.getInputs().add(input);
+        aTask().build().setContract(contract);
         contractObservableValue.setValue(contract);
         inputTreeViewer.setInput(contractObservableValue);
     }
