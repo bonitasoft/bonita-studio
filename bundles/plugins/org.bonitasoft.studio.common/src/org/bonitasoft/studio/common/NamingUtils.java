@@ -347,7 +347,7 @@ public class NamingUtils {
         return NamingUtils.convertToValidURI(processName)+VERSION_SEPARATOR+NamingUtils.convertToValidURI(baseVersion) + ".proc" ;
     }
 
-    private static String convertToValidURI(final String input) {
+    public static String convertToValidURI(final String input) {
         String result = new String(input);
         for(final String invalidChar :   URLEncodableInputValidator.reservedChars){
             if(input.contains(invalidChar)){
