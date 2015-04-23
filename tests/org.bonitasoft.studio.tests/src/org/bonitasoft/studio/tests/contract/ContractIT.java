@@ -16,6 +16,8 @@ package org.bonitasoft.studio.tests.contract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.File;
+
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
@@ -37,6 +39,9 @@ import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.utils.ClassUtils;
+import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
+import org.eclipse.swtbot.swt.finder.utils.SWTUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,11 +96,11 @@ public class ContractIT extends SWTBotGefTestCase {
         final BotContractInputTab inputTab = contractTabBot.selectInputTab();
         final BotContractInputRow contractInputRow = inputTab.add();
 
-        contractInputRow.setName("expenseReport").setDescription("An expense report").setType("COMPLEX");
-        //        assertThat(task.getContract().getInputs()).hasSize(1).extracting("name", "type", "mandatory", "multiple", "description")
-        //                .containsOnly(tuple("expenseReport", ContractInputType.COMPLEX, true, false, "An expense report"));
-
-        //  contractTabBot.inputTable().select(0);
+        final BotContractInputRow inputRow = contractInputRow.setName("expenseReport");
+        captureScreenShot("beforeSetDescription");
+        inputRow.setDescription("An expense report");
+        captureScreenShot("afterSetDescription");
+        inputRow.setType("COMPLEX");
 
         BotContractInputRow childRow = contractInputRow.getChildRow(0);
         childRow.setName("expenseLines").clickMultiple().setType("COMPLEX");
@@ -144,6 +149,13 @@ public class ContractIT extends SWTBotGefTestCase {
         ContractConstraintAssert.assertThat(constraint).hasInputNames("expenseReport");
         assertThat(constraint.getErrorMessage()).isNotNull();
         ContractConstraintAssert.assertThat(constraint).hasErrorMessage("An expense report must have at lease one expense line");
+    }
+
+    private void captureScreenShot(final String label) {
+        final String fileName = "screenshots/screenshot-" + ClassUtils.simpleClassName(getClass()) + "." + getName() + "." + label + "."
+                + SWTBotPreferences.SCREENSHOT_FORMAT.toLowerCase();
+        new File("screenshots").mkdirs();
+        SWTUtils.captureScreenshot(fileName);
     }
 
 }
