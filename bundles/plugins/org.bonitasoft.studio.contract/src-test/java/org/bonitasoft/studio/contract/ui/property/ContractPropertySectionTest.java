@@ -15,20 +15,20 @@
 package org.bonitasoft.studio.contract.ui.property;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
-import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.pagedesigner.ui.contribution.NewFormContributionItem;
 import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -37,15 +37,14 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -54,8 +53,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ContractPropertySectionTest extends AbstractSWTTestCase {
 
-    @InjectMocks
-    @Spy
     private ContractPropertySection section;
 
     @Mock
@@ -72,12 +69,16 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
 
     private Composite parent;
 
+    @Mock
+    private IProgressService progressService;
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         parent = createDisplayAndRealm();
+        section = spy(new ContractPropertySection(eclipseContext, selectionProvider, progressService));
         when(tabbedPropertySheetPage.getWidgetFactory()).thenReturn(new TabbedPropertySheetWidgetFactory());
         doReturn(contributionItem).when(section).newContributionItem(NewFormContributionItem.class);
     }
@@ -107,17 +108,8 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
     }
 
     @Test
-    public void should_validate_call_validate_a_contract() throws Exception {
-        final ContractDefinitionValidator contractValidator = mock(ContractDefinitionValidator.class);
-        doReturn(contractValidator).when(section).getContractDefinitionValidator();
-        final Contract contract = ProcessFactory.eINSTANCE.createContract();
-        section.validate(contract);
-        verify(contractValidator).validate(contract);
-    }
-
-    @Test
     public void should_bindRemoveButtonEnablement_convert_boolean_value() throws Exception {
-        section.init();
+        section.init(new WritableValue(aContract().build(), Contract.class));
         final Button removeButton = new Button(parent, SWT.PUSH);
         final TableViewer inputsTableViewer = new TableViewer(parent);
         inputsTableViewer.setLabelProvider(new LabelProvider());
@@ -133,7 +125,7 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
 
     @Test
     public void should_bindAddChildButtonEnablement_convert_boolean_value() throws Exception {
-        section.init();
+        section.init(new WritableValue(aContract().build(), Contract.class));
         final Button button = new Button(parent, SWT.PUSH);
         final TableViewer inputsTableViewer = new TableViewer(parent);
         inputsTableViewer.setLabelProvider(new LabelProvider());

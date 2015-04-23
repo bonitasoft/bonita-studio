@@ -17,9 +17,9 @@ package org.bonitasoft.studio.data.ui.wizard;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.groovyReferenceValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.maxLengthValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -555,9 +555,9 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         emfDatabindingContext.bindValue(observeText,
                 EMFObservables.observeValue(data, ProcessPackage.Literals.ELEMENT__NAME), updateValueStrategy().withValidator(multiValidator()
                         .addValidator(maxLengthValidator(Messages.name, 50))
-                        .addValidator(groovyReferenceValidator(Messages.name, true, true))
-                        .addValidator(new DataNameUnicityValidator(findDataInScope(), ((DataWizard) getWizard()).getOriginalData()))
-                        .create()).create(), null);
+                        .addValidator(groovyReferenceValidator(Messages.name).startsWithLowerCase())
+                        .addValidator(new DataNameUnicityValidator(findDataInScope(), ((DataWizard) getWizard()).getOriginalData()))).create(),
+                null);
 
         emfDatabindingContext.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify),
                 EMFObservables.observeValue(data, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),
