@@ -31,7 +31,7 @@
     </slideShowImageList>
 	<requestedExecutionLevel>asInvoker</requestedExecutionLevel>
 	<singleInstanceCheck>1</singleInstanceCheck>
-	<allowedLanguages>en es fr de it pt_BR ja</allowedLanguages>
+	<allowedLanguages>en es fr de it pt_BR ja ru</allowedLanguages>
 	<customLanguageFileList>
         <language>
             <code>en</code>
@@ -72,6 +72,12 @@
          <language>
             <code>pt</code>
             <file>i18n/messages_pt.properties</file>
+            <encoding>utf-8</encoding>
+            <resolveUCN>1</resolveUCN>
+        </language>
+        <language>
+            <code>ru</code>
+            <file>i18n/messages_ru.properties</file>
             <encoding>utf-8</encoding>
             <resolveUCN>1</resolveUCN>
         </language>
