@@ -28,9 +28,9 @@ public class ConnectorEventFilter extends ViewerFilter {
 	private final String event;
 
 	public ConnectorEventFilter(final String event) {
-		Preconditions.checkArgument(event.equals(ConnectorEvent.ON_ENTER
-				.toString())
-				|| event.equals(ConnectorEvent.ON_FINISH.toString()));
+		Preconditions
+				.checkArgument(event.equals(ConnectorEvent.ON_ENTER.name())
+						|| event.equals(ConnectorEvent.ON_FINISH.name()));
 		this.event = event;
 	}
 

@@ -25,13 +25,13 @@ public class ConnectorInSection extends ConnectorSection {
 	@Override
 	protected ConnectorWizard createAddConnectorWizard() {
 		final ConnectorWizard connectorWizard = createConnectorWizard(ConnectorEvent.ON_ENTER
-				.toString());
+				.name());
 		return connectorWizard;
 	}
 
 	@Override
 	protected ViewerFilter getViewerFilter() {
-		return new ConnectorEventFilter(ConnectorEvent.ON_ENTER.toString());
+		return new ConnectorEventFilter(ConnectorEvent.ON_ENTER.name());
 	}
 
 }

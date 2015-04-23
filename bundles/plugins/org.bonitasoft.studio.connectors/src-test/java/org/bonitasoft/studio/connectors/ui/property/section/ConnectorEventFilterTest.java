@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.eclipse.jface.viewers.Viewer;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -36,28 +35,33 @@ public class ConnectorEventFilterTest {
 	@Mock
 	private Viewer viewer;
 
-	private ConnectorEventFilter onFinishFilter;
-
-	@Before
-	public void setup() {
-		onFinishFilter = new ConnectorEventFilter(
-				ConnectorEvent.ON_FINISH.toString());
+	/**
+	 * @return
+	 */
+	private ConnectorEventFilter createConnectorEventFilter() {
+		return new ConnectorEventFilter(ConnectorEvent.ON_FINISH.toString());
 	}
 
 	@Test
 	public void should_return_true_when_connectorEvent_isOnFinish() {
+		final ConnectorEventFilter onFinishFilter = createConnectorEventFilter();
+
 		assertTrue(onFinishFilter.select(viewer, null,
 				aConnector().onEvent(ConnectorEvent.ON_FINISH.name()).build()));
 	}
 
 	@Test
 	public void select_should_return_false_when_connectorEvent_isOnEnter() {
+		final ConnectorEventFilter onFinishFilter = createConnectorEventFilter();
+
 		assertFalse(onFinishFilter.select(viewer, null,
 				aConnector().onEvent(ConnectorEvent.ON_ENTER.name()).build()));
 	}
 
 	@Test
 	public void select_shoud_return_false_when_notAConnector() {
+		final ConnectorEventFilter onFinishFilter = createConnectorEventFilter();
+
 		assertFalse(onFinishFilter.select(viewer, null, aTask().build()));
 	}
 

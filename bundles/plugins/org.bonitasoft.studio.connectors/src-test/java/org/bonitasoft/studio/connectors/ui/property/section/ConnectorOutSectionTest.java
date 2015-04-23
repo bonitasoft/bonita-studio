@@ -30,19 +30,18 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectorOutSectionTest {
 
-	private ConnectorOutSection section;
-
 	@Rule
 	public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
 
 	@Before
 	public void setup() {
-		section = new ConnectorOutSection();
 
 	}
 
 	@Test
 	public void should_setConnectorEvent_when_creating_aConnetorWizard() {
+		final ConnectorOutSection section = new ConnectorOutSection();
+
 		final ConnectorWizard wizard = section.createAddConnectorWizard();
 		assertThat(wizard.getWorkingCopyConnector().getEvent()).isEqualTo(
 				ConnectorEvent.ON_FINISH.name());
@@ -51,6 +50,8 @@ public class ConnectorOutSectionTest {
 
 	@Test
 	public void should_return_OnFinish_ConnectorEventFilter() {
+		final ConnectorOutSection section = new ConnectorOutSection();
+
 		assertThat(section.getViewerFilter()).isInstanceOf(
 				ConnectorEventFilter.class);
 		assertThat(
