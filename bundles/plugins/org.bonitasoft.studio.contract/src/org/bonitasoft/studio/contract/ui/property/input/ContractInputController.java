@@ -25,10 +25,10 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.core.refactoring.RefactorContractInputOperation;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.IViewerController;
@@ -63,6 +63,7 @@ import com.google.common.base.Predicate;
  */
 public class ContractInputController implements IViewerController {
 
+    private static final int NAME_COLUMN_INDEX = 0;
     private final IProgressService progressService;
 
     public ContractInputController(final IProgressService progressService) {
@@ -72,18 +73,18 @@ public class ContractInputController implements IViewerController {
     @Override
     public ContractInput add(final ColumnViewer viewer) {
         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-
         final IObservableValue contractObservable = (IObservableValue) viewer.getInput();
         final ContractInput parentInput = (ContractInput) selection.getFirstElement();
-        final ContractInput defaultInput = createDefaultInput((Contract) contractObservable.getValue());
-        if (parentInput != null) {
-            final EObject eContainer = parentInput.eContainer();
-            CustomEMFEditObservables.observeList(eContainer, inputContainerFeature(eContainer)).add(defaultInput);
-        } else {
-            CustomEMFEditObservables.observeList((EObject) contractObservable.getValue(), ProcessPackage.Literals.CONTRACT__INPUTS).add(defaultInput);
-        }
-        viewer.editElement(defaultInput, 0);
+        final Contract contract = (Contract) contractObservable.getValue();
+        final ContractInput defaultInput = createDefaultInput(contract);
+        final EObject targetContainer = targetContainer(parentInput, contract);
+        CustomEMFEditObservables.observeList(targetContainer, inputContainerFeature(targetContainer)).add(defaultInput);
+        viewer.editElement(defaultInput, NAME_COLUMN_INDEX);
         return defaultInput;
+    }
+
+    private EObject targetContainer(final ContractInput parentInput, final Contract contract) {
+        return parentInput != null ? parentInput.eContainer() : contract;
     }
 
     public ContractInput addChildInput(final ColumnViewer viewer) {
@@ -98,7 +99,7 @@ public class ContractInputController implements IViewerController {
             @Override
             public void run() {
                 if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
-                    viewer.editElement(defaultInput, 0);
+                    viewer.editElement(defaultInput, NAME_COLUMN_INDEX);
                 }
             }
         });
@@ -131,11 +132,12 @@ public class ContractInputController implements IViewerController {
 
     @Override
     public void remove(final ColumnViewer viewer) {
+        final IObservableValue contractObservable = (IObservableValue) viewer.getInput();
         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
         final List<?> selectedInput = selection.toList();
-        Contract contract = null;
+        Contract contract = (Contract) contractObservable.getValue();
         if (openConfirmation(selectedInput)) {
-            final RefactorContractInputOperation refactorOperation = newRefactorOperation(selectedInput);
+            final RefactorContractInputOperation refactorOperation = newRefactorOperation(contract);
             final TransactionalEditingDomain editingDomain = editingDomain(selectedInput);
             refactorOperation.setEditingDomain(editingDomain);
             refactorOperation.setAskConfirmation(true);
@@ -161,11 +163,10 @@ public class ContractInputController implements IViewerController {
                     progressService.run(true, true, refactorOperation);
                 }
             } catch (final InvocationTargetException | InterruptedException e) {
-                BonitaStudioLog.error(e, ContractPlugin.PLUGIN_ID);
+                BonitaStudioLog.error("Failed to remove contract input.", e);
+                openErrorDialog(e);
             }
-            if (contract != null) {
-                viewer.refresh(true);
-            }
+            viewer.refresh(true);
         }
     }
 
@@ -187,13 +188,19 @@ public class ContractInputController implements IViewerController {
         return TransactionUtil.getEditingDomain((ContractInput) selectedInput.get(0));
     }
 
-    private RefactorContractInputOperation newRefactorOperation(final List<?> selectedInput) {
+    private RefactorContractInputOperation newRefactorOperation(final Contract contract) {
         return new RefactorContractInputOperation(ModelHelper.getFirstContainerOfType(
-                (ContractInput) selectedInput.get(0), ContractContainer.class), RefactoringOperationType.REMOVE);
+                contract, ContractContainer.class), RefactoringOperationType.REMOVE);
     }
 
     private EReference inputContainerFeature(final EObject eContainer) {
         return eContainer instanceof ContractInput ? ProcessPackage.Literals.CONTRACT_INPUT__INPUTS : ProcessPackage.Literals.CONTRACT__INPUTS;
+    }
+
+    protected void openErrorDialog(final Throwable e) {
+        if (!FileActionDialog.getDisablePopup()) {
+            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.removeInputErrorTitle, Messages.removeInputErrorMsg, e).open();
+        }
     }
 
     protected boolean openConfirmation(final List<?> selectedInput) {
@@ -208,12 +215,12 @@ public class ContractInputController implements IViewerController {
 
     @Override
     public void moveUp(final ColumnViewer viewer) {
-        //Not implemented yet
+        throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override
     public void moveDown(final ColumnViewer viewer) {
-        //Not implemented yet
+        throw new UnsupportedOperationException("Not implemented yet.");
     }
 
 }

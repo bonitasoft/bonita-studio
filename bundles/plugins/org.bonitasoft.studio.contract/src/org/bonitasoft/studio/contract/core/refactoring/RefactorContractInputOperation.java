@@ -1,5 +1,6 @@
 package org.bonitasoft.studio.contract.core.refactoring;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createContractInputExpression;
@@ -32,6 +33,7 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
 
     public RefactorContractInputOperation(final ContractContainer container, final RefactoringOperationType operationType) {
         super(operationType);
+        checkArgument(container != null);
         this.container = container;
     }
 
@@ -39,7 +41,9 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
     protected CompoundCommand doBuildCompoundCommand(final CompoundCommand cc,
             final IProgressMonitor monitor) {
         updateContractInputExpressions(cc);
-        updateContractInputReferenceInConstraints(cc);
+        if (operationType == RefactoringOperationType.UPDATE) {
+            updateContractInputReferenceInConstraints(cc);
+        }
         return cc;
     }
 

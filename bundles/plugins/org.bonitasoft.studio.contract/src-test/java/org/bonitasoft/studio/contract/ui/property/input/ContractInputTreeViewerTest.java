@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.fakes.FakeProgressService;
@@ -67,7 +68,7 @@ public class ContractInputTreeViewerTest extends AbstractSWTTestCase {
         parent = createDisplayAndRealm();
         FileActionDialog.setDisablePopup(true);
         inputTreeViewer = new ContractInputTreeViewer(parent, new FormToolkit(display), progressService);
-        final ContractInputController inputController = new ContractInputController(new FakeProgressService());
+        final ContractInputController inputController = spy(new ContractInputController(new FakeProgressService()));
         doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(inputController).editingDomain(anyList());
         inputTreeViewer.initialize(inputController, messageManager, new EMFDataBindingContext());
         final WritableValue contractObservableValue = new WritableValue();
