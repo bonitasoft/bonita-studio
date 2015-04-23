@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Bonitasoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -24,7 +24,9 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.ui.forms.IMessageManager;
+import org.eclipse.ui.progress.IProgressService;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,24 +40,27 @@ public class InputNameObservableEditingSupportTest {
     public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
     @Mock
     private IMessageManager messageManager;
+    @Mock
+    private IProgressService progressService;
 
     @Test
     public void should_create_a_convert_update_strategy() throws Exception {
-        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(new TableViewer(realmWithDisplay.createComposite()),
-                null, null, new EMFDataBindingContext());
+        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(aTableViewer(),
+                null, new EMFDataBindingContext(), progressService);
 
-        final UpdateValueStrategy convertStrategy = editingSupport.taregtToModelConvertStrategy();
+        final UpdateValueStrategy convertStrategy = editingSupport.targetToModelConvertStrategy(aContractInput().build());
 
         assertThat(convertStrategy.getUpdatePolicy()).isEqualTo(UpdateValueStrategy.POLICY_CONVERT);
     }
 
     @Test
     public void should_fails_validation_if_input_name_already_exists() throws Exception {
-        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(new TableViewer(realmWithDisplay.createComposite()),
-                aContract().havingInput(aContractInput().withName("firstName"))
-                        .build(), messageManager, new EMFDataBindingContext());
+        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(aTableViewer(), messageManager,
+                new EMFDataBindingContext(), progressService);
 
-        final UpdateValueStrategy convertStrategy = editingSupport.taregtToModelConvertStrategy();
+        final UpdateValueStrategy convertStrategy = editingSupport.targetToModelConvertStrategy(aContract()
+                .havingInput(aContractInput().withName("firstName"), aContractInput().withName("lastName"))
+                .build().getInputs().get(1));
         final IStatus status = convertStrategy.validateAfterGet("firstName");
 
         assertThat(status).isNotOK();
@@ -63,11 +68,10 @@ public class InputNameObservableEditingSupportTest {
 
     @Test
     public void should_fails_validation_if_input_name_is_empty_exists() throws Exception {
-        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(new TableViewer(realmWithDisplay.createComposite()),
-                aContract().havingInput(aContractInput().withName("firstName"))
-                        .build(), messageManager, new EMFDataBindingContext());
+        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(aTableViewer(),
+                messageManager, new EMFDataBindingContext(), progressService);
 
-        final UpdateValueStrategy convertStrategy = editingSupport.taregtToModelConvertStrategy();
+        final UpdateValueStrategy convertStrategy = editingSupport.targetToModelConvertStrategy(aContractInput().build());
         final IStatus status = convertStrategy.validateAfterGet("");
 
         assertThat(status).isNotOK();
@@ -75,11 +79,10 @@ public class InputNameObservableEditingSupportTest {
 
     @Test
     public void should_fails_validation_if_input_name_is_longer_than_50_chars_exists() throws Exception {
-        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(new TableViewer(realmWithDisplay.createComposite()),
-                aContract().havingInput(aContractInput().withName("firstName"))
-                        .build(), messageManager, new EMFDataBindingContext());
+        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(aTableViewer(),
+                messageManager, new EMFDataBindingContext(), progressService);
 
-        final UpdateValueStrategy convertStrategy = editingSupport.taregtToModelConvertStrategy();
+        final UpdateValueStrategy convertStrategy = editingSupport.targetToModelConvertStrategy(aContractInput().build());
         final IStatus status = convertStrategy
                 .validateAfterGet("afkjdshfkjdhsfkjdhsfkjhdskjfhdkjshfdkjshfkjdshfdkjshfkjsdhfkjsdhfkjsdhfkjsdhfkjdshfdkjshfkjdshfdkjshfdkjshf");
 
@@ -88,11 +91,10 @@ public class InputNameObservableEditingSupportTest {
 
     @Test
     public void should_fails_validation_if_input_name_is_not_a_valid_java_identifiable() throws Exception {
-        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(new TableViewer(realmWithDisplay.createComposite()),
-                aContract().havingInput(aContractInput().withName("firstName"))
-                        .build(), messageManager, new EMFDataBindingContext());
+        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(aTableViewer(),
+                messageManager, new EMFDataBindingContext(), progressService);
 
-        final UpdateValueStrategy convertStrategy = editingSupport.taregtToModelConvertStrategy();
+        final UpdateValueStrategy convertStrategy = editingSupport.targetToModelConvertStrategy(aContractInput().build());
         final IStatus status = convertStrategy
                 .validateAfterGet("1startsWithOne");
 
@@ -101,11 +103,10 @@ public class InputNameObservableEditingSupportTest {
 
     @Test
     public void should_fails_validation_if_input_name_contais_spaces() throws Exception {
-        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(new TableViewer(realmWithDisplay.createComposite()),
-                aContract().havingInput(aContractInput().withName("firstName"))
-                        .build(), messageManager, new EMFDataBindingContext());
+        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(aTableViewer(),
+                messageManager, new EMFDataBindingContext(), progressService);
 
-        final UpdateValueStrategy convertStrategy = editingSupport.taregtToModelConvertStrategy();
+        final UpdateValueStrategy convertStrategy = editingSupport.targetToModelConvertStrategy(aContractInput().build());
         final IStatus status = convertStrategy
                 .validateAfterGet("first name");
 
@@ -114,14 +115,27 @@ public class InputNameObservableEditingSupportTest {
 
     @Test
     public void should_fails_validation_if_input_name_startsWith_an_uppercase() throws Exception {
-        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(new TableViewer(realmWithDisplay.createComposite()),
-                aContract().havingInput(aContractInput().withName("firstName"))
-                        .build(), messageManager, new EMFDataBindingContext());
+        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(aTableViewer(),
+                messageManager, new EMFDataBindingContext(), progressService);
 
-        final UpdateValueStrategy convertStrategy = editingSupport.taregtToModelConvertStrategy();
+        final UpdateValueStrategy convertStrategy = editingSupport.targetToModelConvertStrategy(aContractInput().build());
         final IStatus status = convertStrategy
                 .validateAfterGet("Firstname");
 
         assertThat(status).isNotOK();
+    }
+
+    @Test
+    public void should_create_a_TextCellEditor_for_ContractInput_element() throws Exception {
+        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(aTableViewer(),
+                messageManager, new EMFDataBindingContext(), progressService);
+
+        final TextCellEditor cellEditor = editingSupport.getCellEditor(aContractInput().build());
+
+        assertThat(cellEditor).isNotNull();
+    }
+
+    private TableViewer aTableViewer() {
+        return new TableViewer(realmWithDisplay.createComposite());
     }
 }

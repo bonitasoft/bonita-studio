@@ -20,7 +20,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
-import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputController;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -67,8 +66,7 @@ public class ContractInputTypeEditingSupportTest extends AbstractSWTTestCase {
     public void setUp() throws Exception {
         parent = createDisplayAndRealm();
         contractInputTypeEditingSupport = new ContractInputTypeEditingSupport(viewer,
-                new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory()), new ContractInputController(
-                        new ContractDefinitionValidator()));
+                new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory()), new ContractInputController());
     }
 
     /**
@@ -89,8 +87,7 @@ public class ContractInputTypeEditingSupportTest extends AbstractSWTTestCase {
     public void should_initializeCellEditorValue_add_ICellEditorListener() throws Exception {
         viewer = new TableViewer(parent);
         contractInputTypeEditingSupport = new ContractInputTypeEditingSupport(viewer,
-                new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory()), new ContractInputController(
-                        new ContractDefinitionValidator()));
+                new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory()), new ContractInputController());
         when(cell.getElement()).thenReturn(ProcessFactory.eINSTANCE.createContractInput());
         contractInputTypeEditingSupport.initializeCellEditorValue(cellEditor, cell);
         verify(cellEditor).addListener(contractInputTypeEditingSupport);

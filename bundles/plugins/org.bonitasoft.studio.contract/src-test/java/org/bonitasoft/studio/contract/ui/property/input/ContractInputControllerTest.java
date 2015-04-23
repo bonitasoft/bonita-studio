@@ -5,19 +5,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.contract.ui.property.input;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -28,7 +25,6 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -47,10 +43,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ContractInputControllerTest extends AbstractSWTTestCase {
@@ -62,9 +56,6 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
 
     private WritableValue observableValue;
 
-    @Mock
-    private ContractDefinitionValidator contractDefinitionValidator;
-
     /**
      * @throws java.lang.Exception
      */
@@ -72,7 +63,7 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
     public void setUp() throws Exception {
         createDisplayAndRealm();
         FileActionDialog.setDisablePopup(true);
-        contractInputController = spy(new ContractInputController(contractDefinitionValidator));
+        contractInputController = spy(new ContractInputController());
         observableValue = new WritableValue(Realm.getDefault());
         when(viewer.getInput()).thenReturn(observableValue);
     }
@@ -85,7 +76,6 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         dispose();
     }
 
-
     @Test
     public void should_addInput_add_a_new_root_contract_input_if_no_selection_in_viewer() throws Exception {
         when(viewer.getSelection()).thenReturn(new StructuredSelection());
@@ -93,7 +83,7 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         observableValue.setValue(contract);
         final ContractInput input = contractInputController.add(viewer);
         assertThat(contract.getInputs()).containsOnly(input);
-        assertThat(input.getName()).isNullOrEmpty();
+        assertThat(input.getName()).isEqualTo("input1");
         assertThat(input.getType()).isEqualTo(ContractInputType.TEXT);
         verify(viewer).editElement(input, 0);
     }
@@ -166,9 +156,6 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(input2, input3)));
         contractInputController.remove(viewer);
         assertThat(((Contract) observableValue.getValue()).getInputs()).containsOnly(input1);
-        verify(contractDefinitionValidator).clearMessages(input2);
-        verify(contractDefinitionValidator).clearMessages(input3);
-        verify(contractDefinitionValidator).validate(contract);
         verify(viewer).refresh(true);
     }
 
@@ -186,9 +173,6 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(child1)));
         contractInputController.remove(viewer);
         assertThat(((Contract) observableValue.getValue()).getInputs()).containsOnly(input1);
-        verify(contractDefinitionValidator).clearMessages(child1);
-        verify(contractDefinitionValidator).clearMessages(child2);
-        verify(contractDefinitionValidator).validate(contract);
         verify(viewer).refresh(true);
     }
 
@@ -205,8 +189,6 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(input2)));
         contractInputController.remove(viewer);
         assertThat(((Contract) observableValue.getValue()).getInputs()).containsOnly(input1, input3);
-        verify(contractDefinitionValidator).clearMessages(input2);
-        verify(contractDefinitionValidator, never()).validate(any(Contract.class));
         verify(viewer, never()).refresh(true);
     }
 
@@ -236,6 +218,5 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
     public void should_moveDown_do_nothing() throws Exception {
         contractInputController.moveDown(viewer);
     }
-
 
 }

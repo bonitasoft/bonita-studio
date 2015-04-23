@@ -14,12 +14,16 @@
  */
 package org.bonitasoft.studio.contract.ui.property.input;
 
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Sets.newHashSet;
+import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAllElementOfTypeIn;
+
 import java.util.List;
 
+import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
-import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.IViewerController;
 import org.bonitasoft.studio.model.process.Contract;
@@ -36,23 +40,20 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
+import com.google.common.base.Function;
+
 /**
  * @author Romain Bioteau
  */
 public class ContractInputController implements IViewerController {
 
-    private final ContractDefinitionValidator contractValidator;
-
-    public ContractInputController(final ContractDefinitionValidator contractValidator) {
-        this.contractValidator = contractValidator;
-    }
-
     @Override
     public ContractInput add(final ColumnViewer viewer) {
         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-        final ContractInput defaultInput = createDefaultInput();
+
         final IObservableValue contractObservable = (IObservableValue) viewer.getInput();
         final ContractInput parentInput = (ContractInput) selection.getFirstElement();
+        final ContractInput defaultInput = createDefaultInput((Contract) contractObservable.getValue());
         if (parentInput != null) {
             final EObject eContainer = parentInput.eContainer();
             if (eContainer instanceof ContractInput) {
@@ -73,7 +74,7 @@ public class ContractInputController implements IViewerController {
         Assert.isLegal(!selection.isEmpty());
 
         final ContractInput parentInput = (ContractInput) selection.getFirstElement();
-        final ContractInput defaultInput = createDefaultInput();
+        final ContractInput defaultInput = createDefaultInput(ModelHelper.getFirstContainerOfType(parentInput, Contract.class));
         CustomEMFEditObservables.observeList(parentInput, ProcessPackage.Literals.CONTRACT_INPUT__INPUTS).add(defaultInput);
         Display.getDefault().asyncExec(new Runnable() {
 
@@ -88,11 +89,27 @@ public class ContractInputController implements IViewerController {
         return defaultInput;
     }
 
-    private ContractInput createDefaultInput() {
+    private ContractInput createDefaultInput(final Contract contract) {
         final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
+        contractInput.setName(defaultContractInputName(contract));
         contractInput.setType(ContractInputType.TEXT);
         contractInput.setMapping(ProcessFactory.eINSTANCE.createContractInputMapping());
         return contractInput;
+    }
+
+    private String defaultContractInputName(final Contract contract) {
+        return NamingUtils.generateNewName(
+                newHashSet(transform(getAllElementOfTypeIn(contract, ContractInput.class), toInputName())), "input");
+    }
+
+    private Function<ContractInput, String> toInputName() {
+        return new Function<ContractInput, String>() {
+
+            @Override
+            public String apply(final ContractInput input) {
+                return input.getName();
+            }
+        };
     }
 
     @Override
@@ -104,8 +121,8 @@ public class ContractInputController implements IViewerController {
             for (final Object input : selectedInput) {
                 final ContractInput contractInput = (ContractInput) input;
                 contract = ModelHelper.getFirstContainerOfType(contractInput, Contract.class);
-                clearMessagesRecursively(contractInput);
-                if (contract == null) {//Parent input has been removed in current selection
+                //Parent input has been removed in current selection
+                if (contract == null) {
                     continue;
                 }
                 final EObject eContainer = contractInput.eContainer();
@@ -117,7 +134,6 @@ public class ContractInputController implements IViewerController {
                 }
             }
             if (contract != null) {
-                contractValidator.validate(contract);
                 viewer.refresh(true);
             }
         }
@@ -133,13 +149,6 @@ public class ContractInputController implements IViewerController {
                 Messages.removeInputConfirmationTitle, message.toString());
     }
 
-    protected void clearMessagesRecursively(final ContractInput input) {
-        contractValidator.clearMessages(input);
-        for (final ContractInput in : input.getInputs()) {
-            clearMessagesRecursively(in);
-        }
-    }
-
     @Override
     public void moveUp(final ColumnViewer viewer) {
         //Not implemented yet
@@ -150,7 +159,4 @@ public class ContractInputController implements IViewerController {
         //Not implemented yet
     }
 
-    public void validate(final Contract contract) {
-        contractValidator.validate(contract);
-    }
 }

@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -39,7 +39,6 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.IMessage;
 import org.eclipse.ui.forms.IMessageManager;
 
 public abstract class CustomTextEMFObservableValueEditingSupport extends ObservableValueEditingSupport {
@@ -49,6 +48,7 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
     private TextCellEditor cellEditor;
     private final IMessageManager messageManager;
     private String controlId;
+    private EObject element;
 
     public CustomTextEMFObservableValueEditingSupport(final ColumnViewer viewer, final EStructuralFeature featureToEdit,
             final IMessageManager messageManager, final DataBindingContext dbc) {
@@ -79,7 +79,8 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
     @Override
     protected IObservableValue doCreateElementObservable(final Object element, final ViewerCell cell) {
         checkArgument(element instanceof EObject);
-        final IObservableValue observableValue = EMFEditObservables.observeValue(TransactionUtil.getEditingDomain(element), (EObject) element,
+        this.element = (EObject) element;
+        final IObservableValue observableValue = EMFEditObservables.observeValue(TransactionUtil.getEditingDomain(element), this.element,
                 featureToEdit);
         observableValue.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
         return observableValue;
@@ -92,7 +93,7 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
      */
     @Override
     protected Binding createBinding(final IObservableValue target, final IObservableValue model) {
-        final Binding binding = dbc.bindValue(target, model, taregtToModelConvertStrategy(), null);
+        final Binding binding = dbc.bindValue(target, model, targetToModelConvertStrategy(element), null);
         final IObservableValue validationStatus = binding.getValidationStatus();
         validationStatus.addValueChangeListener(new IValueChangeListener() {
 
@@ -118,28 +119,13 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
         }
     }
 
-    protected abstract UpdateValueStrategy taregtToModelConvertStrategy();
+    protected abstract UpdateValueStrategy targetToModelConvertStrategy(EObject element);
 
     protected void validationStatusChanged(final IStatus status) {
         updateTextEditorFeedback(status);
         messageManager.removeAllMessages();
         if (!status.isOK()) {
-            messageManager.addMessage("", status.getMessage(), null, toMessageSeverity(status));
-        }
-    }
-
-    protected int toMessageSeverity(final IStatus status) {
-        switch (status.getSeverity()) {
-            case IStatus.OK:
-                return IMessage.NONE;
-            case IStatus.ERROR:
-                return IMessage.ERROR;
-            case IStatus.WARNING:
-                return IMessage.WARNING;
-            case IStatus.INFO:
-                return IMessage.INFORMATION;
-            default:
-                throw new IllegalArgumentException("Unsupported status severity code :" + status.getSeverity());
+            messageManager.addMessage("", status.getMessage(), null, new StatusToMessageSeverity(status).toMessageSeverity());
         }
     }
 
@@ -149,4 +135,5 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
         cellEditor.getControl().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, controlId);
         return cellEditor;
     }
+
 }
