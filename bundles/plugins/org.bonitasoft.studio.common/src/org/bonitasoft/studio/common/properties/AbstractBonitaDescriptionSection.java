@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.common.properties;
 
-import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
-
 import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -49,7 +47,7 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
     public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
         parent.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
-        parent.setLayoutData(fillDefaults().grab(true, true).create());
+        parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         tabbedPropertySheetPage = aTabbedPropertySheetPage;
         final TabbedPropertySheetWidgetFactory widgetFactory = tabbedPropertySheetPage.getWidgetFactory();
         form = widgetFactory.createForm(parent);
