@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2010 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2010-2015 BonitaSoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -16,6 +16,7 @@ package org.bonitasoft.studio.common.properties;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection;
 import org.eclipse.jface.viewers.ISelection;
@@ -30,8 +31,8 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public abstract class PropertySectionWithTabs extends AbstractModelerPropertySection {
 
-    private final ArrayList<AbstractBonitaDescriptionSection> sections;
-    private final ArrayList<String> titles;
+    private final List<AbstractBonitaDescriptionSection> sections = new ArrayList<AbstractBonitaDescriptionSection>();
+    private final List<String> titles = new ArrayList<String>();
     private CTabFolder folder;
 
     /**
@@ -39,8 +40,6 @@ public abstract class PropertySectionWithTabs extends AbstractModelerPropertySec
 	 */
     public PropertySectionWithTabs() {
         super();
-        sections = new ArrayList<AbstractBonitaDescriptionSection>();
-        titles = new ArrayList<String>();
         addSections();
     }
 
