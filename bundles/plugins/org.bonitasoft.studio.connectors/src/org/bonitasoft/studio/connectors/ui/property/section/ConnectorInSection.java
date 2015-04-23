@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -18,26 +18,26 @@ package org.bonitasoft.studio.connectors.ui.property.section;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 public class ConnectorInSection extends ConnectorSection {
 
 	@Override
 	protected ConnectorWizard createAddConnectorWizard() {
-		ConnectorWizard connectorWizard =createConnectorWizard();
-		setConnectorEvent(connectorWizard,ConnectorEvent.ON_ENTER.toString());
+		final ConnectorWizard connectorWizard =createConnectorWizard(ConnectorEvent.ON_ENTER.toString());
 		return connectorWizard;
 	}
 
-	
+
 	@Override
-	protected void setTreeFilter() {
-		ViewerFilter[] filters = {new ConnectorEventFilter(ConnectorEvent.ON_ENTER.toString())};
-		getTree().setFilters(filters);
+	protected ViewerFilter getViewerFilter() {
+		return new ConnectorEventFilter(ConnectorEvent.ON_ENTER.toString());
 	}
-	
-	
-	
-	
+
+
+
+
+
+
+
 }

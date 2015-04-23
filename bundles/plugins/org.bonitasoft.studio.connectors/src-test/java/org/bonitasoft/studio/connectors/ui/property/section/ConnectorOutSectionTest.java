@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -16,53 +16,48 @@
  */
 package org.bonitasoft.studio.connectors.ui.property.section;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard;
-import org.eclipse.jface.viewers.TableViewer;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectorOutSectionTest {
-	
-	@Spy
-	ConnectorOutSection section;
-	
-	@Mock
-	ConnectorWizard connectorWizard;
-	
-	
-	@Mock
-	TableViewer viewer;
-	
-	
+
+
+	private ConnectorOutSection section;
+
+	@Rule
+	public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
+
+
 	@Before
 	public void setup(){
-		 doReturn(connectorWizard).when(section).createConnectorWizard();
-		 doReturn(viewer).when(section).getTree();
-		 
-		 
+		section = new ConnectorOutSection();
+
 	}
-	
-	
+
+
 	@Test
 	public void should_setConnectorEvent_when_creating_aConnetorWizard(){
-		section.createAddConnectorWizard();
-		verify(section).setConnectorEvent(connectorWizard,ConnectorEvent.ON_FINISH.toString());
-		
+		final ConnectorWizard wizard = section
+				.createAddConnectorWizard();
+		assertThat(wizard.getWorkingCopyConnector().getEvent()).isEqualTo(
+				ConnectorEvent.ON_FINISH.name());
+
 	}
-	
+
 	@Test
-	public void should_set_tree_filter(){
-		section.setTreeFilter();
-		verify(section).getTree();
+	public void should_return_OnFinish_ConnectorEventFilter(){
+		assertThat(section.getViewerFilter()).isInstanceOf(ConnectorEventFilter.class);
+		assertThat(((ConnectorEventFilter)section.getViewerFilter()).getEvent()).isEqualTo(ConnectorEvent.ON_FINISH.name());
 	}
 
 }

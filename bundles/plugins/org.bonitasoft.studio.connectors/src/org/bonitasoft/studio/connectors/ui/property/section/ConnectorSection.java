@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Bonitasoft, 31 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
@@ -60,6 +59,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -73,7 +73,8 @@ import org.eclipse.swt.widgets.Listener;
  *
  * @author Romain Bioteau
  */
-public class ConnectorSection extends AbstractBonitaDescriptionSection implements IDoubleClickListener, ISelectionChangedListener {
+public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
+		implements IDoubleClickListener, ISelectionChangedListener {
 
     private Button removeConnectorButton;
     private Button updateConnectorButton;
@@ -117,7 +118,7 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
 
         tableViewer.setContentProvider(new EMFListFeatureTreeContentProvider(getConnectorFeature()));
         tableViewer.setLabelProvider(new StyledConnectorLabelProvider());
-        setTreeFilter();
+		tableViewer.addFilter(getViewerFilter());
 
     }
 
@@ -223,7 +224,7 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
                 final WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(Display.getCurrent().getActiveShell(), createAddConnectorWizard());
                 if(wizardDialog.open() == Dialog.OK){
                     tableViewer.refresh();
-                    
+
                 }
             }
 
@@ -313,13 +314,12 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
         updateButtons();
     }
 
-    protected void setTreeFilter(){
-    }
-    
+	protected abstract ViewerFilter getViewerFilter();
+
     protected TableViewer getTree(){
     	return tableViewer;
     }
-    
+
 
     protected void refreshTree() {
         if(!tableViewer.getTable().isDisposed()){
@@ -429,16 +429,12 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
         super.refresh();
         refreshTree();
     }
-    
-    protected ConnectorWizard createConnectorWizard(){
-		return new ConnectorWizard(getEObject(), getConnectorFeature(), getConnectorFeatureToCheckUniqueID());
+
+	protected ConnectorWizard createConnectorWizard(final String connectorEvent) {
+		return new ConnectorWizard(getEObject(), getConnectorFeature(),
+				getConnectorFeatureToCheckUniqueID(), connectorEvent);
 	}
-    
-    /**
-	 * @param connectorWizard
-	 */
-	protected void setConnectorEvent(ConnectorWizard connectorWizard,String connectorEvent) {
-		connectorWizard.setConnectorEvent(connectorEvent);
-	}
+
+
 
 }

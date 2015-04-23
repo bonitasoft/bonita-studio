@@ -99,6 +99,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Display;
 
+import com.google.common.base.Preconditions;
+
 /**
  * @author Romain Bioteau
  */
@@ -176,7 +178,24 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
         setNeedsProgressMonitor(false);
     }
 
-    protected void setEditMode(final boolean isEdit) {
+    /**
+	 * @param eObject
+	 * @param connectorFeature
+	 * @param connectorFeatureToCheckUniqueID
+	 * @param connectorEvent
+	 */
+	public ConnectorWizard(final EObject eObject,
+			final EStructuralFeature connectorFeature,
+			final Set<EStructuralFeature> connectorFeatureToCheckUniqueID,
+			final String connectorEvent) {
+
+		this(eObject,connectorFeature,connectorFeatureToCheckUniqueID);
+		Preconditions.checkArgument(connectorEvent.equals(ConnectorEvent.ON_FINISH.name()) || connectorEvent.equals(ConnectorEvent.ON_ENTER.name()));
+		connectorWorkingCopy.setEvent(connectorEvent);
+	}
+
+
+	protected void setEditMode(final boolean isEdit) {
         editMode = isEdit;
     }
 
@@ -759,10 +778,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
     @Override
     public void setIsOverviewContext(final boolean isOverviewContext) {
     }
-    
-    public void setConnectorEvent(String event){
-    	Assert.isTrue(event.equals(ConnectorEvent.ON_FINISH.toString()) || event.equals(ConnectorEvent.ON_ENTER.toString()));
-    	connectorWorkingCopy.setEvent(event);
-    }
-    
+
+
+
 }
