@@ -36,12 +36,16 @@ public class ConstraintExpressionEditorValidator extends MultiValidator {
     private final IObservableValue expressionObservable;
     private final IObservableList dependenciesObservable;
     private final GroovyCompilationUnit groovyCompilationUnit;
+    private final MVELProblemRequestor compilationErrorRequestor;
 
-    public ConstraintExpressionEditorValidator(final IObservableValue expressionObservable, final IObservableList dependenciesObservable,
-            final GroovyCompilationUnit groovyCompilationUnit) {
+    public ConstraintExpressionEditorValidator(final IObservableValue expressionObservable,
+            final IObservableList dependenciesObservable,
+            final GroovyCompilationUnit groovyCompilationUnit,
+            final MVELProblemRequestor compilationErrorRequestor) {
         this.expressionObservable = expressionObservable;
         this.dependenciesObservable = dependenciesObservable;
         this.groovyCompilationUnit = groovyCompilationUnit;
+        this.compilationErrorRequestor = compilationErrorRequestor;
     }
 
     /*
@@ -54,8 +58,7 @@ public class ConstraintExpressionEditorValidator extends MultiValidator {
         if (Strings.isNullOrEmpty(text)) {
             return ValidationStatus.error(Messages.emptyExpressionContent);
         }
-        final MVELProblemRequestor compilationErrorRequestor = new MVELProblemRequestor();
-        if (hasCompilationErrors(compilationErrorRequestor)) {
+        if (hasCompilationErrors()) {
             return ValidationStatus.error(compilationErrorRequestor.toString());
         }
         if (dependenciesObservable.isEmpty()) {
@@ -64,7 +67,7 @@ public class ConstraintExpressionEditorValidator extends MultiValidator {
         return ValidationStatus.ok();
     }
 
-    private boolean hasCompilationErrors(final MVELProblemRequestor compilationErrorRequestor) {
+    private boolean hasCompilationErrors() {
         try {
             groovyCompilationUnit.getWorkingCopy(new NullProgressMonitor(), new CustomBufferFactory(), compilationErrorRequestor);
         } catch (final JavaModelException e) {

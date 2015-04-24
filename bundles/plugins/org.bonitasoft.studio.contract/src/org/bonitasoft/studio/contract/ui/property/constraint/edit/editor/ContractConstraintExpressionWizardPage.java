@@ -103,7 +103,7 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         inputIndexer = new ConstraintInputIndexer(constraint, inputs, viewer.getGroovyCompilationUnit());
         getSourceViewer().getDocument().set(expressionContentObservable.getValue().toString());
         context.addValidationStatusProvider(new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable, viewer
-                .getGroovyCompilationUnit()));
+                .getGroovyCompilationUnit(), new MVELProblemRequestor()));
 
         setControl(container);
         WizardPageSupport.create(this, context);
