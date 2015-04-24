@@ -67,7 +67,7 @@
             id="org.bonitasoft.studio.preferences.legacy6x"
             name="Legacy 6.x">
          <keywordReference
-               id="org.bonitasoft.studio.preferences.keywordReference1">
+               id="org.bonitasoft.studio.preferences.keyword.legacy6x">
          </keywordReference>
       </page>
    </extension>
