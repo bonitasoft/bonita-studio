@@ -24,7 +24,6 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.progress.IProgressService;
 import org.junit.Rule;
@@ -123,16 +122,6 @@ public class InputNameObservableEditingSupportTest {
                 .validateAfterGet("Firstname");
 
         assertThat(status).isNotOK();
-    }
-
-    @Test
-    public void should_create_a_TextCellEditor_for_ContractInput_element() throws Exception {
-        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(aTableViewer(),
-                messageManager, new EMFDataBindingContext(), progressService);
-
-        final TextCellEditor cellEditor = editingSupport.getCellEditor(aContractInput().build());
-
-        assertThat(cellEditor).isNotNull();
     }
 
     private TableViewer aTableViewer() {

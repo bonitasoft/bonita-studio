@@ -21,11 +21,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
+import org.bonitasoft.studio.refactoring.core.script.ScriptContainer;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.IContentChangeListener;
@@ -50,55 +49,51 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
+import com.google.common.base.Preconditions;
+
 public class BonitaCompareEditorInput extends CompareEditorInput {
 
-    private List<Expression> newExpressions;
+    private DiffNode root = new DiffNode(Differencer.NO_CHANGE) {
 
-    private List<Expression> oldExpressions;
-
-    private DiffNode root;
+        @Override
+        public boolean hasChildren() {
+            return true;
+        }
+    };;
 
     private DiffTreeViewer viewer;
 
-    private final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+    private final RefactoringOperationType operationType;
 
-    private final AdapterFactoryLabelProvider adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
+    private final String elementName;
 
-    private RefactoringOperationType operationType;
-
-    private String elementName;
-
-    private String newName;
+    private final String newName;
 
     private boolean applyChanges = false;
 
     private boolean canBeContainedInScript = true;
 
-    public BonitaCompareEditorInput(final CompareConfiguration configuration, final List<Expression> oldExpressions, final List<Expression> newExpressions,
+    private final List<ScriptContainer<?>> scripts;
+
+    private final AdapterFactoryLabelProvider adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(new ComposedAdapterFactory(
+            ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+
+    public BonitaCompareEditorInput(final CompareConfiguration configuration, final List<ScriptContainer<?>> scripts,
             final RefactoringOperationType operationType,
             final String elementName, final String newName, final boolean canBeContainedInScript) {
         super(configuration);
-        this.oldExpressions = oldExpressions;
-        this.newExpressions = newExpressions;
+        this.scripts = scripts;
         this.elementName = elementName;
         this.operationType = operationType;
         this.newName = newName;
         this.canBeContainedInScript = canBeContainedInScript;
-        root = new DiffNode(Differencer.NO_CHANGE) {
-
-            @Override
-            public boolean hasChildren() {
-                return true;
-            }
-        };
-
     }
 
     @Override
     protected Object prepareInput(final IProgressMonitor arg0)
             throws InvocationTargetException, InterruptedException {
         setDirty(true);
-        if (!oldExpressions.isEmpty() && !newExpressions.isEmpty() && oldExpressions.size() == newExpressions.size()) {
+        if (!scripts.isEmpty()) {
             buildTree();
             return root;
         }
@@ -113,11 +108,6 @@ public class BonitaCompareEditorInput extends CompareEditorInput {
         } else {
             super.setTitle(Messages.bind(Messages.removeTitle, elementName));
         }
-    }
-
-    @Override
-    public void setStatusMessage(final String message) {
-        super.setStatusMessage(message);
     }
 
     @Override
@@ -193,20 +183,14 @@ public class BonitaCompareEditorInput extends CompareEditorInput {
     }
 
     public void buildTree() {
-        for (int i = 0; i < oldExpressions.size(); i++) {
-            final Expression oldExpression = oldExpressions.get(i);
-            final CompareScript left = new CompareScript(oldExpression.getName(), oldExpression);
-            left.setElement(oldExpression);
-            left.setImage(adapterFactoryLabelProvider.getImage(oldExpression));
-            final Expression newExpression = newExpressions.get(i);
-
-            final CompareScript right = new CompareScript(newExpression.getName(), newExpression);
-            right.setElement(newExpression);
+        for (final ScriptContainer<?> script : scripts) {
+            final LeftCompareScript left = new LeftCompareScript(script, adapterFactoryLabelProvider);
+            final RightCompareScript right = new RightCompareScript(script, adapterFactoryLabelProvider);
             right.addContentChangeListener(new IContentChangeListener() {
 
                 @Override
                 public void contentChanged(final IContentChangeNotifier compareScript) {
-                    if (compareScript instanceof CompareScript) {
+                    if (compareScript instanceof RightCompareScript) {
                         setDirty(true);
                         if (getViewer() == null || getViewer().getControl().isDisposed()) {
                             return;
@@ -215,10 +199,11 @@ public class BonitaCompareEditorInput extends CompareEditorInput {
                     }
                 }
             });
-            right.setImage(adapterFactoryLabelProvider.getImage(newExpression));
             final DiffNode leaf = new DiffNode(null, Differencer.CHANGE, null, left, right);
-            final DiffNode poolNode = buildPathNodes(oldExpression.eContainer(), leaf);
-            if (((CompareScript) poolNode.getAncestor()).getElement() instanceof Pool && root.getChildren().length == 0) {
+            final EObject eContainer = script.getModelElement().eContainer();
+            Preconditions.checkState(eContainer != null);
+            final DiffNode poolNode = buildPathNodes(eContainer, leaf);
+            if (((EObjectNode) poolNode.getAncestor()).getElement() instanceof Pool && root.getChildren().length == 0) {
                 root.add(poolNode);
             }
         }
@@ -228,15 +213,8 @@ public class BonitaCompareEditorInput extends CompareEditorInput {
         final DiffNode parentNode = new DiffNode(Differencer.NO_CHANGE);
         node.setParent(parentNode);
         parentNode.add(node);
-        CompareScript ancestor = null;
-        final String name = adapterFactoryLabelProvider.getText(container);
-        final Expression expr = ExpressionHelper.createConstantExpression(name, String.class.getName());
-        expr.setName(name);
-        ancestor = new CompareScript(expr.getName(), expr);
-        ancestor.setElement(container);
-        ancestor.setImage(adapterFactoryLabelProvider.getImage(container));
+        final EObjectNode ancestor = new EObjectNode(container, adapterFactoryLabelProvider);
         parentNode.setAncestor(ancestor);
-
         if (insertParentNode(parentNode)) {
             return parentNode;
         }
@@ -264,7 +242,7 @@ public class BonitaCompareEditorInput extends CompareEditorInput {
         getAllNodes(nodes, root);
         for (final DiffNode node : nodes) {
             if (node.getAncestor() != null
-                    && ((CompareScript) node.getAncestor()).getElement().equals(((CompareScript) nodeToInsert.getAncestor()).getElement())) {
+                    && ((EObjectNode) node.getAncestor()).getElement().equals(((EObjectNode) nodeToInsert.getAncestor()).getElement())) {
                 addChildrenToParent(node, nodeToInsert.getChildren());
                 return true;
             }
@@ -296,6 +274,10 @@ public class BonitaCompareEditorInput extends CompareEditorInput {
     @Override
     public Object getCompareResult() {
         return super.getCompareResult();
+    }
+
+    public void dispose() {
+        adapterFactoryLabelProvider.dispose();
     }
 
 }

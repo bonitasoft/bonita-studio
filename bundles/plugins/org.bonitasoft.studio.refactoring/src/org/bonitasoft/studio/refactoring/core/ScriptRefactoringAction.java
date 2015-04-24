@@ -16,22 +16,14 @@
 package org.bonitasoft.studio.refactoring.core;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.refactoring.core.script.ScriptContainer;
 import org.bonitasoft.studio.refactoring.ui.BonitaCompareEditorInput;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.command.AddCommand;
-import org.eclipse.emf.edit.command.RemoveCommand;
-import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -44,22 +36,21 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * @author Romain Bioteau
  */
 
-public abstract class AbstractScriptExpressionRefactoringAction<T extends RefactorPair<?, ?>> implements IWorkbenchWindowActionDelegate {
+public class ScriptRefactoringAction<T extends RefactorPair<? extends EObject, ? extends EObject>> implements IWorkbenchWindowActionDelegate {
 
-    private final List<Expression> scriptExpressions;
+    private final List<ScriptContainer<?>> scriptExpressions;
     private final CompoundCommand compoundCommand;
-    private EditingDomain domain;
-    private final List<Expression> refactoredScriptExpression;
     private boolean askConfirmation = false;
     private boolean cancelled;
     private final RefactoringOperationType operationType;
     protected List<T> pairsToRefactor;
 
-    public AbstractScriptExpressionRefactoringAction(final List<T> pairsToRefactor, final List<Expression> scriptExpressions,
-            final List<Expression> refactoredScriptExpression, final CompoundCommand compoundCommand,
-            final EditingDomain domain, final RefactoringOperationType operationType) {
+    public ScriptRefactoringAction(final List<T> pairsToRefactor,
+            final List<ScriptContainer<?>> scriptExpressions,
+            final CompoundCommand compoundCommand,
+            final EditingDomain domain,
+            final RefactoringOperationType operationType) {
         this.scriptExpressions = scriptExpressions;
-        this.refactoredScriptExpression = refactoredScriptExpression;
         this.compoundCommand = compoundCommand;
         this.operationType = operationType;
         this.pairsToRefactor = pairsToRefactor;
@@ -74,8 +65,8 @@ public abstract class AbstractScriptExpressionRefactoringAction<T extends Refact
 
                 @Override
                 public void run() {
-
                     CompareUI.openCompareDialog(editorInput);
+                    editorInput.dispose();
                 }
             });
 
@@ -104,7 +95,7 @@ public abstract class AbstractScriptExpressionRefactoringAction<T extends Refact
             newNames += newNames.isEmpty() ? pairRefactor.getNewValueName() : "," + pairRefactor.getNewValueName();
             canBeContainedInscript = canBeContainedInscript && pairRefactor.canBeContainedInScript();
         }
-        return new BonitaCompareEditorInput(config, scriptExpressions, refactoredScriptExpression, operationType, oldNames,
+        return new BonitaCompareEditorInput(config, scriptExpressions, operationType, oldNames,
                 newNames, canBeContainedInscript);
     }
 
@@ -113,38 +104,16 @@ public abstract class AbstractScriptExpressionRefactoringAction<T extends Refact
     }
 
     protected void doRefactor() {
-        for (int i = 0; i < scriptExpressions.size(); i++) {
-            final Expression updatedExpression = refactoredScriptExpression.get(i);
-            final Expression originalExpression = scriptExpressions.get(i);
-            if (!originalExpression.getContent().equals(updatedExpression.getContent())) {
-                compoundCommand.append(SetCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT,
-                        updatedExpression.getContent()));
-                if (ExpressionConstants.CONDITION_TYPE.equals(originalExpression.getType())) {
-                    compoundCommand.append(SetCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__NAME,
-                            updatedExpression.getContent()));
-                }
-            }
-
+        for (final ScriptContainer<?> scriptContainer : scriptExpressions) {
+            compoundCommand.append(scriptContainer.applyUpdate());
             if (operationType == RefactoringOperationType.REMOVE) {
-                final Map<EObject, EObject> references = getReferencedObjectInScriptsOperation(originalExpression);
-                for (final EObject reference : references.keySet()) {
-                    compoundCommand.append(RemoveCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                            reference));
-                }
+                compoundCommand.append(scriptContainer.removeDependencies(pairsToRefactor));
             }
             if (operationType == RefactoringOperationType.UPDATE) {
-                final Map<EObject, EObject> referencedObjects = getReferencedObjectInScriptsOperation(originalExpression);
-                for (final Entry<EObject, EObject> referencedObject : referencedObjects.entrySet()) {
-                    compoundCommand.append(RemoveCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                            referencedObject.getKey()));
-                    compoundCommand.append(AddCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                            ExpressionHelper.createDependencyFromEObject(referencedObject.getValue())));
-                }
+                compoundCommand.append(scriptContainer.updateDependencies(pairsToRefactor));
             }
         }
     }
-
-    protected abstract Map<EObject, EObject> getReferencedObjectInScriptsOperation(Expression expr);
 
     public boolean isCancelled() {
         return cancelled;
@@ -170,10 +139,6 @@ public abstract class AbstractScriptExpressionRefactoringAction<T extends Refact
 
     public boolean askConfirmation() {
         return askConfirmation;
-    }
-
-    public void setEditingDomain(final EditingDomain domain) {
-        this.domain = domain;
     }
 
 }

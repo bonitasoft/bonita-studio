@@ -94,6 +94,13 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
     @Override
     protected Binding createBinding(final IObservableValue target, final IObservableValue model) {
         final Binding binding = dbc.bindValue(target, model, targetToModelConvertStrategy(element), null);
+        model.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                modelValueChanged(event);
+            }
+        });
         final IObservableValue validationStatus = binding.getValidationStatus();
         validationStatus.addValueChangeListener(new IValueChangeListener() {
 
@@ -104,6 +111,10 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
 
         });
         return binding;
+    }
+
+    protected void modelValueChanged(final ValueChangeEvent event) {
+        //intended to be subclass
     }
 
     protected void updateTextEditorFeedback(final IStatus status) {
