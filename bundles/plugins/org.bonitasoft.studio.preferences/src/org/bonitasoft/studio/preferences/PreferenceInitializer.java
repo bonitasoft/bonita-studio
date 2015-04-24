@@ -90,19 +90,19 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
     }
 
-    protected void initDefaultWebPreferences(final IPreferenceStore bonitaSstore, final IPreferenceStore webStore) {
+    protected void initDefaultWebPreferences(final IPreferenceStore bonitaStore, final IPreferenceStore webStore) {
         final String consolePortSpecifiedAsSystemProperty = System.getProperty(CONSOLE_PORT);
         if (consolePortSpecifiedAsSystemProperty != null
                 && !consolePortSpecifiedAsSystemProperty.isEmpty()) {
             try {
-                bonitaSstore.setDefault(CONSOLE_PORT, Integer.parseInt(consolePortSpecifiedAsSystemProperty));
+                bonitaStore.setDefault(CONSOLE_PORT, Integer.parseInt(consolePortSpecifiedAsSystemProperty));
             } catch (final Exception e) {
-                bonitaSstore.setDefault(CONSOLE_PORT, DEFAULT_PORT);
+                bonitaStore.setDefault(CONSOLE_PORT, DEFAULT_PORT);
             }
         } else {
-            bonitaSstore.setDefault(CONSOLE_PORT, DEFAULT_PORT);
+            bonitaStore.setDefault(CONSOLE_PORT, DEFAULT_PORT);
         }
-        bonitaSstore.setDefault(CONSOLE_HOST, DEFAULT_HOST);
+        bonitaStore.setDefault(CONSOLE_HOST, DEFAULT_HOST);
         webStore.setDefault(CONSOLE_BROWSER_CHOICE, EXTERNAL_BROWSER);
     }
 
