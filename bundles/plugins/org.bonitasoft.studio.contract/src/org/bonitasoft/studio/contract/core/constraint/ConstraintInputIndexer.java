@@ -1,16 +1,14 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2015 BonitaSoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,10 +32,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class ConstraintInputIndexer extends Job {
 
@@ -57,7 +53,8 @@ public class ConstraintInputIndexer extends Job {
         this.groovyCompilationUnit = groovyCompilationUnit;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
@@ -68,7 +65,6 @@ public class ConstraintInputIndexer extends Job {
         referencedInputs.clear();
         final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", "");
         final ContentAssistContext assistContext = finder.findContentAssistContext(groovyCompilationUnit);
-
         org.codehaus.groovy.ast.ASTNode astNode = null;
         if (assistContext != null) {
             astNode = assistContext.containingCodeBlock;
