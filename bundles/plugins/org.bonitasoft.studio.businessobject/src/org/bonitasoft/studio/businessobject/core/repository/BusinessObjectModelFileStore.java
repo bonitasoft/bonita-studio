@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.businessobject.core.repository;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +25,6 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -40,6 +38,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
+
+import com.google.common.io.ByteStreams;
 
 /**
  * @author Romain Bioteau
@@ -68,24 +68,13 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
         if (cachedBusinessObjectModel.containsKey(modificationStamp)) {
             return cachedBusinessObjectModel.get(modificationStamp);
         }
-        InputStream contents = null;
-        try {
-            contents = resource.getContents();
-            final byte[] bytes = FileUtil.loadBytes(contents);
-            final BusinessObjectModel bom = converter.unzip(bytes);
+        try (InputStream contents = resource.getContents()) {
+            final BusinessObjectModel bom = converter.unzip(ByteStreams.toByteArray(contents));
             cachedBusinessObjectModel.clear();
             cachedBusinessObjectModel.put(modificationStamp, bom);
             return bom;
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
-        } finally {
-            if (contents != null) {
-                try {
-                    contents.close();
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
         }
         return null;
     }
@@ -168,6 +157,7 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
         return null;
     }
 
+    @Override
     public byte[] toByteArray() {
         try {
             return converter.zip(getContent());
