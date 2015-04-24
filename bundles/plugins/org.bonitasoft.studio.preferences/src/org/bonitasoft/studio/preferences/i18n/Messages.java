@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2009-2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -61,6 +61,7 @@ public class Messages extends NLS {
     public static String BonitaPreferenceDialog_RunMode;
     public static String BonitaPreferenceDialog_search;
     public static String BonitaPreferenceDialog_Web;
+    public static String BonitaPreferenceDialog_legacy6x;
     public static String warMode;
     public static String embeddedMode;
     public static String BonitaPreferenceDialog_UserXP_Settings;
@@ -72,5 +73,6 @@ public class Messages extends NLS {
 	public static String BonitaPreferenceDialog_DBConnectors;
 	public static String askRenameDiagram;
 	public static String doNotDisplayConnectorDefConfirmationMessage;
-	
+    public static String showLegacyMode;
+
 }
