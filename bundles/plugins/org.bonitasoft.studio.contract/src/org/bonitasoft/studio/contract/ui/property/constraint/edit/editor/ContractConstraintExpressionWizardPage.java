@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -46,10 +44,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class ContractConstraintExpressionWizardPage extends WizardPage implements IDocumentListener {
 
@@ -80,7 +76,6 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         this.browserFactory = browserFactory;
     }
 
-
     @Override
     public void dispose() {
         if (groovyViewer != null) {
@@ -107,7 +102,8 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         final IObservableList inputsObservable = EMFObservables.observeList(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES);
         inputIndexer = new ConstraintInputIndexer(constraint, inputs, viewer.getGroovyCompilationUnit());
         getSourceViewer().getDocument().set(expressionContentObservable.getValue().toString());
-        context.addValidationStatusProvider(new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable));
+        context.addValidationStatusProvider(new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable, viewer
+                .getGroovyCompilationUnit()));
 
         setControl(container);
         WizardPageSupport.create(this, context);
@@ -132,12 +128,11 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
     @Override
     public void documentChanged(final DocumentEvent event) {
         final String expression = event.getDocument().get();
-        expressionContentObservable.setValue(expression);
         if (inputIndexer != null) {
             inputIndexer.schedule();
         }
+        expressionContentObservable.setValue(expression);
     }
-
 
     @Override
     public void performHelp() {

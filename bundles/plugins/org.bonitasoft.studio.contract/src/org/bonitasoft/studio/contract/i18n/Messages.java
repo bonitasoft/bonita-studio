@@ -68,5 +68,6 @@ public class Messages extends NLS {
     public static String refactorFailedMsg;
     public static String removeInputErrorTitle;
     public static String removeInputErrorMsg;
+    public static String severalCompilationErrors;
 
 }
