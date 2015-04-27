@@ -15,23 +15,18 @@
 package org.bonitasoft.studio.refactoring.core.script;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
-import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
 import org.bonitasoft.studio.refactoring.core.ProcessVariableRenamer;
 import org.codehaus.groovy.eclipse.codeassist.requestor.CompletionNodeFinder;
 import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.MalformedTreeException;
@@ -40,7 +35,7 @@ import org.eclipse.text.edits.MultiTextEdit;
 /**
  * @author Romain Bioteau
  */
-public class GroovyScriptRefactoringOperation implements IRunnableWithProgress {
+public class GroovyScriptRefactoringOperation implements IScriptRefactoringOperation {
 
     private String script;
     private final List<ReferenceDiff> diffs;
@@ -50,31 +45,27 @@ public class GroovyScriptRefactoringOperation implements IRunnableWithProgress {
         this.diffs = diffs;
     }
 
-    public List<ReferenceDiff> getDiffs() {
-        return diffs;
-    }
-
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ProvidedGroovyRepositoryStore.class);
-        final GroovyFileStore tmpGroovyFileStore = store.createRepositoryFileStore("script" + System.currentTimeMillis() + ".groovy");
-        tmpGroovyFileStore.save(script);
-        final GroovyCompilationUnit compilationUnitFrom = (GroovyCompilationUnit) JavaCore.createCompilationUnitFrom(tmpGroovyFileStore.getResource());
-
-        final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
-        final ContentAssistContext assistContext = finder.findContentAssistContext(compilationUnitFrom);
-
+        GroovyCompilationUnit compilationUnit = null;
         org.codehaus.groovy.ast.ASTNode astNode = null;
-        if (assistContext != null) {
-            astNode = assistContext.containingCodeBlock;
+        try {
+            final IPackageFragment packageFragment = javaProject()
+                    .findPackageFragmentRoot(javaProject().getPath().append("src-providedGroovy"))
+                    .getPackageFragment("");//default package
+            compilationUnit = (GroovyCompilationUnit) packageFragment.createCompilationUnit(newScriptName(), script, true, monitor);
+            final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            final ContentAssistContext assistContext = finder.findContentAssistContext(compilationUnit);
+            if (assistContext != null) {
+                astNode = assistContext.containingCodeBlock;
+            }
+        } catch (final JavaModelException e1) {
+            BonitaStudioLog.error("Failed to retrieve ASTNode from groovy script.", e1);
         }
+
         if (astNode != null) {
             final ProcessVariableRenamer variableRenamer = new ProcessVariableRenamer();
-            final Map<String, String> variableToRename = new HashMap<String, String>();
-            for (final ReferenceDiff diff : diffs) {
-                variableToRename.put(diff.getOldRef(), diff.getNewRef());
-            }
-            final MultiTextEdit rename = variableRenamer.rename(astNode, variableToRename);
+            final MultiTextEdit rename = variableRenamer.rename(astNode, diffs);
             if (rename.getChildrenSize() > 0) {
                 final Document document = new Document(script);
                 try {
@@ -84,23 +75,31 @@ public class GroovyScriptRefactoringOperation implements IRunnableWithProgress {
                 }
                 script = document.get();
             }
-        }
-        tmpGroovyFileStore.delete();
-        forceDelete(compilationUnitFrom);
-    }
-
-    public String getScript() {
-        return script;
-    }
-
-    private void forceDelete(final GroovyCompilationUnit compilationUnit) {
-        try {
-            if (compilationUnit.exists()) {
-                compilationUnit.delete(true, new NullProgressMonitor());
+            try {
+                if (compilationUnit != null) {
+                    compilationUnit.delete(true, monitor);
+                }
+            } catch (final JavaModelException e) {
+                BonitaStudioLog.error("Failed to remove compilation unit after refactor operation.", e);
             }
-        } catch (final JavaModelException e) {
-            BonitaStudioLog.error(e);
         }
+    }
+
+    protected String newScriptName() {
+        return "script" + System.currentTimeMillis() + ".groovy";
+    }
+
+    protected IJavaProject javaProject() {
+        return RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperation#getRefactoredScript()
+     */
+    @Override
+    public String getRefactoredScript() {
+        return script;
     }
 
 }

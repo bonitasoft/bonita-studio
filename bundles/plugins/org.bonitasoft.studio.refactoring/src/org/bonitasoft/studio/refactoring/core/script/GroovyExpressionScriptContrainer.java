@@ -23,8 +23,12 @@ import org.eclipse.emf.ecore.EAttribute;
 
 public class GroovyExpressionScriptContrainer extends ExpressionScriptContrainer {
 
-    public GroovyExpressionScriptContrainer(final Expression expression, final EAttribute dependencyNameAttribute) {
+    private final IScriptRefactoringOperationFactory scriptRefactoringOperationFactory;
+
+    public GroovyExpressionScriptContrainer(final Expression expression, final EAttribute dependencyNameAttribute,
+            final IScriptRefactoringOperationFactory scriptRefactoringOperationFactory) {
         super(expression, dependencyNameAttribute);
+        this.scriptRefactoringOperationFactory = scriptRefactoringOperationFactory;
     }
 
     /*
@@ -33,13 +37,10 @@ public class GroovyExpressionScriptContrainer extends ExpressionScriptContrainer
      */
     @Override
     public void updateScript(final List<ReferenceDiff> referenceDiffs, final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        final GroovyScriptRefactoringOperation groovyScriptRefactoringOperation = groovyScriptRefactoringOperation(referenceDiffs);
+        final IScriptRefactoringOperation groovyScriptRefactoringOperation = scriptRefactoringOperationFactory.createScriptOperationFactory(getScript(),
+                referenceDiffs);
         groovyScriptRefactoringOperation.run(monitor);
-        setNewScript(groovyScriptRefactoringOperation.getScript());
-    }
-
-    protected GroovyScriptRefactoringOperation groovyScriptRefactoringOperation(final List<ReferenceDiff> referenceDiffs) {
-        return new GroovyScriptRefactoringOperation(getScript(), referenceDiffs);
+        setNewScript(groovyScriptRefactoringOperation.getRefactoredScript());
     }
 
 }

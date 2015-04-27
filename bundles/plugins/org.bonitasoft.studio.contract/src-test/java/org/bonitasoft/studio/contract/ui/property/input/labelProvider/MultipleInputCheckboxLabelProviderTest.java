@@ -1,31 +1,28 @@
-package org.bonitasoft.studio.contract.ui.property.input;
+package org.bonitasoft.studio.contract.ui.property.input.labelProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.junit.After;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
+import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-
 
 public class MultipleInputCheckboxLabelProviderTest {
 
     private MultipleInputCheckboxLabelProvider labelProviderUnderTest;
+
+    @Rule
+    public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        labelProviderUnderTest = new MultipleInputCheckboxLabelProvider();
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
+        labelProviderUnderTest = new MultipleInputCheckboxLabelProvider(new WritableSet());
     }
 
     @Test

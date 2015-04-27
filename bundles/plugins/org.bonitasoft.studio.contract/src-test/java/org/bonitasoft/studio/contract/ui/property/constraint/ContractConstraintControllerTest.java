@@ -97,7 +97,6 @@ public class ContractConstraintControllerTest extends AbstractSWTTestCase {
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(c2, c3)));
         controller.remove(viewer);
         assertThat(contract.getConstraints()).containsOnly(c1);
-        verify(viewer).refresh(true);
     }
 
     @Test

@@ -35,6 +35,7 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
+import org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperationFactory;
 import org.bonitasoft.studio.refactoring.core.script.ScriptContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -47,11 +48,14 @@ import com.google.common.collect.Sets;
 public class RefactorContractInputOperation extends AbstractRefactorOperation<ContractInput, ContractInput, ContractInputRefactorPair> {
 
     private final ContractContainer container;
+    private final IScriptRefactoringOperationFactory scriptRefactorOperationFactory;
 
-    public RefactorContractInputOperation(final ContractContainer container, final RefactoringOperationType operationType) {
+    public RefactorContractInputOperation(final ContractContainer container, final IScriptRefactoringOperationFactory scriptRefactorOperationFactory,
+            final RefactoringOperationType operationType) {
         super(operationType);
         checkArgument(container != null);
         this.container = container;
+        this.scriptRefactorOperationFactory = scriptRefactorOperationFactory;
     }
 
     @Override
@@ -68,7 +72,7 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
     @Override
     protected Set<ScriptContainer<?>> allScriptWithReferencedElement(final RefactorPair<ContractInput, ContractInput> pairRefactor) {
         final Set<ScriptContainer<?>> allScriptWithReferencedElement = super.allScriptWithReferencedElement(pairRefactor);
-        allScriptWithReferencedElement.addAll(constraintExpressionsReferencing(ModelHelper.getFirstContainerOfType(pairRefactor.getNewValue(), Contract.class),
+        allScriptWithReferencedElement.addAll(constraintExpressionsReferencing(ModelHelper.getFirstContainerOfType(pairRefactor.getOldValue(), Contract.class),
                 pairRefactor.getOldValue()));
         return allScriptWithReferencedElement;
     }
@@ -78,15 +82,15 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
                 .newHashSet(transform(
                         filter(contract.getConstraints(),
                                 constraintReferencing(contractInput)),
-                        toScriptExpression()));
+                        toConstraintExpressionContainer()));
     }
 
-    private Function<ContractConstraint, ScriptContainer<?>> toScriptExpression() {
+    private Function<ContractConstraint, ScriptContainer<?>> toConstraintExpressionContainer() {
         return new Function<ContractConstraint, ScriptContainer<?>>() {
 
             @Override
             public ScriptContainer<?> apply(final ContractConstraint constraint) {
-                return new ConstraintExpressionScriptContainer(constraint);
+                return new ConstraintExpressionScriptContainer(constraint, scriptRefactorOperationFactory);
             }
         };
     }
@@ -96,7 +100,7 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
 
             @Override
             public boolean apply(final ContractConstraint constraint) {
-                return constraint.getInputNames().contains(contractInput.getName());
+                return constraint.getInputNames().contains(contractInput.getName()) && constraint.getInputNames().size() > 1;
             }
         };
     }

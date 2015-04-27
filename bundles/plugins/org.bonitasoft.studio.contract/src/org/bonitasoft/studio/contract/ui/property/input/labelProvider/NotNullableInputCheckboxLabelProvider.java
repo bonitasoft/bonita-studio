@@ -12,31 +12,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property.input;
+package org.bonitasoft.studio.contract.ui.property.input.labelProvider;
 
+import org.bonitasoft.studio.common.jface.databinding.CustomCheckBoxColumnLabelProvider;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 
 /**
  * @author Romain Bioteau
  */
-public class DescriptionCellLabelProvider extends PropertyColumnLabelProvider {
+public class NotNullableInputCheckboxLabelProvider extends CustomCheckBoxColumnLabelProvider {
 
-    public DescriptionCellLabelProvider(final IPropertySourceProvider propertySourceProvider) {
-        super(propertySourceProvider, ProcessPackage.Literals.CONTRACT_INPUT__DESCRIPTION.getName());
+    public NotNullableInputCheckboxLabelProvider(final IObservableSet knowElements) {
+        super(ProcessPackage.Literals.CONTRACT_INPUT__MANDATORY, knowElements);
     }
 
     @Override
-    public Image getImage(final Object element) {
-        return null;
-    }
-
-    @Override
-    public String getToolTipText(final Object element) {
-        return ((ContractInput) element).getDescription();
+    protected boolean isSelected(final Object element) {
+        if (element instanceof ContractInput) {
+            return !((ContractInput) element).isMandatory();
+        }
+        return true;
     }
 
 }

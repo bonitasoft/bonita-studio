@@ -15,40 +15,35 @@
 package org.bonitasoft.studio.contract.core.refactoring;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.bonitasoft.studio.model.expression.assertions.ExpressionAssert.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.expression.builders.OperationBuilder.anOperation;
-import static org.bonitasoft.studio.model.process.assertions.ContractConstraintAssert.assertThat;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.ContractConstraintBuilder.aContractConstraint;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
 
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
-import org.bonitasoft.studio.refactoring.core.ScriptRefactoringAction;
-import org.bonitasoft.studio.refactoring.core.RefactorPair;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
+import org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperationFactory;
+import org.bonitasoft.studio.refactoring.core.script.ScriptContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.google.common.collect.Sets;
 
 /**
  * @author Romain Bioteau
@@ -57,30 +52,18 @@ import com.google.common.collect.Sets;
 public class RefactorContractInputOperationTest {
 
     private final IProgressMonitor monitor = new NullProgressMonitor();
-
-    @Test
-    public void should_update_contract_constraint_input_reference_in_constraint() throws Exception {
-        final ContractContainer aTaskWithContract = aTaskWithContract();
-        final ContractConstraint contractConstraint = aTaskWithContract.getContract().getConstraints().get(0);
-        final RefactorContractInputOperation refactorOperation = spy(new RefactorContractInputOperation(aTaskWithContract, RefactoringOperationType.UPDATE));
-        doReturn(Sets.newHashSet()).when(refactorOperation).allScriptWithReferencedElement(any(RefactorPair.class));
-        refactorOperation.addItemToRefactor(aContractInput().withName("lastName").build(), aTaskWithContract.getContract().getInputs().get(0));
-        refactorOperation.setEditingDomain(transactionalEditingDomain());
-
-        refactorOperation.run(monitor);
-
-        assertThat(contractConstraint).hasInputNames("lastName");
-    }
+    @Mock
+    private IScriptRefactoringOperationFactory scriptRefactorOperationFactory;
 
     @Test
     public void should_update_contract_constraint_input_reference_in_contract_input_expressions() throws Exception {
         final Task aTaskWithContractAndOperations = aTaskWithContractAndOperations();
         final Expression contractInputExpression = aTaskWithContractAndOperations.getOperations().get(0).getRightOperand();
         final RefactorContractInputOperation refactorOperation = new RefactorContractInputOperation(aTaskWithContractAndOperations,
-                RefactoringOperationType.UPDATE);
+                scriptRefactorOperationFactory, RefactoringOperationType.UPDATE);
 
-        final ContractInput oldItem = EcoreUtil.copy(aTaskWithContractAndOperations.getContract().getInputs().get(0));
-        final ContractInput newtem = aTaskWithContractAndOperations.getContract().getInputs().get(0);
+        final ContractInput oldItem = aTaskWithContractAndOperations.getContract().getInputs().get(0);
+        final ContractInput newtem = EcoreUtil.copy(oldItem);
         newtem.setName("lastName");
         refactorOperation.addItemToRefactor(newtem, oldItem);
         refactorOperation.setEditingDomain(transactionalEditingDomain());
@@ -91,43 +74,52 @@ public class RefactorContractInputOperationTest {
     }
 
     @Test
-    public void should_scriptExpressionRefactoringAction_be_a_ContractInputScriptExpressionRefactoringAction() throws Exception {
-        final RefactorContractInputOperation refactorOperation = new RefactorContractInputOperation(aTaskWithContract(),
-                RefactoringOperationType.UPDATE);
-
-        final ScriptRefactoringAction<ContractInputRefactorPair> scriptExpressionRefactoringAction = refactorOperation
-                .getScriptExpressionRefactoringAction(null, null, null, null, transactionalEditingDomain(), RefactoringOperationType.UPDATE);
-
-        assertThat(scriptExpressionRefactoringAction).isInstanceOf(ContractInputScriptExpressionRefactoringAction.class);
-    }
-
-    @Test
-    public void should_add_a_script_expression_for_constraint_referencing_updated_input() throws Exception {
+    public void should_not_add_a_script_expression_for_constraint_referencing_only_updated_input() throws Exception {
         final ContractContainer aTaskWithContract = aTaskWithContract();
         final RefactorContractInputOperation refactorOperation = new RefactorContractInputOperation(aTaskWithContract,
+                scriptRefactorOperationFactory,
                 RefactoringOperationType.UPDATE);
 
         final ContractInput contractInput = aTaskWithContract.getContract().getInputs()
                 .get(0);
-        final Set<Expression> allScriptWithReferencedElement = refactorOperation.allScriptWithReferencedElement(new ContractInputRefactorPair(contractInput,
-                EcoreUtil.copy(contractInput)));
+        final Set<ScriptContainer<?>> allScriptWithReferencedElement = refactorOperation.allScriptWithReferencedElement(new ContractInputRefactorPair(
+                EcoreUtil.copy(contractInput),
+                contractInput));
 
-        assertThat(allScriptWithReferencedElement).extracting("content").contains(
-                "firstName.length > 0");
+        assertThat(allScriptWithReferencedElement).isEmpty();
+    }
+
+    @Test
+    public void should_add_a_script_expression_for_constraint_referencing_updated_input_and_some_others() throws Exception {
+        final ContractContainer aTaskWithContract = aTaskWithContractAndGlobalConstraint();
+        final RefactorContractInputOperation refactorOperation = new RefactorContractInputOperation(aTaskWithContract,
+                scriptRefactorOperationFactory,
+                RefactoringOperationType.UPDATE);
+
+        final ContractInput contractInput = aTaskWithContract.getContract().getInputs()
+                .get(0);
+        final Set<ScriptContainer<?>> allScriptWithReferencedElement = refactorOperation.allScriptWithReferencedElement(new ContractInputRefactorPair(
+                EcoreUtil.copy(contractInput),
+                contractInput));
+
+        assertThat(allScriptWithReferencedElement).extracting("script", "modelElement").contains(
+                tuple("firstName.length > 0 && lastName.length > 0", aTaskWithContract.getContract().getConstraints().get(0)));
     }
 
     @Test
     public void should_add_a_script_expression_with_parent_for_constraint_referencing_updated_input() throws Exception {
-        final ContractContainer aTaskWithContract = aTaskWithContract();
+        final ContractContainer aTaskWithContract = aTaskWithContractAndGlobalConstraint();
         final RefactorContractInputOperation refactorOperation = new RefactorContractInputOperation(aTaskWithContract,
+                scriptRefactorOperationFactory,
                 RefactoringOperationType.UPDATE);
 
         final ContractInput contractInput = aTaskWithContract.getContract().getInputs()
                 .get(0);
-        final Set<Expression> allScriptWithReferencedElement = refactorOperation.allScriptWithReferencedElement(new ContractInputRefactorPair(contractInput,
-                EcoreUtil.copy(contractInput)));
+        final Set<ScriptContainer<?>> allScriptWithReferencedElement = refactorOperation.allScriptWithReferencedElement(new ContractInputRefactorPair(
+                EcoreUtil.copy(contractInput),
+                contractInput));
 
-        assertThat(allScriptWithReferencedElement.iterator().next().eContainer()).isEqualTo(aTaskWithContract.getContract().getConstraints().get(0));
+        assertThat(allScriptWithReferencedElement.iterator().next().getModelElement().eContainer()).isNotNull();
     }
 
     private TransactionalEditingDomainImpl transactionalEditingDomain() {
@@ -138,6 +130,14 @@ public class RefactorContractInputOperationTest {
         return aTask().havingContract(aContract()
                 .havingInput(aContractInput().withName("firstName"))
                 .havingConstraint(aContractConstraint().withExpression("firstName.length > 0").havingInput("firstName"))).build();
+    }
+
+    private ContractContainer aTaskWithContractAndGlobalConstraint() {
+        return aTask().havingContract(aContract()
+                .havingInput(aContractInput().withName("firstName"))
+                .havingInput(aContractInput().withName("lastName"))
+                .havingConstraint(aContractConstraint().withExpression("firstName.length > 0 && lastName.length > 0").havingInput("firstName", "lastName")))
+                .build();
     }
 
     private Task aTaskWithContractAndOperations() {

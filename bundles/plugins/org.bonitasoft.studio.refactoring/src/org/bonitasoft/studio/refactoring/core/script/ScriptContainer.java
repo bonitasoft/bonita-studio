@@ -87,7 +87,7 @@ public abstract class ScriptContainer<T extends EObject> {
     public abstract CompoundCommand removeDependencies(List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor);
 
     protected boolean scriptHasChanged() {
-        return !getScript().equals(getNewScript());
+        return getScript() != getNewScript();
     }
 
     public EAttribute getDependencyNameFeature() {

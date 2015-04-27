@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aGroovyScriptExpression;
 import static org.bonitasoft.studio.refactoring.core.script.ReferenceDiff.newReferenceDiff;
 import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -52,13 +53,15 @@ public class GroovyExpressionScriptContrainerTest {
     private GroovyScriptRefactoringOperation groovyScriptOperation;
     @Mock
     private IProgressMonitor monitor;
+    @Mock
+    private IScriptRefactoringOperationFactory scriptRefactorOperationFactory;
 
     @Test
     public void should_retrieve_script_value_form_expression() throws Exception {
         final Data myData = DataBuilder.aData().havingDataType(StringDataTypeBuilder.aStringDataType()).build();
         final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = new GroovyExpressionScriptContrainer(aGroovyScriptExpression()
                 .withContent("return myData").havingReferencedElements(myData).build(),
-                ProcessPackage.Literals.ELEMENT__NAME);
+                ProcessPackage.Literals.ELEMENT__NAME, scriptRefactorOperationFactory);
 
         final String script = groovyExpressionScriptContrainer.getScript();
 
@@ -70,10 +73,11 @@ public class GroovyExpressionScriptContrainerTest {
         final Data myData = DataBuilder.aData().havingDataType(StringDataTypeBuilder.aStringDataType()).build();
         final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = spy(new GroovyExpressionScriptContrainer(aGroovyScriptExpression()
                 .withContent("return myData").havingReferencedElements(myData).build(),
-                ProcessPackage.Literals.ELEMENT__NAME));
-        doReturn(groovyScriptOperation).when(groovyExpressionScriptContrainer).groovyScriptRefactoringOperation(anyList());
+                ProcessPackage.Literals.ELEMENT__NAME,
+                scriptRefactorOperationFactory));
+        doReturn(groovyScriptOperation).when(scriptRefactorOperationFactory).createScriptOperationFactory(anyString(), anyList());
         doNothing().when(groovyScriptOperation).run(monitor);
-        doReturn("return myNewData").when(groovyScriptOperation).getScript();
+        doReturn("return myNewData").when(groovyScriptOperation).getRefactoredScript();
 
         groovyExpressionScriptContrainer.updateScript(newArrayList(newReferenceDiff("myData", "myNewData")),
                 monitor);
@@ -87,7 +91,8 @@ public class GroovyExpressionScriptContrainerTest {
         final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = new GroovyExpressionScriptContrainer(aGroovyScriptExpression()
                 .withName("myScript")
                 .withContent("return myData").havingReferencedElements(myData).build(),
-                ProcessPackage.Literals.ELEMENT__NAME);
+                ProcessPackage.Literals.ELEMENT__NAME,
+                scriptRefactorOperationFactory);
 
         final String name = groovyExpressionScriptContrainer.getName();
 
@@ -100,7 +105,8 @@ public class GroovyExpressionScriptContrainerTest {
         final Expression expression = aGroovyScriptExpression()
                 .withContent("return myData").havingReferencedElements(myData).build();
         final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = spy(new GroovyExpressionScriptContrainer(expression,
-                ProcessPackage.Literals.ELEMENT__NAME));
+                ProcessPackage.Literals.ELEMENT__NAME,
+                scriptRefactorOperationFactory));
         final TransactionalEditingDomainImpl editingDomain = new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
         doReturn(editingDomain).when(groovyExpressionScriptContrainer).editingDomain();
 
@@ -117,7 +123,8 @@ public class GroovyExpressionScriptContrainerTest {
         final Expression expression = aGroovyScriptExpression()
                 .withContent("return field_myText").havingReferencedElements(textFormField).build();
         final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = spy(new GroovyExpressionScriptContrainer(expression,
-                ProcessPackage.Literals.ELEMENT__NAME));
+                ProcessPackage.Literals.ELEMENT__NAME,
+                scriptRefactorOperationFactory));
         final TransactionalEditingDomainImpl editingDomain = new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
         doReturn(editingDomain).when(groovyExpressionScriptContrainer).editingDomain();
 
@@ -134,7 +141,8 @@ public class GroovyExpressionScriptContrainerTest {
         final Expression expression = aGroovyScriptExpression()
                 .withContent("return myData").havingReferencedElements(myData).build();
         final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = spy(new GroovyExpressionScriptContrainer(expression,
-                ProcessPackage.Literals.ELEMENT__NAME));
+                ProcessPackage.Literals.ELEMENT__NAME,
+                scriptRefactorOperationFactory));
         final TransactionalEditingDomainImpl editingDomain = new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
         doReturn(editingDomain).when(groovyExpressionScriptContrainer).editingDomain();
 
@@ -153,7 +161,7 @@ public class GroovyExpressionScriptContrainerTest {
         final Expression expression = aGroovyScriptExpression()
                 .withContent("return field_myText").havingReferencedElements(textFormField).build();
         final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = spy(new GroovyExpressionScriptContrainer(expression,
-                ProcessPackage.Literals.ELEMENT__NAME));
+                ProcessPackage.Literals.ELEMENT__NAME, scriptRefactorOperationFactory));
         final TransactionalEditingDomainImpl editingDomain = new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
         doReturn(editingDomain).when(groovyExpressionScriptContrainer).editingDomain();
 
@@ -172,7 +180,7 @@ public class GroovyExpressionScriptContrainerTest {
         final Expression expression = aGroovyScriptExpression()
                 .withContent("return myData").havingReferencedElements(myData).build();
         final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = spy(new GroovyExpressionScriptContrainer(expression,
-                ProcessPackage.Literals.ELEMENT__NAME));
+                ProcessPackage.Literals.ELEMENT__NAME, scriptRefactorOperationFactory));
         final TransactionalEditingDomainImpl editingDomain = new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
         doReturn(editingDomain).when(groovyExpressionScriptContrainer).editingDomain();
 

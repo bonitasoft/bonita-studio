@@ -32,10 +32,9 @@ import java.util.Set;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.parameter.ParameterPackage;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.refactoring.core.script.ConditionExpressionScriptContrainer;
 import org.bonitasoft.studio.refactoring.core.script.GroovyExpressionScriptContrainer;
+import org.bonitasoft.studio.refactoring.core.script.GroovyScriptRefactoringOperationFactory;
 import org.bonitasoft.studio.refactoring.core.script.ReferenceDiff;
 import org.bonitasoft.studio.refactoring.core.script.ScriptContainer;
 import org.bonitasoft.studio.refactoring.core.script.TextExpressionScriptContainer;
@@ -44,10 +43,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 import com.google.common.base.Function;
@@ -60,17 +57,19 @@ import com.google.common.collect.Sets;
 public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EObject, T extends RefactorPair<Y, Z>> implements IRunnableWithProgress {
 
     private static final int MIN_MONITOR_WORK = 3;
-    private TransactionalEditingDomain domain;
+    private EditingDomain domain;
     private CompoundCommand compoundCommand;
     private boolean canExecute = true;
     private boolean isCancelled = false;
     protected RefactoringOperationType operationType;
     private boolean askConfirmation;
     protected List<T> pairsToRefactor = new ArrayList<T>();
+    private final DependencyFeatureNameResolver dependencyFeatureNameResolver;
 
     public AbstractRefactorOperation(final RefactoringOperationType operationType) {
         this.operationType = operationType;
         compoundCommand = new CompoundCommand("Refactor Operation");
+        dependencyFeatureNameResolver = new DependencyFeatureNameResolver();
     }
 
     protected CompoundCommand buildCompoundCommand(final IProgressMonitor monitor) throws InterruptedException, InvocationTargetException {
@@ -167,21 +166,21 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
         return Sets.newHashSet(transform(
                 filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class),
                         and(withExpressionType(ExpressionConstants.PATTERN_TYPE), withReferencedElement(referencedElement))),
-                toTextExpressionScriptContainer(dependencyNameFeature(referencedElement.eClass()))));
+                toTextExpressionScriptContainer(dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));
     }
 
     private Collection<? extends ScriptContainer<?>> allConditionExpressionWithReferencedElement(final EObject container, final Z referencedElement) {
         return Sets.newHashSet(transform(
                 filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class),
                         and(withExpressionType(ExpressionConstants.CONDITION_TYPE), withReferencedElement(referencedElement))),
-                toConditionExpressionScriptContainer(dependencyNameFeature(referencedElement.eClass()))));
+                toConditionExpressionScriptContainer(dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));
     }
 
     private Collection<? extends ScriptContainer<?>> allGroovyScriptWithReferencedElement(final EObject container, final Z referencedElement) {
         return Sets.newHashSet(transform(
                 filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class),
                         and(withExpressionType(ExpressionConstants.SCRIPT_TYPE), withReferencedElement(referencedElement))),
-                toGroovyExpressionScriptContainer(dependencyNameFeature(referencedElement.eClass()))));
+                toGroovyExpressionScriptContainer(dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));
     }
 
     private Function<Expression, TextExpressionScriptContainer> toTextExpressionScriptContainer(final EAttribute dependencyNameFeature) {
@@ -209,22 +208,9 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
 
             @Override
             public GroovyExpressionScriptContrainer apply(final Expression expression) {
-                return new GroovyExpressionScriptContrainer(expression, dependencyNameFeature);
+                return new GroovyExpressionScriptContrainer(expression, dependencyNameFeature, new GroovyScriptRefactoringOperationFactory());
             }
         };
-    }
-
-    private EAttribute dependencyNameFeature(final EClass eClass) {
-        if (ProcessPackage.Literals.ELEMENT.isSuperTypeOf(eClass)) {
-            return ProcessPackage.Literals.ELEMENT__NAME;
-        }
-        if (ProcessPackage.Literals.CONTRACT_INPUT.equals(eClass)) {
-            return ProcessPackage.Literals.CONTRACT_INPUT__NAME;
-        }
-        if (ParameterPackage.Literals.PARAMETER.equals(eClass)) {
-            return ParameterPackage.Literals.PARAMETER__NAME;
-        }
-        return null;
     }
 
     protected ScriptRefactoringAction<T> createScriptExpressionRefactoringAction(final List<T> pairsToRefactor,
@@ -259,11 +245,11 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
         };
     }
 
-    public void setEditingDomain(final TransactionalEditingDomain domain) {
+    public void setEditingDomain(final EditingDomain domain) {
         this.domain = domain;
     }
 
-    protected TransactionalEditingDomain getEditingDomain() {
+    public EditingDomain getEditingDomain() {
         return domain;
     }
 
@@ -284,7 +270,7 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
         this.askConfirmation = askConfirmation;
     }
 
-    protected boolean askConfirmation() {
+    public boolean askConfirmation() {
         return askConfirmation;
     }
 

@@ -23,6 +23,9 @@ import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -35,14 +38,15 @@ import java.util.Arrays;
 
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.fakes.FakeProgressService;
+import org.bonitasoft.studio.contract.core.refactoring.RefactorContractInputOperation;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.assertions.ContractAssert;
 import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
+import org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperation;
+import org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperationFactory;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.WritableValue;
@@ -78,14 +82,23 @@ public class ContractInputControllerTest {
     @Rule
     public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
 
+    @Mock
+    private IScriptRefactoringOperationFactory scriptRefactoringOperationFactory;
+    @Mock
+    private IScriptRefactoringOperation refactorScriptOperation;
+    @Mock
+    private IProgressService progressService;
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         FileActionDialog.setDisablePopup(true);
-        contractInputController = spy(new ContractInputController(new FakeProgressService()));
-        doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(contractInputController).editingDomain(anyList());
+        contractInputController = spy(new ContractInputController(progressService));
+        doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(contractInputController).editingDomain(any(Contract.class));
+        doReturn(scriptRefactoringOperationFactory).when(contractInputController).scriptRefactoringOperationFactory();
+        when(scriptRefactoringOperationFactory.createScriptOperationFactory(anyString(), anyList())).thenReturn(refactorScriptOperation);
         observableValue = new WritableValue(Realm.getDefault());
         when(viewer.getInput()).thenReturn(observableValue);
     }
@@ -176,8 +189,8 @@ public class ContractInputControllerTest {
 
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(input2, input3)));
         contractInputController.remove(viewer);
-        assertThat(((Contract) observableValue.getValue()).getInputs()).containsOnly(input1);
-        verify(viewer).refresh(true);
+
+        verify(progressService).run(eq(true), eq(true), notNull(RefactorContractInputOperation.class));
     }
 
     @Test
@@ -194,8 +207,8 @@ public class ContractInputControllerTest {
 
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(child1)));
         contractInputController.remove(viewer);
+
         assertThat(((Contract) observableValue.getValue()).getInputs()).containsOnly(input1);
-        verify(viewer).refresh(true);
     }
 
     @Test
@@ -234,7 +247,8 @@ public class ContractInputControllerTest {
     public void should_open_an_error_dialog_if_remove_operation_failed() throws Exception {
         final IProgressService mockProgressService = mock(IProgressService.class);
         contractInputController = spy(new ContractInputController(mockProgressService));
-        doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(contractInputController).editingDomain(anyList());
+        doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(contractInputController).editingDomain(any(Contract.class));
+
         final Contract contract = aContract().havingInput(aContractInput()).in(aTask()).build();
         observableValue.setValue(contract);
         when(viewer.getSelection()).thenReturn(new StructuredSelection(contract.getInputs()));
@@ -252,12 +266,13 @@ public class ContractInputControllerTest {
                 .havingInput(aContractInput().withName("employee"))
                 .havingConstraint(aContractConstraint().havingInput("employee"))
                 .in(aTask()).build();
+        doReturn(false).when(contractInputController).shouldAskConfirmation();
         observableValue.setValue(contract);
         when(viewer.getSelection()).thenReturn(new StructuredSelection(contract.getInputs()));
 
         contractInputController.remove(viewer);
 
-        ContractAssert.assertThat(contract).hasNoConstraints();
+        verify(progressService).run(eq(true), eq(true), notNull(RefactorContractInputOperation.class));
     }
 
     @Test
@@ -266,6 +281,7 @@ public class ContractInputControllerTest {
                 .havingInput(aContractInput().withName("employee"))
                 .havingConstraint(aContractConstraint().havingInput("employee", "manager"))
                 .in(aTask()).build();
+        doReturn(false).when(contractInputController).shouldAskConfirmation();
         observableValue.setValue(contract);
         when(viewer.getSelection()).thenReturn(new StructuredSelection(contract.getInputs()));
 

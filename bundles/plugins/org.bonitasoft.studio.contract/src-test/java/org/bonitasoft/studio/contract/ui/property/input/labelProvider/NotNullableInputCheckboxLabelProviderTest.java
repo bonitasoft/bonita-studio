@@ -1,16 +1,19 @@
-package org.bonitasoft.studio.contract.ui.property.input;
+package org.bonitasoft.studio.contract.ui.property.input.labelProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
-import org.junit.After;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
+import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
+public class NotNullableInputCheckboxLabelProviderTest {
 
-public class NullableInputCheckboxLabelProviderTest extends AbstractSWTTestCase {
+    @Rule
+    public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
 
     private NotNullableInputCheckboxLabelProvider labelProviderUnderTest;
 
@@ -19,18 +22,8 @@ public class NullableInputCheckboxLabelProviderTest extends AbstractSWTTestCase 
      */
     @Before
     public void setUp() throws Exception {
-        createDisplayAndRealm();
-        labelProviderUnderTest = new NotNullableInputCheckboxLabelProvider();
+        labelProviderUnderTest = new NotNullableInputCheckboxLabelProvider(new WritableSet());
     }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
-    }
-
 
     @Test
     public void shouldIsSelected_ReturnsFalse() throws Exception {

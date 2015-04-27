@@ -22,7 +22,11 @@ import org.bonitasoft.studio.contract.ui.property.IViewerController;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ConstraintExpressionPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ConstraintNameObservableEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ErrorMessageObservableEditingSupport;
+import org.bonitasoft.studio.contract.ui.property.constraint.labelProvider.ConstraintErrorMessageCellLabelProvider;
+import org.bonitasoft.studio.contract.ui.property.constraint.labelProvider.ConstraintExpressionCellLabelProvider;
+import org.bonitasoft.studio.contract.ui.property.constraint.labelProvider.ConstraintNameCellLabelProvider;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -169,22 +173,27 @@ public class ContractConstraintsTableViewer extends TableViewer {
 
     protected void createConstraintNameColumn() {
         final TableViewerColumn nameColumnViewer = createColumnViewer(Messages.name + " *", SWT.FILL);
-        nameColumnViewer.setLabelProvider(new ConstraintNameCellLabelProvider(propertySourceProvider));
+        nameColumnViewer.setLabelProvider(new ConstraintNameCellLabelProvider(propertySourceProvider, knowElements()));
         final ConstraintNameObservableEditingSupport editingSupport = new ConstraintNameObservableEditingSupport(this, messageManager,
                 emfDataBindingContext);
         editingSupport.setControlId(SWTBotConstants.SWTBOT_ID_CONSTRAINT_NAME_TEXTEDITOR);
         nameColumnViewer.setEditingSupport(editingSupport);
     }
 
+    private IObservableSet knowElements() {
+        final ObservableListContentProvider contentProvider = (ObservableListContentProvider) getContentProvider();
+        return contentProvider.getKnownElements();
+    }
+
     protected void createConstraintExpressionColumn() {
         final TableViewerColumn nameColumnViewer = createColumnViewer(Messages.expression + " *", SWT.FILL);
-        nameColumnViewer.setLabelProvider(new ConstraintExpressionCellLabelProvider(propertySourceProvider));
+        nameColumnViewer.setLabelProvider(new ConstraintExpressionCellLabelProvider(propertySourceProvider, knowElements()));
         nameColumnViewer.setEditingSupport(new ConstraintExpressionPropertyEditingSupport(this, propertySourceProvider));
     }
 
     protected void createConstraintErrorMessageColumn() {
         final TableViewerColumn descriptionColumnViewer = createColumnViewer(Messages.errorMessage, SWT.FILL);
-        descriptionColumnViewer.setLabelProvider(new ConstraintErrorMessageCellLabelProvider(propertySourceProvider));
+        descriptionColumnViewer.setLabelProvider(new ConstraintErrorMessageCellLabelProvider(propertySourceProvider, knowElements()));
         final ErrorMessageObservableEditingSupport editingSupport = new ErrorMessageObservableEditingSupport(this,
                 messageManager,
                 emfDataBindingContext);

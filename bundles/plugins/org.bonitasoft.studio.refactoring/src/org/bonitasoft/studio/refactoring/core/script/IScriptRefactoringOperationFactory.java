@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -12,20 +12,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.refactoring.i18n;
+package org.bonitasoft.studio.refactoring.core.script;
 
-import org.eclipse.osgi.util.NLS;
+import java.util.List;
 
-/**
- * @author Romain Bioteau
- */
-public class Messages extends NLS {
+public interface IScriptRefactoringOperationFactory {
 
-    public static String refactoringData;
-    public static String refactorFailedTitle;
-    public static String refactorFailedMsg;
+    IScriptRefactoringOperation createScriptOperationFactory(String script, List<ReferenceDiff> referenceDiffs);
 
-    static {
-        NLS.initializeMessages("messages", Messages.class);//$NON-NLS-1$
-    }
 }

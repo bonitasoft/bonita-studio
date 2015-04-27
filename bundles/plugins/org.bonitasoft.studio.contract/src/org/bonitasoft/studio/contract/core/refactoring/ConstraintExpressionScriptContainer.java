@@ -20,7 +20,8 @@ import java.util.List;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
-import org.bonitasoft.studio.refactoring.core.script.GroovyScriptRefactoringOperation;
+import org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperation;
+import org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperationFactory;
 import org.bonitasoft.studio.refactoring.core.script.ReferenceDiff;
 import org.bonitasoft.studio.refactoring.core.script.ScriptContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,11 +29,15 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 
 public class ConstraintExpressionScriptContainer extends ScriptContainer<ContractConstraint> {
 
-    public ConstraintExpressionScriptContainer(final ContractConstraint constraint) {
+    private final IScriptRefactoringOperationFactory scriptRefactoringOperationFactory;
+
+    public ConstraintExpressionScriptContainer(final ContractConstraint constraint, final IScriptRefactoringOperationFactory scriptRefactoringOperationFactory) {
         super(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION, null);
+        this.scriptRefactoringOperationFactory = scriptRefactoringOperationFactory;
     }
 
     /*
@@ -50,9 +55,10 @@ public class ConstraintExpressionScriptContainer extends ScriptContainer<Contrac
      */
     @Override
     public void updateScript(final List<ReferenceDiff> referenceDiffs, final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        final GroovyScriptRefactoringOperation groovyScriptRefactoringOperation = new GroovyScriptRefactoringOperation(getScript(), referenceDiffs);
-        groovyScriptRefactoringOperation.run(monitor);
-        setNewScript(groovyScriptRefactoringOperation.getScript());
+        final IScriptRefactoringOperation scriptRefactoringOperation = scriptRefactoringOperationFactory.createScriptOperationFactory(getScript(),
+                referenceDiffs);
+        scriptRefactoringOperation.run(monitor);
+        setNewScript(scriptRefactoringOperation.getRefactoredScript());
     }
 
     /*
@@ -76,6 +82,15 @@ public class ConstraintExpressionScriptContainer extends ScriptContainer<Contrac
             }
         }
         return compoundCommand;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.refactoring.core.script.ScriptContainer#editingDomain()
+     */
+    @Override
+    protected EditingDomain editingDomain() {
+        return super.editingDomain();
     }
 
     /*
