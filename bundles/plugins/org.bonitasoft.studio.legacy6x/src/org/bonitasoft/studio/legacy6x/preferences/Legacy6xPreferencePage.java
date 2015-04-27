@@ -12,14 +12,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.preferences.pages;
+package org.bonitasoft.studio.legacy6x.preferences;
 
+import org.bonitasoft.studio.legacy6x.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.preferences.i18n.Messages;
+import org.bonitasoft.studio.preferences.pages.AbstractBonitaPreferencePage;
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.xtext.ui.editor.preferences.fields.LabelFieldEditor;
 
 
 public class Legacy6xPreferencePage extends AbstractBonitaPreferencePage {
@@ -31,11 +33,23 @@ public class Legacy6xPreferencePage extends AbstractBonitaPreferencePage {
 
     @Override
     protected void createFieldEditors() {
-        createTitleBar(Messages.BonitaPreferenceDialog_legacy6x, Pics.getImage(PicsConstants.preferenceLegacy6x), false);
+        createTitleBar(org.bonitasoft.studio.preferences.i18n.Messages.BonitaPreferenceDialog_legacy6x, Pics.getImage(PicsConstants.preferenceLegacy6x), false);
+        createDescription();
+        createBooleanField();
+    }
 
-        final BooleanFieldEditor legacyModeFieldEditor = new BooleanFieldEditor(BonitaPreferenceConstants.SHOW_LEGACY_6X_MODE, Messages.showLegacyMode,
+    private void createBooleanField() {
+        final BooleanFieldEditor legacyModeFieldEditor = new BooleanFieldEditor(
+                BonitaPreferenceConstants.SHOW_LEGACY_6X_MODE,
+                Messages.showLegacyMode,
                 getFieldEditorParent());
         addField(legacyModeFieldEditor);
+    }
+
+    private void createDescription() {
+        final String descriptionText = Messages.bind(Messages.showLegcyModeDescriptionPreferncePage,
+                org.bonitasoft.studio.common.Messages.bonitaStudioModuleName);
+        addField(new LabelFieldEditor(descriptionText, getFieldEditorParent()));
     }
 
 }

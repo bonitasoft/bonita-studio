@@ -62,13 +62,9 @@
          </keywordReference>
       </page>
       <page
-            category="org.bonitasoft.studio.preferences.pages.BPM"
-            class="org.bonitasoft.studio.preferences.pages.Legacy6xPreferencePage"
-            id="org.bonitasoft.studio.preferences.legacy6x"
-            name="Legacy 6.x">
-         <keywordReference
-               id="org.bonitasoft.studio.preferences.keyword.legacy6x">
-         </keywordReference>
+            class="org.bonitasoft.studio.preferences.pages.ParentBPMPreferencePage"
+            id="org.bonitasoft.studio.preferences.pages.BPM"
+            name="BPM">
       </page>
    </extension>
    <extension
@@ -114,10 +110,6 @@
       <keyword
             id="org.bonitasoft.studio.preferences.keyword.run"
             label="%runKeywords">
-      </keyword>
-      <keyword
-            id="org.bonitasoft.studio.preferences.keyword.legacy6x"
-            label="%legacy6xKeywords">
       </keyword>
    </extension>
 

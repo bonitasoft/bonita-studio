@@ -261,7 +261,7 @@
               class="org.bonitasoft.studio.profiles.manager.ActivityPropertyTester"
               id="org.eclipse.ui.activityPropertyTester"
               namespace="org.bonitasoft"
-              properties="isActivityEnabled,isCategoryEnabled"
+              properties="isActivityEnabled,isCategoryEnabled,is6XLegacyEnabled"
               type="org.eclipse.ui.IWorkbenchWindow">
         </propertyTester>
      </extension>
