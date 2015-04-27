@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.properties.sections.lookandfeel;
 
@@ -124,6 +121,7 @@ public class LookAndFeelPropertySection extends AbstractBonitaDescriptionSection
         final Button useLocalTemplate = getWidgetFactory().createButton(
                 buttonsComposite, Messages.localTemplate, SWT.FLAT);
         useLocalTemplate.addSelectionListener(new SelectionListener() {
+
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 selectLocalTemplate();
@@ -151,7 +149,7 @@ public class LookAndFeelPropertySection extends AbstractBonitaDescriptionSection
                                     ApplicationResourceRepositoryStore.class);
                     final String processUUID = ModelHelper
                             .getEObjectID(getAbstractProcess());
-                    final ApplicationResourceFileStore webTemplateArtifact = (ApplicationResourceFileStore) store
+                    final ApplicationResourceFileStore webTemplateArtifact = store
                             .getChild(processUUID);
                     try {
                         WebTemplatesUtil.convertWebTemplateToTheme(
@@ -239,6 +237,7 @@ public class LookAndFeelPropertySection extends AbstractBonitaDescriptionSection
                 Messages.Download, SWT.FLAT);
         GridDataFactory.swtDefaults().applyTo(downloadTemplate);
         downloadTemplate.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 downloadDefaultTemplate(templateType, null);
@@ -338,6 +337,7 @@ public class LookAndFeelPropertySection extends AbstractBonitaDescriptionSection
         final SelectLocalTemplateWizard wizard = new SelectLocalTemplateWizard();
         final Shell shell = getPart().getSite().getShell();
         final int res = new WizardDialog(shell, wizard) {
+
             @Override
             protected org.eclipse.swt.graphics.Point getInitialSize() {
                 return new org.eclipse.swt.graphics.Point(650, 500);
@@ -391,8 +391,8 @@ public class LookAndFeelPropertySection extends AbstractBonitaDescriptionSection
                     .getBasedOnLookAndFeel();
 
             basedOnValue
-            .setText(basedOnLookAndFeel != null ? basedOnLookAndFeel
-                    : "");
+                    .setText(basedOnLookAndFeel != null ? basedOnLookAndFeel
+                            : "");
 
             // reload html template
             AssociatedFile template = ((AbstractProcess) resourceContainer)
@@ -442,16 +442,16 @@ public class LookAndFeelPropertySection extends AbstractBonitaDescriptionSection
                 getEditingDomain().getCommandStack().execute(cc);
             }
         }
-        basedOnValue.getParent().getParent().layout();
+        basedOnValue.getParent().getParent().layout(true, true);
     }
 
     /**
      * download login page from bonita.war
      *
      * @param name
-     *            resource name
+     *        resource name
      * @param outFile
-     *            can be null if you want FileDialog to choose
+     *        can be null if you want FileDialog to choose
      */
     public static void downloadDefaultTemplate(final ResourceType templateType,
             String outFile) {
@@ -471,9 +471,9 @@ public class LookAndFeelPropertySection extends AbstractBonitaDescriptionSection
             case ERROR_TEMPLATE:
                 askedFile = fileStore.getErrorTemplate();
                 break;
-                // case HOST_PAGE:
-                // askedFile = fileStore.getHostPage();
-                // break;
+            // case HOST_PAGE:
+            // askedFile = fileStore.getHostPage();
+            // break;
             case GLOBAL_PAGE_TEMPLATE:
                 askedFile = fileStore.getGlobalPageTemplate();
                 break;
@@ -513,7 +513,7 @@ public class LookAndFeelPropertySection extends AbstractBonitaDescriptionSection
     /**
      * @param isSetLabel
      * @param isFilled
-     *            TODO
+     *        TODO
      */
     static void setPathIsFilled(final Label isSetLabel, final boolean isFilled) {
         final Object data = isSetLabel.getData();
