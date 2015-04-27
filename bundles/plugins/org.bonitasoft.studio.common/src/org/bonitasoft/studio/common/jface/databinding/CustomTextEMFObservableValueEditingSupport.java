@@ -128,7 +128,7 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
         updateTextEditorFeedback(status);
         messageManager.removeAllMessages();
         if (!status.isOK() && getViewer().isCellEditorActive()) {
-            messageManager.addMessage("", status.getMessage(), null, new StatusToMessageSeverity(status).toMessageSeverity());
+            messageManager.addMessage(null, status.getMessage(), null, new StatusToMessageSeverity(status).toMessageSeverity());
         }
     }
 
