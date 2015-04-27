@@ -40,6 +40,8 @@ import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
+import org.bonitasoft.studio.refactoring.core.script.GroovyScriptRefactoringOperationFactory;
+import org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperationFactory;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -138,9 +140,9 @@ public class ContractInputController implements IViewerController {
         Contract contract = (Contract) contractObservable.getValue();
         if (openConfirmation(selectedInput)) {
             final RefactorContractInputOperation refactorOperation = newRefactorOperation(contract);
-            final TransactionalEditingDomain editingDomain = editingDomain(selectedInput);
+            final TransactionalEditingDomain editingDomain = editingDomain(contract);
             refactorOperation.setEditingDomain(editingDomain);
-            refactorOperation.setAskConfirmation(true);
+            refactorOperation.setAskConfirmation(shouldAskConfirmation());
             final CompoundCommand compoundCommand = refactorOperation.getCompoundCommand();
             for (final Object input : selectedInput) {
                 final ContractInput contractInput = (ContractInput) input;
@@ -166,8 +168,11 @@ public class ContractInputController implements IViewerController {
                 BonitaStudioLog.error("Failed to remove contract input.", e);
                 openErrorDialog(e);
             }
-            viewer.refresh(true);
         }
+    }
+
+    protected boolean shouldAskConfirmation() {
+        return true;
     }
 
     private Collection<ContractConstraint> constraintsReferencingSingleInput(final Contract contract, final ContractInput contractInput) {
@@ -184,13 +189,17 @@ public class ContractInputController implements IViewerController {
         };
     }
 
-    protected TransactionalEditingDomain editingDomain(final List<?> selectedInput) {
-        return TransactionUtil.getEditingDomain((ContractInput) selectedInput.get(0));
+    protected TransactionalEditingDomain editingDomain(final Contract contract) {
+        return TransactionUtil.getEditingDomain(contract);
     }
 
-    private RefactorContractInputOperation newRefactorOperation(final Contract contract) {
+    protected RefactorContractInputOperation newRefactorOperation(final Contract contract) {
         return new RefactorContractInputOperation(ModelHelper.getFirstContainerOfType(
-                contract, ContractContainer.class), RefactoringOperationType.REMOVE);
+                contract, ContractContainer.class), scriptRefactoringOperationFactory(), RefactoringOperationType.REMOVE);
+    }
+
+    protected IScriptRefactoringOperationFactory scriptRefactoringOperationFactory() {
+        return new GroovyScriptRefactoringOperationFactory();
     }
 
     private EReference inputContainerFeature(final EObject eContainer) {

@@ -89,15 +89,10 @@ public class ContractConstraintController implements IViewerController {
         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
         final IObservableList constraintsObservable = (IObservableList) viewer.getInput();
         final List<?> selectedInput = selection.toList();
-        Contract contract = null;
         if (openConfirmation(selectedInput)) {
             for (final Object constraint : selectedInput) {
                 final ContractConstraint contractConstraint = (ContractConstraint) constraint;
-                contract = ModelHelper.getFirstContainerOfType(contractConstraint, Contract.class);
                 constraintsObservable.remove(contractConstraint);
-            }
-            if (contract != null) {
-                viewer.refresh(true);
             }
         }
     }

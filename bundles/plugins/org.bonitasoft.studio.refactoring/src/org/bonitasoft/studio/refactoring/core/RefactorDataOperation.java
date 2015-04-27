@@ -39,7 +39,6 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
  * @author Romain Bioteau
@@ -208,15 +207,6 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
 
     public void setUpdateDataReferences(final boolean updateDataReferences) {
         this.updateDataReferences = updateDataReferences;
-    }
-
-    @Override
-    protected AbstractScriptExpressionRefactoringAction<DataRefactorPair> getScriptExpressionRefactoringAction(final List<DataRefactorPair> pairsToRefactor,
-            final List<Expression> scriptExpressions, final List<Expression> refactoredScriptExpression, final CompoundCommand compoundCommand,
-            final EditingDomain domain,
-            final RefactoringOperationType operationType) {
-        return new DataScriptExpressionRefactoringAction(pairsToRefactor, scriptExpressions, refactoredScriptExpression, compoundCommand, domain,
-                operationType);
     }
 
     @Override

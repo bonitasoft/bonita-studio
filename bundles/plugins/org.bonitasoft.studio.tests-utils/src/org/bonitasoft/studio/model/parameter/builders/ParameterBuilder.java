@@ -26,7 +26,7 @@ import org.bonitasoft.studio.model.parameter.ParameterFactory;
 public class ParameterBuilder {
 
 
-    public static ParameterBuilder create() {
+    public static ParameterBuilder aParameter() {
         return new ParameterBuilder();
     }
 

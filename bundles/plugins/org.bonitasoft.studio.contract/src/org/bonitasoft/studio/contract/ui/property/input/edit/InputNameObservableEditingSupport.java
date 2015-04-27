@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.contract.ui.property.input.edit;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.collect.Iterables.removeIf;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAllElementOfTypeIn;
@@ -27,17 +28,22 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
 import org.bonitasoft.studio.common.jface.databinding.CustomTextEMFObservableValueEditingSupport;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.refactoring.core.emf.EMFEditWithRefactorObservables;
+import org.bonitasoft.studio.refactoring.core.emf.IRefactorOperationFactory;
+import org.bonitasoft.studio.refactoring.core.emf.ObservableValueWithRefactor;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -45,21 +51,28 @@ public class InputNameObservableEditingSupport extends CustomTextEMFObservableVa
 
     private static final int INPUT_NAME_MAX_LENGTH = 50;
     private final IProgressService progressService;
+    private final IRefactorOperationFactory contractInputRefactorOperationFactory;
 
     public InputNameObservableEditingSupport(final ColumnViewer viewer,
             final IMessageManager messageManager,
             final DataBindingContext dbc,
+            final IRefactorOperationFactory contractInputRefactorOperationFactory,
             final IProgressService progressService) {
         super(viewer, ProcessPackage.Literals.CONTRACT_INPUT__NAME, messageManager, dbc);
         this.progressService = progressService;
+        this.contractInputRefactorOperationFactory = contractInputRefactorOperationFactory;
     }
 
     @Override
-    protected TextCellEditor getCellEditor(final Object object) {
-        final TextCellEditor textCellEditor = super.getCellEditor(object);
-        final Text control = (Text) textCellEditor.getControl();
-        textCellEditor.addListener(new RefactorInputNameListener(progressService, (ContractInput) object, control));
-        return textCellEditor;
+    protected IObservableValue doCreateElementObservable(final Object element, final ViewerCell cell) {
+        checkArgument(element instanceof ContractInput);
+        final ObservableValueWithRefactor observableValue = EMFEditWithRefactorObservables.observeValueWithRefactor(
+                TransactionUtil.getEditingDomain(element), (EObject) element,
+                ProcessPackage.Literals.CONTRACT_INPUT__NAME,
+                contractInputRefactorOperationFactory,
+                progressService);
+        observableValue.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
+        return observableValue;
     }
 
     /*

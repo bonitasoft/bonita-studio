@@ -16,7 +16,7 @@ package org.bonitasoft.studio.contract.ui.property.input;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
-import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
@@ -69,7 +69,7 @@ public class ContractInputTreeViewerTest extends AbstractSWTTestCase {
         FileActionDialog.setDisablePopup(true);
         inputTreeViewer = new ContractInputTreeViewer(parent, new FormToolkit(display), progressService);
         final ContractInputController inputController = spy(new ContractInputController(new FakeProgressService()));
-        doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(inputController).editingDomain(anyList());
+        doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(inputController).editingDomain(any(Contract.class));
         inputTreeViewer.initialize(inputController, messageManager, new EMFDataBindingContext());
         final WritableValue contractObservableValue = new WritableValue();
         final Contract contract = ProcessFactory.eINSTANCE.createContract();

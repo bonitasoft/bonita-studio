@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.contract.ui.property.input;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.contract.core.refactoring.ContractInputRefactorOperationFactory;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.AddRowOnEnterCellNavigationStrategy;
 import org.bonitasoft.studio.contract.ui.property.CharriageColumnViewerEditorActivationStrategy;
@@ -22,17 +23,20 @@ import org.bonitasoft.studio.contract.ui.property.input.edit.CheckboxPropertyEdi
 import org.bonitasoft.studio.contract.ui.property.input.edit.ContractInputTypeEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.input.edit.DescriptionObservableEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.input.edit.InputNameObservableEditingSupport;
+import org.bonitasoft.studio.contract.ui.property.input.labelProvider.ContractInputTypeCellLabelProvider;
+import org.bonitasoft.studio.contract.ui.property.input.labelProvider.DescriptionCellLabelProvider;
+import org.bonitasoft.studio.contract.ui.property.input.labelProvider.InputNameCellLabelProvider;
+import org.bonitasoft.studio.contract.ui.property.input.labelProvider.MultipleInputCheckboxLabelProvider;
+import org.bonitasoft.studio.contract.ui.property.input.labelProvider.NotNullableInputCheckboxLabelProvider;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
-import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
@@ -111,31 +115,9 @@ public class ContractInputTreeViewer extends TreeViewer {
         getTree().setHeaderVisible(true);
         getTree().setLinesVisible(true);
         addFilter(new ComplexTypeChildrenViewerFilter());
-        setContentProvider(new ObservableListTreeContentProvider(new ContractInputObservableFactory(),
-                new ContractInputTreeStructureAdvisor()));
-
-        getColumnViewerEditor().addEditorActivationListener(new ColumnViewerEditorActivationListener() {
-
-            @Override
-            public void beforeEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) {
-
-            }
-
-            @Override
-            public void beforeEditorActivated(final ColumnViewerEditorActivationEvent event) {
-
-            }
-
-            @Override
-            public void afterEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) {
-                messageManager.removeAllMessages();
-            }
-
-            @Override
-            public void afterEditorActivated(final ColumnViewerEditorActivationEvent event) {
-
-            }
-        });
+        final ObservableListTreeContentProvider contentProvider = new ObservableListTreeContentProvider(new ContractInputObservableFactory(),
+                new ContractInputTreeStructureAdvisor());
+        setContentProvider(contentProvider);
         final CellNavigationStrategy cellNavigationStrategy = new AddRowOnEnterCellNavigationStrategy(this, inputController);
         final TreeViewerFocusCellManager focusCellManager = new TreeViewerFocusCellManager(this, new FocusCellOwnerDrawHighlighter(
                 this), cellNavigationStrategy);
@@ -168,12 +150,19 @@ public class ContractInputTreeViewer extends TreeViewer {
         getTree().setLayout(tableLayout);
     }
 
+    private IObservableSet knownElements() {
+        final ObservableListTreeContentProvider contentProvider = (ObservableListTreeContentProvider) getContentProvider();
+        return contentProvider.getKnownElements();
+    }
+
     protected void createInputNameColumn() {
         final TreeViewerColumn nameColumnViewer = createColumnViewer(Messages.name + " *", SWT.FILL);
-        nameColumnViewer.setLabelProvider(new InputNameCellLabelProvider(propertySourceProvider));
+        nameColumnViewer.setLabelProvider(new InputNameCellLabelProvider(propertySourceProvider,
+                knownElements()));
         final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(this,
                 messageManager,
                 emfDataBindingContext,
+                new ContractInputRefactorOperationFactory(),
                 progressService);
         editingSupport.setControlId(SWTBotConstants.SWTBOT_ID_INPUT_NAME_TEXTEDITOR);
         nameColumnViewer.setEditingSupport(editingSupport);
@@ -181,27 +170,28 @@ public class ContractInputTreeViewer extends TreeViewer {
 
     protected void createInputDescriptionColumn() {
         final TreeViewerColumn descriptionColumnViewer = createColumnViewer(Messages.description, SWT.FILL);
-        descriptionColumnViewer.setLabelProvider(new DescriptionCellLabelProvider(propertySourceProvider));
+        descriptionColumnViewer.setLabelProvider(new DescriptionCellLabelProvider(propertySourceProvider,
+                knownElements()));
         descriptionColumnViewer.setEditingSupport(new DescriptionObservableEditingSupport(this,
                 messageManager, emfDataBindingContext));
     }
 
     protected void createInputTypeColumn() {
         final TreeViewerColumn typeColumnViewer = createColumnViewer(Messages.type, SWT.FILL);
-        typeColumnViewer.setLabelProvider(new ContractInputTypeCellLabelProvider(propertySourceProvider));
+        typeColumnViewer.setLabelProvider(new ContractInputTypeCellLabelProvider(propertySourceProvider, knownElements()));
         typeColumnViewer.setEditingSupport(new ContractInputTypeEditingSupport(this, propertySourceProvider, inputController));
     }
 
     protected void createMandatoryColumn() {
         final TreeViewerColumn mandatoryColumnViewer = createColumnViewer(Messages.nullable, SWT.CENTER);
-        mandatoryColumnViewer.setLabelProvider(new NotNullableInputCheckboxLabelProvider());
+        mandatoryColumnViewer.setLabelProvider(new NotNullableInputCheckboxLabelProvider(knownElements()));
         mandatoryColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, this,
                 ProcessPackage.Literals.CONTRACT_INPUT__MANDATORY.getName()));
     }
 
     protected void createMultipleColumn() {
         final TreeViewerColumn multipleColumnViewer = createColumnViewer(Messages.multiple, SWT.CENTER);
-        multipleColumnViewer.setLabelProvider(new MultipleInputCheckboxLabelProvider());
+        multipleColumnViewer.setLabelProvider(new MultipleInputCheckboxLabelProvider(knownElements()));
         multipleColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, this,
                 ProcessPackage.Literals.CONTRACT_INPUT__MULTIPLE.getName()));
     }

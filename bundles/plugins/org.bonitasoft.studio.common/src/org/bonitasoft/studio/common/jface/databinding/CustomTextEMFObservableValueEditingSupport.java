@@ -26,6 +26,7 @@ import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
+import org.eclipse.emf.databinding.edit.EditingDomainEObjectObservableValue;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -48,7 +49,6 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
     private TextCellEditor cellEditor;
     private final IMessageManager messageManager;
     private String controlId;
-    private EObject element;
 
     public CustomTextEMFObservableValueEditingSupport(final ColumnViewer viewer, final EStructuralFeature featureToEdit,
             final IMessageManager messageManager, final DataBindingContext dbc) {
@@ -79,8 +79,7 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
     @Override
     protected IObservableValue doCreateElementObservable(final Object element, final ViewerCell cell) {
         checkArgument(element instanceof EObject);
-        this.element = (EObject) element;
-        final IObservableValue observableValue = EMFEditObservables.observeValue(TransactionUtil.getEditingDomain(element), this.element,
+        final IObservableValue observableValue = EMFEditObservables.observeValue(TransactionUtil.getEditingDomain(element), (EObject) element,
                 featureToEdit);
         observableValue.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
         return observableValue;
@@ -93,7 +92,7 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
      */
     @Override
     protected Binding createBinding(final IObservableValue target, final IObservableValue model) {
-        final Binding binding = dbc.bindValue(target, model, targetToModelConvertStrategy(element), null);
+        final Binding binding = dbc.bindValue(target, model, targetToModelConvertStrategy(observedElement(model)), null);
         final IObservableValue validationStatus = binding.getValidationStatus();
         validationStatus.addValueChangeListener(new IValueChangeListener() {
 
@@ -104,6 +103,10 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
 
         });
         return binding;
+    }
+
+    private EObject observedElement(final IObservableValue model) {
+        return (EObject) ((EditingDomainEObjectObservableValue) model).getObserved();
     }
 
     protected void updateTextEditorFeedback(final IStatus status) {
@@ -124,14 +127,25 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
     protected void validationStatusChanged(final IStatus status) {
         updateTextEditorFeedback(status);
         messageManager.removeAllMessages();
-        if (!status.isOK()) {
-            messageManager.addMessage("", status.getMessage(), null, new StatusToMessageSeverity(status).toMessageSeverity());
+        if (!status.isOK() && getViewer().isCellEditorActive()) {
+            messageManager.addMessage(null, status.getMessage(), null, new StatusToMessageSeverity(status).toMessageSeverity());
         }
     }
 
     @Override
     protected TextCellEditor getCellEditor(final Object object) {
-        cellEditor = new TextCellEditor((Composite) getViewer().getControl());
+        cellEditor = new TextCellEditor((Composite) getViewer().getControl()) {
+
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.jface.viewers.CellEditor#deactivate()
+             */
+            @Override
+            public void deactivate() {
+                super.deactivate();
+                messageManager.removeAllMessages();
+            }
+        };
         cellEditor.getControl().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, controlId);
         return cellEditor;
     }
