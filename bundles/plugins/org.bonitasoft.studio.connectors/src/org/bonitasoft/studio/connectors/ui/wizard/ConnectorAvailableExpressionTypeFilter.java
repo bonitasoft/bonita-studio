@@ -58,10 +58,7 @@ public class ConnectorAvailableExpressionTypeFilter extends AvailableExpressionT
     }
 
     protected boolean isConnectorIsOnPool(final Connector connector) {
-        if (connector.eContainer() instanceof Pool) {
-            return true;
-        }
-        return false;
+        return connector.eContainer() instanceof Pool;
     }
 
     private Connector getParentConnector(final Object context) {
