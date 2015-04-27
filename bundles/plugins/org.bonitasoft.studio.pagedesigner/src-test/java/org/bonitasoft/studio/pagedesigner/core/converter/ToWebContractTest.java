@@ -24,11 +24,10 @@ import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import java.util.Date;
 
 import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.web.designer.model.contract.Contract;
+import org.bonitasoft.web.designer.model.contract.ContractType;
+import org.bonitasoft.web.designer.model.contract.NodeContractInput;
 import org.junit.Test;
-
-import com.bonitasoft.web.designer.model.contract.Contract;
-import com.bonitasoft.web.designer.model.contract.ContractType;
-import com.bonitasoft.web.designer.model.contract.NodeContractInput;
 
 public class ToWebContractTest {
 
