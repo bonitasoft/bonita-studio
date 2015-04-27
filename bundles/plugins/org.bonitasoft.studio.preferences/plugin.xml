@@ -5,6 +5,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
+            category="org.bonitasoft.studio.preferences.pages.BPM"
             class="org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage"
             id="org.bonitasoft.studio.preferences.advanced"
             name="advanced preference page">
@@ -60,6 +61,15 @@
                id="org.eclipse.ui.net.proxy">
          </keywordReference>
       </page>
+      <page
+            category="org.bonitasoft.studio.preferences.pages.BPM"
+            class="org.bonitasoft.studio.preferences.pages.Legacy6xPreferencePage"
+            id="org.bonitasoft.studio.preferences.legacy6x"
+            name="Legacy 6.x">
+         <keywordReference
+               id="org.bonitasoft.studio.preferences.keyword.legacy6x">
+         </keywordReference>
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
@@ -104,6 +114,10 @@
       <keyword
             id="org.bonitasoft.studio.preferences.keyword.run"
             label="%runKeywords">
+      </keyword>
+      <keyword
+            id="org.bonitasoft.studio.preferences.keyword.legacy6x"
+            label="%legacy6xKeywords">
       </keyword>
    </extension>
 
