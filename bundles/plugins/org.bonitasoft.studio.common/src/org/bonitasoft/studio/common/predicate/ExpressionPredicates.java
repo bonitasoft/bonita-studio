@@ -65,10 +65,10 @@ public class ExpressionPredicates {
                     return true;
                 }
                 if (element instanceof Element && o instanceof Element && ModelHelper.isSameElement(element, o)) {
-                    return true && !ModelHelper.isReferencedElementIsInExpression(expr);
+                    return !ModelHelper.isReferencedElementIsInExpression(expr);
                 } else {
                     if (element instanceof Parameter && o instanceof Parameter && ((Parameter) element).getName().equals(((Parameter) o).getName())) {
-                        return true && !ModelHelper.isReferencedElementIsInExpression(expr);
+                        return !ModelHelper.isReferencedElementIsInExpression(expr);
                     }
                 }
             }
