@@ -23,27 +23,27 @@ import java.util.Date;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.web.designer.model.contract.ContractType;
+import org.bonitasoft.web.designer.model.contract.LeafContractInput;
+import org.bonitasoft.web.designer.model.contract.NodeContractInput;
 
-import com.bonitasoft.web.designer.model.contract.ContractType;
-import com.bonitasoft.web.designer.model.contract.LeafContractInput;
-import com.bonitasoft.web.designer.model.contract.NodeContractInput;
 import com.google.common.base.Function;
 
-public class ToWebContract implements Function<Contract, com.bonitasoft.web.designer.model.contract.Contract> {
+public class ToWebContract implements Function<Contract, org.bonitasoft.web.designer.model.contract.Contract> {
 
     @Override
-    public com.bonitasoft.web.designer.model.contract.Contract apply(final Contract fromContract) {
-        final com.bonitasoft.web.designer.model.contract.Contract contract = new com.bonitasoft.web.designer.model.contract.Contract();
+    public org.bonitasoft.web.designer.model.contract.Contract apply(final Contract fromContract) {
+        final org.bonitasoft.web.designer.model.contract.Contract contract = new org.bonitasoft.web.designer.model.contract.Contract();
         contract.setContractType(contractType(fromContract));
         contract.getInput().addAll(newArrayList(transform(fromContract.getInputs(), toWebContractInput())));
         return contract;
     }
 
-    private Function<ContractInput, com.bonitasoft.web.designer.model.contract.ContractInput> toWebContractInput() {
-        return new Function<ContractInput, com.bonitasoft.web.designer.model.contract.ContractInput>() {
+    private Function<ContractInput, org.bonitasoft.web.designer.model.contract.ContractInput> toWebContractInput() {
+        return new Function<ContractInput, org.bonitasoft.web.designer.model.contract.ContractInput>() {
 
             @Override
-            public com.bonitasoft.web.designer.model.contract.ContractInput apply(final ContractInput input) {
+            public org.bonitasoft.web.designer.model.contract.ContractInput apply(final ContractInput input) {
                 switch (input.getType()) {
                     case TEXT:
                         return createLeafContractInput(input, String.class);
@@ -68,20 +68,20 @@ public class ToWebContract implements Function<Contract, com.bonitasoft.web.desi
         return instanceOf(Pool.class).apply(fromContract.eContainer()) ? ContractType.PROCESS : ContractType.TASK;
     }
 
-    private com.bonitasoft.web.designer.model.contract.ContractInput createLeafContractInput(final ContractInput input, final Class<?> type) {
+    private org.bonitasoft.web.designer.model.contract.ContractInput createLeafContractInput(final ContractInput input, final Class<?> type) {
         return copyInputProperties(input, new LeafContractInput(input.getName(), type));
     }
 
-    private com.bonitasoft.web.designer.model.contract.ContractInput copyInputProperties(final ContractInput input,
-            final com.bonitasoft.web.designer.model.contract.ContractInput contractInput) {
+    private org.bonitasoft.web.designer.model.contract.ContractInput copyInputProperties(final ContractInput input,
+            final org.bonitasoft.web.designer.model.contract.ContractInput contractInput) {
         contractInput.setMandatory(input.isMandatory());
         contractInput.setMultiple(input.isMultiple());
         contractInput.setDescription(input.getDescription());
         return contractInput;
     }
 
-    private com.bonitasoft.web.designer.model.contract.ContractInput createNodeContractInput(final ContractInput input) {
-        final com.bonitasoft.web.designer.model.contract.ContractInput nodeInput = copyInputProperties(input, new NodeContractInput(input.getName()));
+    private org.bonitasoft.web.designer.model.contract.ContractInput createNodeContractInput(final ContractInput input) {
+        final org.bonitasoft.web.designer.model.contract.ContractInput nodeInput = copyInputProperties(input, new NodeContractInput(input.getName()));
         nodeInput.getInput().addAll(newArrayList(transform(input.getInputs(), toWebContractInput())));
         return nodeInput;
     }
