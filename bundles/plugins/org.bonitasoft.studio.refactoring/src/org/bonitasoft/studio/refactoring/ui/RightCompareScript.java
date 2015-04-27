@@ -30,7 +30,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 public class RightCompareScript extends CompareScript implements IStreamContentAccessor, IStructureComparator, IEditableContent, ITypedElement, IAdaptable,
         IContentChangeNotifier {
 
-    RightCompareScript(final ScriptContainer<?> script, final AdapterFactoryLabelProvider labelProvider) {
+    protected RightCompareScript(final ScriptContainer<?> script, final AdapterFactoryLabelProvider labelProvider) {
         super(script, labelProvider);
     }
 

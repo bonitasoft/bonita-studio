@@ -30,7 +30,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 public class LeftCompareScript extends CompareScript implements IStreamContentAccessor, IStructureComparator, IEditableContent, ITypedElement, IAdaptable,
         IContentChangeNotifier {
 
-    LeftCompareScript(final ScriptContainer<?> script, final AdapterFactoryLabelProvider labelProvider) {
+    protected LeftCompareScript(final ScriptContainer<?> script, final AdapterFactoryLabelProvider labelProvider) {
         super(script, labelProvider);
     }
 
