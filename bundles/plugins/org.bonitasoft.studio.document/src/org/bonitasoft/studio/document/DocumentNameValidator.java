@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Maxence Raoux
- *
  */
 public class DocumentNameValidator implements IValidator {
 
@@ -35,15 +34,15 @@ public class DocumentNameValidator implements IValidator {
     private String currentName = null;
 
     public DocumentNameValidator(final EObject context, final String currentName) {
-        this.context=context;
+        this.context = context;
         this.currentName = currentName;
-        groovyValidator = new GroovyReferenceValidator(Messages.name, true);
+        groovyValidator = new GroovyReferenceValidator(Messages.name);
     }
 
     @Override
     public IStatus validate(final Object value) {
         final IStatus groovyValidationStatus = groovyValidator.validate(value);
-        if(!groovyValidationStatus.isOK()){
+        if (!groovyValidationStatus.isOK()) {
             return groovyValidationStatus;
         }
 

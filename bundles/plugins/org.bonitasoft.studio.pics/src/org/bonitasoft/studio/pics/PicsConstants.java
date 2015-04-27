@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -191,6 +191,9 @@ public class PicsConstants {
 
     public static String preferenceUserProfileDisabled = "preferences/userprofile_disabled.png";
 
+    public static String preferenceLegacy6x = "preferences/legacy6x.png";
+    public static String preferenceLegacy6xDisabled = "preferences/legacy6x_disabled.png";
+
     public static String formArrowLeft = "forms/arrowLeft.png";
 
     public static String formArrowRight = "forms/arrowRight.png";
@@ -367,4 +370,5 @@ public class PicsConstants {
     public static String processDiagrammeWithRedLock = "editor/processDiagrammeWithRedLock.png";
     public static String formDiagramWithGreyLock = "editor/formDiagramWithGreyLock.png";
     public static String formDiagramWithRedLock = "editor/formDiagramWithRedLock.png";
+
 }

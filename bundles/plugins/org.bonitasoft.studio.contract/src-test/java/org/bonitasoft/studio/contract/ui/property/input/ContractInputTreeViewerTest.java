@@ -5,47 +5,60 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.contract.ui.property.input;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
+import org.bonitasoft.studio.fakes.FakeProgressService;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.progress.IProgressService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
- *
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ContractInputTreeViewerTest extends AbstractSWTTestCase {
 
     private ContractInputTreeViewer inputTreeViewer;
     private Composite parent;
     private ContractInput input;
+    @Mock
+    private IProgressService progressService;
+    @Mock
+    private IMessageManager messageManager;
 
     /**
      * @throws java.lang.Exception
@@ -54,15 +67,17 @@ public class ContractInputTreeViewerTest extends AbstractSWTTestCase {
     public void setUp() throws Exception {
         parent = createDisplayAndRealm();
         FileActionDialog.setDisablePopup(true);
-        inputTreeViewer = new ContractInputTreeViewer(parent, new FormToolkit(display));
-        final ContractInputController inputController = new ContractInputController(new ContractDefinitionValidator());
-        inputTreeViewer.initialize(inputController, new ContractDefinitionValidator());
+        inputTreeViewer = new ContractInputTreeViewer(parent, new FormToolkit(display), progressService);
+        final ContractInputController inputController = spy(new ContractInputController(new FakeProgressService()));
+        doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(inputController).editingDomain(anyList());
+        inputTreeViewer.initialize(inputController, messageManager, new EMFDataBindingContext());
         final WritableValue contractObservableValue = new WritableValue();
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
         input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("name");
         input.setType(ContractInputType.TEXT);
         contract.getInputs().add(input);
+        aTask().build().setContract(contract);
         contractObservableValue.setValue(contract);
         inputTreeViewer.setInput(contractObservableValue);
     }

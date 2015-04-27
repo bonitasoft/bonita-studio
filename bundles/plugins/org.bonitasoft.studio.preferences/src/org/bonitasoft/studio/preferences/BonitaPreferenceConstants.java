@@ -170,5 +170,6 @@ public interface BonitaPreferenceConstants {
     public static final String DEFAULT_STUDIO_LOCALE = "defaultLocale";
     public static final int DEFAULT_PORT = 8080;
     public static final String DEFAULT_HOST = "localhost";
+    public static final String SHOW_LEGACY_6X_MODE = "showLegacy6XMode";
 
 }

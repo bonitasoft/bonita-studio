@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -19,7 +17,6 @@ package org.bonitasoft.studio.contract.ui.property.constraint.edit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
-import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.ui.property.FieldDecoratorProvider;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.ContractConstraintExpressionDialogCellEditor;
 import org.bonitasoft.studio.model.process.Contract;
@@ -41,10 +38,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ConstraintExpressionPropertyEditingSupportTest extends AbstractSWTTestCase {
@@ -67,9 +62,6 @@ public class ConstraintExpressionPropertyEditingSupportTest extends AbstractSWTT
 
     private Composite container;
 
-    @Mock
-    private ContractDefinitionValidator validator;
-
     /**
      * @throws java.lang.Exception
      */
@@ -77,7 +69,7 @@ public class ConstraintExpressionPropertyEditingSupportTest extends AbstractSWTT
     public void setUp() throws Exception {
         container = createDisplayAndRealm();
         propertySourceProvider = new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory());
-        propertyEditingSupport = new ConstraintExpressionPropertyEditingSupport(viewer, propertySourceProvider, validator);
+        propertyEditingSupport = new ConstraintExpressionPropertyEditingSupport(viewer, propertySourceProvider);
     }
 
     /**
@@ -95,7 +87,6 @@ public class ConstraintExpressionPropertyEditingSupportTest extends AbstractSWTT
         contract.getConstraints().add(constraint);
         propertyEditingSupport.setValue(constraint, "name.length > 50");
         assertThat(constraint.getExpression()).isEqualTo("name.length > 50");
-        verify(validator).validate(contract);
         verify(viewer).update(constraint, null);
     }
 
@@ -107,7 +98,7 @@ public class ConstraintExpressionPropertyEditingSupportTest extends AbstractSWTT
 
     @Test
     public void should_getCellEditor_return() throws Exception {
-        propertyEditingSupport = new ConstraintExpressionPropertyEditingSupport(new TableViewer(container), propertySourceProvider, validator);
+        propertyEditingSupport = new ConstraintExpressionPropertyEditingSupport(new TableViewer(container), propertySourceProvider);
         final CellEditor cellEditor = propertyEditingSupport.getCellEditor(ProcessFactory.eINSTANCE.createContractConstraint());
         assertThat(cellEditor).isNotNull().isInstanceOf(ContractConstraintExpressionDialogCellEditor.class);
     }

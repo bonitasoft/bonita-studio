@@ -5,6 +5,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
+            category="org.bonitasoft.studio.preferences.pages.BPM"
             class="org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage"
             id="org.bonitasoft.studio.preferences.advanced"
             name="advanced preference page">
@@ -59,6 +60,11 @@
          <keywordReference
                id="org.eclipse.ui.net.proxy">
          </keywordReference>
+      </page>
+      <page
+            class="org.bonitasoft.studio.preferences.pages.ParentBPMPreferencePage"
+            id="org.bonitasoft.studio.preferences.pages.BPM"
+            name="BPM">
       </page>
    </extension>
    <extension

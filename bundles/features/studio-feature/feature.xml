@@ -3,10 +3,10 @@
       id="studio-feature"
       label="Studio"
       version="7.0.0.qualifier"
-      provider-name="BonitaSoft S.A.">
+      provider-name="Bonitasoft S.A.">
 
    <description url="http://www.example.com/description">
-      Core feature of Bonita Open Solution
+      Core feature of Bonita BPM Studio
    </description>
 
    <copyright url="http://www.example.com/copyright">
@@ -469,9 +469,9 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
-    unpack="false"/>
-    
-       <plugin
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.emf.edapt.common"
          download-size="0"
          install-size="0"
@@ -551,6 +551,13 @@
 
    <plugin
          id="org.bonitasoft.studio.validation.common"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.legacy6x"
          download-size="0"
          install-size="0"
          version="0.0.0"
