@@ -18,6 +18,7 @@ import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
 import static org.bonitasoft.studio.common.predicate.ExpressionPredicates.withExpressionType;
 import static org.bonitasoft.studio.common.predicate.ExpressionPredicates.withReferencedElement;
 import static org.bonitasoft.studio.refactoring.core.script.ReferenceDiff.newReferenceDiff;
@@ -25,7 +26,6 @@ import static org.bonitasoft.studio.refactoring.core.script.ReferenceDiff.newRef
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +48,6 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
@@ -122,7 +121,7 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
     protected abstract CompoundCommand doBuildCompoundCommand(CompoundCommand cc, IProgressMonitor monitor);
 
     protected void updateReferencesInScripts(final IProgressMonitor monitor) throws InterruptedException, InvocationTargetException {
-        final Set<ScriptContainer<?>> scriptExpressionsSetToRefactor = new HashSet<ScriptContainer<?>>();
+        final Set<ScriptContainer<?>> scriptExpressionsSetToRefactor = newHashSet();
         for (final RefactorPair<Y, Z> pairRefactor : pairsToRefactor) {
             if (shouldUpdateReferencesInScripts(pairRefactor)) {
                 final Z oldValue = pairRefactor.getOldValue();
@@ -131,7 +130,7 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
                 }
             }
         }
-        final List<ScriptContainer<?>> scripExpressionsToRefactor = Lists.newArrayList(scriptExpressionsSetToRefactor);
+        final List<ScriptContainer<?>> scripExpressionsToRefactor = newArrayList(scriptExpressionsSetToRefactor);
         if (!scripExpressionsToRefactor.isEmpty()) {
             if (scripExpressionsToRefactor.size() > MIN_MONITOR_WORK) {
                 monitor.beginTask("Refactoring", scripExpressionsToRefactor.size());
@@ -153,7 +152,7 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
     }
 
     protected Set<ScriptContainer<?>> allScriptWithReferencedElement(final RefactorPair<Y, Z> pairRefactor) {
-        final Set<ScriptContainer<?>> result = Sets.newHashSet();
+        final Set<ScriptContainer<?>> result = newHashSet();
         final Z oldValue = pairRefactor.getOldValue();
         final EObject container = getContainer(oldValue);
         result.addAll(allGroovyScriptWithReferencedElement(container, oldValue));

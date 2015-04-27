@@ -20,8 +20,6 @@ import static org.bonitasoft.studio.model.process.builders.ContractConstraintBui
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -80,11 +78,10 @@ public class ConstraintExpressionScriptContainerTest {
     public void should_updateDependencies_create_command_renaming_input_names() throws Exception {
         final ContractConstraint constraint = aContractConstraint()
                 .withExpression("script == content").havingInput("content", "script").build();
-        final ConstraintExpressionScriptContainer constraintExpressionScriptContainer = spy(new ConstraintExpressionScriptContainer(constraint,
-                scriptRefactoringOperationFactory));
-        doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(constraintExpressionScriptContainer).editingDomain();
+        final ConstraintExpressionScriptContainer constraintExpressionScriptContainer = new ConstraintExpressionScriptContainer(constraint,
+                scriptRefactoringOperationFactory);
 
-        final CompoundCommand command = constraintExpressionScriptContainer.updateDependencies(newArrayList(new ContractInputRefactorPair(
+        final CompoundCommand command = constraintExpressionScriptContainer.updateDependencies(editingDomain(), newArrayList(new ContractInputRefactorPair(
                 aContractInput().withName("newContent")
                         .build(), aContractInput().withName("content")
                         .build())));
@@ -93,15 +90,19 @@ public class ConstraintExpressionScriptContainerTest {
         assertThat(constraint.getInputNames()).containsOnly("newContent", "script");
     }
 
+    private TransactionalEditingDomainImpl editingDomain() {
+        return new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory());
+    }
+
     @Test
     public void should_removeDependencies_create_command_removing_input_names() throws Exception {
         final ContractConstraint constraint = aContractConstraint()
                 .withExpression("script == content").havingInput("content", "script").build();
-        final ConstraintExpressionScriptContainer constraintExpressionScriptContainer = spy(new ConstraintExpressionScriptContainer(constraint,
-                scriptRefactoringOperationFactory));
-        doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(constraintExpressionScriptContainer).editingDomain();
+        final ConstraintExpressionScriptContainer constraintExpressionScriptContainer = new ConstraintExpressionScriptContainer(constraint,
+                scriptRefactoringOperationFactory);
 
-        final CompoundCommand command = constraintExpressionScriptContainer.removeDependencies(newArrayList(new ContractInputRefactorPair(null,
+        final CompoundCommand command = constraintExpressionScriptContainer.removeDependencies(editingDomain(), newArrayList(new ContractInputRefactorPair(
+                null,
                 aContractInput().withName("content")
                         .build())));
         command.execute();

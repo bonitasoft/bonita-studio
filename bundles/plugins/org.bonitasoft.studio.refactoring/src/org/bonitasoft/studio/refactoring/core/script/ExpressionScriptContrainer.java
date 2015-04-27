@@ -21,12 +21,14 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 
 public abstract class ExpressionScriptContrainer extends ScriptContainer<Expression> {
 
@@ -48,7 +50,8 @@ public abstract class ExpressionScriptContrainer extends ScriptContainer<Express
      * @see org.bonitasoft.studio.refactoring.core.groovy.ScriptContainer#updateDependencies(java.util.List)
      */
     @Override
-    public CompoundCommand updateDependencies(final List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor) {
+    public CompoundCommand updateDependencies(final EditingDomain editingDomain,
+            final List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor) {
         final CompoundCommand compoundCommand = new CompoundCommand();
         final Expression expression = getModelElement();
         for (final EObject dep : expression.getReferencedElements()) {
@@ -56,10 +59,10 @@ public abstract class ExpressionScriptContrainer extends ScriptContainer<Express
                 final String oldValueName = pair.getOldValueName();
                 final EClass eClass = pair.getOldValue().eClass();
                 if (eClass.equals(dep.eClass()) && oldValueName.equals(dependencyName(dep))) {
-                    compoundCommand.append(RemoveCommand.create(editingDomain(), expression,
+                    compoundCommand.append(RemoveCommand.create(editingDomain, expression,
                             ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
                             dep));
-                    compoundCommand.append(AddCommand.create(editingDomain(), expression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                    compoundCommand.append(AddCommand.create(editingDomain, expression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
                             ExpressionHelper.createDependencyFromEObject(pair.getNewValue())));
                 }
             }
@@ -72,7 +75,8 @@ public abstract class ExpressionScriptContrainer extends ScriptContainer<Express
      * @see org.bonitasoft.studio.refactoring.core.groovy.ScriptContainer#removeDependencies(java.util.List)
      */
     @Override
-    public CompoundCommand removeDependencies(final List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor) {
+    public CompoundCommand removeDependencies(final EditingDomain editingDomain,
+            final List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor) {
         final CompoundCommand compoundCommand = new CompoundCommand();
         final Expression expression = getModelElement();
         for (final EObject dep : expression.getReferencedElements()) {
@@ -80,9 +84,12 @@ public abstract class ExpressionScriptContrainer extends ScriptContainer<Express
                 final String oldValueName = pair.getOldValueName();
                 final EClass eClass = pair.getOldValue().eClass();
                 if (eClass.equals(dep.eClass()) && oldValueName.equals(dependencyName(dep))) {
-                    compoundCommand.append(RemoveCommand.create(editingDomain(), expression,
+                    final Command removeCmd = RemoveCommand.create(editingDomain, expression,
                             ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                            dep));
+                            dep);
+                    if (!compoundCommand.getCommandList().contains(removeCmd)) {
+                        compoundCommand.append(removeCmd);
+                    }
                 }
             }
         }

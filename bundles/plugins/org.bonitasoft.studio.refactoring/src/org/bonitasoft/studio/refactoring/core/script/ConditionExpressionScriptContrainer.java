@@ -19,6 +19,7 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 
 public class ConditionExpressionScriptContrainer extends TextExpressionScriptContainer {
 
@@ -31,10 +32,10 @@ public class ConditionExpressionScriptContrainer extends TextExpressionScriptCon
      * @see org.bonitasoft.studio.refactoring.core.groovy.TextExpressionScriptContrainer#applyUpdate()
      */
     @Override
-    public CompoundCommand applyUpdate() {
-        final CompoundCommand command = super.applyUpdate();
+    public CompoundCommand applyUpdate(final EditingDomain editingDomain) {
+        final CompoundCommand command = super.applyUpdate(editingDomain);
         if (scriptHasChanged()) {
-            command.append(SetCommand.create(editingDomain(), getModelElement(), ExpressionPackage.Literals.EXPRESSION__NAME,
+            command.append(SetCommand.create(editingDomain, getModelElement(), ExpressionPackage.Literals.EXPRESSION__NAME,
                     getNewScript()));
         }
         return command;

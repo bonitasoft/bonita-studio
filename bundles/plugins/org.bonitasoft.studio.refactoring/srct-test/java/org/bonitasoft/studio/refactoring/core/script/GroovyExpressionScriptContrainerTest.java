@@ -38,13 +38,14 @@ import org.bonitasoft.studio.refactoring.core.WidgetRefactorPair;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GroovyExpressionScriptContrainerTest {
@@ -104,14 +105,12 @@ public class GroovyExpressionScriptContrainerTest {
         final Data myData = DataBuilder.aData().havingDataType(StringDataTypeBuilder.aStringDataType()).build();
         final Expression expression = aGroovyScriptExpression()
                 .withContent("return myData").havingReferencedElements(myData).build();
-        final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = spy(new GroovyExpressionScriptContrainer(expression,
+        final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = new GroovyExpressionScriptContrainer(expression,
                 ProcessPackage.Literals.ELEMENT__NAME,
-                scriptRefactorOperationFactory));
-        final TransactionalEditingDomainImpl editingDomain = new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
-        doReturn(editingDomain).when(groovyExpressionScriptContrainer).editingDomain();
+                scriptRefactorOperationFactory);
 
         groovyExpressionScriptContrainer.setNewScript("return myNewData");
-        final CompoundCommand command = groovyExpressionScriptContrainer.applyUpdate();
+        final CompoundCommand command = groovyExpressionScriptContrainer.applyUpdate(editingDomain());
         command.execute();
 
         ExpressionAssert.assertThat(expression).hasContent("return myNewData");
@@ -122,14 +121,12 @@ public class GroovyExpressionScriptContrainerTest {
         final TextFormField textFormField = TextFormFieldBuilder.aTextFormField().withName("myText").build();
         final Expression expression = aGroovyScriptExpression()
                 .withContent("return field_myText").havingReferencedElements(textFormField).build();
-        final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = spy(new GroovyExpressionScriptContrainer(expression,
+        final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = new GroovyExpressionScriptContrainer(expression,
                 ProcessPackage.Literals.ELEMENT__NAME,
-                scriptRefactorOperationFactory));
-        final TransactionalEditingDomainImpl editingDomain = new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
-        doReturn(editingDomain).when(groovyExpressionScriptContrainer).editingDomain();
+                scriptRefactorOperationFactory);
 
         groovyExpressionScriptContrainer.setNewScript("return field_myNewText");
-        final CompoundCommand command = groovyExpressionScriptContrainer.applyUpdate();
+        final CompoundCommand command = groovyExpressionScriptContrainer.applyUpdate(editingDomain());
         command.execute();
 
         ExpressionAssert.assertThat(expression).hasContent("return field_myNewText");
@@ -143,13 +140,11 @@ public class GroovyExpressionScriptContrainerTest {
         final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = spy(new GroovyExpressionScriptContrainer(expression,
                 ProcessPackage.Literals.ELEMENT__NAME,
                 scriptRefactorOperationFactory));
-        final TransactionalEditingDomainImpl editingDomain = new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
-        doReturn(editingDomain).when(groovyExpressionScriptContrainer).editingDomain();
 
         groovyExpressionScriptContrainer.setNewScript("return myNewData");
         final Data copy = EcoreUtil.copy(myData);
         copy.setName("myNewData");
-        final CompoundCommand command = groovyExpressionScriptContrainer.updateDependencies(Lists.newArrayList(new DataRefactorPair(copy, myData)));
+        final CompoundCommand command = groovyExpressionScriptContrainer.updateDependencies(editingDomain(), newArrayList(new DataRefactorPair(copy, myData)));
         command.execute();
 
         assertThat(expression.getReferencedElements()).extracting("name").containsOnly("myNewData");
@@ -160,15 +155,14 @@ public class GroovyExpressionScriptContrainerTest {
         final TextFormField textFormField = TextFormFieldBuilder.aTextFormField().withName("myText").build();
         final Expression expression = aGroovyScriptExpression()
                 .withContent("return field_myText").havingReferencedElements(textFormField).build();
-        final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = spy(new GroovyExpressionScriptContrainer(expression,
-                ProcessPackage.Literals.ELEMENT__NAME, scriptRefactorOperationFactory));
-        final TransactionalEditingDomainImpl editingDomain = new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
-        doReturn(editingDomain).when(groovyExpressionScriptContrainer).editingDomain();
+        final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = new GroovyExpressionScriptContrainer(expression,
+                ProcessPackage.Literals.ELEMENT__NAME, scriptRefactorOperationFactory);
 
         groovyExpressionScriptContrainer.setNewScript("return field_myNewText");
         final TextFormField copy = EcoreUtil.copy(textFormField);
         copy.setName("myNewText");
-        final CompoundCommand command = groovyExpressionScriptContrainer.updateDependencies(Lists.newArrayList(new WidgetRefactorPair(copy, textFormField)));
+        final CompoundCommand command = groovyExpressionScriptContrainer.updateDependencies(editingDomain(), newArrayList(new WidgetRefactorPair(copy,
+                textFormField)));
         command.execute();
 
         assertThat(expression.getReferencedElements()).extracting("name").containsOnly("myNewText");
@@ -179,17 +173,31 @@ public class GroovyExpressionScriptContrainerTest {
         final Data myData = DataBuilder.aData().havingDataType(StringDataTypeBuilder.aStringDataType()).build();
         final Expression expression = aGroovyScriptExpression()
                 .withContent("return myData").havingReferencedElements(myData).build();
-        final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = spy(new GroovyExpressionScriptContrainer(expression,
-                ProcessPackage.Literals.ELEMENT__NAME, scriptRefactorOperationFactory));
-        final TransactionalEditingDomainImpl editingDomain = new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
-        doReturn(editingDomain).when(groovyExpressionScriptContrainer).editingDomain();
+        final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = new GroovyExpressionScriptContrainer(expression,
+                ProcessPackage.Literals.ELEMENT__NAME, scriptRefactorOperationFactory);
 
         groovyExpressionScriptContrainer.setNewScript("return myNewData");
         final Data copy = EcoreUtil.copy(myData);
         copy.setName("myNewData");
-        final CompoundCommand command = groovyExpressionScriptContrainer.removeDependencies(Lists.newArrayList(new DataRefactorPair(copy, myData)));
+        final CompoundCommand command = groovyExpressionScriptContrainer.removeDependencies(editingDomain(), newArrayList(new DataRefactorPair(copy, myData)));
         command.execute();
 
         assertThat(expression.getReferencedElements()).isEmpty();
+    }
+
+    @Test
+    public void should_two_ScriptContainer_refrencening_the_same_modelElement_and_the_same_scriptFeature_be_equal() throws Exception {
+        final Data myData = DataBuilder.aData().havingDataType(StringDataTypeBuilder.aStringDataType()).build();
+        final Expression expression = aGroovyScriptExpression()
+                .withContent("return myData").havingReferencedElements(myData).build();
+
+        assertThat(Sets.newHashSet(new GroovyExpressionScriptContrainer(expression,
+                ProcessPackage.Literals.ELEMENT__NAME, scriptRefactorOperationFactory),
+                new GroovyExpressionScriptContrainer(expression,
+                        ProcessPackage.Literals.ELEMENT__NAME, scriptRefactorOperationFactory))).hasSize(1);
+    }
+
+    private EditingDomain editingDomain() {
+        return new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
     }
 }

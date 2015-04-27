@@ -44,6 +44,7 @@ public class ScriptRefactoringAction<T extends RefactorPair<? extends EObject, ?
     private boolean cancelled;
     private final RefactoringOperationType operationType;
     protected List<T> pairsToRefactor;
+    private final EditingDomain domain;
 
     public ScriptRefactoringAction(final List<T> pairsToRefactor,
             final List<ScriptContainer<?>> scriptExpressions,
@@ -54,6 +55,7 @@ public class ScriptRefactoringAction<T extends RefactorPair<? extends EObject, ?
         this.compoundCommand = compoundCommand;
         this.operationType = operationType;
         this.pairsToRefactor = pairsToRefactor;
+        this.domain = domain;
     }
 
     @Override
@@ -105,12 +107,12 @@ public class ScriptRefactoringAction<T extends RefactorPair<? extends EObject, ?
 
     protected void doRefactor() {
         for (final ScriptContainer<?> scriptContainer : scriptExpressions) {
-            compoundCommand.append(scriptContainer.applyUpdate());
+            compoundCommand.append(scriptContainer.applyUpdate(domain));
             if (operationType == RefactoringOperationType.REMOVE) {
-                compoundCommand.append(scriptContainer.removeDependencies(pairsToRefactor));
+                compoundCommand.append(scriptContainer.removeDependencies(domain, pairsToRefactor));
             }
             if (operationType == RefactoringOperationType.UPDATE) {
-                compoundCommand.append(scriptContainer.updateDependencies(pairsToRefactor));
+                compoundCommand.append(scriptContainer.updateDependencies(domain, pairsToRefactor));
             }
         }
     }

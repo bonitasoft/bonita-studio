@@ -66,17 +66,18 @@ public class ConstraintExpressionScriptContainer extends ScriptContainer<Contrac
      * @see org.bonitasoft.studio.refactoring.core.groovy.ScriptContainer#updateDependencies(java.util.List)
      */
     @Override
-    public CompoundCommand updateDependencies(final List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor) {
+    public CompoundCommand updateDependencies(final EditingDomain editingDomain,
+            final List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor) {
         final CompoundCommand compoundCommand = new CompoundCommand();
         final ContractConstraint constraint = getModelElement();
         for (final String inputName : constraint.getInputNames()) {
             for (final RefactorPair<? extends EObject, ? extends EObject> pair : pairsToRefactor) {
                 final String oldValueName = pair.getOldValueName();
                 if (oldValueName.equals(inputName)) {
-                    compoundCommand.append(RemoveCommand.create(editingDomain(), constraint,
+                    compoundCommand.append(RemoveCommand.create(editingDomain, constraint,
                             ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES,
                             inputName));
-                    compoundCommand.append(AddCommand.create(editingDomain(), constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES,
+                    compoundCommand.append(AddCommand.create(editingDomain, constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES,
                             pair.getNewValueName()));
                 }
             }
@@ -86,26 +87,18 @@ public class ConstraintExpressionScriptContainer extends ScriptContainer<Contrac
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.refactoring.core.script.ScriptContainer#editingDomain()
-     */
-    @Override
-    protected EditingDomain editingDomain() {
-        return super.editingDomain();
-    }
-
-    /*
-     * (non-Javadoc)
      * @see org.bonitasoft.studio.refactoring.core.groovy.ScriptContainer#removeDependencies(java.util.List)
      */
     @Override
-    public CompoundCommand removeDependencies(final List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor) {
+    public CompoundCommand removeDependencies(final EditingDomain editingDomain,
+            final List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor) {
         final CompoundCommand compoundCommand = new CompoundCommand();
         final ContractConstraint constraint = getModelElement();
         for (final String inputName : constraint.getInputNames()) {
             for (final RefactorPair<? extends EObject, ? extends EObject> pair : pairsToRefactor) {
                 final String oldValueName = pair.getOldValueName();
                 if (oldValueName.equals(inputName)) {
-                    compoundCommand.append(RemoveCommand.create(editingDomain(), constraint,
+                    compoundCommand.append(RemoveCommand.create(editingDomain, constraint,
                             ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES,
                             inputName));
                 }

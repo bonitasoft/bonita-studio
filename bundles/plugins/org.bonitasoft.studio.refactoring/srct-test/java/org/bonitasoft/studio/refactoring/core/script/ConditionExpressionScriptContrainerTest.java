@@ -18,7 +18,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.refactoring.core.script.ReferenceDiff.newReferenceDiff;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -30,6 +29,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.builders.DataBuilder;
 import org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,11 +51,9 @@ public class ConditionExpressionScriptContrainerTest {
                 .withContent("myData == \"hello\"").havingReferencedElements(myData).build();
         final ConditionExpressionScriptContrainer textExpressionScriptContainer = spy(new ConditionExpressionScriptContrainer(expression,
                 ProcessPackage.Literals.ELEMENT__NAME));
-        final TransactionalEditingDomainImpl editingDomain = new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
-        doReturn(editingDomain).when(textExpressionScriptContainer).editingDomain();
 
         textExpressionScriptContainer.updateScript(newArrayList(newReferenceDiff("myData", "myNewData")), monitor);
-        textExpressionScriptContainer.applyUpdate().execute();
+        textExpressionScriptContainer.applyUpdate(editingDomain()).execute();
 
         ExpressionAssert.assertThat(expression).hasName("myNewData == \"hello\"");
     }
@@ -73,4 +71,7 @@ public class ConditionExpressionScriptContrainerTest {
         assertThat(textExpressionScriptContainer.getNewScript()).isEqualTo("myNewData == \"hello\"");
     }
 
+    private EditingDomain editingDomain() {
+        return new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
+    }
 }

@@ -24,7 +24,8 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emf.transaction.util.TransactionUtil;
+
+import com.google.common.base.Objects;
 
 public abstract class ScriptContainer<T extends EObject> {
 
@@ -67,10 +68,10 @@ public abstract class ScriptContainer<T extends EObject> {
     public abstract void updateScript(List<ReferenceDiff> referenceDiffs, final IProgressMonitor monitor) throws InvocationTargetException,
             InterruptedException;
 
-    public CompoundCommand applyUpdate() {
+    public CompoundCommand applyUpdate(final EditingDomain editingDomain) {
         final CompoundCommand compoundCommand = new CompoundCommand();
         if (scriptHasChanged()) {
-            compoundCommand.append(SetCommand.create(editingDomain(), modelElement, scriptFeature,
+            compoundCommand.append(SetCommand.create(editingDomain, modelElement, scriptFeature,
                     newScript));
         }
         return compoundCommand;
@@ -78,20 +79,36 @@ public abstract class ScriptContainer<T extends EObject> {
 
     public abstract String getName();
 
-    protected EditingDomain editingDomain() {
-        return TransactionUtil.getEditingDomain(modelElement);
-    }
+    public abstract CompoundCommand updateDependencies(final EditingDomain editingDomain,
+            List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor);
 
-    public abstract CompoundCommand updateDependencies(List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor);
-
-    public abstract CompoundCommand removeDependencies(List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor);
+    public abstract CompoundCommand removeDependencies(final EditingDomain editingDomain,
+            List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor);
 
     protected boolean scriptHasChanged() {
-        return getScript() != getNewScript();
+        return !Objects.equal(getScript(), getNewScript());
     }
 
     public EAttribute getDependencyNameFeature() {
         return dependencyNameFeature;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        return obj != null && Objects.equal(getModelElement(), ((ScriptContainer<?>) obj).getModelElement()) &&
+                Objects.equal(getScript(), ((ScriptContainer<?>) obj).getScript());
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getModelElement(), getScriptFeature());
+    }
 }
