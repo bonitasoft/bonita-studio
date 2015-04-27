@@ -42,6 +42,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+
 /**
  * @author Romain Bioteau
  */
@@ -225,8 +228,7 @@ public class ContractEngineDefinitionBuilderTest {
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
 
-        verify(contractDefBuilder).addInput(eq(employeeInput.getName()), eq(employeeInput.getDescription()), eq(employeeInput.isMultiple()), anyList(),
-                anyList());
+        verify(contractDefBuilder).addInput(eq(employeeInput.getName()), eq(employeeInput.getDescription()), eq(employeeInput.isMultiple()), anyList());
         verify(contractDefBuilder).addMandatoryConstraint("firstName");
         verify(contractDefBuilder).addMandatoryConstraint("skills");
     }
@@ -251,7 +253,13 @@ public class ContractEngineDefinitionBuilderTest {
                 tuple("lastName", Type.TEXT),
                 tuple("birthDate", Type.DATE));
         assertThat(complexInput.getInputs()).extracting("name").contains("skills");
-        final InputDefinition complexInputDefinition = complexInput.getInputs().get(0);
+        final InputDefinition complexInputDefinition = Iterables.find(complexInput.getInputs(), new Predicate<InputDefinition>() {
+
+            @Override
+            public boolean apply(final InputDefinition input) {
+                return input.hasChildren();
+            }
+        }, null);
         assertThat(complexInputDefinition.getInputs()).extracting("name", "type").contains(
                 tuple("name", Type.TEXT),
                 tuple("rate", Type.INTEGER));

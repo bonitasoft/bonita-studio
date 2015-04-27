@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014-2015 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -69,21 +69,19 @@ public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefin
     }
 
     protected void addSimpleInput(final ContractDefinitionBuilder contractBuilder, final ContractInput input, final Type inputType) {
-        contractBuilder.addSimpleInput(input.getName(), inputType,
-                input.getDescription(), input.isMultiple());
+        contractBuilder.addInput(input.getName(), inputType, input.getDescription(), input.isMultiple());
         if (input.isMandatory()) {
             contractBuilder.addMandatoryConstraint(input.getName());
         }
     }
 
     protected void addComplexInput(final ContractDefinitionBuilder contractBuilder, final ContractInput input) {
-        final ComplexInputDefinition complexInput = buildComplexInput(input, contractBuilder);
-        contractBuilder.addComplexInput(complexInput.getName(), complexInput.getDescription(), complexInput.isMultiple(), complexInput.getSimpleInputs(),
-                complexInput.getComplexInputs());
+        final InputDefinition complexInput = buildComplexInput(input, contractBuilder);
+        contractBuilder.addInput(complexInput.getName(), complexInput.getDescription(), complexInput.isMultiple(), complexInput.getInputs());
     }
 
     protected InputDefinition buildComplexInput(final ContractInput input, final ContractDefinitionBuilder contractBuilder) {
-        final InputDefinitionImpl complexInput = new InputDefinitionImpl(input.getName(), input.getDescription(), input.isMultiple());
+        final InputDefinitionImpl complexInput = new InputDefinitionImpl(input.getName(), null, input.getDescription(), input.isMultiple());
         if (input.isMandatory()) {
             contractBuilder.addMandatoryConstraint(complexInput.getName());
         }
