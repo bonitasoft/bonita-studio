@@ -69,12 +69,12 @@ public class ClientBonitaHomeBuildler {
         BonitaStudioLog.debug("Configuring bonita client on host " + host + ":" + port + " with API_TYPE=" + clientProperties.get(API_TYPE),
                 Activator.PLUGIN_ID);
         final File bonitaHome = BonitaHomeUtil.getBonitaHome();
-        final Path bonitaClientPath = bonitaHome.toPath().resolve(Paths.get("client", "conf", "bonita-client.properties"));
+        final Path bonitaClientPath = bonitaHome.toPath().resolve(Paths.get("engine-client", "conf", "bonita-client-custom.properties"));
         final File bonitaClientFile = bonitaClientPath.toFile();
         if (!bonitaClientFile.exists()) {
             BonitaHomeUtil.initBonitaHome();
             if (!bonitaClientFile.exists()) {
-                throw new IllegalStateException("bonita-client.properties not found in the bonita home");
+                throw new IllegalStateException("bonita-client-custom.properties not found in the bonita home");
             }
         }
         try (final FileInputStream inStream = new FileInputStream(bonitaClientFile);

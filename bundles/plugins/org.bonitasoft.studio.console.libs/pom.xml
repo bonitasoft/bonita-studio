@@ -14,7 +14,7 @@
 
 	<properties>
 		<tomcat.bundle.dir>${basedir}/tomcat</tomcat.bundle.dir>
-		<bonita.home.dir>${basedir}/bonita</bonita.home.dir>
+		<bonita.home.dir>${basedir}/bonita-home</bonita.home.dir>
 		<javadoc.dir>${basedir}/javadoc</javadoc.dir>
 		<lib.dir>lib</lib.dir>
 		<tomcat.version>7.0.55</tomcat.version>
@@ -285,7 +285,7 @@
 									failOnNoReplacements="true"/>
 								<delete dir="${tomcat.bundle.dir}/webapps/examples" />
 								<!-- Clean bonita-home server part -->
-								<delete dir="${bonita.home.dir}/server" />
+								<delete dir="${bonita.home.dir}/engine-server" />
 
 								<!-- Package javadoc -->
 								<zip destfile="${basedir}/javadoc.zip" basedir="${javadoc.dir}"
@@ -340,7 +340,7 @@
 						<Eclipse-BundleShape>dir</Eclipse-BundleShape>
 						<Include-Resource>
 							{maven-resources}, {maven-dependencies},
-							javadoc.zip,bonita=bonita,plugin.xml,tomcat=tomcat
+							javadoc.zip,bonita=bonita-home,plugin.xml,tomcat=tomcat
 						</Include-Resource>
 						<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
 						<Import-Package>!*</Import-Package>
