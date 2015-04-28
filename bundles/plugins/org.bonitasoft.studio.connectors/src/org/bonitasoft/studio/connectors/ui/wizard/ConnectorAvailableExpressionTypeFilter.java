@@ -20,6 +20,7 @@ import java.util.Set;
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.emf.ecore.EObject;
@@ -28,48 +29,66 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * @author Romain Bioteau
  */
-public class ConnectorAvailableExpressionTypeFilter extends AvailableExpressionTypeFilter {
+public class ConnectorAvailableExpressionTypeFilter extends
+		AvailableExpressionTypeFilter {
 
-    public ConnectorAvailableExpressionTypeFilter(final String[] contentTypes) {
-        super(contentTypes);
-    }
+	public ConnectorAvailableExpressionTypeFilter(final String[] contentTypes) {
+		super(contentTypes);
+	}
 
-    public ConnectorAvailableExpressionTypeFilter() {
-        super(new String[] {
-                ExpressionConstants.CONSTANT_TYPE,
-                ExpressionConstants.VARIABLE_TYPE,
-                ExpressionConstants.SCRIPT_TYPE,
-                ExpressionConstants.PARAMETER_TYPE
-        });
-    }
+	public ConnectorAvailableExpressionTypeFilter() {
+		super(new String[] { ExpressionConstants.CONSTANT_TYPE,
+				ExpressionConstants.VARIABLE_TYPE,
+				ExpressionConstants.SCRIPT_TYPE,
+				ExpressionConstants.PARAMETER_TYPE });
+	}
 
-    @Override
-    public boolean select(final Viewer viewer, final Object context, final Object element) {
-        if (viewer != null) {
-            final Connector connector = getParentConnector(viewer.getInput());
-            if (connector != null && (ConnectorEvent.ON_FINISH.name().equals(connector.getEvent())
-                    || isConnectorIsOnPool(connector) && ConnectorEvent.ON_ENTER.name().equals(connector.getEvent()))) {
-                final Set<String> contentTypes = new HashSet<String>(getContentTypes());
-                contentTypes.add(ExpressionConstants.CONTRACT_INPUT_TYPE);
-                return isExpressionAllowed(element, contentTypes);
-            }
-        }
-        return super.select(viewer, context, element);
-    }
+	@Override
+	public boolean select(final Viewer viewer, final Object context,
+			final Object element) {
+		if (viewer != null) {
+			final Connector connector = getParentConnector(viewer.getInput());
+			if (connector != null
+					&& isConnectorIsOnActivity(connector)
+					&& ConnectorEvent.ON_FINISH.name().equals(
+							connector.getEvent())
+					|| isConnectorIsOnPool(connector)
+					&& ConnectorEvent.ON_ENTER.name().equals(
+							connector.getEvent())) {
+				final Set<String> contentTypes = new HashSet<String>(
+						getContentTypes());
+				contentTypes.add(ExpressionConstants.CONTRACT_INPUT_TYPE);
+				return isExpressionAllowed(element, contentTypes);
+			}
+		}
+		return super.select(viewer, context, element);
+	}
 
-    protected boolean isConnectorIsOnPool(final Connector connector) {
-        return connector.eContainer() instanceof Pool;
-    }
+	protected boolean isConnectorIsOnPool(final Connector connector) {
+		if (connector != null) {
+			return connector.eContainer() instanceof Pool;
+		} else {
+			return false;
+		}
+	}
 
-    private Connector getParentConnector(final Object context) {
-        if (context instanceof EObject) {
-            EObject current = (EObject) context;
-            while (current != null && !(current instanceof Connector)) {
-                current = current.eContainer();
-            }
-            return (Connector) current;
-        }
-        return null;
-    }
+	protected boolean isConnectorIsOnActivity(final Connector connector) {
+		if (connector != null) {
+			return connector.eContainer() instanceof Activity;
+		} else {
+			return false;
+		}
+	}
+
+	private Connector getParentConnector(final Object context) {
+		if (context instanceof EObject) {
+			EObject current = (EObject) context;
+			while (current != null && !(current instanceof Connector)) {
+				current = current.eContainer();
+			}
+			return (Connector) current;
+		}
+		return null;
+	}
 
 }
