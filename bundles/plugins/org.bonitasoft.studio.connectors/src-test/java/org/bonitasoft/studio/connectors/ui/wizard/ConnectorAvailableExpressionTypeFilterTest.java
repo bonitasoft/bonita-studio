@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -44,117 +42,89 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectorAvailableExpressionTypeFilterTest {
 
-	private ConnectorAvailableExpressionTypeFilter connectorAvailableExpressionTypeFilter;
+    private ConnectorAvailableExpressionTypeFilter connectorAvailableExpressionTypeFilter;
 
-	@Mock
-	private Viewer expressionViewer;
+    @Mock
+    private Viewer expressionViewer;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		connectorAvailableExpressionTypeFilter = new ConnectorAvailableExpressionTypeFilter();
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        connectorAvailableExpressionTypeFilter = new ConnectorAvailableExpressionTypeFilter();
 
-	}
+    }
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
+    /**
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	@Test
-	public void should_select_returns_true_for_contract_input_expression_in_on_finish_connector_input()
-			throws Exception {
-		final Activity activity = ProcessFactory.eINSTANCE.createActivity();
-		final Connector onFinishConnector = ProcessFactory.eINSTANCE
-				.createConnector();
-		onFinishConnector.setEvent(ConnectorEvent.ON_FINISH.name());
-		activity.getConnectors().add(onFinishConnector);
-		when(expressionViewer.getInput()).thenReturn(onFinishConnector);
+    @Test
+    public void should_select_returns_true_for_contract_input_expression_in_on_finish_connector_input()
+            throws Exception {
+        final Activity activity = ProcessFactory.eINSTANCE.createActivity();
+        final Connector onFinishConnector = ProcessFactory.eINSTANCE.createConnector();
+        onFinishConnector.setEvent(ConnectorEvent.ON_FINISH.name());
+        activity.getConnectors().add(onFinishConnector);
+        when(expressionViewer.getInput()).thenReturn(onFinishConnector);
 
-		final ContractInput input = ProcessFactory.eINSTANCE
-				.createContractInput();
-		input.setName("myInput");
-		input.setType(ContractInputType.TEXT);
-		assertThat(
-				connectorAvailableExpressionTypeFilter.select(expressionViewer,
-						null,
-						ExpressionHelper.createContractInputExpression(input)))
-				.isTrue();
-	}
+        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
+        input.setName("myInput");
+        input.setType(ContractInputType.TEXT);
+        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null, ExpressionHelper.createContractInputExpression(input))).isTrue();
+    }
 
-	@Test
-	public void should_select_returns_true_for_contract_input_expression_in_on_enter_connector_input()
-			throws Exception {
-		final Connector onFinishConnector = ProcessFactory.eINSTANCE
-				.createConnector();
-		onFinishConnector.setEvent(ConnectorEvent.ON_ENTER.name());
-		final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE
-				.createConnectorConfiguration();
-		onFinishConnector.setConfiguration(config);
-		when(expressionViewer.getInput()).thenReturn(config);
+    @Test
+    public void should_select_returns_true_for_contract_input_expression_in_on_enter_connector_input() throws Exception {
+        final Connector onFinishConnector = ProcessFactory.eINSTANCE.createConnector();
+        onFinishConnector.setEvent(ConnectorEvent.ON_ENTER.name());
+        final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
+        onFinishConnector.setConfiguration(config);
+        when(expressionViewer.getInput()).thenReturn(config);
 
-		final ContractInput input = ProcessFactory.eINSTANCE
-				.createContractInput();
-		input.setName("myInput");
-		input.setType(ContractInputType.TEXT);
-		assertThat(
-				connectorAvailableExpressionTypeFilter.select(expressionViewer,
-						null,
-						ExpressionHelper.createContractInputExpression(input)))
-				.isFalse();
-	}
+        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
+        input.setName("myInput");
+        input.setType(ContractInputType.TEXT);
+        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null, ExpressionHelper.createContractInputExpression(input))).isFalse();
+    }
 
-	@Test
-	public void should_select_returns_true_for_variable_expression_in_connector_input()
-			throws Exception {
-		final Data data = ProcessFactory.eINSTANCE.createData();
-		data.setName("myData");
-		data.setDataType(ModelHelper.createStringDataType());
-		assertThat(
-				connectorAvailableExpressionTypeFilter.select(null, null,
-						ExpressionHelper.createVariableExpression(data)))
-				.isTrue();
-	}
+    @Test
+    public void should_select_returns_true_for_variable_expression_in_connector_input()
+            throws Exception {
+        final Data data = ProcessFactory.eINSTANCE.createData();
+        data.setName("myData");
+        data.setDataType(ModelHelper.createStringDataType());
+        assertThat(connectorAvailableExpressionTypeFilter.select(null, null, ExpressionHelper.createVariableExpression(data))).isTrue();
+    }
 
-	@Test
-	public void should_select_returns_false_for_form_filed_expression_in_connector_input()
-			throws Exception {
-		final Connector onFinishConnector = ProcessFactory.eINSTANCE
-				.createConnector();
-		onFinishConnector.setEvent(ConnectorEvent.ON_ENTER.name());
-		when(expressionViewer.getInput()).thenReturn(null);
+    @Test
+    public void should_select_returns_false_for_form_filed_expression_in_connector_input() throws Exception {
+        final Connector onFinishConnector = ProcessFactory.eINSTANCE.createConnector();
+        onFinishConnector.setEvent(ConnectorEvent.ON_ENTER.name());
+        when(expressionViewer.getInput()).thenReturn(null);
 
-		final TextFormField field = FormFactory.eINSTANCE.createTextFormField();
-		field.setName("myData");
-		assertThat(
-				connectorAvailableExpressionTypeFilter.select(expressionViewer,
-						null, ExpressionHelper.createWidgetExpression(field)))
-				.isFalse();
-	}
+        final TextFormField field = FormFactory.eINSTANCE.createTextFormField();
+        field.setName("myData");
+        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null, ExpressionHelper.createWidgetExpression(field))).isFalse();
+    }
 
-	@Test
-	public void should_select_returns_true_for_parameter_expression()
-			throws Exception {
-		final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE
-				.createConnectorConfiguration();
-		when(expressionViewer.getInput()).thenReturn(config);
+    @Test
+    public void should_select_returns_true_for_parameter_expression() throws Exception {
+        final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
+        when(expressionViewer.getInput()).thenReturn(config);
 
-		final Parameter param = ParameterFactory.eINSTANCE.createParameter();
-		param.setName("myParam");
-		param.setTypeClassname(String.class.getName());
-		assertThat(
-				connectorAvailableExpressionTypeFilter.select(expressionViewer,
-						null, ExpressionHelper.createParameterExpression(param)))
-				.isTrue();
-	}
+        final Parameter param = ParameterFactory.eINSTANCE.createParameter();
+        param.setName("myParam");
+        param.setTypeClassname(String.class.getName());
+        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null, ExpressionHelper.createParameterExpression(param))).isTrue();
+    }
 
 }
