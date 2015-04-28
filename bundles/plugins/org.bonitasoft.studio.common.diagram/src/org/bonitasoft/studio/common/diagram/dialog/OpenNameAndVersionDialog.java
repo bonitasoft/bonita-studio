@@ -12,11 +12,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common;
+package org.bonitasoft.studio.common.diagram.dialog;
 
 import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.fileNameValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.forbiddenCharactersValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
@@ -26,8 +28,11 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.diagram.Identifier;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -61,18 +66,19 @@ import com.google.common.base.Function;
  */
 public class OpenNameAndVersionDialog extends Dialog {
 
+    private static final int NAME_MAX_LENGTH = 50;
+    private static final int VERSION_MAX_LENGTH = 50;
     private boolean forceNameUpdate = false;
     private final Set<String> existingFileNames;
     private final Set<Identifier> processIdentifiers;
     private final AbstractProcess abstractProcess;
     private Identifier identifier;
-    private final IRepositoryStore<?> diagramStore;
+    private DataBindingContext dbc;
 
     public OpenNameAndVersionDialog(final Shell parentShell, final AbstractProcess abstractProcess,
             final IRepositoryStore<?> diagramStore) {
         super(parentShell);
         this.abstractProcess = abstractProcess;
-        this.diagramStore = diagramStore;
         identifier = newIdentifier(abstractProcess);
         existingFileNames = listExistingFileNames(diagramStore);
         processIdentifiers = computeProcessIdentifiers(diagramStore);
@@ -92,15 +98,17 @@ public class OpenNameAndVersionDialog extends Dialog {
 
     protected Set<String> listExistingFileNames(final IRepositoryStore<?> diagramStore) {
         final Set<String> result = new HashSet<String>();
-        final String[] files = diagramStore.getResource().getLocation().toFile().list(new FilenameFilter() {
+        if (diagramStore.getResource() != null) {
+            final String[] files = diagramStore.getResource().getLocation().toFile().list(new FilenameFilter() {
 
-            @Override
-            public boolean accept(final File arg0, final String arg1) {
-                return arg1.endsWith(".proc");
+                @Override
+                public boolean accept(final File arg0, final String arg1) {
+                    return arg1.endsWith(".proc");
+                }
+            });
+            for (final String f : files) {
+                result.add(f);
             }
-        });
-        for (final String f : files) {
-            result.add(f.toLowerCase());
         }
         return result;
     }
@@ -128,8 +136,8 @@ public class OpenNameAndVersionDialog extends Dialog {
         };
     }
 
-    protected Set<Identifier> existingProcessIdentifiers() {
-        return processIdentifiers;
+    protected List<Identifier> existingProcessIdentifiers() {
+        return newArrayList(processIdentifiers);
     }
 
     @Override
@@ -140,16 +148,24 @@ public class OpenNameAndVersionDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(final Composite parent) {
-        final DataBindingContext dbc = new DataBindingContext();
-
         final Composite res = new Composite(parent, SWT.FILL);
         res.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         res.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 15).create());
 
         createNameAndVersion(res, dbc);
-
-        DialogSupport.create(this, dbc);
         return res;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected Control createContents(final Composite parent) {
+        dbc = new DataBindingContext();
+        final Control contents = super.createContents(parent);
+        DialogSupport.create(this, dbc);
+        return contents;
     }
 
     protected void createNameAndVersion(final Composite res, final DataBindingContext dbc) {
@@ -187,8 +203,7 @@ public class OpenNameAndVersionDialog extends Dialog {
 
     protected MultiValidator unicityValidator(final ISWTObservableValue observeNameText, final ISWTObservableValue observeVersionText) {
         return abstractProcess instanceof MainProcess ? new DiagramUnicityValidator((MainProcess) abstractProcess, observeNameText, observeVersionText,
-                existingFileNames,
-                diagramStore) : new ProcessUnicityValidator(abstractProcess, observeNameText, observeVersionText,
+                existingFileNames) : new ProcessUnicityValidator(abstractProcess, observeNameText, observeVersionText,
                 existingProcessIdentifiers());
     }
 
@@ -203,23 +218,23 @@ public class OpenNameAndVersionDialog extends Dialog {
     protected UpdateValueStrategy diagramVersionUpdateStrategy() {
         return updateValueStrategy().withValidator(multiValidator()
                 .addValidator(mandatoryValidator(Messages.version))
-                .addValidator(maxLengthValidator(Messages.version, 50))
-                .addValidator(forbiddenCharactersValidator(Messages.version, '#', '%', '$', '\\', '/', '"', '*', '?', ':', '<', '>', '|'))
+                .addValidator(maxLengthValidator(Messages.version, VERSION_MAX_LENGTH))
+                .addValidator(fileNameValidator(Messages.version))
                 .addValidator(utf8InputValidator(Messages.version))).create();
     }
 
     protected UpdateValueStrategy diagramNameUpdateStrategy() {
         return updateValueStrategy().withValidator(multiValidator()
                 .addValidator(mandatoryValidator(Messages.name))
-                .addValidator(maxLengthValidator(Messages.name, 50))
-                .addValidator(forbiddenCharactersValidator(Messages.name, '#', '%', '$', '\\', '/', '"', '*', '?', ':', '<', '>', '|'))
+                .addValidator(maxLengthValidator(Messages.name, NAME_MAX_LENGTH))
+                .addValidator(fileNameValidator(Messages.name))
                 .addValidator(utf8InputValidator(Messages.name))).create();
     }
 
     protected UpdateValueStrategy poolNameUpdateStrategy() {
         return updateValueStrategy().withValidator(multiValidator()
                 .addValidator(mandatoryValidator(Messages.name))
-                .addValidator(maxLengthValidator(Messages.name, 50))
+                .addValidator(maxLengthValidator(Messages.name, NAME_MAX_LENGTH))
                 .addValidator(forbiddenCharactersValidator(Messages.name, '#', '%', '$'))
                 .addValidator(utf8InputValidator(Messages.name))).create();
     }
@@ -227,13 +242,9 @@ public class OpenNameAndVersionDialog extends Dialog {
     protected UpdateValueStrategy poolVersionUpdateStrategy() {
         return updateValueStrategy().withValidator(multiValidator()
                 .addValidator(mandatoryValidator(Messages.version))
-                .addValidator(maxLengthValidator(Messages.version, 50))
+                .addValidator(maxLengthValidator(Messages.version, VERSION_MAX_LENGTH))
                 .addValidator(forbiddenCharactersValidator(Messages.version, '#', '%', '$'))
                 .addValidator(utf8InputValidator(Messages.version))).create();
-    }
-
-    protected String typeLabel() {
-        return abstractProcess instanceof MainProcess ? Messages.diagram.toLowerCase() : Messages.Pool_title.toLowerCase();
     }
 
     public Identifier getIdentifier() {

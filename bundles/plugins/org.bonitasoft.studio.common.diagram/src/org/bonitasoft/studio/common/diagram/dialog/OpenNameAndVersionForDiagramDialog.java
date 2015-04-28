@@ -12,11 +12,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common;
+package org.bonitasoft.studio.common.diagram.dialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -25,8 +26,6 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.validation.MultiValidator;
-import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -43,41 +42,8 @@ import org.eclipse.swt.widgets.Text;
 
 public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog {
 
-    private final List<ProcessesNameVersion> pools = new ArrayList<OpenNameAndVersionForDiagramDialog.ProcessesNameVersion>();
-
-    public class ProcessesNameVersion {
-
-        protected AbstractProcess pool;
-        protected String newName;
-        protected String newVersion;
-
-        public ProcessesNameVersion(final AbstractProcess pool) {
-            this.pool = pool;
-            newName = pool.getName();
-            newVersion = pool.getVersion();
-        }
-
-        public AbstractProcess getAbstractProcess() {
-            return pool;
-        }
-
-        public String getNewName() {
-            return newName;
-        }
-
-        public void setNewName(final String newName) {
-            this.newName = newName;
-        }
-
-        public String getNewVersion() {
-            return newVersion;
-        }
-
-        public void setNewVersion(final String newVersion) {
-            this.newVersion = newVersion;
-        }
-
-    }
+    private final List<ProcessesNameVersion> pools = new ArrayList<ProcessesNameVersion>();
+    private DataBindingContext dbc;
 
     public OpenNameAndVersionForDiagramDialog(final Shell parentShell, final MainProcess diagram, final IRepositoryStore<?> diagramStore) {
         super(parentShell, diagram, diagramStore);
@@ -88,17 +54,25 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
 
     @Override
     protected Control createDialogArea(final Composite parent) {
-        final DataBindingContext dbc = new DataBindingContext();
-
         final Composite res = new Composite(parent, SWT.FILL);
         res.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         res.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 15).create());
 
         createDiagramComposite(res, dbc);
         createProcessesNameAndVersion(res, dbc);
-
-        DialogSupport.create(this, dbc);
         return res;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected Control createContents(final Composite parent) {
+        dbc = new DataBindingContext();
+        final Control contents = super.createContents(parent);
+        DialogSupport.create(this, dbc);
+        return contents;
     }
 
     private void createDiagramComposite(final Composite res, final DataBindingContext dbc) {
@@ -136,43 +110,16 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
                 poolVersionUpdateStrategy(),
                 null), SWT.LEFT);
 
-        final MultiValidator caseValidator = new MultiValidator() {
+        if (isForceNameUpdate()) {
+            final MustUpdateValidator mustUpdateValidator = new MustUpdateValidator(pnv.getAbstractProcess(), observePoolNameText, observePoolVersionText);
+            dbc.addValidationStatusProvider(mustUpdateValidator);
+            ControlDecorationSupport.create(mustUpdateValidator, SWT.LEFT);
+        }
+        final MultiValidator processesNameVersionUnicityValidator = new ProcessesNameVersionUnicityValidator(pnv.getAbstractProcess(), observePoolNameText,
+                observePoolVersionText, existingProcessIdentifiers(), pools);
+        dbc.addValidationStatusProvider(processesNameVersionUnicityValidator);
+        ControlDecorationSupport.create(processesNameVersionUnicityValidator, SWT.LEFT);
 
-            @Override
-            protected IStatus validate() {
-                final String poolName = observePoolNameText.getValue().toString();
-                final String poolVersion = observePoolVersionText.getValue().toString();
-                int countNewProcessWithSameName = 0;
-                for (final ProcessesNameVersion pool : pools) {
-                    if (poolName.equals(pool.newName) && poolVersion.equals(pool.newVersion)) {
-                        countNewProcessWithSameName++;
-                    }
-                }
-                if (countNewProcessWithSameName > 1) {
-                    return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel()));
-                }
-                int countOldProcessWithSameName = 0;
-                for (final ProcessesNameVersion pool : pools) {
-                    if (poolName.equals(pool.getAbstractProcess().getName()) && poolVersion.equals(pool.getAbstractProcess().getVersion())) {
-                        countOldProcessWithSameName++;
-                    }
-                }
-                if (countOldProcessWithSameName == 1) {
-                    if (isForceNameUpdate()) {
-                        return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel()));
-                    } else {
-                        return ValidationStatus.ok();
-                    }
-                }
-                if (existingProcessIdentifiers().contains(new Identifier(poolName, poolVersion))) {
-                    return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel()));
-                }
-                return ValidationStatus.ok();
-            }
-
-        };
-        dbc.addValidationStatusProvider(caseValidator);
-        ControlDecorationSupport.create(caseValidator, SWT.LEFT);
     }
 
     protected void createProcessesNameAndVersion(final Composite res, final DataBindingContext dbc) {

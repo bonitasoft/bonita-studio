@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.common.Identifier;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
+import org.bonitasoft.studio.common.diagram.Identifier;
+import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;

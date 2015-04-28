@@ -12,29 +12,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common;
+package org.bonitasoft.studio.common.diagram.dialog;
 
 import java.util.Set;
 
+import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 
-public class ProcessUnicityValidator extends MultiValidator {
+public class DiagramUnicityValidator extends MultiValidator {
 
     private final IObservableValue nameObservable;
     private final IObservableValue versionObservable;
-    private final Set<Identifier> processeIdentifiers;
-    private final AbstractProcess abstractProcess;
+    private final AbstractProcess diagram;
+    private final Set<String> existingFileNames;
 
-    public ProcessUnicityValidator(final AbstractProcess abstractProcess, final IObservableValue nameObservable, final IObservableValue versionObservable,
-            final Set<Identifier> processeIdentifiers) {
-        this.abstractProcess = abstractProcess;
+    public DiagramUnicityValidator(final MainProcess diagram,
+            final IObservableValue nameObservable,
+            final IObservableValue versionObservable,
+            final Set<String> existingFileNames) {
         this.nameObservable = nameObservable;
         this.versionObservable = versionObservable;
-        this.processeIdentifiers = processeIdentifiers;
+        this.diagram = diagram;
+        this.existingFileNames = existingFileNames;
     }
 
     /*
@@ -45,14 +50,21 @@ public class ProcessUnicityValidator extends MultiValidator {
     protected IStatus validate() {
         final String name = (String) nameObservable.getValue();
         final String version = (String) versionObservable.getValue();
-        final Identifier newIdentifier = new Identifier(name, version);
-        if (name.equals(abstractProcess.getName()) && version.equals(abstractProcess.getVersion())) {
-            return ValidationStatus.ok();
+        final String newDiagramFilename = NamingUtils.toDiagramFilename(name, version);
+        if (existingFileNames.contains(newDiagramFilename) && nameOrVersionHasChanged(name, version)) {
+            return ValidationStatus.error(Messages.bind(Messages.diagramAlreadyExists, Messages.diagram.toLowerCase()));
         }
-        if (processeIdentifiers.contains(newIdentifier)) {
-            return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, Messages.Pool_title.toLowerCase()));
+        for (final String existingFileName : existingFileNames) {
+            if (!NamingUtils.toDiagramFilename(diagram.getName(), diagram.getVersion()).equals(newDiagramFilename)
+                    && existingFileName.toLowerCase().equals(newDiagramFilename.toLowerCase())) {
+                return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, Messages.diagram.toLowerCase()));
+            }
         }
         return ValidationStatus.ok();
+    }
+
+    private boolean nameOrVersionHasChanged(final String name, final String version) {
+        return !diagram.getName().equals(name) || !diagram.getVersion().equals(version);
     }
 
 }

@@ -22,10 +22,10 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.bonitasoft.studio.common.Identifier;
-import org.bonitasoft.studio.common.OpenNameAndVersionDialog;
-import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
-import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
+import org.bonitasoft.studio.common.diagram.Identifier;
+import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionDialog;
+import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramDialog;
+import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;

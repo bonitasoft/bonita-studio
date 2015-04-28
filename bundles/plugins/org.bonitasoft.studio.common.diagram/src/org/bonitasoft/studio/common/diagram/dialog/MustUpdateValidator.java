@@ -12,8 +12,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common;
+package org.bonitasoft.studio.common.diagram.dialog;
 
+import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;

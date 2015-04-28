@@ -16,8 +16,8 @@ package org.bonitasoft.studio.application.actions;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.bonitasoft.studio.common.Identifier;
-import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
+import org.bonitasoft.studio.common.diagram.Identifier;
+import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;

@@ -12,36 +12,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common;
+package org.bonitasoft.studio.common.diagram.dialog;
 
-import java.util.Set;
+import java.util.List;
 
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.diagram.Identifier;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 
-public class DiagramUnicityValidator extends MultiValidator {
+public class ProcessesNameVersionUnicityValidator extends MultiValidator {
 
     private final IObservableValue nameObservable;
     private final IObservableValue versionObservable;
-    private final IRepositoryStore<?> diagramStore;
-    private final AbstractProcess diagram;
-    private final Set<String> existingFileNames;
+    private final List<ProcessesNameVersion> processesNameVersion;
+    private final List<Identifier> processeIdentifiers;
+    private final AbstractProcess process;
 
-    public DiagramUnicityValidator(final MainProcess diagram,
+    public ProcessesNameVersionUnicityValidator(
+            final AbstractProcess process,
             final IObservableValue nameObservable,
             final IObservableValue versionObservable,
-            final Set<String> existingFileNames,
-            final IRepositoryStore<?> diagramStore) {
+            final List<Identifier> processeIdentifiers,
+            final List<ProcessesNameVersion> processesNameVersion) {
+        this.process = process;
         this.nameObservable = nameObservable;
         this.versionObservable = versionObservable;
-        this.diagramStore = diagramStore;
-        this.diagram = diagram;
-        this.existingFileNames = existingFileNames;
+        this.processesNameVersion = processesNameVersion;
+        this.processeIdentifiers = processeIdentifiers;
     }
 
     /*
@@ -50,19 +51,18 @@ public class DiagramUnicityValidator extends MultiValidator {
      */
     @Override
     protected IStatus validate() {
-        final String name = (String) nameObservable.getValue();
-        final String version = (String) versionObservable.getValue();
-        final String newDiagramFilename = NamingUtils.toDiagramFilename(name, version);
-        if (diagramStore.getChild(newDiagramFilename) != null && !diagram.getName().equals(name) && !diagram.getVersion().equals(version)) {
-            return ValidationStatus.error(Messages.bind(Messages.diagramAlreadyExists, Messages.diagram.toLowerCase()));
-        }
-        for (final String existingFileName : existingFileNames) {
-            if (!NamingUtils.toDiagramFilename(diagram.getName(), diagram.getVersion()).equals(newDiagramFilename)
-                    && existingFileName.equals(newDiagramFilename.toLowerCase())) {
-                return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, Messages.diagram.toLowerCase()));
+        final String poolName = (String) nameObservable.getValue();
+        final String poolVersion = (String) versionObservable.getValue();
+        processeIdentifiers.remove(new Identifier(process.getName(), process.getVersion()));
+        for (final ProcessesNameVersion poolNameAndVersion : processesNameVersion) {
+            if (!process.equals(poolNameAndVersion.getAbstractProcess())) {
+                processeIdentifiers.add(new Identifier(poolNameAndVersion.getNewName(), poolNameAndVersion.getNewVersion()));
             }
         }
+        if (processeIdentifiers.contains(new Identifier(poolName, poolVersion))) {
+            return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, Messages.Pool_title.toLowerCase()));
+        }
         return ValidationStatus.ok();
-    }
 
+    }
 }
