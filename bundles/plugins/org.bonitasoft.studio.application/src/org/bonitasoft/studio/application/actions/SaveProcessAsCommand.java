@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.actions;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.bonitasoft.studio.common.Identifier;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -52,40 +53,42 @@ public class SaveProcessAsCommand extends AbstractHandler {
      * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
-        IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+    public Object execute(final ExecutionEvent event) throws ExecutionException {
+        diagramStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
+        final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (!(editor instanceof ProcessDiagramEditor)) {
             MessageDialog.openWarning(Display.getDefault().getActiveShell(), "This is not a process diagram!",
                     "Cannot perform \"Duplicate\" on something that is not a process diagram");
             return null;
         }
 
-        ProcessDiagramEditor processEditor = (ProcessDiagramEditor) editor;
+        final ProcessDiagramEditor processEditor = (ProcessDiagramEditor) editor;
 
-        MainProcess process = (MainProcess) ((IGraphicalEditPart) processEditor.getDiagramEditPart()).resolveSemanticElement();
+        final MainProcess process = (MainProcess) ((IGraphicalEditPart) processEditor.getDiagramEditPart()).resolveSemanticElement();
         newProcessLabel = process.getName();
         newProcessVersion = process.getVersion();
-        OpenNameAndVersionForDiagramDialog dialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(),
-                ModelHelper.getMainProcess(process), diagramStore, true);
+        final OpenNameAndVersionForDiagramDialog dialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(),
+                ModelHelper.getMainProcess(process), diagramStore);
+        dialog.forceNameUpdate();
         if (dialog.open() == Dialog.OK) {
-            newProcessLabel = dialog.getDiagramName();
-            newProcessVersion = dialog.getDiagramVersion();
+            final Identifier identifier = dialog.getIdentifier();
+            newProcessLabel = identifier.getName();
+            newProcessVersion = dialog.getIdentifier().getVersion();
             pools = dialog.getPools();
-            DuplicateDiagramOperation op = new DuplicateDiagramOperation();
+            final DuplicateDiagramOperation op = new DuplicateDiagramOperation();
             op.setDiagramToDuplicate(process);
             op.setNewDiagramName(newProcessLabel);
             op.setNewDiagramVersion(newProcessVersion);
             op.setPoolsRenamed(pools);
-            IProgressService service = PlatformUI.getWorkbench().getProgressService();
+            final IProgressService service = PlatformUI.getWorkbench().getProgressService();
             try {
                 service.run(true, false, op);
-            } catch (InvocationTargetException e) {
+            } catch (final InvocationTargetException e) {
                 throw new ExecutionException(e.getMessage(), e);
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 throw new ExecutionException(e.getMessage(), e);
             }
-            DiagramFileStore store = diagramStore.getDiagram(newProcessLabel, newProcessVersion);
+            final DiagramFileStore store = diagramStore.getDiagram(newProcessLabel, newProcessVersion);
             store.open();
         }
         return null;
@@ -98,7 +101,7 @@ public class SaveProcessAsCommand extends AbstractHandler {
     @Override
     public boolean isEnabled() {
         if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-            IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
             return editor != null && editor instanceof ProcessDiagramEditor;
         }
         return false;

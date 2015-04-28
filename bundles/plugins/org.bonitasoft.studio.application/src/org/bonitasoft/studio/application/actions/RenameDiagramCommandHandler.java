@@ -5,19 +5,18 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.application.actions;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.bonitasoft.studio.common.Identifier;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -37,31 +36,31 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class RenameDiagramCommandHandler extends AbstractHandler {
 
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
-        final MainProcess diagram =  getMainProcess();
+        final MainProcess diagram = getMainProcess();
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(),diagram,diagramStore) ;
-        if(nameDialog.open() == Dialog.OK ) {
-            final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+        final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(), diagram,
+                diagramStore);
+        if (nameDialog.open() == Dialog.OK) {
+            final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 
             EObject currentObject = editor.getDiagramEditPart().resolveSemanticElement();
-            while(!(currentObject instanceof MainProcess)){
+            while (!(currentObject instanceof MainProcess)) {
                 currentObject = currentObject.eContainer();
             }
             final MainProcess newProcess = (MainProcess) currentObject;
             final RenameDiagramOperation renameDiagramOperation = new RenameDiagramOperation();
             renameDiagramOperation.setEditor(editor);
             renameDiagramOperation.setDiagramToDuplicate(newProcess);
-            renameDiagramOperation.setNewDiagramName(nameDialog.getDiagramName());
-            renameDiagramOperation.setNewDiagramVersion(nameDialog.getDiagramVersion());
+            Identifier identifier = nameDialog.getIdentifier();
+            renameDiagramOperation.setNewDiagramName(identifier.getName());
+            renameDiagramOperation.setNewDiagramVersion(nameDialog.getIdentifier().getVersion());
             renameDiagramOperation.setPoolsRenamed(nameDialog.getPools());
             final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
             try {
@@ -82,10 +81,10 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
     }
 
     protected MainProcess getMainProcess() {
-        if(PlatformUI.isWorkbenchRunning()){
+        if (PlatformUI.isWorkbenchRunning()) {
             final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-            if(editor instanceof ProcessDiagramEditor || editor instanceof FormDiagramEditor){
-                final EObject mainElement = ((DiagramEditor)editor).getDiagramEditPart().resolveSemanticElement();
+            if (editor instanceof ProcessDiagramEditor || editor instanceof FormDiagramEditor) {
+                final EObject mainElement = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
                 final MainProcess diagram = ModelHelper.getMainProcess(mainElement);
                 return diagram;
             }

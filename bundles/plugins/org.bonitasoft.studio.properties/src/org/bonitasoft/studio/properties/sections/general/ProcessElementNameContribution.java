@@ -22,6 +22,7 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.bonitasoft.studio.common.Identifier;
 import org.bonitasoft.studio.common.OpenNameAndVersionDialog;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
@@ -311,7 +312,7 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
     @Override
     protected void editProcessNameAndVersion() {
         if (element instanceof Pool) {
-            editSinglePoolNameAndVersion();
+            editSinglePoolNameAndVersion((Pool) element);
         } else {
             editDiagramAndPoolNameAndVersion();
         }
@@ -328,10 +329,9 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
             editingDomain.getCommandStack().execute(
                     SetCommand.create(editingDomain, newProcess, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR,
                             System.getProperty("user.name", "Unknown")));
-
             final String oldName = newProcess.getName();
             final String oldVersion = newProcess.getVersion();
-            if (oldName.equals(nameDialog.getDiagramName()) && oldVersion.equals(nameDialog.getDiagramVersion())) {
+            if (new Identifier(oldName, oldVersion).equals(nameDialog.getIdentifier())) {
                 renamePoolsOnly(nameDialog, editor, newProcess);
             } else {
                 renameDiagramAndPool(nameDialog, editor, newProcess);
@@ -341,9 +341,10 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
 
     protected void renameDiagramAndPool(final OpenNameAndVersionForDiagramDialog nameDialog, final DiagramEditor editor, final MainProcess newProcess) {
         final RenameDiagramOperation renameDiagramOperation = new RenameDiagramOperation();
+        final Identifier identifier = nameDialog.getIdentifier();
         renameDiagramOperation.setDiagramToDuplicate(newProcess);
-        renameDiagramOperation.setNewDiagramName(nameDialog.getDiagramName());
-        renameDiagramOperation.setNewDiagramVersion(nameDialog.getDiagramVersion());
+        renameDiagramOperation.setNewDiagramName(identifier.getName());
+        renameDiagramOperation.setNewDiagramVersion(identifier.getVersion());
         renameDiagramOperation.setPoolsRenamed(nameDialog.getPools());
         renameDiagramOperation.setEditor(editor);
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
@@ -356,23 +357,21 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
         }
     }
 
-    protected void editSinglePoolNameAndVersion() {
-        final MainProcess diagram = ModelHelper.getMainProcess(element);
+    protected void editSinglePoolNameAndVersion(final Pool pool) {
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        final OpenNameAndVersionDialog dialog1 = new OpenNameAndVersionDialog(Display.getDefault().getActiveShell(), diagram, element.getName(),
-                ((Pool) element).getVersion(), diagramStore);
+        final OpenNameAndVersionDialog dialog1 = new OpenNameAndVersionDialog(Display.getDefault().getActiveShell(), pool, diagramStore);
         if (dialog1.open() == Dialog.OK) {
             final String oldPoolName = element.getName();
-            final String newPoolName = dialog1.getDiagramName();
             final String oldVersion = ((Pool) element).getVersion();
-            final String newVersion = dialog1.getDiagramVersion();
-            processNamingTools.proceedForPools(element, newPoolName, oldPoolName, oldVersion, newVersion);
+            final Identifier identifier = dialog1.getIdentifier();
+            processNamingTools.proceedForPools(element, identifier.getName(), oldPoolName, oldVersion, identifier.getVersion());
         }
     }
 
     protected void renamePoolsOnly(final OpenNameAndVersionForDiagramDialog nameDialog, final DiagramEditor editor, final MainProcess newProcess) {
         editor.doSave(Repository.NULL_PROGRESS_MONITOR);
-        processNamingTools.changeProcessNameAndVersion(newProcess, nameDialog.getDiagramName(), nameDialog.getDiagramVersion());
+        final Identifier identifier = nameDialog.getIdentifier();
+        processNamingTools.changeProcessNameAndVersion(newProcess, identifier.getName(), identifier.getVersion());
         for (final ProcessesNameVersion pnv : nameDialog.getPools()) {
             processNamingTools.changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(), pnv.getNewVersion());
         }
