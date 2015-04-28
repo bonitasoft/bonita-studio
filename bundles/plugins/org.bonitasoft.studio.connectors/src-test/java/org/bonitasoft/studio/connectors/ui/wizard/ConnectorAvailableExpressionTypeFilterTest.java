@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -28,6 +26,7 @@ import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.parameter.ParameterFactory;
+import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -41,10 +40,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectorAvailableExpressionTypeFilterTest {
@@ -71,9 +68,12 @@ public class ConnectorAvailableExpressionTypeFilterTest {
     }
 
     @Test
-    public void should_select_returns_true_for_contract_input_expression_in_on_finish_connector_input() throws Exception {
+    public void should_select_returns_true_for_contract_input_expression_in_on_finish_connector_input()
+            throws Exception {
+        final Activity activity = ProcessFactory.eINSTANCE.createActivity();
         final Connector onFinishConnector = ProcessFactory.eINSTANCE.createConnector();
         onFinishConnector.setEvent(ConnectorEvent.ON_FINISH.name());
+        activity.getConnectors().add(onFinishConnector);
         when(expressionViewer.getInput()).thenReturn(onFinishConnector);
 
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
@@ -97,7 +97,8 @@ public class ConnectorAvailableExpressionTypeFilterTest {
     }
 
     @Test
-    public void should_select_returns_true_for_variable_expression_in_connector_input() throws Exception {
+    public void should_select_returns_true_for_variable_expression_in_connector_input()
+            throws Exception {
         final Data data = ProcessFactory.eINSTANCE.createData();
         data.setName("myData");
         data.setDataType(ModelHelper.createStringDataType());
