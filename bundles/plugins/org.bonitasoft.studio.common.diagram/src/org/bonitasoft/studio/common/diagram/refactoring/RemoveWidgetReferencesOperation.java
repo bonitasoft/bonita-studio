@@ -14,11 +14,12 @@
  */
 package org.bonitasoft.studio.common.diagram.refactoring;
 
-import java.util.List;
+import static com.google.common.collect.Iterables.filter;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.predicate.ExpressionPredicates;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Widget;
@@ -48,10 +49,10 @@ public class RemoveWidgetReferencesOperation extends AbstractRefactorOperation<W
     @Override
     protected CompoundCommand doBuildCompoundCommand(final CompoundCommand compoundCommand, final IProgressMonitor monitor) {
         monitor.beginTask(Messages.removingWidgetReferences, IProgressMonitor.UNKNOWN);
-        final List<Expression> expressions = ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION);
-        for (final Expression exp : expressions) {
+        for (final Expression exp : filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class),
+                ExpressionPredicates.withExpressionType(ExpressionConstants.FORM_FIELD_TYPE))) {
             for (final WidgetRefactorPair pairToRefactor : pairsToRefactor) {
-                if (ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType()) && exp.getName().equals(pairToRefactor.getNewValueName())) {
+                if (exp.getName().equals(pairToRefactor.getNewValueName())) {
                     // update name and content
                     compoundCommand.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
                     compoundCommand.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
