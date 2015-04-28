@@ -71,9 +71,9 @@ public class CreateFormFromContractOperation implements IRunnableWithProgress {
         }
     }
 
-    protected String doPost(final URL url, final com.bonitasoft.web.designer.model.contract.Contract contract) throws URISyntaxException,
+    protected String doPost(final URL url, final org.bonitasoft.web.designer.model.contract.Contract contract) throws URISyntaxException,
             MalformedURLException, IOException {
-        return new ClientResource(url.toURI()).post(new JacksonRepresentation<com.bonitasoft.web.designer.model.contract.Contract>(contract)).getText();
+        return new ClientResource(url.toURI()).post(new JacksonRepresentation<org.bonitasoft.web.designer.model.contract.Contract>(contract)).getText();
     }
 
     public String getNewPageId() {

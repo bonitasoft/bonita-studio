@@ -15,20 +15,20 @@
     <properties>
         <webapp.dir>${basedir}/webapp</webapp.dir>
         <lib.dir>${basedir}/lib</lib.dir>
-        <page.designer.version>1.0.0-beta</page.designer.version>
+        <ui.designer.version>1.0.0-M18</ui.designer.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>com.bonitasoft.web</groupId>
-            <artifactId>page-designer-backend</artifactId>
-            <version>${page.designer.version}</version>
+            <groupId>org.bonitasoft.web</groupId>
+            <artifactId>ui-designer-backend</artifactId>
+            <version>${ui.designer.version}</version>
             <type>war</type>
         </dependency>
          <dependency>
-            <groupId>com.bonitasoft.web</groupId>
-            <artifactId>page-designer-model</artifactId>
-            <version>${page.designer.version}</version>
+            <groupId>org.bonitasoft.web</groupId>
+            <artifactId>ui-designer-model</artifactId>
+            <version>${ui.designer.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -40,8 +40,8 @@
                 <configuration>
                     <overlays>
                         <overlay>
-                            <groupId>com.bonitasoft.web</groupId>
-                            <artifactId>page-designer-backend</artifactId>
+                            <groupId>org.bonitasoft.web</groupId>
+                            <artifactId>ui-designer-backend</artifactId>
                             <excludes>
                                 <exclude>WEB-INF/lib/slf4j-api-*.jar</exclude>
                             </excludes>
@@ -92,9 +92,9 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>com.bonitasoft.web</groupId>
-                                    <artifactId>page-designer-model</artifactId>
-                                    <version>${page.designer.version}</version>
+                                    <groupId>org.bonitasoft.web</groupId>
+                                    <artifactId>ui-designer-model</artifactId>
+                                    <version>${ui.designer.version}</version>
                                     <overWrite>true</overWrite>
                                 </artifactItem>
                             </artifactItems>
