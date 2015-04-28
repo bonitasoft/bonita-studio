@@ -20,6 +20,7 @@ import java.util.Set;
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.emf.ecore.EObject;
@@ -28,28 +29,27 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * @author Romain Bioteau
  */
-public class ConnectorAvailableExpressionTypeFilter extends AvailableExpressionTypeFilter {
+public class ConnectorAvailableExpressionTypeFilter extends
+        AvailableExpressionTypeFilter {
 
     public ConnectorAvailableExpressionTypeFilter(final String[] contentTypes) {
         super(contentTypes);
     }
 
     public ConnectorAvailableExpressionTypeFilter() {
-        super(new String[] {
-                ExpressionConstants.CONSTANT_TYPE,
+        super(new String[] { ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.SCRIPT_TYPE,
-                ExpressionConstants.PARAMETER_TYPE
-        });
+                ExpressionConstants.PARAMETER_TYPE });
     }
 
     @Override
     public boolean select(final Viewer viewer, final Object context, final Object element) {
         if (viewer != null) {
             final Connector connector = getParentConnector(viewer.getInput());
-            if (connector != null && (ConnectorEvent.ON_FINISH.name().equals(connector.getEvent())
-                    || isConnectorIsOnPool(connector) && ConnectorEvent.ON_ENTER.name().equals(connector.getEvent()))) {
-                final Set<String> contentTypes = new HashSet<String>(getContentTypes());
+            if (isSupportingContractInput(connector)) {
+                final Set<String> contentTypes = new HashSet<String>(
+                        getContentTypes());
                 contentTypes.add(ExpressionConstants.CONTRACT_INPUT_TYPE);
                 return isExpressionAllowed(element, contentTypes);
             }
@@ -57,8 +57,45 @@ public class ConnectorAvailableExpressionTypeFilter extends AvailableExpressionT
         return super.select(viewer, context, element);
     }
 
+    /**
+     * @param connector
+     * @return
+     */
+    private boolean isSupportingContractInput(final Connector connector) {
+        if (connector != null) {
+            return isSupportingContractInputOnActivity(connector)
+                    || isSupportingContractInputOnPool(connector);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param connector
+     * @return
+     */
+    private boolean isSupportingContractInputOnPool(final Connector connector) {
+        return isConnectorIsOnPool(connector)
+                && ConnectorEvent.ON_ENTER.name().equals(
+                        connector.getEvent());
+    }
+
+    /**
+     * @param connector
+     * @return
+     */
+    private boolean isSupportingContractInputOnActivity(final Connector connector) {
+        return isConnectorIsOnActivity(connector)
+                && ConnectorEvent.ON_FINISH.name().equals(
+                        connector.getEvent());
+    }
+
     protected boolean isConnectorIsOnPool(final Connector connector) {
         return connector.eContainer() instanceof Pool;
+    }
+
+    protected boolean isConnectorIsOnActivity(final Connector connector) {
+        return connector.eContainer() instanceof Activity;
     }
 
     private Connector getParentConnector(final Object context) {
