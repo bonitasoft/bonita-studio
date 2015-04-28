@@ -30,73 +30,83 @@ import org.eclipse.jface.viewers.Viewer;
  * @author Romain Bioteau
  */
 public class ConnectorAvailableExpressionTypeFilter extends
-		AvailableExpressionTypeFilter {
+        AvailableExpressionTypeFilter {
 
-	public ConnectorAvailableExpressionTypeFilter(final String[] contentTypes) {
-		super(contentTypes);
-	}
+    public ConnectorAvailableExpressionTypeFilter(final String[] contentTypes) {
+        super(contentTypes);
+    }
 
-	public ConnectorAvailableExpressionTypeFilter() {
-		super(new String[] { ExpressionConstants.CONSTANT_TYPE,
-				ExpressionConstants.VARIABLE_TYPE,
-				ExpressionConstants.SCRIPT_TYPE,
-				ExpressionConstants.PARAMETER_TYPE });
-	}
+    public ConnectorAvailableExpressionTypeFilter() {
+        super(new String[] { ExpressionConstants.CONSTANT_TYPE,
+                ExpressionConstants.VARIABLE_TYPE,
+                ExpressionConstants.SCRIPT_TYPE,
+                ExpressionConstants.PARAMETER_TYPE });
+    }
 
-	@Override
-	public boolean select(final Viewer viewer, final Object context,
-			final Object element) {
-		if (viewer != null) {
-			final Connector connector = getParentConnector(viewer.getInput());
-			if (isSupportingContractInput(connector)) {
-				final Set<String> contentTypes = new HashSet<String>(
-						getContentTypes());
-				contentTypes.add(ExpressionConstants.CONTRACT_INPUT_TYPE);
-				return isExpressionAllowed(element, contentTypes);
-			}
-		}
-		return super.select(viewer, context, element);
-	}
+    @Override
+    public boolean select(final Viewer viewer, final Object context, final Object element) {
+        if (viewer != null) {
+            final Connector connector = getParentConnector(viewer.getInput());
+            if (isSupportingContractInput(connector)) {
+                final Set<String> contentTypes = new HashSet<String>(
+                        getContentTypes());
+                contentTypes.add(ExpressionConstants.CONTRACT_INPUT_TYPE);
+                return isExpressionAllowed(element, contentTypes);
+            }
+        }
+        return super.select(viewer, context, element);
+    }
 
-	/**
-	 * @param connector
-	 * @return
-	 */
-	private boolean isSupportingContractInput(final Connector connector) {
-		return connector != null
-				&& isConnectorIsOnActivity(connector)
-				&& ConnectorEvent.ON_FINISH.name().equals(
-						connector.getEvent())
-				|| isConnectorIsOnPool(connector)
-				&& ConnectorEvent.ON_ENTER.name().equals(
-						connector.getEvent());
-	}
+    /**
+     * @param connector
+     * @return
+     */
+    private boolean isSupportingContractInput(final Connector connector) {
+        if (connector != null) {
+            return isSupportingContractInputOnActivity(connector)
+                    || isSupportingContractInputOnPool(connector);
+        } else {
+            return false;
+        }
+    }
 
-	protected boolean isConnectorIsOnPool(final Connector connector) {
-		if (connector != null) {
-			return connector.eContainer() instanceof Pool;
-		} else {
-			return false;
-		}
-	}
+    /**
+     * @param connector
+     * @return
+     */
+    private boolean isSupportingContractInputOnPool(final Connector connector) {
+        return isConnectorIsOnPool(connector)
+                && ConnectorEvent.ON_ENTER.name().equals(
+                        connector.getEvent());
+    }
 
-	protected boolean isConnectorIsOnActivity(final Connector connector) {
-		if (connector != null) {
-			return connector.eContainer() instanceof Activity;
-		} else {
-			return false;
-		}
-	}
+    /**
+     * @param connector
+     * @return
+     */
+    private boolean isSupportingContractInputOnActivity(final Connector connector) {
+        return isConnectorIsOnActivity(connector)
+                && ConnectorEvent.ON_FINISH.name().equals(
+                        connector.getEvent());
+    }
 
-	private Connector getParentConnector(final Object context) {
-		if (context instanceof EObject) {
-			EObject current = (EObject) context;
-			while (current != null && !(current instanceof Connector)) {
-				current = current.eContainer();
-			}
-			return (Connector) current;
-		}
-		return null;
-	}
+    protected boolean isConnectorIsOnPool(final Connector connector) {
+        return connector.eContainer() instanceof Pool;
+    }
+
+    protected boolean isConnectorIsOnActivity(final Connector connector) {
+        return connector.eContainer() instanceof Activity;
+    }
+
+    private Connector getParentConnector(final Object context) {
+        if (context instanceof EObject) {
+            EObject current = (EObject) context;
+            while (current != null && !(current instanceof Connector)) {
+                current = current.eContainer();
+            }
+            return (Connector) current;
+        }
+        return null;
+    }
 
 }
