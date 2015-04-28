@@ -48,13 +48,7 @@ public class ConnectorAvailableExpressionTypeFilter extends
 			final Object element) {
 		if (viewer != null) {
 			final Connector connector = getParentConnector(viewer.getInput());
-			if (connector != null
-					&& isConnectorIsOnActivity(connector)
-					&& ConnectorEvent.ON_FINISH.name().equals(
-							connector.getEvent())
-					|| isConnectorIsOnPool(connector)
-					&& ConnectorEvent.ON_ENTER.name().equals(
-							connector.getEvent())) {
+			if (isSupportingContractInput(connector)) {
 				final Set<String> contentTypes = new HashSet<String>(
 						getContentTypes());
 				contentTypes.add(ExpressionConstants.CONTRACT_INPUT_TYPE);
@@ -62,6 +56,20 @@ public class ConnectorAvailableExpressionTypeFilter extends
 			}
 		}
 		return super.select(viewer, context, element);
+	}
+
+	/**
+	 * @param connector
+	 * @return
+	 */
+	private boolean isSupportingContractInput(final Connector connector) {
+		return connector != null
+				&& isConnectorIsOnActivity(connector)
+				&& ConnectorEvent.ON_FINISH.name().equals(
+						connector.getEvent())
+				|| isConnectorIsOnPool(connector)
+				&& ConnectorEvent.ON_ENTER.name().equals(
+						connector.getEvent());
 	}
 
 	protected boolean isConnectorIsOnPool(final Connector connector) {
