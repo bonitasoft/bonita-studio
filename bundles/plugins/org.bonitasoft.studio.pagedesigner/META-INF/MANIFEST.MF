@@ -4,7 +4,7 @@ Bundle-Name: Page Designer Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.pagedesigner;singleton:=true
 Bundle-Version: 7.0.0.qualifier
 Bundle-ClassPath: .,
- lib/page-designer-model.jar
+ lib/ui-designer-model.jar
 Bundle-Activator: org.bonitasoft.studio.pagedesigner.PageDesignerPlugin
 Bundle-Vendor: Bonitasoft S.A.
 Bundle-Localization: plugin

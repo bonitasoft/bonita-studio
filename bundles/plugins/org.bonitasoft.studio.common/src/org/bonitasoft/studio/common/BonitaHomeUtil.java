@@ -60,12 +60,6 @@ public class BonitaHomeUtil {
 				+ "jaas-standard.cfg";
 	}
 
-	public static String getServerConfFolder() {
-		return getBonitaHome().getAbsolutePath() + File.separator + "server"
-				+ File.separator + BonitaConstants.DEFAULT_DOMAIN
-				+ File.separator + "conf";
-	}
-
 	public static File getPortalI18NFolder() {
 	    final File bonitaFolder =  new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "tomcat"+File.separator+"bonita");
         return new File(bonitaFolder, "client"
@@ -92,7 +86,7 @@ public class BonitaHomeUtil {
 
 	public static File getReferenceBonitaHome() throws IOException {
 		return new File(FileLocator.toFileURL(
-				ProjectUtil.getConsoleLibsBundle().getEntry("bonita"))
+				ProjectUtil.getConsoleLibsBundle().getEntry("bonita-home"))
 				.getFile());
 	}
 
@@ -126,11 +120,13 @@ public class BonitaHomeUtil {
 
 	public static void configureBonitaClient(final String apiType,final String host,final int serverPort) {
 		BonitaStudioLog.debug("Configuring bonita client on host "+host+":"+serverPort+" with API_TYPE="+apiType, Activator.PLUGIN_ID);
-		final File clientFolder = new File(BonitaHomeUtil.getBonitaHome(),"client"+File.separatorChar+"conf");
-		final File bonitaClientFile = new File(clientFolder,"bonita-client.properties");
-		if(!bonitaClientFile.exists()){
+		final File clientWorkFolder = new File(BonitaHomeUtil.getBonitaHome(),"engine-client"+File.separatorChar+"work");
+		final File clientConfFolder = new File(BonitaHomeUtil.getBonitaHome(),"engine-client"+File.separatorChar+"conf");
+		final File defaultBonitaClientFile = new File(clientWorkFolder,"bonita-client-community.properties");
+		final File customBonitaClientFile = new File(clientConfFolder,"bonita-client-custom.properties");
+		if(!defaultBonitaClientFile.exists()){
             initBonitaHome();
-            if (!bonitaClientFile.exists()) {
+            if (!defaultBonitaClientFile.exists()) {
                 throw new RuntimeException("bonita-client.properties not found in the bonita home");
             }
 		}
@@ -138,14 +134,14 @@ public class BonitaHomeUtil {
 		FileInputStream inStream = null;
 		FileOutputStream out = null;
 		try{
-			inStream = new FileInputStream(bonitaClientFile);
+			inStream = new FileInputStream(defaultBonitaClientFile);
 			p.load(inStream);
 			p.setProperty(API_TYPE, apiType);
 			if(HTTP.equals(apiType)){
 				p.setProperty(SERVER_URL, "http://"+host+":"+serverPort);
 				p.setProperty(APPLICATION_NAME, BONITA_APPLICATION);
 			}
-			out = new FileOutputStream(bonitaClientFile);
+			out = new FileOutputStream(customBonitaClientFile);
 			p.store(out, null);
 			APITypeManager.refresh();
 		}catch (final Exception e) {
@@ -178,7 +174,7 @@ public class BonitaHomeUtil {
 	}
 
 	public static File getDefaultTenantSecurityConfigStudioFile() {
-		final URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita");
+		final URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita-home");
 		File bonitaFolder = null;
 		try {
 			bonitaFolder = new File(FileLocator.toFileURL(url).getFile());
@@ -191,7 +187,7 @@ public class BonitaHomeUtil {
 	}
 
 	public static File getDefaultPlatformTenantConfigFile() {
-		final URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita");
+		final URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita-home");
 		File bonitaFolder = null;
 		try {
 			bonitaFolder = new File(FileLocator.toFileURL(url).getFile());
