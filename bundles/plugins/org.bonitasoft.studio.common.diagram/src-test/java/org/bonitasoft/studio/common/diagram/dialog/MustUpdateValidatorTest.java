@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.common.diagram.dialog;
 
+import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 
-import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
@@ -31,33 +31,30 @@ public class MustUpdateValidatorTest {
     @Test
     public void should_not_fail_if_version_is_changed() throws Exception {
         final MustUpdateValidator mustUpdateValidator = new MustUpdateValidator(aPool().withName("Pool").withVersion("1.0").build(), new WritableValue("Pool",
-                String.class), new WritableValue("1.1",
-                String.class));
+                String.class), new WritableValue("1.1", String.class));
 
         final IStatus status = mustUpdateValidator.validate();
 
-        StatusAssert.assertThat(status).isOK();
+        assertThat(status).isOK();
     }
 
     @Test
     public void should_not_fail_if_name__is_changed() throws Exception {
         final MustUpdateValidator mustUpdateValidator = new MustUpdateValidator(aPool().withName("Pool").withVersion("1.0").build(), new WritableValue("Pool2",
-                String.class), new WritableValue("1.0",
-                String.class));
+                String.class), new WritableValue("1.0", String.class));
 
         final IStatus status = mustUpdateValidator.validate();
 
-        StatusAssert.assertThat(status).isOK();
+        assertThat(status).isOK();
     }
 
     @Test
     public void should_fail_if_neither_name_nor_version_is_changed() throws Exception {
         final MustUpdateValidator mustUpdateValidator = new MustUpdateValidator(aPool().withName("Pool").withVersion("1.0").build(), new WritableValue("Pool",
-                String.class), new WritableValue("1.0",
-                String.class));
+                String.class), new WritableValue("1.0", String.class));
 
         final IStatus status = mustUpdateValidator.validate();
 
-        StatusAssert.assertThat(status).isNotOK();
+        assertThat(status).isNotOK();
     }
 }
