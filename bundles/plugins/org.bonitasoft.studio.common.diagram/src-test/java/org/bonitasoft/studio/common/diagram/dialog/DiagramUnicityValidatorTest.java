@@ -60,7 +60,7 @@ public class DiagramUnicityValidatorTest {
     }
 
     @Test
-    public void should_fail_if_diagram_name_and_versio_nexists() throws Exception {
+    public void should_fail_if_diagram_name_and_version_exists() throws Exception {
         final DiagramUnicityValidator validator = new DiagramUnicityValidator(aMainProcess().withName("MyDiagram").withVersion("1.0").build(),
                 new WritableValue("MyNewDiagram", String.class),
                 new WritableValue("1.0", String.class),
