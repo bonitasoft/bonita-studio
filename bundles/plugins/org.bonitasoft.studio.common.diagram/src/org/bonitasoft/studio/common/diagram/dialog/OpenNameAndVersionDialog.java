@@ -66,8 +66,7 @@ import com.google.common.base.Function;
  */
 public class OpenNameAndVersionDialog extends Dialog {
 
-    private static final int NAME_MAX_LENGTH = 50;
-    private static final int VERSION_MAX_LENGTH = 50;
+    private static final int MAX_LENGTH = 50;
     private boolean forceNameUpdate = false;
     private final Set<String> existingFileNames;
     private final Set<Identifier> processIdentifiers;
@@ -208,43 +207,27 @@ public class OpenNameAndVersionDialog extends Dialog {
     }
 
     private UpdateValueStrategy nameUpdateStrategy() {
-        return abstractProcess instanceof MainProcess ? diagramNameUpdateStrategy() : poolNameUpdateStrategy();
+        return abstractProcess instanceof MainProcess ? diagramUpdateStrategy(Messages.name) : poolUpdateStrategy(Messages.name);
     }
 
     private UpdateValueStrategy versionUpdateStrategy() {
-        return abstractProcess instanceof MainProcess ? diagramVersionUpdateStrategy() : poolVersionUpdateStrategy();
+        return abstractProcess instanceof MainProcess ? diagramUpdateStrategy(Messages.version) : poolUpdateStrategy(Messages.version);
     }
 
-    protected UpdateValueStrategy diagramVersionUpdateStrategy() {
-        return updateValueStrategy().withValidator(multiValidator()
-                .addValidator(mandatoryValidator(Messages.version))
-                .addValidator(maxLengthValidator(Messages.version, VERSION_MAX_LENGTH))
-                .addValidator(fileNameValidator(Messages.version))
-                .addValidator(utf8InputValidator(Messages.version))).create();
-    }
-
-    protected UpdateValueStrategy diagramNameUpdateStrategy() {
+    protected UpdateValueStrategy diagramUpdateStrategy(final String fieldName) {
         return updateValueStrategy().withValidator(multiValidator()
                 .addValidator(mandatoryValidator(Messages.name))
-                .addValidator(maxLengthValidator(Messages.name, NAME_MAX_LENGTH))
+                .addValidator(maxLengthValidator(Messages.name, MAX_LENGTH))
                 .addValidator(fileNameValidator(Messages.name))
                 .addValidator(utf8InputValidator(Messages.name))).create();
     }
 
-    protected UpdateValueStrategy poolNameUpdateStrategy() {
+    protected UpdateValueStrategy poolUpdateStrategy(final String fieldName) {
         return updateValueStrategy().withValidator(multiValidator()
                 .addValidator(mandatoryValidator(Messages.name))
-                .addValidator(maxLengthValidator(Messages.name, NAME_MAX_LENGTH))
+                .addValidator(maxLengthValidator(Messages.name, MAX_LENGTH))
                 .addValidator(forbiddenCharactersValidator(Messages.name, '#', '%', '$'))
                 .addValidator(utf8InputValidator(Messages.name))).create();
-    }
-
-    protected UpdateValueStrategy poolVersionUpdateStrategy() {
-        return updateValueStrategy().withValidator(multiValidator()
-                .addValidator(mandatoryValidator(Messages.version))
-                .addValidator(maxLengthValidator(Messages.version, VERSION_MAX_LENGTH))
-                .addValidator(forbiddenCharactersValidator(Messages.version, '#', '%', '$'))
-                .addValidator(utf8InputValidator(Messages.version))).create();
     }
 
     public Identifier getIdentifier() {

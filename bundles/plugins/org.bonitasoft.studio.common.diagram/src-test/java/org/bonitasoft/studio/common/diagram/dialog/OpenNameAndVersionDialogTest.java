@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.common.diagram.dialog;
 
+import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.bonitasoft.studio.model.process.builders.MainProcessBuilder.aMainProcess;
 
-import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -39,9 +39,9 @@ public class OpenNameAndVersionDialogTest {
         final OpenNameAndVersionDialog dialog = new OpenNameAndVersionDialog(realmWithDisplay.getShell(), aMainProcess().withName("MyDiagram")
                 .withVersion("1.0").build(), diagramStore);
 
-        final UpdateValueStrategy nameStrategy = dialog.diagramNameUpdateStrategy();
+        final UpdateValueStrategy nameStrategy = dialog.diagramUpdateStrategy("");
 
-        StatusAssert.assertThat(nameStrategy.validateAfterGet("My\\Diagram")).isNotOK();
+        assertThat(nameStrategy.validateAfterGet("My\\Diagram")).isNotOK();
     }
 
     @Test
@@ -49,9 +49,9 @@ public class OpenNameAndVersionDialogTest {
         final OpenNameAndVersionDialog dialog = new OpenNameAndVersionDialog(realmWithDisplay.getShell(), aMainProcess().withName("MyDiagram")
                 .withVersion("1.0").build(), diagramStore);
 
-        final UpdateValueStrategy nameStrategy = dialog.diagramNameUpdateStrategy();
+        final UpdateValueStrategy nameStrategy = dialog.diagramUpdateStrategy("");
 
-        StatusAssert.assertThat(nameStrategy.validateAfterGet("")).isNotOK();
+        assertThat(nameStrategy.validateAfterGet("")).isNotOK();
     }
 
     @Test
@@ -59,38 +59,9 @@ public class OpenNameAndVersionDialogTest {
         final OpenNameAndVersionDialog dialog = new OpenNameAndVersionDialog(realmWithDisplay.getShell(), aMainProcess().withName("MyDiagram")
                 .withVersion("1.0").build(), diagramStore);
 
-        final UpdateValueStrategy nameStrategy = dialog.diagramNameUpdateStrategy();
+        final UpdateValueStrategy nameStrategy = dialog.diagramUpdateStrategy("");
 
-        StatusAssert.assertThat(nameStrategy.validateAfterGet("toooooooooooooooooooooooooooooooooooooooooooooooLong")).isNotOK();
+        assertThat(nameStrategy.validateAfterGet("toooooooooooooooooooooooooooooooooooooooooooooooLong")).isNotOK();
     }
 
-    @Test
-    public void should_diagram_version_strategy_validate_fileName() throws Exception {
-        final OpenNameAndVersionDialog dialog = new OpenNameAndVersionDialog(realmWithDisplay.getShell(), aMainProcess().withName("MyDiagram")
-                .withVersion("1.0").build(), diagramStore);
-
-        final UpdateValueStrategy versionStrategy = dialog.diagramVersionUpdateStrategy();
-
-        StatusAssert.assertThat(versionStrategy.validateAfterGet("My\\Diagram")).isNotOK();
-    }
-
-    @Test
-    public void should_diagram_version_strategy_validate_empty_version() throws Exception {
-        final OpenNameAndVersionDialog dialog = new OpenNameAndVersionDialog(realmWithDisplay.getShell(), aMainProcess().withName("MyDiagram")
-                .withVersion("1.0").build(), diagramStore);
-
-        final UpdateValueStrategy versionStrategy = dialog.diagramVersionUpdateStrategy();
-
-        StatusAssert.assertThat(versionStrategy.validateAfterGet("")).isNotOK();
-    }
-
-    @Test
-    public void should_diagram_version_strategy_validate_max_length_version() throws Exception {
-        final OpenNameAndVersionDialog dialog = new OpenNameAndVersionDialog(realmWithDisplay.getShell(), aMainProcess().withName("MyDiagram")
-                .withVersion("1.0").build(), diagramStore);
-
-        final UpdateValueStrategy versionStrategy = dialog.diagramVersionUpdateStrategy();
-
-        StatusAssert.assertThat(versionStrategy.validateAfterGet("toooooooooooooooooooooooooooooooooooooooooooooooLong")).isNotOK();
-    }
 }
