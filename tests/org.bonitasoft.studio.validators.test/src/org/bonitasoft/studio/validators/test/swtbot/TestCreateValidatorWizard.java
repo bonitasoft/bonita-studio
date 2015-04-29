@@ -1,39 +1,37 @@
-package org.bonitasoft.studio.validators.test.swtbot;
 /**
-
- * Copyright (C) 2010 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
+ * Copyright (C) 2010-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.bonitasoft.studio.validators.test.swtbot;
 
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.swtbot.framework.rule.LegacySWTGefBotRule;
 import org.bonitasoft.studio.validators.i18n.Messages;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
 import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotre;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.finder.SWTBotEclipseTestCase;
 import org.eclipse.swtbot.eclipse.finder.matchers.WidgetMatcherFactory;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.ui.IEditorReference;
 import org.hamcrest.Matcher;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -42,8 +40,10 @@ import org.junit.runner.RunWith;
  * @author Romain Bioteau
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestCreateValidatorWizard extends SWTBotEclipseTestCase{
+public class TestCreateValidatorWizard extends SWTBotGefTestCase {
 
+    @Rule
+    public LegacySWTGefBotRule botRule = new LegacySWTGefBotRule(bot);
 
     /**
      * @throws JavaModelException
@@ -54,12 +54,12 @@ public class TestCreateValidatorWizard extends SWTBotEclipseTestCase{
     public void testCreateValidatorOnField() throws JavaModelException, OperationCanceledException, InterruptedException{
         openNewValidatorWizardDialog();
 
-        SWTBotShell newShell = bot.activeShell();
-        SWTBot dialogBot = newShell.bot();
+        final SWTBotShell newShell = bot.activeShell();
+        final SWTBot dialogBot = newShell.bot();
 
-        String displayName = "cool displayNameTest";
-        String className = "MyValidatorTestClassName1";
-        String packageName = "org.boni.testme";
+        final String displayName = "cool displayNameTest";
+        final String className = "MyValidatorTestClassName1";
+        final String packageName = "org.boni.testme";
         dialogBot.textWithLabel("Display name *").setText(displayName);
         assertFalse(dialogBot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         dialogBot.textWithLabel("Class *").setText(className);
@@ -67,11 +67,11 @@ public class TestCreateValidatorWizard extends SWTBotEclipseTestCase{
         dialogBot.textWithLabel(Messages.createValidatorWizardPage_packageLabel+" *").setText(packageName);
 
         dialogBot.comboBox().setSelection("Field");
-        
+
         dialogBot.button(IDialogConstants.FINISH_LABEL).click();
 
        // bot.waitUntil(Conditions.shellCloses(newShell), 10000);
-        Matcher<IEditorReference> matcher = WidgetMatcherFactory.withPartName(className+".java");
+        final Matcher<IEditorReference> matcher = WidgetMatcherFactory.withPartName(className+".java");
         bot.waitUntil(Conditions.waitForEditor(matcher));
 
         check(packageName, className, displayName, "IFormFieldValidator");
@@ -86,11 +86,11 @@ public class TestCreateValidatorWizard extends SWTBotEclipseTestCase{
     public void testCreateValidatorOnForm() throws JavaModelException, OperationCanceledException, InterruptedException{
         openNewValidatorWizardDialog();
 
-        SWTBotShell newShell = bot.activeShell();
-        SWTBot dialogBot = newShell.bot();
-        String className = "MyValidatorTestClassName2";
-        String packageName = "org.boni.testme";
-        String displayName = "cool displayNameTest2";
+        final SWTBotShell newShell = bot.activeShell();
+        final SWTBot dialogBot = newShell.bot();
+        final String className = "MyValidatorTestClassName2";
+        final String packageName = "org.boni.testme";
+        final String displayName = "cool displayNameTest2";
         dialogBot.textWithLabel("Display name *").setText(displayName);
         assertFalse(dialogBot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         dialogBot.textWithLabel("Class *").setText(className);
@@ -100,7 +100,7 @@ public class TestCreateValidatorWizard extends SWTBotEclipseTestCase{
         dialogBot.comboBox().setSelection("Page");
         dialogBot.button(IDialogConstants.FINISH_LABEL).click();
 
-        Matcher<IEditorReference> matcher = WidgetMatcherFactory.withPartName(className+".java");
+        final Matcher<IEditorReference> matcher = WidgetMatcherFactory.withPartName(className+".java");
         bot.waitUntil(Conditions.waitForEditor(matcher));
        // bot.waitUntil(Conditions.shellCloses(newShell), 10000);
 
@@ -110,13 +110,13 @@ public class TestCreateValidatorWizard extends SWTBotEclipseTestCase{
 
 
 
-    protected void check(String packageName, String className, String displayName, String interfaceName)  throws JavaModelException, OperationCanceledException, InterruptedException {
+    protected void check(final String packageName, final String className, final String displayName, final String interfaceName)  throws JavaModelException, OperationCanceledException, InterruptedException {
 
-        ValidatorDescriptorRepositoryStore store =  (ValidatorDescriptorRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
+        final ValidatorDescriptorRepositoryStore store =  RepositoryManager.getInstance().getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
         assertNotNull("The validator descriptor is not created",store.getValidatorDescriptor(packageName+"."+className));
         assertEquals("The displayName is not the good one", displayName, store.getValidatorDescriptor(packageName+"."+className).getName());
 
-        ValidatorSourceRepositorySotre sourceStore = (ValidatorSourceRepositorySotre) RepositoryManager.getInstance().getRepositoryStore(ValidatorSourceRepositorySotre.class);
+        final ValidatorSourceRepositorySotre sourceStore = RepositoryManager.getInstance().getRepositoryStore(ValidatorSourceRepositorySotre.class);
 
         assertNotNull("The validator class is not created", sourceStore.getChild(packageName+"."+className));
     }
