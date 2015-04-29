@@ -30,15 +30,6 @@ public class LegacySWTGefBotRule extends SWTGefBotRule {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule#beforeStatement()
-     */
-    @Override
-    protected void beforeStatement() {
-        super.beforeStatement();
-    }
-
-    /*
-     * (non-Javadoc)
      * @see org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule#initPreferences()
      */
     @Override
