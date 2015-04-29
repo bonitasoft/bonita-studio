@@ -9730,5 +9730,16 @@
     </changes>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.contract.CreatePoolContractCustomMigration"/>
   </releases>
+  <releases date="2015-04-29T09:36:01.782+0200" label="7.0.0-003">
+    <changes xsi:type="history:Create" target="process.ecore#//ContractInputType"
+        referenceName="eLiterals" element="process.ecore#//ContractInputType/FILE">
+      <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/FILE"
+          featureName="literal" dataValue="FILE"/>
+      <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/FILE"
+          featureName="name" dataValue="FILE"/>
+      <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/FILE"
+          featureName="value" dataValue="6" oldDataValue="0"/>
+    </changes>
+  </releases>
   <releases/>
 </history:History>
