@@ -122,6 +122,11 @@ public class RefactorContractInputOperationTest {
         assertThat(allScriptWithReferencedElement.iterator().next().getModelElement().eContainer()).isNotNull();
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void should_have_a_container() throws Exception {
+        new RefactorContractInputOperation(null, scriptRefactorOperationFactory, RefactoringOperationType.UPDATE);
+    }
+
     private TransactionalEditingDomainImpl transactionalEditingDomain() {
         return new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory());
     }
