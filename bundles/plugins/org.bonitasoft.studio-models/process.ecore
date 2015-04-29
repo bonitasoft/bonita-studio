@@ -191,6 +191,7 @@
     <eLiterals name="BOOLEAN" value="3"/>
     <eLiterals name="DATE" value="4" literal="DATE"/>
     <eLiterals name="COMPLEX" value="5"/>
+    <eLiterals name="FILE" value="6" literal="FILE"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Connection" eSuperTypes="#//Element simulation.ecore#//SimulationTransition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//TargetElement"
