@@ -55,15 +55,24 @@ public class SWTGefBotRule implements TestRule {
 
             @Override
             public void evaluate() throws Throwable {
-                initPreferences();
+                beforeStatement();
                 try {
                     base.evaluate();
                 } finally {
-                    closeAllAndReturnToWelcomePage();
+                    afterStatement();
                 }
 
             }
+
         };
+    }
+
+    protected void afterStatement() {
+        closeAllAndReturnToWelcomePage();
+    }
+
+    protected void beforeStatement() {
+        initPreferences();
     }
 
     protected void closeAllAndReturnToWelcomePage() {
