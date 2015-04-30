@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aParameter;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.studio.model.process.builders.SearchIndexBuilder.aSearchIndex;
 
 import org.bonitasoft.studio.model.parameter.ParameterFactory;
 import org.bonitasoft.studio.model.parameter.ParameterPackage;
@@ -57,6 +58,15 @@ public class DependencyFeatureNameResolverTest {
         final EStructuralFeature nameFeature = dependencyNameResolver.resolveNameDependencyFeatureFor(aParameter().build());
 
         assertThat(nameFeature).isEqualTo(ParameterPackage.Literals.PARAMETER__NAME);
+    }
+
+    @Test
+    public void should_return_ELEMENT__NAME_feature_for_SearchIndex() throws Exception {
+        final DependencyFeatureNameResolver dependencyNameResolver = new DependencyFeatureNameResolver();
+
+        final EStructuralFeature nameFeature = dependencyNameResolver.resolveNameDependencyFeatureFor(aSearchIndex().build());
+
+        assertThat(nameFeature).isEqualTo(ProcessPackage.Literals.ELEMENT__NAME);
     }
 
     @Test

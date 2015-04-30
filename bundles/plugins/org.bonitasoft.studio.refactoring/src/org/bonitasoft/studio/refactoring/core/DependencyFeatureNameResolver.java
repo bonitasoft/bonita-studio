@@ -36,6 +36,9 @@ public class DependencyFeatureNameResolver {
         if (ParameterPackage.Literals.PARAMETER.equals(eClass)) {
             return ParameterPackage.Literals.PARAMETER__NAME;
         }
+        if (ProcessPackage.Literals.SEARCH_INDEX.equals(eClass)) {
+            return ProcessPackage.Literals.ELEMENT__NAME;
+        }
         throw new IllegalStateException("Unresolvable dependency name feature for: " + referencedElement);
     }
 
