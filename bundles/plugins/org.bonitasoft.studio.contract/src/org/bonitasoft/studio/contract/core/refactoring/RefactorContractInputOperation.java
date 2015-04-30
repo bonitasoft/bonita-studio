@@ -117,8 +117,7 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
     }
 
     private Expression createDefaultExpression(final Expression exp) {
-        return ExpressionHelper
-                .createConstantExpression("", exp.isReturnTypeFixed() ? exp.getReturnType() : String.class.getName());
+        return ExpressionHelper.createConstantExpression("", exp.isReturnTypeFixed() ? exp.getReturnType() : String.class.getName());
     }
 
     private Predicate<ContractInputRefactorPair> matchingOldName(final String expressionName) {
