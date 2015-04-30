@@ -27,11 +27,14 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.DefinitionMapping;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
@@ -80,8 +83,13 @@ public class ConnectorResourceProvider implements IBOSArchiveFileStoreProvider {
                         }
                     }
                 }
+
                 final String implId = mapping.getImplementationId();
                 final String implVersion = mapping.getImplementationVersion();
+                if (implId == null ){
+                   MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.noImplementationFoundErrorTitle, Messages.bind(Messages.noImplementationFoundErrorMessage, def.getId()));
+                   return null;
+                }
                 final IRepositoryFileStore implementation = connectorImplStore.getImplementationFileStore(implId, implVersion);
                 if (implementation != null && implementation.canBeShared()) {
                     files.add(implementation);

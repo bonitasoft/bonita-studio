@@ -712,7 +712,7 @@
    <extension
          point="org.bonitasoft.studio.bosArchiveProvider">
       <bosArchiveProvider
-            providerClass="org.bonitasoft.studio.diagram.custom.repository.DiagramResourceProvider">
+            providerClass="org.bonitasoft.studio.diagram.custom.repository.DiagramFileStoreBOSArchiveProvider">
       </bosArchiveProvider>
    </extension>
 <extension

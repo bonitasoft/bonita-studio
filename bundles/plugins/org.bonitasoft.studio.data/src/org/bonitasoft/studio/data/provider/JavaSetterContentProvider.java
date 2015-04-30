@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.data.provider;
 
@@ -24,9 +21,9 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -37,13 +34,11 @@ import org.eclipse.jface.viewers.Viewer;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class JavaSetterContentProvider implements ITreeContentProvider {
 
     /*
      * (non-Javadoc)
-     *
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
     @Override
@@ -52,7 +47,6 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface
      * .viewers.Viewer, java.lang.Object, java.lang.Object)
@@ -63,30 +57,28 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * org.eclipse.jface.viewers.ITreeContentProvider#getElements(java.lang.
      * Object)
      */
     @Override
     public Object[] getElements(final Object inputElement) {
-        if(inputElement instanceof String){
-            IType type = null ;
+        if (inputElement instanceof String) {
+            IType type = null;
             try {
                 type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(inputElement.toString());
             } catch (final JavaModelException e1) {
-                BonitaStudioLog.error(e1) ;
+                BonitaStudioLog.error(e1);
             }
-            return new Object[]{type};
-        }else if(inputElement instanceof IType){
-            return getChildren(inputElement) ;
+            return new Object[] { type };
+        } else if (inputElement instanceof IType) {
+            return getChildren(inputElement);
         }
         return new Object[0];
     }
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
      * Object)
@@ -94,18 +86,19 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
     @Override
     public Object[] getChildren(final Object parentElement) {
         try {
+            final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
             if (parentElement instanceof IMethod) {
                 final String typeName = ((IMethod) parentElement).getReturnType();
-                IType type = null ;
+                IType type = null;
                 try {
-                    type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(Signature.toString(typeName));
+                    type = javaProject.findType(Signature.toString(typeName));
                 } catch (final JavaModelException e1) {
-                    BonitaStudioLog.error(e1) ;
+                    BonitaStudioLog.error(e1);
                 }
                 return getChildren(type);
             } else if (parentElement instanceof IType) {
                 final IType type = (IType) parentElement;
-                return computeChildren(type);
+                return computeChildren(type, javaProject);
             } else {
                 return new Object[0];
             }
@@ -119,20 +112,9 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
      * @param type
      * @return
      */
-    protected Object[] computeChildren(final IType type) throws Exception {
+    protected Object[] computeChildren(final IType type, final IJavaProject javaProject) throws Exception {
         final List<IMember> res = new ArrayList<IMember>();
-        try {
-            for (final IMethod method : type.getMethods()) {
-                if (Flags.isPublic(method.getFlags())
-                        && method.getParameterNames().length == 1
-                        && !method.isConstructor()
-                        && !res.contains(method)) {
-                    res.add(method);
-                }
-            }
-        } catch (final CoreException e) {
-            BonitaStudioLog.error(e);
-        }
+        allPublicMethodWithOneParameter(type, res, javaProject);
         Collections.sort(res, new Comparator<IMember>() {
 
             @Override
@@ -150,10 +132,26 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
         return res.toArray();
     }
 
+    private void allPublicMethodWithOneParameter(final IType type, final List<IMember> res, final IJavaProject javaProject) throws JavaModelException {
+        for (final IMethod method : type.getMethods()) {
+            if (Flags.isPublic(method.getFlags())
+                    && method.getParameterNames().length == 1
+                    && !method.isConstructor()
+                    && !res.contains(method)) {
+                res.add(method);
+            }
+        }
+        final String superClassName = type.getSuperclassName();
+        if (superClassName != null && !Object.class.getName().equals(superClassName)) {
+            final IType parentType = javaProject.findType(superClassName);
+            if (parentType instanceof IType) {
+                allPublicMethodWithOneParameter(parentType, res, javaProject);
+            }
+        }
+    }
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object
      * )
@@ -165,7 +163,6 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.
      * Object)

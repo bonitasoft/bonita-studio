@@ -25,6 +25,10 @@ public class UpdateStrategyFactory {
         return new UpdateValueStrategyFactory(UpdateValueStrategy.POLICY_UPDATE);
     }
 
+    public static UpdateSetStrategyFactory updateSetStrategy() {
+        return new UpdateSetStrategyFactory(UpdateValueStrategy.POLICY_UPDATE);
+    }
+
     public static UpdateValueStrategyFactory neverUpdateValueStrategy() {
         return new UpdateValueStrategyFactory(UpdateValueStrategy.POLICY_NEVER);
     }

@@ -28,10 +28,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.forms.IMessage;
 import org.eclipse.ui.forms.IMessageManager;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class ContractDefinitionValidator {
 
@@ -52,6 +50,7 @@ public class ContractDefinitionValidator {
         validationRules.add(new ContractConstraintDuplicationValidationRule());
         validationRules.add(new ContractConstraintInputsValidationRule());
         validationRules.add(new ContractConstraintExpressionValidationRule());
+        validationRules.add(new ContractInputTypeValidationRule());
     }
 
     public IStatus validate(final Contract contract) {
@@ -112,6 +111,5 @@ public class ContractDefinitionValidator {
             messageManager.removeMessage(messageKey);
         }
     }
-
 
 }

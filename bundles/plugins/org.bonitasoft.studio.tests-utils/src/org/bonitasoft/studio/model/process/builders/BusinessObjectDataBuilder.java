@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,12 +19,11 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class BusinessObjectDataBuilder extends JavaObjectDataBuilder<BusinessObjectData, BusinessObjectDataBuilder> {
 
     public static BusinessObjectDataBuilder aBusinessData() {
-        return new BusinessObjectDataBuilder();
+        return new BusinessObjectDataBuilder().havingDataType(BusinessObjectDataTypeBuilder.aBusinessObjectDataType());
     }
 
     public BusinessObjectDataBuilder withBusinessDataRepositoryId(final String businessDataRepositoryId) {
@@ -39,18 +36,10 @@ public class BusinessObjectDataBuilder extends JavaObjectDataBuilder<BusinessObj
         return getThis();
     }
 
-    public BusinessObjectDataBuilder createNewInstance() {
-        getBuiltInstance().setCreateNewInstance(true);
-        return getThis();
-    }
-
-    public BusinessObjectDataBuilder doNotCreateNewInstance() {
-        getBuiltInstance().setCreateNewInstance(false);
-        return getThis();
-    }
-
     @Override
     protected BusinessObjectData newInstance() {
-        return ProcessFactory.eINSTANCE.createBusinessObjectData();
+        final BusinessObjectData data = ProcessFactory.eINSTANCE.createBusinessObjectData();
+        data.setDataType(ProcessFactory.eINSTANCE.createBusinessObjectType());
+        return data;
     }
 }

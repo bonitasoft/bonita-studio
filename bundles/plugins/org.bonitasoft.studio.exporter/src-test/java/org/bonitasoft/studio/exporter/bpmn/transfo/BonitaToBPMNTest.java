@@ -64,18 +64,12 @@ import org.omg.spec.bpmn.model.TFormalExpression;
 import org.omg.spec.bpmn.model.TMultiInstanceLoopCharacteristics;
 import org.omg.spec.bpmn.model.TStandardLoopCharacteristics;
 import org.omg.spec.bpmn.model.TTask;
-
 import org.omg.spec.dd.dc.Font;
-
-
 
 @RunWith(MockitoJUnitRunner.class)
 public class BonitaToBPMNTest extends BonitaToBPMN {
 
-
-
 	private BonitaToBPMN bonitaToBPMN;
-
 
     @Before
     public void setUp() throws Exception {
@@ -181,6 +175,12 @@ public class BonitaToBPMNTest extends BonitaToBPMN {
     }
 
     @Test
+    public void should_set_sequenceFlow_label_DontCrashIfNoEditPart() {
+        final BPMNEdge edge = DiFactory.eINSTANCE.createBPMNEdge();
+        bonitaToBPMN.setSequenceFLowLabel(null, edge);
+    }
+
+    @Test
     public void should_set_event_label(){
     	final CustomEventLabelEditPart labelPart=mock(CustomEventLabelEditPart.class);
     	final Node node = mock(Node.class);
@@ -198,21 +198,21 @@ public class BonitaToBPMNTest extends BonitaToBPMN {
 
     @Test
     public void shouldCreateBPMNShape(){
-    final ShapeNodeEditPart shapePart = mock(ShapeNodeEditPart.class);
-    final CustomEventLabelEditPart labelPart=mock(CustomEventLabelEditPart.class);
-    final ArrayList<EditPart> children = new ArrayList<EditPart>();
-    children.add(labelPart);
-    when(shapePart.getChildren()).thenReturn(children);
-    final Font font = mock(Font.class);
-    final BPMNLabelStyle labelStyle = DiFactory.eINSTANCE.createBPMNLabelStyle();
-    labelStyle.setId("myLabelStyle");
-    doReturn(font).when(bonitaToBPMN).createFont(shapePart);
-    doReturn(labelStyle).when(bonitaToBPMN).getLabelStyle(font);
-    final Map<String,String> map = new HashMap<String,String>();
-    doReturn(map).when(bonitaToBPMN).getShapeColors(shapePart);
-    doNothing().when(bonitaToBPMN).setEventLabelBounds(any(CustomEventLabelEditPart.class), any(BPMNLabel.class));
-    final BPMNShape bpmnShape = bonitaToBPMN.createBPMNShape(shapePart);
-    assertNotNull(bpmnShape);
-    assertNotNull(bpmnShape.getBPMNLabel());
+        final ShapeNodeEditPart shapePart = mock(ShapeNodeEditPart.class);
+        final CustomEventLabelEditPart labelPart = mock(CustomEventLabelEditPart.class);
+        final ArrayList<EditPart> children = new ArrayList<EditPart>();
+        children.add(labelPart);
+        when(shapePart.getChildren()).thenReturn(children);
+        final Font font = mock(Font.class);
+        final BPMNLabelStyle labelStyle = DiFactory.eINSTANCE.createBPMNLabelStyle();
+        labelStyle.setId("myLabelStyle");
+        doReturn(font).when(bonitaToBPMN).createFont(shapePart);
+        doReturn(labelStyle).when(bonitaToBPMN).getLabelStyle(font);
+        final Map<String, String> map = new HashMap<String, String>();
+        doReturn(map).when(bonitaToBPMN).getShapeColors(shapePart);
+        doNothing().when(bonitaToBPMN).setEventLabelBounds(any(CustomEventLabelEditPart.class), any(BPMNLabel.class));
+        final BPMNShape bpmnShape = bonitaToBPMN.createBPMNShape(shapePart);
+        assertNotNull(bpmnShape);
+        assertNotNull(bpmnShape.getBPMNLabel());
     }
 }

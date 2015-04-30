@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -30,7 +28,6 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ComparisonExpressionConverter implements IExpressionConverter {
 
@@ -53,15 +50,17 @@ public class ComparisonExpressionConverter implements IExpressionConverter {
         Operation_Compare compare = null;
         try {
             compare = expressionLoader.loadConditionExpression(content, expression.eContainer());
-            if (compare != null && compare.getOp() != null) {
-                final EObject op = compare.getOp();
-                if (op instanceof Unary_Operation) {
-                    return createExpressionForUnaryOperation(expression, expressionBuilder, name, op);
-                } else if (op instanceof org.bonitasoft.studio.condition.conditionModel.Operation) {
-                    return createExpressionForBinaryOperation(expression, expressionBuilder, name, op);
-                }
+            if (compare == null || compare.getOp() == null) {
+                throw new ComparisonExpressionLoadException("Failed to load comparison expression: " + expression);
             }
-            return null;
+            final EObject op = compare.getOp();
+            if (op instanceof Unary_Operation) {
+                return createExpressionForUnaryOperation(expression, expressionBuilder, name, op);
+            } else if (op instanceof org.bonitasoft.studio.condition.conditionModel.Operation) {
+                return createExpressionForBinaryOperation(expression, expressionBuilder, name, op);
+            } else {
+                throw new IllegalStateException("Unsupported Condition operation type: " + op);
+            }
         } catch (final ComparisonExpressionLoadException e) {
             throw new InvalidExpressionException("Failed to load comparison expression");
         }

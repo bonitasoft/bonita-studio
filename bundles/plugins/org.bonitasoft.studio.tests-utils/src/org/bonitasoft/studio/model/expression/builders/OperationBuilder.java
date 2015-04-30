@@ -5,26 +5,25 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.model.expression.builders;
 
+import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.process.OperationContainer;
 
 /**
  * @author Romain Bioteau
- *
  */
-public class OperationBuilder {
+public class OperationBuilder implements Buildable<Operation> {
 
     private final Operation operation;
 
@@ -56,6 +55,12 @@ public class OperationBuilder {
         return this;
     }
 
+    public OperationBuilder in(final Buildable<OperationContainer> buildable) {
+        buildable.build().getOperations().add(operation);
+        return this;
+    }
+
+    @Override
     public Operation build() {
         return operation;
     }

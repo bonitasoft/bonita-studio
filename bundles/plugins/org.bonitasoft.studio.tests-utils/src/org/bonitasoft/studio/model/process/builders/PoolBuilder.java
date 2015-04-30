@@ -103,6 +103,11 @@ public class PoolBuilder extends ElementBuilder<Pool, PoolBuilder> {
         return getThis();
     }
 
+    public PoolBuilder havingContract(final ContractBuilder contract) {
+        getBuiltInstance().setContract(contract.build());
+        return this;
+    }
+
     @Override
     protected Pool newInstance() {
         return ProcessFactory.eINSTANCE.createPool();

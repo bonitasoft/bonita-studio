@@ -25,7 +25,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -337,11 +336,6 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
                 return null;
             }
         }
-        return null;
-    }
-
-    @Override
-    public Set<String> getCompatibleExtensions() {
         return null;
     }
 

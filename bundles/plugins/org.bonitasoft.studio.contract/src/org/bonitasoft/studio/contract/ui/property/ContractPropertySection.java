@@ -74,11 +74,15 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private ContractConstraintController constraintController;
 
-    @Inject
-    private ContractContainerAdaptableSelectionProvider selectionProvider;
+    private final ContractContainerAdaptableSelectionProvider selectionProvider;
+
+    private final IEclipseContext eclipseContext;
 
     @Inject
-    private IEclipseContext eclipseContext;
+    public ContractPropertySection(final IEclipseContext eclipseContext, final ContractContainerAdaptableSelectionProvider selectionProvider) {
+        this.eclipseContext = eclipseContext;
+        this.selectionProvider = selectionProvider;
+    }
 
     @Override
     public String getSectionDescription() {
@@ -182,6 +186,12 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
     }
 
     private void createInputTabContent(final Composite parent, final IObservableValue observeContractValue) {
+        //    	Composite labelComposite = getWidgetFactory().createComposite(parent);
+        //    	final CLabel warning = getWidgetFactory().createCLabel(labelComposite, "For 7.0 Beta only Text can be used at runtime."); //TODO move for ga
+        //    	warning.setImage(Display.getCurrent().getSystemImage(SWT.ICON_WARNING));
+        //    	labelComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        //    	labelComposite.setLayoutData(GridDataFactory.fillDefaults().span(2,1).create());
+
         final Composite buttonsComposite = createButtonContainer(parent);
         final Button addButton = createButton(buttonsComposite, Messages.add);
         final Button addChildButton = createButton(buttonsComposite, Messages.addChild);

@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,7 +25,6 @@ import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.TableExpression;
-import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -35,7 +32,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class GroovyConnectorConfigurationConverter {
 
@@ -43,10 +39,9 @@ public class GroovyConnectorConfigurationConverter {
     private static final String SCRIPT_INPUT = "script";
     private static final String FAKE_SCRIPT_EXPRESSION = "fakeScriptExpression";
 
-    public Connector convert(final Connector connector) {
-        checkConnectorConfiguration(connector);
-        final Connector newConnector = EcoreUtil.copy(connector);
-        final ConnectorConfiguration configuration = newConnector.getConfiguration();
+    public ConnectorConfiguration convert(final ConnectorConfiguration connectorConfiguration) {
+        checkConnectorConfiguration(connectorConfiguration);
+        final ConnectorConfiguration configuration = EcoreUtil.copy(connectorConfiguration);
         final org.bonitasoft.studio.model.expression.Expression fakeExpression = getFakeExpression(configuration);
         final org.bonitasoft.studio.model.expression.Expression scriptExpression = ExpressionHelper.createConstantExpression(
                 fakeExpression.getContent(), String.class.getName());
@@ -66,15 +61,14 @@ public class GroovyConnectorConfigurationConverter {
         if (paramToDelete != null) {
             configuration.getParameters().remove(paramToDelete);
         }
-        return newConnector;
+        return configuration;
     }
 
-    private void checkConnectorConfiguration(final Connector connector) {
-        Assert.isLegal(connector != null);
-        Assert.isLegal(connector.getDefinitionId().equals("scripting-groovy-script"));
-        Assert.isLegal(connector.getConfiguration() != null);
+    private void checkConnectorConfiguration(final ConnectorConfiguration connectorConfig) {
+        Assert.isLegal(connectorConfig != null);
+        Assert.isLegal(connectorConfig.getDefinitionId().equals("scripting-groovy-script"));
         final Set<String> keys = new HashSet<String>();
-        for (final ConnectorParameter connectorParameter : connector.getConfiguration().getParameters()) {
+        for (final ConnectorParameter connectorParameter : connectorConfig.getParameters()) {
             keys.add(connectorParameter.getKey());
         }
         Assert.isLegal(keys.containsAll(Arrays.asList(SCRIPT_INPUT, FAKE_SCRIPT_EXPRESSION, VARIABLES_INPUT)));
@@ -107,6 +101,10 @@ public class GroovyConnectorConfigurationConverter {
             }
         }
         return null;
+    }
+
+    public boolean appliesTo(final ConnectorConfiguration configuration) {
+        return "scripting-groovy-script".equals(configuration.getDefinitionId());
     }
 
 }

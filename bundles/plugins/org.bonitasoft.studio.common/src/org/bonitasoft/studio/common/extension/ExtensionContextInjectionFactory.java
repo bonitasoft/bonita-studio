@@ -40,7 +40,7 @@ public class ExtensionContextInjectionFactory {
         return Platform.getBundle(element.getDeclaringExtension().getNamespaceIdentifier());
     }
 
-    private IEclipseContext workbenchContext() {
+    public static IEclipseContext workbenchContext() {
         if (PlatformUI.isWorkbenchRunning()) {
             final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
             if (workbench != null) {

@@ -85,44 +85,15 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
         return new BotActorAssignementPropertySection(bot);
     }
 
-    /**
-     * Select the data tab.
-     *
-     * @return
-     */
-    public BotDataPropertySection selectDataTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Data");
-        return new BotDataPropertySection(bot);
-    }
-
-    /**
-     * Select the connectors tab.
-     *
-     * @return
-     */
-    public BotConnectorsPropertySection selectConnectorsTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Connectors");
-        return new BotConnectorsPropertySection(bot);
-    }
+  
+ 
 
     public BotReccurencePropertySection selectIterationTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Iteration");
         return new BotReccurencePropertySection(bot);
     }
 
-    public BotDocumentsPropertySection selectDocumentsTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Documents");
-        return new BotDocumentsPropertySection(bot);
-    }
-
-    public BotOperationsPropertySection selectOperationTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Operations");
-        return new BotOperationsPropertySection(bot);
-    }
-
-    public BotContractPropertySection selectContractTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Contract");
-        return new BotContractPropertySection(bot);
-    }
+  
+  
 
 }

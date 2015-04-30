@@ -14,12 +14,18 @@
  */
 package org.bonitasoft.studio.common.repository.store;
 
+import static com.google.common.base.Predicates.notNull;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.toArray;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
@@ -45,6 +51,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.widgets.Display;
+
+import com.google.common.base.Function;
 
 /**
  * @author Romain Bioteau
@@ -230,32 +238,24 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
 
     @Override
     public List<T> getChildren() {
-
-        refresh();
-
-        final List<T> result = new ArrayList<T>();
-        final IFolder folder = getResource();
         try {
-            for (final IResource r : folder.members()) {
-                if (getCompatibleExtensions() == null) {
-                    if (!r.isHidden() && !r.getName().startsWith(".")) {
-                        final T repositoryFileStore = createRepositoryFileStore(r.getName());
-                        if (repositoryFileStore != null) {
-                            result.add(repositoryFileStore);
-                        }
-                    }
-                } else if (r.getFileExtension() != null && getCompatibleExtensions().contains(r.getFileExtension())) {
-                    final T repositoryFileStore = createRepositoryFileStore(r.getName());
-                    if (repositoryFileStore != null) {
-                        result.add(repositoryFileStore);
-                    }
-                }
-            }
-        } catch (final CoreException e) {
-            BonitaStudioLog.error(e);
+            final List<T> result = newArrayList(filter(transform(listChildren(), toFileStore()), notNull()));
+            Collections.sort(result, new RepositoryFileStoreComparator());
+            return result;
+        } catch (final CoreException e1) {
+            BonitaStudioLog.error("Failed to retrieve store children", e1);
+            return Collections.emptyList();
         }
-        Collections.sort(result, new RepositoryFileStoreComparator());
-        return result;
+    }
+
+    private Function<IResource, T> toFileStore() {
+        return new Function<IResource, T>() {
+
+            @Override
+            public T apply(final IResource resource) {
+                return createRepositoryFileStore(resource.getName());
+            }
+        };
     }
 
     @Override
@@ -334,6 +334,32 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
     @Override
     public void close() {
         //INTENDED TO BE OVERRIDE
+    }
 
+    @Override
+    public boolean isEmpty() {
+        try {
+            return listChildren().isEmpty();
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e);
+        }
+        return false;
+    }
+
+    protected List<IResource> listChildren() throws CoreException {
+        refresh();
+        final IFolder folder = getResource();
+        final FileStoreCollector collector = new FileStoreCollector(folder, toArray(getCompatibleExtensions(), String.class));
+        folder.accept(collector);
+        return collector.toList();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getCompatibleExtensions()
+     */
+    @Override
+    public Set<String> getCompatibleExtensions() {
+        return Collections.emptySet();
     }
 }

@@ -40,8 +40,12 @@ public class JSONFileStore extends AbstractFileStore {
         super(fileName, parentStore);
     }
 
-    public String getStringAttribute(final String attribute) throws JSONException, ReadFileStoreException {
+    protected String getStringAttribute(final String attribute) throws JSONException, ReadFileStoreException {
         return getContent().getString(attribute);
+    }
+
+    protected boolean getBooleanAttribute(final String attribute) throws JSONException, ReadFileStoreException {
+        return getContent().getBoolean(attribute);
     }
 
     /*

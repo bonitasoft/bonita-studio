@@ -14,7 +14,9 @@
  */
 package org.bonitasoft.studio.model.expression.builders;
 
+import org.bonitasoft.engine.expression.ExpressionInterpreter;
 import org.bonitasoft.engine.expression.ExpressionType;
+import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.Connector;
@@ -41,6 +43,11 @@ public class ExpressionBuilder {
 
     public static ExpressionBuilder aVariableExpression() {
         return new ExpressionBuilder(ExpressionFactory.eINSTANCE.createExpression()).withExpressionType(ExpressionType.TYPE_VARIABLE.name());
+    }
+
+    public static ExpressionBuilder aGroovyScriptExpression() {
+        return new ExpressionBuilder(ExpressionFactory.eINSTANCE.createExpression()).withExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name())
+                .withInterpreter(ExpressionInterpreter.GROOVY.name());
     }
 
     public ExpressionBuilder withName(final String name) {
@@ -101,6 +108,15 @@ public class ExpressionBuilder {
         if (connectors != null) {
             for (final Connector connector : connectors) {
                 expression.getConnectors().add(connector);
+            }
+        }
+        return this;
+    }
+
+    public ExpressionBuilder havingConnectors(final Buildable<Connector>... connectors) {
+        if (connectors != null) {
+            for (final Buildable<Connector> connector : connectors) {
+                expression.getConnectors().add(connector.build());
             }
         }
         return this;

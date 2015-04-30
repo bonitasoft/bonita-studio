@@ -14,12 +14,22 @@
  */
 package org.bonitasoft.studio.diagram.custom.repository;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Sets.newHashSet;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainRegistry;
 import org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate;
@@ -35,7 +45,6 @@ import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.migration.model.report.MigrationReportPackage;
 import org.bonitasoft.studio.migration.model.report.Report;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
@@ -56,7 +65,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -82,6 +90,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicates;
+
 /**
  * @author Romain Bioteau
  */
@@ -90,6 +101,8 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
     public static final String PROC_EXT = "proc";
 
     private final NotificationListener poolListener = new PoolNotificationListener();
+
+    private static final Pattern diagramNamePattern = Pattern.compile("(.*)-(.*)");
 
     public DiagramFileStore(final String fileName, final IRepositoryStore<? extends EMFFileStore> store) {
         super(fileName, store);
@@ -106,28 +119,12 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
      */
     @Override
     public String getDisplayName() {
-        final DiagramRepositoryStore store = (DiagramRepositoryStore) getParentStore();
-        String label = null;
-        final String fileName = getName();
-        label = fileName.replace("." + getResource().getFileExtension(), "");
-        String[] eObectIfFromEObjectType = null;
-        EMFResourceUtil emfResourceUtil = null;
-        try {
-            emfResourceUtil = new EMFResourceUtil(getResource().getLocation().toFile());
-            eObectIfFromEObjectType = emfResourceUtil.getEObectIfFromEObjectType("process:MainProcess");
-        } catch (final FeatureNotFoundException e) {
-            BonitaStudioLog.error(e);
-            return label;
+        final String displayName = getResource().getLocation().removeFileExtension().lastSegment();
+        final Matcher matcher = diagramNamePattern.matcher(displayName);
+        if (matcher.matches()) {
+            return String.format("%s (%s)", matcher.group(1), matcher.group(2));
         }
-
-        if (eObectIfFromEObjectType != null && eObectIfFromEObjectType.length == 1) {
-            final String diagramUUID = eObectIfFromEObjectType[0];
-            label = store.getLabelFor(diagramUUID);
-            if (label == null) {
-                label = fileName.replace("." + getResource().getFileExtension(), "");
-            }
-        }
-        return label;
+        return displayName;
     }
 
     @Override
@@ -364,35 +361,6 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         }
     }
 
-    private void closeEditorIfAlreadyOpened(final IWorkbenchPage activePage) {
-        getOpenedEditor();
-        final MainProcess newProcess = getContent();
-        for (final IEditorReference editor : activePage.getEditorReferences()) {
-            final IEditorPart simpleEditor = editor.getEditor(true);
-            if (simpleEditor instanceof DiagramEditor) {
-                final DiagramEditor diagramEditor = (DiagramEditor) simpleEditor;
-                final EObject input = diagramEditor.getDiagramEditPart().resolveSemanticElement();
-                MainProcess oldProcess = null;
-                if (input instanceof MainProcess) {
-                    oldProcess = (MainProcess) input;
-                } else if (input instanceof Form) {
-                    oldProcess = ModelHelper.getMainProcess(input);
-                }
-
-                if (oldProcess != null) {
-                    if (newProcess != null) {
-                        if (oldProcess.getName().equals(newProcess.getName()) &&
-                                oldProcess.getVersion().equals(newProcess.getVersion())) {
-                            activePage.closeEditor(diagramEditor, false);
-                        }
-                    } else {
-                        BonitaStudioLog.log("The new Process is null. Name of currentDiagramFileStore is: " + getName());
-                    }
-                }
-            }
-        }
-    }
-
     @Override
     protected void doClose() {
         final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -425,17 +393,38 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         return getParentStore().getResource().getFile(getName());
     }
 
+    @Override
+    public Set<IRepositoryFileStore> getRelatedFileStore() {
+        final Set<IRepositoryFileStore> result = new HashSet<IRepositoryFileStore>();
+        final ProcessConfigurationRepositoryStore processConfigurationRepositoryStore = getRepository().getRepositoryStore(
+                ProcessConfigurationRepositoryStore.class);
+        final ApplicationResourceRepositoryStore appResourceRepositoryStore = getRepository().getRepositoryStore(
+                ApplicationResourceRepositoryStore.class);
+        for (final String uuid : transform(getProcesses(), toUUID())) {
+            result.add(processConfigurationRepositoryStore.getChild(String.format("%s.%s", uuid
+                    , ProcessConfigurationRepositoryStore.CONF_EXT)));
+            result.add(appResourceRepositoryStore.getChild(uuid));
+        }
+        return newHashSet(filter(result, Predicates.notNull()));
+    }
+
+    private Function<AbstractProcess, String> toUUID() {
+        return new Function<AbstractProcess, String>() {
+
+            @Override
+            public String apply(final AbstractProcess process) {
+                return ModelHelper.getEObjectID(process);
+            }
+        };
+    }
+
     /**
      * @return the migration report if exists otherwise returns null
      */
     public Report getMigrationReport() {
         final Resource emfResource = getEMFResource();
         if (emfResource != null) {
-            for (final EObject root : emfResource.getContents()) {
-                if (root instanceof Report) {
-                    return (Report) root;
-                }
-            }
+            return (Report) find(emfResource.getContents(), instanceOf(Report.class), null);
         }
         return null;
     }

@@ -14,12 +14,11 @@
  */
 package org.bonitasoft.studio.pagedesigner.core.bar;
 
-import static com.google.common.io.ByteStreams.newInputStreamSupplier;
-import static com.google.common.io.ByteStreams.toByteArray;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -33,6 +32,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import com.google.common.io.ByteStreams;
 
 /**
  * @author Romain Bioteau
@@ -58,7 +59,7 @@ public class CustomPageBarResourceFactoryTest {
     @Before
     public void setUp() throws Exception {
         doReturn(new URL("http://localhost:8080/page-designer/export/")).when(pageDesignerURLFactory).exportPage(notNull(String.class));
-        is = newInputStreamSupplier(toByteArray(this.getClass().getResourceAsStream("/page-Step1.zip"))).getInput();
+        is = new ByteArrayInputStream(ByteStreams.toByteArray(this.getClass().getResourceAsStream("/page-Step1.zip")));
         doReturn(is).when(customPageBarResourceFactory).get(notNull(String.class));
     }
 

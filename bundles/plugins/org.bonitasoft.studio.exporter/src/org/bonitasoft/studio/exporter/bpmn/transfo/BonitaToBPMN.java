@@ -815,10 +815,12 @@ public class BonitaToBPMN implements IBonitaTransformer {
     }
 
     protected void setSequenceFLowLabel(final SequenceFlowNameEditPart labelPart,final BPMNEdge edge){
-        final BPMNLabel label = DiFactory.eINSTANCE.createBPMNLabel();
-        final IFigure bonitaElementFigure = labelPart.getFigure();
-        setLabelBounds(label, bonitaElementFigure);
-        edge.setBPMNLabel(label);
+        if (labelPart != null) {
+            final BPMNLabel label = DiFactory.eINSTANCE.createBPMNLabel();
+            final IFigure bonitaElementFigure = labelPart.getFigure();
+            setLabelBounds(label, bonitaElementFigure);
+            edge.setBPMNLabel(label);
+        }
     }
 
     /**
@@ -846,10 +848,9 @@ public class BonitaToBPMN implements IBonitaTransformer {
         return bounds;
     }
 
-
     protected void setEventLabelBounds(final CustomEventLabelEditPart labelPart,final BPMNLabel label){
         final IFigure bonitaElementFigure = labelPart.getFigure();
-        setLabelBounds( label, bonitaElementFigure);
+        setLabelBounds(label, bonitaElementFigure);
     }
     /**
      * @param bpmnProcess

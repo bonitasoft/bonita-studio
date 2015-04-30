@@ -175,7 +175,6 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         }
         final ImportBosArchiveStatusBuilder statusBuilder = new ImportBosArchiveStatusBuilder();
         if (validate) {
-            monitor.setTaskName("Validation");
             for (final IRepositoryFileStore diagramFileStore : iResourceImporter.getImportedProcesses()) {
                 try {
                     final AbstractProcess process = (AbstractProcess) diagramFileStore.getContent();

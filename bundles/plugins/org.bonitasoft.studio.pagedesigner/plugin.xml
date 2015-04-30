@@ -7,6 +7,7 @@
             locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.businessobject.menu">
            <command
                  commandId="org.bonitasoft.studio.pagedesigner.open.command"
+                 icon="icons/ui_designer_16x16.png"
                  style="push">
            </command>
       </menuContribution>
@@ -14,7 +15,7 @@
 <extension
       point="org.eclipse.ui.commands">
    <command
-         defaultHandler="org.bonitasoft.studio.pagedesigner.ui.handler.OpenPageDesignerHandler"
+         defaultHandler="org.bonitasoft.studio.pagedesigner.ui.handler.OpenUIDesignerHandler"
          id="org.bonitasoft.studio.pagedesigner.open.command"
          name="%OpenPageDesigner">
    </command>
@@ -56,12 +57,13 @@
    <propertyTabs
          contributorId="org.bonitasoft.studio.diagram">
       <propertyTab
+            afterTab="tab.contract"
             category="domain"
             id="tab.form.mapping.entry"
             label="%EntryFormMapping">
       </propertyTab>
       <propertyTab
-            afterTab="tab.form.mapping.entry"
+            afterTab="tab.contract"
             category="domain"
             id="tab.form.mapping.caseStart"
             label="%CaseStartFormMapping">
@@ -84,7 +86,7 @@
             filter="org.bonitasoft.studio.pagedesigner.ui.property.filter.TaskFilter"
             id="TaskEntryFormMapping"
             tab="tab.form.mapping.entry"
-            viewID="org.bonitasoft.studio.views.properties.process.formMapping">
+            viewID="org.bonitasoft.studio.views.properties.process.execution">
       </propertySection>
       <propertySection
             class="org.bonitasoft.studio.pagedesigner.ui.property.section.CaseStartFormMappingPropertySection"
@@ -92,14 +94,14 @@
             filter="org.bonitasoft.studio.pagedesigner.ui.property.filter.PoolOrLaneFilter"
             id="PoolEntryFormMapping"
             tab="tab.form.mapping.caseStart"
-            viewID="org.bonitasoft.studio.views.properties.process.formMapping">
+            viewID="org.bonitasoft.studio.views.properties.process.execution">
       </propertySection>
       <propertySection
             class="org.bonitasoft.studio.pagedesigner.ui.property.section.CaseOverviewFormMappingPropertySection"
             filter="org.bonitasoft.studio.pagedesigner.ui.property.filter.PoolOrLaneFilter"
             id="PoolOverviewFormMapping"
             tab="tab.form.mapping.overview"
-            viewID="org.bonitasoft.studio.views.properties.process.formMapping">
+            viewID="org.bonitasoft.studio.views.properties.process.execution">
       </propertySection>
    </propertySections>
 </extension>
@@ -114,5 +116,12 @@
    <bosArchiveProvider
          providerClass="org.bonitasoft.studio.pagedesigner.core.bos.WebFormBOSArchiveFileStoreProvider">
    </bosArchiveProvider>
+</extension>
+<extension
+      point="org.bonitasoft.studio.coolbarContributionItem">
+   <coolbarItem
+         class="org.bonitasoft.studio.pagedesigner.ui.contribution.OpenUIDesignerCoolBarItem"
+         toolbarPosition="9">
+   </coolbarItem>
 </extension>
 </plugin>

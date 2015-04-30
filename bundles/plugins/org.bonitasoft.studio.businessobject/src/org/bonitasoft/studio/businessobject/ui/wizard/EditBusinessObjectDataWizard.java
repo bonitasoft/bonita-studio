@@ -19,8 +19,12 @@ import java.util.Set;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
@@ -28,10 +32,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.refactoring.core.RefactorDataOperation;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
-import org.eclipse.emf.common.command.CompoundCommand;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 /**
@@ -45,25 +46,31 @@ public class EditBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
 
     private final TransactionalEditingDomain editingDomain;
 
-    private final Set<String> existingNames;
-
     private final BusinessObjectData data;
 
     private final DataAware container;
 
-    private final BusinessObjectData dataWorkingCopy;
+    private BusinessObjectData businessObjectDataWorkingCopy;
 
     public EditBusinessObjectDataWizard(final BusinessObjectData data,
             final BusinessObjectModelRepositoryStore businessObjectDefinitionStore,
             final TransactionalEditingDomain editingDomain) {
         this.data = data;
-        dataWorkingCopy = EcoreUtil.copy(data);
         container = (DataAware) data.eContainer();
         this.businessObjectDefinitionStore = businessObjectDefinitionStore;
         this.editingDomain = editingDomain;
-        existingNames = computeExistingNames(container);
-        existingNames.remove(data.getName());
         setDefaultPageImageDescriptor(Pics.getWizban());
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.businessobject.ui.wizard.AbstractBusinessObjectWizard#computeExistingNames(org.bonitasoft.studio.model.process.DataAware)
+     */
+    @Override
+    protected Set<String> computeExistingNames(final DataAware container) {
+        final Set<String> existingNames = super.computeExistingNames(container);
+        existingNames.remove(data.getName());
+        return existingNames;
     }
 
     @Override
@@ -73,14 +80,25 @@ public class EditBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
     }
 
     protected BusinessObjectDataWizardPage createEditBusinessObjectDataWizardPage() {
-        final BusinessObjectDataWizardPage page = new BusinessObjectDataWizardPage(dataWorkingCopy, businessObjectDefinitionStore, getExistingNames());
+        businessObjectDataWorkingCopy = EcoreUtil.copy(data);
+        if (businessObjectDataWorkingCopy.getDefaultValue() == null) {
+            businessObjectDataWorkingCopy.setDefaultValue(defaultValueExpression());
+        }
+        final BusinessObjectDataWizardPage page = new BusinessObjectDataWizardPage(container, businessObjectDataWorkingCopy, businessObjectDefinitionStore,
+                computeExistingNames(container), new HintImageProvider());
         page.setTitle(Messages.bind(Messages.editBusinessObjectDataTitle, ModelHelper.getParentProcess(container).getName()));
         page.setDescription(Messages.editBusinessObjectDataDescription);
         return page;
     }
 
-    public Set<String> getExistingNames() {
-        return existingNames;
+    private Expression defaultValueExpression() {
+        final Expression defaultValueExpression = ExpressionFactory.eINSTANCE.createExpression();
+        defaultValueExpression.setType(ExpressionConstants.SCRIPT_TYPE);
+        defaultValueExpression.setInterpreter(ExpressionConstants.GROOVY);
+        defaultValueExpression.setName("");
+        defaultValueExpression.setContent("");
+        defaultValueExpression.setReturnType(Object.class.getName());
+        return defaultValueExpression;
     }
 
     /*
@@ -89,34 +107,33 @@ public class EditBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
      */
     @Override
     public boolean performFinish() {
-        final Data updatedData = editBusinessObjectDataWizardPage.getBusinessObjectData();
+        final AbstractProcess process = ModelHelper.getParentProcess(container);
+        return refactorBusinessData(process, businessObjectDataWorkingCopy);
+    }
+
+    private boolean refactorBusinessData(final AbstractProcess process, final Data updatedData) {
+        final RefactorDataOperation op = newRefactorOperation(updatedData, process);
+        if (op.canExecute()) {
+            try {
+                getContainer().run(true, false, op);
+                if (op.isCancelled()) {
+                    return false;
+                }
+            } catch (final InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private RefactorDataOperation newRefactorOperation(final Data updatedData, final AbstractProcess process) {
         final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
         op.setEditingDomain(editingDomain);
         op.addItemToRefactor(updatedData, data);
         op.setDataContainer(container);
         op.setAskConfirmation(true);
         op.setDataContainmentFeature(ProcessPackage.Literals.DATA_AWARE__DATA);
-        if (op.canExecute()) {
-            try {
-                getContainer().run(true, false, op);
-            } catch (final InvocationTargetException e) {
-                BonitaStudioLog.error(e);
-                return false;
-            } catch (final InterruptedException e) {
-                BonitaStudioLog.error(e);
-                return false;
-            }
-        }
-        if (op.isCancelled()) {
-            return false;
-        }
-        final CompoundCommand cc = new CompoundCommand();
-
-        for (final EStructuralFeature feature : data.eClass().getEAllStructuralFeatures()) {
-            cc.append(SetCommand.create(editingDomain, data, feature, updatedData.eGet(feature)));
-        }
-        editingDomain.getCommandStack().execute(cc);
-        return !cc.getResult().isEmpty();
+        return op;
     }
-
 }

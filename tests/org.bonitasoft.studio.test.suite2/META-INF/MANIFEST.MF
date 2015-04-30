@@ -23,7 +23,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.importer.bar.tests;bundle-version="1.0.0",
  org.bonitasoft.studio.migration.tests;bundle-version="1.0.0",
  org.bonitasoft.studio.validation.test,
- org.bonitasoft.studio.groovy.ui.test;bundle-version="6.1.0",
  org.junit;bundle-version="4.11.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

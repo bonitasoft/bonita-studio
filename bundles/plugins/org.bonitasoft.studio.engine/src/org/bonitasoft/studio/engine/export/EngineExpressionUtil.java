@@ -58,7 +58,6 @@ public class EngineExpressionUtil {
 
     private static List<IExpressionConverter> converters;
 
-
     public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation) {
         return createOperation(operation, createLeftOperand(operation.getLeftOperand()));
     }
@@ -174,9 +173,9 @@ public class EngineExpressionUtil {
                     result.add(createWidgetExpression((Widget) element));
                 } else if (element instanceof Document) {
                     if (((Document) element).isMultiple()) {
-                        result.add(createDocumentListExpression((Document) element));
+                        result.add(expBuilder.createDocumentListExpression(((Document) element).getName()));
                     } else {
-                        result.add(createDocumentExpression((Document) element));
+                        result.add(expBuilder.createDocumentReferenceExpression(((Document) element).getName()));
                     }
                 } else if (element instanceof GroupIterator) {
                     result.add(createGroupIteratorExpression((GroupIterator) element));
@@ -205,26 +204,6 @@ public class EngineExpressionUtil {
         } catch (final InvalidExpressionException e) {
             BonitaStudioLog.error(e);
             throw new RuntimeException(e);
-        }
-    }
-
-    private static Expression createDocumentExpression(final Document element) {
-        final ExpressionBuilder exp = new ExpressionBuilder();
-        try {
-            return exp.createDocumentReferenceExpression(element.getName());
-        } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
-            return null;
-        }
-    }
-
-    private static Expression createDocumentListExpression(final Document element) {
-        final ExpressionBuilder exp = new ExpressionBuilder();
-        try {
-            return exp.createDocumentListExpression(element.getName());
-        } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
-            return null;
         }
     }
 
@@ -331,6 +310,9 @@ public class EngineExpressionUtil {
     }
 
     public static Expression createExpression(final org.bonitasoft.studio.model.expression.AbstractExpression expression) {
+        if (expression == null) {
+            return null;
+        }
         if (expression instanceof org.bonitasoft.studio.model.expression.Expression) {
             return buildSimpleEngineExpressionWithName(((org.bonitasoft.studio.model.expression.Expression) expression).getName(),
                     (org.bonitasoft.studio.model.expression.Expression) expression);
@@ -338,9 +320,8 @@ public class EngineExpressionUtil {
             return buildListEngineExpression(expression);
         } else if (expression instanceof TableExpression) {
             return buildTableEngineExpression(expression);
-        } else {
-            return null;
         }
+        throw new IllegalArgumentException("Unsupported expression convertion");
     }
 
     protected static Expression buildTableEngineExpression(final org.bonitasoft.studio.model.expression.AbstractExpression expression) {
@@ -409,57 +390,49 @@ public class EngineExpressionUtil {
 
     protected static Expression buildSimpleEngineExpression(final ExpressionBuilder expressionBuilder,
             final org.bonitasoft.studio.model.expression.Expression expression) {
-        String content = expression.getContent();
-        if (content != null && !content.isEmpty()) {
-            final IExpressionConverter converter = getConverter(expression);
-            if (converter != null) {
-                try {
-                    return converter.convert(expression);
-                } catch (final InvalidExpressionException e) {
-                    BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-                    throw new RuntimeException(e);
-                }
-            }
-            final String type = expression.getType();
-            if (ExpressionConstants.PATTERN_TYPE.equals(type)) {
-                return createPatternExpression(expressionBuilder, expression);
-            }
-            if (ExpressionConstants.DOCUMENT_TYPE.equals(type)) {
-                return createDocumentExpression(expressionBuilder, expression);
-            }
-            if (ExpressionConstants.DOCUMENT_LIST_TYPE.equals(type)) {
-                return createDocumentListExpression(expressionBuilder, expression);
-            }
-            if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(type)) {
-                return createEngineExpressionForDocumentRef(expressionBuilder, expression);
-            }
-            if (ExpressionConstants.XPATH_TYPE.equals(type)) {
-                return createXPATHExpression(expressionBuilder, expression);
-            }
-            if (ExpressionConstants.QUERY_TYPE.equals(type)) {
-                return createQueryExpression(expressionBuilder, expression);
-            } else {
-                content = content.replace("\r", "\n");
-                expressionBuilder.setContent(content);
-                final ExpressionType engineExpressionType = toEngineExpressionType(expression);
-                expressionBuilder.setExpressionType(engineExpressionType);
-                if (ExpressionType.TYPE_READ_ONLY_SCRIPT.equals(engineExpressionType)) {
-                    expressionBuilder.setInterpreter(expression.getInterpreter());
-                } else {
-                    expressionBuilder.setInterpreter("");
-                }
-
-                expressionBuilder.setReturnType(expression.getReturnType());
-                try {
-                    expressionBuilder.setDependencies(createDependenciesList(expression));
-                    return expressionBuilder.done();
-                } catch (final InvalidExpressionException e) {
-                    BonitaStudioLog.error(e);
-                    throw new RuntimeException(e);
-                }
-            }
-        } else {
+        if (!expression.hasContent()) {
             return null;
+        }
+        final IExpressionConverter converter = getConverter(expression);
+        if (converter != null) {
+            try {
+                return converter.convert(expression);
+            } catch (final InvalidExpressionException e) {
+                BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
+                throw new RuntimeException(e);
+            }
+        }
+        final String type = expression.getType();
+        if (ExpressionConstants.PATTERN_TYPE.equals(type)) {
+            return createPatternExpression(expressionBuilder, expression);
+        }
+        if (ExpressionConstants.DOCUMENT_TYPE.equals(type)) {
+            return createDocumentExpression(expressionBuilder, expression);
+        }
+        if (ExpressionConstants.DOCUMENT_LIST_TYPE.equals(type)) {
+            return createDocumentListExpression(expressionBuilder, expression);
+        }
+        if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(type)) {
+            return createEngineExpressionForDocumentRef(expressionBuilder, expression);
+        }
+        if (ExpressionConstants.XPATH_TYPE.equals(type)) {
+            return createXPATHExpression(expressionBuilder, expression);
+        }
+        if (ExpressionConstants.QUERY_TYPE.equals(type)) {
+            return createQueryExpression(expressionBuilder, expression);
+        } else {
+            expressionBuilder.setContent(expression.getContent().replace("\r", "\n"));
+            final ExpressionType engineExpressionType = toEngineExpressionType(expression);
+            expressionBuilder.setExpressionType(engineExpressionType);
+            expressionBuilder.setInterpreter(ExpressionType.TYPE_READ_ONLY_SCRIPT.equals(engineExpressionType) ? expression.getInterpreter() : "");
+            expressionBuilder.setReturnType(expression.getReturnType());
+            try {
+                expressionBuilder.setDependencies(createDependenciesList(expression));
+                return expressionBuilder.done();
+            } catch (final InvalidExpressionException e) {
+                BonitaStudioLog.error(e);
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -467,8 +440,8 @@ public class EngineExpressionUtil {
         if (converters == null) {
             converters = new ArrayList<IExpressionConverter>();
             if (ConditionModelActivator.getInstance() != null) {
-            converters.add(new ComparisonExpressionConverter(new XtextComparisonExpressionLoader(ConditionModelActivator.getInstance().getInjector(
-                    ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL))));
+                converters.add(new ComparisonExpressionConverter(new XtextComparisonExpressionLoader(ConditionModelActivator.getInstance().getInjector(
+                        ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL))));
             }
         }
         for (final IExpressionConverter converter : converters) {
@@ -582,7 +555,6 @@ public class EngineExpressionUtil {
         }
     }
 
-
     static ExpressionType toEngineExpressionType(final org.bonitasoft.studio.model.expression.Expression expression) {
         final String type = expression.getType();
         if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(type) || ExpressionConstants.URL_ATTRIBUTE_TYPE.equals(type)) {
@@ -678,7 +650,6 @@ public class EngineExpressionUtil {
         }
     }
 
-
     public static Expression createEmptyListExpression() {
         final ExpressionBuilder exp = new ExpressionBuilder();
         exp.createNewInstance("<empty-name>");
@@ -715,5 +686,14 @@ public class EngineExpressionUtil {
             return content.charAt(indexOf - 1) != '\\';
         }
         return true;
+    }
+
+    public static Expression createBusinessObjectDataReferenceExpression(final BusinessObjectData data) {
+        try {
+            return new ExpressionBuilder().createBusinessDataReferenceExpression(data.getName());
+        } catch (final InvalidExpressionException e) {
+            BonitaStudioLog.error(e);
+            throw new RuntimeException(e);
+        }
     }
 }

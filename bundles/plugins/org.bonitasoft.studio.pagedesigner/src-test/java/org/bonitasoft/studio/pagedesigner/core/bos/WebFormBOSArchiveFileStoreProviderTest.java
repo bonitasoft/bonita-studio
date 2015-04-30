@@ -85,6 +85,7 @@ public class WebFormBOSArchiveFileStoreProviderTest {
         final WebWidgetRepositoryStore widgetRepositoryStore = mock(WebWidgetRepositoryStore.class);
         doReturn(widgetRepositoryStore).when(repositoryAccessor).getRepositoryStore(WebWidgetRepositoryStore.class);
         when(widgetRepositoryStore.getChild("customTestWidget")).thenReturn(customWidgetFileStore);
+        when(customWidgetFileStore.canBeExported()).thenReturn(true);
 
         webFormArtifactsFileStoreProvider = spy(new WebFormBOSArchiveFileStoreProvider(repositoryAccessor, null));
         doReturn(newHashSet("resources/widgets/customTestWidget/customTestWidget.json")).when(webFormArtifactsFileStoreProvider)

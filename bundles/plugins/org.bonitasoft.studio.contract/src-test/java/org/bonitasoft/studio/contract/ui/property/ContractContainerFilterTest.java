@@ -15,62 +15,53 @@
 package org.bonitasoft.studio.contract.ui.property;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.bonitasoft.studio.model.process.builders.LaneBuilder.aLane;
+import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
 
 /**
  * @author Romain Bioteau
- *
  */
-@RunWith(MockitoJUnitRunner.class)
 public class ContractContainerFilterTest {
 
-    private ContractContainerFilter filter;
+    @Test
+    public void accept_TaskEditPart() throws Exception {
+        final ContractContainerFilter filter = new ContractContainerFilter();
 
-    @Mock
-    private IGraphicalEditPart taskEditPart;
-
-    @Mock
-    private IGraphicalEditPart poolEditPart;
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-        filter = new ContractContainerFilter();
-        when(taskEditPart.resolveSemanticElement()).thenReturn(ProcessFactory.eINSTANCE.createTask());
-        when(poolEditPart.resolveSemanticElement()).thenReturn(ProcessFactory.eINSTANCE.createPool());
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
+        assertThat(filter.select(editPartWithSemanticElement(aTask().build()))).isTrue();
     }
 
     @Test
-    public void should_select_accept_TaskEditPart() throws Exception {
-        assertThat(filter.select(taskEditPart)).isTrue();
+    public void accept_PoolEditPart() throws Exception {
+        final ContractContainerFilter filter = new ContractContainerFilter();
+
+        assertThat(filter.select(editPartWithSemanticElement(aPool().build()))).isTrue();
     }
 
     @Test
-    public void should_select_accept_PoolEditPart() throws Exception {
-        assertThat(filter.select(poolEditPart)).isTrue();
+    public void accept_LaneEditPart() throws Exception {
+        final ContractContainerFilter filter = new ContractContainerFilter();
+
+        assertThat(filter.select(editPartWithSemanticElement(aLane().build()))).isTrue();
     }
 
     @Test
-    public void should_select_notaccept_other_type_than_editpart() throws Exception {
-        assertThat(filter.select(ProcessFactory.eINSTANCE.createTask())).isFalse();
+    public void do_not_accept_other_type_than_editpart() throws Exception {
+        final ContractContainerFilter filter = new ContractContainerFilter();
+
+        assertThat(filter.select(aTask().build())).isFalse();
     }
+
+    private IGraphicalEditPart editPartWithSemanticElement(final EObject semanticElement) {
+        final IGraphicalEditPart iGraphicalEditPart = mock(IGraphicalEditPart.class);
+        doReturn(semanticElement).when(iGraphicalEditPart).resolveSemanticElement();
+        return iGraphicalEditPart;
+    }
+
 }
