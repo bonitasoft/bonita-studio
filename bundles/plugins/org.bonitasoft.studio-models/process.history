@@ -9204,12 +9204,12 @@
       </changes>
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Create" target="process.ecore#//ContractInput"
-            referenceName="eStructuralFeatures" element="process.ecore#//ContractInput/mandatory">
-          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/mandatory"
+            referenceName="eStructuralFeatures" element="#//@releases.26/@changes.0/@changes.0/@element">
+          <changes xsi:type="history:Set" element="#//@releases.26/@changes.0/@changes.0/@element"
               featureName="name" dataValue="mandatory"/>
-          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/mandatory"
+          <changes xsi:type="history:Set" element="#//@releases.26/@changes.0/@changes.0/@element"
               featureName="defaultValueLiteral" dataValue="true"/>
-          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/mandatory"
+          <changes xsi:type="history:Set" element="#//@releases.26/@changes.0/@changes.0/@element"
               featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
         </changes>
         <operation name="newAttribute">
@@ -9739,6 +9739,19 @@
           featureName="name" dataValue="FILE"/>
       <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/FILE"
           featureName="value" dataValue="6" oldDataValue="0"/>
+    </changes>
+  </releases>
+  <releases date="2015-04-30T14:45:30.530+0200" label="7.0.0-004">
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="process.ecore#//ContractInput" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="mandatory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+            defaultValueLiteral="true"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.26/@changes.0/@changes.0/@element"/>
+        </parameters>
+      </operation>
     </changes>
   </releases>
   <releases/>

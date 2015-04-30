@@ -176,7 +176,6 @@ public class ContractEngineDefinitionBuilderTest {
     @Test
     public void should_build_create_a_contract_with_constraint() throws Exception {
         final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
-        nameInput.setMandatory(false);
         aContract.getConstraints().add(ContractConstraintUtil.createConstraint("myConstraint", "name.length < 50", "name is too long", nameInput));
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
@@ -187,17 +186,14 @@ public class ContractEngineDefinitionBuilderTest {
     @Test
     public void should_build_create_a_contract_with_mandatory_constraint() throws Exception {
         final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
-        nameInput.setMandatory(true);
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
         verify(contractDefBuilder).addInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
-        verify(contractDefBuilder).addMandatoryConstraint("name");
     }
 
     @Test
     public void should_build_create_operation_for_input_mapping() throws Exception {
         final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
-        nameInput.setMandatory(true);
         final ContractInputMapping mapping = ProcessFactory.eINSTANCE.createContractInputMapping();
         final Data textData = ProcessFactory.eINSTANCE.createData();
         final DataType textDt = ProcessFactory.eINSTANCE.createStringType();
@@ -209,19 +205,17 @@ public class ContractEngineDefinitionBuilderTest {
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
         verify(contractDefBuilder).addInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
-        verify(contractDefBuilder).addMandatoryConstraint("name");
     }
 
     @Test
     public void should_build_add_a_complex_input() throws Exception {
         final ContractInput employeeInput = addInput(aContract, "employee", ContractInputType.COMPLEX, "employee complex type");
-        addInput(employeeInput, "firstName", ContractInputType.TEXT, null).setMandatory(true);;
+        addInput(employeeInput, "firstName", ContractInputType.TEXT, null);
 
         addInput(employeeInput, "lastName", ContractInputType.TEXT, null);
         addInput(employeeInput, "birthDate", ContractInputType.DATE, null);
         final ContractInput skillsInput = addInput(employeeInput, "skills", ContractInputType.COMPLEX, null);
         skillsInput.setMultiple(true);
-        skillsInput.setMandatory(true);
         addInput(skillsInput, "name", ContractInputType.TEXT, "name of the skills");
         addInput(skillsInput, "rate", ContractInputType.INTEGER, "rate of the skill");
 
@@ -229,19 +223,16 @@ public class ContractEngineDefinitionBuilderTest {
         verify(taskBuilder).addContract();
 
         verify(contractDefBuilder).addInput(eq(employeeInput.getName()), eq(employeeInput.getDescription()), eq(employeeInput.isMultiple()), anyList());
-        verify(contractDefBuilder).addMandatoryConstraint("firstName");
-        verify(contractDefBuilder).addMandatoryConstraint("skills");
     }
 
     @Test
     public void should_buildComplexInput_create_a_complex_input_recursively() throws Exception {
         final ContractInput employeeInput = addInput(aContract, "employee", ContractInputType.COMPLEX, "employee complex type");
-        addInput(employeeInput, "firstName", ContractInputType.TEXT, null).setMandatory(false);
+        addInput(employeeInput, "firstName", ContractInputType.TEXT, null);
         addInput(employeeInput, "lastName", ContractInputType.TEXT, null);
         addInput(employeeInput, "birthDate", ContractInputType.DATE, null);
         final ContractInput skillsInput = addInput(employeeInput, "skills", ContractInputType.COMPLEX, null);
         skillsInput.setMultiple(true);
-        skillsInput.setMandatory(false);
         addInput(skillsInput, "name", ContractInputType.TEXT, "name of the skills");
         addInput(skillsInput, "rate", ContractInputType.INTEGER, "rate of the skill");
 

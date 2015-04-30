@@ -74,7 +74,6 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
 
     private org.bonitasoft.web.designer.model.contract.ContractInput copyInputProperties(final ContractInput input,
             final org.bonitasoft.web.designer.model.contract.ContractInput contractInput) {
-        contractInput.setMandatory(input.isMandatory());
         contractInput.setMultiple(input.isMultiple());
         contractInput.setDescription(input.getDescription());
         return contractInput;

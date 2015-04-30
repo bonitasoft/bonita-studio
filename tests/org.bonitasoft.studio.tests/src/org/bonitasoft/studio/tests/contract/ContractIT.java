@@ -109,21 +109,20 @@ public class ContractIT extends SWTBotGefTestCase {
         final EList<ContractInput> rootInputs = contract.getInputs();
         assertThat(rootInputs).hasSize(1);
         final ContractInput expenseReportInput = rootInputs.get(0);
-        ContractInputAssert.assertThat(expenseReportInput).hasName("expenseReport").hasDescription("An expense report").hasType(ContractInputType.COMPLEX)
-                .isMandatory();
+        ContractInputAssert.assertThat(expenseReportInput).hasName("expenseReport").hasDescription("An expense report").hasType(ContractInputType.COMPLEX);
         assertThat(expenseReportInput.getInputs()).hasSize(1);
         final ContractInput expenseLineInput = expenseReportInput.getInputs().get(0);
-        ContractInputAssert.assertThat(expenseLineInput).hasName("expenseLines").hasType(ContractInputType.COMPLEX).isMultiple().isMandatory();
+        ContractInputAssert.assertThat(expenseLineInput).hasName("expenseLines").hasType(ContractInputType.COMPLEX).isMultiple();
         assertThat(expenseLineInput.getInputs()).hasSize(3);
         final ContractInput natureInput = expenseLineInput.getInputs().get(0);
         final ContractInput amountInput = expenseLineInput.getInputs().get(1);
         final ContractInput dateInput = expenseLineInput.getInputs().get(2);
 
-        ContractInputAssert.assertThat(natureInput).hasName("nature").hasType(ContractInputType.TEXT).isNotMultiple().isMandatory()
+        ContractInputAssert.assertThat(natureInput).hasName("nature").hasType(ContractInputType.TEXT).isNotMultiple()
                 .hasDescription("The nature of the expense");
-        ContractInputAssert.assertThat(amountInput).hasName("amount").hasType(ContractInputType.DECIMAL).isNotMultiple().isMandatory()
+        ContractInputAssert.assertThat(amountInput).hasName("amount").hasType(ContractInputType.DECIMAL).isNotMultiple()
                 .hasDescription("The amount of the expense VAT included in euros");
-        ContractInputAssert.assertThat(dateInput).hasName("expenseDate").hasType(ContractInputType.DATE).isNotMultiple().isNotMandatory()
+        ContractInputAssert.assertThat(dateInput).hasName("expenseDate").hasType(ContractInputType.DATE).isNotMultiple()
                 .hasDescription("When the expense was done");
 
         final BotContractConstraintTab constraintTab = contractTabBot.selectConstraintTab();

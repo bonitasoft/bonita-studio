@@ -50,16 +50,6 @@ public class ContractInputBuilder implements Buildable<ContractInput> {
         return this;
     }
 
-    public ContractInputBuilder mandatory() {
-        contractInput.setMandatory(true);
-        return this;
-    }
-
-    public ContractInputBuilder optional() {
-        contractInput.setMandatory(false);
-        return this;
-    }
-
     public ContractInputBuilder multiple() {
         contractInput.setMultiple(true);
         return this;
