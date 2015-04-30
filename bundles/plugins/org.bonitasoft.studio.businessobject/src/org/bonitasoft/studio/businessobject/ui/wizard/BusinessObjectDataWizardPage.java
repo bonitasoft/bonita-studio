@@ -16,10 +16,10 @@ package org.bonitasoft.studio.businessobject.ui.wizard;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.groovyReferenceValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.mandatoryValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.maxLengthValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.handler.ManageBusinessObjectHandler;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.jface.databinding.ValidatorEvent;
+import org.bonitasoft.studio.common.jface.databinding.validator.ValidatorEvent;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -173,8 +173,6 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         return defaultValueExpressionViewer;
 
     }
-
-
 
     protected void createIsMultipleControl(final Composite mainComposite, final EMFDataBindingContext ctx) {
         new Label(mainComposite, SWT.NONE);
@@ -339,7 +337,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
                         ProcessPackage.Literals.ELEMENT__NAME),
                 updateValueStrategy().withValidator(multiValidator()
                         .addValidator(maxLengthValidator(Messages.name, 50))
-                        .addValidator(groovyReferenceValidator(Messages.name, true, true))
+                        .addValidator(groovyReferenceValidator(Messages.name).startsWithLowerCase())
                         .addValidator(uniqueDataNameValidator()).create())
                         .create(),
                 null);

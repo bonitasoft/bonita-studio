@@ -31,7 +31,6 @@ import org.bonitasoft.studio.model.parameter.ParameterPackage;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.parameters.i18n.Messages;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
-import org.bonitasoft.studio.refactoring.core.AbstractScriptExpressionRefactoringAction;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -44,7 +43,6 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
  * @author aurelie Zara
- *
  */
 public class RefactorParametersOperation extends AbstractRefactorOperation<Parameter, Parameter, ParameterRefactorPair> {
 
@@ -73,18 +71,19 @@ public class RefactorParametersOperation extends AbstractRefactorOperation<Param
         }
         configurations.addAll(process.getConfigurations());
         for (final Configuration configuration : configurations) {
-        	final List<Parameter> parameters = configuration.getParameters();
-        	for (final Parameter confParameter : parameters) {
-        		for(final ParameterRefactorPair pairToRefactor : pairsToRefactor){
-        			if (pairToRefactor.getOldValueName().equals(confParameter.getName())) {
-        				cc.append(SetCommand.create(editingDomain, confParameter, ParameterPackage.Literals.PARAMETER__NAME, pairToRefactor.getNewValueName()));
-        				cc.append(SetCommand.create(editingDomain, confParameter, ParameterPackage.Literals.PARAMETER__DESCRIPTION, pairToRefactor.getNewValue().getDescription()));
-        				cc.append(SetCommand.create(editingDomain, confParameter, ParameterPackage.Literals.PARAMETER__TYPE_CLASSNAME,
-        						pairToRefactor.getNewValue().getTypeClassname()));
-        			}
-        		}
-        	}
-        	if (configuration.equals(localeConfiguration)) {
+            final List<Parameter> parameters = configuration.getParameters();
+            for (final Parameter confParameter : parameters) {
+                for (final ParameterRefactorPair pairToRefactor : pairsToRefactor) {
+                    if (pairToRefactor.getOldValueName().equals(confParameter.getName())) {
+                        cc.append(SetCommand.create(editingDomain, confParameter, ParameterPackage.Literals.PARAMETER__NAME, pairToRefactor.getNewValueName()));
+                        cc.append(SetCommand.create(editingDomain, confParameter, ParameterPackage.Literals.PARAMETER__DESCRIPTION, pairToRefactor
+                                .getNewValue().getDescription()));
+                        cc.append(SetCommand.create(editingDomain, confParameter, ParameterPackage.Literals.PARAMETER__TYPE_CLASSNAME,
+                                pairToRefactor.getNewValue().getTypeClassname()));
+                    }
+                }
+            }
+            if (configuration.equals(localeConfiguration)) {
                 cc.append(new SaveConfigurationEMFCommand(file, localConfigurationCopy, localeConfiguration));
             }
         }
@@ -93,15 +92,17 @@ public class RefactorParametersOperation extends AbstractRefactorOperation<Param
     private void refactorReferencedExpressions(final EditingDomain editingDomain, final CompoundCommand cc) {
         final List<Expression> expressions = ModelHelper.getAllItemsOfType(process, ExpressionPackage.Literals.EXPRESSION);
         for (final Expression exp : expressions) {
-        	for(final ParameterRefactorPair pairToRefactor : pairsToRefactor){
-        		if (ExpressionConstants.PARAMETER_TYPE.equals(exp.getType()) && pairToRefactor.getOldValueName().equals(exp.getName())) {
-        			cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, pairToRefactor.getNewValueName()));
-        			cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, pairToRefactor.getNewValueName()));
-        			cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, pairToRefactor.getNewValue().getTypeClassname()));
-        			cc.append(RemoveCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, exp.getReferencedElements()));
-        			cc.append(AddCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, EcoreUtil.copy(pairToRefactor.getNewValue())));
-        		}
-        	}
+            for (final ParameterRefactorPair pairToRefactor : pairsToRefactor) {
+                if (ExpressionConstants.PARAMETER_TYPE.equals(exp.getType()) && pairToRefactor.getOldValueName().equals(exp.getName())) {
+                    cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, pairToRefactor.getNewValueName()));
+                    cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, pairToRefactor.getNewValueName()));
+                    cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, pairToRefactor.getNewValue()
+                            .getTypeClassname()));
+                    cc.append(RemoveCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, exp.getReferencedElements()));
+                    cc.append(AddCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                            EcoreUtil.copy(pairToRefactor.getNewValue())));
+                }
+            }
         }
 
     }
@@ -115,21 +116,13 @@ public class RefactorParametersOperation extends AbstractRefactorOperation<Param
     }
 
     @Override
-    protected AbstractScriptExpressionRefactoringAction<ParameterRefactorPair> getScriptExpressionRefactoringAction(final List<ParameterRefactorPair> pairsToRefactor,
-            final List<Expression> scriptExpressions, final List<Expression> refactoredScriptExpression, final CompoundCommand compoundCommand, final EditingDomain domain,
-            final RefactoringOperationType operationType) {
-        return new ParameterScriptExpressionRefactoringAction(pairsToRefactor, scriptExpressions, refactoredScriptExpression, compoundCommand,
-                domain, operationType);
-    }
-
-    @Override
     protected EObject getContainer(final Parameter olValue) {
         return process;
     }
 
-	@Override
-	protected ParameterRefactorPair createRefactorPair(final Parameter newItem, final Parameter oldItem) {
-		return new ParameterRefactorPair(newItem, oldItem);
-	}
+    @Override
+    protected ParameterRefactorPair createRefactorPair(final Parameter newItem, final Parameter oldItem) {
+        return new ParameterRefactorPair(newItem, oldItem);
+    }
 
 }

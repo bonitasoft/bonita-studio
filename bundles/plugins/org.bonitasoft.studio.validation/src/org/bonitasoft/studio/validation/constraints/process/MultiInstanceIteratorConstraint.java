@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.groovyReferenceValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
 
 import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
@@ -50,7 +50,7 @@ public class MultiInstanceIteratorConstraint extends AbstractLiveValidationMarke
         final MultiInstantiable multiInstantiable = (MultiInstantiable) eObj;
         if (isMultiInstantied(multiInstantiable)
                 && !multiInstantiable.isUseCardinality()) {
-            final IStatus status = groovyReferenceValidator("", true, true).validate(multiInstantiable.getIteratorExpression().getName());
+            final IStatus status = groovyReferenceValidator("").startsWithLowerCase().create().validate(multiInstantiable.getIteratorExpression().getName());
             return status.isOK() ? context.createSuccessStatus() :
                     context.createFailureStatus(status.getMessage());
         }

@@ -24,19 +24,18 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
  * @author Mickael Istria
- *
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class DeleteWidgetWithContextMenuIT extends SWTBotGefTestCase {
 
-
     @Test
-    public void testBug1682() throws Exception {
+    public void should_remove_a_widget_using_context_menu_action() throws Exception {
         Display.getDefault().syncExec(new Runnable() {
 
             @Override
@@ -49,13 +48,23 @@ public class DeleteWidgetWithContextMenuIT extends SWTBotGefTestCase {
             }
         });
         final BotGefFormDiagramEditor activeFormDiagramEditor = new BotProcessDiagramPerspective(bot).activeFormDiagramEditor();
-        EObject form = activeFormDiagramEditor.selectForm().getSelectedSemanticElement();
+        final EObject form = activeFormDiagramEditor.selectForm().getSelectedSemanticElement();
         assertThat(form).isInstanceOf(Form.class);
         assertThat(((Form) form).getWidgets()).hasSize(9);
         activeFormDiagramEditor.selectWidget(1, 1).clickContextMenu("Delete");
         bot.button(IDialogConstants.OK_LABEL).click();
-        form = activeFormDiagramEditor.selectForm().getSelectedSemanticElement();
-        assertThat(((Form) form).getWidgets()).hasSize(8);
+        bot.waitUntil(new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return ((Form) form).getWidgets().size() == 8;
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "Widget has not been removed properly";
+            }
+        });
     }
 
 }

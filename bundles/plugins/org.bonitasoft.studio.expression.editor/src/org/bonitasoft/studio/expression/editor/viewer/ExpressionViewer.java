@@ -1282,10 +1282,15 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     private boolean executeOperation(final String newValue) {
         boolean hasBeenExecuted = false;
         if (operation != null) {
+            operation.clearItemToRefactor();
             final Object oldValue = getInput();
             if (oldValue instanceof Element && !newValue.equals(((Element) getInput()).getName())
                     || oldValue instanceof SearchIndex && !newValue.equals(((SearchIndex) getInput()).getName().getName())) {
-                operation.addItemToRefactor(newValue, getInput());
+                final SearchIndex searchIndex = (SearchIndex) getInput();
+                final SearchIndex newSearchIndex = EcoreUtil.copy(searchIndex);
+                newSearchIndex.getName().setContent(newValue);
+                newSearchIndex.getName().setName(newValue);
+                operation.addItemToRefactor(newSearchIndex, searchIndex);
                 final IProgressService service = PlatformUI.getWorkbench().getProgressService();
                 try {
                     service.busyCursorWhile(operation);

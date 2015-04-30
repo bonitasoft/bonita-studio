@@ -14,9 +14,7 @@
  */
 package org.bonitasoft.studio.contract.ui.property.input.edit;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputController;
-import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -51,7 +49,6 @@ public class ContractInputTypeEditingSupport extends PropertyEditingSupport impl
     protected void setValue(final Object object, final Object value) {
         super.setValue(object, value);
         setContractInput((ContractInput) object);
-        controller.validate(ModelHelper.getFirstContainerOfType((ContractInput) object, Contract.class));
         getViewer().refresh(true);
     }
 

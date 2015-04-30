@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.diagram.custom.repository;
 
@@ -55,7 +52,6 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 /**
  * @author Mickael Istria
  * @author Baptiste Mesta
- *
  */
 public class WebTemplatesUtil {
 
@@ -111,7 +107,6 @@ public class WebTemplatesUtil {
     //	}
 
     /**
-     *
      * get the file from the path even it's a file in a template folder or null
      * if the file does not exists
      *
@@ -119,13 +114,13 @@ public class WebTemplatesUtil {
      * @return the file on the file system
      */
     public static File getFile(final String path) {
-        if(path != null){
+        if (path != null) {
             final File file = new File(path);
             if (file.exists()) {
                 return file;
             } else {
-                final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
-                return  store.getFileInProject(path);
+                final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
+                return store.getFileInProject(path);
 
             }
         }
@@ -133,7 +128,6 @@ public class WebTemplatesUtil {
     }
 
     /**
-     *
      * get the file from the path even it's a file in a template folder or null
      * if the file does not exists
      *
@@ -142,38 +136,36 @@ public class WebTemplatesUtil {
      */
     public static IFile getIFile(final String path) {
         if (path != null) {
-            final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
+            final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
             return store.getIFileInProject(path);
 
         }
         return null;
     }
 
-
-
     public static void refreshFile(final String path) {
-        if(path != null){
+        if (path != null) {
             final File file = new File(path);
             if (!file.exists()) {
-                final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
+                final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
                 final Path ipath = new Path(path);
                 try {
-                    store.getResource().getFile(ipath).refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR) ;
+                    store.getResource().getFile(ipath).refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
                 } catch (final CoreException e) {
-                    BonitaStudioLog.error(e) ;
+                    BonitaStudioLog.error(e);
                 }
             }
         }
     }
-
 
     /**
      * @param process
      * @param theme
      * @return
      */
-    public static CompoundCommand createAddTemplateCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process,final ApplicationLookNFeelFileStore theme) {
-        return createAddTemplateCommand(editingDomain, process, theme,Repository.NULL_PROGRESS_MONITOR);
+    public static CompoundCommand createAddTemplateCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process,
+            final ApplicationLookNFeelFileStore theme) {
+        return createAddTemplateCommand(editingDomain, process, theme, Repository.NULL_PROGRESS_MONITOR);
     }
 
     /**
@@ -189,11 +181,11 @@ public class WebTemplatesUtil {
         clearOldLnF(editingDomain, process, cc);
 
         //copy all files to the user artifact
-        final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
-        final String processUUID = ModelHelper.getEObjectID(process) ;
-        ApplicationResourceFileStore artifact =  (ApplicationResourceFileStore) store.getChild(processUUID);
-        if(artifact== null){
-            artifact = (ApplicationResourceFileStore) store.createRepositoryFileStore(processUUID) ;
+        final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
+        final String processUUID = ModelHelper.getEObjectID(process);
+        ApplicationResourceFileStore artifact = store.getChild(processUUID);
+        if (artifact == null) {
+            artifact = store.createRepositoryFileStore(processUUID);
         }
 
         artifact.clear();
@@ -223,100 +215,108 @@ public class WebTemplatesUtil {
         }
     }
 
-    private static void setWelcomePageCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process, final ApplicationLookNFeelFileStore theme,
+    private static void setWelcomePageCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process,
+            final ApplicationLookNFeelFileStore theme,
             final CompoundCommand cc, final ApplicationResourceFileStore artifact) {
-        if(theme.getWelcomePage().exists()){
+        if (theme.getWelcomePage().exists()) {
             artifact.setWelcomePage(theme.getWelcomePage().getAbsolutePath());
             final AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
             processTemplate.setPath(artifact.getWelcomePageRelativePath());
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE, processTemplate));
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE_INTERNAL, Boolean.TRUE));
-        }else{
+        } else {
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE, null));
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE_INTERNAL, Boolean.FALSE));
         }
     }
 
-    private static void setHostPageCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process, final ApplicationLookNFeelFileStore theme,
+    private static void setHostPageCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process,
+            final ApplicationLookNFeelFileStore theme,
             final CompoundCommand cc, final ApplicationResourceFileStore artifact) {
-        if(theme.getHostPage().exists()){
+        if (theme.getHostPage().exists()) {
             artifact.setHostPage(theme.getHostPage().getAbsolutePath());
             final AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
             processTemplate.setPath(artifact.getHostPageRelativePath());
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__HOST_PAGE, processTemplate));
-        }else{
+        } else {
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__HOST_PAGE, null));
         }
     }
 
-    private static void setLoginPageCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process, final ApplicationLookNFeelFileStore theme,
+    private static void setLoginPageCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process,
+            final ApplicationLookNFeelFileStore theme,
             final CompoundCommand cc, final ApplicationResourceFileStore artifact) {
-        if(theme.getLoginPage().exists()){
+        if (theme.getLoginPage().exists()) {
             artifact.setLoginPage(theme.getLoginPage().getAbsolutePath());
             final AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
             processTemplate.setPath(artifact.getLoginPageRelativePath());
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__LOG_IN_PAGE, processTemplate));
-        }else{
+        } else {
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__LOG_IN_PAGE, null));
         }
     }
 
-    private static void setGlobalTemplateCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process, final ApplicationLookNFeelFileStore theme,
+    private static void setGlobalTemplateCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process,
+            final ApplicationLookNFeelFileStore theme,
             final CompoundCommand cc, final ApplicationResourceFileStore artifact) {
-        if(theme.getGlobalPageTemplate().exists()){
+        if (theme.getGlobalPageTemplate().exists()) {
             artifact.setGlobalPageTemplate(theme.getGlobalPageTemplate().getAbsolutePath());
             final AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
             processTemplate.setPath(artifact.getGlobalPageTemplateRelativePath());
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__PAGE_TEMPLATE, processTemplate));
-        }else{
+        } else {
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__PAGE_TEMPLATE, null));
         }
     }
 
-    private static void setErrorTemplateCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process, final ApplicationLookNFeelFileStore theme,
+    private static void setErrorTemplateCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process,
+            final ApplicationLookNFeelFileStore theme,
             final CompoundCommand cc, final ApplicationResourceFileStore artifact) {
-        if(theme.getErrorTemplate().exists()){
+        if (theme.getErrorTemplate().exists()) {
             artifact.setErrorTemplate(theme.getErrorTemplate().getAbsolutePath());
             final AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
             processTemplate.setPath(artifact.getErrorTemplateProjectRelativePath());
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__ERROR_TEMPLATE, processTemplate));
-        }else{
+        } else {
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__ERROR_TEMPLATE, null));
         }
     }
 
-    private static void setConfirmationTemplateCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process, final ApplicationLookNFeelFileStore theme,
+    private static void setConfirmationTemplateCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process,
+            final ApplicationLookNFeelFileStore theme,
             final CompoundCommand cc, final ApplicationResourceFileStore artifact) {
-        if(theme.getConfirmationTemplate().exists()){
+        if (theme.getConfirmationTemplate().exists()) {
             artifact.setConfirmationTemplate(theme.getConfirmationTemplate().getAbsolutePath());
             final AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
             processTemplate.setPath(artifact.getConfirmationTemplateRelativePath());
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PAGE_FLOW__CONFIRMATION_TEMPLATE, processTemplate));//bad
-        }else{
+        } else {
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PAGE_FLOW__CONFIRMATION_TEMPLATE, null));
         }
     }
 
-    private static void setConsultationTemplateCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process, final ApplicationLookNFeelFileStore theme,
+    private static void setConsultationTemplateCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process,
+            final ApplicationLookNFeelFileStore theme,
             final CompoundCommand cc, final ApplicationResourceFileStore artifact) {
-        if(theme.getConsultationTemplate().exists()){
+        if (theme.getConsultationTemplate().exists()) {
             artifact.setGlobalConsultationPage(theme.getConsultationTemplate().getAbsolutePath());
             final AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
             processTemplate.setPath(artifact.getGlobalConsultationTemplateRelativePath());
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__CONSULTATION_TEMPLATE, processTemplate));
-        }else{
+        } else {
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__CONSULTATION_TEMPLATE, null));
         }
     }
 
-    private static void setProcessTemplateCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process, final ApplicationLookNFeelFileStore theme,
+    private static void setProcessTemplateCommand(final TransactionalEditingDomain editingDomain, final AbstractProcess process,
+            final ApplicationLookNFeelFileStore theme,
             final CompoundCommand cc, final ApplicationResourceFileStore artifact) {
-        if(theme.getProcessTemplate().exists()){
+        if (theme.getProcessTemplate().exists()) {
             artifact.setProcessTemplate(theme.getProcessTemplate().getAbsolutePath());
             final AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
             processTemplate.setPath(artifact.getProcessTemplateProjectRelativePath());
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__PROCESS_TEMPLATE, processTemplate));
-        }else{
+        } else {
             cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__PROCESS_TEMPLATE, null));
         }
     }
@@ -326,36 +326,37 @@ public class WebTemplatesUtil {
         final Collection<ResourceFile> filesToAdd = new ArrayList<ResourceFile>();
         final Collection<ResourceFolder> foldersToAdd = new ArrayList<ResourceFolder>();
         computeFilesAndFoldersToAdd(theme, monitor, artifact, filesToAdd, foldersToAdd);
-        if(filesToAdd.size()>0) {
-            cc.append(new AddCommand(editingDomain, process,ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES, filesToAdd));
+        if (filesToAdd.size() > 0) {
+            cc.append(new AddCommand(editingDomain, process, ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES, filesToAdd));
         }
-        if(foldersToAdd.size()>0){
-            cc.append(new AddCommand(editingDomain, process,ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS, foldersToAdd));
+        if (foldersToAdd.size() > 0) {
+            cc.append(new AddCommand(editingDomain, process, ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS, foldersToAdd));
         }
     }
 
-    private static void computeFilesAndFoldersToAdd(final ApplicationLookNFeelFileStore theme, final IProgressMonitor monitor, final ApplicationResourceFileStore artifact,
+    private static void computeFilesAndFoldersToAdd(final ApplicationLookNFeelFileStore theme, final IProgressMonitor monitor,
+            final ApplicationResourceFileStore artifact,
             final Collection<ResourceFile> filesToAdd, final Collection<ResourceFolder> foldersToAdd) {
         final File themeResourcesApplicationFolder = theme.getResourcesApplicationFolder();
-        if(themeResourcesApplicationFolder != null){
-        	for (final File resource : themeResourcesApplicationFolder.listFiles()) {
-        		if(!resource.getName().equals(".svn")){
-        			final String res = artifact.addResource(resource, monitor);
-        			if(res != null && res.length()>0){
-        				if(resource.isDirectory()){
-        					final ResourceFolder af = ProcessFactory.eINSTANCE.createResourceFolder();
-        					af.setPath(res);
-        					foldersToAdd.add(af);
-        				}else{
-        					final ResourceFile af = ProcessFactory.eINSTANCE.createResourceFile();
-        					af.setPath(res);
-        					filesToAdd.add(af);
-        				}
-        			}
-        		}
-        	}
+        if (themeResourcesApplicationFolder != null) {
+            for (final File resource : themeResourcesApplicationFolder.listFiles()) {
+                if (!resource.getName().equals(".svn")) {
+                    final String res = artifact.addResource(resource, monitor);
+                    if (res != null && res.length() > 0) {
+                        if (resource.isDirectory()) {
+                            final ResourceFolder af = ProcessFactory.eINSTANCE.createResourceFolder();
+                            af.setPath(res);
+                            foldersToAdd.add(af);
+                        } else {
+                            final ResourceFile af = ProcessFactory.eINSTANCE.createResourceFile();
+                            af.setPath(res);
+                            filesToAdd.add(af);
+                        }
+                    }
+                }
+            }
         } else {
-        	BonitaStudioLog.log("The resource Application folder of the theme was not found. (theme: "+ theme.getDisplayName() + ")");
+            BonitaStudioLog.log("The resource Application folder of the theme was not found. (theme: " + theme.getDisplayName() + ")");
         }
     }
 
@@ -364,17 +365,17 @@ public class WebTemplatesUtil {
      * @param abstractProcess
      * @return
      */
-    public static String putResourceInProcessTemplate(final String res, final AbstractProcess abstractProcess,final Object parentFolder) {
-        final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
-        final String processUUID = ModelHelper.getEObjectID(abstractProcess) ;
-        ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) store.getChild(processUUID);
-        if(artifact== null){
-            artifact = (ApplicationResourceFileStore) store.createRepositoryFileStore(processUUID) ;
+    public static String putResourceInProcessTemplate(final String res, final AbstractProcess abstractProcess, final Object parentFolder) {
+        final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
+        final String processUUID = ModelHelper.getEObjectID(abstractProcess);
+        ApplicationResourceFileStore artifact = store.getChild(processUUID);
+        if (artifact == null) {
+            artifact = store.createRepositoryFileStore(processUUID);
         }
         String path;
-        if(parentFolder!=null){
-            path = artifact.addResource(new File(res), ResourceType.RESOURCE,parentFolder, Repository.NULL_PROGRESS_MONITOR);
-        }else{
+        if (parentFolder != null) {
+            path = artifact.addResource(new File(res), ResourceType.RESOURCE, parentFolder, Repository.NULL_PROGRESS_MONITOR);
+        } else {
             path = artifact.addResource(new File(res), new NullProgressMonitor());
         }
         return path;
@@ -384,20 +385,20 @@ public class WebTemplatesUtil {
      * @param temp
      */
     public static boolean isInUserTemplate(final Object temp) {
-        final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
+        final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
         if (temp instanceof String) {
             return ((String) temp).startsWith(store.getResource().getName());
         } else if (temp instanceof ResourceFolder) {
-        	 if(((ResourceFolder) temp).getPath().startsWith(store.getResource().getName())){
-             	return true;
-             }else if(((ResourceFolder) temp).eContainer() instanceof Pool){
-             	return true;
-             }
+            if (((ResourceFolder) temp).getPath().startsWith(store.getResource().getName())) {
+                return true;
+            } else if (((ResourceFolder) temp).eContainer() instanceof Pool) {
+                return true;
+            }
         } else if (temp instanceof ResourceFile) {
-            if(((ResourceFile) temp).getPath().startsWith(store.getResource().getName())){
-            	return true;
-            }else if(((ResourceFile) temp).eContainer() instanceof Pool){
-            	return true;
+            if (((ResourceFile) temp).getPath().startsWith(store.getResource().getName())) {
+                return true;
+            } else if (((ResourceFile) temp).eContainer() instanceof Pool) {
+                return true;
             }
         } else if (temp instanceof File) {
             File parent = ((File) temp).getParentFile();
@@ -413,27 +414,26 @@ public class WebTemplatesUtil {
         return false;
     }
 
-
-
-    public static ApplicationLookNFeelFileStore convertWebTemplateToTheme(final ApplicationResourceFileStore artifact, final String newName, final String previewPath, final IProgressMonitor monitor) throws Exception{
-        final LookNFeelRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class) ;
+    public static ApplicationLookNFeelFileStore convertWebTemplateToTheme(final ApplicationResourceFileStore artifact, final String newName,
+            final String previewPath, final IProgressMonitor monitor) throws Exception {
+        final LookNFeelRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final IFolder folder = store.getResource().getFolder(newName);
-        if(folder.exists()){
+        if (folder.exists()) {
             return null;
         }
         folder.create(true, true, monitor);
         final File targetFolder = folder.getLocation().toFile();
         final File srcFolder = artifact.getResource().getLocation().toFile();
-        PlatformUtil.copyResource(targetFolder, srcFolder, monitor);
+        PlatformUtil.copyResourceDirectory(targetFolder, srcFolder, monitor);
         final ApplicationLookNFeelFileStore target = (ApplicationLookNFeelFileStore) store.createRepositoryFileStore(newName);
         target.setAuthor("Generated from Bonita Studio");
-        if(previewPath != null){
+        if (previewPath != null) {
             final File previewFile = new File(previewPath);
-            if(previewFile.exists()){
-                final FileInputStream is = new FileInputStream(previewFile) ;
-                target.copyPreviewFile(previewFile.getName(),is);
-                is.close() ;
-                target.setPreviewFilePath(previewFile.getName()) ;
+            if (previewFile.exists()) {
+                final FileInputStream is = new FileInputStream(previewFile);
+                target.copyPreviewFile(previewFile.getName(), is);
+                is.close();
+                target.setPreviewFilePath(previewFile.getName());
             }
         }
         target.save(null);
@@ -448,15 +448,15 @@ public class WebTemplatesUtil {
     public static org.eclipse.emf.common.command.Command createDefaultResourceFolders(final TransactionalEditingDomain editingDomain, final Pool poolModel) {
         // copy it in the process template directory
         final IRepositoryStore<?> resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
-        final String processUUID = ModelHelper.getEObjectID(poolModel) ;
+        final String processUUID = ModelHelper.getEObjectID(poolModel);
         ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID);
-        if(artifact== null){
+        if (artifact == null) {
             artifact = (ApplicationResourceFileStore) resourceStore.createRepositoryFileStore(processUUID);
         }
-        ResourceFolder resFolder = searchApplicationFolder(poolModel, artifact);
-        if(resFolder != null){
+        final ResourceFolder resFolder = searchApplicationFolder(poolModel, artifact);
+        if (resFolder != null) {
             return null;
-        }else{
+        } else {
             final String path = artifact.createResourceFolder("application");//$NON-NLS-1$
             final ResourceFolder af = ProcessFactory.eINSTANCE.createResourceFolder();
             af.setPath(path);
@@ -464,12 +464,12 @@ public class WebTemplatesUtil {
         }
     }
 
-    private static ResourceFolder searchApplicationFolder(final Pool poolModel, ApplicationResourceFileStore artifact) {
+    private static ResourceFolder searchApplicationFolder(final Pool poolModel, final ApplicationResourceFileStore artifact) {
         final Iterator<ResourceFolder> it = poolModel.getResourceFolders().iterator();
         ResourceFolder resFolder = null;
         while (resFolder == null && it.hasNext()) {
             final ResourceFolder resourceFolder = it.next();
-            if(resourceFolder.getPath().equals(artifact.getResourceProjectRelativePath()+"/application")){//$NON-NLS-1$
+            if (resourceFolder.getPath().equals(artifact.getResourceProjectRelativePath() + "/application")) {//$NON-NLS-1$
                 resFolder = resourceFolder;
                 break;
             }
@@ -477,20 +477,21 @@ public class WebTemplatesUtil {
         return resFolder;
     }
 
-    public static AssociatedFile putResourcesInProcessTemplate(String res, final Object parentFolder,final TransactionalEditingDomain editingDomain, final AbstractProcess process) {
+    public static AssociatedFile putResourcesInProcessTemplate(String res, final Object parentFolder, final TransactionalEditingDomain editingDomain,
+            final AbstractProcess process) {
         // copy it in the process template directory
         final boolean isDirectory = new File(res).isDirectory();
         res = WebTemplatesUtil.putResourceInProcessTemplate(res, process, parentFolder);
         if (res != null && parentFolder == null) {//do not add a resfolder if it was already in a res folder
             AssociatedFile af;
-            if(isDirectory){
+            if (isDirectory) {
                 af = ProcessFactory.eINSTANCE.createResourceFolder();
-            }else{
+            } else {
                 af = ProcessFactory.eINSTANCE.createResourceFile();
             }
             af.setPath(res);
             editingDomain.getCommandStack().execute(
-                    new AddCommand(editingDomain, process, isDirectory? ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS
+                    new AddCommand(editingDomain, process, isDirectory ? ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS
                             : ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES
                             , af));
             return af;

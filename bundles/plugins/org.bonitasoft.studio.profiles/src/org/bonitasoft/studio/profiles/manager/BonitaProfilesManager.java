@@ -33,6 +33,7 @@ import org.bonitasoft.studio.profiles.ProfilePlugin;
 import org.bonitasoft.studio.profiles.i18n.Messages;
 import org.bonitasoft.studio.profiles.repository.ProfileFileStore;
 import org.bonitasoft.studio.profiles.repository.ProfileRepositoryStore;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
@@ -68,41 +69,48 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
         featuresByFamily = new HashMap<String, List<String>>() ;
         workingCopy = PlatformUI.getWorkbench().getActivitySupport().createWorkingCopy() ;
 
-        List<String> modelingFeatures = new ArrayList<String>();
-        List<String> extensionFeatures = new ArrayList<String>();
-        List<String> applicationFeatures = new ArrayList<String>();
-        for(Object category : workingCopy.getDefinedCategoryIds()){
-            String categoryId = (String) category ;
-
-            if(categoryId.equals(PROCESS_MODELING) ||
-                    categoryId.equals(APPEARANCE_CUSTOMIZATION) ||
-                    categoryId.equals(VALIDATION) ||
-                    categoryId.equals(SIMULATION)){
+        final List<String> modelingFeatures = new ArrayList<String>();
+        final List<String> extensionFeatures = new ArrayList<String>();
+        final List<String> applicationFeatures = new ArrayList<String>();
+        for(final Object category : workingCopy.getDefinedCategoryIds()){
+            final String categoryId = (String) category ;
+            if(isIncludedInModelingFeature(categoryId)){
                 modelingFeatures.add(categoryId) ;
             }
-
-            if(categoryId.equals(EXECUTION) ||
-                    categoryId.equals(CONNECTORS) ||
-                    categoryId.equals(DATA_MANAGEMENT) ||
-                    categoryId.equals(DEPENDENCIES_MANAGEMENT) ||
-                    categoryId.equals(KPI)){
+            if(isIncludedInExtensionFeature(categoryId)){
                 extensionFeatures.add(categoryId) ;
             }
-
-            if(categoryId.equals(LOOK_N_FEELS) ||
-                    categoryId.equals(FORMS_MODELING) ||
-                    categoryId.equals(FORMS_TEMPLATES) ||
-                    categoryId.equals(VALIDATORS) 
-                    ){
+            if (isIncludedInApplicationFeature(categoryId)) {
                 applicationFeatures.add(categoryId) ;
             }
-
         }
 
         featuresByFamily.put(IBonitaActivitiesCategory.MODELING_FAMILY, modelingFeatures) ;
         featuresByFamily.put(IBonitaActivitiesCategory.EXTENSIONS_FAMILY, extensionFeatures) ;
         featuresByFamily.put(IBonitaActivitiesCategory.APPLICATION_FAMILY, applicationFeatures) ;
 
+    }
+
+    protected boolean isIncludedInApplicationFeature(final String categoryId) {
+        return categoryId.equals(LOOK_N_FEELS) ||
+                categoryId.equals(FORMS_MODELING) ||
+                categoryId.equals(FORMS_TEMPLATES) ||
+                categoryId.equals(VALIDATORS);
+    }
+
+    protected boolean isIncludedInExtensionFeature(final String categoryId) {
+        return categoryId.equals(EXECUTION) ||
+                categoryId.equals(CONNECTORS) ||
+                categoryId.equals(DATA_MANAGEMENT) ||
+                categoryId.equals(DEPENDENCIES_MANAGEMENT) ||
+                categoryId.equals(KPI);
+    }
+
+    protected boolean isIncludedInModelingFeature(final String categoryId) {
+        return categoryId.equals(PROCESS_MODELING) ||
+                categoryId.equals(APPEARANCE_CUSTOMIZATION) ||
+                categoryId.equals(VALIDATION) ||
+                categoryId.equals(SIMULATION);
     }
 
     public static BonitaProfilesManager getInstance(){
@@ -116,12 +124,12 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
         return workingCopy ;
     }
 
-    public Set<String> getFeatureByProfile(String profileId){
+    public Set<String> getFeatureByProfile(final String profileId){
         if(profiles.get(profileId) != null){
             return profiles.get(profileId) ;
         }else{
-            final ProfileRepositoryStore profileStore = (ProfileRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProfileRepositoryStore.class) ;
-            ProfileFileStore file = profileStore.getChild(profileId+"."+ProfileRepositoryStore.PROFILE_EXT);
+            final ProfileRepositoryStore profileStore = RepositoryManager.getInstance().getRepositoryStore(ProfileRepositoryStore.class) ;
+            final ProfileFileStore file = profileStore.getChild(profileId+"."+ProfileRepositoryStore.PROFILE_EXT);
             if(file != null){
                 if(file.isProvided()){
                     profiles.put(profileId,  file.getFeatures()) ;
@@ -133,44 +141,49 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
     }
 
 
-    public boolean isEnabled(String category) {
+    public boolean isEnabled(final String category) {
         return InternalActivityHelper.getEnabledCategories(workingCopy).contains(category);
     }
 
-    public List<String> getFeatureByFamily(String family) {
+    public List<String> getFeatureByFamily(final String family) {
         return featuresByFamily.get(family);
     }
 
     @SuppressWarnings("unchecked")
 	public void applyChanges()  {
-        String profileName =  ProfilePlugin.getDefault().getPreferenceStore().getString(PREF_ACTIVE_PROFILE) ;
+        final String profileName =  ProfilePlugin.getDefault().getPreferenceStore().getString(PREF_ACTIVE_PROFILE) ;
         ICategory[] categories = WorkbenchActivityHelper.resolveCategories(workingCopy,getAllFeature()) ;
-        Set activitySet = new HashSet() ;
-        for(ICategory category : categories){
+        final Set activitySet = new HashSet() ;
+        for(final ICategory category : categories){
             activitySet.addAll(WorkbenchActivityHelper.getActivityIdsForCategory(category));
         }
 
-        HashSet newSet = new HashSet(workingCopy.getEnabledActivityIds());
+        final HashSet newSet = new HashSet(workingCopy.getEnabledActivityIds());
         newSet.removeAll(activitySet);
         workingCopy.setEnabledActivityIds(newSet);
 
-        categories = WorkbenchActivityHelper.resolveCategories(workingCopy,getFeatureByProfile(profileName)) ;
+        final Set<String> featureByProfile = getFeatureByProfile(profileName);
+        categories = WorkbenchActivityHelper.resolveCategories(workingCopy,featureByProfile) ;
         activitySet.clear();
-        for(ICategory category : categories){
+        for(final ICategory category : categories){
             activitySet.addAll(WorkbenchActivityHelper.getActivityIdsForCategory(category));
         }
 
         activitySet.addAll(workingCopy.getEnabledActivityIds());
         workingCopy.setEnabledActivityIds(activitySet);
-      
+
 
         PlatformUI.getWorkbench().getActivitySupport().setEnabledActivityIds(workingCopy.getEnabledActivityIds()) ;
-   
+
+    }
+
+    protected IPreferenceStore getBonitaPreferenceStore() {
+        return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
     }
 
 
-    public void setActiveProfile(String profileName,boolean updateUI) {
-        final ProfileRepositoryStore profileStore = (ProfileRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProfileRepositoryStore.class) ;
+    public void setActiveProfile(String profileName,final boolean updateUI) {
+        final ProfileRepositoryStore profileStore = RepositoryManager.getInstance().getRepositoryStore(ProfileRepositoryStore.class) ;
         if(profileStore.getChild(profileName+"."+ProfileRepositoryStore.PROFILE_EXT) == null){
             profileName = APPLICATION_DEVELOPER_PROFILE ;
         }
@@ -205,10 +218,10 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
     protected void updateViews() {
         if(PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null){
             PlatformUtil.openIntroIfNoOtherEditorOpen() ;
-            IWorkbenchPage activePage =  PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() ;
+            final IWorkbenchPage activePage =  PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() ;
             if(activePage != null){
-                for(String id : BonitaPerspectivesUtils.getAllPropertiesViews()){
-                    IViewPart part = activePage.findView(id) ;
+                for(final String id : BonitaPerspectivesUtils.getAllPropertiesViews()){
+                    final IViewPart part = activePage.findView(id) ;
                     if(part != null){
                         activePage.hideView(part) ;
                     }
@@ -219,7 +232,7 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
     }
 
     private Set<String> getAllFeature() {
-        Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<String>();
         result.addAll(getFeatureByFamily(MODELING_FAMILY)) ;
         result.addAll(getFeatureByFamily(APPLICATION_FAMILY)) ;
         result.addAll(getFeatureByFamily(EXTENSIONS_FAMILY)) ;
@@ -244,7 +257,7 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
         return id;
     }
 
-    public static Integer getPriority(String id) {
+    public static Integer getPriority(final String id) {
         if(id.equals(APPLICATION_DEVELOPER_PROFILE)){
             return 3 ;
         }

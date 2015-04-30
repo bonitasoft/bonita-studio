@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 BonitaSoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -14,57 +14,64 @@
  */
 package org.bonitasoft.studio.refactoring.core;
 
+import static com.google.common.base.Predicates.and;
+import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.bonitasoft.studio.refactoring.core.groovy.ReferenceDiff.newReferenceDiff;
+import static com.google.common.collect.Sets.newHashSet;
+import static org.bonitasoft.studio.common.predicate.ExpressionPredicates.withExpressionType;
+import static org.bonitasoft.studio.common.predicate.ExpressionPredicates.withReferencedElement;
+import static org.bonitasoft.studio.refactoring.core.script.ReferenceDiff.newReferenceDiff;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.refactoring.core.groovy.GroovyScriptRefactoringOperation;
-import org.bonitasoft.studio.refactoring.core.groovy.ReferenceDiff;
+import org.bonitasoft.studio.refactoring.core.script.ConditionExpressionScriptContrainer;
+import org.bonitasoft.studio.refactoring.core.script.GroovyExpressionScriptContrainer;
+import org.bonitasoft.studio.refactoring.core.script.GroovyScriptRefactoringOperationFactory;
+import org.bonitasoft.studio.refactoring.core.script.ReferenceDiff;
+import org.bonitasoft.studio.refactoring.core.script.ScriptContainer;
+import org.bonitasoft.studio.refactoring.core.script.TextExpressionScriptContainer;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Sets;
 
 /**
  * @author Romain Bioteau
  */
-public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, Z>> implements IRunnableWithProgress {
+public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EObject, T extends RefactorPair<Y, Z>> implements IRunnableWithProgress {
 
     private static final int MIN_MONITOR_WORK = 3;
-    private TransactionalEditingDomain domain;
+    private EditingDomain domain;
     private CompoundCommand compoundCommand;
     private boolean canExecute = true;
     private boolean isCancelled = false;
     protected RefactoringOperationType operationType;
     private boolean askConfirmation;
     protected List<T> pairsToRefactor = new ArrayList<T>();
+    private final DependencyFeatureNameResolver dependencyFeatureNameResolver;
 
     public AbstractRefactorOperation(final RefactoringOperationType operationType) {
         this.operationType = operationType;
+        compoundCommand = new CompoundCommand("Refactor Operation");
+        dependencyFeatureNameResolver = new DependencyFeatureNameResolver();
     }
 
     protected CompoundCommand buildCompoundCommand(final IProgressMonitor monitor) throws InterruptedException, InvocationTargetException {
-        if (compoundCommand == null) {
-            compoundCommand = new CompoundCommand("Refactor Operation");
-        }
         if (canExecute()) {
             updateReferencesInScripts(monitor);
         }
@@ -114,27 +121,24 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
     protected abstract CompoundCommand doBuildCompoundCommand(CompoundCommand cc, IProgressMonitor monitor);
 
     protected void updateReferencesInScripts(final IProgressMonitor monitor) throws InterruptedException, InvocationTargetException {
-        final Set<Expression> scriptExpressionsSetToRefactor = new HashSet<Expression>();
+        final Set<ScriptContainer<?>> scriptExpressionsSetToRefactor = newHashSet();
         for (final RefactorPair<Y, Z> pairRefactor : pairsToRefactor) {
             if (shouldUpdateReferencesInScripts(pairRefactor)) {
                 final Z oldValue = pairRefactor.getOldValue();
                 if (oldValue instanceof EObject) {
-                    scriptExpressionsSetToRefactor.addAll(ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(getContainer(oldValue),
-                            (EObject) oldValue));
+                    scriptExpressionsSetToRefactor.addAll(allScriptWithReferencedElement(pairRefactor));
                 }
             }
         }
-        final List<Expression> scripExpressionsToRefactor = new ArrayList<Expression>(scriptExpressionsSetToRefactor);
+        final List<ScriptContainer<?>> scripExpressionsToRefactor = newArrayList(scriptExpressionsSetToRefactor);
         if (!scripExpressionsToRefactor.isEmpty()) {
             if (scripExpressionsToRefactor.size() > MIN_MONITOR_WORK) {
                 monitor.beginTask("Refactoring", scripExpressionsToRefactor.size());
             }
-            final List<Expression> refactoredScriptExpression = performRefactoringForAllScripts(scripExpressionsToRefactor, monitor);
-            //TODO: improve in order to filter only the data refactored AND with references
-            final AbstractScriptExpressionRefactoringAction<T> action = getScriptExpressionRefactoringAction(pairsToRefactor,
-                    scripExpressionsToRefactor, refactoredScriptExpression, compoundCommand, domain, operationType);
+            performRefactoringForAllScripts(scripExpressionsToRefactor, monitor);
+            final ScriptRefactoringAction<T> action = createScriptExpressionRefactoringAction(pairsToRefactor,
+                    scripExpressionsToRefactor, compoundCommand, domain, operationType);
             if (action != null) {
-                action.setEditingDomain(domain);
                 action.setAskConfirmation(askConfirmation());
                 action.run(null);
                 setCanExecute(!action.isCancelled());
@@ -147,14 +151,76 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
         }
     }
 
-    protected abstract AbstractScriptExpressionRefactoringAction<T> getScriptExpressionRefactoringAction(List<T> pairsToRefactor,
-            List<Expression> scriptExpressions,
-            List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand, EditingDomain domain, RefactoringOperationType operationType);
+    protected Set<ScriptContainer<?>> allScriptWithReferencedElement(final RefactorPair<Y, Z> pairRefactor) {
+        final Set<ScriptContainer<?>> result = newHashSet();
+        final Z oldValue = pairRefactor.getOldValue();
+        final EObject container = getContainer(oldValue);
+        result.addAll(allGroovyScriptWithReferencedElement(container, oldValue));
+        result.addAll(allPatternScriptWithReferencedElement(container, oldValue));
+        result.addAll(allConditionExpressionWithReferencedElement(container, oldValue));
+        return result;
+    }
 
-    protected List<Expression> performRefactoringForAllScripts(final List<Expression> groovyScriptExpressions, final IProgressMonitor monitor)
-            throws InterruptedException, InvocationTargetException {
-        final List<Expression> newExpressions = new ArrayList<Expression>(groovyScriptExpressions.size());
-        for (final Expression expr : groovyScriptExpressions) {
+    private Collection<? extends ScriptContainer<?>> allPatternScriptWithReferencedElement(final EObject container, final Z referencedElement) {
+        return Sets.newHashSet(transform(
+                filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class),
+                        and(withExpressionType(ExpressionConstants.PATTERN_TYPE), withReferencedElement(referencedElement))),
+                toTextExpressionScriptContainer(dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));
+    }
+
+    private Collection<? extends ScriptContainer<?>> allConditionExpressionWithReferencedElement(final EObject container, final Z referencedElement) {
+        return Sets.newHashSet(transform(
+                filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class),
+                        and(withExpressionType(ExpressionConstants.CONDITION_TYPE), withReferencedElement(referencedElement))),
+                toConditionExpressionScriptContainer(dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));
+    }
+
+    private Collection<? extends ScriptContainer<?>> allGroovyScriptWithReferencedElement(final EObject container, final Z referencedElement) {
+        return Sets.newHashSet(transform(
+                filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class),
+                        and(withExpressionType(ExpressionConstants.SCRIPT_TYPE), withReferencedElement(referencedElement))),
+                toGroovyExpressionScriptContainer(dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));
+    }
+
+    private Function<Expression, TextExpressionScriptContainer> toTextExpressionScriptContainer(final EAttribute dependencyNameFeature) {
+        return new Function<Expression, TextExpressionScriptContainer>() {
+
+            @Override
+            public TextExpressionScriptContainer apply(final Expression expression) {
+                return new TextExpressionScriptContainer(expression, dependencyNameFeature);
+            }
+        };
+    }
+
+    private Function<Expression, ConditionExpressionScriptContrainer> toConditionExpressionScriptContainer(final EAttribute dependencyNameFeature) {
+        return new Function<Expression, ConditionExpressionScriptContrainer>() {
+
+            @Override
+            public ConditionExpressionScriptContrainer apply(final Expression expression) {
+                return new ConditionExpressionScriptContrainer(expression, dependencyNameFeature);
+            }
+        };
+    }
+
+    private Function<Expression, GroovyExpressionScriptContrainer> toGroovyExpressionScriptContainer(final EAttribute dependencyNameFeature) {
+        return new Function<Expression, GroovyExpressionScriptContrainer>() {
+
+            @Override
+            public GroovyExpressionScriptContrainer apply(final Expression expression) {
+                return new GroovyExpressionScriptContrainer(expression, dependencyNameFeature, new GroovyScriptRefactoringOperationFactory());
+            }
+        };
+    }
+
+    protected ScriptRefactoringAction<T> createScriptExpressionRefactoringAction(final List<T> pairsToRefactor,
+            final List<ScriptContainer<?>> scriptExpressions, final CompoundCommand compoundCommand, final EditingDomain domain,
+            final RefactoringOperationType operationType) {
+        return new ScriptRefactoringAction<T>(pairsToRefactor, scriptExpressions, compoundCommand, domain, operationType);
+    }
+
+    protected void performRefactoringForAllScripts(final List<ScriptContainer<?>> groovyScriptExpressions, final IProgressMonitor monitor)
+            throws InvocationTargetException, InterruptedException {
+        for (final ScriptContainer<?> expr : groovyScriptExpressions) {
             if (groovyScriptExpressions.size() > MIN_MONITOR_WORK) {
                 if (monitor.isCanceled()) {
                     throw new InterruptedException("Monitor cancelled by user");
@@ -163,23 +229,9 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
                         groovyScriptExpressions.indexOf(expr) + 1,
                         groovyScriptExpressions.size()));
             }
-            final Expression newExpr = EcoreUtil.copy(expr);
-            if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())) {
-                final GroovyScriptRefactoringOperation groovyScriptRefactoringOperation = new GroovyScriptRefactoringOperation(expr.getContent(),
-                        newArrayList(transform(pairsToRefactor, toRefDiff())));
-                groovyScriptRefactoringOperation.run(monitor);
-                newExpr.setContent(groovyScriptRefactoringOperation.getScript());
-            } else {
-                String textRefactored = expr.getContent();
-                for (final RefactorPair<Y, Z> pairToRefactor : pairsToRefactor) {
-                    textRefactored = performTextReplacement(pairToRefactor.getOldValueName(), pairToRefactor.getNewValueName(), textRefactored);
-                }
-                newExpr.setContent(textRefactored);
-            }
-            newExpressions.add(newExpr);
+            expr.updateScript(newArrayList(transform(pairsToRefactor, toRefDiff())), monitor);
             monitor.worked(1);
         }
-        return newExpressions;
     }
 
     private Function<RefactorPair<Y, Z>, ReferenceDiff> toRefDiff() {
@@ -192,46 +244,11 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
         };
     }
 
-    private String performTextReplacement(final String elementNameToUpdate, final String newElementName, final String script) {
-        final String contextRegex = "[\\W^_]";
-        final Pattern p = Pattern.compile(elementNameToUpdate);
-        final Matcher m = p.matcher(script);
-        final StringBuffer buf = new StringBuffer();
-        while (m.find()) {
-            String prefix = null;
-            String suffix = null;
-            if (m.start() > 0) {
-                prefix = script.substring(m.start() - 1, m.start());
-            }
-            if (m.end() < script.length()) {
-                suffix = script.substring(m.end(), m.end() + 1);
-            }
-            if (prefix == null && suffix == null) {
-                m.appendReplacement(buf, newElementName);
-            } else {
-                if (prefix != null && prefix.matches(contextRegex) && suffix == null) {
-                    m.appendReplacement(buf, newElementName);
-                } else {
-                    if (prefix == null && suffix != null && suffix.matches(contextRegex)) {
-                        m.appendReplacement(buf, newElementName);
-                    } else {
-                        if (prefix != null && suffix != null && prefix.matches(contextRegex) && suffix.matches(contextRegex)) {
-                            m.appendReplacement(buf, newElementName);
-                        }
-                    }
-                }
-            }
-
-        }
-        m.appendTail(buf);
-        return buf.toString();
-    }
-
-    public void setEditingDomain(final TransactionalEditingDomain domain) {
+    public void setEditingDomain(final EditingDomain domain) {
         this.domain = domain;
     }
 
-    protected TransactionalEditingDomain getEditingDomain() {
+    public EditingDomain getEditingDomain() {
         return domain;
     }
 
@@ -252,12 +269,12 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
         this.askConfirmation = askConfirmation;
     }
 
-    protected boolean askConfirmation() {
+    public boolean askConfirmation() {
         return askConfirmation;
     }
 
     public boolean canExecute() {
-        return canExecute;
+        return canExecute && compoundCommand != null;
     }
 
     public void setCanExecute(final boolean canExecute) {
@@ -278,6 +295,10 @@ public abstract class AbstractRefactorOperation<Y, Z, T extends RefactorPair<Y, 
 
     protected void setCancelled(final boolean isCancelled) {
         this.isCancelled = isCancelled;
+    }
+
+    public void clearItemToRefactor() {
+        pairsToRefactor.clear();
     }
 
 }
