@@ -72,5 +72,7 @@ public class Messages extends NLS {
     public static String SelectBusinessDataWizardPageTitle;
     public static String selectBusinessDataWizardPageDescription;
     public static String contentAssistHint;
+    public static String generate;
+    public static String prefix;
 
 }

@@ -43,6 +43,10 @@ public abstract class FieldToContractInputMapping {
         }
     }
 
+    public Field getField() {
+        return field;
+    }
+
     public void setParent(final FieldToContractInputMapping parentField) {
         parent = parentField;
     }
