@@ -123,7 +123,7 @@ public class TestCreateValidatorWizard extends SWTBotGefTestCase {
 
 
     protected void openNewValidatorWizardDialog() {
-        bot.menu("Development").menu("Validators").menu("New validator...").click();
+        bot.menu("Development").menu("6.x Validators").menu("New validator...").click();
         bot.waitUntil(Conditions.shellIsActive("New validator"));
     }
 
