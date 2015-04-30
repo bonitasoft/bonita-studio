@@ -208,6 +208,12 @@ public class Messages extends NLS {
 
     public static String duplicatedFormName;
 
+    public static String SequenceFlow_Without_Target_Element;
+    public static String SequenceFlow_Without_Source_Element;
+    public static String SequenceFlow_Without_Container;
+    public static String SequenceFlow_And_SourceElement_Not_In_The_Same_Container;
+    public static String SequenceFlow_And_TargetElement_Not_In_The_Same_Container;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
