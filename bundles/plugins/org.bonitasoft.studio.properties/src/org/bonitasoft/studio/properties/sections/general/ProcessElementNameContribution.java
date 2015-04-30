@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.properties.sections.general;
 
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.forbiddenCharactersValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.minMaxLengthValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.utf8InputValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.forbiddenCharactersValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.minMaxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.utf8InputValidator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;

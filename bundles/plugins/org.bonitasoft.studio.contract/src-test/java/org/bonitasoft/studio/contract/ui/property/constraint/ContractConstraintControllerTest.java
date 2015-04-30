@@ -5,19 +5,17 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.contract.ui.property.constraint;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
+import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -28,12 +26,12 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -44,10 +42,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ContractConstraintControllerTest extends AbstractSWTTestCase {
@@ -56,9 +52,6 @@ public class ContractConstraintControllerTest extends AbstractSWTTestCase {
 
     @Mock
     private TreeViewer viewer;
-
-    @Mock
-    private ContractDefinitionValidator contractDefinitionValidator;
 
     private Contract contract;
 
@@ -69,7 +62,7 @@ public class ContractConstraintControllerTest extends AbstractSWTTestCase {
     public void setUp() throws Exception {
         createDisplayAndRealm();
         FileActionDialog.setDisablePopup(true);
-        controller = spy(new ContractConstraintController(contractDefinitionValidator));
+        controller = spy(new ContractConstraintController(new WritableValue(aContract().build(), Contract.class)));
         contract = ProcessFactory.eINSTANCE.createContract();
         when(viewer.getInput()).thenReturn(EMFObservables.observeList(contract, ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
     }
@@ -87,11 +80,10 @@ public class ContractConstraintControllerTest extends AbstractSWTTestCase {
         when(viewer.getSelection()).thenReturn(new StructuredSelection());
         final ContractConstraint constraint = controller.add(viewer);
         assertThat(contract.getConstraints()).containsOnly(constraint);
-        assertThat(constraint.getName()).isNullOrEmpty();
+        assertThat(constraint.getName()).isEqualTo("constraint1");
+        assertThat(constraint.getExpression()).isEqualTo("return true;");
         verify(viewer).editElement(constraint, 0);
     }
-
-
 
     @Test
     public void should_remove_remove_selected_constraint_from_contract() throws Exception {
@@ -105,12 +97,7 @@ public class ContractConstraintControllerTest extends AbstractSWTTestCase {
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(c2, c3)));
         controller.remove(viewer);
         assertThat(contract.getConstraints()).containsOnly(c1);
-        verify(contractDefinitionValidator).clearMessages(c2);
-        verify(contractDefinitionValidator).clearMessages(c3);
-        verify(contractDefinitionValidator).validate(contract);
-        verify(viewer).refresh(true);
     }
-
 
     @Test
     public void should_remove_never_refresh_duplicated_inputs() throws Exception {
@@ -123,8 +110,6 @@ public class ContractConstraintControllerTest extends AbstractSWTTestCase {
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(c2)));
         controller.remove(viewer);
         assertThat(contract.getConstraints()).containsOnly(c1, c3);
-        verify(contractDefinitionValidator).clearMessages(c2);
-        verify(contractDefinitionValidator, never()).validate(any(Contract.class));
         verify(viewer, never()).refresh(true);
     }
 

@@ -20,6 +20,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.Index;
+import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.engine.bdm.model.field.RelationField;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.dialog.IndexFieldsSelectionDialog;
 import org.bonitasoft.studio.businessobject.ui.wizard.provider.FieldLabelProvider;
@@ -31,12 +36,6 @@ import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
-import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.Index;
-import org.bonitasoft.engine.bdm.model.field.Field;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.engine.bdm.model.field.SimpleField;
 
 /**
  * @author Romain Bioteau

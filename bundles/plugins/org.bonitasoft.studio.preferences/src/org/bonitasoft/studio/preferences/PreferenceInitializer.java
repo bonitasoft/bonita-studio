@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2009-2012 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -42,23 +42,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
      */
     @Override
     public void initializeDefaultPreferences() {
-        final IPreferenceStore store = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
-        final IPreferenceStore webStore = WebBrowserUIPlugin.getInstance().getPreferenceStore();
-        final IEclipsePreferences node = DefaultScope.INSTANCE.getNode(ResourcesPlugin.PI_RESOURCES);
-        node.put(ResourcesPlugin.PREF_ENCODING, "UTF-8");
-        final String consolePortSpecifiedAsSystemProperty = System.getProperty(CONSOLE_PORT);
-        if (consolePortSpecifiedAsSystemProperty != null
-                && !consolePortSpecifiedAsSystemProperty.isEmpty()) {
-            try {
-                store.setDefault(CONSOLE_PORT, Integer.parseInt(consolePortSpecifiedAsSystemProperty));
-            } catch (final Exception e) {
-                store.setDefault(CONSOLE_PORT, DEFAULT_PORT);
-            }
-        } else {
-            store.setDefault(CONSOLE_PORT, DEFAULT_PORT);
-        }
-        store.setDefault(CONSOLE_HOST, DEFAULT_HOST);
-        webStore.setDefault(CONSOLE_BROWSER_CHOICE, EXTERNAL_BROWSER);
+        final IPreferenceStore store = getBonitaPreferenceStore();
+        final IPreferenceStore webStore = getWebBrowserPreferenceStore();
+        setUTF8DefaultEncoding();
+        initDefaultWebPreferences(store, webStore);
 
         store.setDefault(USER_NAME, USER_NAME_DEFAULT);
         store.setDefault(USER_PASSWORD, USER_PASSWORD_DEFAULT);
@@ -69,27 +56,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         store.setDefault(TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION, MessageDialogWithToggle.NEVER);
         store.setDefault(PUBLISH_ORGANIZATION, false);
 
-        Locale defaultStudioLocal = Locale.getDefault();
-        boolean defaultLocalExists = false;
-        for (final Locale locale : LocaleUtil.getStudioLocales()) {
-            if (locale.getLanguage().equals(defaultStudioLocal.getLanguage())) {
-                defaultStudioLocal = locale;
-                defaultLocalExists = true;
-                break;
-            }
-        }
-
-        String defaultLocaleValue = store.getString(DEFAULT_STUDIO_LOCALE);// Default value is compute on the first the studio is run
-                                                                           // only because Locale.getDefault() is based on osgi.nl
-                                                                           // property
-        if (defaultLocaleValue == null || defaultLocaleValue.isEmpty()) {
-            store.setValue(DEFAULT_STUDIO_LOCALE,
-                    defaultLocalExists ? defaultStudioLocal.getLanguage() : Locale.ENGLISH.getLanguage());
-            defaultLocaleValue = store.getString(DEFAULT_STUDIO_LOCALE);
-        }
-
-        store.setDefault(CURRENT_UXP_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
-        store.setDefault(CURRENT_STUDIO_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
+        initDefaultLocalesPreference(store);
 
         store.setDefault(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE, BonitaCoolBarPreferenceConstant.NORMAL);
         store.setDefault(APLLICATION_DEPLOYMENT_MODE, ALL_IN_BAR);
@@ -100,18 +67,77 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         store.setDefault(VALIDATION_BEFORE_RUN, true);
         store.setDefault(ASK_RENAME_ON_FIRST_SAVE, true);
         store.setDefault(ALWAYS_USE_SCRIPTING_MODE, false);
-        PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.DISABLE_OPEN_EDITOR_IN_PLACE, true);
+        store.setDefault(SHOW_LEGACY_6X_MODE, false);
+        getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.DISABLE_OPEN_EDITOR_IN_PLACE, true);
 
-        DebugUIPlugin.getDefault().getPreferenceStore()
-                .setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_OUT, false);
-        DebugUIPlugin.getDefault().getPreferenceStore()
-                .setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_ERR, false);
-        DebugPlugin
-                .getDefault()
-                .getPluginPreferences()
-                .setDefault(
-                        IInternalDebugCoreConstants.PREF_ENABLE_STATUS_HANDLERS,
-                        false);
+        initDefaultDebugPreferences();
+    }
+
+    protected IPreferenceStore getAPIPreferenceStore() {
+        return PrefUtil.getAPIPreferenceStore();
+    }
+
+    protected void setUTF8DefaultEncoding() {
+        final IEclipsePreferences node = DefaultScope.INSTANCE.getNode(ResourcesPlugin.PI_RESOURCES);
+        node.put(ResourcesPlugin.PREF_ENCODING, "UTF-8");
+    }
+
+    protected IPreferenceStore getWebBrowserPreferenceStore() {
+        return WebBrowserUIPlugin.getInstance().getPreferenceStore();
+    }
+
+    protected IPreferenceStore getBonitaPreferenceStore() {
+        return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
+    }
+
+    protected void initDefaultWebPreferences(final IPreferenceStore bonitaStore, final IPreferenceStore webStore) {
+        final String consolePortSpecifiedAsSystemProperty = System.getProperty(CONSOLE_PORT);
+        if (consolePortSpecifiedAsSystemProperty != null
+                && !consolePortSpecifiedAsSystemProperty.isEmpty()) {
+            try {
+                bonitaStore.setDefault(CONSOLE_PORT, Integer.parseInt(consolePortSpecifiedAsSystemProperty));
+            } catch (final Exception e) {
+                bonitaStore.setDefault(CONSOLE_PORT, DEFAULT_PORT);
+            }
+        } else {
+            bonitaStore.setDefault(CONSOLE_PORT, DEFAULT_PORT);
+        }
+        bonitaStore.setDefault(CONSOLE_HOST, DEFAULT_HOST);
+        webStore.setDefault(CONSOLE_BROWSER_CHOICE, EXTERNAL_BROWSER);
+    }
+
+    protected void initDefaultLocalesPreference(final IPreferenceStore bonitaPreferenceStore) {
+        Locale defaultStudioLocal = Locale.getDefault();
+        boolean defaultLocalExists = false;
+        for (final Locale locale : getStudioLocales()) {
+            if (locale.getLanguage().equals(defaultStudioLocal.getLanguage())) {
+                defaultStudioLocal = locale;
+                defaultLocalExists = true;
+                break;
+            }
+        }
+
+        String defaultLocaleValue = bonitaPreferenceStore.getString(DEFAULT_STUDIO_LOCALE);// Default value is compute on the first the studio is run
+                                                                           // only because Locale.getDefault() is based on osgi.nl
+                                                                           // property
+        if (defaultLocaleValue == null || defaultLocaleValue.isEmpty()) {
+            bonitaPreferenceStore.setValue(DEFAULT_STUDIO_LOCALE,
+                    defaultLocalExists ? defaultStudioLocal.getLanguage() : Locale.ENGLISH.getLanguage());
+            defaultLocaleValue = bonitaPreferenceStore.getString(DEFAULT_STUDIO_LOCALE);
+        }
+
+        bonitaPreferenceStore.setDefault(CURRENT_UXP_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
+        bonitaPreferenceStore.setDefault(CURRENT_STUDIO_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
+    }
+
+    protected Locale[] getStudioLocales() {
+        return LocaleUtil.getStudioLocales();
+    }
+
+    protected void initDefaultDebugPreferences() {
+        DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_OUT, false);
+        DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_ERR, false);
+        DebugPlugin.getDefault().getPluginPreferences().setDefault(IInternalDebugCoreConstants.PREF_ENABLE_STATUS_HANDLERS, false);
     }
 
 }

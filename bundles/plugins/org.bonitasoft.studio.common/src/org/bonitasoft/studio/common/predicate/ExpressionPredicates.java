@@ -14,7 +14,12 @@
  */
 package org.bonitasoft.studio.common.predicate;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.studio.model.process.Element;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import com.google.common.base.Predicate;
 
@@ -43,4 +48,31 @@ public class ExpressionPredicates {
         };
     }
 
+    public static Predicate<Expression> withReferencedElement(final EObject referencedElement) {
+        return new Predicate<Expression>() {
+
+            @Override
+            public boolean apply(final Expression input) {
+                return isElementIsReferencedInScript(input, referencedElement);
+            }
+        };
+    }
+
+    private static boolean isElementIsReferencedInScript(final Expression expr, final EObject element) {
+        if (!expr.getReferencedElements().isEmpty()) {
+            for (final EObject o : expr.getReferencedElements()) {
+                if (EcoreUtil.equals(element, o)) {
+                    return true;
+                }
+                if (element instanceof Element && o instanceof Element && ModelHelper.isSameElement(element, o)) {
+                    return !ModelHelper.isReferencedElementIsInExpression(expr);
+                } else {
+                    if (element instanceof Parameter && o instanceof Parameter && ((Parameter) element).getName().equals(((Parameter) o).getName())) {
+                        return !ModelHelper.isReferencedElementIsInExpression(expr);
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }

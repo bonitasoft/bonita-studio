@@ -92,10 +92,6 @@ public class ContractIT extends SWTBotGefTestCase {
         final BotContractInputRow contractInputRow = inputTab.add();
 
         contractInputRow.setName("expenseReport").setDescription("An expense report").setType("COMPLEX");
-        //        assertThat(task.getContract().getInputs()).hasSize(1).extracting("name", "type", "mandatory", "multiple", "description")
-        //                .containsOnly(tuple("expenseReport", ContractInputType.COMPLEX, true, false, "An expense report"));
-
-        //  contractTabBot.inputTable().select(0);
 
         BotContractInputRow childRow = contractInputRow.getChildRow(0);
         childRow.setName("expenseLines").clickMultiple().setType("COMPLEX");
@@ -107,7 +103,7 @@ public class ContractIT extends SWTBotGefTestCase {
         childRow.setName("amount").setType("DECIMAL").setDescription("The amount of the expense VAT included in euros");
 
         childRow = inputTab.add();
-        childRow.setName("expenseDate").setType("DATE").setDescription("When the expense was done").clickMandatory();
+        childRow.setName("expenseDate").setType("DATE").setDescription("When the expense was done").clickNullable();
 
         Contract contract = contractContainer.getContract();
         final EList<ContractInput> rootInputs = contract.getInputs();

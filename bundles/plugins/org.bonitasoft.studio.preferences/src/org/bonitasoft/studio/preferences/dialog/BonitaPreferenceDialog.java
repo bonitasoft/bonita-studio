@@ -1,19 +1,16 @@
 /**
- * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
+ * Copyright (C) 2011-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.preferences.dialog;
 
@@ -86,6 +83,7 @@ public class BonitaPreferenceDialog extends Dialog {
     public static final String PROXY_PAGE_ID = "org.eclipse.ui.net.custom.NetPreferences"; //$NON-NLS-1$
     public static final String ADVANCED_PAGE_ID = "org.bonitasoft.studio.preferences.advanced"; //$NON-NLS-1$
     public static final String USER_PROFILE_PAGE_ID = "org.bonitasoft.studio.preferences.profiles"; //$NON-NLS-1$;
+    public static final String LEGACY6X_MODE_ID = "org.bonitasoft.studio.preferences.legacy6x"; //$NON-NLS-1$;
     public static final String ECLIPSE_PAGE_ID = "eclipse.page"; //$NON-NLS-1$;
 
     private final Map keywordCache = new HashMap();
@@ -103,7 +101,8 @@ public class BonitaPreferenceDialog extends Dialog {
 
     private static  String[] pageIds = new String[]{USER_PROFILE_PAGE_ID,DATABASE_PAGE_ID,
         APPEARANCE_PAGE_ID,LANGUAGE_PAGE_ID,JAVA_PAGE_ID,RUN_DEPLOY_MODE_PAGE_ID,RUN_DEPLOY_MODE_PAGE_ID,
-        USERXP_SETTINGS_PAGE_ID, DB_CONNECTORS_PAGE_ID,REMOTE_ENGINE_PAGE_ID,WEB_BROWSER_PAGE_ID,PROXY_PAGE_ID,ADVANCED_PAGE_ID,ECLIPSE_PAGE_ID};
+            USERXP_SETTINGS_PAGE_ID, DB_CONNECTORS_PAGE_ID, REMOTE_ENGINE_PAGE_ID, WEB_BROWSER_PAGE_ID, PROXY_PAGE_ID, ADVANCED_PAGE_ID, LEGACY6X_MODE_ID,
+            ECLIPSE_PAGE_ID };
 
     /**
      * Create the dialog.
@@ -176,6 +175,29 @@ public class BonitaPreferenceDialog extends Dialog {
         }) ;
         btnDisplay.setEnabled(false) ;
 
+        createSearchField(composite);
+
+        final Label separator = new Label(container,SWT.SEPARATOR | SWT.HORIZONTAL) ;
+        separator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+
+        mainComposite = new Composite(container, SWT.NONE);
+        stack = new StackLayout() ;
+        mainComposite.setLayout(stack);
+        mainComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+
+        menuComposite = createMenuComposite(mainComposite);
+        preferencePageComposite = createPreferencePageComposite(mainComposite);
+
+        stack.topControl = menuComposite ;
+        mainComposite.layout() ;
+        menuComposite.setFocus();
+
+
+        return container;
+    }
+
+    protected void createSearchField(final Composite composite) {
         final Text searchTxt = new Text(composite, SWT.SEARCH |SWT.ICON_SEARCH | SWT.CANCEL ) ;
         final GridData gd_searchTxt = GridDataFactory.fillDefaults().align(SWT.LEFT,SWT.CENTER).indent(10,5).create();
         gd_searchTxt.grabExcessHorizontalSpace = true;
@@ -211,25 +233,6 @@ public class BonitaPreferenceDialog extends Dialog {
                 }
             }
         }) ;
-
-        final Label separator = new Label(container,SWT.SEPARATOR | SWT.HORIZONTAL) ;
-        separator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-
-        mainComposite = new Composite(container, SWT.NONE);
-        stack = new StackLayout() ;
-        mainComposite.setLayout(stack);
-        mainComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
-
-        menuComposite = createMenuComposite(mainComposite);
-        preferencePageComposite = createPreferencePageComposite(mainComposite);
-
-        stack.topControl = menuComposite ;
-        mainComposite.layout() ;
-        menuComposite.setFocus();
-
-
-        return container;
     }
 
     protected void cleanHighlights() {
@@ -379,6 +382,18 @@ public class BonitaPreferenceDialog extends Dialog {
         gl_menuComposite.marginBottom = 15 ;
         menuComposite.setLayout(gl_menuComposite);
 
+        createGeneralCategoryLine(menuComposite);
+        createSeparator(menuComposite) ;
+        createDeploymentCategoryLine(menuComposite);
+        createSeparator(menuComposite) ;
+        createWebCategoryLine(menuComposite);
+        createSeparator(menuComposite) ;
+        createOtherCategoryLine(menuComposite);
+
+        return menuComposite;
+    }
+
+    protected void createGeneralCategoryLine(final Composite menuComposite) {
         Composite generalRow = null ;
         if(PreferenceUtil.findNodeMatching(USER_PROFILE_PAGE_ID) != null){
             generalRow = createRow(menuComposite,LIGHT_BACKGROUND,Messages.BonitaPreferenceDialog_general,5);
@@ -421,9 +436,9 @@ public class BonitaPreferenceDialog extends Dialog {
 
         itemPerPreferenceNode.put(JAVA_PAGE_ID, tltmJava) ;
         labelPerPreferenceNode.put(JAVA_PAGE_ID,lblJava) ;
+    }
 
-        createSeparator(menuComposite) ;
-
+    protected void createDeploymentCategoryLine(final Composite menuComposite) {
         final Composite deploymentRow = createRow(menuComposite, null, Messages.BonitaPreferenceDialog_Deployment, 4) ;
 
         final ToolItem tltmRunMode = createTool(deploymentRow, null, Pics.getImage(PicsConstants.preferenceDeploy), Pics.getImage(PicsConstants.preferenceDeploydisabled), RUN_DEPLOY_MODE_PAGE_ID) ;
@@ -463,9 +478,9 @@ public class BonitaPreferenceDialog extends Dialog {
         }else{
             new Label(deploymentRow, SWT.WRAP | SWT.CENTER);
         }
+    }
 
-        createSeparator(menuComposite) ;
-
+    protected void createWebCategoryLine(final Composite menuComposite) {
         final Composite webRowComposite = createRow(menuComposite, LIGHT_BACKGROUND, Messages.BonitaPreferenceDialog_Web, 2) ;
 
         final ToolItem tltmBrowser = createTool(webRowComposite, LIGHT_BACKGROUND, Pics.getImage(PicsConstants.preferenceWeb), Pics.getImage(PicsConstants.preferenceWebdisabled), WEB_BROWSER_PAGE_ID) ;
@@ -480,16 +495,14 @@ public class BonitaPreferenceDialog extends Dialog {
 
         itemPerPreferenceNode.put(PROXY_PAGE_ID, tltmProxy) ;
         labelPerPreferenceNode.put(PROXY_PAGE_ID,lblProxy) ;
+    }
 
-        createSeparator(menuComposite) ;
-
-        final Composite otherRowComposite = createRow(menuComposite, null, Messages.BonitaPreferenceDialog_Other, 2) ;
-
+    protected void createOtherCategoryLine(final Composite menuComposite) {
+        final Composite otherRowComposite = createRow(menuComposite, null, Messages.BonitaPreferenceDialog_Other, 3);
 
         final ToolItem tltmAdvancedSettings = createTool(otherRowComposite, null, Pics.getImage(PicsConstants.preferenceAdvanced), Pics.getImage(PicsConstants.preferenceAdvanceddisabled), ADVANCED_PAGE_ID) ;
-
-
-
+        final ToolItem tltmLegacy6x = createTool(otherRowComposite, null, Pics.getImage(PicsConstants.preferenceLegacy6x),
+                Pics.getImage(PicsConstants.preferenceLegacy6xDisabled), LEGACY6X_MODE_ID);
         final ToolItem eclipseItem = createTool(otherRowComposite, null,  Pics.getImage(PicsConstants.preferenceEclipse), Pics.getImage(PicsConstants.preferenceEclipseDisabled), null) ;
         eclipseItem.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -512,16 +525,25 @@ public class BonitaPreferenceDialog extends Dialog {
         });
 
         final Label lblAdvanced = createItemLabel(otherRowComposite, null, Messages.BonitaPreferenceDialog_Advanced) ;
+        final Label lblLegacy6x = createItemLabel(otherRowComposite, null, Messages.BonitaPreferenceDialog_legacy6x);
         final Label eclipseLabel = createItemLabel(otherRowComposite, null, Messages.EclipsePreferences) ;
 
+        putInItemPerPreferenceNode(ADVANCED_PAGE_ID, tltmAdvancedSettings);
+        putInLabelPerPreferenceNode(ADVANCED_PAGE_ID, lblAdvanced);
 
-        itemPerPreferenceNode.put(ADVANCED_PAGE_ID, tltmAdvancedSettings) ;
-        labelPerPreferenceNode.put(ADVANCED_PAGE_ID, lblAdvanced) ;
+        putInItemPerPreferenceNode(LEGACY6X_MODE_ID, tltmLegacy6x);
+        putInLabelPerPreferenceNode(LEGACY6X_MODE_ID, lblLegacy6x);
 
-        itemPerPreferenceNode.put(ECLIPSE_PAGE_ID, eclipseItem) ;
-        labelPerPreferenceNode.put(ECLIPSE_PAGE_ID, eclipseLabel) ;
+        putInItemPerPreferenceNode(ECLIPSE_PAGE_ID, eclipseItem);
+        putInLabelPerPreferenceNode(ECLIPSE_PAGE_ID, eclipseLabel);
+    }
 
-        return menuComposite;
+    protected void putInItemPerPreferenceNode(final String id, final ToolItem toolItem) {
+        itemPerPreferenceNode.put(id, toolItem);
+    }
+
+    protected void putInLabelPerPreferenceNode(final String id, final Label label) {
+        labelPerPreferenceNode.put(id, label);
     }
 
     protected void updateShellSize(final boolean restore) {

@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,19 +19,17 @@ import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class BotContractInputRow extends BotBase {
-
 
     private TreeItem treeItem;
     private final SWTBotTreeItem swtBotTreeItem;
@@ -41,14 +37,16 @@ public class BotContractInputRow extends BotBase {
     private static final int NAME_COLUMN = 0;
     private static final int TYPE_COLUMN = 1;
     private static final int MULTIPLE_COLUMN = 2;
-    private static final int MANDATORY_COLUMN = 3;
-    //    private static final int MAPPING_COLUMN = 4;
-    //private static final int CONSTRAINT_COLUMN = 5;
+    private static final int NULLABLE_COLUMN = 3;
     private static final int DESCRIPTION_COLUMN = 4;
 
     public BotContractInputRow(final SWTGefBot bot, final int row) {
         super(bot);
-        swtBotTreeItem = getTreeItem(bot.treeWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE), row);
+        swtBotTreeItem = getTreeItem(inputTree(bot), row);
+    }
+
+    private SWTBotTree inputTree(final SWTGefBot bot) {
+        return bot.treeWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE);
     }
 
     public BotContractInputRow(final SWTGefBot bot, final SWTBotTreeItem item) {
@@ -56,7 +54,8 @@ public class BotContractInputRow extends BotBase {
         swtBotTreeItem = item;
     }
 
-    public BotContractInputRow setName(final String name){
+    public BotContractInputRow setName(final String name) {
+        waitForInputTree();
         swtBotTreeItem.setFocus();
         swtBotTreeItem.click(NAME_COLUMN);
         bot.textWithId(SWTBotConstants.SWTBOT_ID_INPUT_NAME_TEXTEDITOR);
@@ -67,7 +66,6 @@ public class BotContractInputRow extends BotBase {
 
     private SWTBotTreeItem getTreeItem(final SWTBotTree swtBotTree, final int row) {
         Display.getDefault().syncExec(new Runnable() {
-
 
             @Override
             public void run() {
@@ -80,6 +78,7 @@ public class BotContractInputRow extends BotBase {
     }
 
     public BotContractInputRow setDescription(final String description) {
+        waitForInputTree();
         swtBotTreeItem.setFocus();
         swtBotTreeItem.click(DESCRIPTION_COLUMN);
         bot.text(1);
@@ -88,9 +87,8 @@ public class BotContractInputRow extends BotBase {
         return this;
     }
 
-
-
     public BotContractInputRow setType(final String type) {
+        waitForInputTree();
         swtBotTreeItem.setFocus();
         swtBotTreeItem.click(TYPE_COLUMN);
         final SWTBotCCombo comboBox = bot.ccomboBox();
@@ -100,14 +98,20 @@ public class BotContractInputRow extends BotBase {
     }
 
     public BotContractInputRow clickMultiple() {
+        waitForInputTree();
         swtBotTreeItem.setFocus();
         swtBotTreeItem.click(MULTIPLE_COLUMN);
         return this;
     }
 
-    public BotContractInputRow clickMandatory() {
+    private void waitForInputTree() {
+        bot.waitUntil(Conditions.widgetIsEnabled(inputTree(bot)));
+    }
+
+    public BotContractInputRow clickNullable() {
+        waitForInputTree();
         swtBotTreeItem.setFocus();
-        swtBotTreeItem.click(MANDATORY_COLUMN);
+        swtBotTreeItem.click(NULLABLE_COLUMN);
         return this;
     }
 

@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -32,10 +30,8 @@ import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
-import org.bonitasoft.studio.refactoring.core.AbstractScriptExpressionRefactoringAction;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.bonitasoft.studio.refactoring.core.WidgetRefactorPair;
-import org.bonitasoft.studio.refactoring.core.WidgetScriptExpressionRefactoringAction;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
@@ -43,14 +39,11 @@ import org.eclipse.emf.edit.command.AbstractOverrideableCommand;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class RefactorWidgetOperation extends AbstractRefactorOperation<Widget, Widget, WidgetRefactorPair> {
-
 
     public RefactorWidgetOperation(final Widget widget, final String newName) {
         super(RefactoringOperationType.UPDATE);
@@ -60,11 +53,10 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation<Widget, W
 
     }
 
-
     @Override
     protected CompoundCommand doBuildCompoundCommand(final CompoundCommand compoundCommand, final IProgressMonitor monitor) {
         monitor.beginTask(Messages.updatingWidgetReferences, IProgressMonitor.UNKNOWN);
-        for(final WidgetRefactorPair pairToRefactor : pairsToRefactor){
+        for (final WidgetRefactorPair pairToRefactor : pairsToRefactor) {
             final Widget widget = pairToRefactor.getOldValue();
             final String newReferenceName = pairToRefactor.getNewValueName();
             final List<Expression> expressions = ModelHelper.getAllItemsOfType(ModelHelper.getPageFlow(widget), ExpressionPackage.Literals.EXPRESSION);
@@ -105,7 +97,6 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation<Widget, W
                         FormsUtils.changeIdInTemplate((Form) widget.eContainer(), srcName, pairToRefactor.getNewValue().getName());
                     }
 
-
                     @Override
                     public void doExecute() {
                         FormsUtils.changeIdInTemplate((Form) widget.eContainer(), srcName, pairToRefactor.getNewValue().getName());
@@ -122,20 +113,12 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation<Widget, W
     }
 
     @Override
-    protected AbstractScriptExpressionRefactoringAction<WidgetRefactorPair> getScriptExpressionRefactoringAction(final List<WidgetRefactorPair> pairsToRefactor,
-            final List<Expression> scriptExpressions, final List<Expression> refactoredScriptExpression, final CompoundCommand compoundCommand, final EditingDomain domain,
-            final RefactoringOperationType operationType) {
-        return new WidgetScriptExpressionRefactoringAction(pairsToRefactor, scriptExpressions, refactoredScriptExpression, compoundCommand, domain,
-                operationType);
-    }
-
-    @Override
     protected EObject getContainer(final Widget widget) {
         return ModelHelper.getPageFlow(widget);
     }
 
     @Override
-    protected WidgetRefactorPair createRefactorPair(final Widget newItem,	final Widget oldItem) {
+    protected WidgetRefactorPair createRefactorPair(final Widget newItem, final Widget oldItem) {
         return new WidgetRefactorPair(newItem, oldItem);
     }
 
