@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -16,7 +16,6 @@ package org.bonitasoft.studio.tests.contract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractContainer;
@@ -24,8 +23,6 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.assertions.ContractConstraintAssert;
 import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractConstraintRow;
@@ -34,11 +31,11 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContra
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractInputTab;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractPropertySection;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -48,23 +45,8 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ContractIT extends SWTBotGefTestCase {
 
-    private boolean disablePopup;
-
-    @Override
-    @Before
-    public void setUp() {
-        disablePopup = FileActionDialog.getDisablePopup();
-        FileActionDialog.setDisablePopup(true);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
-    }
-
-    @Override
-    @After
-    public void tearDown() {
-        bot.saveAllEditors();
-        bot.closeAllEditors();
-        FileActionDialog.setDisablePopup(disablePopup);
-    }
+    @Rule
+    public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     @Test
     public void create_expense_report_step_contract() {
