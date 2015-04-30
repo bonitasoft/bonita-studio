@@ -27,7 +27,6 @@ import org.bonitasoft.studio.contract.ui.property.input.labelProvider.ContractIn
 import org.bonitasoft.studio.contract.ui.property.input.labelProvider.DescriptionCellLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.input.labelProvider.InputNameCellLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.input.labelProvider.MultipleInputCheckboxLabelProvider;
-import org.bonitasoft.studio.contract.ui.property.input.labelProvider.NotNullableInputCheckboxLabelProvider;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
@@ -136,17 +135,15 @@ public class ContractInputTreeViewer extends TreeViewer {
         createInputNameColumn();
         createInputTypeColumn();
         createMultipleColumn();
-        createMandatoryColumn();
         createInputDescriptionColumn();
     }
 
     protected void configureTableLayout() {
         final TableLayout tableLayout = new TableLayout();
-        tableLayout.addColumnData(new ColumnWeightData(3));
+        tableLayout.addColumnData(new ColumnWeightData(4));
         tableLayout.addColumnData(new ColumnWeightData(1));
         tableLayout.addColumnData(new ColumnWeightData(1));
-        tableLayout.addColumnData(new ColumnWeightData(1));
-        tableLayout.addColumnData(new ColumnWeightData(5));
+        tableLayout.addColumnData(new ColumnWeightData(6));
         getTree().setLayout(tableLayout);
     }
 
@@ -180,13 +177,6 @@ public class ContractInputTreeViewer extends TreeViewer {
         final TreeViewerColumn typeColumnViewer = createColumnViewer(Messages.type, SWT.FILL);
         typeColumnViewer.setLabelProvider(new ContractInputTypeCellLabelProvider(propertySourceProvider, knownElements()));
         typeColumnViewer.setEditingSupport(new ContractInputTypeEditingSupport(this, propertySourceProvider, inputController));
-    }
-
-    protected void createMandatoryColumn() {
-        final TreeViewerColumn mandatoryColumnViewer = createColumnViewer(Messages.nullable, SWT.CENTER);
-        mandatoryColumnViewer.setLabelProvider(new NotNullableInputCheckboxLabelProvider(knownElements()));
-        mandatoryColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, this,
-                ProcessPackage.Literals.CONTRACT_INPUT__MANDATORY.getName()));
     }
 
     protected void createMultipleColumn() {

@@ -589,7 +589,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/multiple"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/mandatory"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractInput/mapping"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractInput/inputs"/>
     </genClasses>

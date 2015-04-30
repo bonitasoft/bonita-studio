@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -16,7 +16,6 @@ package org.bonitasoft.studio.tests.contract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractContainer;
@@ -24,8 +23,6 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.assertions.ContractConstraintAssert;
 import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractConstraintRow;
@@ -34,11 +31,11 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContra
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractInputTab;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractPropertySection;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -48,23 +45,8 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ContractIT extends SWTBotGefTestCase {
 
-    private boolean disablePopup;
-
-    @Override
-    @Before
-    public void setUp() {
-        disablePopup = FileActionDialog.getDisablePopup();
-        FileActionDialog.setDisablePopup(true);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
-    }
-
-    @Override
-    @After
-    public void tearDown() {
-        bot.saveAllEditors();
-        bot.closeAllEditors();
-        FileActionDialog.setDisablePopup(disablePopup);
-    }
+    @Rule
+    public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     @Test
     public void create_expense_report_step_contract() {
@@ -103,27 +85,26 @@ public class ContractIT extends SWTBotGefTestCase {
         childRow.setName("amount").setType("DECIMAL").setDescription("The amount of the expense VAT included in euros");
 
         childRow = inputTab.add();
-        childRow.setName("expenseDate").setType("DATE").setDescription("When the expense was done").clickNullable();
+        childRow.setName("expenseDate").setType("DATE").setDescription("When the expense was done");
 
         Contract contract = contractContainer.getContract();
         final EList<ContractInput> rootInputs = contract.getInputs();
         assertThat(rootInputs).hasSize(1);
         final ContractInput expenseReportInput = rootInputs.get(0);
-        ContractInputAssert.assertThat(expenseReportInput).hasName("expenseReport").hasDescription("An expense report").hasType(ContractInputType.COMPLEX)
-                .isMandatory();
+        ContractInputAssert.assertThat(expenseReportInput).hasName("expenseReport").hasDescription("An expense report").hasType(ContractInputType.COMPLEX);
         assertThat(expenseReportInput.getInputs()).hasSize(1);
         final ContractInput expenseLineInput = expenseReportInput.getInputs().get(0);
-        ContractInputAssert.assertThat(expenseLineInput).hasName("expenseLines").hasType(ContractInputType.COMPLEX).isMultiple().isMandatory();
+        ContractInputAssert.assertThat(expenseLineInput).hasName("expenseLines").hasType(ContractInputType.COMPLEX).isMultiple();
         assertThat(expenseLineInput.getInputs()).hasSize(3);
         final ContractInput natureInput = expenseLineInput.getInputs().get(0);
         final ContractInput amountInput = expenseLineInput.getInputs().get(1);
         final ContractInput dateInput = expenseLineInput.getInputs().get(2);
 
-        ContractInputAssert.assertThat(natureInput).hasName("nature").hasType(ContractInputType.TEXT).isNotMultiple().isMandatory()
+        ContractInputAssert.assertThat(natureInput).hasName("nature").hasType(ContractInputType.TEXT).isNotMultiple()
                 .hasDescription("The nature of the expense");
-        ContractInputAssert.assertThat(amountInput).hasName("amount").hasType(ContractInputType.DECIMAL).isNotMultiple().isMandatory()
+        ContractInputAssert.assertThat(amountInput).hasName("amount").hasType(ContractInputType.DECIMAL).isNotMultiple()
                 .hasDescription("The amount of the expense VAT included in euros");
-        ContractInputAssert.assertThat(dateInput).hasName("expenseDate").hasType(ContractInputType.DATE).isNotMultiple().isNotMandatory()
+        ContractInputAssert.assertThat(dateInput).hasName("expenseDate").hasType(ContractInputType.DATE).isNotMultiple()
                 .hasDescription("When the expense was done");
 
         final BotContractConstraintTab constraintTab = contractTabBot.selectConstraintTab();
