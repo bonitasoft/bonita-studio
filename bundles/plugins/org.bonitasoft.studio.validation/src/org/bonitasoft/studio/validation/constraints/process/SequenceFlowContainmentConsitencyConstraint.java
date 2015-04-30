@@ -61,23 +61,23 @@ public class SequenceFlowContainmentConsitencyConstraint extends AbstractLiveVal
 
         final TargetElement targetElement = sequenceFlow.getTarget();
         if (targetElement == null) {
-            return ctx.createFailureStatus(Messages.SequenceFlow_Without_Target_Element);
+            return ctx.createFailureStatus(Messages.sequenceFlow_Without_Target_Element);
         }
         final SourceElement sourceElement = sequenceFlow.getSource();
         if (sourceElement == null) {
-            return ctx.createFailureStatus(Messages.SequenceFlow_Without_Source_Element);
+            return ctx.createFailureStatus(Messages.sequenceFlow_Without_Source_Element);
         }
 
         final Pool sequenceFlowContainer = ModelHelper.getParentPool(sequenceFlow);
         if (sequenceFlowContainer == null) {
-            return ctx.createFailureStatus(Messages.SequenceFlow_Without_Container);
+            return ctx.createFailureStatus(Messages.sequenceFlow_Without_Container);
         }
 
         if (!Objects.equals(ModelHelper.getParentPool(sourceElement), sequenceFlowContainer)) {
-            return ctx.createFailureStatus(Messages.SequenceFlow_And_SourceElement_Not_In_The_Same_Container);
+            return ctx.createFailureStatus(Messages.sequenceFlow_And_SourceElement_Not_In_The_Same_Container);
         }
         if (!Objects.equals(ModelHelper.getParentPool(targetElement), sequenceFlowContainer)) {
-            return ctx.createFailureStatus(Messages.SequenceFlow_And_TargetElement_Not_In_The_Same_Container);
+            return ctx.createFailureStatus(Messages.sequenceFlow_And_TargetElement_Not_In_The_Same_Container);
         }
 
         return ctx.createSuccessStatus();

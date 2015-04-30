@@ -50,7 +50,7 @@ public class SequenceFlowContainmentConsitencyConstraintTest {
 
         constraint.performBatchValidation(validationContext);
 
-        verify(validationContext).createFailureStatus(Messages.SequenceFlow_Without_Target_Element);
+        verify(validationContext).createFailureStatus(Messages.sequenceFlow_Without_Target_Element);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class SequenceFlowContainmentConsitencyConstraintTest {
 
         constraint.performBatchValidation(validationContext);
 
-        verify(validationContext).createFailureStatus(Messages.SequenceFlow_Without_Source_Element);
+        verify(validationContext).createFailureStatus(Messages.sequenceFlow_Without_Source_Element);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class SequenceFlowContainmentConsitencyConstraintTest {
 
         constraint.performBatchValidation(validationContext);
 
-        verify(validationContext).createFailureStatus(Messages.SequenceFlow_Without_Container);
+        verify(validationContext).createFailureStatus(Messages.sequenceFlow_Without_Container);
     }
 
     @Test
@@ -84,7 +84,7 @@ public class SequenceFlowContainmentConsitencyConstraintTest {
 
         constraint.performBatchValidation(validationContext);
 
-        verify(validationContext).createFailureStatus(Messages.SequenceFlow_And_SourceElement_Not_In_The_Same_Container);
+        verify(validationContext).createFailureStatus(Messages.sequenceFlow_And_SourceElement_Not_In_The_Same_Container);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class SequenceFlowContainmentConsitencyConstraintTest {
 
         constraint.performBatchValidation(validationContext);
 
-        verify(validationContext).createFailureStatus(Messages.SequenceFlow_And_TargetElement_Not_In_The_Same_Container);
+        verify(validationContext).createFailureStatus(Messages.sequenceFlow_And_TargetElement_Not_In_The_Same_Container);
     }
 
     @Test
