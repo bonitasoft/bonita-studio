@@ -59,9 +59,27 @@ public abstract class FieldToContractInputMapping {
         final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
         contractInput.setName(field.getName());
         contractInput.setType(toContractInputType());
-        contractInput.setMultiple(field.isCollection());
-        contractInput.setMandatory(!field.isNullable());
+        setMultiple(contractInput);
+        setMandatory(contractInput);
         return contractInput;
+    }
+
+    /**
+     * @param contractInput
+     */
+    private void setMandatory(final ContractInput contractInput) {
+        if (field.isNullable() != null) {
+            contractInput.setMandatory(!field.isNullable());
+        }
+    }
+
+    /**
+     * @param contractInput
+     */
+    private void setMultiple(final ContractInput contractInput) {
+        if (field.isCollection() != null) {
+            contractInput.setMultiple(field.isCollection());
+        }
     }
 
     protected abstract ContractInputType toContractInputType();
