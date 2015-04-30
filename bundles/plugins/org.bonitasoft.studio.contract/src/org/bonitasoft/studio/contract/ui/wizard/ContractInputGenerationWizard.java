@@ -14,19 +14,21 @@
  */
 package org.bonitasoft.studio.contract.ui.wizard;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.util.List;
 
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
+import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.wizard.Wizard;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 /**
  * @author aurelie
@@ -35,22 +37,25 @@ public class ContractInputGenerationWizard extends Wizard {
 
     private final EObject container;
     private final List<Data> availableBusinessData;
+    private final BusinessObjectModelRepositoryStore businessObjectStore;
 
-    public ContractInputGenerationWizard(final EObject container) {
+    public ContractInputGenerationWizard(final EObject container, final BusinessObjectModelRepositoryStore businessObjectStore) {
         this.container = container;
         availableBusinessData = availableBusinessData();
+        this.businessObjectStore = businessObjectStore;
     }
 
     @Override
     public void addPages() {
-        addPage(new SelectBusinessDataWizardPage(availableBusinessData));
-        addPage(new CreateContractInputFromBusinessObjectWizardPage());
-    };
+        final EMFDataBindingContext dbc = new EMFDataBindingContext();
+        final WritableValue selectedDataObservable = new WritableValue();
+        addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable));
+        addPage(new CreateContractInputFromBusinessObjectWizardPage(selectedDataObservable, businessObjectStore));
+    }
 
     private List<Data> availableBusinessData() {
         final AbstractProcess pool = ModelHelper.getParentProcess(container);
-        final Predicate<Object> predicate = Predicates.instanceOf(BusinessObjectData.class);
-        return Lists.newArrayList(Iterables.filter(pool.getData(), predicate));
+        return newArrayList(filter(pool.getData(), instanceOf(BusinessObjectData.class)));
     }
 
     /*

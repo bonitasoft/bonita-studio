@@ -22,12 +22,15 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TableViewer;
@@ -41,12 +44,14 @@ import org.eclipse.swt.widgets.Composite;
 public class SelectBusinessDataWizardPage extends WizardPage {
 
     List<Data> availableBusinessData;
+    private final WritableValue selectedDataObservable;
 
-    public SelectBusinessDataWizardPage(final List<Data> availableBusinessData) {
+    public SelectBusinessDataWizardPage(final List<Data> availableBusinessData, final WritableValue selectedDataObservable) {
         super(SelectBusinessDataWizardPage.class.getName());
         setTitle(Messages.SelectBusinessDataWizardPageTitle);
         setDescription(Messages.selectBusinessDataWizardPageDescription);
         this.availableBusinessData = availableBusinessData;
+        this.selectedDataObservable = selectedDataObservable;
     }
 
     /*
@@ -55,15 +60,16 @@ public class SelectBusinessDataWizardPage extends WizardPage {
      */
     @Override
     public void createControl(final Composite parent) {
-        createTableViewer(parent);
-        setControl(parent);
-    }
-
-    public void createTableViewer(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
         composite.setLayoutData(GridDataFactory.fillDefaults().create());
-        final TableViewer businessDataTableViewer = new TableViewer(composite, SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL);
+        createTableViewer(composite);
+        setControl(composite);
+    }
+
+    public void createTableViewer(final Composite parent) {
+        final DataBindingContext dbc = new DataBindingContext();
+        final TableViewer businessDataTableViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL);
         businessDataTableViewer.getTable().setLayout(GridLayoutFactory.fillDefaults().create());
         businessDataTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
         final ObservableListContentProvider contentProvider = new ObservableListContentProvider();
@@ -74,6 +80,7 @@ public class SelectBusinessDataWizardPage extends WizardPage {
         businessDataTableViewer.setLabelProvider(new BusinessObjectDataStyledLabelProvider(RepositoryManager.getInstance().getRepositoryStore(
                 BusinessObjectModelRepositoryStore.class), labelMaps));
         businessDataTableViewer.setInput(new WritableList(availableBusinessData, ProcessPackage.Literals.BUSINESS_OBJECT_DATA));
+        dbc.bindValue(ViewersObservables.observeSingleSelection(businessDataTableViewer), selectedDataObservable);
     }
 
 }

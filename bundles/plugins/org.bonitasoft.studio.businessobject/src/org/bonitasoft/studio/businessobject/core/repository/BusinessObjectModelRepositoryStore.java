@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.engine.bdm.dao.BusinessObjectDAO;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
@@ -116,6 +117,17 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
             final BusinessObjectModelFileStore businessObjectFileStore = (BusinessObjectModelFileStore) file;
             if (businessObjectFileStore.getBusinessObject(qualifiedName) != null) {
                 return businessObjectFileStore;
+            }
+        }
+        return null;
+    }
+
+    public BusinessObject getBusinessObjectByQualifiedName(final String qualifiedName) {
+        for (final IRepositoryFileStore file : getChildren()) {
+            final BusinessObjectModelFileStore businessObjectFileStore = (BusinessObjectModelFileStore) file;
+            final BusinessObject businessObject = businessObjectFileStore.getBusinessObject(qualifiedName);
+            if (businessObject != null) {
+                return businessObjectFileStore.getBusinessObject(qualifiedName);
             }
         }
         return null;

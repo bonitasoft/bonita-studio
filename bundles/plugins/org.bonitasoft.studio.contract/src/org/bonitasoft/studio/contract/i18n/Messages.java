@@ -71,5 +71,7 @@ public class Messages extends NLS {
     public static String severalCompilationErrors;
     public static String SelectBusinessDataWizardPageTitle;
     public static String selectBusinessDataWizardPageDescription;
+    public static String generate;
+    public static String prefix;
 
 }
