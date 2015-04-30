@@ -283,7 +283,7 @@ public class NewDiagramFactory {
     protected Map<Class<?>, EObject> createlModel(final ProcessFactory processFactory, final String diagramIdentifier, final ElementInitializers initializers,
             final IProgressMonitor monitor) {
         final Map<Class<?>, EObject> domainElements = new HashMap<Class<?>, EObject>();
-        final String diagramName = NamingUtils.convertToId(org.bonitasoft.studio.diagram.custom.i18n.Messages.newFilePrefix + diagramIdentifier);
+        final String diagramName = NamingUtils.convertToValidURI(org.bonitasoft.studio.diagram.custom.i18n.Messages.newFilePrefix + diagramIdentifier);
         final MainProcess mainProcess = processFactory.createMainProcess();
         mainProcess.setName(diagramName);
         mainProcess.setVersion(BASE_VERSION);
