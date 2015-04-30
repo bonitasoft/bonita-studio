@@ -106,7 +106,7 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
 
         this.widgetFactory = widgetFactory;
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 5).create());
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         defaultCheckBox = widgetFactory.createButton(mainComposite, Messages.defaultFlowLabel, SWT.CHECK);
         defaultCheckBox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -119,7 +119,7 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
         useDecisionTable = widgetFactory.createButton(radioComposite, Messages.useDecisionTable, SWT.RADIO);
 
         conditionSection = widgetFactory.createSection(mainComposite, Section.NO_TITLE | Section.CLIENT_INDENT);
-        conditionSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 20).create());
+        conditionSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         conditionSection.setExpanded(true);
 
         if (transition.getConditionType() == SequenceFlowConditionType.EXPRESSION) {
