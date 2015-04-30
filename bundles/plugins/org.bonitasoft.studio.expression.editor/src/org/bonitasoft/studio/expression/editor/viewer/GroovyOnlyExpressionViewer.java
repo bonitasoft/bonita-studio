@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.expression.editor.viewer;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -49,7 +48,7 @@ public class GroovyOnlyExpressionViewer extends ExpressionViewer {
     }
 
     @Override
-    protected String getDefaultExpressionType(final Expression selectedExpression) {
+    protected String overrideDefaultReturnType() {
         return ExpressionConstants.SCRIPT_TYPE;
     }
 
