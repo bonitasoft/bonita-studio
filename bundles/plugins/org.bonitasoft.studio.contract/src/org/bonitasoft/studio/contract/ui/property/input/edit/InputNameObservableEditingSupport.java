@@ -17,8 +17,7 @@ package org.bonitasoft.studio.contract.ui.property.input.edit;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.collect.Iterables.removeIf;
-import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAllElementOfTypeIn;
-import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getFirstContainerOfType;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.convertUpdateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
@@ -87,11 +86,16 @@ public class InputNameObservableEditingSupport extends CustomTextEMFObservableVa
                                 .addValidator(mandatoryValidator(Messages.name))
                                 .addValidator(maxLengthValidator(Messages.name, INPUT_NAME_MAX_LENGTH))
                                 .addValidator(groovyReferenceValidator(Messages.name).startsWithLowerCase())
-                                .addValidator(uniqueValidator().in(allContractInput(element)).onProperty("name"))).create();
+                                .addValidator(uniqueValidator().in(siblingContractInput(element)).onProperty("name"))).create();
     }
 
-    private Iterable<ContractInput> allContractInput(final EObject element) {
-        final List<ContractInput> result = getAllElementOfTypeIn(getFirstContainerOfType(element, Contract.class), ContractInput.class);
+    private Iterable<ContractInput> siblingContractInput(final EObject element) {
+        final EObject inputContainer = element.eContainer();
+        if (inputContainer == null) {
+            return newArrayList();
+        }
+        final List<ContractInput> result = inputContainer instanceof ContractInput ? newArrayList(((ContractInput) element).getInputs())
+                : newArrayList(((Contract) inputContainer).getInputs());
         removeIf(result, equalTo(element));
         return result;
     }
