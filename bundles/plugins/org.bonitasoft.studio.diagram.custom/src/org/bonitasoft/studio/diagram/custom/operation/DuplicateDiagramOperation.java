@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
+import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -91,7 +91,6 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         Assert.isNotNull(diagramVersion);
         Assert.isNotNull(diagramName);
         monitor.beginTask(Messages.duplicatingDiagram, IProgressMonitor.UNKNOWN);
-
 
         final String oldName = diagram.getName();
         final String oldVersion = diagram.getVersion();
@@ -245,7 +244,6 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                 }
             }
 
-
             /* Duplicate Confirmation Template */
             final List<PageFlow> pageFlows = ModelHelper.getAllItemsOfType(newProc, ProcessPackage.Literals.PAGE_FLOW);
             for (final PageFlow pageFlow : pageFlows) {
@@ -355,7 +353,8 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         }
     }
 
-    protected void updateFormCustomTemplate(final Copier copier, final ApplicationResourceRepositoryStore resourceStore, final AbstractProcess oldProc, final AbstractProcess newProc)
+    protected void updateFormCustomTemplate(final Copier copier, final ApplicationResourceRepositoryStore resourceStore, final AbstractProcess oldProc,
+            final AbstractProcess newProc)
             throws CoreException, IOException {
         final List<Form> allForms = ModelHelper.getAllItemsOfType(newProc, FormPackage.Literals.FORM);
         for (final Form form : allForms) {
@@ -415,9 +414,9 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
 
     protected ApplicationResourceFileStore getApplicationResourceFileStore(
             final ApplicationResourceRepositoryStore resourceStore, final String newProcId) {
-        ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(newProcId);
+        ApplicationResourceFileStore artifact = resourceStore.getChild(newProcId);
         if (artifact == null) {
-            artifact = (ApplicationResourceFileStore) resourceStore.createRepositoryFileStore(newProcId);
+            artifact = resourceStore.createRepositoryFileStore(newProcId);
         }
         return artifact;
     }
@@ -426,7 +425,7 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
             final String newProcessVersion) {
         editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ELEMENT__NAME, newProcessLabel));
         editingDomain.getCommandStack()
-        .execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION, newProcessVersion));
+                .execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION, newProcessVersion));
 
         //        try {
         //            process.eResource().save(Collections.EMPTY_MAP);

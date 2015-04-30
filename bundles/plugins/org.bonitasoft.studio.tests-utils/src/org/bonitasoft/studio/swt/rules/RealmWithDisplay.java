@@ -80,9 +80,6 @@ public class RealmWithDisplay extends ExternalResource {
         if (headlessShell != null) {
             headlessShell.dispose();
         }
-        if (display != null) {
-            display.dispose();
-        }
     }
 
     public Shell getShell() {

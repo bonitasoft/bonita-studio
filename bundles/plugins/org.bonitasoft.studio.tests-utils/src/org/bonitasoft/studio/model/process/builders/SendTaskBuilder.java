@@ -25,7 +25,7 @@ import org.bonitasoft.studio.model.process.SendTask;
  */
 public class SendTaskBuilder extends ActivityBuilder<SendTask, SendTaskBuilder> {
 
-    public static SendTaskBuilder createSendTaskBuilder() {
+    public static SendTaskBuilder aSendTask() {
         return new SendTaskBuilder();
     }
 

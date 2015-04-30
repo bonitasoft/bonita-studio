@@ -25,7 +25,6 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
-import org.bonitasoft.studio.refactoring.core.AbstractScriptExpressionRefactoringAction;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -34,7 +33,6 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
 
 public class RefactorDocumentOperation extends AbstractRefactorOperation<Document, Document, DocumentRefactorPair> {
 
@@ -130,10 +128,10 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
                 || ExpressionConstants.DOCUMENT_REF_TYPE.equals(exp.getType()))
                 && exp.getName() != null
                 && exp.getName()
-                .equals(
-                        pairToRefactor
-                        .getOldValue()
-                        .getName());
+                        .equals(
+                                pairToRefactor
+                                        .getOldValue()
+                                        .getName());
     }
 
     private void removeAllDocumentReferences(final CompoundCommand cc, final DocumentRefactorPair pairToRefactor) {
@@ -159,18 +157,6 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
     private List<Expression> retrieveExpressionsInTheContainer(final DocumentRefactorPair pairToRefactor) {
         final List<Expression> expressions = ModelHelper.getAllItemsOfType(getContainer(pairToRefactor.getOldValue()), ExpressionPackage.Literals.EXPRESSION);
         return expressions;
-    }
-
-    @Override
-    protected AbstractScriptExpressionRefactoringAction<DocumentRefactorPair> getScriptExpressionRefactoringAction(
-            final List<DocumentRefactorPair> pairsToRefactor,
-            final List<Expression> scriptExpressions,
-            final List<Expression> refactoredScriptExpression,
-            final CompoundCommand compoundCommand,
-            final EditingDomain domain,
-            final RefactoringOperationType operationType) {
-        return new DocumentScriptExpressionRefactoringAction(pairsToRefactor, scriptExpressions, refactoredScriptExpression, compoundCommand, domain,
-                operationType);
     }
 
     @Override

@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.DataTypeLabels;
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -1005,39 +1004,6 @@ public class ModelHelper {
                 }
             }
         }
-    }
-
-    public static Set<Expression> findAllScriptAndConditionsExpressionWithReferencedElement(final EObject container, final EObject element) {
-        final Set<Expression> result = new HashSet<Expression>();
-        for (final EObject o : ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION)) {
-            final Expression expr = (Expression) o;
-            if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType()) || ExpressionConstants.CONDITION_TYPE.equals(expr.getType())
-                    || ExpressionConstants.PATTERN_TYPE.equals(expr.getType())) {
-                if (isElementIsReferencedInScript(expr, element)) {
-                    result.add(expr);
-                }
-            }
-        }
-        return result;
-
-    }
-
-    private static boolean isElementIsReferencedInScript(final Expression expr, final EObject element) {
-        if (!expr.getReferencedElements().isEmpty()) {
-            for (final EObject o : expr.getReferencedElements()) {
-                if (EcoreUtil.equals(element, o)) {
-                    return true;
-                }
-                if (element instanceof Element && o instanceof Element && isSameElement(element, o)) {
-                    return true && !isReferencedElementIsInExpression(expr);
-                } else {
-                    if (element instanceof Parameter && o instanceof Parameter && ((Parameter) element).getName().equals(((Parameter) o).getName())) {
-                        return true && !isReferencedElementIsInExpression(expr);
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     public static boolean isReferencedElementIsInExpression(final EObject target) {
@@ -2099,7 +2065,7 @@ public class ModelHelper {
      * @param referencedElement
      * @return
      */
-    protected static boolean isSameElement(final EObject elementToDisplay, final EObject referencedElement) {
+    public static boolean isSameElement(final EObject elementToDisplay, final EObject referencedElement) {
         if (elementToDisplay.eContainer() != null) {
             return ((Element) referencedElement).getName().equals(((Element) elementToDisplay).getName())
                     && isSameContainer(referencedElement, elementToDisplay);

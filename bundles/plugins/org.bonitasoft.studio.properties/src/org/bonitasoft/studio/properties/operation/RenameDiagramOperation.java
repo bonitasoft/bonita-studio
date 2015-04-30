@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
+import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -186,6 +186,5 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
     public void setEditor(final DiagramEditor editor) {
         this.editor = editor;
     }
-
 
 }
