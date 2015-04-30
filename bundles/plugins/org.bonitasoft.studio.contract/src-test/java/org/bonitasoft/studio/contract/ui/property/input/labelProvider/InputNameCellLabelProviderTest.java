@@ -30,14 +30,22 @@ import org.junit.Test;
 public class InputNameCellLabelProviderTest {
 
     @Rule
-    public RealmWithDisplay RealmWithDisplay = new RealmWithDisplay();
+    public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
 
     @Test
-    public void should_returns_contract_input_name() throws Exception {
+    public void should_display_contract_input_name_as_text() throws Exception {
         final InputNameCellLabelProvider labelProvider = new InputNameCellLabelProvider(new AdapterFactoryContentProvider(
                 new ProcessItemProviderAdapterFactory()), new WritableSet());
 
         assertThat(labelProvider.getText(aContractInput().withName("myInput").build())).isEqualTo("myInput");
+    }
+
+    @Test
+    public void should_not_display_an_icon() throws Exception {
+        final InputNameCellLabelProvider labelProvider = new InputNameCellLabelProvider(new AdapterFactoryContentProvider(
+                new ProcessItemProviderAdapterFactory()), new WritableSet());
+
+        assertThat(labelProvider.getImage(aContractInput().build())).isNull();
     }
 
 }

@@ -31,7 +31,7 @@ public class InputNameCellLabelProvider extends CustomPropertyColumnLabelProvide
 
     @Override
     public Image getImage(final Object object) {
-        return null;//Pics.getImage("ContractInput.gif", ContractPlugin.getDefault());
+        return null;
     }
 
 }
