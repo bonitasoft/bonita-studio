@@ -103,7 +103,7 @@ public class ContractIT extends SWTBotGefTestCase {
         childRow.setName("amount").setType("DECIMAL").setDescription("The amount of the expense VAT included in euros");
 
         childRow = inputTab.add();
-        childRow.setName("expenseDate").setType("DATE").setDescription("When the expense was done").clickNullable();
+        childRow.setName("expenseDate").setType("DATE").setDescription("When the expense was done");
 
         Contract contract = contractContainer.getContract();
         final EList<ContractInput> rootInputs = contract.getInputs();
