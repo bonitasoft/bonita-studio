@@ -59,6 +59,8 @@ public abstract class FieldToContractInputMapping {
         final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
         contractInput.setName(field.getName());
         contractInput.setType(toContractInputType());
+        contractInput.setMultiple(field.isCollection());
+        contractInput.setMandatory(!field.isNullable());
         return contractInput;
     }
 

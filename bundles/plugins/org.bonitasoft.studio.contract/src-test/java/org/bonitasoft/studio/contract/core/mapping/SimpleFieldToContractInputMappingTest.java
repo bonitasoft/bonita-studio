@@ -120,6 +120,30 @@ public class SimpleFieldToContractInputMappingTest {
         ContractInputAssert.assertThat(input).hasName("age").hasType(ContractInputType.INTEGER).hasNoInputs();
     }
 
+    @Test
+    public void should_create_a_multiple_contract_input() throws Exception {
+        final SimpleField multipleField = aSimpleField("messages", FieldType.STRING);
+        multipleField.setCollection(true);
+
+        final SimpleFieldToContractInputMapping fieldToContractInputMapping = new SimpleFieldToContractInputMapping(multipleField);
+
+        final ContractInput input = fieldToContractInputMapping.toContractInput();
+
+        ContractInputAssert.assertThat(input).hasName("messages").hasType(ContractInputType.TEXT).hasNoInputs().isMultiple();
+    }
+
+    @Test
+    public void should_create_contract_a_mandatory_input() throws Exception {
+        final SimpleField nullableField = aSimpleField("age", FieldType.INTEGER);
+        nullableField.setNullable(false);
+
+        final SimpleFieldToContractInputMapping fieldToContractInputMapping = new SimpleFieldToContractInputMapping(nullableField);
+
+        final ContractInput input = fieldToContractInputMapping.toContractInput();
+
+        ContractInputAssert.assertThat(input).hasName("age").hasType(ContractInputType.INTEGER).hasNoInputs().isMandatory();
+    }
+
     private SimpleField aSimpleField(final String name, final FieldType type) {
         final SimpleField simpleField = new SimpleField();
         simpleField.setName(name);
