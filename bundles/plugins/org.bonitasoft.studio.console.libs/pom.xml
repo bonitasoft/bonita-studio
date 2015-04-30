@@ -14,7 +14,7 @@
 
 	<properties>
 		<tomcat.bundle.dir>${basedir}/tomcat</tomcat.bundle.dir>
-		<bonita.home.dir>${basedir}/bonita</bonita.home.dir>
+		<bonita.home.dir>${basedir}/bonita-home</bonita.home.dir>
 		<javadoc.dir>${basedir}/javadoc</javadoc.dir>
 		<lib.dir>lib</lib.dir>
 		<tomcat.version>7.0.55</tomcat.version>
