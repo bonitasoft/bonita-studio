@@ -15,19 +15,15 @@
 package org.bonitasoft.studio.contract.ui.property.input.labelProvider;
 
 import org.bonitasoft.studio.common.jface.databinding.CustomPropertyColumnLabelProvider;
-import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
-import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
-import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
 /**
  * @author Romain Bioteau
  */
-public class InputNameCellLabelProvider extends CustomPropertyColumnLabelProvider implements IStyledLabelProvider {
+public class InputNameCellLabelProvider extends CustomPropertyColumnLabelProvider {
 
     public InputNameCellLabelProvider(final IPropertySourceProvider propertySourceProvider, final IObservableSet knownElements) {
         super(propertySourceProvider, ProcessPackage.Literals.CONTRACT_INPUT__NAME, knownElements);
@@ -35,12 +31,7 @@ public class InputNameCellLabelProvider extends CustomPropertyColumnLabelProvide
 
     @Override
     public Image getImage(final Object object) {
-        return Pics.getImage("ContractInput.gif", ContractPlugin.getDefault());
-    }
-
-    @Override
-    public StyledString getStyledText(final Object element) {
-        return new StyledString(getText(element));
+        return null;//Pics.getImage("ContractInput.gif", ContractPlugin.getDefault());
     }
 
 }
