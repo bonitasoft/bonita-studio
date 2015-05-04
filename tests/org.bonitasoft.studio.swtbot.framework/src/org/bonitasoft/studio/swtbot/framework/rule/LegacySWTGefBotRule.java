@@ -43,11 +43,7 @@ public class LegacySWTGefBotRule extends SWTGefBotRule {
     }
 
     protected void notifyActiveWorkbenchWindow() {
-<<<<<<< Upstream, based on branch 'CP_7.0_RC_sprint_1' of https://github.com/bonitasoft/bonita-studio.git
-        Display.getDefault().asyncExec(new Runnable() {
-=======
         Display.getDefault().syncExec(new Runnable() {
->>>>>>> 571125d BS-13182: try to force a refresh of menu visibility
 
             @Override
             public void run() {
