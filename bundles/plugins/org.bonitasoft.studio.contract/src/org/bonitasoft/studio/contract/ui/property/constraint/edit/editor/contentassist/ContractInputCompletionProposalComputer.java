@@ -86,7 +86,7 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
             completionNode.visit(codeVistor);
         }
         final List<ICompletionProposal> proposals = codeVistor.getProposals();
-        if (proposals == null) {
+        if (proposals == null || proposals.isEmpty()) {
             return super.computeCompletionProposals(context, monitor);
         }
         return proposals;

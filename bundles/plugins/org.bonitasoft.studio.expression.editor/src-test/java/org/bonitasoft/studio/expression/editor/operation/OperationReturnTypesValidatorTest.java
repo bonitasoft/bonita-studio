@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 Bonitasoft S.A.
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,6 +13,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.expression.editor.operation;
+
+import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FormFactory;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.runtime.IStatus;
@@ -116,11 +119,24 @@ public class OperationReturnTypesValidatorTest {
     }
 
     @Test
-    public void testValidateSetDocumentOperationValid() {
+    public void should_not_fail_for_SetDocument_Operation_with_DocumentValue() {
         final Expression leftOperand = ExpressionHelper.createDocumentExpressionWithDependency("doc");
 
-        final Expression rightOperand = ExpressionHelper.createGroovyScriptExpression("myList", DocumentValue.class.getName());
-        rightOperand.setContent("[]");
+        final Expression rightOperand = ExpressionHelper.createGroovyScriptExpression("myDocumentValue", DocumentValue.class.getName());
+        rightOperand.setContent("new DocumentValue()");
+
+        createOperation(leftOperand, rightOperand, ExpressionConstants.SET_DOCUMENT_OPERATOR);
+
+        final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
+        final IStatus status = validator.validate(rightOperand);
+        Assertions.assertThat(status.isOK()).isTrue();
+    }
+
+    @Test
+    public void should_not_fail_for_SetDocument_Operation_with_FileInputValue() {
+        final Expression leftOperand = ExpressionHelper.createDocumentExpressionWithDependency("doc");
+        final Expression rightOperand = ExpressionHelper.createContractInputExpression(aContractInput().withType(ContractInputType.FILE).withName("myFile")
+                .build());
 
         createOperation(leftOperand, rightOperand, ExpressionConstants.SET_DOCUMENT_OPERATOR);
 
@@ -158,7 +174,6 @@ public class OperationReturnTypesValidatorTest {
         final IStatus status = validator.validate(rightOperand);
         Assertions.assertThat(status.isOK()).isTrue();
     }
-
 
     @Test
     public void shouldValidateSetDocumentListOperation_add_error_message_when_right_operand_is_String_in_Operation_of_Task_Or_Form() throws Exception {
@@ -208,7 +223,6 @@ public class OperationReturnTypesValidatorTest {
         // set right operand
         final Expression rightOperand = ExpressionHelper.createConstantExpression("", "", String.class.getName());
         final Operation operation = createOperation(leftOperand, rightOperand, ExpressionConstants.SET_DOCUMENT_OPERATOR);
-
 
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
 

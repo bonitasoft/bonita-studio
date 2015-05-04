@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.engine.bpm.contract.FileInputValue;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
@@ -65,7 +66,7 @@ public class ExpressionHelper {
         returnTypeForInputType.put(ContractInputType.INTEGER, Long.class.getName());
         returnTypeForInputType.put(ContractInputType.DECIMAL, Double.class.getName());
         returnTypeForInputType.put(ContractInputType.COMPLEX, Map.class.getName());
-        returnTypeForInputType.put(ContractInputType.FILE, Map.class.getName());
+        returnTypeForInputType.put(ContractInputType.FILE, FileInputValue.class.getName());
     }
 
     private ExpressionHelper() {
