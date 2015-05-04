@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -72,7 +72,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.expression.TableExpression;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
@@ -433,27 +432,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
 	protected void createDefaultOutputs(final ConnectorDefinition definition) {
 		connectorWorkingCopy.getOutputs().clear();
 		for (final Output output : definition.getOutput()) {
-			final Operation operation = ExpressionFactory.eINSTANCE
-					.createOperation();
-			final Operator assignment = ExpressionFactory.eINSTANCE
-					.createOperator();
-			assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
-			operation.setOperator(assignment);
-
-			final Expression rightOperand = ExpressionFactory.eINSTANCE
-					.createExpression();
-			rightOperand.setName(output.getName());
-			rightOperand.setContent(output.getName());
-			rightOperand.setReturnType(output.getType());
-			rightOperand.setType(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
-			rightOperand.getReferencedElements().add(
-					ExpressionHelper.createDependencyFromEObject(output));
-			operation.setRightOperand(rightOperand);
-
-			final Expression leftOperand = ExpressionFactory.eINSTANCE
-					.createExpression();
-			operation.setLeftOperand(leftOperand);
-
+            final Operation operation = ExpressionHelper.createDefaultConnectorOutputOperation(output);
 			connectorWorkingCopy.getOutputs().add(operation);
 		}
 	}
@@ -764,7 +743,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
 	 */
 	@Override
@@ -865,7 +844,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
 	 */
@@ -876,7 +855,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext
 	 * (boolean)
