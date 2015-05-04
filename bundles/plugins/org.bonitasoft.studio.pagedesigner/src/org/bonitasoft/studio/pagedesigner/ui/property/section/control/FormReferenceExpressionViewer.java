@@ -17,7 +17,6 @@ package org.bonitasoft.studio.pagedesigner.ui.property.section.control;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.viewer.EditExpressionDialog;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
@@ -50,7 +49,7 @@ public class FormReferenceExpressionViewer extends ExpressionViewer {
     }
 
     @Override
-    protected String getDefaultExpressionType(final Expression selectedExpression) {
+    protected String overrideDefaultReturnType() {
         return ExpressionConstants.FORM_REFERENCE_TYPE;
     }
 

@@ -18,15 +18,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.model.edit.custom.process.CustomProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
-import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
+import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -47,16 +50,18 @@ public class RefactorDataOperationTest {
     private Expression rightOperand;
     private TransactionalEditingDomain domain;
     private Operation operation;
+    private final BooleanType initialBooleanDataType = ProcessFactory.eINSTANCE.createBooleanType();
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        domain = new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory(), new TransactionalCommandStackImpl());
+        domain = new TransactionalEditingDomainImpl(new CustomProcessItemProviderAdapterFactory(), new TransactionalCommandStackImpl());
         parentProcess = ProcessFactory.eINSTANCE.createPool();
         myData = ProcessFactory.eINSTANCE.createData();
         myData.setName("myData");
+        myData.setDataType(initialBooleanDataType);
         parentProcess.getData().add(myData);
         final Task task = ProcessFactory.eINSTANCE.createTask();
         operation = ExpressionFactory.eINSTANCE.createOperation();
@@ -124,5 +129,99 @@ public class RefactorDataOperationTest {
         assertThat(referencedElements).hasSize(0);
         assertThat(parentProcess.getData()).isEmpty();
 
+    }
+
+    @Test
+    public void testTypeUpdateForExpressionDataWithReturnedTypeNotFixed() throws Exception {
+        rightOperand = ExpressionFactory.eINSTANCE.createExpression();
+        rightOperand.setName(myData.getName());
+        rightOperand.setContent(myData.getName());
+        rightOperand.setType(ExpressionConstants.VARIABLE_TYPE);
+        rightOperand.setReturnType(Boolean.class.getName());
+        rightOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(myData));
+        operation.setRightOperand(rightOperand);
+
+        final Data newData = ProcessFactory.eINSTANCE.createData();
+        newData.setName("refactored");
+        newData.setDataType(ProcessFactory.eINSTANCE.createStringType());
+
+        final RefactorDataOperation refacorDataOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
+        refacorDataOperation.setAskConfirmation(false);// Skip UI
+        refacorDataOperation.setEditingDomain(domain);
+        refacorDataOperation.setDataContainer(parentProcess);
+        refacorDataOperation.setDataContainer(parentProcess);
+        refacorDataOperation.setDataContainmentFeature(ProcessPackage.Literals.DATA_AWARE__DATA);
+        refacorDataOperation.addItemToRefactor(newData, myData);
+        refacorDataOperation.run(null);
+        ExpressionAssert.assertThat(leftOperand).hasName(newData.getName());
+        ExpressionAssert.assertThat(rightOperand).hasContent(newData.getName());
+        ExpressionAssert.assertThat(rightOperand).hasReturnType(String.class.getName());
+        final EList<EObject> referencedElements = rightOperand.getReferencedElements();
+        assertThat(referencedElements).hasSize(1);
+        final EObject dep = referencedElements.get(0);
+        assertThat(dep).isInstanceOf(Data.class);
+        assertThat(((Data) dep).getName()).isEqualTo("refactored");
+    }
+
+    @Test
+    public void testTypeUpdateForExpressionDataWithReturnedTypeFixed() throws Exception {
+        rightOperand = ExpressionFactory.eINSTANCE.createExpression();
+        rightOperand.setName(myData.getName());
+        rightOperand.setContent(myData.getName());
+        rightOperand.setType(ExpressionConstants.VARIABLE_TYPE);
+        rightOperand.setReturnTypeFixed(true);
+        rightOperand.setReturnType(Boolean.class.getName());
+        rightOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(myData));
+        operation.setRightOperand(rightOperand);
+
+        final Data newData = ProcessFactory.eINSTANCE.createData();
+        newData.setName("refactored");
+        newData.setDataType(ProcessFactory.eINSTANCE.createStringType());
+
+        final RefactorDataOperation refacorDataOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
+        refacorDataOperation.setAskConfirmation(false);// Skip UI
+        refacorDataOperation.setEditingDomain(domain);
+        refacorDataOperation.setDataContainer(parentProcess);
+        refacorDataOperation.setDataContainmentFeature(ProcessPackage.Literals.DATA_AWARE__DATA);
+        refacorDataOperation.addItemToRefactor(newData, myData);
+        refacorDataOperation.setUpdateDataReferences(true);
+        refacorDataOperation.run(null);
+        ExpressionAssert.assertThat(rightOperand)
+                .hasContent("")
+                .hasName("")
+                .hasReturnType(Boolean.class.getName());
+        final EList<EObject> referencedElements = rightOperand.getReferencedElements();
+        assertThat(referencedElements).hasSize(0);
+    }
+
+    @Test
+    public void testNameUpdateForExpressionDataWithReturnedTypeFixed() throws Exception {
+        rightOperand = ExpressionFactory.eINSTANCE.createExpression();
+        rightOperand.setName(myData.getName());
+        rightOperand.setContent(myData.getName());
+        rightOperand.setType(ExpressionConstants.VARIABLE_TYPE);
+        rightOperand.setReturnType(Boolean.class.getName());
+        rightOperand.setReturnTypeFixed(true);
+        rightOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(myData));
+        operation.setRightOperand(rightOperand);
+
+        final Data newData = ProcessFactory.eINSTANCE.createData();
+        newData.setName("refactored");
+        newData.setDataType(myData.getDataType());
+
+        final RefactorDataOperation refacorDataOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
+        refacorDataOperation.setAskConfirmation(false);// Skip UI
+        refacorDataOperation.setEditingDomain(domain);
+        refacorDataOperation.setDataContainer(parentProcess);
+        refacorDataOperation.addItemToRefactor(newData, myData);
+        refacorDataOperation.run(null);
+        ExpressionAssert.assertThat(leftOperand).hasName(newData.getName());
+        ExpressionAssert.assertThat(rightOperand).hasContent(newData.getName());
+        ExpressionAssert.assertThat(rightOperand).hasReturnType(Boolean.class.getName());
+        final EList<EObject> referencedElements = rightOperand.getReferencedElements();
+        assertThat(referencedElements).hasSize(1);
+        final EObject dep = referencedElements.get(0);
+        assertThat(dep).isInstanceOf(Data.class);
+        assertThat(((Data) dep).getName()).isEqualTo("refactored");
     }
 }

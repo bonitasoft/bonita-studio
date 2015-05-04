@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -213,20 +213,15 @@ public class ExpressionHelper {
             if (!expr.isReturnTypeFixed() || expr.getReturnType() == null) {
                 returnType = String.class.getName();
             }
-            final CompoundCommand cc = new CompoundCommand();
-            cc.append(SetCommand.create(editingDomain, expr,
-                    ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
-            cc.append(SetCommand.create(editingDomain, expr,
-                    ExpressionPackage.Literals.EXPRESSION__NAME, ""));
-            cc.append(SetCommand.create(editingDomain, expr,
-                    ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
-            cc.append(SetCommand.create(editingDomain, expr,
-                    ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, returnType));
-            cc.append(RemoveCommand.create(editingDomain, expr,
-                    ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                    expr.getReferencedElements()));
-            cc.append(RemoveCommand.create(editingDomain, expr,
-                    ExpressionPackage.Literals.EXPRESSION__CONNECTORS, expr.getConnectors()));
+            final CompoundCommand cc = new CompoundCommand("Clear Expression");
+            if (!ExpressionConstants.CONDITION_TYPE.equals(expr.getType())) {
+                cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
+            }
+            cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
+            cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
+            cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, returnType));
+            cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, expr.getReferencedElements()));
+            cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__CONNECTORS, expr.getConnectors()));
             return cc;
         } else {
             clearExpression(expr);
@@ -238,7 +233,9 @@ public class ExpressionHelper {
         Assert.isLegal(expr != null, "Expression cannot be null.");
         expr.setName("");
         expr.setContent("");
-        expr.setType(ExpressionConstants.CONSTANT_TYPE);
+        if (!ExpressionConstants.CONDITION_TYPE.equals(expr.getType())) {
+            expr.setType(ExpressionConstants.CONSTANT_TYPE);
+        }
         expr.getReferencedElements().clear();
         expr.getConnectors().clear();
         if (!expr.isReturnTypeFixed() || expr.getReturnType() == null) {
@@ -400,6 +397,25 @@ public class ExpressionHelper {
         storageExpression.setReturnType(String.class.getName());
         storageExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
         return storageExpression;
+    }
+
+    public static Operation createDefaultConnectorOutputOperation(final Output output) {
+        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
+        assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+        operation.setOperator(assignment);
+
+        final Expression rightOperand = ExpressionFactory.eINSTANCE.createExpression();
+        rightOperand.setName(output.getName());
+        rightOperand.setContent(output.getName());
+        rightOperand.setReturnType(output.getType());
+        rightOperand.setType(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
+        rightOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(output));
+        operation.setRightOperand(rightOperand);
+
+        final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression();
+        operation.setLeftOperand(leftOperand);
+        return operation;
     }
 
 }
