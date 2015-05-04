@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
+import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
 import java.util.ArrayList;
@@ -137,12 +138,11 @@ public class OperationReturnTypesValidatorTest {
         final Expression leftOperand = ExpressionHelper.createDocumentExpressionWithDependency("doc");
         final Expression rightOperand = ExpressionHelper.createContractInputExpression(aContractInput().withType(ContractInputType.FILE).withName("myFile")
                 .build());
-
         createOperation(leftOperand, rightOperand, ExpressionConstants.SET_DOCUMENT_OPERATOR);
 
-        final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
-        final IStatus status = validator.validate(rightOperand);
-        Assertions.assertThat(status.isOK()).isTrue();
+        final IStatus status = new OperationReturnTypesValidator().validate(rightOperand);
+
+        assertThat(status).isOK();
     }
 
     @Test
