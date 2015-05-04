@@ -45,6 +45,7 @@ public class ContractInputGenerationWizard extends Wizard {
     private final EditingDomain editingDomain;
     private final ContractContainer contractContainer;
     private CreateContractInputFromBusinessObjectWizardPage contractInputFromBusinessObjectWizardPage;
+    private List<Data> availableBusinessData;
 
     public ContractInputGenerationWizard(final ContractContainer contractContainer, final EditingDomain editingDomain,
             final BusinessObjectModelRepositoryStore businessObjectStore) {
@@ -58,17 +59,31 @@ public class ContractInputGenerationWizard extends Wizard {
     @Override
     public void addPages() {
         final WritableValue selectedDataObservable = new WritableValue();
-        final List<Data> availableBusinessData = availableBusinessData();
-        selectedDataObservable.setValue(availableBusinessData.get(0));
+        availableBusinessData = availableBusinessData();
+        if (!availableBusinessData.isEmpty()) {
+            selectedDataObservable.setValue(availableBusinessData.get(0));
+        }
         addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable, businessObjectStore));
         contractInputFromBusinessObjectWizardPage = new CreateContractInputFromBusinessObjectWizardPage(contractContainer.getContract(),
                 selectedDataObservable, new FieldToContractInputMappingFactory(businessObjectStore));
         addPage(contractInputFromBusinessObjectWizardPage);
     }
 
-    private List<Data> availableBusinessData() {
+    protected List<Data> availableBusinessData() {
         final AbstractProcess pool = ModelHelper.getParentProcess(contractContainer);
         return newArrayList(filter(pool.getData(), instanceOf(BusinessObjectData.class)));
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.wizard.Wizard#canFinish()
+     */
+    @Override
+    public boolean canFinish() {
+        if (availableBusinessData.isEmpty()) {
+            return false;
+        }
+        return super.canFinish();
     }
 
     /*

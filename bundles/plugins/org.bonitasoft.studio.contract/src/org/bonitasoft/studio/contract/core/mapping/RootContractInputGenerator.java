@@ -27,9 +27,9 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 public class RootContractInputGenerator {
 
     private final String rootContractInputName;
-    private List<FieldToContractInputMapping> children = new ArrayList<FieldToContractInputMapping>();
+    private List<? extends FieldToContractInputMapping> children = new ArrayList<FieldToContractInputMapping>();
 
-    public RootContractInputGenerator(final String rootContractInputName, final List<FieldToContractInputMapping> children) {
+    public RootContractInputGenerator(final String rootContractInputName, final List<? extends FieldToContractInputMapping> children) {
         this.rootContractInputName = rootContractInputName;
         this.children = children;
     }

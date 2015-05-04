@@ -23,14 +23,13 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 import java.util.Collections;
 import java.util.List;
 
-import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
-import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.wizard.labelProvider.FieldNameColumnLabelProvider;
+import org.bonitasoft.studio.contract.ui.wizard.labelProvider.FieldTypeColumnLabelProvider;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -53,13 +52,11 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -102,13 +99,13 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     @Override
     public void createControl(final Composite parent) {
         final EMFDataBindingContext dbc = new EMFDataBindingContext();
+        WizardPageSupport.create(this, dbc);
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         createRootNameControl(dbc, composite);
         createProcessDataMappingTreeViewer(composite, dbc);
         setControl(composite);
-        WizardPageSupport.create(this, dbc);
     }
 
     /**
@@ -203,12 +200,12 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         final TreeViewerColumn nameTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
         nameTreeViewerColumn.getColumn().setText(Messages.name);
         nameTreeViewerColumn.getColumn().setWidth(250);
-        nameTreeViewerColumn.setLabelProvider(createNameColumnLabelProvider());
+        nameTreeViewerColumn.setLabelProvider(new FieldNameColumnLabelProvider());
 
         final TreeViewerColumn typeTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
         typeTreeViewerColumn.getColumn().setText(Messages.type);
         typeTreeViewerColumn.getColumn().setWidth(250);
-        typeTreeViewerColumn.setLabelProvider(createTypeColumnLabelProvider());
+        typeTreeViewerColumn.setLabelProvider(new FieldTypeColumnLabelProvider());
 
         dbc.bindValue(ViewersObservables.observeInput(treeViewer),
                 selectedDataObservable,
@@ -230,44 +227,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         };
     }
 
-    /**
-     * @return
-     */
-    private CellLabelProvider createNameColumnLabelProvider() {
-        return new CellLabelProvider() {
-
-            @Override
-            public void update(final ViewerCell cell) {
-                final Object element = cell.getElement();
-                if (element instanceof FieldToContractInputMapping) {
-                    cell.setText(((FieldToContractInputMapping) element).getField().getName());
-                }
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private CellLabelProvider createTypeColumnLabelProvider() {
-        return new CellLabelProvider() {
-
-            @Override
-            public void update(final ViewerCell cell) {
-                final Object element = cell.getElement();
-                if (element instanceof SimpleFieldToContractInputMapping) {
-                    final SimpleFieldToContractInputMapping mapping = (SimpleFieldToContractInputMapping) element;
-                    cell.setText(((SimpleField) mapping.getField()).getType().name());
-                } else {
-                    if (element instanceof RelationFieldToContractInputMapping) {
-                        final RelationFieldToContractInputMapping mapping = (RelationFieldToContractInputMapping) element;
-                        cell.setText(((RelationField) mapping.getField()).getReference().getQualifiedName());
-                    }
-                }
-            }
-        };
-    }
-
     public List<FieldToContractInputMapping> getMappings() {
         return mappings;
     }
@@ -280,6 +239,32 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     public void checkStateChanged(final CheckStateChangedEvent event) {
         final FieldToContractInputMapping mapping = (FieldToContractInputMapping) event.getElement();
         mapping.setGenerated(event.getChecked());
+
+        // SELECT/DESELECT ALL CHILDREN
+        final CheckboxTreeViewer checkboxTreeViewer = (CheckboxTreeViewer) event.getSource();
+        checkboxTreeViewer.setSubtreeChecked(mapping, event.getChecked());
+
+        //SELECT PARENT IF CHILD IS SELECTED
+        if (event.getChecked()) {
+            if (mapping.getParent() != null) {
+                checkboxTreeViewer.setChecked(mapping.getParent(), true);
+            }
+        }
+
+        // DESELECT PARENT IF NO CHILD SELECTED
+        if (!event.getChecked() && mapping.getParent() != null) {
+            boolean deselect = true;
+            for (final FieldToContractInputMapping m : mapping.getParent().getChildren()) {
+                if (checkboxTreeViewer.getChecked(m)) {
+                    deselect = false;
+                }
+            }
+            // ALL CHILD ARE UNCHECKED
+            if (deselect) {
+                checkboxTreeViewer.setChecked(mapping.getParent(), false);
+            }
+        }
+
     }
 
     /*

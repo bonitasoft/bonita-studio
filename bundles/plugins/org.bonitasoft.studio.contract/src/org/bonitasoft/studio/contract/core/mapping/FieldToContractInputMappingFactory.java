@@ -20,6 +20,7 @@ import java.util.List;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
+import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 
@@ -58,8 +59,10 @@ public class FieldToContractInputMappingFactory {
 
     private FieldToContractInputMapping createRelationFieldToContractInputMapping(final RelationField field) {
         final RelationFieldToContractInputMapping relationFieldMapping = new RelationFieldToContractInputMapping(field);
-        for (final Field child : field.getReference().getFields()) {
-            relationFieldMapping.addChild(createFieldToContractInputMapping(child));
+        if (((RelationField) relationFieldMapping.getField()).getType().equals(Type.COMPOSITION)) {
+            for (final Field child : field.getReference().getFields()) {
+                relationFieldMapping.addChild(createFieldToContractInputMapping(child));
+            }
         }
         return relationFieldMapping;
     }
