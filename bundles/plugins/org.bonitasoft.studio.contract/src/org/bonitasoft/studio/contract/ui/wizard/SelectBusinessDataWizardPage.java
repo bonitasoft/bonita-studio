@@ -84,4 +84,16 @@ public class SelectBusinessDataWizardPage extends WizardPage {
         dbc.bindValue(ViewersObservables.observeSingleSelection(businessDataTableViewer), selectedDataObservable);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
+     */
+    @Override
+    public boolean isPageComplete() {
+        if (availableBusinessData.isEmpty()) {
+            return false;
+        }
+        return super.isPageComplete();
+    }
+
 }

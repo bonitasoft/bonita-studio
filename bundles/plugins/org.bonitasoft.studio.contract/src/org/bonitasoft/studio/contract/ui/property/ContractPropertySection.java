@@ -206,8 +206,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
     }
 
     private void createGenerateButton(final Composite buttonsComposite) {
-        final Button generatebutton = createButton(buttonsComposite, Messages.generate);
-        generatebutton.addSelectionListener(new SelectionAdapter() {
+        final Button generateButton = createButton(buttonsComposite, Messages.generate);
+        generateButton.addSelectionListener(new SelectionAdapter() {
 
             /*
              * (non-Javadoc)

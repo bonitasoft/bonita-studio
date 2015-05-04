@@ -76,7 +76,33 @@ public class ContractInputGenerationWizardTest {
         assertThat(process.getContract().getInputs().get(0).getInputs()).extracting("name").contains("firstName");
     }
 
+    @Test
+    public void should_canFinish_return_false_when_no_data_is_defined() {
+        final Pool process = aPool().havingContract(aContract()).build();
+        final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), store);
+        wizard.addPages();
+        final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
+        when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
+        wizard.setContainer(wizardContainer);
+        wizard.createPageControls(realmWithDisplay.createComposite());
+        assertThat(wizard.canFinish()).isFalse();
+    }
+
+    @Test
+    public void should_canFinish_return_true_when_data_is_defined() {
+        final Pool process = aPool().havingContract(aContract()).build();
+        process.getData().add(aBusinessData().build());
+        final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), store);
+        wizard.addPages();
+        final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
+        when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
+        wizard.setContainer(wizardContainer);
+        wizard.createPageControls(realmWithDisplay.createComposite());
+        assertThat(wizard.canFinish()).isTrue();
+    }
+
     private EditingDomain editingDomain() {
         return new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory());
     }
+
 }

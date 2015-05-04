@@ -289,11 +289,16 @@ public class NamingUtils {
     }
 
     public static String generateNewName(final Set<String> existingNames, final String defaultName, int startIndex) {
-        while (existingNames.contains(defaultName + startIndex)) {
-            startIndex++;
-        }
-        if (startIndex > 0) {
-            return defaultName + startIndex;
+        if (startIndex == 0 && existingNames.contains(defaultName) || startIndex > 0) {
+            if (startIndex == 0) {
+                startIndex++;
+            }
+            while (existingNames.contains(defaultName + startIndex)) {
+                startIndex++;
+            }
+            if (startIndex > 0) {
+                return defaultName + startIndex;
+            }
         }
         return defaultName;
     }
