@@ -43,15 +43,20 @@ public class LegacySWTGefBotRule extends SWTGefBotRule {
     }
 
     protected void notifyActiveWorkbenchWindow() {
+        System.out.println("LegacySWTGefBotRule.notifyActiveWorkbenchWindow start");
         Display.getDefault().syncExec(new Runnable() {
 
             @Override
             public void run() {
+                System.out.println("LegacySWTGefBotRule.notifyActiveWorkbenchWindow retrieve Evaluation Service...");
                 final IEvaluationService service = (IEvaluationService) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getWorkbench()
                         .getService(IEvaluationService.class);
+                System.out.println("LegacySWTGefBotRule.notifyActiveWorkbenchWindow Evaluation Service: " + service);
                 service.requestEvaluation("activeWorkbenchWindow");
+                System.out.println("LegacySWTGefBotRule.notifyActiveWorkbenchWindow evaluation requested on 'activeWorkbenchWindow'");
             }
         });
+        System.out.println("LegacySWTGefBotRule.notifyActiveWorkbenchWindow end");
     }
 
     /*
