@@ -22,12 +22,18 @@ import java.util.List;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
+import org.bonitasoft.studio.contract.core.mapping.RootContractInputGenerator;
+import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.emf.databinding.EMFDataBindingContext;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.wizard.Wizard;
 
 /**
@@ -35,26 +41,33 @@ import org.eclipse.jface.wizard.Wizard;
  */
 public class ContractInputGenerationWizard extends Wizard {
 
-    private final EObject container;
-    private final List<Data> availableBusinessData;
     private final BusinessObjectModelRepositoryStore businessObjectStore;
+    private final EditingDomain editingDomain;
+    private final ContractContainer contractContainer;
+    private CreateContractInputFromBusinessObjectWizardPage contractInputFromBusinessObjectWizardPage;
 
-    public ContractInputGenerationWizard(final EObject container, final BusinessObjectModelRepositoryStore businessObjectStore) {
-        this.container = container;
-        availableBusinessData = availableBusinessData();
+    public ContractInputGenerationWizard(final ContractContainer contractContainer, final EditingDomain editingDomain,
+            final BusinessObjectModelRepositoryStore businessObjectStore) {
+        setWindowTitle(Messages.contractInputGenerationTitle);
+        setDefaultPageImageDescriptor(Pics.getWizban());
+        this.contractContainer = contractContainer;
+        this.editingDomain = editingDomain;
         this.businessObjectStore = businessObjectStore;
     }
 
     @Override
     public void addPages() {
-        final EMFDataBindingContext dbc = new EMFDataBindingContext();
         final WritableValue selectedDataObservable = new WritableValue();
-        addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable));
-        addPage(new CreateContractInputFromBusinessObjectWizardPage(selectedDataObservable, businessObjectStore));
+        final List<Data> availableBusinessData = availableBusinessData();
+        selectedDataObservable.setValue(availableBusinessData.get(0));
+        addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable, businessObjectStore));
+        contractInputFromBusinessObjectWizardPage = new CreateContractInputFromBusinessObjectWizardPage(contractContainer.getContract(),
+                selectedDataObservable, new FieldToContractInputMappingFactory(businessObjectStore));
+        addPage(contractInputFromBusinessObjectWizardPage);
     }
 
     private List<Data> availableBusinessData() {
-        final AbstractProcess pool = ModelHelper.getParentProcess(container);
+        final AbstractProcess pool = ModelHelper.getParentProcess(contractContainer);
         return newArrayList(filter(pool.getData(), instanceOf(BusinessObjectData.class)));
     }
 
@@ -64,8 +77,12 @@ public class ContractInputGenerationWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
-
-        return false;
+        editingDomain.getCommandStack()
+                .execute(
+                        AddCommand.create(editingDomain, contractContainer.getContract(), ProcessPackage.Literals.CONTRACT__INPUTS,
+                                new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
+                                        contractInputFromBusinessObjectWizardPage.getMappings()).toRootContractInput()));
+        return true;
     }
 
 }

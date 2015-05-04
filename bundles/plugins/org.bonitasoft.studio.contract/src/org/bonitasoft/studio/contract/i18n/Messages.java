@@ -73,6 +73,9 @@ public class Messages extends NLS {
     public static String selectBusinessDataWizardPageDescription;
     public static String contentAssistHint;
     public static String generate;
-    public static String prefix;
+    public static String contractInputGenerationTitle;
+    public static String rootContractInputName;
+    public static String selectFieldToGenerateTitle;
+    public static String selectFieldToGenerateDescription;
 
 }

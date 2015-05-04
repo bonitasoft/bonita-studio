@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.ui.BusinessObjectDataStyledLabelProvider;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -45,13 +44,16 @@ public class SelectBusinessDataWizardPage extends WizardPage {
 
     List<Data> availableBusinessData;
     private final WritableValue selectedDataObservable;
+    private final BusinessObjectModelRepositoryStore businessObjectStore;
 
-    public SelectBusinessDataWizardPage(final List<Data> availableBusinessData, final WritableValue selectedDataObservable) {
+    public SelectBusinessDataWizardPage(final List<Data> availableBusinessData, final WritableValue selectedDataObservable,
+            final BusinessObjectModelRepositoryStore businessObjectStore) {
         super(SelectBusinessDataWizardPage.class.getName());
         setTitle(Messages.SelectBusinessDataWizardPageTitle);
         setDescription(Messages.selectBusinessDataWizardPageDescription);
         this.availableBusinessData = availableBusinessData;
         this.selectedDataObservable = selectedDataObservable;
+        this.businessObjectStore = businessObjectStore;
     }
 
     /*
@@ -77,8 +79,7 @@ public class SelectBusinessDataWizardPage extends WizardPage {
         final IObservableSet knownElements = contentProvider.getKnownElements();
         final IObservableMap[] labelMaps = EMFObservables.observeMaps(knownElements, new EStructuralFeature[] { ProcessPackage.Literals.ELEMENT__NAME,
                 ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME });
-        businessDataTableViewer.setLabelProvider(new BusinessObjectDataStyledLabelProvider(RepositoryManager.getInstance().getRepositoryStore(
-                BusinessObjectModelRepositoryStore.class), labelMaps));
+        businessDataTableViewer.setLabelProvider(new BusinessObjectDataStyledLabelProvider(businessObjectStore, labelMaps));
         businessDataTableViewer.setInput(new WritableList(availableBusinessData, ProcessPackage.Literals.BUSINESS_OBJECT_DATA));
         dbc.bindValue(ViewersObservables.observeSingleSelection(businessDataTableViewer), selectedDataObservable);
     }
