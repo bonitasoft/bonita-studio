@@ -603,7 +603,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
             @Override
             public Data apply(final MultiInstantiable input) {
-                return DataExpressionProvider.dataFromIteratorExpression(input, input.getIteratorExpression());
+                return DataExpressionProvider.dataFromIteratorExpression(input, input.getIteratorExpression(), ModelHelper.getMainProcess(container));
             }
         };
     }

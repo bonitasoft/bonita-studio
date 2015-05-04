@@ -25,7 +25,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class LongDataTypeBuilder extends DataTypeBuilder<LongType, LongDataTypeBuilder> {
 
-    public static LongDataTypeBuilder create() {
+    public static LongDataTypeBuilder aLongDataType() {
         return new LongDataTypeBuilder();
     }
 

@@ -76,8 +76,8 @@ public class ComparisonExpressionConverterTest {
     @Before
     public void setUp() throws Exception {
         comparisonExpressionConverter = new ComparisonExpressionConverter(loader);
-        variable = DataBuilder.aData().withName("amount").havingDataType(DoubleDataTypeBuilder.create()).build();
-        validVariable = DataBuilder.aData().withName("valid").havingDataType(BooleanDataTypeBuilder.create()).build();
+        variable = DataBuilder.aData().withName("amount").havingDataType(DoubleDataTypeBuilder.aDoubleDataType()).build();
+        validVariable = DataBuilder.aData().withName("valid").havingDataType(BooleanDataTypeBuilder.aBooleanDataType()).build();
         parameter = ParameterBuilder.aParameter().withName("commission").withType(Double.class.getName()).build();
         binaryExpression = ExpressionBuilder.anExpression()
                 .withExpressionType(ExpressionConstants.CONDITION_TYPE)

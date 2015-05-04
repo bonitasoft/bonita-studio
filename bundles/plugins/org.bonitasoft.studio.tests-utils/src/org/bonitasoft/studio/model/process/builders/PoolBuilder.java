@@ -14,8 +14,10 @@
  */
 package org.bonitasoft.studio.model.process.builders;
 
+import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.parameter.builders.ParameterBuilder;
 import org.bonitasoft.studio.model.process.Connection;
+import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.Pool;
@@ -105,7 +107,12 @@ public class PoolBuilder extends ElementBuilder<Pool, PoolBuilder> {
 
     public PoolBuilder havingContract(final ContractBuilder contract) {
         getBuiltInstance().setContract(contract.build());
-        return this;
+        return getThis();
+    }
+
+    public PoolBuilder in(final Buildable<? extends Container> containerBuildable) {
+        containerBuildable.build().getElements().add(getBuiltInstance());
+        return getThis();
     }
 
     @Override
