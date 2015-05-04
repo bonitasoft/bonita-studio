@@ -79,7 +79,6 @@ public class UserAidsPropertySection extends ExtensibleGridPropertySection {
 
     @Override
     public String getSectionDescription() {
-        // TODO Auto-generated method stub
         return null;
     }
 
