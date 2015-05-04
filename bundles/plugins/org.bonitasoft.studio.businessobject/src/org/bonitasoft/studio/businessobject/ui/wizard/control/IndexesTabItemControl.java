@@ -227,6 +227,6 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
             }
         }
 
-        return NamingUtils.generateNewName(existingNames, DEFAULT_INDEX_NAME);
+        return NamingUtils.generateNewName(existingNames, DEFAULT_INDEX_NAME, 1);
     }
 }

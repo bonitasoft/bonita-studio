@@ -14,43 +14,76 @@
  */
 package org.bonitasoft.studio.contract.ui.wizard;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.util.List;
 
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
+import org.bonitasoft.studio.contract.core.mapping.RootContractInputGenerator;
+import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.Data;
-import org.eclipse.emf.ecore.EObject;
+import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.wizard.Wizard;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 /**
  * @author aurelie
  */
 public class ContractInputGenerationWizard extends Wizard {
 
-    private final EObject container;
-    private final List<Data> availableBusinessData;
+    private final BusinessObjectModelRepositoryStore businessObjectStore;
+    private final EditingDomain editingDomain;
+    private final ContractContainer contractContainer;
+    private CreateContractInputFromBusinessObjectWizardPage contractInputFromBusinessObjectWizardPage;
+    private List<Data> availableBusinessData;
 
-    public ContractInputGenerationWizard(final EObject container) {
-        this.container = container;
-        availableBusinessData = availableBusinessData();
+    public ContractInputGenerationWizard(final ContractContainer contractContainer, final EditingDomain editingDomain,
+            final BusinessObjectModelRepositoryStore businessObjectStore) {
+        setWindowTitle(Messages.contractInputGenerationTitle);
+        setDefaultPageImageDescriptor(Pics.getWizban());
+        this.contractContainer = contractContainer;
+        this.editingDomain = editingDomain;
+        this.businessObjectStore = businessObjectStore;
     }
 
     @Override
     public void addPages() {
-        addPage(new SelectBusinessDataWizardPage(availableBusinessData));
-        addPage(new CreateContractInputFromBusinessObjectWizardPage());
-    };
+        final WritableValue selectedDataObservable = new WritableValue();
+        availableBusinessData = availableBusinessData();
+        if (!availableBusinessData.isEmpty()) {
+            selectedDataObservable.setValue(availableBusinessData.get(0));
+        }
+        addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable, businessObjectStore));
+        contractInputFromBusinessObjectWizardPage = new CreateContractInputFromBusinessObjectWizardPage(contractContainer.getContract(),
+                selectedDataObservable, new FieldToContractInputMappingFactory(businessObjectStore));
+        addPage(contractInputFromBusinessObjectWizardPage);
+    }
 
-    private List<Data> availableBusinessData() {
-        final AbstractProcess pool = ModelHelper.getParentProcess(container);
-        final Predicate<Object> predicate = Predicates.instanceOf(BusinessObjectData.class);
-        return Lists.newArrayList(Iterables.filter(pool.getData(), predicate));
+    protected List<Data> availableBusinessData() {
+        final AbstractProcess pool = ModelHelper.getParentProcess(contractContainer);
+        return newArrayList(filter(pool.getData(), instanceOf(BusinessObjectData.class)));
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.wizard.Wizard#canFinish()
+     */
+    @Override
+    public boolean canFinish() {
+        if (availableBusinessData.isEmpty()) {
+            return false;
+        }
+        return super.canFinish();
     }
 
     /*
@@ -59,8 +92,12 @@ public class ContractInputGenerationWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
-
-        return false;
+        editingDomain.getCommandStack()
+                .execute(
+                        AddCommand.create(editingDomain, contractContainer.getContract(), ProcessPackage.Literals.CONTRACT__INPUTS,
+                                new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
+                                        contractInputFromBusinessObjectWizardPage.getMappings()).toRootContractInput()));
+        return true;
     }
 
 }

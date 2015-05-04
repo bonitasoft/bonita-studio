@@ -33,6 +33,8 @@ public abstract class FieldToContractInputMapping {
 
     private FieldToContractInputMapping parent;
 
+    private boolean generated = true;
+
     public FieldToContractInputMapping(final Field field) {
         this.field = field;
     }
@@ -41,6 +43,10 @@ public abstract class FieldToContractInputMapping {
         if (children.add(child)) {
             child.setParent(this);
         }
+    }
+
+    public Field getField() {
+        return field;
     }
 
     public void setParent(final FieldToContractInputMapping parentField) {
@@ -64,5 +70,13 @@ public abstract class FieldToContractInputMapping {
     }
 
     protected abstract ContractInputType toContractInputType();
+
+    public boolean isGenerated() {
+        return generated;
+    }
+
+    public void setGenerated(final boolean generated) {
+        this.generated = generated;
+    }
 
 }
