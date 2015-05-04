@@ -28,6 +28,7 @@ import org.bonitasoft.studio.contract.ui.property.input.ContractInputTreeViewer;
 import org.bonitasoft.studio.contract.ui.wizard.ContractInputGenerationWizard;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -44,6 +45,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
@@ -213,8 +215,9 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
              */
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                final WizardDialog dialog = new WizardDialog(Display.getCurrent().getActiveShell(), new ContractInputGenerationWizard(getEObject(),
-                        RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class)));
+                final WizardDialog dialog = new WizardDialog(Display.getCurrent().getActiveShell(), new ContractInputGenerationWizard(
+                        (ContractContainer) selectionProvider.getAdapter(EObject.class),
+                        getEditingDomain(), RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class)));
                 dialog.open();
             }
         });

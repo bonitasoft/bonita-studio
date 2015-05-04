@@ -51,9 +51,17 @@ public class FieldToContractInputMappingFactory {
         if (field instanceof SimpleField) {
             return new SimpleFieldToContractInputMapping((SimpleField) field);
         } else if (field instanceof RelationField) {
-            return new RelationFieldToContractInputMapping((RelationField) field);
+            return createRelationFieldToContractInputMapping((RelationField) field);
         }
         throw new IllegalStateException("Unkwown Field type");
+    }
+
+    private FieldToContractInputMapping createRelationFieldToContractInputMapping(final RelationField field) {
+        final RelationFieldToContractInputMapping relationFieldMapping = new RelationFieldToContractInputMapping(field);
+        for (final Field child : field.getReference().getFields()) {
+            relationFieldMapping.addChild(createFieldToContractInputMapping(child));
+        }
+        return relationFieldMapping;
     }
 
 }

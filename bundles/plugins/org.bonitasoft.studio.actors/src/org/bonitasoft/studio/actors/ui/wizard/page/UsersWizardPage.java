@@ -1162,7 +1162,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             names.add(u.getUserName());
         }
 
-        return NamingUtils.generateNewName(names, Messages.defaultUserName);
+        return NamingUtils.generateNewName(names, Messages.defaultUserName, 1);
     }
 
     @Override

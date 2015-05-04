@@ -181,7 +181,7 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
         for (final UniqueConstraint constraint : constraints) {
             existingNames.add(constraint.getName());
         }
-        return NamingUtils.generateNewName(existingNames, DEFAULT_UNIQUE_CONSTRAINT_NAME);
+        return NamingUtils.generateNewName(existingNames, DEFAULT_UNIQUE_CONSTRAINT_NAME, 1);
     }
 
     protected void createUniqueConstraintNameColumn(final DataBindingContext ctx, final TableViewer constraintsTableViewer,

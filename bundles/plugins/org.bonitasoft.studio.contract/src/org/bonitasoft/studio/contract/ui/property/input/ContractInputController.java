@@ -119,7 +119,7 @@ public class ContractInputController implements IViewerController {
 
     private String defaultContractInputName(final Contract contract) {
         return NamingUtils.generateNewName(
-                newHashSet(transform(getAllElementOfTypeIn(contract, ContractInput.class), toInputName())), "input");
+                newHashSet(transform(getAllElementOfTypeIn(contract, ContractInput.class), toInputName())), "input", 1);
     }
 
     private Function<ContractInput, String> toInputName() {
