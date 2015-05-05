@@ -158,7 +158,6 @@ public class NamingUtils {
             }
         }
         return max;
-
     }
 
     public static String convertToId(final Element item) {

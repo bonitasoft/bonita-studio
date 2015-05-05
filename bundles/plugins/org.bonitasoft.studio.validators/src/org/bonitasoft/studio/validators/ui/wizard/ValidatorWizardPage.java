@@ -19,9 +19,9 @@
 package org.bonitasoft.studio.validators.ui.wizard;
 
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.minMaxLengthValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.urlEncodableInputValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.minMaxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.urlEncodableInputValidator;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;

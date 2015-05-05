@@ -78,7 +78,7 @@ public class ComparisonExpressionConverterTest {
         comparisonExpressionConverter = new ComparisonExpressionConverter(loader);
         variable = DataBuilder.aData().withName("amount").havingDataType(DoubleDataTypeBuilder.create()).build();
         validVariable = DataBuilder.aData().withName("valid").havingDataType(BooleanDataTypeBuilder.create()).build();
-        parameter = ParameterBuilder.create().withName("commission").withType(Double.class.getName()).build();
+        parameter = ParameterBuilder.aParameter().withName("commission").withType(Double.class.getName()).build();
         binaryExpression = ExpressionBuilder.anExpression()
                 .withExpressionType(ExpressionConstants.CONDITION_TYPE)
                 .withContent("amount <= commission")

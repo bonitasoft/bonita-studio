@@ -35,7 +35,7 @@ import org.junit.runners.model.Statement;
 public class SWTGefBotRule implements TestRule {
 
     private boolean disablePopup;
-    private final SWTGefBot bot;
+    protected final SWTGefBot bot;
 
     public SWTGefBotRule(final SWTGefBot bot) {
         this.bot = bot;
@@ -55,15 +55,24 @@ public class SWTGefBotRule implements TestRule {
 
             @Override
             public void evaluate() throws Throwable {
-                initPreferences();
+                beforeStatement();
                 try {
                     base.evaluate();
                 } finally {
-                    closeAllAndReturnToWelcomePage();
+                    afterStatement();
                 }
 
             }
+
         };
+    }
+
+    protected void afterStatement() {
+        closeAllAndReturnToWelcomePage();
+    }
+
+    protected void beforeStatement() {
+        initPreferences();
     }
 
     protected void closeAllAndReturnToWelcomePage() {

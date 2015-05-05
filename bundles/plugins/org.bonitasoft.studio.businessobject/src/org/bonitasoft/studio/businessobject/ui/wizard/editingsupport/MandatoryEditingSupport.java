@@ -16,14 +16,13 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 
+import org.bonitasoft.engine.bdm.model.field.Field;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-
-import org.bonitasoft.engine.bdm.model.field.Field;
 
 /**
  * @author Romain Bioteau

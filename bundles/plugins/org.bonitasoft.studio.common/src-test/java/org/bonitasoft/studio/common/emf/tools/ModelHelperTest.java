@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.emf.tools;
 
@@ -22,9 +20,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Set;
-
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
@@ -48,7 +43,6 @@ import org.junit.Test;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ModelHelperTest {
 
@@ -91,7 +85,6 @@ public class ModelHelperTest {
         process.getElements().add(task1);
         process.getElements().add(task2);
 
-
     }
 
     /**
@@ -120,17 +113,17 @@ public class ModelHelperTest {
 
     @Test
     public void shouldGetAccessibleData_ForTask1ReturnProcessDataAndT1Data() throws Exception {
-        assertThat(ModelHelper.getAccessibleData(task1, false)).isNotNull().containsOnly(processData,t1Data);
+        assertThat(ModelHelper.getAccessibleData(task1, false)).isNotNull().containsOnly(processData, t1Data);
     }
 
     @Test
     public void shouldGetAccessibleData_ForWidgetReturnAllAccessibleAndPageflowTransientData() throws Exception {
-        assertThat(ModelHelper.getAccessibleData(textField, true)).isNotNull().containsOnly(processData,t1Data,pageFlowTransientData);
+        assertThat(ModelHelper.getAccessibleData(textField, true)).isNotNull().containsOnly(processData, t1Data, pageFlowTransientData);
     }
 
     @Test
     public void shouldGetAccessibleData_ForWidgetReturnAllAccessibleWithoutPageflowTransientData_IfIncludeTransientDataIsFalse() throws Exception {
-        assertThat(ModelHelper.getAccessibleData(textField, false)).isNotNull().containsOnly(processData,t1Data);
+        assertThat(ModelHelper.getAccessibleData(textField, false)).isNotNull().containsOnly(processData, t1Data);
     }
 
     @Test
@@ -240,7 +233,6 @@ public class ModelHelperTest {
         final EObject container = ModelHelper.getReferencedDataActivityContainer(refData);
         assertEquals(container, activity);
     }
-
 
     @Test
     public void shouldReturnReferencedDataPoolContainer() {
@@ -480,103 +472,6 @@ public class ModelHelperTest {
         activity2.getData().add(data);
         activity2.getData().add(anotherData);
         assertFalse(ModelHelper.isSameElement(data, refData));
-    }
-
-    @Test
-    public void isElementIsReferencedInScriptReturnsExpressionWhenExpressionIsScript() {
-        final Expression expr = ExpressionFactory.eINSTANCE.createExpression();
-        final Data refData = ProcessFactory.eINSTANCE.createData();
-        refData.setName("myData");
-        expr.setType(ExpressionConstants.SCRIPT_TYPE);
-        expr.getReferencedElements().add(refData);
-        final Operation op = ExpressionFactory.eINSTANCE.createOperation();
-        op.setRightOperand(expr);
-
-        final Activity activity = ProcessFactory.eINSTANCE.createActivity();
-        activity.getOperations().add(op);
-        final Data data = ProcessFactory.eINSTANCE.createData();
-        data.setName("myData");
-        final Data anotherData = ProcessFactory.eINSTANCE.createData();
-        anotherData.setName("anotherData");
-
-        activity.getData().add(data);
-        activity.getData().add(anotherData);
-
-        final Set<Expression> exprList = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(activity, data);
-        assertTrue(!exprList.isEmpty());
-    }
-
-    @Test
-    public void isElementIsReferencedInScriptReturnsExpressionWhenExpressionIsCondition() {
-        final Expression expr = ExpressionFactory.eINSTANCE.createExpression();
-        final Data refData = ProcessFactory.eINSTANCE.createData();
-        refData.setName("myData");
-        expr.setType(ExpressionConstants.CONDITION_TYPE);
-        expr.getReferencedElements().add(refData);
-        final Operation op = ExpressionFactory.eINSTANCE.createOperation();
-        op.setRightOperand(expr);
-
-        final Activity activity = ProcessFactory.eINSTANCE.createActivity();
-        activity.getOperations().add(op);
-        final Data data = ProcessFactory.eINSTANCE.createData();
-        data.setName("myData");
-        final Data anotherData = ProcessFactory.eINSTANCE.createData();
-        anotherData.setName("anotherData");
-
-        activity.getData().add(data);
-        activity.getData().add(anotherData);
-
-        final Set<Expression> exprList = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(activity, data);
-        assertTrue(!exprList.isEmpty());
-    }
-
-    @Test
-    public void isElementIsReferencedInScriptReturnsExpressionWhenExpressionIsPattern() {
-        final Expression expr = ExpressionFactory.eINSTANCE.createExpression();
-        final Data refData = ProcessFactory.eINSTANCE.createData();
-        refData.setName("myData");
-        expr.setType(ExpressionConstants.PATTERN_TYPE);
-        expr.getReferencedElements().add(refData);
-        final Operation op = ExpressionFactory.eINSTANCE.createOperation();
-        op.setRightOperand(expr);
-
-        final Activity activity = ProcessFactory.eINSTANCE.createActivity();
-        activity.getOperations().add(op);
-        final Data data = ProcessFactory.eINSTANCE.createData();
-        data.setName("myData");
-        final Data anotherData = ProcessFactory.eINSTANCE.createData();
-        anotherData.setName("anotherData");
-
-        activity.getData().add(data);
-        activity.getData().add(anotherData);
-
-        final Set<Expression> exprList = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(activity, data);
-        assertTrue(!exprList.isEmpty());
-    }
-
-    @Test
-    public void isElementIsReferencedInScriptReturnsEmptyList() {
-        final Expression expr = ExpressionFactory.eINSTANCE.createExpression();
-        final Data refData = ProcessFactory.eINSTANCE.createData();
-        refData.setName("myData");
-        expr.setType(ExpressionConstants.PATTERN_TYPE);
-        expr.getReferencedElements().add(refData);
-        final Operation op = ExpressionFactory.eINSTANCE.createOperation();
-        op.setRightOperand(expr);
-
-        final Activity activity = ProcessFactory.eINSTANCE.createActivity();
-        activity.getOperations().add(op);
-        final Activity activity1 = ProcessFactory.eINSTANCE.createActivity();
-        final Data data = ProcessFactory.eINSTANCE.createData();
-        data.setName("myData");
-        final Data anotherData = ProcessFactory.eINSTANCE.createData();
-        anotherData.setName("anotherData");
-
-        activity1.getData().add(data);
-        activity1.getData().add(anotherData);
-
-        final Set<Expression> exprList = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(activity1, data);
-        assertTrue(exprList.isEmpty());
     }
 
 }

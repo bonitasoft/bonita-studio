@@ -60,7 +60,7 @@ public class TestTextAreaInConnectorWizard extends SWTBotGefTestCase {
         SWTBotTestUtil.addNewData(bot, "mariage", "Boolean", false, null);
 
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION).show();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
+        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_IN);
         bot.button("Add...").click();
         Assert.assertFalse(IDialogConstants.NEXT_LABEL + " should be disabled", bot
                 .button(IDialogConstants.NEXT_LABEL).isEnabled());

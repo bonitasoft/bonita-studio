@@ -16,7 +16,7 @@ package org.bonitasoft.studio.common.jface.databinding.validator;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.uniqueValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.uniqueValidator;
 
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Test;
