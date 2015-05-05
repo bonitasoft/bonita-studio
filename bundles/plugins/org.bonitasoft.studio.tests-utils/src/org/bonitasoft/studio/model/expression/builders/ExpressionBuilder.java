@@ -20,6 +20,7 @@ import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.studio.model.process.Element;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -100,6 +101,13 @@ public class ExpressionBuilder {
             for (final EObject referencedElement : referencedElements) {
                 expression.getReferencedElements().add(referencedElement);
             }
+        }
+        return this;
+    }
+
+    public ExpressionBuilder havingReferencedElements(final Buildable<? extends Element>... referencedElementBuildable) {
+        for (final Buildable<? extends Element> referencedElement : referencedElementBuildable) {
+            expression.getReferencedElements().add(referencedElement.build());
         }
         return this;
     }
