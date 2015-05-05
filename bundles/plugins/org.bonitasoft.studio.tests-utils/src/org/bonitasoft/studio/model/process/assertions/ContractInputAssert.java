@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.model.process.assertions;
 
 import static java.lang.String.format;
@@ -15,7 +29,7 @@ public class ContractInputAssert extends AbstractAssert<ContractInputAssert, Con
 
     /**
      * Creates a new </code>{@link ContractInputAssert}</code> to make assertions on actual ContractInput.
-     * 
+     *
      * @param actual the ContractInput we want to make assertions on.
      */
     public ContractInputAssert(final ContractInput actual) {
@@ -25,7 +39,7 @@ public class ContractInputAssert extends AbstractAssert<ContractInputAssert, Con
     /**
      * An entry point for ContractInputAssert to follow AssertJ standard <code>assertThat()</code> statements.<br>
      * With a static import, one's can write directly : <code>assertThat(myContractInput)</code> and get specific assertion with code completion.
-     * 
+     *
      * @param actual the ContractInput we want to make assertions on.
      * @return a new </code>{@link ContractInputAssert}</code>
      */
@@ -35,7 +49,7 @@ public class ContractInputAssert extends AbstractAssert<ContractInputAssert, Con
 
     /**
      * Verifies that the actual ContractInput's description is equal to the given one.
-     * 
+     *
      * @param description the given description to compare the actual ContractInput's description to.
      * @return this assertion object.
      * @throws AssertionError - if the actual ContractInput's description is not equal to the given one.
@@ -58,7 +72,7 @@ public class ContractInputAssert extends AbstractAssert<ContractInputAssert, Con
 
     /**
      * Verifies that the actual ContractInput's inputs contains the given ContractInput elements.
-     * 
+     *
      * @param inputs the given elements that should be contained in actual ContractInput's inputs.
      * @return this assertion object.
      * @throws AssertionError if the actual ContractInput's inputs does not contain all given ContractInput elements.
@@ -87,7 +101,7 @@ public class ContractInputAssert extends AbstractAssert<ContractInputAssert, Con
 
     /**
      * Verifies that the actual ContractInput has no inputs.
-     * 
+     *
      * @return this assertion object.
      * @throws AssertionError if the actual ContractInput's inputs is not empty.
      */
@@ -109,7 +123,7 @@ public class ContractInputAssert extends AbstractAssert<ContractInputAssert, Con
 
     /**
      * Verifies that the actual ContractInput's mapping is equal to the given one.
-     * 
+     *
      * @param mapping the given mapping to compare the actual ContractInput's mapping to.
      * @return this assertion object.
      * @throws AssertionError - if the actual ContractInput's mapping is not equal to the given one.
@@ -132,7 +146,7 @@ public class ContractInputAssert extends AbstractAssert<ContractInputAssert, Con
 
     /**
      * Verifies that the actual ContractInput is multiple.
-     * 
+     *
      * @return this assertion object.
      * @throws AssertionError - if the actual ContractInput is not multiple.
      */
@@ -154,7 +168,7 @@ public class ContractInputAssert extends AbstractAssert<ContractInputAssert, Con
 
     /**
      * Verifies that the actual ContractInput is not multiple.
-     * 
+     *
      * @return this assertion object.
      * @throws AssertionError - if the actual ContractInput is multiple.
      */
@@ -176,7 +190,7 @@ public class ContractInputAssert extends AbstractAssert<ContractInputAssert, Con
 
     /**
      * Verifies that the actual ContractInput's name is equal to the given one.
-     * 
+     *
      * @param name the given name to compare the actual ContractInput's name to.
      * @return this assertion object.
      * @throws AssertionError - if the actual ContractInput's name is not equal to the given one.
@@ -199,7 +213,7 @@ public class ContractInputAssert extends AbstractAssert<ContractInputAssert, Con
 
     /**
      * Verifies that the actual ContractInput's type is equal to the given one.
-     * 
+     *
      * @param type the given type to compare the actual ContractInput's type to.
      * @return this assertion object.
      * @throws AssertionError - if the actual ContractInput's type is not equal to the given one.
