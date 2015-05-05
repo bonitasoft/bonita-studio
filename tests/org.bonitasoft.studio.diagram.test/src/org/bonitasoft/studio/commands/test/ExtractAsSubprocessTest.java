@@ -226,7 +226,7 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
      * @throws IOException
      */
     public void importProcess() throws IOException {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "BoundaryProcess_1_0.bos", "Bonita 6.x", "BoundaryProcess", this.getClass(), false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "BoundaryProcess_1_0.bos", "Bonita 6.x and 7.x", "BoundaryProcess", this.getClass(), false);
         bot.waitUntil(new EditorOpenCondition(store.getChild("BoundaryProcess-1.0.proc").getResource()));
         bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));//to avoid Progress information dialog
     }
