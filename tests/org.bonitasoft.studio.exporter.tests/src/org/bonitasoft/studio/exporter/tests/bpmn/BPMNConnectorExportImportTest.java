@@ -194,7 +194,7 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
     //TODO check connector output mapping
 
     protected void prepareTest() throws IOException {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "diagramToTestConnectorBPMNImportExport-1.0.bos", "Bonita 6.x and 7.x", "diagramToTestConnectorBPMNImportExport", BPMNConnectorExportImportTest.class, false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "diagramToTestConnectorBPMNImportExport-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "diagramToTestConnectorBPMNImportExport", BPMNConnectorExportImportTest.class, false);
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
         final SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
         final MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);

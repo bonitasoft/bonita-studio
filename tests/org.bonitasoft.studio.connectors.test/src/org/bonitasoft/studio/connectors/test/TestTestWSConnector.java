@@ -35,7 +35,7 @@ public class TestTestWSConnector extends SWTBotGefTestCase {
 	public void testTestWSConnector() throws IOException{
 		/*Import process*/
 		bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
-		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "WS_Without_Introspect--1.0.bar", "Bonita 6.x and 7.x", "WS_Without_Introspect (1.0)", this.getClass(), false);
+		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "WS_Without_Introspect--1.0.bar", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "WS_Without_Introspect (1.0)", this.getClass(), false);
 		SWTBotGefEditor gefEditor = bot.gefEditor("WS_Without_Introspect (1.0)");
 		/*Select step on which there is the connector to test*/
 		gefEditor.getEditPart("Step1").parent().select();
