@@ -147,6 +147,6 @@ public class ContractIT extends SWTBotGefTestCase {
                 .hasDescription("The amount of the expense VAT included in euros");
         ContractInputAssert.assertThat(find(expenseLineInputs, withContractInputName("expenseDate"))).hasType(ContractInputType.DATE)
                 .isNotMultiple()
-                .hasDescription("When the expense was done !");
+                .hasDescription("When the expense was done");
     }
 }
