@@ -32,6 +32,8 @@ import org.bonitasoft.studio.expression.editor.viewer.DefaultExpressionValidator
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.GroovyOnlyExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ObservableExpressionContentProvider;
+import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.Pool;
@@ -53,11 +55,16 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -102,6 +109,8 @@ public class DocumentWizardPage extends WizardPage {
     private Composite singleComposite;
     private Composite multipleComposite;
     private Link manageLink;
+
+    private Composite contractComposite;
 
     public DocumentWizardPage(final EObject context, final Document document) {
         super(DocumentWizardPage.class.getName());
@@ -312,11 +321,64 @@ public class DocumentWizardPage extends WizardPage {
         noneCompo = new Composite(stackedComposite, SWT.NONE);
         noneCompo.setLayoutData(GridDataFactory.swtDefaults().grab(false, false).create());
 
-        createInternalComposite(stackedComposite, emfDataBindingContext);
+        createContractComposite(stackedComposite, emfDataBindingContext);
+        createLocalFileComposite(stackedComposite, emfDataBindingContext);
+        createExternalURLComposite(stackedComposite, emfDataBindingContext);
 
-        createExternalComposite(stackedComposite, emfDataBindingContext);
+        updateStack(document.getDocumentType());
+    }
 
-        updateStack();
+    private void createContractComposite(final Composite parent, final EMFDataBindingContext emfDataBindingContext) {
+        contractComposite = new Composite(parent, SWT.NONE);
+        contractComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
+        contractComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+        final Label contractLabel = new Label(contractComposite, SWT.NONE);
+        contractLabel.setLayoutData(GridDataFactory.swtDefaults().create());
+        contractLabel.setText(Messages.fileContractInput + " *");
+
+        final ComboViewer contractInputComboViewer = new ComboViewer(contractComposite, SWT.BORDER | SWT.READ_ONLY);
+        contractInputComboViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER)
+                .grab(true, false).indent(10, 0).create());
+        contractInputComboViewer.setContentProvider(ArrayContentProvider.getInstance());
+        contractInputComboViewer.setLabelProvider(new ContractInputLabelProvider());
+        contractInputComboViewer.addFilter(acceptSingleFileContractInput());
+        contractInputComboViewer.setInput(ModelHelper.getAllElementOfTypeIn(processContract(), ContractInput.class));
+
+        ControlDecorationSupport.create(
+                emfDataBindingContext.bindValue(
+                        ViewersObservables.observeSingleSelection(contractInputComboViewer),
+                        EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__CONTRACT_INPUT),
+                        updateValueStrategy().withValidator(contractInputValidator()).create(),
+                        null), SWT.LEFT);
+    }
+
+    private ViewerFilter acceptSingleFileContractInput() {
+        return new ViewerFilter() {
+
+            @Override
+            public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+                final ContractInput contractInput = (ContractInput) element;
+                return contractInput.getType() == ContractInputType.FILE && !contractInput.isMultiple();
+            }
+        };
+    }
+
+    private IValidator contractInputValidator() {
+        return new IValidator() {
+
+            @Override
+            public IStatus validate(final Object value) {
+                if (value == null && document.getDocumentType() == DocumentType.CONTRACT) {
+                    return ValidationStatus.error(Messages.contractInputNotSet);
+                }
+                return ValidationStatus.ok();
+            }
+        };
+    }
+
+    private EObject processContract() {
+        return ModelHelper.getParentPool(context).getContract();
     }
 
     private void createMultipleComposite(final Composite parent, final EMFDataBindingContext emfDataBindingContext) {
@@ -380,19 +442,9 @@ public class DocumentWizardPage extends WizardPage {
         return radioButtonMultiple;
     }
 
-    private void updateStack() {
-        if (document.getDocumentType().equals(DocumentType.NONE)) {
-            updateStack(DocumentType.NONE);
-        } else if (document.getDocumentType().equals(DocumentType.INTERNAL)) {
-            updateStack(DocumentType.INTERNAL);
-        } else {
-            updateStack(DocumentType.EXTERNAL);
-        }
-    }
-
-    private void createExternalComposite(final Composite propertiesComposite, final EMFDataBindingContext emfDataBindingContext) {
+    private void createExternalURLComposite(final Composite propertiesComposite, final EMFDataBindingContext emfDataBindingContext) {
         externalCompo = new Composite(propertiesComposite, SWT.NONE);
-        externalCompo.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 0).create());
+        externalCompo.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
         externalCompo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         final Label documentURLLabel = new Label(externalCompo, SWT.NONE);
@@ -417,9 +469,9 @@ public class DocumentWizardPage extends WizardPage {
                 EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__URL));
     }
 
-    private void createInternalComposite(final Composite parent, final EMFDataBindingContext emfDataBindingContext) {
+    private void createLocalFileComposite(final Composite parent, final EMFDataBindingContext emfDataBindingContext) {
         internalCompo = new Composite(parent, SWT.NONE);
-        internalCompo.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 0).create());
+        internalCompo.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 5).create());
         internalCompo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         final Label documentBrowserLabel = new Label(internalCompo, SWT.NONE);
@@ -468,12 +520,16 @@ public class DocumentWizardPage extends WizardPage {
         compo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         final Button radioButtonNone = createRadioButtonNone(compo);
+        final Button radioButtonContract = createRadioButtonContract(compo);
         final Button radioButtonInternal = createRadioButtonInternal(compo);
         final Button radioButtonExternal = createRadioButtonExternal(compo);
 
         final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(ProcessPackage.DOCUMENT_TYPE);
         final IObservableValue btnDocumentTypeNone = SWTObservables.observeSelection(radioButtonNone);
         documentTypeObservableValue.addOption(DocumentType.NONE, btnDocumentTypeNone);
+
+        final IObservableValue btnDocumentTypeContract = SWTObservables.observeSelection(radioButtonContract);
+        documentTypeObservableValue.addOption(DocumentType.CONTRACT, btnDocumentTypeContract);
 
         final IObservableValue btnDocumentTypeExternal = SWTObservables.observeSelection(radioButtonExternal);
         documentTypeObservableValue.addOption(DocumentType.EXTERNAL, btnDocumentTypeExternal);
@@ -492,6 +548,24 @@ public class DocumentWizardPage extends WizardPage {
                 validate(emfDataBindingContext);
             }
         });
+    }
+
+    private Button createRadioButtonContract(final Composite compo) {
+        final Button radioButtonContract = new Button(compo, SWT.RADIO);
+        radioButtonContract.setText(Messages.initialValueButtonContract);
+        radioButtonContract.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                super.widgetSelected(e);
+                if (radioButtonContract.getSelection()) {
+                    updateStack(DocumentType.CONTRACT);
+                    updateMimeTypeEnabled(false);
+                }
+            }
+
+        });
+        return radioButtonContract;
     }
 
     private Button createRadioButtonExternal(final Composite compo) {
@@ -564,6 +638,8 @@ public class DocumentWizardPage extends WizardPage {
             stack.topControl = externalCompo;
         } else if (docType.equals(DocumentType.INTERNAL)) {
             stack.topControl = internalCompo;
+        } else if (docType.equals(DocumentType.CONTRACT)) {
+            stack.topControl = contractComposite;
         }
         stackedComposite.layout();
     }
@@ -583,7 +659,7 @@ public class DocumentWizardPage extends WizardPage {
             updateMimeTypeEnabled(false);
         } else {
             singleMultiplestack.topControl = singleComposite;
-            updateMimeTypeEnabled(!document.getDocumentType().equals(DocumentType.NONE));
+            updateMimeTypeEnabled(!(document.getDocumentType().equals(DocumentType.NONE) || document.getDocumentType().equals(DocumentType.CONTRACT)));
         }
         multipleComposite.getParent().layout();
     }

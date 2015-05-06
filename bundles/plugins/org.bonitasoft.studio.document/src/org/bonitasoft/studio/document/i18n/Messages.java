@@ -90,6 +90,10 @@ public class Messages extends NLS {
 
     public static String documentType;
 
+    public static String fileContractInput;
+
+    public static String contractInputNotSet;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
