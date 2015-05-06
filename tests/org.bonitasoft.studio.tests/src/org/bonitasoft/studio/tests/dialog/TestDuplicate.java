@@ -102,7 +102,7 @@ public class TestDuplicate extends SWTBotGefTestCase {
 
     @Test
     public void should_duplicate_all_confirmation_templates() throws Exception {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "Test confirmation template-1.0.bos", "Bonita 6.x and 7.x", "Test confirmation template",
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "Test confirmation template-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "Test confirmation template",
                 this.getClass(), false);
 
         final int nbEditorBefore = bot.editors().size();
