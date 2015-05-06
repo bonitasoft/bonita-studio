@@ -126,6 +126,8 @@ public class BOSWebServerManager {
 
     private IServer tomcat;
 
+    private PortConfigurator portConfigurator;
+
     public synchronized static BOSWebServerManager getInstance() {
         if (INSTANCE == null) {
             INSTANCE = createInstance();
@@ -358,7 +360,7 @@ public class BOSWebServerManager {
                 Repository.NULL_PROGRESS_MONITOR);
         final IServer server = configureServer(runtime, sType, file,
                 configurationFolder, monitor);
-        final PortConfigurator portConfigurator = newPortConfigurator(server);
+        portConfigurator = newPortConfigurator(server);
         final IStatus h2ServerStatus = portConfigurator.canStartH2Server(monitor);
         if (!h2ServerStatus.isOK()) {
             throw new CoreException(h2ServerStatus);
@@ -552,9 +554,9 @@ public class BOSWebServerManager {
         }
     }
 
-    private void waitServerStopped(final IProgressMonitor monitor) {
+    private void waitServerStopped(final IProgressMonitor monitor) throws CoreException {
         while (tomcat != null
-                && tomcat.getServerState() != IServer.STATE_STOPPED) {
+                && tomcat.getServerState() != IServer.STATE_STOPPED || portConfigurator != null && portConfigurator.h2PortInUse(monitor)) {
             try {
                 Thread.sleep(1000);
             } catch (final InterruptedException e) {
@@ -587,8 +589,8 @@ public class BOSWebServerManager {
                 BonitaStudioLog.error(e1, EnginePlugin.PLUGIN_ID);
             }
             tomcat.stop(true);
-            waitServerStopped(monitor);
             try {
+                waitServerStopped(monitor);
                 tomcat.delete();
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
