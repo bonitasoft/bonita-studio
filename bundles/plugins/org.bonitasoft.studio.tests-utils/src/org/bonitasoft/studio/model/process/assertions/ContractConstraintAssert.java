@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.model.process.assertions;
 
 import static java.lang.String.format;
@@ -13,6 +27,7 @@ public class ContractConstraintAssert extends AbstractAssert<ContractConstraintA
 
     /**
      * Creates a new </code>{@link ContractConstraintAssert}</code> to make assertions on actual ContractConstraint.
+     * 
      * @param actual the ContractConstraint we want to make assertions on.
      */
     public ContractConstraintAssert(final ContractConstraint actual) {
@@ -22,6 +37,7 @@ public class ContractConstraintAssert extends AbstractAssert<ContractConstraintA
     /**
      * An entry point for ContractConstraintAssert to follow AssertJ standard <code>assertThat()</code> statements.<br>
      * With a static import, one's can write directly : <code>assertThat(myContractConstraint)</code> and get specific assertion with code completion.
+     * 
      * @param actual the ContractConstraint we want to make assertions on.
      * @return a new </code>{@link ContractConstraintAssert}</code>
      */
@@ -31,6 +47,7 @@ public class ContractConstraintAssert extends AbstractAssert<ContractConstraintA
 
     /**
      * Verifies that the actual ContractConstraint's errorMessage is equal to the given one.
+     * 
      * @param errorMessage the given errorMessage to compare the actual ContractConstraint's errorMessage to.
      * @return this assertion object.
      * @throws AssertionError - if the actual ContractConstraint's errorMessage is not equal to the given one.
@@ -53,6 +70,7 @@ public class ContractConstraintAssert extends AbstractAssert<ContractConstraintA
 
     /**
      * Verifies that the actual ContractConstraint's expression is equal to the given one.
+     * 
      * @param expression the given expression to compare the actual ContractConstraint's expression to.
      * @return this assertion object.
      * @throws AssertionError - if the actual ContractConstraint's expression is not equal to the given one.
@@ -75,6 +93,7 @@ public class ContractConstraintAssert extends AbstractAssert<ContractConstraintA
 
     /**
      * Verifies that the actual ContractConstraint's inputNames contains the given String elements.
+     * 
      * @param inputNames the given elements that should be contained in actual ContractConstraint's inputNames.
      * @return this assertion object.
      * @throws AssertionError if the actual ContractConstraint's inputNames does not contain all given String elements.
@@ -103,6 +122,7 @@ public class ContractConstraintAssert extends AbstractAssert<ContractConstraintA
 
     /**
      * Verifies that the actual ContractConstraint has no inputNames.
+     * 
      * @return this assertion object.
      * @throws AssertionError if the actual ContractConstraint's inputNames is not empty.
      */
@@ -124,6 +144,7 @@ public class ContractConstraintAssert extends AbstractAssert<ContractConstraintA
 
     /**
      * Verifies that the actual ContractConstraint's name is equal to the given one.
+     * 
      * @param name the given name to compare the actual ContractConstraint's name to.
      * @return this assertion object.
      * @throws AssertionError - if the actual ContractConstraint's name is not equal to the given one.

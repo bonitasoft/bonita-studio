@@ -36,6 +36,7 @@ public class LegacySWTGefBotRule extends SWTGefBotRule {
     protected void initPreferences() {
         super.initPreferences();
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.SHOW_LEGACY_6X_MODE, true);
+        bot.resetActivePerspective();
     }
 
     /*
@@ -45,6 +46,7 @@ public class LegacySWTGefBotRule extends SWTGefBotRule {
     @Override
     protected void afterStatement() {
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.SHOW_LEGACY_6X_MODE, false);
+        bot.resetActivePerspective();
         super.afterStatement();
     }
 

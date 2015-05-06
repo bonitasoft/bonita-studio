@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.pics;
 
@@ -33,12 +30,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-
 /**
  * @author Mickael Istria
- *
  */
-public class Pics extends AbstractUIPlugin{
+public class Pics extends AbstractUIPlugin {
 
     // The plug-in ID
     public static final String PLUGIN_ID = "org.bonitasoft.studio.pics"; //$NON-NLS-1$
@@ -56,7 +51,8 @@ public class Pics extends AbstractUIPlugin{
             this.file = file;
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
          * @see org.eclipse.jface.resource.ImageDescriptor#getImageData()
          */
         @Override
@@ -81,13 +77,13 @@ public class Pics extends AbstractUIPlugin{
      * image registry.
      *
      * @param imageName a pathname relative to the icons directory of
-     * this project.
+     *        this project.
      */
     public static Image getImage(final String imageName) {
-        if(PicsConstants.hint.equals(imageName)){
+        if (PicsConstants.hint.equals(imageName) && plugin != null) {
             return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
-        }else{
-            return getImage(imageName,plugin);
+        } else {
+            return getImage(imageName, plugin);
         }
     }
 
@@ -103,13 +99,13 @@ public class Pics extends AbstractUIPlugin{
             return result;
         }
 
-        final ImageDescriptor descriptor = getImageDescriptor(imageName,plugin) ;
-        if(descriptor != null){
+        final ImageDescriptor descriptor = getImageDescriptor(imageName, plugin);
+        if (descriptor != null) {
             result = descriptor.createImage();
         }
 
         reg.remove(imageName);
-        if(result != null){
+        if (result != null) {
             reg.put(imageName, result);
         }
 
@@ -136,10 +132,10 @@ public class Pics extends AbstractUIPlugin{
      * for deallocating the image if it creates the image from the descriptor
      *
      * @param imageName is a pathname relative to the icons directory
-     * within this project.
+     *        within this project.
      */
     public static ImageDescriptor getImageDescriptor(final String imageName) {
-        return getImageDescriptor(imageName,plugin);
+        return getImageDescriptor(imageName, plugin);
     }
 
     /*
@@ -170,20 +166,20 @@ public class Pics extends AbstractUIPlugin{
         return getImage(connectorCategories + element + ".png"); //$NON-NLS-1$
     }
 
-
     public static Image getFlag(final Locale locale) {
         return getImage("/flags/" + locale.getCountry() + ".png"); //$NON-NLS-1$
     }
 
     /**
-     *  get the system image resized in 16x16 (only used in connectors label provider)
+     * get the system image resized in 16x16 (only used in connectors label provider)
+     *
      * @param id
      * @return
      */
-    public static Image getSystemImage(final int id){
+    public static Image getSystemImage(final int id) {
         final ImageRegistry reg = plugin.getImageRegistry();
 
-        final String imageName = id+"";
+        final String imageName = id + "";
         Image result = reg.get(imageName);
 
         if (result != null && !result.isDisposed()) {//prevent from bad dispose
