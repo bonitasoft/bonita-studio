@@ -266,8 +266,9 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
 
     protected void addDocumentInContext(final Object contextBuilder, final Pool pool) {
         for (final Document document : pool.getDocuments()) {
+            final String referenceName = document.getName() + SUFFIX_CONTEXT;
             final Expression documentReferenceExpression = EngineExpressionUtil.createDocumentExpression(document);
-            addContextEntry(contextBuilder, document.getName() + SUFFIX_CONTEXT, documentReferenceExpression);
+            addContextEntry(contextBuilder, referenceName, documentReferenceExpression);
         }
     }
 
