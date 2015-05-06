@@ -47,7 +47,7 @@ public class ConstraintExpressionEditorValidatorTest {
 
     @Test
     public void should_fails_with_compilation_error() throws Exception {
-        final MVELProblemRequestor requestor = mock(MVELProblemRequestor.class);
+        final CompilationProblemRequestor requestor = mock(CompilationProblemRequestor.class);
         final ConstraintExpressionEditorValidator validator = new ConstraintExpressionEditorValidator(anExpressionContentObservable("return true &&"), null,
                 mock(GroovyCompilationUnit.class), requestor);
         when(requestor.isEmpty()).thenReturn(false);
@@ -60,7 +60,7 @@ public class ConstraintExpressionEditorValidatorTest {
 
     @Test
     public void should_warn_with_no_input_referenced() throws Exception {
-        final MVELProblemRequestor requestor = mock(MVELProblemRequestor.class);
+        final CompilationProblemRequestor requestor = mock(CompilationProblemRequestor.class);
         when(requestor.isEmpty()).thenReturn(true);
         final ConstraintExpressionEditorValidator validator = new ConstraintExpressionEditorValidator(anExpressionContentObservable("return true;"),
                 anInputNamesListObservable(),
@@ -73,7 +73,7 @@ public class ConstraintExpressionEditorValidatorTest {
 
     @Test
     public void should_pass_without_errors() throws Exception {
-        final MVELProblemRequestor requestor = mock(MVELProblemRequestor.class);
+        final CompilationProblemRequestor requestor = mock(CompilationProblemRequestor.class);
         when(requestor.isEmpty()).thenReturn(true);
         final ConstraintExpressionEditorValidator validator = new ConstraintExpressionEditorValidator(anExpressionContentObservable("return true;"),
                 anInputNamesListObservable("input1"),

@@ -21,7 +21,7 @@ import org.bonitasoft.studio.contract.i18n.Messages;
 import org.eclipse.jdt.core.IProblemRequestor;
 import org.eclipse.jdt.core.compiler.IProblem;
 
-public class MVELProblemRequestor implements IProblemRequestor {
+public class CompilationProblemRequestor implements IProblemRequestor {
 
     /*
      * (non-Javadoc)
