@@ -16,7 +16,10 @@ package org.bonitasoft.studio.swtbot.framework.rule;
 
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.services.IEvaluationService;
 
 /**
  * Enable legacy mode on @Before
@@ -36,6 +39,19 @@ public class LegacySWTGefBotRule extends SWTGefBotRule {
     protected void initPreferences() {
         super.initPreferences();
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.SHOW_LEGACY_6X_MODE, true);
+        notifyActiveWorkbenchWindow();
+    }
+
+    protected void notifyActiveWorkbenchWindow() {
+        Display.getDefault().asyncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                final IEvaluationService service = (IEvaluationService) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getWorkbench()
+                        .getService(IEvaluationService.class);
+                service.requestEvaluation("activeWorkbenchWindow");
+            }
+        });
     }
 
     /*
@@ -45,6 +61,7 @@ public class LegacySWTGefBotRule extends SWTGefBotRule {
     @Override
     protected void afterStatement() {
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.SHOW_LEGACY_6X_MODE, false);
+        notifyActiveWorkbenchWindow();
         super.afterStatement();
     }
 

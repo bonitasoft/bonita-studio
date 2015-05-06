@@ -50,7 +50,7 @@ public class DeleteCommandTest extends SWTBotGefTestCase {
     @Test
     public void deleteElementsInDiagram() throws Exception {
         SWTBotTestUtil.pressEnter();
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "Elements2Delete-1.0.bos", "Bonita 6.x", "Elements2Delete", this.getClass(), false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "Elements2Delete-1.0.bos", "Bonita 6.x and 7.x", "Elements2Delete", this.getClass(), false);
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
         SWTBotGefEditPart part = editor1.getEditPart("Step1").parent();
         part.select();
