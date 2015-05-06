@@ -15,12 +15,12 @@
 package org.bonitasoft.studio.contract.core.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.studio.model.process.builders.ContractConstraintBuilder.aContractConstraint;
+import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
-import org.bonitasoft.studio.contract.core.ContractConstraintUtil;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,9 +42,8 @@ public class ContractConstraintInputValidatorTest {
 
     @Test
     public void should_validate_returns_a_valid_status() throws Exception {
-        final Contract contract = ProcessFactory.eINSTANCE.createContract();
-        final ContractInput input = addInput(contract, "name", ContractInputType.TEXT, null);
-        final ContractConstraint constraint = ContractConstraintUtil.createConstraint("name length", "", "", input);
+        final Contract contract = aContract().havingInput(aContractInput().withName("name")).build();
+        final ContractConstraint constraint = aContractConstraint().withName("name length").havingInput("name").build();
         contract.getConstraints().add(constraint);
         assertThat(validator.validate(constraint).isOK()).isTrue();
     }
@@ -52,7 +51,7 @@ public class ContractConstraintInputValidatorTest {
     @Test
     public void should_validate_returns_an_error_status_for_empty_inputs() throws Exception {
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
-        final ContractConstraint constraint = ContractConstraintUtil.createConstraint("name length", "", "");
+        final ContractConstraint constraint = aContractConstraint().withName("name length").build();
         contract.getConstraints().add(constraint);
         assertThat(validator.validate(constraint).isOK()).isFalse();
     }
@@ -60,19 +59,10 @@ public class ContractConstraintInputValidatorTest {
     @Test
     public void should_validate_returns_an_error_status_for_unknown_inputs() throws Exception {
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
-        final ContractConstraint constraint = ContractConstraintUtil.createConstraint("name length", "", "");
+        final ContractConstraint constraint = aContractConstraint().withName("name length").build();
         constraint.getInputNames().add("unknownInput");
         contract.getConstraints().add(constraint);
         assertThat(validator.validate(constraint).isOK()).isFalse();
-    }
-
-    private ContractInput addInput(final Contract contract, final String inputName, final ContractInputType type, final String description) {
-        final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
-        contractInput.setName(inputName);
-        contractInput.setType(type);
-        contractInput.setDescription(description);
-        contract.getInputs().add(contractInput);
-        return contractInput;
     }
 
 }

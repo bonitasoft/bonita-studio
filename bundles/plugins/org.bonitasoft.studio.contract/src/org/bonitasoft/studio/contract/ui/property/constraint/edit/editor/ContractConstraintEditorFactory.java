@@ -22,10 +22,10 @@ package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
  * @author Romain Bioteau
  *
  */
-public class MVELEditorFactory {
+public class ContractConstraintEditorFactory {
 
-    public MVELEditor newInstance() {
-        return new MVELEditor();
+    public ContractConstraintEditor newInstance() {
+        return new ContractConstraintEditor();
     }
 
 }

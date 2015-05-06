@@ -30,7 +30,6 @@ import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-
 public class ConstraintExpressionSourceViewerConfiguration extends GroovyConfiguration {
 
     public ConstraintExpressionSourceViewerConfiguration(final GroovyColorManager colorManager, final IPreferenceStore preferenceSource,
@@ -38,8 +37,6 @@ public class ConstraintExpressionSourceViewerConfiguration extends GroovyConfigu
         super(colorManager, preferenceSource, editor);
     }
 
-
-    @SuppressWarnings({ "restriction", "unchecked" })
     @Override
     public IContentAssistant getContentAssistant(final ISourceViewer sourceViewer) {
         final ContentAssistant contentAssistant = (ContentAssistant) super.getContentAssistant(sourceViewer);
