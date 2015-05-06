@@ -82,6 +82,8 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     public static final String DB_USER = "username";
     public static final String DB_PASSWORD = "password";
 
+    private static final String SUFFIX_CONTEXT = "_ref";
+
     public AbstractSwitch(final Set<EObject> eObjectNotExported) {
         this.eObjectNotExported = eObjectNotExported;
     }
@@ -265,14 +267,14 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     protected void addDocumentInContext(final Object contextBuilder, final Pool pool) {
         for (final Document document : pool.getDocuments()) {
             final Expression documentReferenceExpression = EngineExpressionUtil.createDocumentExpression(document);
-            addContextEntry(contextBuilder, document.getName() + "_ref", documentReferenceExpression);
+            addContextEntry(contextBuilder, document.getName() + SUFFIX_CONTEXT, documentReferenceExpression);
         }
     }
 
     protected void addBusinessDataInContext(final Object contextBuilder, final Pool pool) {
         for (final Data data : pool.getData()) {
             if (data instanceof BusinessObjectData) {
-                final String referenceName = data.getName() + "_ref";
+                final String referenceName = data.getName() + SUFFIX_CONTEXT;
                 final Expression referenceExpression = EngineExpressionUtil.createBusinessObjectDataReferenceExpression((BusinessObjectData) data);
                 addContextEntry(contextBuilder, referenceName, referenceExpression);
             }
