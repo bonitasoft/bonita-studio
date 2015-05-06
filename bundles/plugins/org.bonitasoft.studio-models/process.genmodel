@@ -449,6 +449,7 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/NONE"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/INTERNAL"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/EXTERNAL"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/CONTRACT"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//EntryPageFlowType">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//EntryPageFlowType/PAGEFLOW"/>
@@ -633,6 +634,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/documentType"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Document/initialMultipleContent"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/multiple"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Document/contractInput"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//DoubleType"/>
     <genClasses ecoreClass="process.ecore#//Element">
