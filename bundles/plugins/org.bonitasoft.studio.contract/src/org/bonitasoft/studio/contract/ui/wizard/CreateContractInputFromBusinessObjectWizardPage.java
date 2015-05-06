@@ -26,36 +26,32 @@ import java.util.List;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
-import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.wizard.labelProvider.FieldNameColumnLabelProvider;
 import org.bonitasoft.studio.contract.ui.wizard.labelProvider.FieldTypeColumnLabelProvider;
+import org.bonitasoft.studio.contract.ui.wizard.labelProvider.InputTypeColumnLabelProvider;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.Realm;
-import org.eclipse.core.databinding.observable.list.WritableList;
-import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
-import org.eclipse.jface.databinding.viewers.TreeStructureAdvisor;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -68,7 +64,7 @@ import com.google.common.base.Function;
 /**
  * @author aurelie
  */
-public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage implements ICheckStateListener, ICheckStateProvider {
+public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage {
 
     private final WritableValue selectedDataObservable;
     private CheckboxTreeViewer treeViewer;
@@ -85,12 +81,25 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     protected CreateContractInputFromBusinessObjectWizardPage(final Contract contract, final WritableValue selectedDataObservable,
             final FieldToContractInputMappingFactory fieldToContractInputMappingFactory) {
         super(CreateContractInputFromBusinessObjectWizardPage.class.getName());
-        setTitle(Messages.selectFieldToGenerateTitle);
         setDescription(Messages.selectFieldToGenerateDescription);
         this.selectedDataObservable = selectedDataObservable;
         this.fieldToContractInputMappingFactory = fieldToContractInputMappingFactory;
         this.contract = contract;
     }
+
+    public void setTitle() {
+        if (selectedDataObservable.getValue() != null) {
+            setTitle(Messages.bind(Messages.selectFieldToGenerateTitle, ((Element) selectedDataObservable.getValue()).getName()));
+            EMFObservables.observeDetailValue(Realm.getDefault(), selectedDataObservable, ProcessPackage.Literals.ELEMENT__NAME).addValueChangeListener(
+                    new IValueChangeListener() {
+
+                        @Override
+                        public void handleValueChange(final ValueChangeEvent event) {
+                            setTitle(Messages.bind(Messages.selectFieldToGenerateTitle, event.diff.getNewValue()));
+                        }
+                    });
+        }
+    };
 
     /*
      * (non-Javadoc)
@@ -114,13 +123,15 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
      */
     private void createRootNameControl(final EMFDataBindingContext dbc, final Composite composite) {
         final Composite rootNameComposite = new Composite(composite, SWT.NONE);
-        rootNameComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
+        rootNameComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 10).create());
         rootNameComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         final Label label = new Label(rootNameComposite, SWT.NONE);
         label.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         label.setText(Messages.rootContractInputName);
         final Text prefixText = new Text(rootNameComposite, SWT.BORDER);
         prefixText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        final Label typeLabel = new Label(rootNameComposite, SWT.NONE);
+        typeLabel.setText(Messages.inputOfType);
         final IObservableValue prefixObservable = PojoObservables.observeValue(this, "rootName");
         dbc.bindValue(prefixObservable,
                 EMFObservables.observeDetailValue(Realm.getDefault(), selectedDataObservable, ProcessPackage.Literals.ELEMENT__NAME),
@@ -163,39 +174,11 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         treeViewer = new CheckboxTreeViewer(composite, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
         treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
         treeViewer.getTree().setHeaderVisible(true);
-        treeViewer.addCheckStateListener(this);
-        treeViewer.setCheckStateProvider(this);
-        treeViewer.setContentProvider(new ObservableListTreeContentProvider(new IObservableFactory() {
-
-            @Override
-            public IObservable createObservable(final Object target) {
-                if (target instanceof List<?>) {
-                    return new WritableList((List<?>) target, FieldToContractInputMapping.class);
-                } else if (target instanceof RelationFieldToContractInputMapping) {
-                    return new WritableList(((RelationFieldToContractInputMapping) target).getChildren(), FieldToContractInputMapping.class);
-                }
-                return new WritableList();
-            }
-        }, new TreeStructureAdvisor() {
-
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.jface.databinding.viewers.TreeStructureAdvisor#getParent(java.lang.Object)
-             */
-            @Override
-            public Object getParent(final Object element) {
-                return ((FieldToContractInputMapping) element).getParent();
-            }
-
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.jface.databinding.viewers.TreeStructureAdvisor#hasChildren(java.lang.Object)
-             */
-            @Override
-            public Boolean hasChildren(final Object element) {
-                return !((FieldToContractInputMapping) element).getChildren().isEmpty();
-            }
-        }));
+        final FieldToContractInputMappingViewerCheckStateManager manager = new FieldToContractInputMappingViewerCheckStateManager();
+        treeViewer.addCheckStateListener(manager);
+        treeViewer.setCheckStateProvider(manager);
+        treeViewer.setContentProvider(new ObservableListTreeContentProvider(new FieldToContractInputMappingObservableFactory(),
+                new FieldToContractInputMappingTreeStructureAdvisor()));
 
         final TreeViewerColumn nameTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
         nameTreeViewerColumn.getColumn().setText(Messages.name);
@@ -203,9 +186,14 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         nameTreeViewerColumn.setLabelProvider(new FieldNameColumnLabelProvider());
 
         final TreeViewerColumn typeTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
-        typeTreeViewerColumn.getColumn().setText(Messages.type);
-        typeTreeViewerColumn.getColumn().setWidth(250);
+        typeTreeViewerColumn.getColumn().setText(Messages.attributetype);
+        typeTreeViewerColumn.getColumn().setWidth(150);
         typeTreeViewerColumn.setLabelProvider(new FieldTypeColumnLabelProvider());
+
+        final TreeViewerColumn inputTypeTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
+        inputTypeTreeViewerColumn.getColumn().setText(Messages.inputType);
+        inputTypeTreeViewerColumn.getColumn().setWidth(150);
+        inputTypeTreeViewerColumn.setLabelProvider(new InputTypeColumnLabelProvider());
 
         dbc.bindValue(ViewersObservables.observeInput(treeViewer),
                 selectedDataObservable,
@@ -229,60 +217,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
     public List<FieldToContractInputMapping> getMappings() {
         return mappings;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ICheckStateListener#checkStateChanged(org.eclipse.jface.viewers.CheckStateChangedEvent)
-     */
-    @Override
-    public void checkStateChanged(final CheckStateChangedEvent event) {
-        final FieldToContractInputMapping mapping = (FieldToContractInputMapping) event.getElement();
-        mapping.setGenerated(event.getChecked());
-
-        // SELECT/DESELECT ALL CHILDREN
-        final CheckboxTreeViewer checkboxTreeViewer = (CheckboxTreeViewer) event.getSource();
-        checkboxTreeViewer.setSubtreeChecked(mapping, event.getChecked());
-
-        //SELECT PARENT IF CHILD IS SELECTED
-        if (event.getChecked()) {
-            if (mapping.getParent() != null) {
-                checkboxTreeViewer.setChecked(mapping.getParent(), true);
-            }
-        }
-
-        // DESELECT PARENT IF NO CHILD SELECTED
-        if (!event.getChecked() && mapping.getParent() != null) {
-            boolean deselect = true;
-            for (final FieldToContractInputMapping m : mapping.getParent().getChildren()) {
-                if (checkboxTreeViewer.getChecked(m)) {
-                    deselect = false;
-                }
-            }
-            // ALL CHILD ARE UNCHECKED
-            if (deselect) {
-                checkboxTreeViewer.setChecked(mapping.getParent(), false);
-            }
-        }
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ICheckStateProvider#isChecked(java.lang.Object)
-     */
-    @Override
-    public boolean isChecked(final Object element) {
-        return ((FieldToContractInputMapping) element).isGenerated();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ICheckStateProvider#isGrayed(java.lang.Object)
-     */
-    @Override
-    public boolean isGrayed(final Object element) {
-        return false;
     }
 
     public String getRootName() {

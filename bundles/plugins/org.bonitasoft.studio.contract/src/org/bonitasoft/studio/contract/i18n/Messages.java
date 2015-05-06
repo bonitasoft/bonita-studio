@@ -77,5 +77,8 @@ public class Messages extends NLS {
     public static String rootContractInputName;
     public static String selectFieldToGenerateTitle;
     public static String selectFieldToGenerateDescription;
+    public static String inputOfType;
+    public static String inputType;
+    public static String attributetype;
 
 }

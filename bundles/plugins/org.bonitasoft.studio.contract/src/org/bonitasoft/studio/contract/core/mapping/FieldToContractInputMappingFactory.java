@@ -33,7 +33,6 @@ public class FieldToContractInputMappingFactory {
 
     public FieldToContractInputMappingFactory(final BusinessObjectModelRepositoryStore businessObjectStore) {
         this.businessObjectStore = businessObjectStore;
-
     }
 
     public List<FieldToContractInputMapping> createMappingForBusinessObjectType(final String className) {
@@ -59,7 +58,7 @@ public class FieldToContractInputMappingFactory {
 
     private FieldToContractInputMapping createRelationFieldToContractInputMapping(final RelationField field) {
         final RelationFieldToContractInputMapping relationFieldMapping = new RelationFieldToContractInputMapping(field);
-        if (((RelationField) relationFieldMapping.getField()).getType().equals(Type.COMPOSITION)) {
+        if (Type.COMPOSITION.equals(((RelationField) relationFieldMapping.getField()).getType())) {
             for (final Field child : field.getReference().getFields()) {
                 relationFieldMapping.addChild(createFieldToContractInputMapping(child));
             }

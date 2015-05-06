@@ -42,7 +42,6 @@ public class ContractContainerAdaptableSelectionProvider extends EObjectAdaptabl
             } else if (unwrapSelection instanceof EObject) {
                 return asContractContainer((EObject) unwrapSelection);
             }
-
         }
         return null;
     }

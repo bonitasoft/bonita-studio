@@ -66,6 +66,7 @@ public class ContractInputGenerationWizard extends Wizard {
         addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable, businessObjectStore));
         contractInputFromBusinessObjectWizardPage = new CreateContractInputFromBusinessObjectWizardPage(contractContainer.getContract(),
                 selectedDataObservable, new FieldToContractInputMappingFactory(businessObjectStore));
+        contractInputFromBusinessObjectWizardPage.setTitle();
         addPage(contractInputFromBusinessObjectWizardPage);
     }
 
