@@ -9754,5 +9754,46 @@
       </operation>
     </changes>
   </releases>
+  <releases date="2015-05-06T15:27:41.594+0200" label="7.0.0-005">
+    <changes xsi:type="history:Create" target="process.ecore#//DocumentType" referenceName="eLiterals"
+        element="process.ecore#//DocumentType/CONTRACT">
+      <changes xsi:type="history:Set" element="process.ecore#//DocumentType/CONTRACT"
+          featureName="literal" dataValue="CONTRACT"/>
+      <changes xsi:type="history:Set" element="process.ecore#//DocumentType/CONTRACT"
+          featureName="value" dataValue="3" oldDataValue="0"/>
+      <changes xsi:type="history:Set" element="process.ecore#//DocumentType/CONTRACT"
+          featureName="name" dataValue="CONTRACT"/>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
+          element="process.ecore#//Document/contractInput">
+        <changes xsi:type="history:Set" element="process.ecore#//Document/contractInput"
+            featureName="name" dataValue="contractInput"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Document/contractInput"
+            featureName="eType" referenceValue="process.ecore#//ContractInput"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//Document"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>contractInput</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="process.ecore#//ContractInput"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>false</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+  </releases>
   <releases/>
 </history:History>
