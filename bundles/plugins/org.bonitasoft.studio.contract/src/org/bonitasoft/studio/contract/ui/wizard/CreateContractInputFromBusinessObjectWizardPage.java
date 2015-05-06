@@ -43,9 +43,13 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.databinding.validation.MultiValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
@@ -172,6 +176,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
     private void createProcessDataMappingTreeViewer(final Composite composite, final EMFDataBindingContext dbc) {
         treeViewer = new CheckboxTreeViewer(composite, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
+
         treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
         treeViewer.getTree().setHeaderVisible(true);
         final FieldToContractInputMappingViewerCheckStateManager manager = new FieldToContractInputMappingViewerCheckStateManager();
@@ -199,6 +204,19 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                 selectedDataObservable,
                 null,
                 updateValueStrategy().withConverter(selectedDataToFieldMappings()).create());
+
+        dbc.addValidationStatusProvider(new MultiValidator() {
+
+            @Override
+            protected IStatus validate() {
+                final IViewerObservableSet checkedElements = ViewersObservables.observeCheckedElements(treeViewer, FieldToContractInputMapping.class);
+                if (checkedElements.isEmpty()) {
+                    return ValidationStatus.error(Messages.atLeastOneAttributeShouldBeSelectedError);
+                }
+                return ValidationStatus.ok();
+            }
+        });
+
     }
 
     private IConverter selectedDataToFieldMappings() {

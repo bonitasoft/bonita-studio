@@ -29,6 +29,8 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
  */
 public class FieldToContractInputMappingFactory {
 
+    private static final int MAX_DEPTH = 5;
+
     private final BusinessObjectModelRepositoryStore businessObjectStore;
 
     public FieldToContractInputMappingFactory(final BusinessObjectModelRepositoryStore businessObjectStore) {
@@ -42,26 +44,28 @@ public class FieldToContractInputMappingFactory {
             throw new IllegalArgumentException("Cannot find a BusinessObject with qualified name: " + className);
         }
         for (final Field field : businessObject.getFields()) {
-            mappings.add(createFieldToContractInputMapping(field));
+            mappings.add(createFieldToContractInputMapping(field, MAX_DEPTH));
         }
         return mappings;
     }
 
-    private FieldToContractInputMapping createFieldToContractInputMapping(final Field field) {
+    private FieldToContractInputMapping createFieldToContractInputMapping(final Field field, final int depth) {
         if (field instanceof SimpleField) {
             return new SimpleFieldToContractInputMapping((SimpleField) field);
         } else if (field instanceof RelationField) {
-            return createRelationFieldToContractInputMapping((RelationField) field);
+            return createRelationFieldToContractInputMapping((RelationField) field, depth);
         }
         throw new IllegalStateException("Unkwown Field type");
     }
 
-    private FieldToContractInputMapping createRelationFieldToContractInputMapping(final RelationField field) {
+    private FieldToContractInputMapping createRelationFieldToContractInputMapping(final RelationField field, int depth) {
         final RelationFieldToContractInputMapping relationFieldMapping = new RelationFieldToContractInputMapping(field);
-        if (Type.COMPOSITION.equals(((RelationField) relationFieldMapping.getField()).getType())) {
+        if (Type.COMPOSITION.equals(((RelationField) relationFieldMapping.getField()).getType()) && depth > 0) {
+            depth--;
             for (final Field child : field.getReference().getFields()) {
-                relationFieldMapping.addChild(createFieldToContractInputMapping(child));
+                relationFieldMapping.addChild(createFieldToContractInputMapping(child, depth));
             }
+
         }
         return relationFieldMapping;
     }

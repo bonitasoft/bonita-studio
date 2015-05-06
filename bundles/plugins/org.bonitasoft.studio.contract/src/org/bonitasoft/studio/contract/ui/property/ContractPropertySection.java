@@ -25,6 +25,7 @@ import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraintC
 import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraintsTableViewer;
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputController;
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputTreeViewer;
+import org.bonitasoft.studio.contract.ui.wizard.AddInputContractFromDataWizardDialog;
 import org.bonitasoft.studio.contract.ui.wizard.ContractInputGenerationWizard;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
@@ -56,7 +57,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -215,12 +215,22 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
              */
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                final WizardDialog dialog = new WizardDialog(Display.getCurrent().getActiveShell(), new ContractInputGenerationWizard(
-                        (ContractContainer) selectionProvider.getAdapter(EObject.class),
-                        getEditingDomain(), RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class)));
-                dialog.open();
+                openAddInputWizardDialog();
             }
+
+            /**
+             *
+             */
+
         });
+    }
+
+    public void openAddInputWizardDialog() {
+        final AddInputContractFromDataWizardDialog dialog = new AddInputContractFromDataWizardDialog(Display.getCurrent().getActiveShell(),
+                new ContractInputGenerationWizard(
+                        (ContractContainer) selectionProvider.getAdapter(EObject.class),
+                        getEditingDomain(), RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class)), this, true);
+        dialog.open();
     }
 
     private Button createButton(final Composite buttonsComposite, final String label) {
