@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.document.i18n;
 
-
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
@@ -51,6 +50,7 @@ public class Messages extends NLS {
     public static String initialValueButtonInternalToolTip;
     public static String initialValueButtonExternal;
     public static String initialValueButtonExternalToolTip;
+    public static String initialValueButtonContract;
 
     public static String documentExternalLabel;
     public static String documentInternalLabel;

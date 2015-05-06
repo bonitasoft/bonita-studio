@@ -27,7 +27,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class DocumentBuilder extends ElementBuilder<Document, DocumentBuilder> {
 
-    public static DocumentBuilder create() {
+    public static DocumentBuilder aDocument() {
         return new DocumentBuilder();
     }
 
