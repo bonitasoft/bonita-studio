@@ -21,7 +21,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.engine.bpm.contract.ComplexInputDefinition;
+import org.bonitasoft.engine.bpm.contract.InputDefinition;
 import org.bonitasoft.engine.bpm.contract.Type;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
@@ -41,6 +41,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 /**
  * @author Romain Bioteau
@@ -118,11 +121,11 @@ public class ContractEngineDefinitionBuilderTest {
         addInput(aContract, "isMarried", ContractInputType.BOOLEAN, null);
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
-        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", false);
-        verify(contractDefBuilder).addSimpleInput("birthDate", Type.DATE, "Birth date of an employee", false);
-        verify(contractDefBuilder).addSimpleInput("age", Type.INTEGER, null, false);
-        verify(contractDefBuilder).addSimpleInput("salary", Type.DECIMAL, null, false);
-        verify(contractDefBuilder).addSimpleInput("isMarried", Type.BOOLEAN, null, false);
+        verify(contractDefBuilder).addInput("name", Type.TEXT, "name of an employee", false);
+        verify(contractDefBuilder).addInput("birthDate", Type.DATE, "Birth date of an employee", false);
+        verify(contractDefBuilder).addInput("age", Type.INTEGER, null, false);
+        verify(contractDefBuilder).addInput("salary", Type.DECIMAL, null, false);
+        verify(contractDefBuilder).addInput("isMarried", Type.BOOLEAN, null, false);
     }
 
     @Test
@@ -134,11 +137,11 @@ public class ContractEngineDefinitionBuilderTest {
         addInput(aContract, "isMarried", ContractInputType.BOOLEAN, null);
         processengineContractBuilder.build(aContract);
         verify(processBuilder).addContract();
-        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", false);
-        verify(contractDefBuilder).addSimpleInput("birthDate", Type.DATE, "Birth date of an employee", false);
-        verify(contractDefBuilder).addSimpleInput("age", Type.INTEGER, null, false);
-        verify(contractDefBuilder).addSimpleInput("salary", Type.DECIMAL, null, false);
-        verify(contractDefBuilder).addSimpleInput("isMarried", Type.BOOLEAN, null, false);
+        verify(contractDefBuilder).addInput("name", Type.TEXT, "name of an employee", false);
+        verify(contractDefBuilder).addInput("birthDate", Type.DATE, "Birth date of an employee", false);
+        verify(contractDefBuilder).addInput("age", Type.INTEGER, null, false);
+        verify(contractDefBuilder).addInput("salary", Type.DECIMAL, null, false);
+        verify(contractDefBuilder).addInput("isMarried", Type.BOOLEAN, null, false);
     }
 
     private ContractInput addInput(final Contract contract, final String inputName, final ContractInputType type, final String description) {
@@ -177,7 +180,7 @@ public class ContractEngineDefinitionBuilderTest {
         aContract.getConstraints().add(ContractConstraintUtil.createConstraint("myConstraint", "name.length < 50", "name is too long", nameInput));
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
-        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
+        verify(contractDefBuilder).addInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
         verify(contractDefBuilder).addConstraint("myConstraint", "name.length < 50", "name is too long", nameInput.getName());
     }
 
@@ -187,7 +190,7 @@ public class ContractEngineDefinitionBuilderTest {
         nameInput.setMandatory(true);
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
-        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
+        verify(contractDefBuilder).addInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
         verify(contractDefBuilder).addMandatoryConstraint("name");
     }
 
@@ -205,7 +208,7 @@ public class ContractEngineDefinitionBuilderTest {
         nameInput.setMapping(mapping);
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
-        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
+        verify(contractDefBuilder).addInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
         verify(contractDefBuilder).addMandatoryConstraint("name");
     }
 
@@ -225,8 +228,7 @@ public class ContractEngineDefinitionBuilderTest {
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
 
-        verify(contractDefBuilder).addComplexInput(eq(employeeInput.getName()), eq(employeeInput.getDescription()), eq(employeeInput.isMultiple()), anyList(),
-                anyList());
+        verify(contractDefBuilder).addInput(eq(employeeInput.getName()), eq(employeeInput.getDescription()), eq(employeeInput.isMultiple()), anyList());
         verify(contractDefBuilder).addMandatoryConstraint("firstName");
         verify(contractDefBuilder).addMandatoryConstraint("skills");
     }
@@ -243,16 +245,22 @@ public class ContractEngineDefinitionBuilderTest {
         addInput(skillsInput, "name", ContractInputType.TEXT, "name of the skills");
         addInput(skillsInput, "rate", ContractInputType.INTEGER, "rate of the skill");
 
-        final ComplexInputDefinition complexInput = userTaskengineContractBuilder.buildComplexInput(employeeInput, contractDefBuilder);
+        final InputDefinition complexInput = userTaskengineContractBuilder.buildComplexInput(employeeInput, contractDefBuilder);
         assertThat(complexInput.getName()).isEqualTo(employeeInput.getName());
         assertThat(complexInput.getDescription()).isEqualTo(employeeInput.getDescription());
-        assertThat(complexInput.getSimpleInputs()).extracting("name", "type").contains(
+        assertThat(complexInput.getInputs()).extracting("name", "type").contains(
                 tuple("firstName", Type.TEXT),
                 tuple("lastName", Type.TEXT),
                 tuple("birthDate", Type.DATE));
-        assertThat(complexInput.getComplexInputs()).extracting("name").contains("skills");
-        final ComplexInputDefinition complexInputDefinition = complexInput.getComplexInputs().get(0);
-        assertThat(complexInputDefinition.getSimpleInputs()).extracting("name", "type").contains(
+        assertThat(complexInput.getInputs()).extracting("name").contains("skills");
+        final InputDefinition complexInputDefinition = Iterables.find(complexInput.getInputs(), new Predicate<InputDefinition>() {
+
+            @Override
+            public boolean apply(final InputDefinition input) {
+                return input.hasChildren();
+            }
+        }, null);
+        assertThat(complexInputDefinition.getInputs()).extracting("name", "type").contains(
                 tuple("name", Type.TEXT),
                 tuple("rate", Type.INTEGER));
     }

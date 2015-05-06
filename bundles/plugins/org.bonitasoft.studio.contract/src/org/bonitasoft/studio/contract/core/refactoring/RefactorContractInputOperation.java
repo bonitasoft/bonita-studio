@@ -1,65 +1,123 @@
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.contract.core.refactoring;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Iterables.transform;
 import static org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createContractInputExpression;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAllElementOfTypeIn;
 import static org.bonitasoft.studio.common.predicate.ExpressionPredicates.withExpressionType;
-import static org.bonitasoft.studio.refactoring.core.groovy.ReferenceDiff.newReferenceDiff;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
-import org.bonitasoft.studio.refactoring.core.AbstractScriptExpressionRefactoringAction;
+import org.bonitasoft.studio.refactoring.core.RefactorPair;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
-import org.bonitasoft.studio.refactoring.core.groovy.GroovyScriptRefactoringOperation;
+import org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperationFactory;
+import org.bonitasoft.studio.refactoring.core.script.ScriptContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.domain.EditingDomain;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
 
 public class RefactorContractInputOperation extends AbstractRefactorOperation<ContractInput, ContractInput, ContractInputRefactorPair> {
 
     private final ContractContainer container;
+    private final IScriptRefactoringOperationFactory scriptRefactorOperationFactory;
 
-    public RefactorContractInputOperation(final ContractContainer container, final RefactoringOperationType operationType) {
+    public RefactorContractInputOperation(final ContractContainer container, final IScriptRefactoringOperationFactory scriptRefactorOperationFactory,
+            final RefactoringOperationType operationType) {
         super(operationType);
+        checkArgument(container != null);
         this.container = container;
+        this.scriptRefactorOperationFactory = scriptRefactorOperationFactory;
     }
 
     @Override
     protected CompoundCommand doBuildCompoundCommand(final CompoundCommand cc,
             final IProgressMonitor monitor) {
         updateContractInputExpressions(cc);
-        updateContractInputReferenceInConstraints(cc);
         return cc;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation#allScriptWithReferencedElement(org.bonitasoft.studio.refactoring.core.RefactorPair)
+     */
     @Override
-    protected AbstractScriptExpressionRefactoringAction<ContractInputRefactorPair> getScriptExpressionRefactoringAction(
-            final List<ContractInputRefactorPair> pairsToRefactor,
-            final List<Expression> scriptExpressions,
-            final List<Expression> refactoredScriptExpression,
-            final CompoundCommand compoundCommand, final EditingDomain domain,
-            final RefactoringOperationType operationType) {
-        return new ContractInputScriptExpressionRefactoringAction(pairsToRefactor, scriptExpressions, refactoredScriptExpression, compoundCommand, domain,
-                operationType);
+    protected Set<ScriptContainer<?>> allScriptWithReferencedElement(final RefactorPair<ContractInput, ContractInput> pairRefactor) {
+        final Set<ScriptContainer<?>> allScriptWithReferencedElement = super.allScriptWithReferencedElement(pairRefactor);
+        allScriptWithReferencedElement.addAll(constraintExpressionsReferencing(ModelHelper.getFirstContainerOfType(pairRefactor.getOldValue(), Contract.class),
+                pairRefactor.getOldValue()));
+        return allScriptWithReferencedElement;
+    }
+
+    private Collection<? extends ScriptContainer<?>> constraintExpressionsReferencing(final Contract contract, final ContractInput contractInput) {
+        return Sets
+                .newHashSet(transform(
+                        filter(contract.getConstraints(),
+                                constraintReferencing(contractInput)),
+                        toConstraintExpressionContainer()));
+    }
+
+    private Function<ContractConstraint, ScriptContainer<?>> toConstraintExpressionContainer() {
+        return new Function<ContractConstraint, ScriptContainer<?>>() {
+
+            @Override
+            public ScriptContainer<?> apply(final ContractConstraint constraint) {
+                return new ConstraintExpressionScriptContainer(constraint, scriptRefactorOperationFactory);
+            }
+        };
+    }
+
+    private Predicate<ContractConstraint> constraintReferencing(final ContractInput contractInput) {
+        return new Predicate<ContractConstraint>() {
+
+            @Override
+            public boolean apply(final ContractConstraint constraint) {
+                return constraint.getInputNames().contains(contractInput.getName()) && constraint.getInputNames().size() > 1;
+            }
+        };
     }
 
     private void updateContractInputExpressions(final CompoundCommand cc) {
         for (final Expression exp : filter(getAllElementOfTypeIn(container, Expression.class), withExpressionType(ExpressionConstants.CONTRACT_INPUT_TYPE))) {
             for (final ContractInputRefactorPair pairToRefactor : filter(pairsToRefactor, matchingOldName(exp.getName()))) {
-                cc.append(new UpdateExpressionCommand(getEditingDomain(), exp, createContractInputExpression(pairToRefactor.getNewValue())));
+                final ContractInput newValue = pairToRefactor.getNewValue();
+                cc.append(new UpdateExpressionCommand(getEditingDomain(), exp, newValue != null ? createContractInputExpression(newValue)
+                        : createDefaultExpression(exp)));
             }
         }
 
+    }
+
+    private Expression createDefaultExpression(final Expression exp) {
+        return ExpressionHelper.createConstantExpression("", exp.isReturnTypeFixed() ? exp.getReturnType() : String.class.getName());
     }
 
     private Predicate<ContractInputRefactorPair> matchingOldName(final String expressionName) {
@@ -68,31 +126,6 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
             @Override
             public boolean apply(final ContractInputRefactorPair refactorPair) {
                 return refactorPair.getOldValueName().equals(expressionName);
-            }
-        };
-    }
-
-    private void updateContractInputReferenceInConstraints(final CompoundCommand cc) {
-        for (final ContractInputRefactorPair refactorPair : pairsToRefactor) {
-            for (final ContractConstraint constraint : filter(container.getContract().getConstraints(), constraintWithInputName(refactorPair.getOldValueName()))) {
-                cc.append(new RenameContractConstraintInputNameCommand(getEditingDomain(), constraint, createGroovyScriptRefactoringOperation(constraint,
-                        refactorPair)));
-            }
-        }
-    }
-
-    protected GroovyScriptRefactoringOperation createGroovyScriptRefactoringOperation(final ContractConstraint constraint,
-            final ContractInputRefactorPair refactorPair) {
-        return new GroovyScriptRefactoringOperation(constraint.getExpression(), newArrayList(newReferenceDiff(
-                refactorPair.getOldValueName(), refactorPair.getNewValueName())));
-    }
-
-    private Predicate<ContractConstraint> constraintWithInputName(final String inputName) {
-        return new Predicate<ContractConstraint>() {
-
-            @Override
-            public boolean apply(final ContractConstraint input) {
-                return input.getInputNames().contains(inputName);
             }
         };
     }

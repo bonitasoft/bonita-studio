@@ -1,31 +1,29 @@
 /**
  * Copyright (C) 2009-2014 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.properties.form.sections.general.contributions;
 
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.OpenNameDialog;
-import org.bonitasoft.studio.common.jface.databinding.MultiValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractNamePropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
@@ -96,14 +94,10 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
                 return fromObject;
             }
         };
-        labelTargetToModelUpdate = new UpdateValueStrategy();
-        labelTargetToModelUpdate.setConverter(convertToId);
-        final List<IValidator> validators = new ArrayList<IValidator>();
-        validators.add(new InputLengthValidator(Messages.name, 50));
-        validators.add(new GroovyReferenceValidator(Messages.name, true, false));
-        validators.add(createUniqueWidgetIdValidator());
-        final MultiValidator multiValidation = new MultiValidator(validators);
-        labelTargetToModelUpdate.setAfterGetValidator(multiValidation);
+        labelTargetToModelUpdate = updateValueStrategy().withConverter(convertToId).withValidator(multiValidator()
+                .addValidator(maxLengthValidator(Messages.name, 50))
+                .addValidator(ValidatorFactory.groovyReferenceValidator(Messages.name).startsWithAnyCase())
+                .addValidator(createUniqueWidgetIdValidator())).create();
         final ISWTObservableValue observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
         ControlDecorationSupport.create(context.bindValue(observable,
                 EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME), labelTargetToModelUpdate, null), SWT.LEFT);

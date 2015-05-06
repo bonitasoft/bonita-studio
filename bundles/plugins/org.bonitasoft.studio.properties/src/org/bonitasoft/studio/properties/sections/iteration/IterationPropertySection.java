@@ -15,9 +15,9 @@
 package org.bonitasoft.studio.properties.sections.iteration;
 
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.groovyReferenceValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.uniqueValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.uniqueValidator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
@@ -619,8 +619,8 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
             @Override
             protected IStatus validate() {
                 return multiValidator()
-                        .addValidator(groovyReferenceValidator(Messages.iterator, true, true))
-                        .addValidator(uniqueValidator().in(visibleData()).onProperty("name").create()).create()
+                        .addValidator(groovyReferenceValidator(Messages.iterator).startsWithLowerCase())
+                        .addValidator(uniqueValidator().in(visibleData()).onProperty("name")).create()
                         .validate(observeDelayedValue.getValue());
             }
         };

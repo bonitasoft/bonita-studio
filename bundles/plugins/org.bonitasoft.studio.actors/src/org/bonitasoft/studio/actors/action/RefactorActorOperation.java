@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -28,32 +26,31 @@ import org.bonitasoft.studio.diagram.custom.repository.SaveConfigurationEMFComma
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
 import org.bonitasoft.studio.model.actormapping.ActorMappingPackage;
 import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
-import org.bonitasoft.studio.refactoring.core.AbstractScriptExpressionRefactoringAction;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
  * @author Aurelie Zara
  * @author Romain Bioteau
  */
-public class RefactorActorOperation extends AbstractRefactorOperation<String, Actor, ActorRefactorPair> {
+public class RefactorActorOperation extends AbstractRefactorOperation<Actor, Actor, ActorRefactorPair> {
 
     private final AbstractProcess process;
 
     public RefactorActorOperation(final AbstractProcess process, final Actor actor, final String newValue) {
         super(RefactoringOperationType.UPDATE);
         this.process = process;
-        addItemToRefactor(newValue, actor);
+        final Actor copy = EcoreUtil.copy(actor);
+        copy.setName(newValue);
+        addItemToRefactor(copy, actor);
     }
 
     @Override
@@ -75,7 +72,7 @@ public class RefactorActorOperation extends AbstractRefactorOperation<String, Ac
             configurations.add(localeConfiguration);
         }
         configurations.addAll(process.getConfigurations());
-        for(final ActorRefactorPair pairToRefactor : pairsToRefactor){
+        for (final ActorRefactorPair pairToRefactor : pairsToRefactor) {
             final Actor actor = pairToRefactor.getOldValue();
             for (final Configuration configuration : configurations) {
                 if (configuration.getActorMappings() != null) {
@@ -97,19 +94,12 @@ public class RefactorActorOperation extends AbstractRefactorOperation<String, Ac
     }
 
     @Override
-    protected AbstractScriptExpressionRefactoringAction<ActorRefactorPair> getScriptExpressionRefactoringAction(final List<ActorRefactorPair> pairsToRefactor,
-            final List<Expression> scriptExpressions, final List<Expression> refactoredScriptExpression, final CompoundCommand compoundCommand, final EditingDomain domain,
-            final RefactoringOperationType operationType) {
-        return null;
-    }
-
-    @Override
     protected EObject getContainer(final Actor oldValue) {
         return null;
     }
 
     @Override
-    protected ActorRefactorPair createRefactorPair(final String newItem, final Actor oldItem) {
+    protected ActorRefactorPair createRefactorPair(final Actor newItem, final Actor oldItem) {
         return new ActorRefactorPair(newItem, oldItem);
     }
 
