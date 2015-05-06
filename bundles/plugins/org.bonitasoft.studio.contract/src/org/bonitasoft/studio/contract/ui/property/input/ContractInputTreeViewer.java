@@ -169,8 +169,10 @@ public class ContractInputTreeViewer extends TreeViewer {
         final TreeViewerColumn descriptionColumnViewer = createColumnViewer(Messages.description, SWT.FILL);
         descriptionColumnViewer.setLabelProvider(new DescriptionCellLabelProvider(propertySourceProvider,
                 knownElements()));
-        descriptionColumnViewer.setEditingSupport(new DescriptionObservableEditingSupport(this,
-                messageManager, emfDataBindingContext));
+        final DescriptionObservableEditingSupport editingSupport = new DescriptionObservableEditingSupport(this,
+                messageManager, emfDataBindingContext);
+        editingSupport.setControlId(SWTBotConstants.SWTBOT_ID_INPUT_DESCRIPTION_TEXTEDITOR);
+        descriptionColumnViewer.setEditingSupport(editingSupport);
     }
 
     protected void createInputTypeColumn() {

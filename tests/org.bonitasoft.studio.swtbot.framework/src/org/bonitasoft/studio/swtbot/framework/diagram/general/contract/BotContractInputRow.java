@@ -80,7 +80,7 @@ public class BotContractInputRow extends BotBase {
         waitForInputTree();
         swtBotTreeItem.setFocus();
         swtBotTreeItem.click(DESCRIPTION_COLUMN);
-        bot.text(1);
+        bot.textWithId(SWTBotConstants.SWTBOT_ID_INPUT_DESCRIPTION_TEXTEDITOR);
         typeText(description);
         pressEnter();
         return this;
