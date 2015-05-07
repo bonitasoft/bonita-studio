@@ -81,5 +81,6 @@ public class Messages extends NLS {
     public static String inputType;
     public static String attributetype;
     public static String atLeastOneAttributeShouldBeSelectedError;
+    public static String attributeName;
 
 }

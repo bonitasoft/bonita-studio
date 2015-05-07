@@ -186,7 +186,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                 new FieldToContractInputMappingTreeStructureAdvisor()));
 
         final TreeViewerColumn nameTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
-        nameTreeViewerColumn.getColumn().setText(Messages.name);
+        nameTreeViewerColumn.getColumn().setText(Messages.attributeName);
         nameTreeViewerColumn.getColumn().setWidth(250);
         nameTreeViewerColumn.setLabelProvider(new FieldNameColumnLabelProvider());
 
