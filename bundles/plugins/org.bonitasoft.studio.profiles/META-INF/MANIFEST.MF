@@ -17,7 +17,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.ui.workbench.swt,
  org.eclipse.e4.ui.workbench,
  org.eclipse.e4.ui.model.workbench,
- org.eclipse.core.expressions;bundle-version="3.4.500"
+ org.eclipse.core.expressions;bundle-version="3.4.500",
+ org.junit;bundle-version="4.11.0";resolution:=optional,
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
+ org.mockito;bundle-version="1.10.19";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.profiles,org.bonitasoft.studio.p

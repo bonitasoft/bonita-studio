@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.Query;
 import org.bonitasoft.studio.businessobject.ui.wizard.QueryWizard;
 import org.bonitasoft.studio.businessobject.ui.wizard.ReadOnlyQueryWizard;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
@@ -27,9 +29,6 @@ import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
-import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.Query;
 
 /**
  * @author Romain Bioteau

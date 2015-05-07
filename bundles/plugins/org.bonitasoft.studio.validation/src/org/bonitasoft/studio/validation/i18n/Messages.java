@@ -196,7 +196,7 @@ public class Messages extends NLS {
     public static String queryParameterDoesNotExistInExpression;
 
     public static String businessObjectDefinitionNotFound;
-    public static String invalidContractDefinition;
+    public static String invalidContractConstraintDefinition;
 
     public static String invalidInternalFormMapping;
 

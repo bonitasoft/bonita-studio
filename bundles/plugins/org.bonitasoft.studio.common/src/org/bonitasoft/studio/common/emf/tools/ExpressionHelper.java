@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -399,6 +399,25 @@ public class ExpressionHelper {
         storageExpression.setReturnType(String.class.getName());
         storageExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
         return storageExpression;
+    }
+
+    public static Operation createDefaultConnectorOutputOperation(final Output output) {
+        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
+        assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+        operation.setOperator(assignment);
+
+        final Expression rightOperand = ExpressionFactory.eINSTANCE.createExpression();
+        rightOperand.setName(output.getName());
+        rightOperand.setContent(output.getName());
+        rightOperand.setReturnType(output.getType());
+        rightOperand.setType(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
+        rightOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(output));
+        operation.setRightOperand(rightOperand);
+
+        final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression();
+        operation.setLeftOperand(leftOperand);
+        return operation;
     }
 
 }

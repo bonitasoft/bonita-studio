@@ -5,21 +5,19 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.contract.ui.property.constraint;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -28,28 +26,35 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
- *
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ContractConstraintsTableViewerTest extends AbstractSWTTestCase {
 
     private ContractConstraintsTableViewer viewer;
     private Composite parent;
     private ContractConstraint constraint;
     private ContractConstraint constraint2;
+    @Mock
+    private IMessageManager messageManager;
 
     /**
      * @throws java.lang.Exception
@@ -59,8 +64,9 @@ public class ContractConstraintsTableViewerTest extends AbstractSWTTestCase {
         parent = createDisplayAndRealm();
         FileActionDialog.setDisablePopup(true);
         viewer = new ContractConstraintsTableViewer(parent, new FormToolkit(display));
-        final ContractConstraintController inputController = new ContractConstraintController(new ContractDefinitionValidator());
-        viewer.initialize(inputController, new ContractDefinitionValidator());
+        final ContractConstraintController inputController = new ContractConstraintController(new WritableValue(aContract()
+                .build(), Contract.class));
+        viewer.initialize(inputController, messageManager, new EMFDataBindingContext());
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("name");

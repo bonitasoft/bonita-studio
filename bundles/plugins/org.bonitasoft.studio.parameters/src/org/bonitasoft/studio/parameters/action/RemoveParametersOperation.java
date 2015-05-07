@@ -30,7 +30,6 @@ import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.parameters.i18n.Messages;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
-import org.bonitasoft.studio.refactoring.core.AbstractScriptExpressionRefactoringAction;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -43,7 +42,6 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
  * @author aurelie
- *
  */
 public class RemoveParametersOperation extends AbstractRefactorOperation<Parameter, Parameter, ParameterRefactorPair> {
 
@@ -75,7 +73,7 @@ public class RemoveParametersOperation extends AbstractRefactorOperation<Paramet
     @Override
     protected CompoundCommand doBuildCompoundCommand(final CompoundCommand compoundCommand, final IProgressMonitor monitor) {
         monitor.beginTask(Messages.removeParameters, IProgressMonitor.UNKNOWN);
-        for(final ParameterRefactorPair pairToRefactor : pairsToRefactor){
+        for (final ParameterRefactorPair pairToRefactor : pairsToRefactor) {
             deleteAllReferencesToParameter(getEditingDomain(), pairToRefactor.getOldValue(), compoundCommand);
             final String id = ModelHelper.getEObjectID(process);
             final String fileName = id + ".conf";
@@ -106,20 +104,12 @@ public class RemoveParametersOperation extends AbstractRefactorOperation<Paramet
     }
 
     @Override
-    protected AbstractScriptExpressionRefactoringAction<ParameterRefactorPair> getScriptExpressionRefactoringAction(final List<ParameterRefactorPair> pairsToRefactor,
-            final List<Expression> scriptExpressions, final List<Expression> refactoredScriptExpression, final CompoundCommand compoundCommand, final EditingDomain domain,
-            final RefactoringOperationType operationType) {
-        return new ParameterScriptExpressionRefactoringAction(pairsToRefactor, scriptExpressions, refactoredScriptExpression, compoundCommand,
-                domain, operationType);
-    }
-
-    @Override
     protected EObject getContainer(final Parameter oldValue) {
         return process;
     }
 
     @Override
-    protected ParameterRefactorPair createRefactorPair(final Parameter newItem,	final Parameter oldItem) {
+    protected ParameterRefactorPair createRefactorPair(final Parameter newItem, final Parameter oldItem) {
         return new ParameterRefactorPair(newItem, oldItem);
     }
 

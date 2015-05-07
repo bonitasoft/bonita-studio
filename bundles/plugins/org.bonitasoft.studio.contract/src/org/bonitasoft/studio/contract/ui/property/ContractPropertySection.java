@@ -18,7 +18,6 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
-import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraintController;
 import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraintsTableViewer;
@@ -37,8 +36,6 @@ import org.eclipse.core.databinding.observable.list.IListChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.ListChangeEvent;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.IValueChangeListener;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.EList;
@@ -60,6 +57,7 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Romain Bioteau
@@ -67,8 +65,6 @@ import org.eclipse.ui.IWorkbenchPart;
 public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private EMFDataBindingContext context;
-
-    private ContractDefinitionValidator contractDefinitionValidator;
 
     private ContractInputController inputController;
 
@@ -78,10 +74,14 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private final IEclipseContext eclipseContext;
 
+    private final IProgressService progressService;
+
     @Inject
-    public ContractPropertySection(final IEclipseContext eclipseContext, final ContractContainerAdaptableSelectionProvider selectionProvider) {
+    public ContractPropertySection(final IEclipseContext eclipseContext, final ContractContainerAdaptableSelectionProvider selectionProvider,
+            final IProgressService progressService) {
         this.eclipseContext = eclipseContext;
         this.selectionProvider = selectionProvider;
+        this.progressService = progressService;
     }
 
     @Override
@@ -94,12 +94,10 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         return Messages.contractInputs;
     }
 
-    protected void init() {
-        setContractDefinitionValidator(new ContractDefinitionValidator(
-                getMessageManager()));
-        setInputController(new ContractInputController(getContractDefinitionValidator()));
-        setConstraintController(new ContractConstraintController(getContractDefinitionValidator()));
-        setContext(new EMFDataBindingContext());
+    protected void init(final IObservableValue observeContractValue) {
+        inputController = new ContractInputController(progressService);
+        constraintController = new ContractConstraintController(observeContractValue);
+        context = new EMFDataBindingContext();
     }
 
     @Override
@@ -123,27 +121,19 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     @Override
     protected void createContent(final Composite parent) {
-        init();
-        final CTabFolder tabFolder = getWidgetFactory().createTabFolder(parent, SWT.FLAT | SWT.TOP);
-        tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        getWidgetFactory().adapt(tabFolder, true, true);
-
         final IObservableValue observeContractValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(selectionProvider),
                 ProcessPackage.Literals.CONTRACT_CONTAINER__CONTRACT);
-        observeContractValue.addValueChangeListener(new IValueChangeListener() {
-
-            @Override
-            public void handleValueChange(final ValueChangeEvent event) {
-                validate((Contract) event.diff.getNewValue());
-            }
-        });
+        init(observeContractValue);
+        final CTabFolder tabFolder = getWidgetFactory().createTabFolder(parent, SWT.FLAT | SWT.TOP);
+        tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        getWidgetFactory().adapt(tabFolder, true, true);
 
         final CTabItem inputTabItem = getWidgetFactory().createTabItem(tabFolder, SWT.NULL);
         inputTabItem.setText(Messages.inputTabLabel);
         final Composite inputComposite = getWidgetFactory().createComposite(tabFolder);
         inputComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        inputComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 15, 10, 5).create());
+        inputComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 25, 10, 5).create());
 
         createInputTabContent(inputComposite, observeContractValue);
 
@@ -151,7 +141,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
         final Composite constraintComposite = getWidgetFactory().createComposite(tabFolder);
         constraintComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        constraintComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 15, 10, 5).create());
+        constraintComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 25, 10, 5).create());
 
         createConstraintTabContent(constraintComposite, observeContractValue);
 
@@ -169,11 +159,11 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final Button removeButton = createButton(buttonsComposite, Messages.remove);
 
         final ContractConstraintsTableViewer constraintsTableViewer = new ContractConstraintsTableViewer(parent, getWidgetFactory());
-        constraintsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, 180).create());
-        constraintsTableViewer.initialize(getConstraintController(), getContractDefinitionValidator());
-
+        constraintsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        constraintsTableViewer.initialize(constraintController, getMessageManager(), context);
         constraintsTableViewer.setInput(CustomEMFEditObservables.observeDetailList(Realm.getDefault(), observeContractValue,
                 ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
+
         constraintsTableViewer.createAddListener(addButton);
         constraintsTableViewer.createMoveUpListener(upButton);
         constraintsTableViewer.createMoveDownListener(downButton);
@@ -186,21 +176,14 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
     }
 
     private void createInputTabContent(final Composite parent, final IObservableValue observeContractValue) {
-        //    	Composite labelComposite = getWidgetFactory().createComposite(parent);
-        //    	final CLabel warning = getWidgetFactory().createCLabel(labelComposite, "For 7.0 Beta only Text can be used at runtime."); //TODO move for ga
-        //    	warning.setImage(Display.getCurrent().getSystemImage(SWT.ICON_WARNING));
-        //    	labelComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        //    	labelComposite.setLayoutData(GridDataFactory.fillDefaults().span(2,1).create());
-
         final Composite buttonsComposite = createButtonContainer(parent);
         final Button addButton = createButton(buttonsComposite, Messages.add);
         final Button addChildButton = createButton(buttonsComposite, Messages.addChild);
         final Button removeButton = createButton(buttonsComposite, Messages.remove);
 
-        final ContractInputTreeViewer inputsTableViewer = new ContractInputTreeViewer(parent, getWidgetFactory());
-        inputsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, 180).create());
-        inputsTableViewer.initialize(getInputController(), getContractDefinitionValidator());
-
+        final ContractInputTreeViewer inputsTableViewer = new ContractInputTreeViewer(parent, getWidgetFactory(), progressService);
+        inputsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        inputsTableViewer.initialize(inputController, getMessageManager(), context);
         inputsTableViewer.setInput(observeContractValue);
 
         inputsTableViewer.createAddListener(addButton);
@@ -240,33 +223,33 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
     }
 
     protected void bindRemoveButtonEnablement(final Button button, final Viewer viewer) {
-        getContext().bindValue(SWTObservables.observeEnabled(button),
+        context.bindValue(SWTObservables.observeEnabled(button),
                 ViewersObservables.observeSingleSelection(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 emptySelectionToBooleanStrategy());
     }
 
     protected void bindUpButtonEnablement(final Button button, final Viewer viewer) {
-        getContext().bindValue(SWTObservables.observeEnabled(button),
+        context.bindValue(SWTObservables.observeEnabled(button),
                 ViewersObservables.observeSingleSelection(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 isFirstElementToBooleanStrategy());
     }
 
     protected void bindDownButtonEnablement(final Button button, final Viewer viewer) {
-        getContext().bindValue(SWTObservables.observeEnabled(button),
+        context.bindValue(SWTObservables.observeEnabled(button),
                 ViewersObservables.observeSingleSelection(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 isLastElementToBooleanStrategy());
     }
 
     protected void bindAddChildButtonEnablement(final Button button, final Viewer viewer) {
-        getContext().bindValue(SWTObservables.observeEnabled(button),
+        context.bindValue(SWTObservables.observeEnabled(button),
                 ViewersObservables.observeSingleSelection(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 emptySelectionAndComplexTypeToBooleanStrategy());
 
-        getContext().bindValue(
+        context.bindValue(
                 SWTObservables.observeEnabled(button),
                 EMFObservables.observeDetailValue(Realm.getDefault(), ViewersObservables.observeSingleSelection(viewer),
                         ProcessPackage.Literals.CONTRACT_INPUT__TYPE),
@@ -356,48 +339,11 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         selectionProvider.setSelection(selection);
     }
 
-    protected void validate(final Contract contract) {
-        getContractDefinitionValidator().validate(contract);
-    }
-
-    public ContractDefinitionValidator getContractDefinitionValidator() {
-        return contractDefinitionValidator;
-    }
-
-    public void setContractDefinitionValidator(final ContractDefinitionValidator contractValidator) {
-        contractDefinitionValidator = contractValidator;
-    }
-
-    public ContractInputController getInputController() {
-        return inputController;
-    }
-
-    public void setInputController(final ContractInputController inputController) {
-        this.inputController = inputController;
-    }
-
-    public ContractConstraintController getConstraintController() {
-        return constraintController;
-    }
-
-    public void setConstraintController(final ContractConstraintController constraintController) {
-        this.constraintController = constraintController;
-    }
-
-    public EMFDataBindingContext getContext() {
-        return context;
-    }
-
-    public void setContext(final EMFDataBindingContext context) {
-        this.context = context;
-    }
-
     @Override
     public void dispose() {
         super.dispose();
-        final EMFDataBindingContext ctx = getContext();
-        if (ctx != null) {
-            ctx.dispose();
+        if (context != null) {
+            context.dispose();
         }
     }
 

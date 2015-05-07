@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -28,6 +28,7 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFacto
 import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory;
 import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.form.Duplicable;
@@ -450,6 +451,21 @@ public class ExpressionHelperTest {
         for (final ContractInputType type : ContractInputType.values()) {
             assertThat(ExpressionHelper.returnTypeForInputType).containsKey(type);
         }
+    }
+
+    @Test
+    public void should_createOperationFromOutput() {
+        final Output output = ConnectorDefinitionFactory.eINSTANCE.createOutput();
+        output.setName("outputName");
+        output.setType(Integer.class.getName());
+        final Operation createDefaultConnectorOutputOperation = ExpressionHelper.createDefaultConnectorOutputOperation(output);
+        assertThat(createDefaultConnectorOutputOperation.getOperator().getType()).isEqualTo(ExpressionConstants.ASSIGNMENT_OPERATOR);
+        assertThat(createDefaultConnectorOutputOperation.getRightOperand())
+                .hasType(ExpressionConstants.CONNECTOR_OUTPUT_TYPE)
+                .hasReturnType(Integer.class.getName())
+                .hasName("outputName")
+                .hasContent("outputName");
+        assertThat(createDefaultConnectorOutputOperation.getLeftOperand()).isNotNull();
     }
 
 }
