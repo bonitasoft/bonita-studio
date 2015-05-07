@@ -18,6 +18,7 @@ import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.bonitasoft.studio.model.process.builders.DocumentBuilder.aDocument;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.never;
@@ -26,18 +27,15 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import org.bonitasoft.engine.bpm.contract.FileInputValue;
 import org.bonitasoft.engine.bpm.process.impl.DocumentDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
-import org.bonitasoft.engine.expression.ExpressionType;
-import org.bonitasoft.studio.assertions.EngineExpressionAssert;
+import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.builders.ContractInputBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -51,12 +49,16 @@ public class SingleDocumentEngineDefinitionBuilderTest {
     @Mock
     private DocumentDefinitionBuilder docDefinitionBuilder;
 
+    @Mock
+    private DocumentGroovyScriptExpressionFactory scriptFactory;
+
     @Test
     public void testMimeTypeAddedIfThereIsADefaultValue() throws Exception {
         when(processBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
 
         final SingleDocumentEngineDefinitionBuilder builder = new SingleDocumentEngineDefinitionBuilder(aDocument().withDocumentType(DocumentType.EXTERNAL)
-                .havingURL(anExpression().withContent("http://test.com")).havingMimeType(anExpression().withContent("octet/stream")).build(), processBuilder);
+                .havingURL(anExpression().withContent("http://test.com")).havingMimeType(anExpression().withContent("octet/stream")).build(), processBuilder,
+                scriptFactory);
         builder.build();
 
         verify(docDefinitionBuilder).addMimeType(anyString());
@@ -67,7 +69,7 @@ public class SingleDocumentEngineDefinitionBuilderTest {
         when(processBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
 
         final SingleDocumentEngineDefinitionBuilder builder = new SingleDocumentEngineDefinitionBuilder(aDocument().withDocumentType(DocumentType.EXTERNAL)
-                .havingURL(anExpression()).havingMimeType(anExpression().withContent("octet/stream")).build(), processBuilder);
+                .havingURL(anExpression()).havingMimeType(anExpression().withContent("octet/stream")).build(), processBuilder, scriptFactory);
         builder.build();
 
         verify(docDefinitionBuilder).addMimeType(anyString());
@@ -78,7 +80,8 @@ public class SingleDocumentEngineDefinitionBuilderTest {
         when(processBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
 
         final SingleDocumentEngineDefinitionBuilder builder = new SingleDocumentEngineDefinitionBuilder(aDocument().withDocumentType(DocumentType.EXTERNAL)
-                .havingURL(aGroovyScriptExpression().withReturnType(List.class.getName()).withContent("http://test.com")).build(), processBuilder);
+                .havingURL(aGroovyScriptExpression().withReturnType(List.class.getName()).withContent("http://test.com")).build(), processBuilder,
+                scriptFactory);
         builder.build();
 
         verify(docDefinitionBuilder).addUrl(Mockito.anyString());
@@ -89,7 +92,7 @@ public class SingleDocumentEngineDefinitionBuilderTest {
         when(processBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
 
         final SingleDocumentEngineDefinitionBuilder builder = new SingleDocumentEngineDefinitionBuilder(aDocument().withDocumentType(DocumentType.EXTERNAL)
-                .build(), processBuilder);
+                .build(), processBuilder, scriptFactory);
         builder.build();
 
         verify(docDefinitionBuilder, Mockito.never()).addUrl(Mockito.anyString());
@@ -100,7 +103,7 @@ public class SingleDocumentEngineDefinitionBuilderTest {
         when(processBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
 
         final SingleDocumentEngineDefinitionBuilder builder = new SingleDocumentEngineDefinitionBuilder(aDocument().withDocumentType(DocumentType.INTERNAL)
-                .withDefaultValueIdOfDocumentStore("idTest").build(), processBuilder);
+                .withDefaultValueIdOfDocumentStore("idTest").build(), processBuilder, scriptFactory);
         builder.build();
 
         verify(docDefinitionBuilder).addFile(Mockito.anyString());
@@ -112,7 +115,7 @@ public class SingleDocumentEngineDefinitionBuilderTest {
         when(processBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
 
         final SingleDocumentEngineDefinitionBuilder builder = new SingleDocumentEngineDefinitionBuilder(aDocument().withDocumentType(DocumentType.INTERNAL)
-                .build(), processBuilder);
+                .build(), processBuilder, scriptFactory);
         builder.build();
 
         verify(docDefinitionBuilder, Mockito.never()).addFile(Mockito.anyString());
@@ -124,7 +127,7 @@ public class SingleDocumentEngineDefinitionBuilderTest {
         when(processBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
 
         final SingleDocumentEngineDefinitionBuilder builder = new SingleDocumentEngineDefinitionBuilder(aDocument().withDocumentType(DocumentType.CONTRACT)
-                .build(), processBuilder);
+                .build(), processBuilder, scriptFactory);
         builder.build();
 
         verify(docDefinitionBuilder, never()).addInitialValue(notNull(Expression.class));
@@ -133,16 +136,15 @@ public class SingleDocumentEngineDefinitionBuilderTest {
     @Test
     public void should_add_initial_content_as_expression_for_CONTRACT_type() throws Exception {
         when(processBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
+        when(scriptFactory.createSingleDocumentInitialContentScriptExpression(any(ContractInput.class))).thenReturn(
+                aGroovyScriptExpression().withContent("script content").build());
 
         final ContractInputBuilder fileInput = aContractInput().withName("myFile").withType(ContractInputType.FILE);
         aContractInput().withName("parent").withType(ContractInputType.COMPLEX).havingInput(fileInput).build();
         final SingleDocumentEngineDefinitionBuilder builder = new SingleDocumentEngineDefinitionBuilder(aDocument().withDocumentType(DocumentType.CONTRACT)
-                .havingContractInput(fileInput).build(), processBuilder);
+                .havingContractInput(fileInput).build(), processBuilder, scriptFactory);
         builder.build();
 
-        final ArgumentCaptor<Expression> expressionCaptor = ArgumentCaptor.forClass(Expression.class);
-        verify(docDefinitionBuilder).addInitialValue(expressionCaptor.capture());
-        EngineExpressionAssert.assertThat(expressionCaptor.getValue()).hasContent("parent.myFile").hasReturnType(FileInputValue.class.getName())
-                .hasExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name());
+        verify(docDefinitionBuilder).addInitialValue(notNull(Expression.class));
     }
 }

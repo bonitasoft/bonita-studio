@@ -15,30 +15,27 @@
 package org.bonitasoft.studio.document.core.export;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameList;
 
-import org.bonitasoft.engine.bpm.contract.FileInputValue;
 import org.bonitasoft.engine.bpm.process.impl.DocumentDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Document;
-
-import com.google.common.base.Joiner;
 
 public class SingleDocumentEngineDefinitionBuilder implements IDefinitionBuildable {
 
     private final Document document;
     private final ProcessDefinitionBuilder builder;
+    private final DocumentGroovyScriptExpressionFactory scriptFactory;
 
-    public SingleDocumentEngineDefinitionBuilder(final Document document, final ProcessDefinitionBuilder builder) {
+    public SingleDocumentEngineDefinitionBuilder(final Document document, final ProcessDefinitionBuilder builder,
+            final DocumentGroovyScriptExpressionFactory scriptFactory) {
         checkArgument(document != null);
         checkArgument(!document.isMultiple());
         this.document = document;
         this.builder = builder;
+        this.scriptFactory = scriptFactory;
     }
 
     /*
@@ -78,11 +75,10 @@ public class SingleDocumentEngineDefinitionBuilder implements IDefinitionBuildab
     }
 
     private void addContractInputContent(final Document document, final DocumentDefinitionBuilder documentBuilder) {
-        final Expression groovyScriptExpression = ExpressionHelper.createGroovyScriptExpression(
-                fileContractInputAccessorScript(document.getContractInput()),
-                FileInputValue.class.getName());
-        groovyScriptExpression.setName("Initial document value script");
-        documentBuilder.addInitialValue(EngineExpressionUtil.createExpression(groovyScriptExpression));
+        if (document.getContractInput() != null) {
+            documentBuilder.addInitialValue(EngineExpressionUtil.createExpression(scriptFactory.createSingleDocumentInitialContentScriptExpression(document
+                    .getContractInput())));
+        }
     }
 
     private void addUrlContent(final Document document, final DocumentDefinitionBuilder documentBuilder) {
@@ -98,10 +94,6 @@ public class SingleDocumentEngineDefinitionBuilder implements IDefinitionBuildab
             documentBuilder.addFile(defaultValueIdOfDocumentStore);
             documentBuilder.addContentFileName(defaultValueIdOfDocumentStore);
         }
-    }
-
-    private String fileContractInputAccessorScript(final ContractInput contractInput) {
-        return Joiner.on(".").join(toAncestorNameList().apply(contractInput));
     }
 
 }

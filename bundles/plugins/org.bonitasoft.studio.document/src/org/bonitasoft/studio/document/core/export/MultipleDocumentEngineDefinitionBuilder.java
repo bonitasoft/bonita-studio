@@ -15,34 +15,27 @@
 package org.bonitasoft.studio.document.core.export;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.not;
-import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameList;
-import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withMultipleInHierarchy;
-
-import java.util.List;
 
 import org.bonitasoft.engine.bpm.process.impl.DocumentListDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Document;
-
-import com.google.common.base.Joiner;
 
 public class MultipleDocumentEngineDefinitionBuilder implements IDefinitionBuildable {
 
     private final Document document;
     private final ProcessDefinitionBuilder builder;
+    private final DocumentGroovyScriptExpressionFactory scriptFactory;
 
-    public MultipleDocumentEngineDefinitionBuilder(final Document document, final ProcessDefinitionBuilder builder) {
+    public MultipleDocumentEngineDefinitionBuilder(final Document document, final ProcessDefinitionBuilder builder,
+            final DocumentGroovyScriptExpressionFactory scriptFactory) {
         checkArgument(document != null);
         checkArgument(document.isMultiple());
         this.document = document;
         this.builder = builder;
+        this.scriptFactory = scriptFactory;
     }
 
     /*
@@ -65,11 +58,8 @@ public class MultipleDocumentEngineDefinitionBuilder implements IDefinitionBuild
 
     private void addContractInputInitialContent(final DocumentListDefinitionBuilder documentListBuilder) {
         if (document.getContractInput() != null) {
-            final Expression groovyScriptExpression = ExpressionHelper.createGroovyScriptExpression(
-                    fileContractInputAccessorScript(document.getContractInput()),
-                    List.class.getName());
-            groovyScriptExpression.setName("Initial document value script");
-            documentListBuilder.addInitialValue(EngineExpressionUtil.createExpression(groovyScriptExpression));
+            documentListBuilder.addInitialValue(EngineExpressionUtil.createExpression(scriptFactory
+                    .createMultipleDocumentInitialContentScriptExpression(document.getContractInput())));
         }
     }
 
@@ -80,18 +70,4 @@ public class MultipleDocumentEngineDefinitionBuilder implements IDefinitionBuild
         }
     }
 
-    private String fileContractInputAccessorScript(final ContractInput contractInput) {
-        if (contractInput.isMultiple()) {
-            if (not(instanceOf(ContractInput.class)).apply(contractInput.eContainer())
-                    || not(withMultipleInHierarchy()).apply((ContractInput) contractInput.eContainer())) {
-                return Joiner.on(".").join(toAncestorNameList().apply(contractInput));
-            }
-        }
-        final ContractInput parentInput = (ContractInput) contractInput.eContainer();
-        final StringBuilder scriptBuilder = new StringBuilder(Joiner.on(".").join(toAncestorNameList().apply(parentInput)));
-        scriptBuilder.append(".collect{it.");
-        scriptBuilder.append(contractInput.getName());
-        scriptBuilder.append("}.flatten()");
-        return scriptBuilder.toString();
-    }
 }

@@ -14,31 +14,28 @@
  */
 package org.bonitasoft.studio.document.core.export;
 
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aGroovyScriptExpression;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.bonitasoft.studio.model.process.builders.DocumentBuilder.aDocument;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
-
 import org.bonitasoft.engine.bpm.process.impl.DocumentListDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
-import org.bonitasoft.engine.expression.ExpressionType;
-import org.bonitasoft.studio.assertions.EngineExpressionAssert;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.builders.ContractInputBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -50,6 +47,8 @@ public class MultipleDocumentEngineDefinitionBuilderTest {
     private ProcessDefinitionBuilder processBuilder;
     @Mock
     public DocumentListDefinitionBuilder docDefinitionListBuilder;
+    @Mock
+    private DocumentGroovyScriptExpressionFactory scriptFactory;
 
     @Test
     public void testIntialContentForMultipleDocumentAdded() throws Exception {
@@ -62,11 +61,23 @@ public class MultipleDocumentEngineDefinitionBuilderTest {
         document.setInitialMultipleContent(initialExpression);
         process.getDocuments().add(document);
 
-        final MultipleDocumentEngineDefinitionBuilder builder = new MultipleDocumentEngineDefinitionBuilder(document, processBuilder);
+        final MultipleDocumentEngineDefinitionBuilder builder = new MultipleDocumentEngineDefinitionBuilder(document, processBuilder, scriptFactory);
 
         builder.build();
 
         verify(docDefinitionListBuilder).addInitialValue(Mockito.<org.bonitasoft.engine.expression.Expression> anyObject());
+    }
+
+    @Test
+    public void should_not_add_initial_content_if_initial_expression_is_null_or_empty() throws Exception {
+        when(processBuilder.addDocumentListDefinition(anyString())).thenReturn(docDefinitionListBuilder);
+
+        final MultipleDocumentEngineDefinitionBuilder builder = new MultipleDocumentEngineDefinitionBuilder(aDocument().multiple()
+                .withDocumentType(DocumentType.NONE).havingInitialMultipleContent(anExpression())
+                .build(), processBuilder, scriptFactory);
+        builder.build();
+
+        verify(docDefinitionListBuilder, never()).addInitialValue(notNull(org.bonitasoft.engine.expression.Expression.class));
     }
 
     @Test
@@ -75,63 +86,23 @@ public class MultipleDocumentEngineDefinitionBuilderTest {
 
         final MultipleDocumentEngineDefinitionBuilder builder = new MultipleDocumentEngineDefinitionBuilder(aDocument().multiple()
                 .withDocumentType(DocumentType.CONTRACT)
-                .build(), processBuilder);
+                .build(), processBuilder, scriptFactory);
         builder.build();
 
         verify(docDefinitionListBuilder, never()).addInitialValue(notNull(org.bonitasoft.engine.expression.Expression.class));
     }
 
     @Test
-    public void should_add_initial_content_as_expression_for_CONTRACT_type_for_child_input() throws Exception {
+    public void should_add_initial_content_for_CONTRACT_type_if_contract_input_is_not_null() throws Exception {
         when(processBuilder.addDocumentListDefinition(anyString())).thenReturn(docDefinitionListBuilder);
-
-        final ContractInputBuilder fileInput = aContractInput().withName("myFile").multiple().withType(ContractInputType.FILE);
-        aContractInput().withName("parent").withType(ContractInputType.COMPLEX).havingInput(fileInput).build();
+        when(scriptFactory.createMultipleDocumentInitialContentScriptExpression(any(ContractInput.class))).thenReturn(
+                aGroovyScriptExpression().withContent("script content").build());
         final MultipleDocumentEngineDefinitionBuilder builder = new MultipleDocumentEngineDefinitionBuilder(aDocument().multiple()
-                .withDocumentType(DocumentType.CONTRACT)
-                .havingContractInput(fileInput).build(), processBuilder);
+                .withDocumentType(DocumentType.CONTRACT).havingContractInput(aContractInput().withName("input"))
+                .build(), processBuilder, scriptFactory);
         builder.build();
 
-        final ArgumentCaptor<org.bonitasoft.engine.expression.Expression> expressionCaptor = ArgumentCaptor
-                .forClass(org.bonitasoft.engine.expression.Expression.class);
-        verify(docDefinitionListBuilder).addInitialValue(expressionCaptor.capture());
-        EngineExpressionAssert.assertThat(expressionCaptor.getValue()).hasContent("parent.myFile").hasReturnType(List.class.getName())
-                .hasExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name());
-    }
-
-    @Test
-    public void should_add_initial_content_as_expression_for_CONTRACT_type_for_root_input() throws Exception {
-        when(processBuilder.addDocumentListDefinition(anyString())).thenReturn(docDefinitionListBuilder);
-
-        final ContractInputBuilder fileInput = aContractInput().withName("myFile").multiple().withType(ContractInputType.FILE);
-        final MultipleDocumentEngineDefinitionBuilder builder = new MultipleDocumentEngineDefinitionBuilder(aDocument().multiple()
-                .withDocumentType(DocumentType.CONTRACT)
-                .havingContractInput(fileInput).build(), processBuilder);
-        builder.build();
-
-        final ArgumentCaptor<org.bonitasoft.engine.expression.Expression> expressionCaptor = ArgumentCaptor
-                .forClass(org.bonitasoft.engine.expression.Expression.class);
-        verify(docDefinitionListBuilder).addInitialValue(expressionCaptor.capture());
-        EngineExpressionAssert.assertThat(expressionCaptor.getValue()).hasContent("myFile").hasReturnType(List.class.getName())
-                .hasExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name());
-    }
-
-    @Test
-    public void should_add_initial_content_as_expression_for_CONTRACT_type_for_single_chile_input_contained_in_a_multiple_parent_input() throws Exception {
-        when(processBuilder.addDocumentListDefinition(anyString())).thenReturn(docDefinitionListBuilder);
-
-        final ContractInputBuilder fileInput = aContractInput().withName("myFile").withType(ContractInputType.FILE);
-        aContractInput().withName("parent").withType(ContractInputType.COMPLEX).multiple().havingInput(fileInput).build();
-        final MultipleDocumentEngineDefinitionBuilder builder = new MultipleDocumentEngineDefinitionBuilder(aDocument().multiple()
-                .withDocumentType(DocumentType.CONTRACT)
-                .havingContractInput(fileInput).build(), processBuilder);
-        builder.build();
-
-        final ArgumentCaptor<org.bonitasoft.engine.expression.Expression> expressionCaptor = ArgumentCaptor
-                .forClass(org.bonitasoft.engine.expression.Expression.class);
-        verify(docDefinitionListBuilder).addInitialValue(expressionCaptor.capture());
-        EngineExpressionAssert.assertThat(expressionCaptor.getValue()).hasContent("parent.collect{it.myFile}.flatten()").hasReturnType(List.class.getName())
-                .hasExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name());
+        verify(docDefinitionListBuilder).addInitialValue(notNull(org.bonitasoft.engine.expression.Expression.class));
     }
 
     private Document createBasicDocument() {

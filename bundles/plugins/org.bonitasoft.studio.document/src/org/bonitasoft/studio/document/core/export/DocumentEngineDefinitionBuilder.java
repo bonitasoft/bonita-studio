@@ -26,6 +26,11 @@ import org.eclipse.emf.ecore.EObject;
 public class DocumentEngineDefinitionBuilder implements IEngineDefinitionBuilder<ProcessDefinitionBuilder> {
 
     private ProcessDefinitionBuilder processDefinitionBuilder;
+    private final DocumentGroovyScriptExpressionFactory scriptExpressionFactory;
+
+    public DocumentEngineDefinitionBuilder() {
+        scriptExpressionFactory = new DocumentGroovyScriptExpressionFactory();
+    }
 
     /*
      * (non-Javadoc)
@@ -43,11 +48,11 @@ public class DocumentEngineDefinitionBuilder implements IEngineDefinitionBuilder
     }
 
     protected SingleDocumentEngineDefinitionBuilder singleDocumentDelegate(final Document document) {
-        return new SingleDocumentEngineDefinitionBuilder(document, processDefinitionBuilder);
+        return new SingleDocumentEngineDefinitionBuilder(document, processDefinitionBuilder, scriptExpressionFactory);
     }
 
     protected MultipleDocumentEngineDefinitionBuilder multipeDocumentDelegate(final Document document) {
-        return new MultipleDocumentEngineDefinitionBuilder(document, processDefinitionBuilder);
+        return new MultipleDocumentEngineDefinitionBuilder(document, processDefinitionBuilder, scriptExpressionFactory);
     }
 
     /*
