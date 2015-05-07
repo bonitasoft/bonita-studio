@@ -24,7 +24,6 @@ import org.bonitasoft.studio.assertions.EngineExpressionAssert;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.document.core.expression.DocumentReferenceExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
@@ -338,14 +337,14 @@ public class EngineExpressionUtilTest {
     public void toEngineExpressionType_returnDocumentListForDocumentReferenceList() {
         final Document document = ProcessFactory.eINSTANCE.createDocument();
         document.setMultiple(true);
-        final Expression expression = new DocumentReferenceExpressionProvider().createDocRefExpression(document);
+        final Expression expression = ExpressionHelper.createDocumentReferenceExpression(document);
         assertThat(EngineExpressionUtil.toEngineExpressionType(expression)).isEqualTo(ExpressionType.TYPE_DOCUMENT_LIST);
     }
 
     @Test
     public void toEngineExpressionType_returnDocumentListForDocumentReferenceSimple() {
         final Document document = ProcessFactory.eINSTANCE.createDocument();
-        final Expression expression = new DocumentReferenceExpressionProvider().createDocRefExpression(document);
+        final Expression expression = ExpressionHelper.createDocumentReferenceExpression(document);
         assertThat(EngineExpressionUtil.toEngineExpressionType(expression)).isEqualTo(ExpressionType.TYPE_CONSTANT);
     }
 

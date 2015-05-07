@@ -89,7 +89,7 @@ public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefin
         complexInput.getInputs().add(new InputDefinitionImpl(child.getName(), inputType, child.getDescription(), child.isMultiple()));
     }
 
-    public Type getInputType(final ContractInput input) {
+    private Type getInputType(final ContractInput input) {
         return org.bonitasoft.engine.bpm.contract.Type.valueOf(input.getType().getName());
     }
 

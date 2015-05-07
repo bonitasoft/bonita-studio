@@ -254,6 +254,20 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
         }
     }
 
+    protected void addDocuments(final ProcessDefinitionBuilder builder, final Pool pool) {
+        if (pool != null) {
+            for (final Document document : pool.getDocuments()) {
+                final IEngineDefinitionBuilder documentBuilder = getEngineDefinitionBuilder(pool, document);
+                documentBuilder.setEngineBuilder(builder);
+                try {
+                    documentBuilder.build(document);
+                } catch (final BuildProcessDefinitionException e) {
+                    throw new RuntimeException("Failed to export document definition for " + ((Element) pool).getName(), e);
+                }
+            }
+        }
+    }
+
     protected void addContext(final Object contextBuilder, final Task task) {
         final Pool pool = ModelHelper.getParentPool(task);
         addContext(contextBuilder, pool);

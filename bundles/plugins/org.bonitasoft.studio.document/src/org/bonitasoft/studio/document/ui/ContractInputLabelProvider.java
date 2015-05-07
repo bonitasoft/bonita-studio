@@ -15,16 +15,12 @@
 package org.bonitasoft.studio.document.ui;
 
 import static com.google.common.base.Preconditions.checkArgument;
-
-import java.util.ArrayList;
-import java.util.List;
+import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameList;
 
 import org.bonitasoft.studio.model.process.ContractInput;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.LabelProvider;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 
 public class ContractInputLabelProvider extends LabelProvider {
 
@@ -40,16 +36,7 @@ public class ContractInputLabelProvider extends LabelProvider {
     }
 
     private String contractInputPath(final ContractInput contractInput) {
-        return Joiner.on(".").join(inputAncestors(contractInput));
+        return Joiner.on(".").join(toAncestorNameList().apply(contractInput));
     }
 
-    private List<String> inputAncestors(final ContractInput contractInput) {
-        final List<String> ancestors = new ArrayList<String>();
-        EObject current = contractInput;
-        while (current instanceof ContractInput) {
-            ancestors.add(((ContractInput) current).getName());
-            current = current.eContainer();
-        }
-        return Lists.reverse(ancestors);
-    }
 }

@@ -21,25 +21,19 @@ import java.util.Set;
 
 import org.bonitasoft.engine.bpm.process.DesignProcessDefinition;
 import org.bonitasoft.engine.bpm.process.InvalidProcessDefinitionException;
-import org.bonitasoft.engine.bpm.process.impl.DocumentDefinitionBuilder;
-import org.bonitasoft.engine.bpm.process.impl.DocumentListDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.engine.export.switcher.AbstractProcessSwitch;
 import org.bonitasoft.studio.engine.export.switcher.AbstractSwitch;
 import org.bonitasoft.studio.engine.export.switcher.FlowElementSwitch;
 import org.bonitasoft.studio.engine.export.switcher.SequenceFlowSwitch;
-import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.LinkEvent;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
@@ -124,7 +118,6 @@ public class DesignProcessDefinitionBuilder {
         final AbstractProcessSwitch processSwitch = createProcessSwitch(processBuilder);
         processSwitch.doSwitch(process);
 
-        processDocuments(process, processBuilder);
         processFlowElements(process, processBuilder);
         processSequenceFlows(process, processBuilder);
 
@@ -174,94 +167,4 @@ public class DesignProcessDefinitionBuilder {
         }
     }
 
-    void processDocuments(final AbstractProcess process, final ProcessDefinitionBuilder processBuilder) {
-        if (process instanceof Pool) {
-            final List<Document> documents = ((Pool) process).getDocuments();
-            for (final Document document : documents) {
-                processDocument(processBuilder, document);
-            }
-        }
-    }
-
-    private void processDocument(final ProcessDefinitionBuilder processBuilder, final Document document) {
-        if (document.isMultiple()) {
-            processMultipleDocument(processBuilder, document);
-        } else {
-            processSimpleDocument(processBuilder, document);
-        }
-    }
-
-    private void processSimpleDocument(final ProcessDefinitionBuilder processBuilder, final Document document) {
-        final DocumentDefinitionBuilder documentBuilder = processBuilder.addDocumentDefinition(document.getName());
-        documentBuilder.addDescription(document.getDocumentation());
-        handleDocumentMimeType(document, documentBuilder);
-        handleSimpleDocumentInitialContent(document, documentBuilder);
-    }
-
-    private void processMultipleDocument(final ProcessDefinitionBuilder processBuilder, final Document document) {
-        final DocumentListDefinitionBuilder documentListBuilder = processBuilder.addDocumentListDefinition(document.getName());
-        documentListBuilder.addDescription(document.getDocumentation());
-        if (hasADefaultValue(document)) {
-            documentListBuilder.addInitialValue(EngineExpressionUtil.createExpression(document.getInitialMultipleContent()));
-        }
-    }
-
-    private void handleSimpleDocumentInitialContent(final Document document, final DocumentDefinitionBuilder documentBuilder) {
-        final DocumentType documentType = document.getDocumentType();
-        if (documentType.equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL)) {
-            final String defaultValueIdOfDocumentStore = document.getDefaultValueIdOfDocumentStore();
-            if (defaultValueIdOfDocumentStore != null && !defaultValueIdOfDocumentStore.isEmpty()) {
-                documentBuilder.addFile(defaultValueIdOfDocumentStore);
-                documentBuilder.addContentFileName(defaultValueIdOfDocumentStore);
-            }
-        } else if (documentType.equals(org.bonitasoft.studio.model.process.DocumentType.EXTERNAL)) {
-            final Expression url = document.getUrl();
-            if (url != null) {
-                documentBuilder.addUrl(url.getContent());
-            }
-        } else {
-            // CASE NONE
-        }
-    }
-
-    private void handleDocumentMimeType(final Document document, final DocumentDefinitionBuilder documentBuilder) {
-        final Expression mimeType = document.getMimeType();
-        if (mimeType != null) {
-            documentBuilder.addMimeType(mimeType.getContent());
-        }
-    }
-
-    boolean hasADefaultValue(final Document document) {
-        if (!document.isMultiple()) {
-            final DocumentType documentType = document.getDocumentType();
-            switch (documentType) {
-                case NONE:
-                    return false;
-                case INTERNAL:
-                    return hasDefaultValueIdOfDocumentStoreFiled(document);
-                case EXTERNAL:
-                    return hasUrlFiled(document);
-
-                default:
-                    return false;
-            }
-        } else {
-            return hasInitialMultipleContentFiled(document);
-        }
-    }
-
-    private boolean hasInitialMultipleContentFiled(final Document document) {
-        final Expression initialMultipleContent = document.getInitialMultipleContent();
-        return initialMultipleContent != null && initialMultipleContent.getContent() != null && !initialMultipleContent.getContent().isEmpty();
-    }
-
-    private boolean hasUrlFiled(final Document document) {
-        final Expression documentInitialUrl = document.getUrl();
-        return documentInitialUrl != null && documentInitialUrl.getContent() != null && !documentInitialUrl.getContent().isEmpty();
-    }
-
-    private boolean hasDefaultValueIdOfDocumentStoreFiled(final Document document) {
-        final String defaultValueIdOfDocumentStore = document.getDefaultValueIdOfDocumentStore();
-        return defaultValueIdOfDocumentStore != null && !defaultValueIdOfDocumentStore.isEmpty();
-    }
 }

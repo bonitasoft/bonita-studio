@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withMultipleInHierarchy;
 
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -58,10 +59,11 @@ public class DocumentWithContractInputContentConstraint extends AbstractLiveVali
                 return ctx
                         .createFailureStatus(Messages.bind(Messages.invalidFileContractInputType, document.getName(), contractInput.getType().name()));
             }
-            if (contractInput.isMultiple() && !document.isMultiple()) {
+            final boolean hasMultipleInHierachy = withMultipleInHierarchy().apply(contractInput);
+            if (hasMultipleInHierachy && !document.isMultiple()) {
                 return ctx.createFailureStatus(Messages.bind(Messages.invalidMultipleFileContractInput, document.getName()));
             }
-            if (!contractInput.isMultiple() && document.isMultiple()) {
+            if (!hasMultipleInHierachy && document.isMultiple()) {
                 return ctx.createFailureStatus(Messages.bind(Messages.invalidSingleFileContractInput, document.getName()));
             }
         }
