@@ -87,7 +87,11 @@ public class MultipleDocumentEngineDefinitionBuilder implements IDefinitionBuild
                 return Joiner.on(".").join(toAncestorNameList().apply(contractInput));
             }
         }
-        //Here a complicated script ?
-        return "";
+        final ContractInput parentInput = (ContractInput) contractInput.eContainer();
+        final StringBuilder scriptBuilder = new StringBuilder(Joiner.on(".").join(toAncestorNameList().apply(parentInput)));
+        scriptBuilder.append(".collect{it.");
+        scriptBuilder.append(contractInput.getName());
+        scriptBuilder.append("}.flatten()");
+        return scriptBuilder.toString();
     }
 }

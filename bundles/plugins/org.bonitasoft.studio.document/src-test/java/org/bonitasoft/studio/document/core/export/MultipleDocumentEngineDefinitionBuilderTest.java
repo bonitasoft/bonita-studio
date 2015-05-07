@@ -82,7 +82,7 @@ public class MultipleDocumentEngineDefinitionBuilderTest {
     }
 
     @Test
-    public void should_add_initial_content_as_expression_for_CONTRACT_type() throws Exception {
+    public void should_add_initial_content_as_expression_for_CONTRACT_type_for_child_input() throws Exception {
         when(processBuilder.addDocumentListDefinition(anyString())).thenReturn(docDefinitionListBuilder);
 
         final ContractInputBuilder fileInput = aContractInput().withName("myFile").multiple().withType(ContractInputType.FILE);
@@ -96,6 +96,41 @@ public class MultipleDocumentEngineDefinitionBuilderTest {
                 .forClass(org.bonitasoft.engine.expression.Expression.class);
         verify(docDefinitionListBuilder).addInitialValue(expressionCaptor.capture());
         EngineExpressionAssert.assertThat(expressionCaptor.getValue()).hasContent("parent.myFile").hasReturnType(List.class.getName())
+                .hasExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name());
+    }
+
+    @Test
+    public void should_add_initial_content_as_expression_for_CONTRACT_type_for_root_input() throws Exception {
+        when(processBuilder.addDocumentListDefinition(anyString())).thenReturn(docDefinitionListBuilder);
+
+        final ContractInputBuilder fileInput = aContractInput().withName("myFile").multiple().withType(ContractInputType.FILE);
+        final MultipleDocumentEngineDefinitionBuilder builder = new MultipleDocumentEngineDefinitionBuilder(aDocument().multiple()
+                .withDocumentType(DocumentType.CONTRACT)
+                .havingContractInput(fileInput).build(), processBuilder);
+        builder.build();
+
+        final ArgumentCaptor<org.bonitasoft.engine.expression.Expression> expressionCaptor = ArgumentCaptor
+                .forClass(org.bonitasoft.engine.expression.Expression.class);
+        verify(docDefinitionListBuilder).addInitialValue(expressionCaptor.capture());
+        EngineExpressionAssert.assertThat(expressionCaptor.getValue()).hasContent("myFile").hasReturnType(List.class.getName())
+                .hasExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name());
+    }
+
+    @Test
+    public void should_add_initial_content_as_expression_for_CONTRACT_type_for_single_chile_input_contained_in_a_multiple_parent_input() throws Exception {
+        when(processBuilder.addDocumentListDefinition(anyString())).thenReturn(docDefinitionListBuilder);
+
+        final ContractInputBuilder fileInput = aContractInput().withName("myFile").withType(ContractInputType.FILE);
+        aContractInput().withName("parent").withType(ContractInputType.COMPLEX).multiple().havingInput(fileInput).build();
+        final MultipleDocumentEngineDefinitionBuilder builder = new MultipleDocumentEngineDefinitionBuilder(aDocument().multiple()
+                .withDocumentType(DocumentType.CONTRACT)
+                .havingContractInput(fileInput).build(), processBuilder);
+        builder.build();
+
+        final ArgumentCaptor<org.bonitasoft.engine.expression.Expression> expressionCaptor = ArgumentCaptor
+                .forClass(org.bonitasoft.engine.expression.Expression.class);
+        verify(docDefinitionListBuilder).addInitialValue(expressionCaptor.capture());
+        EngineExpressionAssert.assertThat(expressionCaptor.getValue()).hasContent("parent.collect{it.myFile}.flatten()").hasReturnType(List.class.getName())
                 .hasExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name());
     }
 
