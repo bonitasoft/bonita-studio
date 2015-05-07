@@ -80,16 +80,6 @@ public class ToWebContractTest {
     }
 
     @Test
-    public void transform_an_emf_contract_into_a_designer_contract_with_mandatory_input() throws Exception {
-        final ToWebContract contractConverter = new ToWebContract();
-
-        final Contract contract = contractConverter.apply(aContract()
-                .havingInput(aContractInput().withType(ContractInputType.TEXT).mandatory()).build());
-
-        assertThat(contract.getInput()).extracting("mandatory").containsExactly(true);
-    }
-
-    @Test
     public void transform_an_emf_contract_into_a_designer_contract_with_multiple_input() throws Exception {
         final ToWebContract contractConverter = new ToWebContract();
 

@@ -25,7 +25,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class IntegerDataTypeBuilder extends DataTypeBuilder<IntegerType, IntegerDataTypeBuilder> {
 
-    public static IntegerDataTypeBuilder create() {
+    public static IntegerDataTypeBuilder anIntegerDataType() {
         return new IntegerDataTypeBuilder();
     }
 

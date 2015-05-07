@@ -46,6 +46,10 @@ public class ValidatorFactory {
         return new ForbiddenCharactersValidator(inputName, forbiddenCharacters);
     }
 
+    public static IValidator fileNameValidator(final String inputName) {
+        return new FileNameValidator(inputName);
+    }
+
     public static IValidator urlEncodableInputValidator(final String inputName) {
         return new URLEncodableInputValidator(inputName);
     }

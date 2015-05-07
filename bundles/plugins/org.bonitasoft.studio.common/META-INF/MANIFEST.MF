@@ -54,6 +54,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.connector,
+ org.bonitasoft.engine.bpm.contract,
  org.bonitasoft.engine.bpm.document,
  org.bonitasoft.engine.expression,
  org.bonitasoft.engine.operation,

@@ -61,8 +61,10 @@ public class DataSwitchTest {
         final FlowElementContainerDefinition flowElementContainerDefinition = builder.getProcess().getFlowElementContainer();
         final List<BusinessDataDefinition> businessDataDefinitions = flowElementContainerDefinition.getBusinessDataDefinitions();
         assertThat(businessDataDefinitions).hasSize(1);
-        assertThat(businessDataDefinitions).extracting("name", "className", "description", "multiple", "defaultValueExpression").contains(
-                tuple("myLeaveRequest", "org.bonitasoft.hr.LeaveRequest", "Some doc", false, EngineExpressionUtil.createExpression(data.getDefaultValue())));
+        assertThat(businessDataDefinitions).extracting("name", "className", "description", "multiple").contains(
+                tuple("myLeaveRequest", "org.bonitasoft.hr.LeaveRequest", "Some doc", false));
+        assertThat(businessDataDefinitions.get(0).getDefaultValueExpression())
+                .isEqualToIgnoringGivenFields(EngineExpressionUtil.createExpression(data.getDefaultValue()), "id");
     }
 
     @Test

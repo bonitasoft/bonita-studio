@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.engine.bpm.contract.FileInputValue;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
@@ -49,7 +50,6 @@ import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
-
 /**
  * @author Romain Bioteau
  */
@@ -66,12 +66,12 @@ public class ExpressionHelper {
         returnTypeForInputType.put(ContractInputType.INTEGER, Long.class.getName());
         returnTypeForInputType.put(ContractInputType.DECIMAL, Double.class.getName());
         returnTypeForInputType.put(ContractInputType.COMPLEX, Map.class.getName());
+        returnTypeForInputType.put(ContractInputType.FILE, FileInputValue.class.getName());
     }
 
     private ExpressionHelper() {
 
     }
-
 
     public static Expression createExpressionFromEnumType(final EnumType type) {
         final Expression generatedExp = ExpressionFactory.eINSTANCE.createExpression();
@@ -295,7 +295,6 @@ public class ExpressionHelper {
         throw new IllegalArgumentException("element argument is not supported: " + element);
     }
 
-
     public static Expression createContractInputExpression(final ContractInput input) {
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
         exp.setType(ExpressionConstants.CONTRACT_INPUT_TYPE);
@@ -307,7 +306,7 @@ public class ExpressionHelper {
     }
 
     public static String getContractInputReturnType(final ContractInput input) {
-        if(input == null){
+        if (input == null) {
             return null;
         }
         String returnType = returnTypeForInputType.get(input.getType());

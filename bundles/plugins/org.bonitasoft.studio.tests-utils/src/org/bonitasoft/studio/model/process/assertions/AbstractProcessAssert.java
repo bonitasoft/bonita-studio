@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.model.process.assertions;
 
 import static java.lang.String.format;
@@ -20,35 +34,39 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Creates a new </code>{@link AbstractProcessAssert}</code> to make assertions on actual AbstractProcess.
+     * 
      * @param actual the AbstractProcess we want to make assertions on.
      */
-    public AbstractProcessAssert(AbstractProcess actual) {
+    public AbstractProcessAssert(final AbstractProcess actual) {
         super(actual, AbstractProcessAssert.class);
     }
 
     /**
      * An entry point for AbstractProcessAssert to follow AssertJ standard <code>assertThat()</code> statements.<br>
      * With a static import, one's can write directly : <code>assertThat(myAbstractProcess)</code> and get specific assertion with code completion.
+     * 
      * @param actual the AbstractProcess we want to make assertions on.
      * @return a new </code>{@link AbstractProcessAssert}</code>
      */
-    public static AbstractProcessAssert assertThat(AbstractProcess actual) {
+    public static AbstractProcessAssert assertThat(final AbstractProcess actual) {
         return new AbstractProcessAssert(actual);
     }
 
     /**
      * Verifies that the actual AbstractProcess's actors contains the given Actor elements.
+     * 
      * @param actors the given elements that should be contained in actual AbstractProcess's actors.
      * @return this assertion object.
      * @throws AssertionError if the actual AbstractProcess's actors does not contain all given Actor elements.
      */
-    public AbstractProcessAssert hasActors(Actor... actors) {
+    public AbstractProcessAssert hasActors(final Actor... actors) {
         // check that actual AbstractProcess we want to make assertions on is not null.
         isNotNull();
 
         // check that given Actor varargs is not null.
-        if (actors == null)
+        if (actors == null) {
             throw new AssertionError("Expecting actors parameter not to be null.");
+        }
 
         // check with standard error message (see commented below to set your own message).
         Assertions.assertThat(actual.getActors()).contains(actors);
@@ -65,6 +83,7 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess has no actors.
+     * 
      * @return this assertion object.
      * @throws AssertionError if the actual AbstractProcess's actors is not empty.
      */
@@ -73,11 +92,12 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected :\n  <%s>\nnot to have actors but had :\n  <%s>", actual, actual.getActors());
+        final String errorMessage = format("\nExpected :\n  <%s>\nnot to have actors but had :\n  <%s>", actual, actual.getActors());
 
         // check
-        if (!actual.getActors().isEmpty())
+        if (!actual.getActors().isEmpty()) {
             throw new AssertionError(errorMessage);
+        }
 
         // return the current assertion for method chaining
         return this;
@@ -85,16 +105,17 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess's author is equal to the given one.
+     * 
      * @param author the given author to compare the actual AbstractProcess's author to.
      * @return this assertion object.
      * @throws AssertionError - if the actual AbstractProcess's author is not equal to the given one.
      */
-    public AbstractProcessAssert hasAuthor(String author) {
+    public AbstractProcessAssert hasAuthor(final String author) {
         // check that actual AbstractProcess we want to make assertions on is not null.
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected <%s> author to be:\n  <%s>\n but was:\n  <%s>", actual, author, actual.getAuthor());
+        final String errorMessage = format("\nExpected <%s> author to be:\n  <%s>\n but was:\n  <%s>", actual, author, actual.getAuthor());
 
         // check
         if (!actual.getAuthor().equals(author)) {
@@ -107,17 +128,19 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess's categories contains the given String elements.
+     * 
      * @param categories the given elements that should be contained in actual AbstractProcess's categories.
      * @return this assertion object.
      * @throws AssertionError if the actual AbstractProcess's categories does not contain all given String elements.
      */
-    public AbstractProcessAssert hasCategories(String... categories) {
+    public AbstractProcessAssert hasCategories(final String... categories) {
         // check that actual AbstractProcess we want to make assertions on is not null.
         isNotNull();
 
         // check that given String varargs is not null.
-        if (categories == null)
+        if (categories == null) {
             throw new AssertionError("Expecting categories parameter not to be null.");
+        }
 
         // check with standard error message (see commented below to set your own message).
         Assertions.assertThat(actual.getCategories()).contains(categories);
@@ -134,6 +157,7 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess has no categories.
+     * 
      * @return this assertion object.
      * @throws AssertionError if the actual AbstractProcess's categories is not empty.
      */
@@ -142,11 +166,12 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected :\n  <%s>\nnot to have categories but had :\n  <%s>", actual, actual.getCategories());
+        final String errorMessage = format("\nExpected :\n  <%s>\nnot to have categories but had :\n  <%s>", actual, actual.getCategories());
 
         // check
-        if (!actual.getCategories().isEmpty())
+        if (!actual.getCategories().isEmpty()) {
             throw new AssertionError(errorMessage);
+        }
 
         // return the current assertion for method chaining
         return this;
@@ -154,17 +179,19 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess's configurations contains the given Configuration elements.
+     * 
      * @param configurations the given elements that should be contained in actual AbstractProcess's configurations.
      * @return this assertion object.
      * @throws AssertionError if the actual AbstractProcess's configurations does not contain all given Configuration elements.
      */
-    public AbstractProcessAssert hasConfigurations(Configuration... configurations) {
+    public AbstractProcessAssert hasConfigurations(final Configuration... configurations) {
         // check that actual AbstractProcess we want to make assertions on is not null.
         isNotNull();
 
         // check that given Configuration varargs is not null.
-        if (configurations == null)
+        if (configurations == null) {
             throw new AssertionError("Expecting configurations parameter not to be null.");
+        }
 
         // check with standard error message (see commented below to set your own message).
         Assertions.assertThat(actual.getConfigurations()).contains(configurations);
@@ -181,6 +208,7 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess has no configurations.
+     * 
      * @return this assertion object.
      * @throws AssertionError if the actual AbstractProcess's configurations is not empty.
      */
@@ -189,11 +217,12 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected :\n  <%s>\nnot to have configurations but had :\n  <%s>", actual, actual.getConfigurations());
+        final String errorMessage = format("\nExpected :\n  <%s>\nnot to have configurations but had :\n  <%s>", actual, actual.getConfigurations());
 
         // check
-        if (!actual.getConfigurations().isEmpty())
+        if (!actual.getConfigurations().isEmpty()) {
             throw new AssertionError(errorMessage);
+        }
 
         // return the current assertion for method chaining
         return this;
@@ -201,17 +230,19 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess's connections contains the given Connection elements.
+     * 
      * @param connections the given elements that should be contained in actual AbstractProcess's connections.
      * @return this assertion object.
      * @throws AssertionError if the actual AbstractProcess's connections does not contain all given Connection elements.
      */
-    public AbstractProcessAssert hasConnections(Connection... connections) {
+    public AbstractProcessAssert hasConnections(final Connection... connections) {
         // check that actual AbstractProcess we want to make assertions on is not null.
         isNotNull();
 
         // check that given Connection varargs is not null.
-        if (connections == null)
+        if (connections == null) {
             throw new AssertionError("Expecting connections parameter not to be null.");
+        }
 
         // check with standard error message (see commented below to set your own message).
         Assertions.assertThat(actual.getConnections()).contains(connections);
@@ -228,6 +259,7 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess has no connections.
+     * 
      * @return this assertion object.
      * @throws AssertionError if the actual AbstractProcess's connections is not empty.
      */
@@ -236,11 +268,12 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected :\n  <%s>\nnot to have connections but had :\n  <%s>", actual, actual.getConnections());
+        final String errorMessage = format("\nExpected :\n  <%s>\nnot to have connections but had :\n  <%s>", actual, actual.getConnections());
 
         // check
-        if (!actual.getConnections().isEmpty())
+        if (!actual.getConnections().isEmpty()) {
             throw new AssertionError(errorMessage);
+        }
 
         // return the current assertion for method chaining
         return this;
@@ -248,16 +281,17 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess's creationDate is equal to the given one.
+     * 
      * @param creationDate the given creationDate to compare the actual AbstractProcess's creationDate to.
      * @return this assertion object.
      * @throws AssertionError - if the actual AbstractProcess's creationDate is not equal to the given one.
      */
-    public AbstractProcessAssert hasCreationDate(Date creationDate) {
+    public AbstractProcessAssert hasCreationDate(final Date creationDate) {
         // check that actual AbstractProcess we want to make assertions on is not null.
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected <%s> creationDate to be:\n  <%s>\n but was:\n  <%s>", actual, creationDate, actual.getCreationDate());
+        final String errorMessage = format("\nExpected <%s> creationDate to be:\n  <%s>\n but was:\n  <%s>", actual, creationDate, actual.getCreationDate());
 
         // check
         if (!actual.getCreationDate().equals(creationDate)) {
@@ -270,17 +304,19 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess's datatypes contains the given DataType elements.
+     * 
      * @param datatypes the given elements that should be contained in actual AbstractProcess's datatypes.
      * @return this assertion object.
      * @throws AssertionError if the actual AbstractProcess's datatypes does not contain all given DataType elements.
      */
-    public AbstractProcessAssert hasDatatypes(DataType... datatypes) {
+    public AbstractProcessAssert hasDatatypes(final DataType... datatypes) {
         // check that actual AbstractProcess we want to make assertions on is not null.
         isNotNull();
 
         // check that given DataType varargs is not null.
-        if (datatypes == null)
+        if (datatypes == null) {
             throw new AssertionError("Expecting datatypes parameter not to be null.");
+        }
 
         // check with standard error message (see commented below to set your own message).
         Assertions.assertThat(actual.getDatatypes()).contains(datatypes);
@@ -297,6 +333,7 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess has no datatypes.
+     * 
      * @return this assertion object.
      * @throws AssertionError if the actual AbstractProcess's datatypes is not empty.
      */
@@ -305,11 +342,12 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected :\n  <%s>\nnot to have datatypes but had :\n  <%s>", actual, actual.getDatatypes());
+        final String errorMessage = format("\nExpected :\n  <%s>\nnot to have datatypes but had :\n  <%s>", actual, actual.getDatatypes());
 
         // check
-        if (!actual.getDatatypes().isEmpty())
+        if (!actual.getDatatypes().isEmpty()) {
             throw new AssertionError(errorMessage);
+        }
 
         // return the current assertion for method chaining
         return this;
@@ -317,16 +355,17 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess's modificationDate is equal to the given one.
+     * 
      * @param modificationDate the given modificationDate to compare the actual AbstractProcess's modificationDate to.
      * @return this assertion object.
      * @throws AssertionError - if the actual AbstractProcess's modificationDate is not equal to the given one.
      */
-    public AbstractProcessAssert hasModificationDate(Date modificationDate) {
+    public AbstractProcessAssert hasModificationDate(final Date modificationDate) {
         // check that actual AbstractProcess we want to make assertions on is not null.
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected <%s> modificationDate to be:\n  <%s>\n but was:\n  <%s>", actual, modificationDate,
+        final String errorMessage = format("\nExpected <%s> modificationDate to be:\n  <%s>\n but was:\n  <%s>", actual, modificationDate,
                 actual.getModificationDate());
 
         // check
@@ -340,17 +379,19 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess's parameters contains the given Parameter elements.
+     * 
      * @param parameters the given elements that should be contained in actual AbstractProcess's parameters.
      * @return this assertion object.
      * @throws AssertionError if the actual AbstractProcess's parameters does not contain all given Parameter elements.
      */
-    public AbstractProcessAssert hasParameters(Parameter... parameters) {
+    public AbstractProcessAssert hasParameters(final Parameter... parameters) {
         // check that actual AbstractProcess we want to make assertions on is not null.
         isNotNull();
 
         // check that given Parameter varargs is not null.
-        if (parameters == null)
+        if (parameters == null) {
             throw new AssertionError("Expecting parameters parameter not to be null.");
+        }
 
         // check with standard error message (see commented below to set your own message).
         Assertions.assertThat(actual.getParameters()).contains(parameters);
@@ -367,6 +408,7 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess has no parameters.
+     * 
      * @return this assertion object.
      * @throws AssertionError if the actual AbstractProcess's parameters is not empty.
      */
@@ -375,11 +417,12 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected :\n  <%s>\nnot to have parameters but had :\n  <%s>", actual, actual.getParameters());
+        final String errorMessage = format("\nExpected :\n  <%s>\nnot to have parameters but had :\n  <%s>", actual, actual.getParameters());
 
         // check
-        if (!actual.getParameters().isEmpty())
+        if (!actual.getParameters().isEmpty()) {
             throw new AssertionError(errorMessage);
+        }
 
         // return the current assertion for method chaining
         return this;
@@ -387,16 +430,17 @@ public class AbstractProcessAssert extends AbstractAssert<AbstractProcessAssert,
 
     /**
      * Verifies that the actual AbstractProcess's version is equal to the given one.
+     * 
      * @param version the given version to compare the actual AbstractProcess's version to.
      * @return this assertion object.
      * @throws AssertionError - if the actual AbstractProcess's version is not equal to the given one.
      */
-    public AbstractProcessAssert hasVersion(String version) {
+    public AbstractProcessAssert hasVersion(final String version) {
         // check that actual AbstractProcess we want to make assertions on is not null.
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected <%s> version to be:\n  <%s>\n but was:\n  <%s>", actual, version, actual.getVersion());
+        final String errorMessage = format("\nExpected <%s> version to be:\n  <%s>\n but was:\n  <%s>", actual, version, actual.getVersion());
 
         // check
         if (!actual.getVersion().equals(version)) {

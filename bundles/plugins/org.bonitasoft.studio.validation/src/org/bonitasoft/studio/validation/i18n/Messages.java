@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -207,6 +207,12 @@ public class Messages extends NLS {
     public static String invalidURLFormMapping;
 
     public static String duplicatedFormName;
+
+    public static String sequenceFlow_Without_Target_Element;
+    public static String sequenceFlow_Without_Source_Element;
+    public static String sequenceFlow_Without_Container;
+    public static String sequenceFlow_And_SourceElement_Not_In_The_Same_Container;
+    public static String sequenceFlow_And_TargetElement_Not_In_The_Same_Container;
 
     static {
         // initialize resource bundle

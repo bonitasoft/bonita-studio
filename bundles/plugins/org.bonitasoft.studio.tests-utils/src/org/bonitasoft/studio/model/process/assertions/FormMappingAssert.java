@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.model.process.assertions;
 
 import static java.lang.String.format;
@@ -14,7 +28,7 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
 
     /**
      * Creates a new </code>{@link FormMappingAssert}</code> to make assertions on actual FormMapping.
-     * 
+     *
      * @param actual the FormMapping we want to make assertions on.
      */
     public FormMappingAssert(final FormMapping actual) {
@@ -24,7 +38,7 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
     /**
      * An entry point for FormMappingAssert to follow AssertJ standard <code>assertThat()</code> statements.<br>
      * With a static import, one's can write directly : <code>assertThat(myFormMapping)</code> and get specific assertion with code completion.
-     * 
+     *
      * @param actual the FormMapping we want to make assertions on.
      * @return a new </code>{@link FormMappingAssert}</code>
      */
@@ -34,7 +48,7 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
 
     /**
      * Verifies that the actual FormMapping's targetForm is equal to the given one.
-     * 
+     *
      * @param targetForm the given targetForm to compare the actual FormMapping's targetForm to.
      * @return this assertion object.
      * @throws AssertionError - if the actual FormMapping's targetForm is not equal to the given one.
@@ -57,7 +71,7 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
 
     /**
      * Verifies that the actual FormMapping's type is equal to the given one.
-     * 
+     *
      * @param type the given type to compare the actual FormMapping's type to.
      * @return this assertion object.
      * @throws AssertionError - if the actual FormMapping's type is not equal to the given one.
@@ -80,7 +94,7 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
 
     /**
      * Verifies that the actual FormMapping's url is equal to the given one.
-     * 
+     *
      * @param url the given url to compare the actual FormMapping's url to.
      * @return this assertion object.
      * @throws AssertionError - if the actual FormMapping's url is not equal to the given one.

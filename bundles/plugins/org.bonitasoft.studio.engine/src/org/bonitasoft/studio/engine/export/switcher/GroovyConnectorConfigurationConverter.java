@@ -14,6 +14,11 @@
  */
 package org.bonitasoft.studio.engine.export.switcher;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Iterables.find;
+import static org.bonitasoft.studio.common.predicate.ConnectorParameterPredicates.withInputName;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +30,6 @@ import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.TableExpression;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -43,35 +47,28 @@ public class GroovyConnectorConfigurationConverter {
         checkConnectorConfiguration(connectorConfiguration);
         final ConnectorConfiguration configuration = EcoreUtil.copy(connectorConfiguration);
         final org.bonitasoft.studio.model.expression.Expression fakeExpression = getFakeExpression(configuration);
-        final org.bonitasoft.studio.model.expression.Expression scriptExpression = ExpressionHelper.createConstantExpression(
-                fakeExpression.getContent(), String.class.getName());
-        final org.bonitasoft.studio.model.expression.TableExpression variablesExpression = createVariableExpression(fakeExpression);
-        ConnectorParameter paramToDelete = null;
-        for (final ConnectorParameter param : configuration.getParameters()) {
-            if (SCRIPT_INPUT.equals(param.getKey())) {
-                param.setExpression(scriptExpression);
-            }
-            if (VARIABLES_INPUT.equals(param.getKey())) {
-                param.setExpression(variablesExpression);
-            }
-            if (FAKE_SCRIPT_EXPRESSION.equals(param.getKey())) {
-                paramToDelete = param;
-            }
-        }
-        if (paramToDelete != null) {
-            configuration.getParameters().remove(paramToDelete);
-        }
+        find(configuration.getParameters(), withInputName(SCRIPT_INPUT)).setExpression(createConstantScriptExpression(fakeExpression));
+        find(configuration.getParameters(), withInputName(VARIABLES_INPUT)).setExpression(createVariableExpression(fakeExpression));
+        configuration.getParameters().remove(find(configuration.getParameters(), withInputName(FAKE_SCRIPT_EXPRESSION)));
         return configuration;
     }
 
+    private org.bonitasoft.studio.model.expression.Expression createConstantScriptExpression(
+            final org.bonitasoft.studio.model.expression.Expression fakeExpression) {
+        final org.bonitasoft.studio.model.expression.Expression scriptExpression = ExpressionHelper.createConstantExpression(
+                fakeExpression.getContent(), String.class.getName());
+        scriptExpression.setName(fakeExpression.getName());
+        return scriptExpression;
+    }
+
     private void checkConnectorConfiguration(final ConnectorConfiguration connectorConfig) {
-        Assert.isLegal(connectorConfig != null);
-        Assert.isLegal(connectorConfig.getDefinitionId().equals("scripting-groovy-script"));
+        checkArgument(connectorConfig != null);
+        checkArgument(connectorConfig.getDefinitionId().equals("scripting-groovy-script"));
         final Set<String> keys = new HashSet<String>();
         for (final ConnectorParameter connectorParameter : connectorConfig.getParameters()) {
             keys.add(connectorParameter.getKey());
         }
-        Assert.isLegal(keys.containsAll(Arrays.asList(SCRIPT_INPUT, FAKE_SCRIPT_EXPRESSION, VARIABLES_INPUT)));
+        checkState(keys.containsAll(Arrays.asList(SCRIPT_INPUT, FAKE_SCRIPT_EXPRESSION, VARIABLES_INPUT)));
     }
 
     private org.bonitasoft.studio.model.expression.TableExpression createVariableExpression(

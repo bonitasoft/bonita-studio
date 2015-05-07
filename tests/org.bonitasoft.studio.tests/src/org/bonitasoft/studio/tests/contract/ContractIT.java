@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -14,9 +14,12 @@
  */
 package org.bonitasoft.studio.tests.contract;
 
+import static com.google.common.collect.Iterables.find;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withContractInputName;
 
-import org.bonitasoft.studio.common.jface.FileActionDialog;
+import java.util.List;
+
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractContainer;
@@ -24,9 +27,8 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.assertions.ContractConstraintAssert;
 import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractConstraintRow;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractConstraintTab;
@@ -34,11 +36,11 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContra
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractInputTab;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractPropertySection;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -48,23 +50,8 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ContractIT extends SWTBotGefTestCase {
 
-    private boolean disablePopup;
-
-    @Override
-    @Before
-    public void setUp() {
-        disablePopup = FileActionDialog.getDisablePopup();
-        FileActionDialog.setDisablePopup(true);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
-    }
-
-    @Override
-    @After
-    public void tearDown() {
-        bot.saveAllEditors();
-        bot.closeAllEditors();
-        FileActionDialog.setDisablePopup(disablePopup);
-    }
+    @Rule
+    public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     @Test
     public void create_expense_report_step_contract() {
@@ -103,28 +90,15 @@ public class ContractIT extends SWTBotGefTestCase {
         childRow.setName("amount").setType("DECIMAL").setDescription("The amount of the expense VAT included in euros");
 
         childRow = inputTab.add();
-        childRow.setName("expenseDate").setType("DATE").setDescription("When the expense was done").clickNullable();
+        childRow.setName("expenseDate").setType("DATE").setDescription("When the expense was done");
 
-        Contract contract = contractContainer.getContract();
-        final EList<ContractInput> rootInputs = contract.getInputs();
-        assertThat(rootInputs).hasSize(1);
-        final ContractInput expenseReportInput = rootInputs.get(0);
-        ContractInputAssert.assertThat(expenseReportInput).hasName("expenseReport").hasDescription("An expense report").hasType(ContractInputType.COMPLEX)
-                .isMandatory();
-        assertThat(expenseReportInput.getInputs()).hasSize(1);
-        final ContractInput expenseLineInput = expenseReportInput.getInputs().get(0);
-        ContractInputAssert.assertThat(expenseLineInput).hasName("expenseLines").hasType(ContractInputType.COMPLEX).isMultiple().isMandatory();
-        assertThat(expenseLineInput.getInputs()).hasSize(3);
-        final ContractInput natureInput = expenseLineInput.getInputs().get(0);
-        final ContractInput amountInput = expenseLineInput.getInputs().get(1);
-        final ContractInput dateInput = expenseLineInput.getInputs().get(2);
+        bot.waitUntil(new AssertionCondition() {
 
-        ContractInputAssert.assertThat(natureInput).hasName("nature").hasType(ContractInputType.TEXT).isNotMultiple().isMandatory()
-                .hasDescription("The nature of the expense");
-        ContractInputAssert.assertThat(amountInput).hasName("amount").hasType(ContractInputType.DECIMAL).isNotMultiple().isMandatory()
-                .hasDescription("The amount of the expense VAT included in euros");
-        ContractInputAssert.assertThat(dateInput).hasName("expenseDate").hasType(ContractInputType.DATE).isNotMultiple().isNotMandatory()
-                .hasDescription("When the expense was done");
+            @Override
+            protected void makeAssert() throws Exception {
+                checkContractInput(contractContainer);
+            }
+        });
 
         final BotContractConstraintTab constraintTab = contractTabBot.selectConstraintTab();
         final BotContractConstraintRow constraintRow = constraintTab.add();
@@ -132,14 +106,47 @@ public class ContractIT extends SWTBotGefTestCase {
         constraintRow.setExpression("expenseReport.expenseLines.size() > 0");
         constraintRow.setErrorMessages("An expense report must have at lease one expense line");
 
-        contract = contractContainer.getContract();
-        assertThat(contract.getConstraints()).hasSize(1);
-        final ContractConstraint constraint = contract.getConstraints().get(0);
-        ContractConstraintAssert.assertThat(constraint).hasName("Check empty report");
-        ContractConstraintAssert.assertThat(constraint).hasExpression("expenseReport.expenseLines.size() > 0");
-        ContractConstraintAssert.assertThat(constraint).hasInputNames("expenseReport");
-        assertThat(constraint.getErrorMessage()).isNotNull();
-        ContractConstraintAssert.assertThat(constraint).hasErrorMessage("An expense report must have at lease one expense line");
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                checkContractConstraint(contractContainer);
+            }
+        });
+
     }
 
+    protected void checkContractConstraint(final ContractContainer contractContainer) throws Exception {
+        final Contract contract = contractContainer.getContract();
+        assertThat(contract.getConstraints()).hasSize(1);
+        final ContractConstraint constraint = contract.getConstraints().get(0);
+        ContractConstraintAssert.assertThat(constraint)
+                .hasName("Check empty report")
+                .hasExpression("expenseReport.expenseLines.size() > 0")
+                .hasInputNames("expenseReport")
+                .hasErrorMessage("An expense report must have at lease one expense line");
+    }
+
+    protected void checkContractInput(final ContractContainer contractContainer) throws Exception {
+        final Contract contract = contractContainer.getContract();
+        final EList<ContractInput> rootInputs = contract.getInputs();
+        assertThat(rootInputs).hasSize(1);
+        final ContractInput expenseReportInput = rootInputs.get(0);
+        ContractInputAssert.assertThat(expenseReportInput).hasName("expenseReport").hasDescription("An expense report").hasType(ContractInputType.COMPLEX);
+        assertThat(expenseReportInput.getInputs()).hasSize(1);
+        final ContractInput expenseLineInput = find(expenseReportInput.getInputs(), withContractInputName("expenseLines"));
+        ContractInputAssert.assertThat(find(expenseReportInput.getInputs(), withContractInputName("expenseLines"))).hasType(ContractInputType.COMPLEX)
+                .isMultiple();
+        final List<ContractInput> expenseLineInputs = expenseLineInput.getInputs();
+        assertThat(expenseLineInputs).hasSize(3);
+        ContractInputAssert.assertThat(find(expenseLineInputs, withContractInputName("nature"))).hasType(ContractInputType.TEXT)
+                .isNotMultiple()
+                .hasDescription("The nature of the expense");
+        ContractInputAssert.assertThat(find(expenseLineInputs, withContractInputName("amount"))).hasType(ContractInputType.DECIMAL)
+                .isNotMultiple()
+                .hasDescription("The amount of the expense VAT included in euros");
+        ContractInputAssert.assertThat(find(expenseLineInputs, withContractInputName("expenseDate"))).hasType(ContractInputType.DATE)
+                .isNotMultiple()
+                .hasDescription("When the expense was done");
+    }
 }

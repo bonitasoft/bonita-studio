@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.engine.bpm.contract.FileInputValue;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
@@ -51,28 +52,12 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @author Romain Bioteau
  */
 public class ExpressionHelperTest {
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
 
     /**
      * Test method for {@link org.bonitasoft.studio.common.emf.tools.ExpressionHelper#createDependencyFromEObject(org.eclipse.emf.ecore.EObject)}.
@@ -154,7 +139,7 @@ public class ExpressionHelperTest {
         widget.setReturnTypeModifier(Integer.class.getName());
 
         final EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
-        assertThat(((Widget)dependencyFromEObject).getReturnTypeModifier()).isEqualTo(Integer.class.getName());
+        assertThat(((Widget) dependencyFromEObject).getReturnTypeModifier()).isEqualTo(Integer.class.getName());
     }
 
     @Test
@@ -163,7 +148,7 @@ public class ExpressionHelperTest {
         ((Duplicable) widget).setDuplicate(true);
 
         final EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
-        assertThat(((Duplicable)dependencyFromEObject).isDuplicate()).isTrue();
+        assertThat(((Duplicable) dependencyFromEObject).isDuplicate()).isTrue();
     }
 
     @Test
@@ -263,10 +248,10 @@ public class ExpressionHelperTest {
     public void shouldCreateEmptyListGroovyScriptExpression_ReturnAValidEmptyListExpression() throws Exception {
         final Expression expression = ExpressionHelper.createEmptyListGroovyScriptExpression();
         assertThat(expression).hasContent("[]").
-        hasInterpreter(ExpressionConstants.GROOVY).
-        hasType(ExpressionConstants.SCRIPT_TYPE).
-        hasName(Messages.emptyListExpressionName).
-        hasReturnType(Collection.class.getName());
+                hasInterpreter(ExpressionConstants.GROOVY).
+                hasType(ExpressionConstants.SCRIPT_TYPE).
+                hasName(Messages.emptyListExpressionName).
+                hasReturnType(Collection.class.getName());
     }
 
     @Test
@@ -396,7 +381,6 @@ public class ExpressionHelperTest {
         assertThat(EcoreUtil.equals(expression, inputExpression)).isTrue();
     }
 
-
     @Test
     public void should_createExpressionFromEObject_Returns_a_ContractInputExpression_if_EObject_is_a_ContractInput() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
@@ -441,6 +425,23 @@ public class ExpressionHelperTest {
                 hasType(ExpressionConstants.CONTRACT_INPUT_TYPE).
                 hasName(input.getName()).
                 hasReturnType(Map.class.getName());
+        assertThat(expression.getReferencedElements()).hasSize(1);
+        final EObject refElement = expression.getReferencedElements().get(0);
+        assertThat(EcoreUtil.equals(input, refElement)).isTrue();
+    }
+
+    @Test
+    public void should_createExpressionFromEObject_Returns_a_ContractInputExpression_of_type_FileInputValue_if_EObject_is_a_FILE_ContractInput()
+            throws Exception {
+        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
+        input.setName("inputName");
+        input.setType(ContractInputType.FILE);
+        final Expression expression = ExpressionHelper.createExpressionFromEObject(input);
+        assertThat(expression).hasContent(input.getName()).
+                hasInterpreter("").
+                hasType(ExpressionConstants.CONTRACT_INPUT_TYPE).
+                hasName(input.getName()).
+                hasReturnType(FileInputValue.class.getName());
         assertThat(expression.getReferencedElements()).hasSize(1);
         final EObject refElement = expression.getReferencedElements().get(0);
         assertThat(EcoreUtil.equals(input, refElement)).isTrue();

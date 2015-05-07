@@ -1,16 +1,14 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -18,6 +16,7 @@ package org.bonitasoft.studio.expression.editor.operation;
 
 import java.util.List;
 
+import org.bonitasoft.engine.bpm.contract.FileInputValue;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -38,10 +37,8 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class OperationReturnTypesValidator implements IExpressionValidator {
-
 
     private final ExpressionTypeLabelProvider typeLabelProvider = new ExpressionTypeLabelProvider();
 
@@ -83,7 +80,7 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
                         if (status != null) {
                             return status;
                         }
-                    }  else if (ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR.equals(operatorType)) {
+                    } else if (ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR.equals(operatorType)) {
                         final IStatus status = validateSetListDocumentOperation(expression, operation);
                         if (status != null) {
                             return status;
@@ -194,7 +191,6 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
             final String returnType = expression.getReturnType();
             try {
                 final boolean isListType = listClass.equals(returnType) || List.class.isAssignableFrom(Class.forName(returnType));
-
                 if (!isListType && listClass.equals(dataReturnType)) {
 
                     if (isTask) {
@@ -203,8 +199,8 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
                         if (PlatformUtil.isACommunityBonitaProduct()) {
                             return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInFormInCommunity);
                         } else {
-                        return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInForm);
-                    }
+                            return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInForm);
+                        }
                     }
                 } else {
                     return ValidationStatus.ok();
@@ -273,7 +269,6 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
     }
 
     protected IStatus validateSetDocumentOperation(final Expression expression, final Operation operation) {
-
         final boolean isTask = operation.eContainer() instanceof Task;
         final Expression storageExpression = operation.getLeftOperand();
         if (!String.class.getName().equals(storageExpression.getReturnType())) {
@@ -282,24 +277,17 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
         }
         if (expression != null && expression.getContent() != null && !expression.getContent().isEmpty()) {
             final String typeName = storageExpression.getReturnType();
-            final String actionType = expression.getReturnType();
-            if (!(actionType.equals(DocumentValue.class.getName()) && typeName.equals(String.class.getName()))) {
-
-                if (isTask) {
-                    return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInTask);
-                } else {
-                    return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInForm);
-                }
+            final String actionExpressionReturnType = expression.getReturnType();
+            if (!((DocumentValue.class.getName().equals(actionExpressionReturnType) || FileInputValue.class.getName().equals(actionExpressionReturnType))
+            && typeName.equals(String.class.getName()))) {
+                return isTask ? ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInTask) : ValidationStatus
+                        .warning(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInForm);
             } else {
                 return ValidationStatus.ok();
             }
-
         } else {
-            if (isTask) {
-                return ValidationStatus.info(Messages.messageOperationWithDocumentInTask);
-            } else {
-                return ValidationStatus.info(Messages.messageOperationWithDocumentInForm);
-            }
+            return isTask ? ValidationStatus.info(Messages.messageOperationWithDocumentInTask) : ValidationStatus
+                    .info(Messages.messageOperationWithDocumentInForm);
         }
     }
 
@@ -359,7 +347,6 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
         }
         return ValidationStatus.ok();
     }
-
 
     @Override
     public void setInputExpression(final Expression inputExpression) {
