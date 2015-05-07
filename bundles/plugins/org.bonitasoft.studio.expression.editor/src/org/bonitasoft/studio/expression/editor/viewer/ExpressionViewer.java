@@ -71,14 +71,12 @@ import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -377,25 +375,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
     protected void validateExternalDatabindingContextTargets(final DataBindingContext dbc) {
         if (dbc != null) {
-            final IObservableList validationStatusProviders = dbc.getValidationStatusProviders();
-            final Iterator iterator = validationStatusProviders.iterator();
+            final IObservableList bindings = dbc.getBindings();
+            final Iterator<?> iterator = bindings.iterator();
             while (iterator.hasNext()) {
-                final ValidationStatusProvider validationStatusProvider = (ValidationStatusProvider) iterator.next();
-                final IObservableValue validationStatus = validationStatusProvider.getValidationStatus();
-                final IStatus status = (IStatus) validationStatus.getValue();
-                if (status != null) {
-                    if (status.isOK()) {
-                        validationStatus.setValue(ValidationStatus.ok());
-                    } else if (status.getSeverity() == IStatus.WARNING) {
-                        validationStatus.setValue(ValidationStatus.warning(status.getMessage()));
-                    } else if (status.getSeverity() == IStatus.INFO) {
-                        validationStatus.setValue(ValidationStatus.info(status.getMessage()));
-                    } else if (status.getSeverity() == IStatus.ERROR) {
-                        validationStatus.setValue(ValidationStatus.error(status.getMessage()));
-                    } else if (status.getSeverity() == IStatus.CANCEL) {
-                        validationStatus.setValue(ValidationStatus.cancel(status.getMessage()));
-                    }
-                }
+                final Binding binding = (Binding) iterator.next();
+                binding.validateTargetToModel();
             }
         }
     }
@@ -404,7 +388,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         final EditingDomain editingDomain = getEditingDomain();
         if (editingDomain != null) {
             final CompoundCommand cc = ExpressionHelper.clearExpression(selectedExpression, editingDomain);
-            if(overrideDefaultReturnType() != null){
+            if (overrideDefaultReturnType() != null) {
                 cc.append(SetCommand.create(editingDomain, selectedExpression,
                         ExpressionPackage.Literals.EXPRESSION__TYPE, overrideDefaultReturnType()));
             }
@@ -414,7 +398,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             }
         } else {
             ExpressionHelper.clearExpression(selectedExpression);
-            if(overrideDefaultReturnType() != null){
+            if (overrideDefaultReturnType() != null) {
                 selectedExpression.setReturnType(overrideDefaultReturnType());
             }
         }

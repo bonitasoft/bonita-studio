@@ -14,21 +14,31 @@
  */
 package org.bonitasoft.studio.document.ui;
 
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.removeIf;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.uniqueValidator;
+import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.multipleContractInput;
+import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withContractInputType;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.document.DocumentInitialContentValidator;
-import org.bonitasoft.studio.document.DocumentNameValidator;
 import org.bonitasoft.studio.document.SelectDocumentInBonitaStudioRepository;
 import org.bonitasoft.studio.document.i18n.Messages;
+import org.bonitasoft.studio.document.ui.validator.ContractInputValidator;
+import org.bonitasoft.studio.document.ui.validator.DocumentInitialContentValidator;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.expression.editor.viewer.DefaultExpressionValidator;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.GroovyOnlyExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ObservableExpressionContentProvider;
@@ -42,6 +52,8 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
@@ -54,6 +66,7 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
@@ -63,8 +76,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -77,6 +88,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+
+import com.google.common.base.Predicate;
 
 public class DocumentWizardPage extends WizardPage {
 
@@ -101,7 +114,6 @@ public class DocumentWizardPage extends WizardPage {
     private Composite manageLinkComposite;
     private StackLayout mimeStack;
     private Composite mimeCompo;
-    private final DocumentInitialContentValidator externalValidator;
 
     final private int URL_SIZE_MAX = 1023;
 
@@ -110,7 +122,15 @@ public class DocumentWizardPage extends WizardPage {
     private Composite multipleComposite;
     private Link manageLink;
 
-    private Composite contractComposite;
+    private Composite singleContractComposite;
+
+    private Composite multipleContractComposite;
+
+    private Composite scriptComposite;
+
+    private Composite multipleStackedComposite;
+
+    private StackLayout multipleStack;
 
     public DocumentWizardPage(final EObject context, final Document document) {
         super(DocumentWizardPage.class.getName());
@@ -118,7 +138,6 @@ public class DocumentWizardPage extends WizardPage {
         this.document = document;
         setTitle(Messages.bind(Messages.documentWizardPageTitle, getCurrentContextName()));
         setDescription(Messages.newDocumentWizardDescription);
-        externalValidator = new DocumentInitialContentValidator(URL_SIZE_MAX);
     }
 
     @Override
@@ -141,8 +160,8 @@ public class DocumentWizardPage extends WizardPage {
         createMultipleComposite(stackComposite, emfDataBindingContext);
         createMimeType(initialContentGroup, emfDataBindingContext);
         updateMimeTypeStack();
-
         updateSingleMultipleStack(document.isMultiple());
+        updateStack(document.getDocumentType());
         WizardPageSupport.create(this, emfDataBindingContext);
         setControl(mainComposite);
     }
@@ -179,7 +198,7 @@ public class DocumentWizardPage extends WizardPage {
 
     protected Text createDocumentNameField(final Composite parent, final EMFDataBindingContext emfDataBindingContext) {
         final Label nameLabel = new Label(parent, SWT.NONE);
-        nameLabel.setText(Messages.name + " *");
+        nameLabel.setText(mandatoryFieldLabel(Messages.name));
         nameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
 
         final Text documentNameText = new Text(parent, SWT.BORDER);
@@ -190,12 +209,28 @@ public class DocumentWizardPage extends WizardPage {
                 updateValueStrategy().withValidator(multiValidator()
                         .addValidator(maxLengthValidator(Messages.name, NAME_MAX_LENGTH))
                         .addValidator(groovyReferenceValidator(Messages.name))
-                        .addValidator(new DocumentNameValidator(context, document != null ? document.getName() : null))).create(),
+                        .addValidator(uniqueValidator().in(processDocuments()).onProperty(ProcessPackage.Literals.ELEMENT__NAME.getName()))).create(),
                 null);
         return documentNameText;
     }
 
-    private void createDocumentDescriptionField(final Composite parent, final EMFDataBindingContext emfDataBindingContext) {
+    private Iterable<?> processDocuments() {
+        final List<Document> documents = newArrayList(ModelHelper.getParentPool(context).getDocuments());
+        removeIf(documents, hasSameCurrentDocumentName());
+        return documents;
+    }
+
+    private Predicate<Document> hasSameCurrentDocumentName() {
+        return new Predicate<Document>() {
+
+            @Override
+            public boolean apply(final Document input) {
+                return Objects.equals(input.getName(), document.getName());
+            }
+        };
+    }
+
+    private Text createDocumentDescriptionField(final Composite parent, final EMFDataBindingContext emfDataBindingContext) {
         final Label description = new Label(parent, SWT.NONE);
         description.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).create());
         description.setText(Messages.description);
@@ -205,6 +240,8 @@ public class DocumentWizardPage extends WizardPage {
 
         emfDataBindingContext.bindValue(SWTObservables.observeText(documentDescriptionText, SWT.Modify),
                 EMFObservables.observeValue(document, ProcessPackage.Literals.ELEMENT__DOCUMENTATION));
+
+        return documentDescriptionText;
     }
 
     private void createDocumentMimeTypeField(final Composite parent, final EMFDataBindingContext emfDataBindingContext) {
@@ -321,59 +358,56 @@ public class DocumentWizardPage extends WizardPage {
         noneCompo = new Composite(stackedComposite, SWT.NONE);
         noneCompo.setLayoutData(GridDataFactory.swtDefaults().grab(false, false).create());
 
-        createContractComposite(stackedComposite, emfDataBindingContext);
+        singleContractComposite = createContractComposite(stackedComposite, emfDataBindingContext);
         createLocalFileComposite(stackedComposite, emfDataBindingContext);
         createExternalURLComposite(stackedComposite, emfDataBindingContext);
-
-        updateStack(document.getDocumentType());
     }
 
-    private void createContractComposite(final Composite parent, final EMFDataBindingContext emfDataBindingContext) {
-        contractComposite = new Composite(parent, SWT.NONE);
+    private Composite createContractComposite(final Composite parent, final EMFDataBindingContext emfDataBindingContext) {
+        final Composite contractComposite = new Composite(parent, SWT.NONE);
         contractComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
         contractComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         final Label contractLabel = new Label(contractComposite, SWT.NONE);
         contractLabel.setLayoutData(GridDataFactory.swtDefaults().create());
-        contractLabel.setText(Messages.fileContractInput + " *");
+        contractLabel.setText(mandatoryFieldLabel(Messages.fileContractInput));
 
         final ComboViewer contractInputComboViewer = new ComboViewer(contractComposite, SWT.BORDER | SWT.READ_ONLY);
         contractInputComboViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER)
                 .grab(true, false).indent(10, 0).create());
         contractInputComboViewer.setContentProvider(ArrayContentProvider.getInstance());
         contractInputComboViewer.setLabelProvider(new ContractInputLabelProvider());
-        contractInputComboViewer.addFilter(acceptSingleFileContractInput());
-        contractInputComboViewer.setInput(ModelHelper.getAllElementOfTypeIn(processContract(), ContractInput.class));
 
+        final IObservableValue observeInput = ViewersObservables.observeInput(contractInputComboViewer);
+        final IObservableValue multipleDocumentObervable = EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__MULTIPLE);
+        emfDataBindingContext.bindValue(observeInput,
+                multipleDocumentObervable,
+                neverUpdateValueStrategy().create(),
+                updateValueStrategy().withConverter(toInputList()).create());
+
+        final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(contractInputComboViewer);
         ControlDecorationSupport.create(
                 emfDataBindingContext.bindValue(
-                        ViewersObservables.observeSingleSelection(contractInputComboViewer),
-                        EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__CONTRACT_INPUT),
-                        updateValueStrategy().withValidator(contractInputValidator()).create(),
-                        null), SWT.LEFT);
+                        observeSingleSelection,
+                        EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__CONTRACT_INPUT)), SWT.LEFT);
+        emfDataBindingContext.addValidationStatusProvider(new ContractInputValidator(document, observeSingleSelection, observeInput));
+        return contractComposite;
     }
 
-    private ViewerFilter acceptSingleFileContractInput() {
-        return new ViewerFilter() {
-
-            @Override
-            public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-                final ContractInput contractInput = (ContractInput) element;
-                return contractInput.getType() == ContractInputType.FILE && !contractInput.isMultiple();
-            }
-        };
+    protected String mandatoryFieldLabel(final String label) {
+        return label + " *";
     }
 
-    private IValidator contractInputValidator() {
-        return new IValidator() {
+    private IConverter toInputList() {
+        return new Converter(Boolean.class, List.class) {
 
             @Override
-            public IStatus validate(final Object value) {
-                if (value == null && document.getDocumentType() == DocumentType.CONTRACT) {
-                    return ValidationStatus.error(Messages.contractInputNotSet);
-                }
-                return ValidationStatus.ok();
+            public Object convert(final Object fromObject) {
+                final List<ContractInput> result = ModelHelper.getAllElementOfTypeIn(processContract(), ContractInput.class);
+                return document.isMultiple() ? newArrayList(filter(result, and(withContractInputType(ContractInputType.FILE), multipleContractInput()))) :
+                        newArrayList(filter(result, and(withContractInputType(ContractInputType.FILE), not(multipleContractInput()))));
             }
+
         };
     }
 
@@ -386,12 +420,55 @@ public class DocumentWizardPage extends WizardPage {
         multipleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         multipleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
 
-        final GroovyOnlyExpressionViewer multipleInitialContentExpressionViewer = new GroovyOnlyExpressionViewer(multipleComposite, SWT.READ_ONLY | SWT.BORDER);
+        final Composite radioContainer = new Composite(multipleComposite, SWT.NONE);
+        radioContainer.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
+        radioContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+
+        final Button radioButtonContract = createRadioButtonContract(radioContainer);
+        final Button radioButtonScript = createRadioButtonNone(radioContainer);
+        radioButtonScript.setText(Messages.initialValueButtonScript);
+
+        final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(ProcessPackage.DOCUMENT_TYPE);
+        final IObservableValue btnDocumentTypeNone = SWTObservables.observeSelection(radioButtonScript);
+        documentTypeObservableValue.addOption(DocumentType.NONE, btnDocumentTypeNone);
+
+        final IObservableValue btnDocumentTypeContract = SWTObservables.observeSelection(radioButtonContract);
+        documentTypeObservableValue.addOption(DocumentType.CONTRACT, btnDocumentTypeContract);
+
+        final IObservableValue documentTypeObservable = EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE);
+        emfDataBindingContext.bindValue(
+                documentTypeObservableValue,
+                documentTypeObservable);
+        documentTypeObservable.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                validate(emfDataBindingContext);
+            }
+        });
+
+        multipleStackedComposite = new Composite(multipleComposite, SWT.NONE);
+        multipleStackedComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        multipleStack = new StackLayout();
+        multipleStackedComposite.setLayout(multipleStack);
+
+        multipleContractComposite = createContractComposite(multipleStackedComposite, emfDataBindingContext);
+        scriptComposite = createScriptComposite(multipleStackedComposite, emfDataBindingContext);
+    }
+
+    private Composite createScriptComposite(final Composite parent, final EMFDataBindingContext emfDataBindingContext) {
+        final Composite scriptComposite = new Composite(parent, SWT.NONE);
+        scriptComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        scriptComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
+
+        final GroovyOnlyExpressionViewer multipleInitialContentExpressionViewer = new GroovyOnlyExpressionViewer(scriptComposite, SWT.READ_ONLY | SWT.BORDER);
         multipleInitialContentExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        multipleInitialContentExpressionViewer.setMessage(Messages.documentListScriptToolTip, IStatus.INFO);
         multipleInitialContentExpressionViewer.setInput(document);
 
         emfDataBindingContext.bindValue(ViewerProperties.singleSelection().observe(multipleInitialContentExpressionViewer),
                 EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__INITIAL_MULTIPLE_CONTENT));
+        return scriptComposite;
     }
 
     protected void validate(final EMFDataBindingContext emfDataBindingContext) {
@@ -448,7 +525,7 @@ public class DocumentWizardPage extends WizardPage {
         externalCompo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         final Label documentURLLabel = new Label(externalCompo, SWT.NONE);
-        documentURLLabel.setText(Messages.documentExternalLabel + " *");
+        documentURLLabel.setText(mandatoryFieldLabel(Messages.documentExternalLabel));
 
         documentUrlViewer = new ExpressionViewer(externalCompo, SWT.BORDER);
         documentUrlViewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE));
@@ -457,13 +534,7 @@ public class DocumentWizardPage extends WizardPage {
         documentUrlViewer.setContentProvider(new ObservableExpressionContentProvider());
         documentUrlViewer.setInput(document);
         documentUrlViewer.setExternalDataBindingContext(emfDataBindingContext);
-        documentUrlViewer.addExpressionValidator(new DefaultExpressionValidator() {
-
-            @Override
-            public IStatus validate(final Object value) {
-                return externalValidator.validate(document);
-            }
-        });
+        documentUrlViewer.addExpressionValidator(new DocumentInitialContentValidator(document, URL_SIZE_MAX));
 
         emfDataBindingContext.bindValue(ViewerProperties.singleSelection().observe(documentUrlViewer),
                 EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__URL));
@@ -476,7 +547,7 @@ public class DocumentWizardPage extends WizardPage {
 
         final Label documentBrowserLabel = new Label(internalCompo, SWT.NONE);
         documentBrowserLabel.setLayoutData(GridDataFactory.swtDefaults().create());
-        documentBrowserLabel.setText(Messages.documentInternalLabel + " *");
+        documentBrowserLabel.setText(mandatoryFieldLabel(Messages.documentInternalLabel));
 
         final Text documentTextId = new Text(internalCompo, SWT.BORDER);
         documentTextId.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER)
@@ -525,17 +596,10 @@ public class DocumentWizardPage extends WizardPage {
         final Button radioButtonExternal = createRadioButtonExternal(compo);
 
         final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(ProcessPackage.DOCUMENT_TYPE);
-        final IObservableValue btnDocumentTypeNone = SWTObservables.observeSelection(radioButtonNone);
-        documentTypeObservableValue.addOption(DocumentType.NONE, btnDocumentTypeNone);
-
-        final IObservableValue btnDocumentTypeContract = SWTObservables.observeSelection(radioButtonContract);
-        documentTypeObservableValue.addOption(DocumentType.CONTRACT, btnDocumentTypeContract);
-
-        final IObservableValue btnDocumentTypeExternal = SWTObservables.observeSelection(radioButtonExternal);
-        documentTypeObservableValue.addOption(DocumentType.EXTERNAL, btnDocumentTypeExternal);
-
-        final IObservableValue btnDocumentTypeInternal = SWTObservables.observeSelection(radioButtonInternal);
-        documentTypeObservableValue.addOption(DocumentType.INTERNAL, btnDocumentTypeInternal);
+        documentTypeObservableValue.addOption(DocumentType.NONE, SWTObservables.observeSelection(radioButtonNone));
+        documentTypeObservableValue.addOption(DocumentType.CONTRACT, SWTObservables.observeSelection(radioButtonContract));
+        documentTypeObservableValue.addOption(DocumentType.EXTERNAL, SWTObservables.observeSelection(radioButtonExternal));
+        documentTypeObservableValue.addOption(DocumentType.INTERNAL, SWTObservables.observeSelection(radioButtonInternal));
 
         final IObservableValue documentTypeObservable = EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE);
         emfDataBindingContext.bindValue(
@@ -634,14 +698,19 @@ public class DocumentWizardPage extends WizardPage {
     protected void updateStack(final DocumentType docType) {
         if (docType.equals(DocumentType.NONE)) {
             stack.topControl = noneCompo;
+            multipleStack.topControl = scriptComposite;
         } else if (docType.equals(DocumentType.EXTERNAL)) {
             stack.topControl = externalCompo;
+            multipleStack.topControl = scriptComposite;
         } else if (docType.equals(DocumentType.INTERNAL)) {
             stack.topControl = internalCompo;
+            multipleStack.topControl = scriptComposite;
         } else if (docType.equals(DocumentType.CONTRACT)) {
-            stack.topControl = contractComposite;
+            stack.topControl = singleContractComposite;
+            multipleStack.topControl = multipleContractComposite;
         }
         stackedComposite.layout();
+        multipleStackedComposite.layout();
     }
 
     protected void updateMimeTypeStack(final String type) {
@@ -659,7 +728,7 @@ public class DocumentWizardPage extends WizardPage {
             updateMimeTypeEnabled(false);
         } else {
             singleMultiplestack.topControl = singleComposite;
-            updateMimeTypeEnabled(!(document.getDocumentType().equals(DocumentType.NONE) || document.getDocumentType().equals(DocumentType.CONTRACT)));
+            updateMimeTypeEnabled(!document.getDocumentType().equals(DocumentType.NONE));
         }
         multipleComposite.getParent().layout();
     }

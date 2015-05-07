@@ -33,7 +33,6 @@ public class Messages extends NLS {
     public static String explanationInternalDocument;
     public static String hintExternalUrl;
     public static String Browse;
-
     public static String selectDocumentDescription;
     public static String importEtc;
     public static String remove;
@@ -43,7 +42,6 @@ public class Messages extends NLS {
     public static String error_documentURLTooLong;
     public static String error_documentDefaultIDEmpty;
     public static String explanationMimeTypeDocument;
-
     public static String initialValueLabel;
     public static String initialValueButtonNone;
     public static String initialValueButtonInternal;
@@ -51,48 +49,33 @@ public class Messages extends NLS {
     public static String initialValueButtonExternal;
     public static String initialValueButtonExternalToolTip;
     public static String initialValueButtonContract;
-
     public static String documentExternalLabel;
     public static String documentInternalLabel;
-
     public static String editDocumentTitle;
     public static String editDocumentDescription;
-
     public static String hideMimeType;
     public static String manageMimeType;
-
     public static String editDocument;
-
     public static String documentInitialContentInternalErrorMessage;
     public static String documentInitialContentExternalErrorMessage;
-
     public static String initialMultipleContent;
-
     public static String error_documentInitialContentsEmpty;
-
     public static String multipleInitialContentsLabel;
-
     public static String radioButtonMultiple;
     public static String radioButtonMultipleToolTip;
     public static String radioButtonSingle;
-
     public static String areYouSureMessage;
-
     public static String documentPropertySectionDescription;
-
     public static String AddSimple;
-
     public static String documentRepository;
-
     public static String returnType;
-
     public static String documentReferenceType;
-
     public static String documentType;
-
     public static String fileContractInput;
-
     public static String contractInputNotSet;
+    public static String initialValueButtonScript;
+
+    public static String documentListScriptToolTip;
 
     static {
         // initialize resource bundle
