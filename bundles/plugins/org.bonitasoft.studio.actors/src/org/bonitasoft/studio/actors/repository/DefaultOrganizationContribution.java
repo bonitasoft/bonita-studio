@@ -137,7 +137,7 @@ public class DefaultOrganizationContribution implements IFileStoreContribution {
         userList.add(createUser(mr,"jan.fisher","Jan","Fisher","bpm","JanFisher@acme.com","favio.riviera","Infrastucture specialist")) ;
 
         userList.add(createUser(mrs,"isabel.bleasdale","Isabel","Bleasdale","bpm","IsabelBleasdale@acme.com","favio.riviera","Product marketing manager")) ;
-        userList.add(createUser(mr,"favio.riviera","Favio","Rivera","bpm","FavioRivera@acme.com","william.jobs","Vice President of Marketing")) ;
+        userList.add(createUser(mr,"favio.riviera","Favio","Riviera","bpm","FavioRiviera@acme.com","william.jobs","Vice President of Marketing")) ;
 
         userList.add(createUser(mr,"michael.morrison","Michael","Morrison","bpm","MichaelMorrison@acme.com","william.jobs","Chief Technical Officer")) ;
         userList.add(createUser(mr,"marc.marseau","Marc","Marseau","bpm","MarcMarseau@acme.com","michael.morrison","Engineer")) ;
