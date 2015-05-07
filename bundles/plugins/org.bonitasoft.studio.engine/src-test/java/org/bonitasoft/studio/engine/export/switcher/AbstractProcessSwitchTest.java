@@ -30,6 +30,7 @@ import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.expression.ExpressionType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
+import org.bonitasoft.studio.model.process.builders.DocumentBuilder;
 import org.bonitasoft.studio.model.process.builders.PoolBuilder;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.Before;
@@ -56,7 +57,7 @@ public class AbstractProcessSwitchTest {
     }
 
     @Test
-    public void testAddContext() {
+    public void testAddBusinessDataInContext() {
         final Pool pool = PoolBuilder.aPool()
                 .havingData(BusinessObjectDataBuilder.aBusinessData().withName("myBData").withClassname("my.classname"))
                 .build();
@@ -66,6 +67,51 @@ public class AbstractProcessSwitchTest {
         verify(processDefBuilder).addContextEntry(eq("myBData_ref"), argument.capture());
         assertThat(argument.getValue().getName()).isEqualTo("myBData");
         assertThat(argument.getValue().getExpressionType()).isEqualTo(ExpressionType.TYPE_BUSINESS_DATA_REFERENCE.name());
+    }
+
+    @Test
+    public void testAddSimpleDocumentInContext() {
+        final Pool pool = PoolBuilder.aPool()
+                .havingDocuments(DocumentBuilder.create().withName("myDoc"))
+                .build();
+        processSwitch.caseAbstractProcess(pool);
+
+        final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
+        verify(processDefBuilder).addContextEntry(eq("myDoc_ref"), argument.capture());
+        assertThat(argument.getValue().getName()).isEqualTo("myDoc");
+        assertThat(argument.getValue().getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT.name());
+    }
+
+    @Test
+    public void testAddSMultipleDocumentInContext() {
+        final Pool pool = PoolBuilder.aPool()
+                .havingDocuments(DocumentBuilder.create().withName("myDoc").multiple())
+                .build();
+        processSwitch.caseAbstractProcess(pool);
+
+        final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
+        verify(processDefBuilder).addContextEntry(eq("myDoc_ref"), argument.capture());
+        assertThat(argument.getValue().getName()).isEqualTo("myDoc");
+        assertThat(argument.getValue().getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT_LIST.name());
+    }
+
+    @Test
+    public void testAddBusinessDataAndDocumentInContext() {
+        final Pool pool = PoolBuilder.aPool()
+                .havingData(BusinessObjectDataBuilder.aBusinessData().withName("myBData").withClassname("my.classname"))
+                .havingDocuments(DocumentBuilder.create().withName("myDoc"))
+                .build();
+        processSwitch.caseAbstractProcess(pool);
+
+        final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
+        verify(processDefBuilder).addContextEntry(eq("myBData_ref"), argument.capture());
+        assertThat(argument.getValue().getName()).isEqualTo("myBData");
+        assertThat(argument.getValue().getExpressionType()).isEqualTo(ExpressionType.TYPE_BUSINESS_DATA_REFERENCE.name());
+
+        final ArgumentCaptor<Expression> argumentDoc = ArgumentCaptor.forClass(Expression.class);
+        verify(processDefBuilder).addContextEntry(eq("myDoc_ref"), argumentDoc.capture());
+        assertThat(argumentDoc.getValue().getName()).isEqualTo("myDoc");
+        assertThat(argumentDoc.getValue().getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT.name());
     }
 
 }
