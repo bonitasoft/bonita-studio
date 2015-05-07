@@ -38,10 +38,8 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class ContractInputExpressionProvider implements IExpressionProvider {
 
@@ -52,7 +50,8 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
         adapterLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressions(org.eclipse.emf.ecore.EObject)
      */
     @Override
@@ -73,7 +72,8 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionType()
      */
     @Override
@@ -81,7 +81,8 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
         return ExpressionConstants.CONTRACT_INPUT_TYPE;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getIcon(org.bonitasoft.studio.model.expression.Expression)
      */
     @Override
@@ -92,7 +93,8 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getTypeIcon()
      */
     @Override
@@ -100,7 +102,8 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
         return Pics.getImage("ContractInput.gif", ContractPlugin.getDefault());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getProposalLabel(org.bonitasoft.studio.model.expression.Expression)
      */
     @Override
@@ -108,7 +111,8 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
         return expression.getName();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#isRelevantFor(org.eclipse.emf.ecore.EObject)
      */
     @Override
@@ -117,11 +121,12 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
         if (parentFlowElement != null) {//check if on an Activity
             return parentFlowElement instanceof ContractContainer && ModelHelper.getParentForm(context) == null;
         } else {// we are at Pool Level
-            return context instanceof Data || (ModelHelper.getParentPool(context) != null && ModelHelper.getParentForm(context) == null);
+            return context instanceof Data || ModelHelper.getParentPool(context) != null && ModelHelper.getParentForm(context) == null;
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getTypeLabel()
      */
     @Override
@@ -129,8 +134,10 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
         return Messages.contractInputTypeLabel;
     }
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionEditor(org.bonitasoft.studio.model.expression.Expression, org.eclipse.emf.ecore.EObject)
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionEditor(org.bonitasoft.studio.model.expression.Expression,
+     * org.eclipse.emf.ecore.EObject)
      */
     @Override
     public IExpressionEditor getExpressionEditor(final Expression expression, final EObject context) {
