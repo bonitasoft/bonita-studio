@@ -217,11 +217,6 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
             public void widgetSelected(final SelectionEvent e) {
                 openAddInputWizardDialog();
             }
-
-            /**
-             *
-             */
-
         });
     }
 

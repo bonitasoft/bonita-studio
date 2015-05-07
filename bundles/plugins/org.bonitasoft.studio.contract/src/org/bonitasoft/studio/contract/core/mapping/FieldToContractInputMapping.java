@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.contract.core.mapping;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.field.Field;
@@ -54,7 +55,7 @@ public abstract class FieldToContractInputMapping {
     }
 
     public List<FieldToContractInputMapping> getChildren() {
-        return children;
+        return Collections.<FieldToContractInputMapping> unmodifiableList(children);
     }
 
     public FieldToContractInputMapping getParent() {

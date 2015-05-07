@@ -20,6 +20,7 @@ import static org.mockito.Mockito.doReturn;
 
 import java.util.List;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.RelationFieldBuilder;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
@@ -80,6 +81,19 @@ public class FieldToContractInputMappingFactoryTest {
         assertThat(mappings.get(0).getChildren()).extracting("field.name").containsOnly("firstName", "isValid");
         mappings.get(0).getChildren().get(0).setGenerated(false);
 
+    }
+
+    @Test
+    public void should_create_fieldMappingToContractInputMappingTree_withADepth_of_five_when_business_model_is_recursive() {
+        final BusinessObject bo = aBO("Employee").build();
+        bo.addField(RelationFieldBuilder.aCompositionField("employee", bo));
+        doReturn(bo).when(businessObjectStore)
+                .getBusinessObjectByQualifiedName("Employee");
+        final FieldToContractInputMappingFactory factory = new FieldToContractInputMappingFactory(businessObjectStore);
+        final List<FieldToContractInputMapping> mappings = factory.createMappingForBusinessObjectType("Employee");
+        assertThat(
+                mappings.get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren()
+                        .isEmpty()).isTrue();
     }
 
 }

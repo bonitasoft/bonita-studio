@@ -61,8 +61,6 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
         checkboxTreeViewer.setSubtreeChecked(mapping, event.getChecked());
         selectParentIfChildIsSelected(event, mapping, checkboxTreeViewer);
         deselectParentIfNoChildSelected(event, mapping, checkboxTreeViewer);
-        // checkboxTreeViewer.setGrayChecked(mapping, isGrayed(mapping));
-
     }
 
     /**
@@ -72,16 +70,16 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
      */
     private void deselectParentIfNoChildSelected(final CheckStateChangedEvent event, final FieldToContractInputMapping mapping,
             final CheckboxTreeViewer checkboxTreeViewer) {
-        if (!event.getChecked() && mapping.getParent() != null) {
+        final FieldToContractInputMapping parentMapping = mapping.getParent();
+        if (!event.getChecked() && parentMapping != null) {
             boolean deselect = true;
-            for (final FieldToContractInputMapping m : mapping.getParent().getChildren()) {
+            for (final FieldToContractInputMapping m : parentMapping.getChildren()) {
                 if (checkboxTreeViewer.getChecked(m)) {
                     deselect = false;
                 }
             }
-            // ALL CHILD ARE UNCHECKED
             if (deselect) {
-                checkboxTreeViewer.setChecked(mapping.getParent(), false);
+                checkboxTreeViewer.setChecked(parentMapping, false);
             }
         }
     }
