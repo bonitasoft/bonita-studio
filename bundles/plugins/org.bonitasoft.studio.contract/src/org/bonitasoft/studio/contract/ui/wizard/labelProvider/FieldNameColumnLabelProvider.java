@@ -12,25 +12,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.core.mapping;
+package org.bonitasoft.studio.contract.ui.wizard.labelProvider;
 
-import java.util.List;
-
-import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.emf.common.command.CompoundCommand;
-import org.eclipse.emf.edit.command.AddCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 
 /**
  * @author aurelie
  */
-public class AddContractInputFromMappingCommand extends CompoundCommand {
+public class FieldNameColumnLabelProvider extends ColumnLabelProvider {
 
-    public AddContractInputFromMappingCommand(final EditingDomain domain, final Contract contract, final List<FieldToContractInputMapping> mappings) {
-        for (final FieldToContractInputMapping mapping : mappings) {
-            append(AddCommand.create(domain, contract, ProcessPackage.Literals.CONTRACT__INPUTS, mapping.toContractInput()));
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+     */
+    @Override
+    public String getText(final Object element) {
+
+        if (element instanceof FieldToContractInputMapping) {
+            return ((FieldToContractInputMapping) element).getField().getName();
         }
-    }
 
+        return super.getText(element);
+    }
 }
