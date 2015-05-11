@@ -15,7 +15,7 @@
 <extension
       point="org.eclipse.ui.commands">
    <command
-         defaultHandler="org.bonitasoft.studio.pagedesigner.ui.handler.OpenUIDesignerHandler"
+         defaultHandler="org.bonitasoft.studio.designer.ui.handler.OpenUIDesignerHandler"
          id="org.bonitasoft.studio.pagedesigner.open.command"
          name="%OpenPageDesigner">
    </command>
@@ -23,13 +23,13 @@
 <extension
       point="org.bonitasoft.studio.repositoryStore">
    <repositoryStore
-         class="org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore">
+         class="org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore">
    </repositoryStore>
    <repositoryStore
-         class="org.bonitasoft.studio.pagedesigner.core.repository.WebFragmentRepositoryStore">
+         class="org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore">
    </repositoryStore>
    <repositoryStore
-         class="org.bonitasoft.studio.pagedesigner.core.repository.WebWidgetRepositoryStore">
+         class="org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore">
    </repositoryStore>
 </extension>
 <extension
@@ -42,14 +42,14 @@
       point="org.bonitasoft.studio.expression.proposalListener">
    <proposalListner
          name="&lt;A&gt;Create a new form...&lt;/A&gt;"
-         providerClass="org.bonitasoft.studio.pagedesigner.core.expression.CreateNewFormProposalListener"
+         providerClass="org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener"
          type="FORM_REFERENCE_TYPE">
    </proposalListner>
 </extension>
 <extension
       point="org.bonitasoft.studio.expression.expressionProvider">
    <expressionProvider
-         providerClass="org.bonitasoft.studio.pagedesigner.core.expression.FormReferenceExpressionProvider">
+         providerClass="org.bonitasoft.studio.designer.core.expression.FormReferenceExpressionProvider">
    </expressionProvider>
 </extension>
 <extension
@@ -81,24 +81,24 @@
    <propertySections
          contributorId="org.bonitasoft.studio.diagram">
       <propertySection
-            class="org.bonitasoft.studio.pagedesigner.ui.property.section.EntryFormMappingPropertySection"
+            class="org.bonitasoft.studio.designer.ui.property.section.EntryFormMappingPropertySection"
             enablesFor="1"
-            filter="org.bonitasoft.studio.pagedesigner.ui.property.filter.TaskFilter"
+            filter="org.bonitasoft.studio.designer.ui.property.filter.TaskFilter"
             id="TaskEntryFormMapping"
             tab="tab.form.mapping.entry"
             viewID="org.bonitasoft.studio.views.properties.process.execution">
       </propertySection>
       <propertySection
-            class="org.bonitasoft.studio.pagedesigner.ui.property.section.CaseStartFormMappingPropertySection"
+            class="org.bonitasoft.studio.designer.ui.property.section.CaseStartFormMappingPropertySection"
             enablesFor="1"
-            filter="org.bonitasoft.studio.pagedesigner.ui.property.filter.PoolOrLaneFilter"
+            filter="org.bonitasoft.studio.designer.ui.property.filter.PoolOrLaneFilter"
             id="PoolEntryFormMapping"
             tab="tab.form.mapping.caseStart"
             viewID="org.bonitasoft.studio.views.properties.process.execution">
       </propertySection>
       <propertySection
-            class="org.bonitasoft.studio.pagedesigner.ui.property.section.CaseOverviewFormMappingPropertySection"
-            filter="org.bonitasoft.studio.pagedesigner.ui.property.filter.PoolOrLaneFilter"
+            class="org.bonitasoft.studio.designer.ui.property.section.CaseOverviewFormMappingPropertySection"
+            filter="org.bonitasoft.studio.designer.ui.property.filter.PoolOrLaneFilter"
             id="PoolOverviewFormMapping"
             tab="tab.form.mapping.overview"
             viewID="org.bonitasoft.studio.views.properties.process.execution">
@@ -108,19 +108,19 @@
 <extension
       point="org.bonitasoft.studio.common.barResourcesProvider">
    <barResourceProvider
-         providerClass="org.bonitasoft.studio.pagedesigner.core.bar.FormBarResourceProvider">
+         providerClass="org.bonitasoft.studio.designer.core.bar.FormBarResourceProvider">
    </barResourceProvider>
 </extension>
 <extension
       point="org.bonitasoft.studio.bosArchiveProvider">
    <bosArchiveProvider
-         providerClass="org.bonitasoft.studio.pagedesigner.core.bos.WebFormBOSArchiveFileStoreProvider">
+         providerClass="org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider">
    </bosArchiveProvider>
 </extension>
 <extension
       point="org.bonitasoft.studio.coolbarContributionItem">
    <coolbarItem
-         class="org.bonitasoft.studio.pagedesigner.ui.contribution.OpenUIDesignerCoolBarItem"
+         class="org.bonitasoft.studio.designer.ui.contribution.OpenUIDesignerCoolBarItem"
          toolbarPosition="9">
    </coolbarItem>
 </extension>
