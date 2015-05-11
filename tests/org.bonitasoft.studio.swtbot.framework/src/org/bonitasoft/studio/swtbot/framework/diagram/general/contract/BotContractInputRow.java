@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -37,8 +37,7 @@ public class BotContractInputRow extends BotBase {
     private static final int NAME_COLUMN = 0;
     private static final int TYPE_COLUMN = 1;
     private static final int MULTIPLE_COLUMN = 2;
-    private static final int NULLABLE_COLUMN = 3;
-    private static final int DESCRIPTION_COLUMN = 4;
+    private static final int DESCRIPTION_COLUMN = 3;
 
     public BotContractInputRow(final SWTGefBot bot, final int row) {
         super(bot);
@@ -81,7 +80,7 @@ public class BotContractInputRow extends BotBase {
         waitForInputTree();
         swtBotTreeItem.setFocus();
         swtBotTreeItem.click(DESCRIPTION_COLUMN);
-        bot.text(1);
+        bot.textWithId(SWTBotConstants.SWTBOT_ID_INPUT_DESCRIPTION_TEXTEDITOR);
         typeText(description);
         pressEnter();
         return this;
@@ -106,13 +105,6 @@ public class BotContractInputRow extends BotBase {
 
     private void waitForInputTree() {
         bot.waitUntil(Conditions.widgetIsEnabled(inputTree(bot)));
-    }
-
-    public BotContractInputRow clickNullable() {
-        waitForInputTree();
-        swtBotTreeItem.setFocus();
-        swtBotTreeItem.click(NULLABLE_COLUMN);
-        return this;
     }
 
     public BotContractInputRow select() {

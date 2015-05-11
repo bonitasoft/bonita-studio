@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009-2012 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -15,9 +15,14 @@
 
 package org.bonitasoft.studio.common.emf.tools;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.find;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -163,260 +168,9 @@ public class ModelHelper {
     }
 
     private static List<AbstractProcess> findAllProcesses(final Element element, final List<AbstractProcess> processes) {
-
-        //		List<URI> newwayFindProcesses = newwayFindProcesses(element, processes);
-        //		ResultSet resultSet = newWayFindProcessesWithQueriesInObjectFormat(element);
         final List<AbstractProcess> oldwayFindProcesses = oldwayFindProcesses(element, processes);
-        //		ResultSet resultSet2 = newwayFindProcessesWithXtextQuery(element);
-        //
-        //		if(resultSet2.getSize() != oldwayFindProcesses.size()){
-        //			System.out.println("erdf:\n"+resultSet2.getSize()+"\n\n"+oldwayFindProcesses);
-        //		} else {
-        //			System.out.println("all is fine using Xtext");
-        //		}
-        //
-        //		if(resultSet.getSize() != oldwayFindProcesses.size()){
-        //			System.out.println("erdf:\n"+resultSet.getSize()+"\n\n"+oldwayFindProcesses);
-        //		} else {
-        //			System.out.println("all is fine using Object format");
-        //		}
-        //		if(newwayFindProcesses.size() != oldwayFindProcesses.size()){
-        //			System.out.println("erdf:\n"+newwayFindProcesses+"\n\n"+oldwayFindProcesses);
-        //		} else {
-        //			System.out.println("all is fine using basic query");
-        //		}
         return oldwayFindProcesses;
     }
-
-    //	private static List<URI> newwayFindProcesses(Element element,
-    //			List<AbstractProcess> processes) {
-    //		final EObjectQuery<EObjectDescriptor> eObjectQuery = IndexQueryFactory.createEObjectQuery();
-    //		eObjectQuery.eClassURI(EcoreUtil.getURI(ProcessPackage.Literals.POOL));
-    //		final List<URI> result = new ArrayList<URI>();
-    //		getIndexFactory().executeQueryCommand(new QueryCommand() {
-    //
-    //			public void execute(QueryExecutor queryExecutor) {
-    //				QueryResult<EObjectDescriptor> execute = queryExecutor.execute(eObjectQuery);
-    //				for (EObjectDescriptor objDesc : execute) {
-    //					URI candidateResourceUri = objDesc.getResourceURI();
-    //					//boolean isInScope = scope.contains(candidateResourceUri);
-    // // if (isInclusiveScope == isInScope) {
-    //						// add uri of instance to result
-    //						result.add(candidateResourceUri.appendFragment(objDesc.getFragment()));
-    // // }
-    //				}
-    //			}
-    //		});
-    //		return result;
-    //	}
-    //
-    //	private static Model model;
-    //	private static QueryProcessor queryProcessor;
-    //	private static XtextResourceSet set;
-    //	private static boolean firstQuery;
-    //
-    //	private static ResultSet newwayFindProcessesWithXtextQuery(final Element element) {
-    //
-    //		MQLquery query = findQuery("searchAllProcesses");
-    //		Query internalQuery = QueryTransformer.transform(query);
-    //		Index indexFactory = getIndexFactory();
-    //		QueryProcessor queryProcessor = getQueryProcessorFactory().createQueryProcessor(indexFactory);
-    //		final ResultSet result = queryProcessor.execute(internalQuery, new QueryContext() {
-    //
-    //			public ResourceSet getResourceSet() {
-    //				return element.eResource().getResourceSet();
-    //			}
-    //
-    //			public URI[] getResourceScope() {
-    //				return new URI[]{element.eResource().getURI()};
-    //			}
-    //		});
-    //
-    //		return result;
-    //	}
-    //
-    //	private static MQLquery findQuery(String queryName) {
-    //		if(model == null){
-    //			new org.eclipse.emf.mwe.utils.StandaloneSetup().setPlatformUri("..");
-    //			Injector injector = new QueryStandaloneSetup().createInjectorAndDoEMFRegistration();
-    //			set = injector.getInstance(XtextResourceSet.class);
-    //			set.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
-    //			URI resourceURI = URI.createURI(
-    //			         "platform:/plugin/org.bonitasoft.studio.common/bonita.query");
-    //			URI normalized = set.getURIConverter().normalize(resourceURI);
-    //			LazyLinkingResource xtextResource = (LazyLinkingResource) set.getResource(normalized, true);
-    //			Index indexFactory = getIndexFactory();
-    //			queryProcessor = getQueryProcessorFactory().createQueryProcessor(indexFactory);
-    //			model = (Model) xtextResource.getContents().get(0);
-    //		}
-    //		if (queryName == null) {
-    //			return model.getDefaultQuery();
-    //		}
-    //		for (NamedQuery query : model.getNamedQueries()) {
-    //			if (query.getName().equals(queryName)) {
-    //				return query.getQuery();
-    //			}
-    //		}
-    //		return null;
-    //	}
-    //
-    //	private static boolean indexHasChangedSinceLastGetAllProcessesRequest = true;
-    //	private static ResultSet allProcessesCache;
-    //
-    //	public static ResultSet getAllProcesses() {
-    //		if(firstQuery){
-    //			IndexFactory.getInstance().getEventListenerRegistry().addIndexChangeListener(new IndexChangeListener() {
-    //
-    //				public void indexChanged(IndexChangeEvent arg0) {
-    //					indexHasChangedSinceLastGetAllProcessesRequest = true;
-    //				}
-    //			});
-    //		}
-    //		if(indexHasChangedSinceLastGetAllProcessesRequest){
-    //			final List<URI> resourcesList = new ArrayList<URI>();
-    //			executeQueryCommandToRetrieveResourceScope(resourcesList);
-    //			final URI[] resourceScopes = resourcesList.toArray(new URI[resourcesList.size()]);
-    //
-    //			//		List<String> attrs = new ArrayList<String>();
-    //			//		attrs.add("name");
-    //			//		attrs.add("version");
-    //
-    //			//		SelectEntry selectPoolEntry = new SelectAttrs("pool", attrs);//new SelectAlias("pool");
-    //
-    //			FromType fromType = constructFromType(resourceScopes);
-    //
-    //			final Query query = constructQuery(fromType);
-    //
-    //			QueryProcessor queryProcessor = constructQueryProcessor();
-    //			allProcessesCache = executeQuery(resourceScopes, query,
-    //					queryProcessor);
-    //			indexHasChangedSinceLastGetAllProcessesRequest = false;
-    //		}
-    //		return allProcessesCache;
-
-    //		MQLquery query = findQuery("searchAllProcesses");
-    //		Query internalQuery = QueryTransformer.transform(query);
-    //		final ResultSet result = queryProcessor.execute(internalQuery, new QueryContext() {
-    //
-    //			public ResourceSet getResourceSet() {
-    //				return new ResourceSetImpl();
-    //			}
-    //
-    //			public URI[] getResourceScope() {
-    //				final List<URI> result = new ArrayList<URI>();
-    //				IndexFactory.getInstance().executeQueryCommand(new QueryCommand() {
-    //
-    //					public void execute(QueryExecutor queryExecutor) {
-    //						ResourceQuery<ResourceDescriptor> resourceQuery = IndexQueryFactory.createResourceQuery();
-    //						for (ResourceDescriptor desc : queryExecutor.execute(resourceQuery)) {
-    //							result.add(desc.getURI());
-    //						}
-    //					}
-    //
-    //				});
-    //				return result.toArray(new URI[result.size()]);
-    //			}
-    //		});
-    //
-    //		return result;
-    //
-    //	}
-    //
-    //	protected static void executeQueryCommandToRetrieveResourceScope(
-    //			final List<URI> resourcesList) {
-    //		getIndexFactory().executeQueryCommand(new QueryCommand() {
-    //
-    //			public void execute(QueryExecutor queryExecutor) {
-    //				ResourceQuery<ResourceDescriptor> resourceQuery = IndexQueryFactory.createResourceQuery();
-    //				for (ResourceDescriptor desc : queryExecutor.execute(resourceQuery)) {
-    //					resourcesList.add(desc.getURI());
-    //				}
-    //			}
-    //
-    //		});
-    //	}
-    //
-    //	protected static ResultSet executeQuery(final URI[] resourceScopes,
-    //			final Query query, QueryProcessor queryProcessor) {
-    //		final ResultSet result = queryProcessor.execute(query, new QueryContext() {
-    //
-    //			public ResourceSet getResourceSet() {
-    //				return new ResourceSetImpl();
-    //			}
-    //
-    //			public URI[] getResourceScope() {
-    //				return resourceScopes;
-    //			}
-    //		});
-    //		return result;
-    //	}
-    //
-    //	protected static QueryProcessor constructQueryProcessor() {
-    //		QueryProcessor queryProcessor = getQueryProcessorFactory().createQueryProcessor(getIndexFactory());
-    //		return queryProcessor;
-    //	}
-    //
-    //	protected static Query constructQuery(FromType fromType) {
-    //		final Query query = new Query(new SelectEntry[] {new SelectAlias("pool")/*selectPoolEntry*/}, new FromType[] { fromType });
-    //		return query;
-    //	}
-    //
-    //	protected static FromType constructFromType(final URI[] resourceScopes) {
-    //		FromType fromType = new FromType("pool", EcoreUtil.getURI(ProcessPackage.Literals.POOL), true,
-    //				new  TypeScopeProvider() {
-    //
-    //			public boolean isInclusiveScope() {
-    //				return true;
-    //			}
-    //			public URI[] getResourceScope() {
-    //				return resourceScopes;
-    //			}
-    //		});
-    //		return fromType;
-    //	}
-    //
-    //	protected static QueryProcessorFactory getQueryProcessorFactory() {
-    //		return QueryProcessorFactory.getDefault();
-    //	}
-    //
-    //	protected static Index getIndexFactory() {
-    //		return IndexFactory.getInstance();
-    //	}
-    //
-    //
-    //
-    //	private static ResultSet newWayFindProcessesWithQueriesInObjectFormat(final Element element){
-    //
-    //		SelectEntry selectPoolEntry = new SelectAlias("pool");
-    //
-    //		FromType fromType = new FromType("pool", EcoreUtil.getURI(ProcessPackage.Literals.POOL), false,
-    //				new  TypeScopeProvider() {
-    //
-    //			public boolean isInclusiveScope() {
-    //				return true;
-    //			}
-    //			public URI[] getResourceScope() {
-    //				return new URI[]{element.eResource().getURI()};
-    //			}
-    //		});
-    //
-    //		final Query query = new Query(new SelectEntry[] {selectPoolEntry}, new FromType[] { fromType });
-    //
-    //		Index indexFactory = getIndexFactory();
-    //
-    //		QueryProcessor queryProcessor = getQueryProcessorFactory().createQueryProcessor(indexFactory);
-    //		final ResultSet result = queryProcessor.execute(query, new QueryContext() {
-    //
-    //			public ResourceSet getResourceSet() {
-    //				return element.eResource().getResourceSet();
-    //			}
-    //
-    //			public URI[] getResourceScope() {
-    //				return new URI[]{element.eResource().getURI()};
-    //			}
-    //		});
-    //		return result;
-    //	}
 
     protected static List<AbstractProcess> oldwayFindProcesses(final Element element,
             final List<AbstractProcess> processes) {
@@ -455,22 +209,6 @@ public class ModelHelper {
             return null;
         }
     }
-
-    //	public static AbstractProcess getParentProcessIncludedEmbedded(EObject object) {
-    //		EObject process = object;
-    //		while (process != null &&  !(process instanceof AbstractProcess)) {
-    //			if (process.eContainer() != null) {
-    //				process = process.eContainer();
-    //			} else {
-    //				break;
-    //			}
-    //		}
-    //		if (process instanceof AbstractProcess) {
-    //			return (AbstractProcess) process;
-    //		} else {
-    //			return null;
-    //		}
-    //	}
 
     public static Container getParentContainer(final EObject object) {
         EObject container = object;
@@ -730,6 +468,26 @@ public class ModelHelper {
         return null;
     }
 
+    public static DataType getDataTypeByClassName(final MainProcess dataTypeContainer, final String returnTypeClassname) {
+        checkArgument(dataTypeContainer != null);
+        checkArgument(returnTypeClassname != null);
+        if (returnTypeClassname.equals(Boolean.class.getName())) {
+            return find(dataTypeContainer.getDatatypes(), instanceOf(BooleanType.class), null);
+        } else if (returnTypeClassname.equals(String.class.getName())) {
+            return find(dataTypeContainer.getDatatypes(), instanceOf(StringType.class), null);
+        } else if (returnTypeClassname.equals(Double.class.getName())) {
+            return find(dataTypeContainer.getDatatypes(), instanceOf(DoubleType.class), null);
+        } else if (returnTypeClassname.equals(Long.class.getName())) {
+            return find(dataTypeContainer.getDatatypes(), instanceOf(LongType.class), null);
+        } else if (returnTypeClassname.equals(Integer.class.getName())) {
+            return find(dataTypeContainer.getDatatypes(), instanceOf(IntegerType.class), null);
+        } else if (returnTypeClassname.equals(Date.class.getName())) {
+            return find(dataTypeContainer.getDatatypes(), instanceOf(DateType.class), null);
+        } else {
+            return find(dataTypeContainer.getDatatypes(), instanceOf(JavaType.class), null);
+        }
+    }
+
     public static List<Data> getMessageSourceAccessibleData(final MessageFlow messageFlow) {
         final List<Data> datas = new ArrayList<Data>();
 
@@ -824,31 +582,8 @@ public class ModelHelper {
     }
 
     public static AbstractProcess findProcess(final Element element, final String procName) {
-        //		if(findNewProcess(element, procName).getSize() != 1){
-        //			System.out.println("it doesn't work to find process");
-        //		}
-
         return findOldProcesses(element, procName);
     }
-
-    //
-    //	private static ResultSet findNewProcess(final Element element, String procName) {
-    //		MQLquery query = findQuery("findProcess");
-    //		Query internalQuery = QueryTransformer.transform(query, new Object[]{procName});
-    //		final ResultSet result = queryProcessor.execute(internalQuery, new QueryContext() {
-    //
-    //			public ResourceSet getResourceSet() {
-    //				return new ResourceSetImpl();
-    //			}
-    //
-    //			public URI[] getResourceScope() {
-    //				return new URI[]{element.eResource().getURI()};
-    //			}
-    //		});
-    //
-    //		return result;
-    //
-    //	}
 
     protected static AbstractProcess findOldProcesses(final Element element,
             final String procName) {
@@ -1093,26 +828,6 @@ public class ModelHelper {
             }
         }
         return null;
-
-        /*
-         * for (Widget w : parent.getWidgets()) { if (!(w instanceof Group) ||
-         * includeGroups) { if (y >= w.getWidgetLayoutInfo().getLine() && y <
-         * w.getWidgetLayoutInfo().getLine() +
-         * w.getWidgetLayoutInfo().getVerticalSpan() && x >=
-         * w.getWidgetLayoutInfo().getColumn() && x <
-         * w.getWidgetLayoutInfo().getColumn() +
-         * w.getWidgetLayoutInfo().getHorizontalSpan()) return w; } else { for
-         * (Widget wg : ((Group) w).getWidgets()) { int dx =
-         * w.getWidgetLayoutInfo().getColumn(); int dy =
-         * w.getWidgetLayoutInfo().getLine(); if (y >=
-         * wg.getWidgetLayoutInfo().getLine() + dy && y <
-         * wg.getWidgetLayoutInfo().getLine() +
-         * wg.getWidgetLayoutInfo().getVerticalSpan() + dy && x >=
-         * wg.getWidgetLayoutInfo().getColumn() + dx && x <
-         * wg.getWidgetLayoutInfo().getColumn() +
-         * wg.getWidgetLayoutInfo().getHorizontalSpan() + dx) return w; } }
-         * } return null;
-         */
     }
 
     /**

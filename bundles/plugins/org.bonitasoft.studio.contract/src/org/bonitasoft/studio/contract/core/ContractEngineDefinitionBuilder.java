@@ -45,8 +45,7 @@ public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefin
             if (input.getType() == ContractInputType.COMPLEX) {
                 addComplexInput(contractBuilder, input);
             } else {
-                final Type inputType = getInputType(input);
-                addSimpleInput(contractBuilder, input, inputType);
+                contractBuilder.addInput(input.getName(), getInputType(input), input.getDescription(), input.isMultiple());
             }
         }
         buildConstraints(contract, contractBuilder);
@@ -68,13 +67,6 @@ public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefin
         builder = engineBuilder;
     }
 
-    protected void addSimpleInput(final ContractDefinitionBuilder contractBuilder, final ContractInput input, final Type inputType) {
-        contractBuilder.addInput(input.getName(), inputType, input.getDescription(), input.isMultiple());
-        if (input.isMandatory()) {
-            contractBuilder.addMandatoryConstraint(input.getName());
-        }
-    }
-
     protected void addComplexInput(final ContractDefinitionBuilder contractBuilder, final ContractInput input) {
         final InputDefinition complexInput = buildComplexInput(input, contractBuilder);
         contractBuilder.addInput(complexInput.getName(), complexInput.getDescription(), complexInput.isMultiple(), complexInput.getInputs());
@@ -82,9 +74,6 @@ public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefin
 
     protected InputDefinition buildComplexInput(final ContractInput input, final ContractDefinitionBuilder contractBuilder) {
         final InputDefinitionImpl complexInput = new InputDefinitionImpl(input.getName(), null, input.getDescription(), input.isMultiple());
-        if (input.isMandatory()) {
-            contractBuilder.addMandatoryConstraint(complexInput.getName());
-        }
         for (final ContractInput child : input.getInputs()) {
             if (ContractInputType.COMPLEX == child.getType()) {
                 complexInput.getInputs().add(buildComplexInput(child, contractBuilder));
@@ -98,9 +87,6 @@ public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefin
     protected void buildLeafInput(final ContractDefinitionBuilder contractBuilder, final InputDefinitionImpl complexInput, final ContractInput child) {
         final Type inputType = getInputType(child);
         complexInput.getInputs().add(new InputDefinitionImpl(child.getName(), inputType, child.getDescription(), child.isMultiple()));
-        if (child.isMandatory()) {
-            contractBuilder.addMandatoryConstraint(child.getName());
-        }
     }
 
     public Type getInputType(final ContractInput input) {

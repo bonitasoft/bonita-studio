@@ -25,7 +25,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class JavaDataTypeBuilder extends DataTypeBuilder<JavaType, JavaDataTypeBuilder> {
 
-    public static JavaDataTypeBuilder create() {
+    public static JavaDataTypeBuilder aJavaDataType() {
         return new JavaDataTypeBuilder();
     }
 

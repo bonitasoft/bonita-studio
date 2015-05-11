@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012-2014 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -20,7 +20,7 @@ package org.bonitasoft.studio.common;
 public class ModelVersion {
 
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
-    public static final String CURRENT_VERSION = "7.0.0-002";
+    public static final String CURRENT_VERSION = "7.0.0-004";
 
     public static boolean sameVersion(final String version) {
         return CURRENT_VERSION.equals(version);

@@ -1,32 +1,35 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.data.provider;
+
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.find;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.DataTypeLabels;
+import javax.inject.Inject;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.data.i18n.Messages;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -44,6 +47,7 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.PageFlow;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.pics.Pics;
@@ -55,14 +59,16 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class DataExpressionProvider implements IExpressionProvider {
 
     private final ComposedAdapterFactory adapterFactory;
     private final AdapterFactoryLabelProvider adapterLabelProvider;
+    private final RepositoryAccessor repositoryAccessor;
 
-    public DataExpressionProvider() {
+    @Inject
+    public DataExpressionProvider(final RepositoryAccessor repositoryAccessor) {
+        this.repositoryAccessor = repositoryAccessor;
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
     }
@@ -109,7 +115,7 @@ public class DataExpressionProvider implements IExpressionProvider {
                 if (iteratorExpression != null
                         && iteratorExpression.getName() != null
                         && !iteratorExpression.getName().isEmpty()) {
-                    final Data d = dataFromIteratorExpression((MultiInstantiable) parentFlowElement, iteratorExpression);
+                    final Data d = dataFromIteratorExpression((MultiInstantiable) parentFlowElement, iteratorExpression, mainProcess(parentFlowElement));
                     result.add(createExpression(d));
                 }
             }
@@ -118,11 +124,22 @@ public class DataExpressionProvider implements IExpressionProvider {
         return result;
     }
 
-    public static Data dataFromIteratorExpression(final MultiInstantiable parentFlowElement, final Expression iteratorExpression) {
+    private MainProcess mainProcess(final FlowElement parentFlowElement) {
+        final MainProcess mainProcess = ModelHelper.getMainProcess(parentFlowElement);
+        return mainProcess != null ? mainProcess : mainProcessFromStore(parentFlowElement);
+    }
+
+    private MainProcess mainProcessFromStore(final FlowElement parentFlowElement) {
+        final Pool pool = ModelHelper.getParentPool(parentFlowElement);
+        final DiagramRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
+        return ModelHelper.getMainProcess(repositoryStore.findProcess(pool.getName(), pool.getVersion()));
+    }
+
+    public static Data dataFromIteratorExpression(final MultiInstantiable parentFlowElement, final Expression iteratorExpression, final MainProcess mainProcess) {
         final String returnType = iteratorExpression.getReturnType();
         Data d = null;
         if (returnType != null) {
-            final DataType dt = getDataTypeFrom(returnType, iteratorExpression, parentFlowElement);
+            final DataType dt = getDataTypeFrom(returnType, mainProcess, parentFlowElement);
             if (dt instanceof BusinessObjectType) {
                 d = ProcessFactory.eINSTANCE.createBusinessObjectData();
                 ((JavaObjectData) d).setClassName(returnType);
@@ -138,22 +155,11 @@ public class DataExpressionProvider implements IExpressionProvider {
         return d;
     }
 
-    private static DataType getDataTypeFrom(final String returnType, final Expression iteratorExpression, final MultiInstantiable parentFlowElement) {
-        final MainProcess diagram = ModelHelper.getMainProcess(parentFlowElement);
-        if (returnType.equals(Boolean.class.getName())) {
-            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.booleanDataType);
-        } else if (returnType.equals(String.class.getName())) {
-            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.stringDataType);
-        } else if (returnType.equals(Double.class.getName())) {
-            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.doubleDataType);
-        } else if (returnType.equals(Long.class.getName())) {
-            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.longDataType);
-        } else if (returnType.equals(Integer.class.getName())) {
-            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.integerDataType);
-        } else if (parentFlowElement.getCollectionDataToMultiInstantiate() instanceof BusinessObjectData) {
-            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.businessObjectType);
+    private static DataType getDataTypeFrom(final String returnType, final MainProcess mainProcess, final MultiInstantiable parentFlowElement) {
+        if (parentFlowElement.getCollectionDataToMultiInstantiate() instanceof BusinessObjectData) {
+            return find(mainProcess.getDatatypes(), instanceOf(BusinessObjectType.class), null);
         } else {
-            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.javaDataType);
+            return ModelHelper.getDataTypeByClassName(mainProcess, returnType);
         }
     }
 
@@ -180,8 +186,6 @@ public class DataExpressionProvider implements IExpressionProvider {
     public String getProposalLabel(final Expression expression) {
         return expression.getName();
     }
-
-
 
     private Expression createExpression(final Data d) {
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
@@ -213,7 +217,4 @@ public class DataExpressionProvider implements IExpressionProvider {
         return new DataExpressionEditor();
     }
 
-
-
 }
-

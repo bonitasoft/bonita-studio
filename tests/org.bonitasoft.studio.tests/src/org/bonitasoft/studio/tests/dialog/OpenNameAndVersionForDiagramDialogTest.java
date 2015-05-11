@@ -16,7 +16,7 @@ package org.bonitasoft.studio.tests.dialog;
 
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
+import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -122,7 +122,7 @@ public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCas
         setDiagramOk();
         bot.text("1.0").setText("1.0?beta");
         bot.sleep(VALIDATION_DELAY);
-        assertTrue("We now allow UTF-8 characters in pool versions",
+        assertFalse("Question mark are not allowed in version because they are not valid file name character",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }

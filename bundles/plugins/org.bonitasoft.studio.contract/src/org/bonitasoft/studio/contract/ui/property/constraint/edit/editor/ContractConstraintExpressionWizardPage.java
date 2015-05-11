@@ -29,16 +29,21 @@ import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -92,8 +97,13 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
     public void createControl(final Composite parent) {
         final EMFDataBindingContext context = new EMFDataBindingContext();
         final Composite container = new Composite(parent, SWT.NONE);
-        container.setLayout(new FillLayout());
-        final GroovyViewer viewer = createSourceViewer(container);
+        container.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+
+        final Composite editorContainer = new Composite(container, SWT.NONE);
+        editorContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        editorContainer.setLayout(new FillLayout());
+        final GroovyViewer viewer = createSourceViewer(editorContainer);
+
         getSourceViewer().getTextWidget().setData(ContractInputCompletionProposalComputer.INPUTS, inputs);
         getSourceViewer().getDocument().addDocumentListener(this);
 
@@ -104,6 +114,11 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         getSourceViewer().getDocument().set(expressionContentObservable.getValue().toString());
         context.addValidationStatusProvider(new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable, viewer
                 .getGroovyCompilationUnit(), new MVELProblemRequestor()));
+
+        final CLabel contentAssistHint = new CLabel(container, SWT.NONE);
+        contentAssistHint.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).create());
+        contentAssistHint.setText(Messages.contentAssistHint);
+        contentAssistHint.setImage(Pics.getImage(PicsConstants.hint));
 
         setControl(container);
         WizardPageSupport.create(this, context);

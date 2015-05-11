@@ -15,58 +15,37 @@
 package org.bonitasoft.studio.contract.ui.property.input.labelProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
+import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
-import org.bonitasoft.studio.contract.ui.property.input.labelProvider.InputNameCellLabelProvider;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.set.WritableSet;
-import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.junit.After;
-import org.junit.Before;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
  */
-@RunWith(MockitoJUnitRunner.class)
 public class InputNameCellLabelProviderTest {
 
-    @Mock
-    private IPropertySourceProvider propertySourceLabelProvider;
+    @Rule
+    public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
 
-    private InputNameCellLabelProvider inputNameCellLabelProvider;
+    @Test
+    public void should_display_contract_input_name_as_text() throws Exception {
+        final InputNameCellLabelProvider labelProvider = new InputNameCellLabelProvider(new AdapterFactoryContentProvider(
+                new ProcessItemProviderAdapterFactory()), new WritableSet());
 
-    @Mock
-    private ColumnViewer viewer;
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-        inputNameCellLabelProvider = spy(new InputNameCellLabelProvider(propertySourceLabelProvider, new WritableSet()));
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
+        assertThat(labelProvider.getText(aContractInput().withName("myInput").build())).isEqualTo("myInput");
     }
 
     @Test
-    public void should_getStyledString_returns_a_StyledString_with_text() throws Exception {
-        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
-        input.setName("inputName");
-        doReturn(input.getName()).when(inputNameCellLabelProvider).getText(input);
-        assertThat(inputNameCellLabelProvider.getStyledText(input)).isNotNull();
-        assertThat(inputNameCellLabelProvider.getStyledText(input).getString()).isEqualTo(input.getName());
+    public void should_not_display_an_icon() throws Exception {
+        final InputNameCellLabelProvider labelProvider = new InputNameCellLabelProvider(new AdapterFactoryContentProvider(
+                new ProcessItemProviderAdapterFactory()), new WritableSet());
+
+        assertThat(labelProvider.getImage(aContractInput().build())).isNull();
     }
 
 }

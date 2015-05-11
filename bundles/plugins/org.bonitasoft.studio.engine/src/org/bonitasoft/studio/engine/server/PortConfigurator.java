@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -97,13 +97,17 @@ public class PortConfigurator {
     }
 
     public IStatus canStartH2Server(final IProgressMonitor monitor) throws CoreException {
-        if (isPortInUse(h2TCPPort(monitor))) {
+        if (h2PortInUse(monitor)) {
             return new Status(
                     IStatus.ERROR,
                     EnginePlugin.PLUGIN_ID,
                     "H2 server TCP port is already used by another application. Most likely another BonitaBPM instances. Please close all other running instances of BonitaBPM and restart.");
         }
         return Status.OK_STATUS;
+    }
+
+    public boolean h2PortInUse(final IProgressMonitor monitor) throws CoreException {
+        return isPortInUse(h2TCPPort(monitor));
     }
 
     private void configurePort(final ServerPort port, final IProgressMonitor monitor) throws CoreException {

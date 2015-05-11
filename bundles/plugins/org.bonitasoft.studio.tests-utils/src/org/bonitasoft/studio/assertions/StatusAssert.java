@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.assertions;
 
 import static java.lang.String.format;
@@ -13,7 +27,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     /**
      * Creates a new </code>{@link StatusAssert}</code> to make assertions on actual IStatus.
-     * 
+     *
      * @param actual the IStatus we want to make assertions on.
      */
     public StatusAssert(final IStatus actual) {
@@ -23,7 +37,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
     /**
      * An entry point for IStatusAssert to follow AssertJ standard <code>assertThat()</code> statements.<br>
      * With a static import, one's can write directly : <code>assertThat(myIStatus)</code> and get specific assertion with code completion.
-     * 
+     *
      * @param actual the IStatus we want to make assertions on.
      * @return a new </code>{@link StatusAssert}</code>
      */
@@ -33,7 +47,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     /**
      * Verifies that the actual IStatus's children contains the given IStatus elements.
-     * 
+     *
      * @param children the given elements that should be contained in actual IStatus's children.
      * @return this assertion object.
      * @throws AssertionError if the actual IStatus's children does not contain all given IStatus elements.
@@ -62,7 +76,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     /**
      * Verifies that the actual IStatus has no children.
-     * 
+     *
      * @return this assertion object.
      * @throws AssertionError if the actual IStatus's children is not empty.
      */
@@ -85,7 +99,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     /**
      * Verifies that the actual IStatus's code is equal to the given one.
-     * 
+     *
      * @param code the given code to compare the actual IStatus's code to.
      * @return this assertion object.
      * @throws AssertionError - if the actual IStatus's code is not equal to the given one.
@@ -108,7 +122,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     /**
      * Verifies that the actual IStatus's exception is equal to the given one.
-     * 
+     *
      * @param exception the given exception to compare the actual IStatus's exception to.
      * @return this assertion object.
      * @throws AssertionError - if the actual IStatus's exception is not equal to the given one.
@@ -131,7 +145,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     /**
      * Verifies that the actual IStatus's message is equal to the given one.
-     * 
+     *
      * @param message the given message to compare the actual IStatus's message to.
      * @return this assertion object.
      * @throws AssertionError - if the actual IStatus's message is not equal to the given one.
@@ -154,7 +168,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     /**
      * Verifies that the actual IStatus is multiStatus.
-     * 
+     *
      * @return this assertion object.
      * @throws AssertionError - if the actual IStatus is not multiStatus.
      */
@@ -176,7 +190,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     /**
      * Verifies that the actual IStatus is not multiStatus.
-     * 
+     *
      * @return this assertion object.
      * @throws AssertionError - if the actual IStatus is multiStatus.
      */
@@ -198,7 +212,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     /**
      * Verifies that the actual IStatus is oK.
-     * 
+     *
      * @return this assertion object.
      * @throws AssertionError - if the actual IStatus is not oK.
      */
@@ -220,7 +234,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     /**
      * Verifies that the actual IStatus is not oK.
-     * 
+     *
      * @return this assertion object.
      * @throws AssertionError - if the actual IStatus is oK.
      */
@@ -242,7 +256,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     /**
      * Verifies that the actual IStatus's plugin is equal to the given one.
-     * 
+     *
      * @param plugin the given plugin to compare the actual IStatus's plugin to.
      * @return this assertion object.
      * @throws AssertionError - if the actual IStatus's plugin is not equal to the given one.
@@ -265,7 +279,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     /**
      * Verifies that the actual IStatus's severity is equal to the given one.
-     * 
+     *
      * @param severity the given severity to compare the actual IStatus's severity to.
      * @return this assertion object.
      * @throws AssertionError - if the actual IStatus's severity is not equal to the given one.

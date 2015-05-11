@@ -44,10 +44,10 @@ public interface SWTBotConstants {
 
     public static final String VIEWS_OVERVIEW = "org.bonitasoft.studio.views.overview";
     public static final String VIEWS_TREE_OVERVIEW = "org.bonitasoft.studio.views.overview.tree";
-    
+
     public static final String VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES = "Variables";
     public static final String VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_IN = "Connectors in";
-    public static final String VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_OUT="Connectors out";
+    public static final String VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_OUT = "Connectors out";
 
     public static final String SWTBOT_ID_EXPLORER_LEFT_TREE = "org.bonitasoft.studio.treeexplorer.left";
     public static final String SWTBOT_ID_EXPLORER_RIGHT_TABLE = "org.bonitasoft.studio.treeexplorer.right";
@@ -57,7 +57,7 @@ public interface SWTBotConstants {
     public static final String APPLICATION_SECTION_FORMS_SELECTION_TREE = "org.bonitasoft.studio.application.formTree";
 
     public static final String SWTBOT_ID_INPUT_NAME_TEXTEDITOR = "SWTBOT_ID_INPUT_NAME_TEXTEDITOR";
-
+    public static final String SWTBOT_ID_INPUT_DESCRIPTION_TEXTEDITOR = "SWTBOT_ID_INPUT_DESCRIPTION_TEXTEDITOR";
     public static final String SWTBOT_ID_CONTRACT_INPUT_TREE = "SWTBOT_ID_CONTRACT_INPUT_TREE";
 
     public static final String SWTBOT_ID_CONTRACT_CONSTRAINT_TABLE = "SWTBOT_ID_CONTRACT_CONSTRAINT_TABLE";

@@ -141,6 +141,9 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
         } catch (final JavaModelException e) {
             BonitaStudioLog.error(String.format("Failed to retrieve %s type", BusinessObjectDAO.class.getName()), e);
         }
+        if (daoType == null) {
+            return Collections.emptyList();
+        }
         final ITypeHierarchy newTypeHierarchy = typeHierarchy(javaProject, daoType);
         if (newTypeHierarchy != null) {
             return newArrayList(newTypeHierarchy.getAllSubtypes(daoType));
