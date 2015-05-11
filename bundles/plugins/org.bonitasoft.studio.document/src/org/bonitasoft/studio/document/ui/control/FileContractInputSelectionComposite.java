@@ -22,6 +22,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withContractInputType;
+import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withMultipleInHierarchy;
 
 import java.util.List;
 
@@ -49,8 +50,6 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
-import com.google.common.base.Predicate;
 
 public class FileContractInputSelectionComposite extends Composite {
 
@@ -99,28 +98,12 @@ public class FileContractInputSelectionComposite extends Composite {
             @Override
             public Object convert(final Object fromObject) {
                 final List<ContractInput> result = ModelHelper.getAllElementOfTypeIn(processContract(context), ContractInput.class);
-                return document.isMultiple() ? newArrayList(filter(result, and(withContractInputType(ContractInputType.FILE), withMultipleInHierarchy()))) :
+                return document.isMultiple() ? newArrayList(filter(result,
+                        and(withContractInputType(ContractInputType.FILE), withMultipleInHierarchy()))) :
                         newArrayList(filter(result,
                                 and(withContractInputType(ContractInputType.FILE), not(withMultipleInHierarchy()))));
             }
 
-        };
-    }
-
-    private Predicate<ContractInput> withMultipleInHierarchy() {
-        return new Predicate<ContractInput>() {
-
-            @Override
-            public boolean apply(final ContractInput input) {
-                ContractInput current = input;
-                while (current.eContainer() instanceof ContractInput) {
-                    if (current.isMultiple()) {
-                        return true;
-                    }
-                    current = (ContractInput) current.eContainer();
-                }
-                return current.isMultiple();
-            }
         };
     }
 

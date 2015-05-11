@@ -34,6 +34,16 @@ public class AbstractProcessSwitch extends AbstractSwitch {
         builder = processBuilder;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.model.process.util.ProcessSwitch#casePool(org.bonitasoft.studio.model.process.Pool)
+     */
+    @Override
+    public Element casePool(final Pool pool) {
+        addDocuments(builder, pool);
+        return pool;
+    }
+
     @Override
     public Element caseAbstractProcess(final AbstractProcess process) {
         addActors(builder, process);

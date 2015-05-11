@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.engine.export.switcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.DocumentBuilder.aDocument;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -30,7 +31,6 @@ import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.expression.ExpressionType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
-import org.bonitasoft.studio.model.process.builders.DocumentBuilder;
 import org.bonitasoft.studio.model.process.builders.PoolBuilder;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.Before;
@@ -39,7 +39,6 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractProcessSwitchTest {
@@ -72,7 +71,7 @@ public class AbstractProcessSwitchTest {
     @Test
     public void testAddSimpleDocumentInContext() {
         final Pool pool = PoolBuilder.aPool()
-                .havingDocuments(DocumentBuilder.create().withName("myDoc"))
+                .havingDocuments(aDocument().withName("myDoc"))
                 .build();
         processSwitch.caseAbstractProcess(pool);
 
@@ -85,7 +84,7 @@ public class AbstractProcessSwitchTest {
     @Test
     public void testAddSMultipleDocumentInContext() {
         final Pool pool = PoolBuilder.aPool()
-                .havingDocuments(DocumentBuilder.create().withName("myDoc").multiple())
+                .havingDocuments(aDocument().withName("myDoc").multiple())
                 .build();
         processSwitch.caseAbstractProcess(pool);
 
@@ -99,7 +98,7 @@ public class AbstractProcessSwitchTest {
     public void testAddBusinessDataAndDocumentInContext() {
         final Pool pool = PoolBuilder.aPool()
                 .havingData(BusinessObjectDataBuilder.aBusinessData().withName("myBData").withClassname("my.classname"))
-                .havingDocuments(DocumentBuilder.create().withName("myDoc"))
+                .havingDocuments(aDocument().withName("myDoc"))
                 .build();
         processSwitch.caseAbstractProcess(pool);
 
