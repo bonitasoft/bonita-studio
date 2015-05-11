@@ -22,45 +22,45 @@ import org.osgi.framework.BundleContext;
  */
 public class UIDesignerPlugin extends AbstractUIPlugin {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.bonitasoft.studio.pagedesigner"; //$NON-NLS-1$
+    // The plug-in ID
+    public static final String PLUGIN_ID = "org.bonitasoft.studio.designer"; //$NON-NLS-1$
 
-	// The shared instance
-	private static UIDesignerPlugin plugin;
+    // The shared instance
+    private static UIDesignerPlugin plugin;
 
-	/**
-	 * The constructor
-	 */
-	public UIDesignerPlugin() {
-	}
+    /**
+     * The constructor
+     */
+    public UIDesignerPlugin() {
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+     */
+    @Override
     public void start(final BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-	}
+        super.start(context);
+        plugin = this;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+     */
+    @Override
     public void stop(final BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
+        plugin = null;
+        super.stop(context);
+    }
 
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static UIDesignerPlugin getDefault() {
-		return plugin;
-	}
+    /**
+     * Returns the shared instance
+     *
+     * @return the shared instance
+     */
+    public static UIDesignerPlugin getDefault() {
+        return plugin;
+    }
 
 }
