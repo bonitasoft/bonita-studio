@@ -310,11 +310,10 @@ public class DocumentWizardPage extends WizardPage {
         radioButtonScript.setText(Messages.initialValueButtonScript);
 
         final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(ProcessPackage.DOCUMENT_TYPE);
-        final IObservableValue btnDocumentTypeNone = SWTObservables.observeSelection(radioButtonScript);
-        documentTypeObservableValue.addOption(DocumentType.NONE, btnDocumentTypeNone);
-
-        final IObservableValue btnDocumentTypeContract = SWTObservables.observeSelection(radioButtonContract);
-        documentTypeObservableValue.addOption(DocumentType.CONTRACT, btnDocumentTypeContract);
+        documentTypeObservableValue.addOption(DocumentType.NONE, SWTObservables.observeSelection(radioButtonScript));
+        documentTypeObservableValue.addOption(DocumentType.INTERNAL, SWTObservables.observeSelection(radioButtonScript));
+        documentTypeObservableValue.addOption(DocumentType.EXTERNAL, SWTObservables.observeSelection(radioButtonScript));
+        documentTypeObservableValue.addOption(DocumentType.CONTRACT, SWTObservables.observeSelection(radioButtonContract));
 
         final IObservableValue documentTypeObservable = EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE);
         emfDataBindingContext.bindValue(
