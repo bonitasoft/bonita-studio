@@ -27,6 +27,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class WebFragmentRepositoryStore extends AbstractFolderRepositoryStore<WebFragmentFileStore> {
 
+    private static final String FRAGMENT_ICON_PATH = "fragment.png";
     private final static Set<String> extensions = new HashSet<String>();
     public static final String JSON_EXTENSION = "json";
     public static final String WEB_FRAGMENT_REPOSITORY_NAME = "web_fragments";
@@ -47,7 +48,7 @@ public class WebFragmentRepositoryStore extends AbstractFolderRepositoryStore<We
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("fragment.png", UIDesignerPlugin.getDefault());
+        return Pics.getImage(FRAGMENT_ICON_PATH, UIDesignerPlugin.getDefault());
     }
 
     @Override

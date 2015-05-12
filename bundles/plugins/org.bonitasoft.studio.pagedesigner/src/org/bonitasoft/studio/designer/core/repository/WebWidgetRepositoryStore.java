@@ -24,6 +24,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class WebWidgetRepositoryStore extends AbstractFolderRepositoryStore<WebWidgetFileStore> {
 
+    private static final String CUSTOM_WIDGET_ICON_PATH = "custom_widget.png";
     public static final String WEB_WIDGET_REPOSITORY_NAME = "web_widgets";
 
     @Override
@@ -38,7 +39,7 @@ public class WebWidgetRepositoryStore extends AbstractFolderRepositoryStore<WebW
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("custom_widget.png", UIDesignerPlugin.getDefault());
+        return Pics.getImage(CUSTOM_WIDGET_ICON_PATH, UIDesignerPlugin.getDefault());
     }
 
     @Override

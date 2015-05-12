@@ -30,6 +30,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class WebPageRepositoryStore extends AbstractFolderRepositoryStore<WebPageFileStore> {
 
+    private static final String PAGE_ICON_PATH = "page.png";
     private final static Set<String> extensions = new HashSet<String>();
     public static final String JSON_EXTENSION = "json";
     public static final String WEB_FORM_REPOSITORY_NAME = "web_page";
@@ -53,7 +54,7 @@ public class WebPageRepositoryStore extends AbstractFolderRepositoryStore<WebPag
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("page.png", UIDesignerPlugin.getDefault());
+        return Pics.getImage(PAGE_ICON_PATH, UIDesignerPlugin.getDefault());
     }
 
     @Override
