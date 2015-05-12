@@ -166,7 +166,7 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
         for(final Organization a : organizations){
             names.add(a.getName()) ;
         }
-        return NamingUtils.generateNewName(names,Messages.defaultOrganizationName) ;
+        return NamingUtils.generateNewName(names,Messages.defaultOrganizationName, 1) ;
     }
 
     private void updateButtons() {

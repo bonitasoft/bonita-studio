@@ -22,18 +22,18 @@ import org.bonitasoft.studio.contract.i18n.Messages;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.junit.Test;
 
-public class MVELProblemRequestorTest {
+public class CompilationProblemRequestorTest {
 
     @Test
     public void should_be_active() throws Exception {
-        final MVELProblemRequestor mvelProblemRequestor = new MVELProblemRequestor();
+        final CompilationProblemRequestor mvelProblemRequestor = new CompilationProblemRequestor();
 
         assertThat(mvelProblemRequestor.isActive()).isTrue();
     }
 
     @Test
     public void should_insert_problem_when_accepting() throws Exception {
-        final MVELProblemRequestor mvelProblemRequestor = new MVELProblemRequestor();
+        final CompilationProblemRequestor mvelProblemRequestor = new CompilationProblemRequestor();
 
         mvelProblemRequestor.acceptProblem(aProblem("An error message"));
 
@@ -42,7 +42,7 @@ public class MVELProblemRequestorTest {
 
     @Test
     public void should_reset_problems_when_beginning_report() throws Exception {
-        final MVELProblemRequestor mvelProblemRequestor = new MVELProblemRequestor();
+        final CompilationProblemRequestor mvelProblemRequestor = new CompilationProblemRequestor();
 
         mvelProblemRequestor.acceptProblem(aProblem("An error message"));
         mvelProblemRequestor.beginReporting();
@@ -52,7 +52,7 @@ public class MVELProblemRequestorTest {
 
     @Test
     public void should_print_a_human_readable_with_message_when_a_single_problem_has_been_found() throws Exception {
-        final MVELProblemRequestor mvelProblemRequestor = new MVELProblemRequestor();
+        final CompilationProblemRequestor mvelProblemRequestor = new CompilationProblemRequestor();
 
         mvelProblemRequestor.acceptProblem(aProblem("An error message"));
 
@@ -61,7 +61,7 @@ public class MVELProblemRequestorTest {
 
     @Test
     public void should_print_a_human_readable_message_when_several_problem_has_been_found() throws Exception {
-        final MVELProblemRequestor mvelProblemRequestor = new MVELProblemRequestor();
+        final CompilationProblemRequestor mvelProblemRequestor = new CompilationProblemRequestor();
 
         mvelProblemRequestor.acceptProblem(aProblem("An error message"));
         mvelProblemRequestor.acceptProblem(aProblem("Another error message"));

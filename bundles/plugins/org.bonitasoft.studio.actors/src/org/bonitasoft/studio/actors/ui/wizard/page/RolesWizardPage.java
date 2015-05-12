@@ -363,7 +363,7 @@ public class RolesWizardPage extends AbstractOrganizationWizardPage implements V
             names.add(r.getName()) ;
         }
 
-        return NamingUtils.generateNewName(names, Messages.defaultRoleName);
+        return NamingUtils.generateNewName(names, Messages.defaultRoleName, 1);
     }
 
     @Override

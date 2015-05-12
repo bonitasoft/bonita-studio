@@ -27,9 +27,9 @@ import org.eclipse.jface.action.IMenuManager;
  * @author Romain Bioteau
  *
  */
-public class MVELEditor extends GroovyEditor {
+public class ContractConstraintEditor extends GroovyEditor {
 
-    public MVELEditor() {
+    public ContractConstraintEditor() {
         super();
         setPreferenceStore(GroovyPlugin.getDefault().getPreferenceStore());
     }

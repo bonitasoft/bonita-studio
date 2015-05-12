@@ -34,10 +34,10 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MVELEditorTest {
+public class ContractConstraintEditorTest {
 
     @Mock
-    private MVELEditor editor;
+    private ContractConstraintEditor editor;
     @Mock
     private IMenuManager menuManager;
 

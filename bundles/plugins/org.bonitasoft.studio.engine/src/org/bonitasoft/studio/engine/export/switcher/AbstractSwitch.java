@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012-2015 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -51,6 +51,7 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
+import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.Task;
@@ -80,6 +81,8 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     public static final String DB_QUERY = "script";
     public static final String DB_USER = "username";
     public static final String DB_PASSWORD = "password";
+
+    private static final String SUFFIX_CONTEXT = "_ref";
 
     public AbstractSwitch(final Set<EObject> eObjectNotExported) {
         this.eObjectNotExported = eObjectNotExported;
@@ -251,16 +254,43 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
         }
     }
 
+    protected void addDocuments(final ProcessDefinitionBuilder builder, final Pool pool) {
+        if (pool != null) {
+            for (final Document document : pool.getDocuments()) {
+                final IEngineDefinitionBuilder documentBuilder = getEngineDefinitionBuilder(pool, document);
+                documentBuilder.setEngineBuilder(builder);
+                try {
+                    documentBuilder.build(document);
+                } catch (final BuildProcessDefinitionException e) {
+                    throw new RuntimeException("Failed to export document definition for " + ((Element) pool).getName(), e);
+                }
+            }
+        }
+    }
+
     protected void addContext(final Object contextBuilder, final Task task) {
         final Pool pool = ModelHelper.getParentPool(task);
         addContext(contextBuilder, pool);
     }
 
     protected void addContext(final Object contextBuilder, final Pool pool) {
+        addBusinessDataInContext(contextBuilder, pool);
+        addDocumentInContext(contextBuilder, pool);
+    }
+
+    protected void addDocumentInContext(final Object contextBuilder, final Pool pool) {
+        for (final Document document : pool.getDocuments()) {
+            final String referenceName = document.getName() + SUFFIX_CONTEXT;
+            final Expression documentReferenceExpression = EngineExpressionUtil.createDocumentExpression(document);
+            addContextEntry(contextBuilder, referenceName, documentReferenceExpression);
+        }
+    }
+
+    protected void addBusinessDataInContext(final Object contextBuilder, final Pool pool) {
         for (final Data data : pool.getData()) {
             if (data instanceof BusinessObjectData) {
-                final String referenceName = data.getName() + "_ref";
-                final org.bonitasoft.engine.expression.Expression referenceExpression = EngineExpressionUtil.createBusinessObjectDataReferenceExpression((BusinessObjectData) data);
+                final String referenceName = data.getName() + SUFFIX_CONTEXT;
+                final Expression referenceExpression = EngineExpressionUtil.createBusinessObjectDataReferenceExpression((BusinessObjectData) data);
                 addContextEntry(contextBuilder, referenceName, referenceExpression);
             }
         }

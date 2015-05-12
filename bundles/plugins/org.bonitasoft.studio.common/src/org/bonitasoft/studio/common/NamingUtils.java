@@ -288,12 +288,19 @@ public class NamingUtils {
         return name + "_" + version.replace(".", "_");
     }
 
-    public static String generateNewName(final Set<String> existingNames, final String defaultName) {
-        int cpt = 1;
-        while (existingNames.contains(defaultName + cpt)) {
-            cpt++;
+    public static String generateNewName(final Set<String> existingNames, final String defaultName, int startIndex) {
+        if (startIndex == 0 && existingNames.contains(defaultName) || startIndex > 0) {
+            if (startIndex == 0) {
+                startIndex++;
+            }
+            while (existingNames.contains(defaultName + startIndex)) {
+                startIndex++;
+            }
+            if (startIndex > 0) {
+                return defaultName + startIndex;
+            }
         }
-        return defaultName + cpt;
+        return defaultName;
     }
 
     /**

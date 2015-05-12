@@ -219,7 +219,7 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
             names.add(p.getName());
         }
 
-        param.setName(NamingUtils.generateNewName(names, Messages.paramDefaultName));
+        param.setName(NamingUtils.generateNewName(names, Messages.paramDefaultName, 1));
         param.setValue("");
         param.setDescription("");
         param.setTypeClassname(String.class.getName());

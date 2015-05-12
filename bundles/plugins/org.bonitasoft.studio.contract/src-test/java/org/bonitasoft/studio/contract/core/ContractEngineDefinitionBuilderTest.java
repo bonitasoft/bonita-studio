@@ -16,6 +16,7 @@ package org.bonitasoft.studio.contract.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
+import static org.bonitasoft.studio.model.process.builders.ContractConstraintBuilder.aContractConstraint;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -176,7 +177,9 @@ public class ContractEngineDefinitionBuilderTest {
     @Test
     public void should_build_create_a_contract_with_constraint() throws Exception {
         final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
-        aContract.getConstraints().add(ContractConstraintUtil.createConstraint("myConstraint", "name.length < 50", "name is too long", nameInput));
+        aContract.getConstraints().add(
+                aContractConstraint().withName("myConstraint").withExpression("name.length < 50").withErrorMessage("name is too long")
+                        .havingInput(nameInput.getName()).build());
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
         verify(contractDefBuilder).addInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());

@@ -36,7 +36,12 @@ public class ContractContainerAdaptableSelectionProvider extends EObjectAdaptabl
     @Override
     public Object getAdapter(final Class adapter) {
         if (EObject.class.equals(adapter)) {
-            return asContractContainer((EObject) ((IAdaptable) unwrap(selection)).getAdapter(EObject.class));
+            final Object unwrapSelection = unwrap(selection);
+            if (unwrapSelection instanceof IAdaptable) {
+                return asContractContainer((EObject) ((IAdaptable) unwrapSelection).getAdapter(EObject.class));
+            } else if (unwrapSelection instanceof EObject) {
+                return asContractContainer((EObject) unwrapSelection);
+            }
         }
         return null;
     }

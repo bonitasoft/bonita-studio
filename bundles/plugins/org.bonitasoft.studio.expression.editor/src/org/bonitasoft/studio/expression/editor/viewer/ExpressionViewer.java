@@ -79,6 +79,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.internal.databinding.observable.UnmodifiableObservableValue;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -382,18 +383,20 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             while (iterator.hasNext()) {
                 final ValidationStatusProvider validationStatusProvider = (ValidationStatusProvider) iterator.next();
                 final IObservableValue validationStatus = validationStatusProvider.getValidationStatus();
-                final IStatus status = (IStatus) validationStatus.getValue();
-                if (status != null) {
-                    if (status.isOK()) {
-                        validationStatus.setValue(ValidationStatus.ok());
-                    } else if (status.getSeverity() == IStatus.WARNING) {
-                        validationStatus.setValue(ValidationStatus.warning(status.getMessage()));
-                    } else if (status.getSeverity() == IStatus.INFO) {
-                        validationStatus.setValue(ValidationStatus.info(status.getMessage()));
-                    } else if (status.getSeverity() == IStatus.ERROR) {
-                        validationStatus.setValue(ValidationStatus.error(status.getMessage()));
-                    } else if (status.getSeverity() == IStatus.CANCEL) {
-                        validationStatus.setValue(ValidationStatus.cancel(status.getMessage()));
+                if (!(validationStatus instanceof UnmodifiableObservableValue)) {
+                    final IStatus status = (IStatus) validationStatus.getValue();
+                    if (status != null) {
+                        if (status.isOK()) {
+                            validationStatus.setValue(ValidationStatus.ok());
+                        } else if (status.getSeverity() == IStatus.WARNING) {
+                            validationStatus.setValue(ValidationStatus.warning(status.getMessage()));
+                        } else if (status.getSeverity() == IStatus.INFO) {
+                            validationStatus.setValue(ValidationStatus.info(status.getMessage()));
+                        } else if (status.getSeverity() == IStatus.ERROR) {
+                            validationStatus.setValue(ValidationStatus.error(status.getMessage()));
+                        } else if (status.getSeverity() == IStatus.CANCEL) {
+                            validationStatus.setValue(ValidationStatus.cancel(status.getMessage()));
+                        }
                     }
                 }
             }
@@ -404,7 +407,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         final EditingDomain editingDomain = getEditingDomain();
         if (editingDomain != null) {
             final CompoundCommand cc = ExpressionHelper.clearExpression(selectedExpression, editingDomain);
-            if(overrideDefaultReturnType() != null){
+            if (overrideDefaultReturnType() != null) {
                 cc.append(SetCommand.create(editingDomain, selectedExpression,
                         ExpressionPackage.Literals.EXPRESSION__TYPE, overrideDefaultReturnType()));
             }
@@ -414,7 +417,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             }
         } else {
             ExpressionHelper.clearExpression(selectedExpression);
-            if(overrideDefaultReturnType() != null){
+            if (overrideDefaultReturnType() != null) {
                 selectedExpression.setReturnType(overrideDefaultReturnType());
             }
         }
@@ -746,9 +749,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         }
         targetToModelNameStrategy.setConverter(getNameConverter());
 
-        final ISWTObservableValue observeDelayedValue = SWTObservables.observeDelayedValue(500,
+        final ISWTObservableValue textDelayedObservableValue = SWTObservables.observeDelayedValue(500,
                 SWTObservables.observeText(textControl, SWT.Modify));
-        expressionBinding = internalDataBindingContext.bindValue(observeDelayedValue, nameObservable,
+        expressionBinding = internalDataBindingContext.bindValue(textDelayedObservableValue, nameObservable,
                 targetToModelNameStrategy, updateValueStrategy().create());
         bindEditableText(typeObservable);
         if (externalDataBindingContext != null) {

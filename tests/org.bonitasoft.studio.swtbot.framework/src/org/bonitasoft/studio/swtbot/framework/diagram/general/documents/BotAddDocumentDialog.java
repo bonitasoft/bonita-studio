@@ -17,6 +17,7 @@ import org.bonitasoft.studio.swtbot.framework.StudioAPIUtil;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.expression.BotScriptExpressionEditor;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 
@@ -108,10 +109,9 @@ public class BotAddDocumentDialog extends BotWizardDialog {
         bot.textWithLabel(Messages.documentExternalLabel + " *").setText(pURL);
     }
 
-
     /**
      * get URL expressionEditor.
-     * 
+     *
      * @param pURL
      */
     public void setURLWithExpressionEditor(final String pURL) {
@@ -131,7 +131,6 @@ public class BotAddDocumentDialog extends BotWizardDialog {
     public void chooseMultipleContent() {
         bot.radio(Messages.radioButtonMultiple).click();
     }
-
 
     /**
      * MIME TYPE.
@@ -182,6 +181,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
     public boolean isMymeTypeFieldEnabled() {
         return bot.link("<A>" + Messages.manageMimeType + "</A>").isEnabled();
     }
+
     /**
      * VALIDATION
      */
@@ -219,8 +219,8 @@ public class BotAddDocumentDialog extends BotWizardDialog {
      *
      * @return
      */
-    public boolean isErrorMessageAlreadyExist() {
-        return isErrorMessage(Messages.error_documentAllreadyexist);
+    public boolean isErrorMessageAlreadyExist(final String docName) {
+        return isErrorMessage(NLS.bind(org.bonitasoft.studio.common.Messages.unicityErrorMessage, docName));
     }
 
     /**
@@ -256,5 +256,13 @@ public class BotAddDocumentDialog extends BotWizardDialog {
     public boolean isInitialContentEmpty() {
         bot.shell(Messages.newDocument).setFocus();
         return bot.textWithLabel(Messages.documentInternalLabel + " *").getText().isEmpty();
+    }
+
+    public boolean hasNoValidationError() {
+        return hasTextVisible(Messages.newDocumentWizardDescription) || hasTextVisible(Messages.editDocumentDescription);
+    }
+
+    public boolean canFinish() {
+        return isFinishEnabled() && isFinishAndAddEnabled();
     }
 }

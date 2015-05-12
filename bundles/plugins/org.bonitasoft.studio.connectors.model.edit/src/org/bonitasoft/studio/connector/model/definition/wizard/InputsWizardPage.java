@@ -98,7 +98,7 @@ public class InputsWizardPage extends WizardPage implements ISelectionChangedLis
             names.add(i.getName()) ;
         }
 
-        return NamingUtils.generateNewName(names, Messages.defaultInputName);
+        return NamingUtils.generateNewName(names, Messages.defaultInputName, 1);
     }
 
 

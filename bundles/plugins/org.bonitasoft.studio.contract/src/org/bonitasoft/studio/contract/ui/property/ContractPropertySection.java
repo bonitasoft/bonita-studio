@@ -16,15 +16,20 @@ package org.bonitasoft.studio.contract.ui.property;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraintController;
 import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraintsTableViewer;
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputController;
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputTreeViewer;
+import org.bonitasoft.studio.contract.ui.wizard.AddInputContractFromDataWizardDialog;
+import org.bonitasoft.studio.contract.ui.wizard.ContractInputGenerationWizard;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -41,6 +46,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
@@ -54,8 +60,11 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -177,6 +186,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private void createInputTabContent(final Composite parent, final IObservableValue observeContractValue) {
         final Composite buttonsComposite = createButtonContainer(parent);
+
+        createGenerateButton(buttonsComposite);
         final Button addButton = createButton(buttonsComposite, Messages.add);
         final Button addChildButton = createButton(buttonsComposite, Messages.addChild);
         final Button removeButton = createButton(buttonsComposite, Messages.remove);
@@ -192,6 +203,29 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
         bindRemoveButtonEnablement(removeButton, inputsTableViewer);
         bindAddChildButtonEnablement(addChildButton, inputsTableViewer);
+    }
+
+    private void createGenerateButton(final Composite buttonsComposite) {
+        final Button generateButton = createButton(buttonsComposite, Messages.generate);
+        generateButton.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                openAddInputWizardDialog();
+            }
+        });
+    }
+
+    public void openAddInputWizardDialog() {
+        final AddInputContractFromDataWizardDialog dialog = new AddInputContractFromDataWizardDialog(Display.getCurrent().getActiveShell(),
+                new ContractInputGenerationWizard(
+                        (ContractContainer) selectionProvider.getAdapter(EObject.class),
+                        getEditingDomain(), RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class)), this, true);
+        dialog.open();
     }
 
     private Button createButton(final Composite buttonsComposite, final String label) {
