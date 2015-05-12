@@ -20,25 +20,13 @@ import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.wit
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 public class DocumentWithContractInputContentConstraint extends AbstractLiveValidationMarkerConstraint {
-
-    @Override
-    protected IStatus performLiveValidation(final IValidationContext ctx) {
-        return ctx.createSuccessStatus();
-    }
-
-    @Override
-    protected String getMarkerType(final DiagramEditor editor) {
-        return ProcessMarkerNavigationProvider.MARKER_TYPE;
-    }
 
     @Override
     protected String getConstraintId() {
