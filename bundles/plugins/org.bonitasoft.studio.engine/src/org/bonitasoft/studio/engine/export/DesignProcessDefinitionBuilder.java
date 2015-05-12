@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.engine.export;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,11 +28,7 @@ import org.bonitasoft.studio.engine.export.builder.EngineProcessBuilder;
 import org.bonitasoft.studio.engine.export.builder.EngineSequenceFlowBuilder;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.LinkEvent;
-import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
@@ -46,17 +41,7 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class DesignProcessDefinitionBuilder {
 
-    private final Set<String> definedAuthorities;
-    private final Set<Data> definedData;
-    private final Set<LinkEvent> definedLink;
-    private Set<EObject> eObjectNotExported;
-
-    public DesignProcessDefinitionBuilder() {
-        definedAuthorities = new HashSet<String>();
-        definedData = new HashSet<Data>();
-        definedLink = new HashSet<LinkEvent>();
-        eObjectNotExported = new HashSet<EObject>();
-    }
+    private Set<EObject> eObjectNotExported = new HashSet<EObject>();
 
     public Set<EObject> geteObjectNotExported() {
         return eObjectNotExported;
@@ -66,48 +51,6 @@ public class DesignProcessDefinitionBuilder {
         this.eObjectNotExported = eObjectNotExported;
     }
 
-    /**
-     * can be called on a MainProcess
-     *
-     * @param studioProcess
-     * @return
-     * @throws BonitaExportException
-     * @throws InvalidProcessDefinitionException
-     */
-    public List<DesignProcessDefinition> createProcessDefinition(final AbstractProcess studioProcess) throws InvalidProcessDefinitionException {
-        final List<DesignProcessDefinition> res = new ArrayList<DesignProcessDefinition>();
-
-        final DesignProcessDefinition def = createDefinition(studioProcess);
-        if (null != def) {
-            res.add(def);
-            reset();
-        }
-
-        if (studioProcess instanceof MainProcess) {
-            for (final Element item : studioProcess.getElements()) {
-                if (item instanceof AbstractProcess) {
-                    res.addAll(createProcessDefinition((AbstractProcess) item));
-                }
-            }
-        }
-
-        return res;
-    }
-
-    private void reset() {
-        definedAuthorities.clear();
-        definedData.clear();
-        definedLink.clear();
-    }
-
-    /**
-     * Must be called on a single process
-     *
-     * @param process
-     * @return
-     * @throws BonitaExportException
-     * @throws InvalidProcessDefinitionException
-     */
     public DesignProcessDefinition createDefinition(final AbstractProcess process) throws InvalidProcessDefinitionException {
         final ProcessDefinitionBuilder processBuilder = createProcessDefinitionBuilderInstance(process);
         final String decription = process.getDocumentation();
