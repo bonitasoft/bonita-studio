@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.engine.export.switcher;
+package org.bonitasoft.studio.engine.export.builder;
 
 import static com.google.common.collect.Iterables.find;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +24,7 @@ import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.
 import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
 import static org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder.aStringDataType;
 
+import org.bonitasoft.studio.engine.export.builder.GroovyConnectorConfigurationConverter;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;

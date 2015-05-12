@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.engine.export.switcher;
+package org.bonitasoft.studio.engine.export.builder;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -28,6 +28,7 @@ import java.util.HashSet;
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.engine.bpm.process.impl.ConnectorDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
+import org.bonitasoft.studio.engine.export.builder.AbstractProcessBuilder;
 import org.bonitasoft.studio.model.kpi.AbstractKPIBinding;
 import org.bonitasoft.studio.model.kpi.KpiFactory;
 import org.bonitasoft.studio.model.process.ConnectableElement;
@@ -40,9 +41,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AbstractSwitchTest {
+public class AbstractProcessBuilderTest {
 
-    private AbstractSwitch abstractSwitch;
+    private AbstractProcessBuilder abstractSwitch;
     @Mock
     private FlowElementBuilder builder;
     @Mock
@@ -51,7 +52,7 @@ public class AbstractSwitchTest {
     @Before
     public void setup() {
         doReturn(connectorBuilder).when(builder).addConnector(anyString(), anyString(), anyString(), any(ConnectorEvent.class));
-        abstractSwitch = spy(new AbstractSwitch(new HashSet<EObject>()) {
+        abstractSwitch = spy(new AbstractProcessBuilder(new HashSet<EObject>()) {
         });
     }
 

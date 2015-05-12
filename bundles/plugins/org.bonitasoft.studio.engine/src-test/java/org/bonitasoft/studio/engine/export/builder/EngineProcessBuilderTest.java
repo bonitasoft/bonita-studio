@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.engine.export.switcher;
+package org.bonitasoft.studio.engine.export.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.DocumentBuilder.aDocument;
@@ -29,6 +29,7 @@ import org.bonitasoft.engine.bpm.process.impl.BusinessDataDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.expression.ExpressionType;
+import org.bonitasoft.studio.engine.export.builder.EngineProcessBuilder;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
 import org.bonitasoft.studio.model.process.builders.PoolBuilder;
@@ -41,9 +42,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AbstractProcessSwitchTest {
+public class EngineProcessBuilderTest {
 
-    private AbstractProcessSwitch processSwitch;
+    private EngineProcessBuilder processSwitch;
     @Mock
     ProcessDefinitionBuilder processDefBuilder;
     @Mock
@@ -51,7 +52,7 @@ public class AbstractProcessSwitchTest {
 
     @Before
     public void setup() {
-        processSwitch = spy(new AbstractProcessSwitch(processDefBuilder, Collections.<EObject> emptySet()));
+        processSwitch = spy(new EngineProcessBuilder(processDefBuilder, Collections.<EObject> emptySet()));
         doReturn(bDataBuilder).when(processDefBuilder).addBusinessData(anyString(), anyString(), any(Expression.class));
     }
 

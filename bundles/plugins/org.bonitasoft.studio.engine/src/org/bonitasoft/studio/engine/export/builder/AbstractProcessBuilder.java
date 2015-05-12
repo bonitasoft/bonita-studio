@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.engine.export.switcher;
+package org.bonitasoft.studio.engine.export.builder;
 
 import static com.google.common.collect.Iterables.find;
 
@@ -66,7 +66,7 @@ import com.google.common.base.Predicate;
 /**
  * @author Romain Bioteau
  */
-public abstract class AbstractSwitch extends ProcessSwitch<Element> {
+public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
 
     private static final String ENGINE_DEFINITION_BUILDER_EXTENSION_ID = "org.bonitasoft.studio.engine.definition.builder";
 
@@ -84,7 +84,7 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
 
     private static final String SUFFIX_CONTEXT = "_ref";
 
-    public AbstractSwitch(final Set<EObject> eObjectNotExported) {
+    public AbstractProcessBuilder(final Set<EObject> eObjectNotExported) {
         this.eObjectNotExported = eObjectNotExported;
     }
 
@@ -228,9 +228,9 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
         }
     }
 
-    protected DataSwitch getDataSwitch(
+    protected EngineDataBuilder getDataSwitch(
             final FlowElementBuilder dataContainerBuilder, final Data data) {
-        return new DataSwitch(data, dataContainerBuilder);
+        return new EngineDataBuilder(data, dataContainerBuilder);
     }
 
     protected void addDescription(final DescriptionBuilder builder, final String description) {
