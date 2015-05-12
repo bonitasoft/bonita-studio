@@ -36,11 +36,11 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.designer.UIDesignerPlugin;
+import org.bonitasoft.studio.designer.core.WorkspaceResourceServerManager;
+import org.bonitasoft.studio.designer.core.WorkspaceSystemProperties;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.server.PortConfigurator;
-import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
-import org.bonitasoft.studio.pagedesigner.core.WorkspaceResourceServerManager;
-import org.bonitasoft.studio.pagedesigner.core.WorkspaceSystemProperties;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.resources.IFile;
@@ -174,7 +174,7 @@ public class BOSWebServerManager {
 
     protected void addPageBuilderWar(final File targetFolder, final IProgressMonitor monitor) throws IOException {
         BonitaStudioLog.debug("Copying Designer war in tomcat/webapps...", EnginePlugin.PLUGIN_ID);
-        final URL url = Platform.getBundle(PageDesignerPlugin.PLUGIN_ID).getResource("webapp");
+        final URL url = Platform.getBundle(UIDesignerPlugin.PLUGIN_ID).getResource("webapp");
         final File pageBuilderWarFile = new File(FileLocator.toFileURL(url).getFile(), "designer.war");
         PlatformUtil.copyResource(new File(targetFolder, "webapps"), pageBuilderWarFile, monitor);
         BonitaStudioLog.debug("Designer war copied in tomcat/webapps.",
