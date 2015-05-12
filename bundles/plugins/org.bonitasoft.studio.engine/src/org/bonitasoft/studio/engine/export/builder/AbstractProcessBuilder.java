@@ -125,12 +125,9 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
 
     protected void addActors(final ProcessDefinitionBuilder builder, final AbstractProcess process) {
         for (final Actor a : process.getActors()) {
-            final ActorDefinitionBuilder actorBuilder = builder.addActor(a.getName());
+            final ActorDefinitionBuilder actorBuilder = builder.addActor(a.getName(), a.isInitiator());
             if (a.getDocumentation() != null) {
                 actorBuilder.addDescription(a.getDocumentation());
-            }
-            if (a.isInitiator()) {
-                actorBuilder.setActorInitiator(a.getName());
             }
         }
     }
