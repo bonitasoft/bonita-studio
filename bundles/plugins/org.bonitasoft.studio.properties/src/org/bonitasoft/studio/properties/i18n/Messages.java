@@ -102,7 +102,6 @@ public class Messages extends NLS {
 
     public static String assignTo;
     public static String sourceParameter;
-    public static String targetParameter;
 
     public static String removeEventConfirmMessage;
 
@@ -448,6 +447,11 @@ public class Messages extends NLS {
     public static String generateInitialValueForBusinessDataHint;
 
     public static String noBusinessDataAvailable;
+
+    public static String assignToContractInput;
+    public static String assignToData;
+    public static String targetParameterForOutput;
+    public static String targetParameterForInput;
 
     static {
         // initialize resource bundle
