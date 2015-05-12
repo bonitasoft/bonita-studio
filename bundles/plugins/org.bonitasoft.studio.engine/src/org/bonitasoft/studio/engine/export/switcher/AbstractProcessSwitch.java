@@ -17,7 +17,6 @@ package org.bonitasoft.studio.engine.export.switcher;
 import java.util.Set;
 
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
-import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.emf.ecore.EObject;
@@ -41,21 +40,14 @@ public class AbstractProcessSwitch extends AbstractSwitch {
     @Override
     public Element casePool(final Pool pool) {
         addDocuments(builder, pool);
+        addActors(builder, pool);
+        addData(builder, pool);
+        addParameters(builder, pool);
+        addConnector(builder, pool);
+        addKPIBinding(builder, pool);
+        addContract(builder, pool);
+        addContext(builder, pool);
         return pool;
-    }
-
-    @Override
-    public Element caseAbstractProcess(final AbstractProcess process) {
-        addActors(builder, process);
-        addData(builder, process);
-        addParameters(builder, process);
-        addConnector(builder, process);
-        addKPIBinding(builder, process);
-        if (process instanceof Pool) {
-            addContract(builder, (Pool) process);
-            addContext(builder, (Pool) process);
-        }
-        return process;
     }
 
     public ProcessDefinitionBuilder getProcessBuilder() {
