@@ -17,23 +17,16 @@ package org.bonitasoft.studio.validation.constraints.process;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
-import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
  * @author Romain Bioteau
  */
 public class SequenceFlowConstraint extends AbstractLiveValidationMarkerConstraint {
-
-    @Override
-    protected IStatus performLiveValidation(final IValidationContext ctx) {
-        return ctx.createSuccessStatus();
-    }
 
     @Override
     protected IStatus performBatchValidation(final IValidationContext ctx) {
@@ -53,11 +46,6 @@ public class SequenceFlowConstraint extends AbstractLiveValidationMarkerConstrai
         }
 
         return ctx.createSuccessStatus();
-    }
-
-    @Override
-    protected String getMarkerType(final DiagramEditor editor) {
-        return ProcessMarkerNavigationProvider.MARKER_TYPE;
     }
 
     @Override
