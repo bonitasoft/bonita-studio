@@ -124,7 +124,7 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
         }
         final boolean ok = super.performOk();
         if (newPort != -1) {
-            updatePortConfiguration(port.getIntValue());
+            updatePortConfiguration(newPort);
         }
         return ok;
     }
@@ -157,7 +157,7 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
     public void propertyChange(final PropertyChangeEvent event) {
         if (event.getSource().equals(port)) {
             if (port.isValid()) {
-                newPort = Integer.valueOf((String) event.getNewValue());
+                newPort = port.getIntValue();
             }
         }
         super.propertyChange(event);
