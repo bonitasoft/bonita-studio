@@ -69,6 +69,33 @@ public class FieldToContractInputMappingViewerCheckStateManagerTest {
         assertThat(viewer.getChecked(rootMapping)).isFalse();
     }
 
+    @Test
+    public void should_not_deselectParent_IfNoChildIsSelected() {
+        final FieldToContractInputMappingViewerCheckStateManager checkedStateManager = new FieldToContractInputMappingViewerCheckStateManager();
+
+        final FieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
+        final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
+        final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
+        rootMapping.addChild(childMapping1);
+        rootMapping.addChild(childMapping2);
+        final CheckboxTreeViewer viewer = aCheckBoxTreeViewer(Lists.newArrayList(rootMapping));
+        checkedStateManager.checkStateChanged(new CheckStateChangedEvent(viewer, childMapping2, true));
+        checkedStateManager.checkStateChanged(new CheckStateChangedEvent(viewer, childMapping1, false));
+
+        assertThat(viewer.getChecked(rootMapping)).isTrue();
+    }
+
+    @Test
+    public void should_not_deselectParent_IfmappingHasNoParent() {
+        final FieldToContractInputMappingViewerCheckStateManager checkedStateManager = new FieldToContractInputMappingViewerCheckStateManager();
+
+        final FieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
+
+        final CheckboxTreeViewer viewer = aCheckBoxTreeViewer(Lists.newArrayList(rootMapping));
+        checkedStateManager.checkStateChanged(new CheckStateChangedEvent(viewer, rootMapping, false));
+        assertThat(viewer.getChecked(rootMapping)).isFalse();
+    }
+
     private CheckboxTreeViewer aCheckBoxTreeViewer(final List<FieldToContractInputMapping> input) {
         final CheckboxTreeViewer viewer = new CheckboxTreeViewer(realmWithDisplay.createComposite());
         viewer.setContentProvider(new ObservableListTreeContentProvider(new FieldToContractInputMappingObservableFactory(),
