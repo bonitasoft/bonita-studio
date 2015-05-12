@@ -124,7 +124,7 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
         }
         final boolean ok = super.performOk();
         if (newPort != -1) {
-            updatePortConfiguration(port.getIntValue());
+            updatePortConfiguration(newPort);
         }
         return ok;
     }
