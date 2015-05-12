@@ -60,7 +60,7 @@ public class AbstractProcessSwitchTest {
         final Pool pool = PoolBuilder.aPool()
                 .havingData(BusinessObjectDataBuilder.aBusinessData().withName("myBData").withClassname("my.classname"))
                 .build();
-        processSwitch.caseAbstractProcess(pool);
+        processSwitch.casePool(pool);
 
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
         verify(processDefBuilder).addContextEntry(eq("myBData_ref"), argument.capture());
@@ -73,7 +73,7 @@ public class AbstractProcessSwitchTest {
         final Pool pool = PoolBuilder.aPool()
                 .havingDocuments(aDocument().withName("myDoc"))
                 .build();
-        processSwitch.caseAbstractProcess(pool);
+        processSwitch.casePool(pool);
 
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
         verify(processDefBuilder).addContextEntry(eq("myDoc_ref"), argument.capture());
@@ -86,7 +86,7 @@ public class AbstractProcessSwitchTest {
         final Pool pool = PoolBuilder.aPool()
                 .havingDocuments(aDocument().withName("myDoc").multiple())
                 .build();
-        processSwitch.caseAbstractProcess(pool);
+        processSwitch.casePool(pool);
 
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
         verify(processDefBuilder).addContextEntry(eq("myDoc_ref"), argument.capture());
@@ -100,7 +100,7 @@ public class AbstractProcessSwitchTest {
                 .havingData(BusinessObjectDataBuilder.aBusinessData().withName("myBData").withClassname("my.classname"))
                 .havingDocuments(aDocument().withName("myDoc"))
                 .build();
-        processSwitch.caseAbstractProcess(pool);
+        processSwitch.casePool(pool);
 
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
         verify(processDefBuilder).addContextEntry(eq("myBData_ref"), argument.capture());
