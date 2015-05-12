@@ -23,10 +23,10 @@ import org.bonitasoft.engine.bpm.process.DesignProcessDefinition;
 import org.bonitasoft.engine.bpm.process.InvalidProcessDefinitionException;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.engine.export.switcher.AbstractProcessSwitch;
-import org.bonitasoft.studio.engine.export.switcher.AbstractSwitch;
-import org.bonitasoft.studio.engine.export.switcher.FlowElementSwitch;
-import org.bonitasoft.studio.engine.export.switcher.SequenceFlowSwitch;
+import org.bonitasoft.studio.engine.export.builder.AbstractProcessBuilder;
+import org.bonitasoft.studio.engine.export.builder.EngineFlowElementBuilder;
+import org.bonitasoft.studio.engine.export.builder.EngineProcessBuilder;
+import org.bonitasoft.studio.engine.export.builder.EngineSequenceFlowBuilder;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.Data;
@@ -115,12 +115,9 @@ public class DesignProcessDefinitionBuilder {
             processBuilder.addDescription(decription);
             processBuilder.addDisplayDescription(decription);
         }
-        final AbstractProcessSwitch processSwitch = createProcessSwitch(processBuilder);
-        processSwitch.doSwitch(process);
-
+        newEngineProcessBuilder(processBuilder).doSwitch(process);
         processFlowElements(process, processBuilder);
         processSequenceFlows(process, processBuilder);
-
         return processBuilder.done();
     }
 
@@ -128,14 +125,14 @@ public class DesignProcessDefinitionBuilder {
         return new ProcessDefinitionBuilder().createNewInstance(process.getName(), process.getVersion());
     }
 
-    protected AbstractProcessSwitch createProcessSwitch(final ProcessDefinitionBuilder processBuilder) {
-        return new AbstractProcessSwitch(processBuilder, eObjectNotExported);
+    protected EngineProcessBuilder newEngineProcessBuilder(final ProcessDefinitionBuilder processBuilder) {
+        return new EngineProcessBuilder(processBuilder, eObjectNotExported);
     }
 
     protected void processFlowElements(final AbstractProcess process,
             final ProcessDefinitionBuilder processBuilder) {
         final List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.FLOW_ELEMENT);
-        final AbstractSwitch flowElementSwitch = createFlowElementSwitch(processBuilder);
+        final AbstractProcessBuilder flowElementSwitch = newEngineFlowElementBuilder(processBuilder);
         for (final FlowElement flowElement : flowElements) {
             if (!eObjectNotExported.contains(flowElement) && !ModelHelper.isInEvenementialSubProcessPool(flowElement)) {
                 flowElementSwitch.doSwitch(flowElement);
@@ -149,15 +146,15 @@ public class DesignProcessDefinitionBuilder {
         }
     }
 
-    protected AbstractSwitch createFlowElementSwitch(
+    protected AbstractProcessBuilder newEngineFlowElementBuilder(
             final ProcessDefinitionBuilder processBuilder) {
-        return new FlowElementSwitch(processBuilder, eObjectNotExported);
+        return new EngineFlowElementBuilder(processBuilder, eObjectNotExported);
     }
 
     protected void processSequenceFlows(final AbstractProcess process,
             final ProcessDefinitionBuilder processBuilder) {
         final List<SourceElement> sourceElements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.SOURCE_ELEMENT);
-        final SequenceFlowSwitch sequenceFlowSwitch = new SequenceFlowSwitch(processBuilder);
+        final EngineSequenceFlowBuilder sequenceFlowSwitch = new EngineSequenceFlowBuilder(processBuilder);
         for (final SourceElement sourceElement : sourceElements) {
             for (final Connection connection : sourceElement.getOutgoing()) {
                 if (!ModelHelper.isInEvenementialSubProcessPool(connection.getSource())) {

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.engine.export.switcher;
+package org.bonitasoft.studio.engine.export.builder;
 
 import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
 import org.bonitasoft.studio.decision.core.DecisionTableUtil;
@@ -37,11 +37,11 @@ import org.bonitasoft.studio.model.process.util.ProcessSwitch;
  * @author Romain Bioteau
  *
  */
-public class SequenceFlowSwitch extends ProcessSwitch<SequenceFlow> {
+public class EngineSequenceFlowBuilder extends ProcessSwitch<SequenceFlow> {
 
 	private final FlowElementBuilder builder;
 
-	public SequenceFlowSwitch(FlowElementBuilder processBuilder){
+	public EngineSequenceFlowBuilder(FlowElementBuilder processBuilder){
 		builder = processBuilder ;
 	}
 

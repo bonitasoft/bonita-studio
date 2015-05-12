@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.engine.export.switcher;
+package org.bonitasoft.studio.engine.export.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -25,11 +25,12 @@ import org.bonitasoft.engine.bpm.businessdata.BusinessDataDefinition;
 import org.bonitasoft.engine.bpm.flownode.FlowElementContainerDefinition;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
+import org.bonitasoft.studio.engine.export.builder.EngineDataBuilder;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DataSwitchTest {
+public class EngineDataBuilderTest {
 
     private ProcessDefinitionBuilder builder;
 
@@ -54,7 +55,7 @@ public class DataSwitchTest {
                 .withDocumentation("Some doc")
                 .havingDefaultValue(
                         aGroovyScriptExpression().withName("init").withContent("new LeaveRequest()").withReturnType("org.bonitasoft.hr.LeaveRequest")).build();
-        final DataSwitch switchUnderTest = new DataSwitch(data, builder);
+        final EngineDataBuilder switchUnderTest = new EngineDataBuilder(data, builder);
 
         switchUnderTest.doSwitch(data.getDataType());
 
@@ -70,7 +71,7 @@ public class DataSwitchTest {
     @Test
     public void shouldCaseBusinessObjecType_addMultipleBusinessObjectDataInProcessDefinition() throws Exception {
         final BusinessObjectData data = aBusinessData().withName("myLeaveRequest").withClassname("org.bonitasoft.hr.LeaveRequest").multiple().build();
-        final DataSwitch switchUnderTest = new DataSwitch(data, builder);
+        final EngineDataBuilder switchUnderTest = new EngineDataBuilder(data, builder);
 
         switchUnderTest.doSwitch(data.getDataType());
 

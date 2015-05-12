@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.engine.export.switcher;
+package org.bonitasoft.studio.engine.export.builder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -114,11 +114,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author Romain Bioteau
  *
  */
-public class FlowElementSwitch extends AbstractSwitch {
+public class EngineFlowElementBuilder extends AbstractProcessBuilder {
 
     private final FlowElementBuilder builder;
 
-    public FlowElementSwitch(final FlowElementBuilder processBuilder, final Set<EObject> eObjectNotExported) {
+    public EngineFlowElementBuilder(final FlowElementBuilder processBuilder, final Set<EObject> eObjectNotExported) {
         super(eObjectNotExported);
         builder = processBuilder;
     }
@@ -126,7 +126,7 @@ public class FlowElementSwitch extends AbstractSwitch {
     @Override
     public Element caseSubProcessEvent(final SubProcessEvent subProcessEvent) {
         final SubProcessDefinitionBuilder subProcessBuilder = builder.addSubProcess(subProcessEvent.getName(), true).getSubProcessBuilder();
-        final AbstractSwitch subProcessSwitch = new FlowElementSwitch(subProcessBuilder, eObjectNotExported);
+        final AbstractProcessBuilder subProcessSwitch = new EngineFlowElementBuilder(subProcessBuilder, eObjectNotExported);
         final List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(subProcessEvent, ProcessPackage.Literals.FLOW_ELEMENT);
         for (final FlowElement flowElement : flowElements) {
             if (!eObjectNotExported.contains(flowElement)) {
@@ -134,7 +134,7 @@ public class FlowElementSwitch extends AbstractSwitch {
             }
         }
         final List<SourceElement> sourceElements = ModelHelper.getAllItemsOfType(subProcessEvent, ProcessPackage.Literals.SOURCE_ELEMENT);
-        final SequenceFlowSwitch sequenceFlowSwitch = new SequenceFlowSwitch(subProcessBuilder);
+        final EngineSequenceFlowBuilder sequenceFlowSwitch = new EngineSequenceFlowBuilder(subProcessBuilder);
         for (final SourceElement sourceElement : sourceElements) {
             for (final Connection connection : sourceElement.getOutgoing()) {
                 sequenceFlowSwitch.doSwitch(connection);
