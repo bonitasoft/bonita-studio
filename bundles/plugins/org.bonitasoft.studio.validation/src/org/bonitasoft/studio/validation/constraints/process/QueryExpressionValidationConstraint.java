@@ -22,15 +22,11 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
-import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
-import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
  * @author Romain Bioteau
@@ -38,11 +34,6 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 public class QueryExpressionValidationConstraint extends AbstractLiveValidationMarkerConstraint {
 
     public static final String ID = "org.bonitasoft.studio.validation.ex.constraint.businessobject.checkQueryExpression";
-
-    @Override
-    protected IStatus performLiveValidation(final IValidationContext context) {
-        return null;
-    }
 
     @Override
     protected IStatus performBatchValidation(final IValidationContext context) {
@@ -154,16 +145,6 @@ public class QueryExpressionValidationConstraint extends AbstractLiveValidationM
     @Override
     protected String getConstraintId() {
         return ID;
-    }
-
-    @Override
-    protected String getMarkerType(final DiagramEditor editor) {
-        if (editor instanceof ProcessDiagramEditor) {
-            return ProcessMarkerNavigationProvider.MARKER_TYPE;
-        } else if (editor instanceof FormDiagramEditor) {
-            return org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.MARKER_TYPE;
-        }
-        return ProcessMarkerNavigationProvider.MARKER_TYPE;
     }
 
 }

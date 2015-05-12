@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.engine.export.switcher;
+package org.bonitasoft.studio.engine.export.builder;
 
 import java.util.Collection;
 
@@ -41,13 +41,13 @@ import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 /**
  * @author Romain Bioteau
  */
-public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
+public class EngineDataBuilder extends ProcessSwitch<DataDefinitionBuilder> {
 
     private final Data data;
     private final FlowElementBuilder builder;
     private Expression expr;
 
-    public DataSwitch(final Data data, final FlowElementBuilder flowElementBuilder) {
+    public EngineDataBuilder(final Data data, final FlowElementBuilder flowElementBuilder) {
         builder = flowElementBuilder;
         this.data = data;
         expr = EngineExpressionUtil.createExpression(data.getDefaultValue());

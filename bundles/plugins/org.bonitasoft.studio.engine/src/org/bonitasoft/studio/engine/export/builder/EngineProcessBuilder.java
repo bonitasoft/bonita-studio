@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.engine.export.switcher;
+package org.bonitasoft.studio.engine.export.builder;
 
 import java.util.Set;
 
@@ -24,11 +24,11 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * @author Romain Bioteau
  */
-public class AbstractProcessSwitch extends AbstractSwitch {
+public class EngineProcessBuilder extends AbstractProcessBuilder {
 
     protected final ProcessDefinitionBuilder builder;
 
-    public AbstractProcessSwitch(final ProcessDefinitionBuilder processBuilder, final Set<EObject> eObjectNotExported) {
+    public EngineProcessBuilder(final ProcessDefinitionBuilder processBuilder, final Set<EObject> eObjectNotExported) {
         super(eObjectNotExported);
         builder = processBuilder;
     }

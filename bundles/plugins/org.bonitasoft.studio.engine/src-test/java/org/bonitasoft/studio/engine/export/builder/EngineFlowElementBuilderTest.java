@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.engine.export.switcher;
+package org.bonitasoft.studio.engine.export.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -34,6 +34,7 @@ import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.expression.ExpressionType;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
+import org.bonitasoft.studio.engine.export.builder.EngineFlowElementBuilder;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
@@ -65,9 +66,9 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class FlowElementSwitchTest {
+public class EngineFlowElementBuilderTest {
 
-    private FlowElementSwitch flowElementSwitch;
+    private EngineFlowElementBuilder flowElementSwitch;
     private ProcessDefinitionBuilder instance;
     @Mock
     ActivityDefinitionBuilder activityDefinitionBuilder;
@@ -92,7 +93,7 @@ public class FlowElementSwitchTest {
     @Before
     public void setUp() throws Exception {
         instance = new ProcessDefinitionBuilder().createNewInstance("test", "1.0");
-        flowElementSwitch = spy(new FlowElementSwitch(instance, Collections.<EObject> emptySet()));
+        flowElementSwitch = spy(new EngineFlowElementBuilder(instance, Collections.<EObject> emptySet()));
         doReturn(engineContractBuilder).when(flowElementSwitch).getEngineDefinitionBuilder(any(EObject.class), any(Contract.class));
     }
 

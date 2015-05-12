@@ -171,7 +171,9 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
         }
     }
 
-    protected abstract IStatus performLiveValidation(IValidationContext context);
+    protected IStatus performLiveValidation(final IValidationContext context) {
+        return context.createSuccessStatus();
+    }
 
     protected abstract IStatus performBatchValidation(IValidationContext context);
 
