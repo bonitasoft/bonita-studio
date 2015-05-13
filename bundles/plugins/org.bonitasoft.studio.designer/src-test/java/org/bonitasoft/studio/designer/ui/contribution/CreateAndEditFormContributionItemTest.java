@@ -22,7 +22,7 @@ import static org.mockito.Mockito.doReturn;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
-import org.bonitasoft.studio.designer.ui.contribution.NewFormContributionItem;
+import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -41,10 +41,10 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class NewFormContributionItemTest {
+public class CreateAndEditFormContributionItemTest {
 
     @InjectMocks
-    private NewFormContributionItem contribution;
+    private CreateAndEditFormContributionItem contribution;
 
     @Mock
     private CreateNewFormProposalListener listener;
@@ -84,6 +84,15 @@ public class NewFormContributionItemTest {
         assertThat(contribution.isEnabled()).isFalse();
 
         doReturn(new StructuredSelection(aTask().havingFormMapping(aFormMapping().havingTargetForm(anExpression())).build())).when(selectionProvider)
+                .getSelection();
+        contribution.update();
+
+        assertThat(contribution.isEnabled()).isTrue();
+
+        doReturn(
+                new StructuredSelection(aTask().havingFormMapping(
+                        aFormMapping().havingTargetForm(anExpression()).withType(FormMappingType.URL).withURL("anUrl")).build())).when(
+                selectionProvider)
                 .getSelection();
         contribution.update();
 

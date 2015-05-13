@@ -26,6 +26,7 @@ import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListe
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.PageFlow;
@@ -49,7 +50,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * @author Romain Bioteau
  */
 @Creatable
-public class NewFormContributionItem extends ContributionItem {
+public class CreateAndEditFormContributionItem extends ContributionItem {
 
     private ToolItem toolItem;
 
@@ -64,7 +65,7 @@ public class NewFormContributionItem extends ContributionItem {
     @Override
     public void update() {
         if (toolItem != null) {
-            toolItem.setEnabled(canCreateNewForm());
+            toolItem.setEnabled(canCreateNewForm() || canEditForm());
             final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
             if (pageFlow != null) {
                 if (pageFlow instanceof Pool) {
@@ -107,7 +108,11 @@ public class NewFormContributionItem extends ContributionItem {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                createNewForm();
+                if (!canEditForm()) {
+                    createNewForm();
+                } else {
+                    editForm();
+                }
             }
         });
     }
@@ -123,12 +128,30 @@ public class NewFormContributionItem extends ContributionItem {
             final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(pageflow);
             editingDomain.getCommandStack().execute(new UpdateFormMappingCommand(editingDomain, pageflow.getFormMapping(),
                     ExpressionHelper.createFormReferenceExpression(webPageFileStore.getDisplayName(), newPageId)));
-            toolItem.setEnabled(false);
+
         }
     }
 
     public void setSelectionProvider(final ISelectionProvider selectionProvider) {
         this.selectionProvider = selectionProvider;
+    }
+
+    protected void editForm() {
+        final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
+        final FormMapping mapping = pageFlow.getFormMapping();;
+        final Expression targetForm = mapping.getTargetForm();
+        if (targetForm.hasContent()) {
+            repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent()).open();
+        }
+    }
+
+    protected boolean canEditForm() {
+        final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
+        if (pageFlow != null) {
+            final FormMapping formMapping = pageFlow.getFormMapping();
+            return formMapping.getType() == FormMappingType.URL ? !isNullOrEmpty(formMapping.getUrl()) : formMapping.getTargetForm().hasName();
+        }
+        return false;
     }
 
 }
