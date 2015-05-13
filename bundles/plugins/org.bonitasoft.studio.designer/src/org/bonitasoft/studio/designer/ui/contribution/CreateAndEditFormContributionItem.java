@@ -174,6 +174,7 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
         if (pageFlow != null) {
             final FormMapping formMapping = pageFlow.getFormMapping();
             return formMapping.getTargetForm().hasName();
+
         }
         return false;
     }

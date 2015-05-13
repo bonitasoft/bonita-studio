@@ -167,6 +167,7 @@ public class CreateAndEditFormContributionItemTest {
                 .getSelection();
 
         assertThat(contribution.getFormMappingTypeName()).isEqualTo(FormMappingType.URL.name());
+
     }
 
 }
