@@ -37,6 +37,7 @@ import org.bonitasoft.engine.expression.ExpressionType;
 import org.bonitasoft.engine.operation.LeftOperand;
 import org.bonitasoft.engine.operation.Operation;
 import org.bonitasoft.engine.operation.OperatorType;
+import org.bonitasoft.studio.assertions.EngineExpressionAssert;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
@@ -233,7 +234,8 @@ public class EngineFlowElementBuilderTest {
 
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
         verify(callActivityBuilder).addProcessStartContractInput(eq("contractInput"), argument.capture());
-        assertThat(argument.getValue().getContent()).isEqualTo("processData");
-        assertThat(argument.getValue().getExpressionType()).isEqualTo(ExpressionType.TYPE_VARIABLE.name());
+        EngineExpressionAssert.assertThat(argument.getValue())
+                .hasContent("processData")
+                .hasExpressionType(ExpressionType.TYPE_VARIABLE.name());
     }
 }
