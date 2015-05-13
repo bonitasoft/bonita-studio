@@ -25,6 +25,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 
@@ -34,11 +35,14 @@ import org.bonitasoft.engine.bpm.bar.form.model.FormMappingDefinition;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingModel;
 import org.bonitasoft.engine.form.FormMappingTarget;
 import org.bonitasoft.engine.form.FormMappingType;
-import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
-import org.bonitasoft.studio.designer.core.bar.FormBarResourceProvider;
+import org.bonitasoft.studio.designer.core.preference.DesignerPreferenceConstants;
 import org.bonitasoft.studio.model.process.Pool;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.ecore.EObject;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -48,7 +52,10 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class FormBarResourceProviderTest {
+public class FormMappingBarResourceProviderTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Mock
     private BusinessArchiveBuilder builder;
@@ -62,8 +69,16 @@ public class FormBarResourceProviderTest {
     @Mock
     private BarResource taskFormCustomPage;
 
+    @Mock
+    private IEclipsePreferences preferenceStore;
+
     @InjectMocks
-    private FormBarResourceProvider formMappingBarResourceProvider;
+    private FormMappingBarResourceProvider formMappingBarResourceProvider;
+
+    @Before
+    public void setUp() throws Exception {
+        when(preferenceStore.getBoolean(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true)).thenReturn(false);
+    }
 
     @Test(expected = NullPointerException.class)
     public void should_throw_NullPointerException_if_process_is_null() throws Exception {
@@ -145,6 +160,15 @@ public class FormBarResourceProviderTest {
                 new FormMappingDefinition("custompage_caseoverview", FormMappingType.PROCESS_OVERVIEW, FormMappingTarget.INTERNAL));
     }
 
+    @Test
+    public void should_throw_an_InternalFormNotFoundExecption_when_creating_an_internal_mapping_without_custom_page_and_mapping_is_forced() throws Exception {
+        when(preferenceStore.getBoolean(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true)).thenReturn(true);
+
+        thrown.expect(InternalFormNotFoundException.class);
+
+        formMappingBarResourceProvider.newFormMappingModel(builder, aPoolWithEmptyFormMappings());
+    }
+
     private Pool aPoolAndTaskWithAllTypeOfFormMappings() {
         return aPool()
                 .withName("Pool1")
@@ -165,6 +189,16 @@ public class FormBarResourceProviderTest {
                 .havingFormMapping(
                         aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.INTERNAL)
                                 .havingTargetForm(anExpression().withContent("")))
+                .build();
+    }
+
+    private Pool aPoolWithUnknownFormMapping() {
+        return aPool()
+                .withName("Pool1")
+                .withVersion("1.0")
+                .havingFormMapping(
+                        aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.INTERNAL)
+                                .havingTargetForm(anExpression().withName("MyForm").withContent("an_unknown_id")))
                 .build();
     }
 

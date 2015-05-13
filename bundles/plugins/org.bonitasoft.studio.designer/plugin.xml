@@ -108,7 +108,7 @@
 <extension
       point="org.bonitasoft.studio.common.barResourcesProvider">
    <barResourceProvider
-         providerClass="org.bonitasoft.studio.designer.core.bar.FormBarResourceProvider">
+         providerClass="org.bonitasoft.studio.designer.core.bar.FormMappingBarResourceProvider">
    </barResourceProvider>
 </extension>
 <extension

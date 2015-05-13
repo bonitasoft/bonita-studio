@@ -43,6 +43,7 @@ public class Messages extends NLS {
     public static String creatingNewForm;
     public static String switchTypeOfFormQuestionTitle;
     public static String switchTypeOfFormQuestion;
+    public static String internalFormMappingUndefined;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
