@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>org.bonitasoft.web</groupId>
-            <artifactId>ui-designer-backend</artifactId>
+            <artifactId>ui-designer-backend-webapp</artifactId>
             <version>${ui.designer.version}</version>
             <type>war</type>
         </dependency>
