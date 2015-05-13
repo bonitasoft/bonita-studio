@@ -1046,6 +1046,21 @@
                class="Document:http://www.bonitasoft.org/ns/studio/process">
          </target>
       </constraint>
+      <constraint
+            class="org.bonitasoft.studio.validation.constraints.process.InternalFormMappingConstraint"
+            id="org.bonitasoft.studio.validation.constraints.internalFormMapping"
+            lang="Java"
+            mode="Batch"
+            name="Internal Form Mapping constraint"
+            severity="INFO"
+            statusCode="1">
+         <message>
+            {0}
+         </message>
+         <target
+               class="FormMapping:http://www.bonitasoft.org/ns/studio/process">
+         </target>
+      </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">
