@@ -73,6 +73,7 @@ public class ExpressionEditorService {
                 BonitaStudioLog.error(e);
             }
         }
+        context.set(ExpressionEditorService.class, this);
     }
 
     public Set<IExpressionProvider> getExpressionProviders() {

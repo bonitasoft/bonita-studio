@@ -313,6 +313,12 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="processSource" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="subprocessTarget" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="assignationType" lowerBound="1"
+        eType="#//InputMappingAssignationType" defaultValueLiteral="ContractInput"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="InputMappingAssignationType">
+    <eLiterals name="ContractInput"/>
+    <eLiterals name="Data" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IntegerType" eSuperTypes="#//DataType"/>
   <eClassifiers xsi:type="ecore:EClass" name="IntermediateErrorCatchEvent" eSuperTypes="#//BoundaryEvent #//ErrorEvent"/>
