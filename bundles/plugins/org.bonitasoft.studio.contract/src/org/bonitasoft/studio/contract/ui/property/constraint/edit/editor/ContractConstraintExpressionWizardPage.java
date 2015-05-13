@@ -54,7 +54,7 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
  */
 public class ContractConstraintExpressionWizardPage extends WizardPage implements IDocumentListener {
 
-    protected static final String MVEL_BASICS_URL = "http://mvel.codehaus.org/Language+Guide+for+2.0";
+    protected static final String GROOVY_BASICS_URL = "http://groovy-lang.org/single-page-documentation.html";
 
     private final ContractConstraint constraint;
     private final List<ContractInput> inputs;
@@ -63,14 +63,14 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
 
     private GroovyViewer groovyViewer;
     private final GroovySourceViewerFactory groovyViewerFactory;
-    private final MVELEditorFactory editorFactory;
+    private final ContractConstraintEditorFactory editorFactory;
 
     private final WebBrowserFactory browserFactory;
 
     public ContractConstraintExpressionWizardPage(final ContractConstraint constraint,
             final List<ContractInput> inputs,
             final GroovySourceViewerFactory sourceViewerFactory,
-            final MVELEditorFactory editorFactory,
+            final ContractConstraintEditorFactory editorFactory,
             final WebBrowserFactory browserFactory) {
         super(ContractConstraintExpressionWizardPage.class.getName());
         setDescription(Messages.constraintEditorDescription);
@@ -113,7 +113,7 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         inputIndexer = new ConstraintInputIndexer(constraint, inputs, viewer.getGroovyCompilationUnit());
         getSourceViewer().getDocument().set(expressionContentObservable.getValue().toString());
         context.addValidationStatusProvider(new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable, viewer
-                .getGroovyCompilationUnit(), new MVELProblemRequestor()));
+                .getGroovyCompilationUnit(), new CompilationProblemRequestor()));
 
         final CLabel contentAssistHint = new CLabel(container, SWT.NONE);
         contentAssistHint.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).create());
@@ -152,9 +152,9 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
     @Override
     public void performHelp() {
         try {
-            browserFactory.openExteranlBrowser(MVEL_BASICS_URL);
+            browserFactory.openExteranlBrowser(GROOVY_BASICS_URL);
         } catch (final MalformedURLException e) {
-            BonitaStudioLog.error("Invalid URL format for :" + MVEL_BASICS_URL, e, ContractPlugin.PLUGIN_ID);
+            BonitaStudioLog.error("Invalid URL format for :" + GROOVY_BASICS_URL, e, ContractPlugin.PLUGIN_ID);
         }
     }
 

@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -119,7 +119,7 @@ public class ContractInputController implements IViewerController {
 
     private String defaultContractInputName(final Contract contract) {
         return NamingUtils.generateNewName(
-                newHashSet(transform(getAllElementOfTypeIn(contract, ContractInput.class), toInputName())), "input");
+                newHashSet(transform(getAllElementOfTypeIn(contract, ContractInput.class), toInputName())), "input", 1);
     }
 
     private Function<ContractInput, String> toInputName() {
@@ -152,12 +152,10 @@ public class ContractInputController implements IViewerController {
                     continue;
                 }
                 refactorOperation.addItemToRefactor(null, contractInput);
-                final EObject eContainer = contractInput.eContainer();
-                compoundCommand.append(RemoveCommand.create(editingDomain, eContainer, inputContainerFeature(eContainer), contractInput));
+                compoundCommand.append(DeleteCommand.create(editingDomain, contractInput));
                 final Collection<ContractConstraint> constraintsReferencingInput = constraintsReferencingSingleInput(contract, contractInput);
                 if (!constraintsReferencingInput.isEmpty()) {
-                    compoundCommand.append(RemoveCommand.create(editingDomain, eContainer, ProcessPackage.Literals.CONTRACT__CONSTRAINTS,
-                            constraintsReferencingInput));
+                    compoundCommand.append(DeleteCommand.create(editingDomain, constraintsReferencingInput));
                 }
             }
             try {

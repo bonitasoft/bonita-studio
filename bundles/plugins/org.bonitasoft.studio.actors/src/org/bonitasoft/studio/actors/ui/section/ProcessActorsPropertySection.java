@@ -292,7 +292,7 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
             actorsName.add(a.getName()) ;
         }
 
-        return NamingUtils.generateNewName(actorsName,Messages.defaultActorName) ;
+        return NamingUtils.generateNewName(actorsName,Messages.defaultActorName, 1) ;
     }
 
 

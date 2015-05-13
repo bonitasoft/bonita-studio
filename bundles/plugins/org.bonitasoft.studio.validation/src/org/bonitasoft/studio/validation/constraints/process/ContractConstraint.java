@@ -20,13 +20,11 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.contract.core.validation.ContractConstraintInputValidator;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
  * @author Romain Bioteau
@@ -37,11 +35,6 @@ public class ContractConstraint extends AbstractLiveValidationMarkerConstraint {
 
     public ContractConstraint() {
         validator = new ContractConstraintInputValidator();
-    }
-
-    @Override
-    protected IStatus performLiveValidation(final IValidationContext ctx) {
-        return ctx.createSuccessStatus();
     }
 
     @Override
@@ -58,11 +51,6 @@ public class ContractConstraint extends AbstractLiveValidationMarkerConstraint {
 
     private Element contractContainer(final EObject constraint) {
         return (Element) ModelHelper.getFirstContainerOfType(constraint, ContractContainer.class);
-    }
-
-    @Override
-    protected String getMarkerType(final DiagramEditor editor) {
-        return ProcessMarkerNavigationProvider.MARKER_TYPE;
     }
 
     @Override
