@@ -103,6 +103,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
     public static final int CONTEXTUALPALETTE_SEQUENCEFLOW = 2;
     //TOOLBAREVENT doesn't work, create a comment
     public static final int CONTEXTUALPALETTE_EVENT = 3;
+    public static final String IMPORTER_TITLE_BONITA = SWTBotTestUtil.IMPORTER_TITLE_BONITA;
 
     public static void createNewDiagram(final SWTWorkbenchBot bot) {
         final long timebeforeCreatenewDiagram = System.currentTimeMillis();

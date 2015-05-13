@@ -74,7 +74,7 @@ public class TestConfigurationDialog extends SWTBotGefTestCase {
 
 	@Test
 	public void importDiagramWithCustomActorMappingAndOpenConfiguration() throws IOException{
-	    SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestImport-1.0.bos", "Bonita 6.x and 7.x", "TestImport (1.0)", this.getClass(), false);
+	    SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestImport-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "TestImport (1.0)", this.getClass(), false);
 	    final SWTBotEditor botEditor = bot.activeEditor();
 	    clickOnConfigure();
 	    final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
