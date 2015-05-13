@@ -194,7 +194,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
                     final DataType dataType = subprocessTypes.get(subprocessDataString);
                     if (dataType != null && dataType.getName().equals(data.getDataType().getName())) {
                         if (!mappedInputData.contains(data)) {
-                            createInputMapping(data, subprocessDataString);
+                            createInputMapping(data, InputMappingAssignationType.DATA, subprocessDataString);
                         }
                         if (!mappedOutputData.contains(data)) {
                             createOutputMapping(data, subprocessDataString);
@@ -369,14 +369,14 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         addLineButton.addListener(SWT.Selection, new Listener() {
             @Override
             public void handleEvent(final Event event) {
-                createInputMapping(null,null);
+                createInputMapping(null, InputMappingAssignationType.CONTRACT_INPUT, null);
                 refreshScrolledComposite(parent);
             }
         });
 
     }
 
-    private void createInputMapping(final Data source, final String target) {
+    private void createInputMapping(final Data source, final InputMappingAssignationType assignationType, final String target) {
         final InputMapping mapping = ProcessFactory.eINSTANCE.createInputMapping();
         if(source != null){
             mapping.setProcessSource(ExpressionHelper.createVariableExpression(source));
@@ -384,7 +384,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         if(target != null){
             mapping.setSubprocessTarget(target);
         }
-        mapping.setAssignationType(InputMappingAssignationType.DATA);
+        mapping.setAssignationType(assignationType);
         getEditingDomain().getCommandStack().execute(new AddCommand(getEditingDomain(), getCallActivity().getInputMappings(), mapping));
         addInputMappingLine(inputMappingControl, mapping);
     }
@@ -426,6 +426,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
 
         // TODO populate combo
         final Button deleteButton = new Button(outputMappingControl, SWT.FLAT);
+        deleteButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_DELETE_INPUT);
         deleteButton.setImage(sharedImages.getImage(ISharedImages.IMG_TOOL_DELETE));
         deleteButton.addListener(SWT.Selection, new Listener() {
 
