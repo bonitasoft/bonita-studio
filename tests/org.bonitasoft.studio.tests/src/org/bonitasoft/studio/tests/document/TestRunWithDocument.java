@@ -39,7 +39,7 @@ public class TestRunWithDocument extends SWTBotGefTestCase {
 
     @Test
     public void testRunWithDocument() throws Exception {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcessWithAttachment_1_0.bos", "Bonita 6.x", "ProcessWithAttachment", TestRunWithDocument.class, false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcessWithAttachment_1_0.bos", "Bonita 6.x and 7.x", "ProcessWithAttachment", TestRunWithDocument.class, false);
         runAndCheckResult();
     }
 
