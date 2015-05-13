@@ -40,6 +40,7 @@ import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowDefaultFlowExpo
 import org.bonitasoft.studio.migration.tests.MigrationReporTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.properties.test.CallActivityMappingIT;
 import org.bonitasoft.studio.properties.test.TestResources;
 import org.bonitasoft.studio.repository.test.swtbot.TestExportBosArchive;
 import org.bonitasoft.studio.tests.IHeapDumper;
@@ -110,6 +111,7 @@ import org.junit.runners.Suite;
         TestFormValidatorIT.class,
         TestOrganizationPassword.class,
         BarImportReportIT.class,
+        CallActivityMappingIT.class,
         CreateDeployExportBusinessObjectIT.class
 })
 public class AllSWTBotTests2 {
