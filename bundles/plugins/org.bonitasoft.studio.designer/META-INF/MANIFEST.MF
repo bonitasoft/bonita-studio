@@ -12,6 +12,7 @@ Export-Package: org.bonitasoft.studio.designer,
  org.bonitasoft.studio.designer.core,
  org.bonitasoft.studio.designer.core.expression,
  org.bonitasoft.studio.designer.core.operation,
+ org.bonitasoft.studio.designer.core.preference,
  org.bonitasoft.studio.designer.core.repository,
  org.bonitasoft.studio.designer.core.resources,
  org.bonitasoft.studio.designer.ui.contribution
