@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.expression.editor.filter;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
@@ -25,6 +25,12 @@ import org.eclipse.jdt.core.JavaModelException;
  * @author Romain Bioteau
  */
 public class ExpressionReturnTypeFilter {
+
+    private final IJavaContainer javaContainer;
+
+    public ExpressionReturnTypeFilter(final IJavaContainer javaContainer) {
+        this.javaContainer = javaContainer;
+    }
 
     /**
      * @param currentReturnType
@@ -40,27 +46,23 @@ public class ExpressionReturnTypeFilter {
             final Class<?> targetReturnTypeClass = Class.forName(targetReturnType);
             return currentReturnTypeClass.isAssignableFrom(targetReturnTypeClass);
         } catch (final ClassNotFoundException e) {
-            final IJavaProject javaProject = getJavaProject();
+            final IJavaProject javaProject = javaContainer.getJavaProject();
             if (javaProject != null) {
                 try {
                     final IType currentType = javaProject.findType(currentReturnType);
                     final IType targetType = javaProject.findType(targetReturnType);
                     if (currentType != null && targetType != null) {
-                        return RepositoryManager.getInstance().getCurrentRepository().getJdtTypeHierarchyManager().getTypeHierarchy(targetType)
+                        return javaContainer.getJdtTypeHierarchyManager().getTypeHierarchy(currentType)
                                 .contains(targetType);
                     }
                 } catch (final JavaModelException e1) {
-
+                    BonitaStudioLog.error(e1);
                 }
             }
             BonitaStudioLog.debug("Failed to determine the compatibility between " + targetReturnType + " and "
                     + currentReturnType, ExpressionEditorPlugin.PLUGIN_ID);
         }
         return true;
-    }
-
-    protected IJavaProject getJavaProject() {
-        return RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
     }
 
 }
