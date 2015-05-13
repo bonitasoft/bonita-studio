@@ -16,7 +16,9 @@ package org.bonitasoft.studio.expression.editor.filter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
@@ -51,7 +53,8 @@ public class ExpressionReturnTypeFilterTest {
 
     @Before
     public void setUp() throws Exception {
-        filter = new ExpressionReturnTypeFilter(javaContainer);
+        filter = spy(new ExpressionReturnTypeFilter());
+        doReturn(javaContainer).when(filter).javaContainer();
         when(javaContainer.getJavaProject()).thenReturn(javaProject);
         when(javaContainer.getJdtTypeHierarchyManager()).thenReturn(typeHierarchyManager);
         when(javaProject.findType(anyString())).thenReturn(null);
