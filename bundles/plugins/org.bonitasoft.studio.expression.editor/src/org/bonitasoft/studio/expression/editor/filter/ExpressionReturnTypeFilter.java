@@ -27,12 +27,6 @@ import org.eclipse.jdt.core.JavaModelException;
  */
 public class ExpressionReturnTypeFilter {
 
-    private final IJavaContainer javaContainer;
-
-    public ExpressionReturnTypeFilter(final IJavaContainer javaContainer) {
-        this.javaContainer = javaContainer;
-    }
-
     /**
      * @param currentReturnType
      * @param targetReturnType
@@ -47,7 +41,6 @@ public class ExpressionReturnTypeFilter {
             final Class<?> targetReturnTypeClass = Class.forName(targetReturnType);
             return currentReturnTypeClass.isAssignableFrom(targetReturnTypeClass);
         } catch (final ClassNotFoundException e) {
-
             final IJavaContainer javaContainer = javaContainer();
             final IJavaProject javaProject = javaContainer.getJavaProject();
             if (javaProject != null) {
