@@ -552,7 +552,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         for (final Field feature : businessObject.getFields()) {
             existingNames.add(feature.getName());
         }
-        return NamingUtils.generateNewName(existingNames, Messages.attribute);
+        return NamingUtils.generateNewName(existingNames, Messages.attribute, 1);
     }
 
 }

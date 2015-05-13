@@ -214,6 +214,11 @@ public class Messages extends NLS {
     public static String sequenceFlow_And_SourceElement_Not_In_The_Same_Container;
     public static String sequenceFlow_And_TargetElement_Not_In_The_Same_Container;
 
+    public static String invalidMultipleFileContractInput;
+    public static String invalidFileContractInputType;
+    public static String invalidSingleFileContractInput;
+    public static String missingFileContractInput;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

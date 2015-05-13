@@ -23,24 +23,17 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
  * @author Baptiste Mesta
  */
 public class UniqueContainerIdConstraint extends AbstractLiveValidationMarkerConstraint {
-
-    @Override
-    protected IStatus performLiveValidation(final IValidationContext ctx) {
-        return ctx.createSuccessStatus();
-    }
 
     @Override
     protected IStatus performBatchValidation(final IValidationContext ctx) {
@@ -73,11 +66,6 @@ public class UniqueContainerIdConstraint extends AbstractLiveValidationMarkerCon
         final String eObjectID = ModelHelper.getEObjectID(p);
         final String eObjectID2 = ModelHelper.getEObjectID(other_p);
         return eObjectID != null && eObjectID.equals(eObjectID2);
-    }
-
-    @Override
-    protected String getMarkerType(final DiagramEditor editor) {
-        return ProcessMarkerNavigationProvider.MARKER_TYPE;
     }
 
     @Override

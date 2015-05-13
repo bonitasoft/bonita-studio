@@ -487,7 +487,7 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
             names.add(g.getName()) ;
         }
 
-        return NamingUtils.generateNewName(names, Messages.defaultGroupName);
+        return NamingUtils.generateNewName(names, Messages.defaultGroupName, 1);
     }
 
     @Override

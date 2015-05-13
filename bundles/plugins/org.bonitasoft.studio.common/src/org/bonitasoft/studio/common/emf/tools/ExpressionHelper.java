@@ -337,7 +337,11 @@ public class ExpressionHelper {
         exp.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
         exp.setContent(d.getName());
         exp.setName(d.getName());
-        exp.setReturnType(String.class.getName());
+        if (d.isMultiple()) {
+            exp.setReturnType(List.class.getName());
+        } else {
+            exp.setReturnType(String.class.getName());
+        }
         exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(d));
         return exp;
     }

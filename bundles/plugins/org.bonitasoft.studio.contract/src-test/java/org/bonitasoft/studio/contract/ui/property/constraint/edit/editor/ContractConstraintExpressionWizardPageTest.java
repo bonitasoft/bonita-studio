@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -44,10 +42,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.osgi.framework.BundleContext;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ContractConstraintExpressionWizardPageTest extends AbstractSWTTestCase {
@@ -62,9 +58,9 @@ public class ContractConstraintExpressionWizardPageTest extends AbstractSWTTestC
     @Mock
     private GroovySourceViewerFactory groovySourceViewerFactory;
     @Mock
-    private MVELEditorFactory editorFactory;
+    private ContractConstraintEditorFactory editorFactory;
     @Mock
-    private MVELEditor editor;
+    private ContractConstraintEditor editor;
     @Mock
     private WebBrowserFactory browserFactory;
 
@@ -136,9 +132,9 @@ public class ContractConstraintExpressionWizardPageTest extends AbstractSWTTestC
     }
 
     @Test
-    public void should_performHelp_open_browser_with_mvel_url() throws Exception {
+    public void should_performHelp_open_browser_with_groovy_getting_start_url() throws Exception {
         wizardPage.createControl(composite);
         wizardPage.performHelp();
-        verify(browserFactory).openExteranlBrowser(ContractConstraintExpressionWizardPage.MVEL_BASICS_URL);
+        verify(browserFactory).openExteranlBrowser(ContractConstraintExpressionWizardPage.GROOVY_BASICS_URL);
     }
 }

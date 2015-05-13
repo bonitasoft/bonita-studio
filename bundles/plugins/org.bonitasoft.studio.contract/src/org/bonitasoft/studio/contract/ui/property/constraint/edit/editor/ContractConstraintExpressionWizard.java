@@ -53,7 +53,7 @@ public class ContractConstraintExpressionWizard extends Wizard {
     public void addPages() {
         page = new ContractConstraintExpressionWizardPage(constraintWorkingCopy,
                 inputs, new GroovySourceViewerFactory(),
-                new MVELEditorFactory(),
+                new ContractConstraintEditorFactory(),
                 new WebBrowserFactory());
         if (constraintWorkingCopy.getExpression() == null
                 || constraintWorkingCopy.getExpression().isEmpty()) {

@@ -96,7 +96,7 @@ public class OutputsWizardPage extends WizardPage implements ISelectionChangedLi
             names.add(o.getName()) ;
         }
 
-        return NamingUtils.generateNewName(names, Messages.defaultOutputName);
+        return NamingUtils.generateNewName(names, Messages.defaultOutputName, 1);
     }
 
 

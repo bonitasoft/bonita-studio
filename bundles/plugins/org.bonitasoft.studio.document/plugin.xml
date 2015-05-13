@@ -54,5 +54,11 @@
             providerClass="org.bonitasoft.studio.document.core.repository.DocumentFilseStoreProvider">
       </bosArchiveProvider>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.engine.definition.builder">
+      <EngineDefinitionBuilder
+            class="org.bonitasoft.studio.document.core.export.DocumentEngineDefinitionBuilder">
+      </EngineDefinitionBuilder>
+   </extension>
 
 </plugin>
