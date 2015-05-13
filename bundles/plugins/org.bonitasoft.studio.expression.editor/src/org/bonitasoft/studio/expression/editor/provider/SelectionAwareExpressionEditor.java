@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.bonitasoft.studio.expression.editor.filter.ExpressionReturnTypeFilter;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -82,7 +81,7 @@ public abstract class SelectionAwareExpressionEditor implements IExpressionEdito
     }
 
     protected boolean compatibleReturnType(final Expression inputExpression, final Expression e) {
-        final ExpressionReturnTypeFilter expressionReturnTypeFilter = new ExpressionReturnTypeFilter(RepositoryManager.getInstance().getCurrentRepository());
+        final ExpressionReturnTypeFilter expressionReturnTypeFilter = new ExpressionReturnTypeFilter();
         final String currentReturnType = inputExpression.getReturnType();
         final String expressionReturnType = e.getReturnType();
         if (currentReturnType.equals(expressionReturnType)) {
