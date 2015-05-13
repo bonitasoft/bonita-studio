@@ -38,7 +38,12 @@ public class CallActivityMappingIT extends SWTBotGefTestCase {
 
     @Test
     public void testInputMappings() throws IOException {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ITTest-CallActivityMapping-1.0.bos", "Bonita 6.x", "TTest-CallActivityMapping", this.getClass(),
+        SWTBotTestUtil.importProcessWIthPathFromClass(
+                bot,
+                "ITTest-CallActivityMapping-1.0.bos",
+                SWTBotTestUtil.IMPORTER_TITLE_BONITA,
+                "TTest-CallActivityMapping",
+                this.getClass(),
                 false);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotProcessDiagramPerspective(bot);
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step With Known Called Process");
