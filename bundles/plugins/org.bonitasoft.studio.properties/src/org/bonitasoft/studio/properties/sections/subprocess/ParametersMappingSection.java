@@ -386,7 +386,6 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
     }
 
     private void createInputMapping(final Data source, final InputMappingAssignationType assignationType, final String target) {
-
         final InputMapping mapping = ProcessFactory.eINSTANCE.createInputMapping();
         if (source != null) {
             mapping.setProcessSource(ExpressionHelper.createVariableExpression(source));
