@@ -19,29 +19,17 @@ import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
  * @author Baptiste Mesta
  * @author Aurelien Pupier - constraint for assigned actors with Lane
  */
 public class InternalDocumentConstraint extends AbstractLiveValidationMarkerConstraint {
-
-    @Override
-    protected IStatus performLiveValidation(final IValidationContext ctx) {
-        return ctx.createSuccessStatus();
-    }
-
-    @Override
-    protected String getMarkerType(final DiagramEditor editor) {
-        return ProcessMarkerNavigationProvider.MARKER_TYPE;
-    }
 
     @Override
     protected String getConstraintId() {

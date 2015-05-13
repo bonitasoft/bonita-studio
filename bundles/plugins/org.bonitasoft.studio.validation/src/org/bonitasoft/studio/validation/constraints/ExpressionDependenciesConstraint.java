@@ -59,11 +59,6 @@ public class ExpressionDependenciesConstraint extends AbstractLiveValidationMark
     }
 
     @Override
-    protected IStatus performLiveValidation(final IValidationContext context) {
-        return null;
-    }
-
-    @Override
     protected IStatus performBatchValidation(final IValidationContext context) {
         final Expression expression = (Expression) context.getTarget();
         if (shouldValidateExpression(expression)) {
