@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.model.expression.assertions;
 
 import static java.lang.String.format;
@@ -13,34 +27,37 @@ public class OperatorAssert extends AbstractAssert<OperatorAssert, Operator> {
 
     /**
      * Creates a new </code>{@link OperatorAssert}</code> to make assertions on actual Operator.
+     * 
      * @param actual the Operator we want to make assertions on.
      */
-    public OperatorAssert(Operator actual) {
+    public OperatorAssert(final Operator actual) {
         super(actual, OperatorAssert.class);
     }
 
     /**
      * An entry point for OperatorAssert to follow AssertJ standard <code>assertThat()</code> statements.<br>
      * With a static import, one's can write directly : <code>assertThat(myOperator)</code> and get specific assertion with code completion.
+     * 
      * @param actual the Operator we want to make assertions on.
      * @return a new </code>{@link OperatorAssert}</code>
      */
-    public static OperatorAssert assertThat(Operator actual) {
+    public static OperatorAssert assertThat(final Operator actual) {
         return new OperatorAssert(actual);
     }
 
     /**
      * Verifies that the actual Operator's expression is equal to the given one.
+     * 
      * @param expression the given expression to compare the actual Operator's expression to.
      * @return this assertion object.
      * @throws AssertionError - if the actual Operator's expression is not equal to the given one.
      */
-    public OperatorAssert hasExpression(String expression) {
+    public OperatorAssert hasExpression(final String expression) {
         // check that actual Operator we want to make assertions on is not null.
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected <%s> expression to be:\n  <%s>\n but was:\n  <%s>", actual, expression, actual.getExpression());
+        final String errorMessage = format("\nExpected <%s> expression to be:\n  <%s>\n but was:\n  <%s>", actual, expression, actual.getExpression());
 
         // check
         if (!actual.getExpression().equals(expression)) {
@@ -53,17 +70,19 @@ public class OperatorAssert extends AbstractAssert<OperatorAssert, Operator> {
 
     /**
      * Verifies that the actual Operator's inputTypes contains the given String elements.
+     * 
      * @param inputTypes the given elements that should be contained in actual Operator's inputTypes.
      * @return this assertion object.
      * @throws AssertionError if the actual Operator's inputTypes does not contain all given String elements.
      */
-    public OperatorAssert hasInputTypes(String... inputTypes) {
+    public OperatorAssert hasInputTypes(final String... inputTypes) {
         // check that actual Operator we want to make assertions on is not null.
         isNotNull();
 
         // check that given String varargs is not null.
-        if (inputTypes == null)
+        if (inputTypes == null) {
             throw new AssertionError("Expecting inputTypes parameter not to be null.");
+        }
 
         // check with standard error message (see commented below to set your own message).
         Assertions.assertThat(actual.getInputTypes()).contains(inputTypes);
@@ -80,6 +99,7 @@ public class OperatorAssert extends AbstractAssert<OperatorAssert, Operator> {
 
     /**
      * Verifies that the actual Operator has no inputTypes.
+     * 
      * @return this assertion object.
      * @throws AssertionError if the actual Operator's inputTypes is not empty.
      */
@@ -88,11 +108,12 @@ public class OperatorAssert extends AbstractAssert<OperatorAssert, Operator> {
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected :\n  <%s>\nnot to have inputTypes but had :\n  <%s>", actual, actual.getInputTypes());
+        final String errorMessage = format("\nExpected :\n  <%s>\nnot to have inputTypes but had :\n  <%s>", actual, actual.getInputTypes());
 
         // check
-        if (!actual.getInputTypes().isEmpty())
+        if (!actual.getInputTypes().isEmpty()) {
             throw new AssertionError(errorMessage);
+        }
 
         // return the current assertion for method chaining
         return this;
@@ -100,16 +121,17 @@ public class OperatorAssert extends AbstractAssert<OperatorAssert, Operator> {
 
     /**
      * Verifies that the actual Operator's type is equal to the given one.
+     * 
      * @param type the given type to compare the actual Operator's type to.
      * @return this assertion object.
      * @throws AssertionError - if the actual Operator's type is not equal to the given one.
      */
-    public OperatorAssert hasType(String type) {
+    public OperatorAssert hasType(final String type) {
         // check that actual Operator we want to make assertions on is not null.
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected <%s> type to be:\n  <%s>\n but was:\n  <%s>", actual, type, actual.getType());
+        final String errorMessage = format("\nExpected <%s> type to be:\n  <%s>\n but was:\n  <%s>", actual, type, actual.getType());
 
         // check
         if (!actual.getType().equals(type)) {

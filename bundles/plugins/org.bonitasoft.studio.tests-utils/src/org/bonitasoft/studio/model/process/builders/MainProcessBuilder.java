@@ -14,7 +14,9 @@
  */
 package org.bonitasoft.studio.model.process.builders;
 
+import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.process.Connection;
+import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -52,6 +54,20 @@ public class MainProcessBuilder extends ElementBuilder<MainProcess, MainProcessB
                     }
                 }
             }
+        }
+        return getThis();
+    }
+
+    public MainProcessBuilder havingDatatypes(final DataType... dataTypes) {
+        for (final DataType dt : dataTypes) {
+            getBuiltInstance().getDatatypes().add(dt);
+        }
+        return getThis();
+    }
+
+    public MainProcessBuilder havingDatatypes(final Buildable<? extends DataType>... dataTypeBuildables) {
+        for (final Buildable<? extends DataType> dt : dataTypeBuildables) {
+            getBuiltInstance().getDatatypes().add(dt.build());
         }
         return getThis();
     }

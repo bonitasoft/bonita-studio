@@ -62,8 +62,11 @@ public class ConnectorOutputAvailableExpressionTypeFilterTest {
     }
 
     @Test
-    public void should_select_returns_true_for_contract_input_expression_in_on_finish_connector_input() throws Exception {
+    public void should_select_returns_true_for_contract_input_expression_in_on_finish_connector_input()
+            throws Exception {
+        final Activity activity = ProcessFactory.eINSTANCE.createActivity();
         final Connector onFinishConnector = ProcessFactory.eINSTANCE.createConnector();
+        activity.getConnectors().add(onFinishConnector);
         onFinishConnector.setEvent(ConnectorEvent.ON_FINISH.name());
         when(expressionViewer.getInput()).thenReturn(onFinishConnector);
 
@@ -74,29 +77,32 @@ public class ConnectorOutputAvailableExpressionTypeFilterTest {
     }
 
     @Test
-    public void should_select_returns_true_for_contract_input_expression_in_pool_on_enter_connector_input() throws Exception {
+    public void should_select_returns_true_for_contract_input_expression_in_pool_on_enter_connector_input()
+            throws Exception {
         final Pool pool = ProcessFactory.eINSTANCE.createPool();
         final Connector onEnterConnector = ProcessFactory.eINSTANCE.createConnector();
         onEnterConnector.setEvent(ConnectorEvent.ON_ENTER.name());
         pool.getConnectors().add(onEnterConnector);
-        final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
+        final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE
+                .createConnectorConfiguration();
         onEnterConnector.setConfiguration(config);
         when(expressionViewer.getInput()).thenReturn(config);
 
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("myInput");
         input.setType(ContractInputType.TEXT);
-        assertThat(connectorOutputAvailableExpressionTypeFilter.select(expressionViewer, null, ExpressionHelper.createContractInputExpression(input)))
-                .isTrue();
+        assertThat(connectorOutputAvailableExpressionTypeFilter.select(expressionViewer, null, ExpressionHelper.createContractInputExpression(input))).isTrue();
     }
 
     @Test
-    public void should_select_returns_false_for_contract_input_expression_in_activity_on_enter_connector_input() throws Exception {
+    public void should_select_returns_false_for_contract_input_expression_in_activity_on_enter_connector_input()
+            throws Exception {
         final Activity activity = ProcessFactory.eINSTANCE.createActivity();
         final Connector onEnterConnector = ProcessFactory.eINSTANCE.createConnector();
         onEnterConnector.setEvent(ConnectorEvent.ON_ENTER.name());
         activity.getConnectors().add(onEnterConnector);
-        final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
+        final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE
+                .createConnectorConfiguration();
         onEnterConnector.setConfiguration(config);
         when(expressionViewer.getInput()).thenReturn(config);
 

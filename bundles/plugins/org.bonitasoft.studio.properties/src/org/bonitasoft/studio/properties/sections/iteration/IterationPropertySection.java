@@ -42,6 +42,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -701,18 +702,25 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
                         .getInnerObservableValue();
                 if (expression != null && returnType != null) {
                     final MultiInstantiable parentFlowElement = (MultiInstantiable) ModelHelper.getParentFlowElement(expression);
-                    final Data oldItem = DataExpressionProvider.dataFromIteratorExpression(parentFlowElement, expression);
+                    final Data oldItem = DataExpressionProvider.dataFromIteratorExpression(parentFlowElement, expression,
+                            mainProcess(parentFlowElement));
                     final Expression expressionCopy = EcoreUtil.copy(expression);
                     expressionCopy.setReturnType(returnType);
-                    final Data newItem = DataExpressionProvider.dataFromIteratorExpression(parentFlowElement, expressionCopy);
+                    final Data newItem = DataExpressionProvider.dataFromIteratorExpression(parentFlowElement, expressionCopy,
+                            mainProcess(parentFlowElement));
                     innerObservableValue.setRefactoringCommand(getRefactorCommand(oldItem, newItem, parentFlowElement));
                 } else {
                     innerObservableValue.setRefactoringCommand(null);
                 }
                 return value;
             }
+
         });
         return strategy;
+    }
+
+    private MainProcess mainProcess(final EObject element) {
+        return ModelHelper.getMainProcess(element);
     }
 
     private UpdateValueStrategy refactorNameStrategy(final IObservableValue expressionNameDetailValue, final IObservableValue iteratorObservable) {
@@ -727,7 +735,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
                 if (expression != null && name != null) {
                     final MultiInstantiable parentFlowElement = (MultiInstantiable) ModelHelper.getParentFlowElement(expression);
                     final Data oldItem = DataExpressionProvider.dataFromIteratorExpression(
-                            parentFlowElement, expression);
+                            parentFlowElement, expression, mainProcess(parentFlowElement));
                     final Data newItem = EcoreUtil.copy(oldItem);
                     newItem.setName(name.toString());
                     innerObservableValue.setRefactoringCommand(getRefactorCommand(oldItem, newItem, parentFlowElement));

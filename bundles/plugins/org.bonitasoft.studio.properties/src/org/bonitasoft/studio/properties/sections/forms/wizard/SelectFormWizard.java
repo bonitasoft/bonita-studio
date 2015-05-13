@@ -113,7 +113,7 @@ public class SelectFormWizard extends Wizard {
     private void addMultiInstanceIterator(final Element container, final List<EObject> elements) {
         if (isDataMultiInstantiated((MultiInstantiable) container)) {
             final Data dataFromIteratorExpression = DataExpressionProvider.dataFromIteratorExpression((MultiInstantiable) container,
-                    ((MultiInstantiable) container).getIteratorExpression());
+                    ((MultiInstantiable) container).getIteratorExpression(), ModelHelper.getMainProcess(container));
             final EClass eClassData = dataFromIteratorExpression.getDataType().eClass();
             if (!aJavaObjectData(eClassData)
                     && !anXmlData(eClassData)) {

@@ -56,7 +56,20 @@ public class InputNameObservableEditingSupportTest {
     }
 
     @Test
-    public void should_fails_validation_if_input_name_already_exists() throws Exception {
+    public void should_not_fails_validation_if_input_name_already_exists_at_another_level() throws Exception {
+        final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(aTableViewer(), messageManager,
+                new EMFDataBindingContext(), refactorOperationFactory, progressService);
+
+        final UpdateValueStrategy convertStrategy = editingSupport.targetToModelConvertStrategy(aContract()
+                .havingInput(aContractInput().withName("firstName"), aContractInput().withName("manager").havingInput(aContractInput().withName("lastName")))
+                .build().getInputs().get(1).getInputs().get(0));
+        final IStatus status = convertStrategy.validateAfterGet("firstName");
+
+        assertThat(status).isOK();
+    }
+
+    @Test
+    public void should_fails_validation_if_input_name_already_exists_at_same_level() throws Exception {
         final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(aTableViewer(), messageManager,
                 new EMFDataBindingContext(), refactorOperationFactory, progressService);
 
@@ -104,7 +117,7 @@ public class InputNameObservableEditingSupportTest {
     }
 
     @Test
-    public void should_fails_validation_if_input_name_contais_spaces() throws Exception {
+    public void should_fails_validation_if_input_name_contains_spaces() throws Exception {
         final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(aTableViewer(),
                 messageManager, new EMFDataBindingContext(), refactorOperationFactory, progressService);
 

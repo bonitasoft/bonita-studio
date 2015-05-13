@@ -25,7 +25,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class DateDataTypeBuilder extends DataTypeBuilder<DateType, DateDataTypeBuilder> {
 
-    public static DateDataTypeBuilder create() {
+    public static DateDataTypeBuilder aDateDataType() {
         return new DateDataTypeBuilder();
     }
 

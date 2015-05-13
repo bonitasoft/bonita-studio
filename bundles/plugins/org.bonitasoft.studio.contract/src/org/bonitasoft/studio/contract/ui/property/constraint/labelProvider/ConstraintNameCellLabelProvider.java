@@ -19,15 +19,13 @@ import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
-import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
-import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
 /**
  * @author Romain Bioteau
  */
-public class ConstraintNameCellLabelProvider extends CustomPropertyColumnLabelProvider implements IStyledLabelProvider {
+public class ConstraintNameCellLabelProvider extends CustomPropertyColumnLabelProvider {
 
     public ConstraintNameCellLabelProvider(final IPropertySourceProvider propertySourceProvider, final IObservableSet knownElements) {
         super(propertySourceProvider, ProcessPackage.Literals.CONTRACT_CONSTRAINT__NAME, knownElements);
@@ -36,11 +34,6 @@ public class ConstraintNameCellLabelProvider extends CustomPropertyColumnLabelPr
     @Override
     public Image getImage(final Object element) {
         return Pics.getImage("ContractConstraint.gif", ContractPlugin.getDefault());
-    }
-
-    @Override
-    public StyledString getStyledText(final Object element) {
-        return new StyledString(getText(element));
     }
 
 }
