@@ -262,7 +262,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
     public Set<IRepositoryFileStore> getArtifacts() {
         final Set<IRepositoryFileStore> checkedArtifacts = new HashSet<IRepositoryFileStore>();
-        for (final Object element : selectedFiles) {
+        for (final Object element : treeViewer.getCheckedElements()) {
             if (element instanceof IRepositoryFileStore) {
                 checkedArtifacts.add((IRepositoryFileStore) element);
                 checkedArtifacts.addAll(((IRepositoryFileStore) element).getRelatedFileStore());
