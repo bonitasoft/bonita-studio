@@ -25,6 +25,9 @@
        <slideShowImage>
           <path>@slide3@</path>
        </slideShowImage>
+       <slideShowImage>
+          <path>@slide4@</path>
+       </slideShowImage>
     </slideShowImageList>
 	<requestedExecutionLevel>asInvoker</requestedExecutionLevel>
 	<singleInstanceCheck>1</singleInstanceCheck>
