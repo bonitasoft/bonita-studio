@@ -61,7 +61,7 @@ public class TestThrowCatchMessage extends SWTBotGefTestCase implements
 	@Test
 	public void testThrowCathMessage() throws IOException {
 		SWTBotTestUtil.importProcessWIthPathFromClass(bot,
-				"DemoMessageContentCorrelation-1.0.bos", "Bonita 6.x",
+				"DemoMessageContentCorrelation-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA,
 				"DemoMessageContentCorrelation", this.getClass(), false);
 		SWTBotEditor botEditor = bot.activeEditor();
 		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
@@ -204,7 +204,7 @@ public class TestThrowCatchMessage extends SWTBotGefTestCase implements
 	@Test
 	public void testCathMessageNotAllowed() throws IOException {
 		SWTBotTestUtil.importProcessWIthPathFromClass(bot,
-				"TestCatchMessageSelectionTest-1.0.bos", "Bonita 6.x",
+				"TestCatchMessageSelectionTest-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA,
 				"TestCatchMessageSelectionTest", this.getClass(), false);
 		SWTBotEditor botEditor = bot.activeEditor();
 		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());

@@ -17,39 +17,47 @@ package org.bonitasoft.studio.expression.editor.filter;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
+import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.jdt.core.IJavaProject;
-import org.junit.After;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeHierarchy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ExpressionReturnTypeFilterTest {
 
-    @Spy
     private ExpressionReturnTypeFilter filter;
 
     @Mock
     private IJavaProject javaProject;
 
+    @Mock
+    private IJavaContainer javaContainer;
+
+    @Mock
+    private JDTTypeHierarchyManager typeHierarchyManager;
+
     @Before
     public void setUp() throws Exception {
-        doReturn(javaProject).when(filter).getJavaProject();
+        filter = spy(new ExpressionReturnTypeFilter());
+        doReturn(javaContainer).when(filter).javaContainer();
+        when(javaContainer.getJavaProject()).thenReturn(javaProject);
+        when(javaContainer.getJdtTypeHierarchyManager()).thenReturn(typeHierarchyManager);
         when(javaProject.findType(anyString())).thenReturn(null);
-    }
-
-    @After
-    public void tearDown() throws Exception {
     }
 
     @Test
@@ -78,6 +86,18 @@ public class ExpressionReturnTypeFilterTest {
         final Expression customTypeExpression = ExpressionHelper.createConstantExpression("true", "org.bonitasoft.test.MyType");
         final Expression stringExpression = ExpressionHelper.createGroovyScriptExpression("[1,2]", String.class.getName());
         assertThat(filter.compatibleReturnTypes(stringExpression.getReturnType(), customTypeExpression.getReturnType())).isTrue();
+    }
+
+    @Test
+    public void should_use_type_hierarchy_to_compare_types_when_classes_belongs_to_javaProject() throws Exception {
+        final IType myClassIType = mock(IType.class);
+        final IType booleanType = mock(IType.class);
+        when(javaProject.findType("org.test.MyClass")).thenReturn(myClassIType);
+        when(javaProject.findType(Boolean.class.getName())).thenReturn(booleanType);
+        final ITypeHierarchy iTypeHierarchy = mock(ITypeHierarchy.class);
+        when(typeHierarchyManager.getTypeHierarchy(myClassIType)).thenReturn(iTypeHierarchy);
+
+        assertThat(filter.compatibleReturnTypes("org.test.MyClass", Boolean.class.getName())).isFalse();
     }
 
 }

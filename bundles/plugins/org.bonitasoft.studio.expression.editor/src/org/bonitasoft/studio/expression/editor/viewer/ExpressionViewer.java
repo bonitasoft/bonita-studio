@@ -720,7 +720,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     protected boolean compatibleReturnTypes(final Expression currentExpression, final Expression targetExpression) {
         final String currentReturnType = currentExpression.getReturnType();
         final String targetReturnType = targetExpression.getReturnType();
-        return new ExpressionReturnTypeFilter().compatibleReturnTypes(currentReturnType, targetReturnType);
+        return new ExpressionReturnTypeFilter().compatibleReturnTypes(
+                currentReturnType, targetReturnType);
     }
 
     protected Set<ViewerFilter> getFilters() {

@@ -23,8 +23,8 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -104,12 +104,12 @@ public abstract class EObjectSelectionProviderSection extends AbstractBonitaDesc
     @Override
     public void setInput(final IWorkbenchPart part, final ISelection selection) {
         super.setInput(part, selection);
-        final EObject semanticElement = ((IGraphicalEditPart) ((IStructuredSelection) selection).getFirstElement()).resolveSemanticElement();
+        final EObject semanticElement = (EObject) ((IAdaptable) ((IStructuredSelection) selection).getFirstElement()).getAdapter(EObject.class);
         setSelection(new StructuredSelection(adaptEObject(semanticElement)));
-        setPoolContainer((Pool) ModelHelper.getParentPool(semanticElement));
+        setPoolContainer(ModelHelper.getParentPool(semanticElement));
     }
 
-    protected EObject adaptEObject(EObject semanticElement) {
+    protected EObject adaptEObject(final EObject semanticElement) {
         return semanticElement;
     }
 
