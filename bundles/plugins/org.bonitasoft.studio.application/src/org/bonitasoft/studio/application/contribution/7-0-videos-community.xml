@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" ?>
+<rss version="2.0">
+  <channel>
+    <pubDate>2015-05-13</pubDate>
+    <author>Bonitasoft</author>
+    <category>Videos</category>
+    <title>Bonitasoft community videos</title>
+    <!-- TODO replace with link to new web site videos list -->
+    <link></link>
+    <description>Videos from Bonitasoft</description>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Videos</category>
+       <title>Todo video community 1</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/todo_video_1</link>
+       <description></description>
+    </item>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Videos</category>
+       <title>Todo video community 2</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/todo_video_2</link>
+       <description></description>
+    </item>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Videos</category>
+       <title>Todo video community 3</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/todo_video_3</link>
+       <description></description>
+    </item>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Videos</category>
+       <title>Todo video community 4</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/todo_video_4</link>
+       <description></description>
+    </item>
+   </channel>
+</rss>
