@@ -22,8 +22,14 @@ import static org.mockito.Mockito.doReturn;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
+import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
+import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.model.process.FormMappingType;
+import org.bonitasoft.studio.model.process.PageFlow;
+import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -35,6 +41,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -44,6 +51,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class CreateAndEditFormContributionItemTest {
 
     @InjectMocks
+    @Spy
     private CreateAndEditFormContributionItem contribution;
 
     @Mock
@@ -54,6 +62,15 @@ public class CreateAndEditFormContributionItemTest {
 
     @Mock
     private ISelectionProvider selectionProvider;
+
+    @Mock
+    private WebPageRepositoryStore repositoryStore;
+
+    @Mock
+    private CreateNewFormProposalListener createNewFormListener;
+
+    @Mock
+    private WebPageFileStore webPageFileStore;
 
     @Rule
     public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
@@ -76,27 +93,80 @@ public class CreateAndEditFormContributionItemTest {
     }
 
     @Test
-    public void should_update_refresh_toolItem_enablement() throws Exception {
-        final Composite composite = realmWithDisplay.createComposite();
-        contribution.fill(new ToolBar(composite, SWT.NONE), SWT.NONE);
-
-        contribution.update();
-        assertThat(contribution.isEnabled()).isFalse();
-
-        doReturn(new StructuredSelection(aTask().havingFormMapping(aFormMapping().havingTargetForm(anExpression())).build())).when(selectionProvider)
+    public void isEditable_should_return_false_if_selection_is_not_aPageFlow() {
+        doReturn(new StructuredSelection()).when(selectionProvider)
                 .getSelection();
-        contribution.update();
+        assertThat(contribution.isEditable()).isFalse();
+    }
 
-        assertThat(contribution.isEnabled()).isTrue();
-
+    @Test
+    public void isEditable_should_return_true_if_selection_is_aPageFlow_withAFormMapping_withAForm_havingName() {
         doReturn(
                 new StructuredSelection(aTask().havingFormMapping(
-                        aFormMapping().havingTargetForm(anExpression()).withType(FormMappingType.URL).withURL("anUrl")).build())).when(
+                        aFormMapping().havingTargetForm(anExpression().withName("newForm")).withType(FormMappingType.INTERNAL)).build())).when(
                 selectionProvider)
                 .getSelection();
-        contribution.update();
 
-        assertThat(contribution.isEnabled()).isTrue();
+        assertThat(contribution.isEditable()).isTrue();
+    }
+
+    @Test
+    public void isInternalForm_should_return_True_if_FormMappingType_isDefinedTo_INTERNAL() {
+        doReturn(
+                new StructuredSelection(aTask().havingFormMapping(
+                        aFormMapping().havingTargetForm(anExpression().withName("newForm")).withType(FormMappingType.INTERNAL)).build())).when(
+                selectionProvider)
+                .getSelection();
+
+        assertThat(contribution.isInternalForm()).isTrue();
+    }
+
+    @Test
+    public void isInternalForm_should_return_False_if_FormMappingType_isDefinedTo_URL() {
+        doReturn(
+                new StructuredSelection(aTask().havingFormMapping(
+                        aFormMapping().havingTargetForm(anExpression()).withType(FormMappingType.URL)).build())).when(
+                selectionProvider)
+                .getSelection();
+
+        assertThat(contribution.isInternalForm()).isFalse();
+    }
+
+    @Test
+    public void isEditableShouldReturnTrue_after_calling_createForm() {
+        doReturn(repositoryStore).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
+        final PageFlow pagefLow = aTask().havingFormMapping(
+                aFormMapping().havingTargetForm(anExpression())).build();
+        doReturn("newForm").when(createNewFormListener).handleEvent(pagefLow.getFormMapping(), null);
+        doReturn(
+                new StructuredSelection(pagefLow)).when(
+                selectionProvider)
+                .getSelection();
+
+        doReturn(webPageFileStore).when(repositoryStore).getChild("newForm");
+        doReturn("newName").when(webPageFileStore).getDisplayName();
+        doReturn(editingDomain()).when(contribution).getEditingDomain(pagefLow);
+
+        contribution.createNewForm();
+
+        assertThat(contribution.isInternalForm()).isTrue();
+
+        assertThat(contribution.isEditable()).isTrue();
+    }
+
+    private EditingDomain editingDomain() {
+        return new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory());
+    }
+
+    @Test
+    public void should_return_FormMapping_typeName() {
+        doReturn(
+                new StructuredSelection(aTask().havingFormMapping(
+                        aFormMapping().havingTargetForm(anExpression()).withType(FormMappingType.URL)).build())).when(
+                selectionProvider)
+                .getSelection();
+
+        assertThat(contribution.getFormMappingTypeName()).isEqualTo(FormMappingType.URL.name());
     }
 
 }

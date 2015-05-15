@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.designer.ui.contribution;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
@@ -36,6 +34,7 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.action.ContributionItem;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -43,6 +42,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -65,7 +65,7 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
     @Override
     public void update() {
         if (toolItem != null) {
-            toolItem.setEnabled(canCreateNewForm() || canEditForm());
+            toolItem.setEnabled(true);
             final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
             if (pageFlow != null) {
                 if (pageFlow instanceof Pool) {
@@ -80,15 +80,6 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
     @Override
     public boolean isEnabled() {
         return toolItem != null ? toolItem.isEnabled() : false;
-    }
-
-    protected boolean canCreateNewForm() {
-        final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
-        if (pageFlow != null) {
-            final FormMapping formMapping = pageFlow.getFormMapping();
-            return formMapping.getType() == FormMappingType.URL ? isNullOrEmpty(formMapping.getUrl()) : !formMapping.getTargetForm().hasName();
-        }
-        return false;
     }
 
     private PageFlow unwrap(final ISelection selection) {
@@ -108,10 +99,17 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                if (!canEditForm()) {
-                    createNewForm();
-                } else {
-                    editForm();
+                boolean canCreateOrEdit = true;
+                if (!isInternalForm()) {
+                    canCreateOrEdit = MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), Messages.switchTypeOfFormQuestionTitle,
+                            Messages.bind(Messages.switchTypeOfFormQuestion, getFormMappingTypeName()));
+                }
+                if (canCreateOrEdit) {
+                    if (!isEditable()) {
+                        createNewForm();
+                    } else {
+                        editForm();
+                    }
                 }
             }
         });
@@ -125,11 +123,18 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
         repositoryStore.refresh();
         final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId);
         if (webPageFileStore != null) {
-            final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(pageflow);
-            editingDomain.getCommandStack().execute(new UpdateFormMappingCommand(editingDomain, pageflow.getFormMapping(),
+            getEditingDomain(pageflow).getCommandStack().execute(new UpdateFormMappingCommand(getEditingDomain(pageflow), pageflow.getFormMapping(),
                     ExpressionHelper.createFormReferenceExpression(webPageFileStore.getDisplayName(), newPageId)));
 
         }
+    }
+
+    /**
+     * @param pageflow
+     * @return
+     */
+    public TransactionalEditingDomain getEditingDomain(final PageFlow pageflow) {
+        return TransactionUtil.getEditingDomain(pageflow);
     }
 
     public void setSelectionProvider(final ISelectionProvider selectionProvider) {
@@ -145,11 +150,30 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
         }
     }
 
-    protected boolean canEditForm() {
+    protected boolean isInternalForm() {
         final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
         if (pageFlow != null) {
             final FormMapping formMapping = pageFlow.getFormMapping();
-            return formMapping.getType() == FormMappingType.URL ? !isNullOrEmpty(formMapping.getUrl()) : formMapping.getTargetForm().hasName();
+            return FormMappingType.INTERNAL.equals(formMapping.getType());
+        }
+        return false;
+
+    }
+
+    protected String getFormMappingTypeName() {
+        final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
+        if (pageFlow != null) {
+            final FormMapping formMapping = pageFlow.getFormMapping();
+            return formMapping.getType().name();
+        }
+        return null;
+    }
+
+    protected boolean isEditable() {
+        final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
+        if (pageFlow != null) {
+            final FormMapping formMapping = pageFlow.getFormMapping();
+            return formMapping.getTargetForm().hasName();
         }
         return false;
     }
