@@ -168,6 +168,7 @@ public class CreateAndEditFormContributionItemTest {
                 .getSelection();
 
         assertThat(contribution.getFormMappingTypeName()).isEqualTo(Messages.externalURL);
+
     }
 
 }
