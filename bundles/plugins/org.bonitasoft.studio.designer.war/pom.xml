@@ -34,7 +34,7 @@
                     <overlays>
                         <overlay>
                             <groupId>org.bonitasoft.web</groupId>
-                            <artifactId>ui-designer-backend</artifactId>
+                            <artifactId>ui-designer-backend-webapp</artifactId>
                             <excludes>
                                 <exclude>WEB-INF/lib/slf4j-api-*.jar</exclude>
                             </excludes>
