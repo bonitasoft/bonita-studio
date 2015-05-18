@@ -26,25 +26,21 @@ import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
 import org.bonitasoft.studio.common.repository.ui.viewer.CheckboxRepositoryTreeViewer;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -89,30 +85,28 @@ public class ExportRepositoryWizardPage extends WizardPage {
     private String detinationPath;
 
     private CheckboxRepositoryTreeViewer treeViewer;
-    private final Object input;
+    private final List<IRepositoryStore<? extends IRepositoryFileStore>> stores;
     private final boolean isZip;
 
     private DataBindingContext dbc;
-    private Set<Object> selectedFiles = new HashSet<Object>();
     private Button destinationBrowseButton;
     private Combo destinationCombo;
-
-    private WizardPageSupport pageSupport;
 
     private final String defaultFileName;
     private ViewerFilter[] filters = {};
 
-    public ExportRepositoryWizardPage(final Object input, final boolean isZip, final String defaultFileName, final String wizardTitle) {
+    private Set<Object> defaultSelectedFiles = new HashSet<Object>();
+
+    public ExportRepositoryWizardPage(final List<IRepositoryStore<? extends IRepositoryFileStore>> stores, final boolean isZip, final String defaultFileName) {
         super(ExportRepositoryWizardPage.class.getName());
         this.isZip = isZip;
         this.defaultFileName = defaultFileName;
-        setTitle(wizardTitle);
         if (isZip) {
             setDescription(Messages.exportArtifactsWizard_desc);
         } else {
             setDescription(Messages.exportArtifactsWizard_desc_toFile);
         }
-        this.input = input;
+        this.stores = stores;
     }
 
     /*
@@ -151,7 +145,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
         browseRepoSection.setExpanded(true);
         browseRepoSection.setClient(createViewer(browseRepoSection));
         createDestination(composite);
-        pageSupport = WizardPageSupport.create(this, dbc);
+        WizardPageSupport.create(this, dbc);
         setControl(composite);
     }
 
@@ -160,52 +154,15 @@ public class ExportRepositoryWizardPage extends WizardPage {
         treeComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         treeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        treeViewer = new CheckboxRepositoryTreeViewer(treeComposite, SWT.BORDER | SWT.V_SCROLL);
-        treeViewer.setFilters(filters);
-        treeViewer.setInput(input);
-        treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
-        final IObservableSet checkedElementsObservable = ViewersObservables.observeCheckedElements(treeViewer, Object.class);
-        final MultiValidator notEmptyValidator = new MultiValidator() {
-
-            @Override
-            protected IStatus validate() {
-                if (checkedElementsObservable.isEmpty()) {
-                    return ValidationStatus.error(Messages.selectAtLeastOneArtifact);
-                }
-                return ValidationStatus.ok();
-            }
-        };
-
-        treeViewer.collapseAll();
-
-        dbc.addValidationStatusProvider(notEmptyValidator);
-        dbc.bindSet(checkedElementsObservable, PojoObservables.observeSet(this, "selectedFiles"));
-
-        final Set<IRepositoryFileStore> selectedChild = getArtifacts();
-        for (final IRepositoryStore<? extends IRepositoryFileStore> store : RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores()) {
-            final List<? extends IRepositoryFileStore> children = store.getChildren();
-            boolean containsAllChildren = !children.isEmpty();
-            int cpt = children.size();
-            int unexportable = 0;
-            for (final IRepositoryFileStore file : children) {
-                if (!file.canBeExported()) {
-                    unexportable++;
-                }
-                if (!contains(selectedChild, file) && file != null && file.canBeExported()) {
-                    cpt--;
-                    containsAllChildren = false;
-                }
-            }
-
-            if (containsAllChildren) {
-                treeViewer.setChecked(store, true);
-            } else if (cpt != unexportable && cpt < children.size() && cpt > 0) {
-                treeViewer.setGrayChecked(store, true);
-            }
+        treeViewer = new CheckboxRepositoryTreeViewer(treeComposite);
+        for (final ViewerFilter filter : filters) {
+            treeViewer.addFilter(filter);
         }
+        treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        treeViewer.bindTree(dbc, stores);
+        treeViewer.setCheckedElements(defaultSelectedFiles.toArray());
 
-        createButtonsComposite(treeComposite, checkedElementsObservable);
+        createButtonsComposite(treeComposite, treeViewer.checkedElementsObservable());
 
         return treeComposite;
     }
@@ -224,7 +181,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 final ITreeContentProvider provider = (ITreeContentProvider) treeViewer.getContentProvider();
-                checkedElementsObservable.addAll(Arrays.asList(provider.getElements(input)));
+                checkedElementsObservable.addAll(Arrays.asList(provider.getElements(stores)));
             }
         });
 
@@ -240,29 +197,9 @@ public class ExportRepositoryWizardPage extends WizardPage {
         });
     }
 
-    private boolean contains(final Set<IRepositoryFileStore> selectedChild, final IRepositoryFileStore file) {
-        for (final IRepositoryFileStore f : selectedChild) {
-            if (f.equals(file)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        if (pageSupport != null) {
-            pageSupport.dispose();
-        }
-        if (dbc != null) {
-            dbc.dispose();
-        }
-    }
-
-    public Set<IRepositoryFileStore> getArtifacts() {
+    private Set<IRepositoryFileStore> getSelectedFileStores() {
         final Set<IRepositoryFileStore> checkedArtifacts = new HashSet<IRepositoryFileStore>();
-        for (final Object element : treeViewer.getCheckedElements()) {
+        for (final Object element : treeViewer.checkedElementsObservable()) {
             if (element instanceof IRepositoryFileStore) {
                 checkedArtifacts.add((IRepositoryFileStore) element);
                 checkedArtifacts.addAll(((IRepositoryFileStore) element).getRelatedFileStore());
@@ -288,12 +225,13 @@ public class ExportRepositoryWizardPage extends WizardPage {
                 @Override
                 public void run(final IProgressMonitor monitor) throws InvocationTargetException,
                         InterruptedException {
-                    monitor.beginTask(Messages.exporting, getArtifacts().size());
+                    final Set<IRepositoryFileStore> selectedFileStores = getSelectedFileStores();
+                    monitor.beginTask(Messages.exporting, selectedFileStores.size());
                     final File dest = new File(getDetinationPath());
                     if (!dest.exists()) {
                         dest.mkdirs();
                     }
-                    for (final IRepositoryFileStore file : getArtifacts()) {
+                    for (final IRepositoryFileStore file : selectedFileStores) {
                         if (file.getResource() != null && file.getResource().exists()) {
                             try {
                                 file.export(dest.getAbsolutePath());
@@ -369,7 +307,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
     protected Set<IResource> computeResourcesToExport() {
         final Set<IResource> resourcesToExport = new HashSet<IResource>();
-        for (final IRepositoryFileStore file : getArtifacts()) {
+        for (final IRepositoryFileStore file : getSelectedFileStores()) {
             if (file.getResource() != null && file.getResource().exists()) {
                 resourcesToExport.add(file.getResource());
                 resourcesToExport.addAll(file.getRelatedResources());
@@ -390,32 +328,25 @@ public class ExportRepositoryWizardPage extends WizardPage {
         restoreWidgetValues();
         final UpdateValueStrategy pathStrategy = new UpdateValueStrategy();
         pathStrategy.setAfterGetValidator(new EmptyInputValidator(Messages.destinationPath));
-        if (isZip) {
-            pathStrategy.setBeforeSetValidator(new IValidator() {
+        pathStrategy.setBeforeSetValidator(new IValidator() {
 
-                @Override
-                public IStatus validate(final Object input) {
+            @Override
+            public IStatus validate(final Object input) {
+                if (!isZip) {
+                    if (!new File(input.toString()).isDirectory()) {
+                        return ValidationStatus.error(Messages.destinationPathMustBeADirectory);
+                    }
+                } else {
                     if (!input.toString().endsWith(".bos")) {
                         return ValidationStatus.error(Messages.invalidFileFormat);
                     }
                     if (new File(input.toString()).isDirectory()) {
                         return ValidationStatus.error(Messages.invalidFileFormat);
                     }
-                    return ValidationStatus.ok();
                 }
-            });
-        } else {
-            pathStrategy.setBeforeSetValidator(new IValidator() {
-
-                @Override
-                public IStatus validate(final Object input) {
-                    if (!new File(input.toString()).isDirectory()) {
-                        return ValidationStatus.error(Messages.destinationPathMustBeADirectory);
-                    }
-                    return ValidationStatus.ok();
-                }
-            });
-        }
+                return ValidationStatus.ok();
+            }
+        });
 
         dbc.bindValue(SWTObservables.observeText(destinationCombo), PojoProperties.value(ExportRepositoryWizardPage.class, "detinationPath").observe(this),
                 pathStrategy, null);
@@ -424,7 +355,6 @@ public class ExportRepositoryWizardPage extends WizardPage {
         destinationBrowseButton = new Button(group, SWT.PUSH);
         destinationBrowseButton.setText(Messages.browse);
         destinationBrowseButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create());
-
         destinationBrowseButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -600,12 +530,8 @@ public class ExportRepositoryWizardPage extends WizardPage {
         this.detinationPath = detinationPath;
     }
 
-    public Set<Object> getSelectedFiles() {
-        return selectedFiles;
-    }
-
-    public void setSelectedFiles(final Set<Object> selectedFiles) {
-        this.selectedFiles = selectedFiles;
+    public void setDefaultSelectedFiles(final Set<Object> defaultSelectedFiles) {
+        this.defaultSelectedFiles = defaultSelectedFiles;
     }
 
 }
