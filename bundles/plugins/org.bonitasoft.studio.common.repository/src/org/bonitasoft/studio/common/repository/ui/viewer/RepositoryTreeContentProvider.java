@@ -49,7 +49,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider {
             return cache.get(parentElement);
 
         }
-        return null;
+        return new Object[0];
     }
 
     /*
@@ -96,7 +96,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider {
                 return ((Collection<?>) element).toArray();
             }
         }
-        return new Object[] {};
+        return new Object[0];
     }
 
     /*
