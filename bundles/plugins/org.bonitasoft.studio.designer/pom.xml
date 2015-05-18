@@ -19,7 +19,7 @@
     <dependencies>
          <dependency>
             <groupId>org.bonitasoft.web</groupId>
-            <artifactId>ui-designer-model</artifactId>
+            <artifactId>ui-designer-backend-contract</artifactId>
             <version>${ui.designer.version}</version>
         </dependency>
     </dependencies>
@@ -56,7 +56,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.bonitasoft.web</groupId>
-                                    <artifactId>ui-designer-model</artifactId>
+                                    <artifactId>ui-designer-backend-contract</artifactId>
                                     <version>${ui.designer.version}</version>
                                     <overWrite>true</overWrite>
                                 </artifactItem>
