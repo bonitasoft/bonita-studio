@@ -32,7 +32,10 @@ public class FileStoreObservableFactory implements IObservableFactory {
      */
     @Override
     public IObservable createObservable(final Object target) {
-        if (target instanceof Collection<?>) {
+        if (target instanceof List<?>) {
+            if (((List<?>) target).size() == 1) {
+                return createObservable(((List<?>) target).get(0));
+            }
             return new WritableList((Collection<?>) target, IRepositoryStore.class);
         } else if (target instanceof IRepositoryStore<?>) {
             final List<IRepositoryFileStore> result = new ArrayList<IRepositoryFileStore>();
