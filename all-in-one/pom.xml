@@ -50,7 +50,7 @@
                             <yLocation>44</yLocation>
                             <fontSize>14</fontSize>
                             <color>55738c</color>
-                            <versionLabel>7.0.0</versionLabel>
+                            <versionLabel>${version}</versionLabel>
                         </configuration>
                         <goals>
                             <goal>create-image</goal>
