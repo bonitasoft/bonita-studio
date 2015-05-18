@@ -13,18 +13,10 @@
     <packaging>eclipse-plugin</packaging>
 
     <properties>
-        <webapp.dir>${basedir}/webapp</webapp.dir>
         <lib.dir>${basedir}/lib</lib.dir>
-        <ui.designer.version>1.0.0-M18</ui.designer.version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.bonitasoft.web</groupId>
-            <artifactId>ui-designer-backend</artifactId>
-            <version>${ui.designer.version}</version>
-            <type>war</type>
-        </dependency>
          <dependency>
             <groupId>org.bonitasoft.web</groupId>
             <artifactId>ui-designer-model</artifactId>
@@ -35,34 +27,6 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <overlays>
-                        <overlay>
-                            <groupId>org.bonitasoft.web</groupId>
-                            <artifactId>ui-designer-backend</artifactId>
-                            <excludes>
-                                <exclude>WEB-INF/lib/slf4j-api-*.jar</exclude>
-                            </excludes>
-                        </overlay>
-                    </overlays>
-                    <workDirectory>target/overlay-war-folder</workDirectory>
-                    <warName>designer</warName>
-                    <outputDirectory>${webapp.dir}</outputDirectory>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>war</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
@@ -70,7 +34,6 @@
                         <phase>clean</phase>
                         <configuration>
                             <target>
-                                <delete dir="${webapp.dir}" />
                                 <delete dir="${lib.dir}" />
                             </target>
                         </configuration>

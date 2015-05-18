@@ -44,6 +44,7 @@
 		<module>org.bonitasoft.studio.decision.ui</module>
 		<module>org.bonitasoft.studio.dependencies</module>
         <module>org.bonitasoft.studio.designer</module>
+        <module>org.bonitasoft.studio.designer.war</module>
 		<module>org.bonitasoft.studio.diagram.custom</module>
 		<module>org.bonitasoft.studio.diagram.form.custom</module>
 		<module>org.bonitasoft.studio.diagram.form.properties</module>
