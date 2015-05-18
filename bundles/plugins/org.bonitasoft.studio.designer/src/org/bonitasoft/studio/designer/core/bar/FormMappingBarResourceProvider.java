@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.designer.core.bar;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.util.List;
@@ -65,7 +64,7 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
     public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
             final Configuration configuration,
             final Set<EObject> excludedObject) throws Exception {
-        checkNotNull(process);
+        checkArgument(process != null);
         builder.setFormMappings(newFormMappingModel(builder, process));
     }
 
