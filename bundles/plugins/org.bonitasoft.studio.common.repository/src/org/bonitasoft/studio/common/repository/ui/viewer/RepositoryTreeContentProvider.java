@@ -14,7 +14,10 @@
  */
 package org.bonitasoft.studio.common.repository.ui.viewer;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.WeakHashMap;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -22,6 +25,8 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 public class RepositoryTreeContentProvider implements ITreeContentProvider {
+
+    private final WeakHashMap<IRepositoryStore<?>, Object[]> cache = new WeakHashMap<IRepositoryStore<?>, Object[]>();
 
     /*
      * (non-Javadoc)
@@ -31,11 +36,20 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider {
      */
     @Override
     public Object[] getChildren(final Object parentElement) {
-        if (parentElement instanceof IRepositoryStore<?>) {
-            return ((IRepositoryStore<?>) parentElement).getChildren().toArray();
+        if (parentElement instanceof IRepositoryStore) {
+            if (!cache.containsKey(parentElement)) {
+                final List<IRepositoryFileStore> result = new ArrayList<IRepositoryFileStore>();
+                for (final IRepositoryFileStore child : ((IRepositoryStore<IRepositoryFileStore>) parentElement).getChildren()) {
+                    if (child != null && child.canBeExported()) {
+                        result.add(child);
+                    }
+                }
+                cache.put((IRepositoryStore<?>) parentElement, result.toArray());
+            }
+            return cache.get(parentElement);
 
         }
-        return new Object[] {};
+        return null;
     }
 
     /*
@@ -75,7 +89,12 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider {
     @Override
     public Object[] getElements(final Object element) {
         if (element instanceof Collection<?>) {
-            return ((Collection<?>) element).toArray();
+            if (((Collection<?>) element).size() == 1) {
+                final IRepositoryStore<?> store = (IRepositoryStore<?>) ((Collection<?>) element).iterator().next();
+                return getChildren(store);
+            } else {
+                return ((Collection<?>) element).toArray();
+            }
         }
         return new Object[] {};
     }

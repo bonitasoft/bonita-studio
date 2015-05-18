@@ -14,17 +14,20 @@
  */
 package org.bonitasoft.studio.common.repository.ui.viewer;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.WeakHashMap;
 
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.FileStoreLabelProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.list.WritableList;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.databinding.validation.MultiValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
@@ -34,112 +37,34 @@ import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
  */
 public class CheckboxRepositoryTreeViewer extends ContainerCheckedTreeViewer {
 
-    private class RepositoryTreeContentProvider implements ITreeContentProvider {
-
-        private final WeakHashMap<IRepositoryStore, Object[]> cache = new WeakHashMap<IRepositoryStore, Object[]>();
-
-        @Override
-        public Object[] getChildren(final Object parentElement) {
-            if (parentElement instanceof IRepositoryStore) {
-                if (!cache.containsKey(parentElement)) {
-                    final List<IRepositoryFileStore> result = new ArrayList<IRepositoryFileStore>();
-                    for (final IRepositoryFileStore child : ((IRepositoryStore<IRepositoryFileStore>) parentElement).getChildren()) {
-                        if (child != null && child.canBeExported()) {
-                            result.add(child);
-                        }
-                    }
-                    cache.put((IRepositoryStore) parentElement, result.toArray());
-                }
-                return cache.get(parentElement);
-
-            }
-            return null;
-        }
-
-        @Override
-        public Object getParent(final Object element) {
-            if (element instanceof IRepositoryFileStore) {
-                return ((IRepositoryFileStore) element).getParentStore();
-            }
-            return null;
-        }
-
-        @Override
-        public boolean hasChildren(final Object element) {
-            if (element instanceof IRepositoryStore<?>) {
-                return !((IRepositoryStore<?>) element).isEmpty();
-            }
-            return false;
-        }
-
-        @Override
-        public Object[] getElements(final Object element) {
-            if (element instanceof Collection<?>) {
-                if (((Collection<?>) element).size() == 1) {
-                    final IRepositoryStore store = (IRepositoryStore) ((Collection<?>) element).iterator().next();
-                    return getChildren(store);
-                } else {
-                    return ((Collection<?>) element).toArray();
-                }
-
-            } else if (element instanceof Object[]) {
-                return (Object[]) element;
-            }
-            return null;
-        }
-
-        /*
-         * (non-Javadoc)
-         * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-         */
-        @Override
-        public void dispose() {
-
-        }
-
-        /*
-         * (non-Javadoc)
-         * @see
-         * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
-         * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-         */
-        @Override
-        public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
-
-        }
-
-    }
-
-    private RepositoryTreeContentProvider localContentProvider;
-
-    /**
-     * @param parent
-     * @param style
-     * @param showImages
-     */
-    public CheckboxRepositoryTreeViewer(final Composite parent, final int style) {
-        super(parent, style | SWT.VIRTUAL);
+    public CheckboxRepositoryTreeViewer(final Composite parent) {
+        super(parent, SWT.VIRTUAL | SWT.BORDER | SWT.V_SCROLL);
         initialize();
     }
 
-    /**
-	 *
-	 */
     private void initialize() {
         setLabelProvider(new FileStoreLabelProvider());
-        localContentProvider = new RepositoryTreeContentProvider();
-        setContentProvider(localContentProvider);
-        addFilter(new ViewerFilter() {
+        setContentProvider(new ObservableListTreeContentProvider(new FileStoreObservableFactory(), new FileStoreTreeStructureAdvisor()));
+    }
+
+    public void bindTree(final DataBindingContext context, final List<IRepositoryStore<? extends IRepositoryFileStore>> stores) {
+        setInput(new WritableList(stores, IRepositoryStore.class));
+        final IObservableSet checkedElementsObservable = checkedElementsObservable();
+        context.addValidationStatusProvider(new MultiValidator() {
 
             @Override
-            public boolean select(final Viewer arg0, final Object parentElement, final Object element) {
-                if (element instanceof IRepositoryStore) {
-                    final ITreeContentProvider provider = (ITreeContentProvider) getContentProvider();
-                    return provider.hasChildren(element);
+            protected IStatus validate() {
+                if (checkedElementsObservable.isEmpty()) {
+                    return ValidationStatus.error(Messages.selectAtLeastOneArtifact);
                 }
-                return true;
+                return ValidationStatus.ok();
             }
         });
+        collapseAll();
+    }
+
+    public IObservableSet checkedElementsObservable() {
+        return ViewersObservables.observeCheckedElements(this, Object.class);
     }
 
 }
