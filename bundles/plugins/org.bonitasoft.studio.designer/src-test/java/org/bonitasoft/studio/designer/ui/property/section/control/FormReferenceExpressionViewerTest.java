@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
+import org.eclipse.swt.SWT;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.junit.Before;
 import org.junit.Rule;
@@ -42,11 +43,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-/**
- * @author Romain Bioteau
- */
 @RunWith(MockitoJUnitRunner.class)
-public class InternalMappingCompositeTest {
+public class FormReferenceExpressionViewerTest {
 
     @Rule
     public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
@@ -64,6 +62,8 @@ public class InternalMappingCompositeTest {
     private IWorkspace workspace;
     @Mock
     private CreateNewFormProposalListener createNewFormProposalListener;
+    @Mock
+    private TabbedPropertySheetWidgetFactory widgetFactory;
 
     /**
      * @throws java.lang.Exception
@@ -76,37 +76,40 @@ public class InternalMappingCompositeTest {
 
     @Test
     public void should_open_file_store_on_edit() throws Exception {
-        final InternalMappingComposite pageDesignerMappingComposite = makeComposite();
+        final FormReferenceExpressionViewer formReferenceExpressionViewer = new FormReferenceExpressionViewer(makeComposite(), SWT.BORDER, widgetFactory,
+                webPageRepositoryStore);
         when(webPageRepositoryStore.getChild("a-page-id")).thenReturn(selectedPage);
 
-        pageDesignerMappingComposite.createOReditForm(new WritableValue(aFormMapping().havingTargetForm(anExpression().withContent("a-page-id")).build(),
-                FormMapping.class));
+        formReferenceExpressionViewer.createOReditForm(new WritableValue(aFormMapping().havingTargetForm(anExpression().withContent("a-page-id")).build(),
+                FormMapping.class), createNewFormProposalListener, repositoryAccessor);
 
         verify(selectedPage).open();
     }
 
     @Test
     public void should_open_file_store_on_create() throws Exception {
-        final InternalMappingComposite pageDesignerMappingComposite = Mockito.spy(makeComposite());
+        final FormReferenceExpressionViewer formReferenceExpressionViewer = Mockito.spy(new FormReferenceExpressionViewer(makeComposite(), SWT.BORDER,
+                widgetFactory,
+                webPageRepositoryStore));
 
         when(webPageRepositoryStore.getChild("a-page-id")).thenReturn(selectedPage);
         final FormMapping mapping = aFormMapping().havingTargetForm(anExpression()).build();
         when(createNewFormProposalListener.handleEvent(mapping, null)).thenReturn("a-page-id");
-        doReturn(editingDomain()).when(pageDesignerMappingComposite).getEditingDomain(mapping);
+        doReturn(editingDomain()).when(formReferenceExpressionViewer).getEditingDomain(mapping);
 
-        pageDesignerMappingComposite.createOReditForm(new WritableValue(mapping,
-                FormMapping.class));
+        formReferenceExpressionViewer.createOReditForm(new WritableValue(mapping,
+                FormMapping.class), createNewFormProposalListener, repositoryAccessor);
 
         assertThat(mapping.getTargetForm().hasContent()).isTrue();
+    }
+
+    private TransactionalEditingDomain editingDomain() {
+        return new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory());
     }
 
     private InternalMappingComposite makeComposite() {
         return new InternalMappingComposite(realmWithDisplay.createComposite(),
                 new TabbedPropertySheetWidgetFactory(), preferenceStore, repositoryAccessor,
                 formReferenceExpressionValidator, createNewFormProposalListener);
-    }
-
-    private TransactionalEditingDomain editingDomain() {
-        return new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory());
     }
 }
