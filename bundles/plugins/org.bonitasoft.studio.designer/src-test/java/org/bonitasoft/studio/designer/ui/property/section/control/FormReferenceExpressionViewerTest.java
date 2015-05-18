@@ -75,7 +75,7 @@ public class FormReferenceExpressionViewerTest {
     }
 
     @Test
-    public void should_open_file_store_on_edit() throws Exception {
+    public void should_open_file_store_on_createOredit() throws Exception {
         final FormReferenceExpressionViewer formReferenceExpressionViewer = new FormReferenceExpressionViewer(makeComposite(), SWT.BORDER, widgetFactory,
                 webPageRepositoryStore);
         when(webPageRepositoryStore.getChild("a-page-id")).thenReturn(selectedPage);
@@ -87,7 +87,7 @@ public class FormReferenceExpressionViewerTest {
     }
 
     @Test
-    public void should_open_file_store_on_create() throws Exception {
+    public void should_createAForm_on_createOrEdit() throws Exception {
         final FormReferenceExpressionViewer formReferenceExpressionViewer = Mockito.spy(new FormReferenceExpressionViewer(makeComposite(), SWT.BORDER,
                 widgetFactory,
                 webPageRepositoryStore));
