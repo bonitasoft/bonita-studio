@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.designer.ui.property.section.control.FormMappingRadioGroup;
 import org.bonitasoft.studio.designer.ui.property.section.control.FormReferenceExpressionValidator;
@@ -54,13 +55,16 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
     @Inject
     private FormReferenceExpressionValidator formReferenceExpressionValidator;
 
+    @Inject
+    private CreateNewFormProposalListener createNewFormProposalListener;
+
     private FormMappingRadioGroup formMappingRadioGroup;
 
     @Override
     protected void createContent(final Composite parent) {
         context = new EMFDataBindingContext();
         formMappingRadioGroup = new FormMappingRadioGroup(parent, getWidgetFactory(), preferenceStore,
-                repositoryAccessor, formReferenceExpressionValidator);
+                repositoryAccessor, formReferenceExpressionValidator, createNewFormProposalListener);
         formMappingRadioGroup.doBindControl(context, CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(selectionProvider),
                 getFormMappingFeature()));

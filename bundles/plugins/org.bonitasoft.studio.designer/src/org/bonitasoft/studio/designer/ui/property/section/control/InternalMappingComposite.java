@@ -15,8 +15,11 @@
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.designer.core.command.UpdateFormMappingCommand;
+import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
@@ -34,6 +37,8 @@ import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -55,16 +60,20 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 public class InternalMappingComposite extends Composite implements BonitaPreferenceConstants {
 
     private static final int WIDTH_HINT = 300;
+
     private final ExpressionViewer targetFormExpressionViewer;
     private final RepositoryAccessor repositoryAccessor;
     private final WebPageNameResourceChangeListener webPageNameResourceChangeListener;
+    private final CreateNewFormProposalListener createNewFormListener;
 
     public InternalMappingComposite(final Composite parent,
             final TabbedPropertySheetWidgetFactory widgetFactory,
             final IEclipsePreferences preferenceStore,
             final RepositoryAccessor repositoryAccessor,
-            final FormReferenceExpressionValidator formReferenceExpressionValidator) {
+            final FormReferenceExpressionValidator formReferenceExpressionValidator,
+            final CreateNewFormProposalListener createNewFormListener) {
         super(parent, SWT.NONE);
+        this.createNewFormListener = createNewFormListener;
         this.repositoryAccessor = repositoryAccessor;
         webPageNameResourceChangeListener = new WebPageNameResourceChangeListener(new ExpressionItemProvider(
                 new ExpressionItemProviderAdapterFactory()));
@@ -129,7 +138,7 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                editForm(formMappingObservable);
+                createOReditForm(formMappingObservable);
             }
 
         });
@@ -142,11 +151,33 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
         }
     }
 
-    protected void editForm(final IObservableValue formMappingObservable) {
+    protected void createOReditForm(final IObservableValue formMappingObservable) {
         final FormMapping mapping = (FormMapping) formMappingObservable.getValue();
         final Expression targetForm = mapping.getTargetForm();
         if (targetForm.hasContent()) {
             repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent()).open();
+        } else {
+            createNewForm(mapping);
         }
+    }
+
+    protected void createNewForm(final FormMapping mapping) {
+        final String newPageId = createNewFormListener.handleEvent(mapping, null);
+        final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
+        repositoryStore.refresh();
+        final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId);
+        if (webPageFileStore != null) {
+            final TransactionalEditingDomain editingDomain = getEditingDomain(mapping);
+            editingDomain.getCommandStack().execute(new UpdateFormMappingCommand(editingDomain, mapping,
+                    ExpressionHelper.createFormReferenceExpression(webPageFileStore.getDisplayName(), newPageId)));
+        }
+    }
+
+    /**
+     * @param mapping
+     * @return
+     */
+    public TransactionalEditingDomain getEditingDomain(final FormMapping mapping) {
+        return TransactionUtil.getEditingDomain(mapping.eContainer());
     }
 }

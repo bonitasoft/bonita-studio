@@ -14,27 +14,32 @@
  */
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
-import org.bonitasoft.studio.designer.ui.property.section.control.FormReferenceExpressionValidator;
-import org.bonitasoft.studio.designer.ui.property.section.control.InternalMappingComposite;
 import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -57,6 +62,8 @@ public class InternalMappingCompositeTest {
     private WebPageFileStore selectedPage;
     @Mock
     private IWorkspace workspace;
+    @Mock
+    private CreateNewFormProposalListener createNewFormProposalListener;
 
     /**
      * @throws java.lang.Exception
@@ -72,15 +79,34 @@ public class InternalMappingCompositeTest {
         final InternalMappingComposite pageDesignerMappingComposite = makeComposite();
         when(webPageRepositoryStore.getChild("a-page-id")).thenReturn(selectedPage);
 
-        pageDesignerMappingComposite.editForm(new WritableValue(aFormMapping().havingTargetForm(anExpression().withContent("a-page-id")).build(),
+        pageDesignerMappingComposite.createOReditForm(new WritableValue(aFormMapping().havingTargetForm(anExpression().withContent("a-page-id")).build(),
                 FormMapping.class));
 
         verify(selectedPage).open();
     }
 
+    @Test
+    public void should_open_file_store_on_create() throws Exception {
+        final InternalMappingComposite pageDesignerMappingComposite = Mockito.spy(makeComposite());
+
+        when(webPageRepositoryStore.getChild("a-page-id")).thenReturn(selectedPage);
+        final FormMapping mapping = aFormMapping().havingTargetForm(anExpression()).build();
+        when(createNewFormProposalListener.handleEvent(mapping, null)).thenReturn("a-page-id");
+        doReturn(editingDomain()).when(pageDesignerMappingComposite).getEditingDomain(mapping);
+
+        pageDesignerMappingComposite.createOReditForm(new WritableValue(mapping,
+                FormMapping.class));
+
+        assertThat(mapping.getTargetForm().hasContent()).isTrue();
+    }
+
     private InternalMappingComposite makeComposite() {
         return new InternalMappingComposite(realmWithDisplay.createComposite(),
                 new TabbedPropertySheetWidgetFactory(), preferenceStore, repositoryAccessor,
-                formReferenceExpressionValidator);
+                formReferenceExpressionValidator, createNewFormProposalListener);
+    }
+
+    private TransactionalEditingDomain editingDomain() {
+        return new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory());
     }
 }

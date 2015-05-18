@@ -53,11 +53,15 @@ public class NewFormContributionItem extends ContributionItem {
 
     private ToolItem toolItem;
 
-    @Inject
-    private CreateNewFormProposalListener createNewFormListener;
+    private final CreateNewFormProposalListener createNewFormListener;
+
+    private final RepositoryAccessor repositoryAccessor;
 
     @Inject
-    private RepositoryAccessor repositoryAccessor;
+    public NewFormContributionItem(final CreateNewFormProposalListener createNewFormListener, final RepositoryAccessor repositoryAccessor) {
+        this.createNewFormListener = createNewFormListener;
+        this.repositoryAccessor = repositoryAccessor;
+    }
 
     private ISelectionProvider selectionProvider;
 
