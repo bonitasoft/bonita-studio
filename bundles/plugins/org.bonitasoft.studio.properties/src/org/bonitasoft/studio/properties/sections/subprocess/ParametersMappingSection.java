@@ -14,11 +14,6 @@
  */
 package org.bonitasoft.studio.properties.sections.subprocess;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -28,24 +23,18 @@ import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.jface.EMFFeatureLabelProvider;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.properties.EObjectSelectionProviderSection;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.widgets.MagicComposite;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.CallActivity;
-import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.InputMapping;
 import org.bonitasoft.studio.model.process.InputMappingAssignationType;
 import org.bonitasoft.studio.model.process.OutputMapping;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
@@ -85,6 +74,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  */
 public class ParametersMappingSection extends EObjectSelectionProviderSection {
 
+    private final CallActivityHelper callAcitivtyHelper;
     private static final String SUBPROCESS_MAPPING_DATA_PREFIX = "sub_";
     private Composite inputMappingControl;
     private Composite outputMappingControl;
@@ -94,9 +84,11 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
     private final ISharedImages sharedImages;
 
     @Inject
-    public ParametersMappingSection(final ExpressionEditorService expressionEditorService, final ISharedImages sharedImages) {
+    public ParametersMappingSection(final ExpressionEditorService expressionEditorService, final ISharedImages sharedImages,
+            final RepositoryAccessor repositoryAccessor) {
         this.expressionEditorService = expressionEditorService;
         this.sharedImages = sharedImages;
+        callAcitivtyHelper = new CallActivityHelper(repositoryAccessor);
     }
 
     @Override
@@ -155,7 +147,14 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         automapButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                automapSubProcess(parent);
+                final CallActivityMapper mapper = callAcitivtyHelper.automapSubProcess(getCallActivity());
+                for (final Data data : mapper.getInputMappingToCreate()) {
+                    createInputMapping(data, InputMappingAssignationType.CONTRACT_INPUT, data.getName());
+                }
+                for (final Data data : mapper.getOutputMappingToCreate()) {
+                    createOutputMapping(data, data.getName());
+                }
+                refreshScrolledComposite(parent);
             }
         });
         addInputMappingControl(parent);
@@ -164,48 +163,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         addOutputMappingControl(parent);
     }
 
-    /**
-     * @param parent
-     *
-     */
-    protected void automapSubProcess(final Composite parent) {
-        final List<String> subprocessData = getCallActivityData();
-        final Map<String, DataType> subprocessTypes = getSubprocessDataTypes();
-        final List<Data> accessibleData = ModelHelper.getAccessibleData(getCallActivity(),false);
-        final List<Data> mappedOutputData = new ArrayList<Data>();
-        final List<Data> mappedInputData = new ArrayList<Data>();
 
-        for(final InputMapping existingMapping : getCallActivity().getInputMappings()){
-            final EList<EObject> referencedElements = existingMapping.getProcessSource().getReferencedElements();
-            if (!referencedElements.isEmpty()) {
-                mappedInputData.add((Data) referencedElements.get(0));
-            }
-        }
-
-        for (final Data data : accessibleData) {
-            if (!mappedOutputData.contains(data) || !mappedInputData.contains(data)) {
-                String subprocessDataString = null;
-                if (subprocessData.contains(data.getName())) {
-                    subprocessDataString = data.getName();
-                } else if (subprocessData.contains(SUBPROCESS_MAPPING_DATA_PREFIX + data.getName())) {
-                    subprocessDataString = SUBPROCESS_MAPPING_DATA_PREFIX + data.getName();
-                }
-                if (subprocessDataString != null) {
-                    final DataType dataType = subprocessTypes.get(subprocessDataString);
-                    if (dataType != null && dataType.getName().equals(data.getDataType().getName())) {
-                        if (!mappedInputData.contains(data)) {
-                            createInputMapping(data, InputMappingAssignationType.DATA, subprocessDataString);
-                        }
-                        if (!mappedOutputData.contains(data)) {
-                            createOutputMapping(data, subprocessDataString);
-                        }
-                    }
-                }
-            }
-        }
-
-        refreshScrolledComposite(parent);
-    }
 
     /**
      * @param parent
@@ -239,6 +197,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         });
 
     }
+
     /**
      * @param parent
      */
@@ -246,7 +205,8 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         parent.getParent().getParent().layout(true ,true);
         getTabbedPropertySheetPage().resizeScrolledComposite();
     }
-    private void createOutputMapping(final Data target, final String source) {
+
+    protected void createOutputMapping(final Data target, final String source) {
         final OutputMapping outputMapping = ProcessFactory.eINSTANCE.createOutputMapping();
         if(target != null){
             outputMapping.setProcessTarget(target);
@@ -257,6 +217,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         getEditingDomain().getCommandStack().execute(new AddCommand(getEditingDomain(), getCallActivity().getOutputMappings(), outputMapping));
         addOutputMappingLine(outputMappingControl, outputMapping);
     }
+
     /**
      * @param outputMappingControl
      * @param object
@@ -291,7 +252,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
 
 	private CCombo createSubprocessSourceCombo(final Composite outputMappingControl, final OutputMapping mapping) {
         final CCombo subprocessSourceCombo = widgetFactory.createCCombo(outputMappingControl, SWT.BORDER);
-        for (final String subprocessData : getCallActivityData()) {
+        for (final String subprocessData : callAcitivtyHelper.getCallActivityData(getCallActivity())) {
             subprocessSourceCombo.add(subprocessData);
         }
         final GridData layoutData = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
@@ -376,7 +337,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
 
     }
 
-    private void createInputMapping(final Data source, final InputMappingAssignationType assignationType, final String target) {
+    protected void createInputMapping(final Data source, final InputMappingAssignationType assignationType, final String target) {
         final InputMapping mapping = ProcessFactory.eINSTANCE.createInputMapping();
         if(source != null){
             mapping.setProcessSource(ExpressionHelper.createVariableExpression(source));
@@ -472,11 +433,11 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
 
     protected void updateAvailableValuesInputMappingTargetCombo(final CCombo targetCombo, final InputMappingAssignationType assignationType) {
         if (InputMappingAssignationType.DATA == assignationType) {
-            for (final String subprocessData : getCallActivityData()) {
+            for (final String subprocessData : callAcitivtyHelper.getCallActivityData(getCallActivity())) {
                 targetCombo.add(subprocessData);
             }
         } else {
-            for (final String contractInputOfCalledActivity : getCallActivityContractInput()) {
+            for (final String contractInputOfCalledActivity : callAcitivtyHelper.getCallActivityContractInput(getCallActivity())) {
                 targetCombo.add(contractInputOfCalledActivity);
             }
         }
@@ -535,80 +496,9 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         return srcCombo;
     }
 
-    /**
-     * @return
-     */
 
-    private List<String> getCallActivityData() {
-        final List<String> res = new ArrayList<String>();
-        final AbstractProcess subProcess = getCalledProcess();
-        if (subProcess != null) {
-            for (final Data data : subProcess.getData()) {
-                res.add(data.getName());
-            }
-        }
-        return res;
-    }
 
-    private List<String> getCallActivityContractInput() {
-        final List<String> res = new ArrayList<String>();
-        final Pool subProcess = getCalledProcess();
-        if (subProcess != null) {
-            for (final ContractInput contractInput : subProcess.getContract().getInputs()) {
-                res.add(contractInput.getName());
-            }
-        }
-        return res;
-    }
-
-    protected Pool getCalledProcess() {
-        final CallActivity sub = getCallActivity();
-        final String subprocessName = getCalledProcessName(sub);
-        final String subprocessVersion = getCalledProcessVersion(sub);
-        if (subprocessName != null) {
-            return (Pool) findProcess(subprocessName, subprocessVersion);
-        }
-        return null;
-    }
-
-    protected AbstractProcess findProcess(final String subprocessName, final String subprocessVersion) {
-        final DiagramRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
-        return ModelHelper.findProcess(subprocessName, subprocessVersion, repositoryStore.getAllProcesses());
-    }
-
-    protected String getCalledProcessVersion(final CallActivity sub) {
-        String subprocessVersion = null;
-        if (sub.getCalledActivityVersion() != null
-                && sub.getCalledActivityVersion().getContent() != null) {
-            subprocessVersion = sub.getCalledActivityVersion().getContent();
-        }
-        return subprocessVersion;
-    }
-
-    protected String getCalledProcessName(final CallActivity sub) {
-        String subprocessName = null;
-        if (sub.getCalledActivityName() != null
-                && sub.getCalledActivityName().getContent() != null) {
-            subprocessName = sub.getCalledActivityName().getContent();
-        }
-        return subprocessName;
-    }
-
-    /**
-     * @return
-     */
-    private Map<String, DataType> getSubprocessDataTypes() {
-        final Map<String, DataType> res = new HashMap<String, DataType>();
-        final AbstractProcess subProcess = getCalledProcess();
-        if (subProcess != null) {
-            for (final Data data : subProcess.getData()) {
-                res.put(data.getName(), data.getDataType());
-            }
-        }
-        return res;
-    }
-
-    private CallActivity getCallActivity() {
+    protected CallActivity getCallActivity() {
         return (CallActivity) getEObject();
     }
 

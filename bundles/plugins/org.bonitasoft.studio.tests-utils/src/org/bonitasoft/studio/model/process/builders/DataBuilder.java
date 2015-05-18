@@ -18,6 +18,7 @@ package org.bonitasoft.studio.model.process.builders;
 
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 
 /**
@@ -73,6 +74,11 @@ public class DataBuilder<T extends Data, B extends DataBuilder<T, B>> extends El
 
     public B havingDataType(final DataTypeBuilder<?, ?> dataType) {
         getBuiltInstance().setDataType(dataType.build());
+        return getThis();
+    }
+
+    public B havingDataType(final DataType dataType) {
+        getBuiltInstance().setDataType(dataType);
         return getThis();
     }
 
