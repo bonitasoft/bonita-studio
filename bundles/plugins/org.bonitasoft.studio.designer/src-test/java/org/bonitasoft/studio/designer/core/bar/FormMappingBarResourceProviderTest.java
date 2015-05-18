@@ -80,8 +80,8 @@ public class FormMappingBarResourceProviderTest {
         when(preferenceStore.getBoolean(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true)).thenReturn(false);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void should_throw_NullPointerException_if_process_is_null() throws Exception {
+    @Test(expected = IllegalArgumentException.class)
+    public void should_throw_an_IllegalArgumentException_if_process_is_null() throws Exception {
         formMappingBarResourceProvider.addResourcesForConfiguration(new BusinessArchiveBuilder(), null, aConfiguration()
                 .build(),
                 Collections.<EObject> emptySet());
