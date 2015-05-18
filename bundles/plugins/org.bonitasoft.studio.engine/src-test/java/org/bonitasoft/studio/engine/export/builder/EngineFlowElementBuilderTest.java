@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.engine.export.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder.aStringDataType;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -33,23 +34,32 @@ import org.bonitasoft.engine.bpm.process.impl.UserFilterDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.expression.ExpressionType;
+import org.bonitasoft.engine.operation.LeftOperand;
+import org.bonitasoft.engine.operation.Operation;
+import org.bonitasoft.engine.operation.OperatorType;
+import org.bonitasoft.studio.assertions.EngineExpressionAssert;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
-import org.bonitasoft.studio.engine.export.builder.EngineFlowElementBuilder;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.TableExpression;
+import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.ActorFilter;
 import org.bonitasoft.studio.model.process.BoundaryMessageEvent;
+import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.InputMappingAssignationType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.StartMessageEvent;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
+import org.bonitasoft.studio.model.process.builders.CallActivityBuilder;
+import org.bonitasoft.studio.model.process.builders.DataBuilder;
+import org.bonitasoft.studio.model.process.builders.InputMappingBuilder;
 import org.bonitasoft.studio.model.process.builders.PoolBuilder;
 import org.bonitasoft.studio.model.process.builders.TaskBuilder;
 import org.eclipse.emf.ecore.EObject;
@@ -83,6 +93,8 @@ public class EngineFlowElementBuilderTest {
 
     @Mock
     private UserTaskDefinitionBuilder taskBuilder;
+    @Mock
+    private org.bonitasoft.engine.bpm.process.impl.CallActivityBuilder callActivityBuilder;
 
     @Mock
     private IEngineDefinitionBuilder engineContractBuilder;
@@ -176,4 +188,54 @@ public class EngineFlowElementBuilderTest {
         assertThat(argument.getValue().getExpressionType()).isEqualTo(ExpressionType.TYPE_BUSINESS_DATA_REFERENCE.name());
     }
 
+    @Test
+    public void testAddInputMappingAssignedToData() {
+        final Pool pool = PoolBuilder.aPool()
+                .havingElements(
+                        CallActivityBuilder
+                                .aCallActivity()
+                                .withName("Call Activity")
+                                .havingInputMappings(
+                                        InputMappingBuilder
+                                                .anInputMapping()
+                                                .setSubProcessTarget(InputMappingAssignationType.DATA, "subProcessData")
+                                                .setProcessSource(ExpressionBuilder.aVariableExpression().withContent("processData").build())
+                                                .build()))
+                .havingData(DataBuilder.aData().havingDataType(aStringDataType()).withName("processData"))
+                .build();
+
+        flowElementSwitch.exportInputMappingsForCallActivity((CallActivity) pool.getElements().get(0), callActivityBuilder);
+
+        final ArgumentCaptor<Operation> argument = ArgumentCaptor.forClass(Operation.class);
+        verify(callActivityBuilder).addDataInputOperation(argument.capture());
+        assertThat(argument.getValue().getType()).isEqualTo(OperatorType.ASSIGNMENT);
+        assertThat(argument.getValue().getLeftOperand().getName()).isEqualTo("subProcessData");
+        assertThat(argument.getValue().getLeftOperand().getType()).isEqualTo(LeftOperand.TYPE_DATA);
+        assertThat(argument.getValue().getRightOperand().getContent()).isEqualTo("processData");
+    }
+
+    @Test
+    public void testAddInputMappingAssignedToContractInput() {
+        final Pool pool = PoolBuilder.aPool()
+                .havingElements(
+                        CallActivityBuilder
+                                .aCallActivity()
+                                .withName("Call Activity")
+                                .havingInputMappings(
+                                        InputMappingBuilder
+                                                .anInputMapping()
+                                                .setSubProcessTarget(InputMappingAssignationType.CONTRACT_INPUT, "contractInput")
+                                                .setProcessSource(ExpressionBuilder.aVariableExpression().withContent("processData").build())
+                                                .build()))
+                .havingData(DataBuilder.aData().havingDataType(aStringDataType()).withName("processData"))
+                .build();
+
+        flowElementSwitch.exportInputMappingsForCallActivity((CallActivity) pool.getElements().get(0), callActivityBuilder);
+
+        final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
+        verify(callActivityBuilder).addProcessStartContractInput(eq("contractInput"), argument.capture());
+        EngineExpressionAssert.assertThat(argument.getValue())
+                .hasContent("processData")
+                .hasExpressionType(ExpressionType.TYPE_VARIABLE.name());
+    }
 }
