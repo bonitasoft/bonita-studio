@@ -22,49 +22,32 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.dependencies.handler.ImportLibsOperation;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class ImportLibsRunnableIT {
 
-    private List<File> toClean;
-
-    @Before
-    public void setup() {
-        toClean = new ArrayList<File>();
-    }
-
-    @After
-    public void tearDown() {
-        for (final File file : toClean) {
-            file.delete();
-        }
-    }
+    @Rule
+    public TemporaryFolder tmpFolder = new TemporaryFolder();
 
     @Test
     public void testImportLibs() throws IOException, InvocationTargetException, InterruptedException {
-        final File tmpJarFileWhichWillBeCopied1 = File.createTempFile("testImport1-", ".jar");
-        toClean.add(tmpJarFileWhichWillBeCopied1);
+        final File tmpJarFileWhichWillBeCopied1 = tmpFolder.newFile("testjar.jar");
         FileUtil.copy(this.getClass().getResourceAsStream("test.jar"), new FileOutputStream(tmpJarFileWhichWillBeCopied1));
-        final File tmpJarFileWhichWillBeCopied2 = File.createTempFile("testImport2-", ".jar");
-        toClean.add(tmpJarFileWhichWillBeCopied2);
+        final File tmpJarFileWhichWillBeCopied2 = tmpFolder.newFile("test2jar.jar");;
         FileUtil.copy(this.getClass().getResourceAsStream("test.jar"), new FileOutputStream(tmpJarFileWhichWillBeCopied2));
 
-        final File tmpFileWhichWillBeCopied1 = File.createTempFile("testImport1-", ".zip");
-        toClean.add(tmpFileWhichWillBeCopied1);
+        final File tmpFileWhichWillBeCopied1 = tmpFolder.newFile("test.zip");
         FileUtil.copy(this.getClass().getResourceAsStream("test.zip"), new FileOutputStream(tmpFileWhichWillBeCopied1));
-        final File tmpFileWhichWillBeCopied2 = File.createTempFile("testImport2-", ".zip");
-        toClean.add(tmpFileWhichWillBeCopied2);
-        FileUtil.copy(this.getClass().getResourceAsStream("test-2.zip"), new FileOutputStream(tmpJarFileWhichWillBeCopied2));
+        final File tmpFileWhichWillBeCopied2 = tmpFolder.newFile("test-2.zip");
+        FileUtil.copy(this.getClass().getResourceAsStream("test-2.zip"), new FileOutputStream(tmpFileWhichWillBeCopied2));
 
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied1.toString(), tmpFileWhichWillBeCopied2.toString(),
                 tmpJarFileWhichWillBeCopied1.toString(), tmpJarFileWhichWillBeCopied2.toString() };
