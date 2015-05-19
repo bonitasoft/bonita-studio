@@ -33,7 +33,7 @@ public class OutputMappingBuilder implements Buildable<OutputMapping> {
     }
 
     public OutputMappingBuilder setProcessTarget(final Data data) {
-        outputMapping.setProcessTarget(data);;
+        outputMapping.setProcessTarget(data);
         return this;
     }
 
