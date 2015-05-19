@@ -17,7 +17,6 @@ package org.bonitasoft.studio.designer.ui.property.section.control;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
@@ -54,16 +53,14 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
     private final FormReferenceExpressionViewer targetFormExpressionViewer;
     private final RepositoryAccessor repositoryAccessor;
     private final WebPageNameResourceChangeListener webPageNameResourceChangeListener;
-    private final CreateNewFormProposalListener createNewFormListener;
 
     public InternalMappingComposite(final Composite parent,
             final TabbedPropertySheetWidgetFactory widgetFactory,
             final IEclipsePreferences preferenceStore,
             final RepositoryAccessor repositoryAccessor,
             final FormReferenceExpressionValidator formReferenceExpressionValidator,
-            final CreateNewFormProposalListener createNewFormListener) {
+            final CreateOrEditFormProposalListener createOrEditFormListener) {
         super(parent, SWT.NONE);
-        this.createNewFormListener = createNewFormListener;
         this.repositoryAccessor = repositoryAccessor;
         webPageNameResourceChangeListener = new WebPageNameResourceChangeListener(new ExpressionItemProvider(
                 new ExpressionItemProviderAdapterFactory()));
@@ -73,7 +70,7 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
 
         final WebPageRepositoryStore webPageRepositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
         targetFormExpressionViewer = new FormReferenceExpressionViewer(this, SWT.BORDER, widgetFactory,
-                webPageRepositoryStore);
+                webPageRepositoryStore, createOrEditFormListener);
         targetFormExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(WIDTH_HINT, SWT.DEFAULT).create());
         targetFormExpressionViewer.setExpressionProposalLableProvider(new FormReferenceProposalLabelProvider());
         targetFormExpressionViewer.addExpressionValidator(formReferenceExpressionValidator);
@@ -121,7 +118,6 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
         context.bindValue(ViewersObservables.observeInput(targetFormExpressionViewer), formMappingObservable);
         context.bindValue(ViewersObservables.observeSingleSelection(targetFormExpressionViewer),
                 CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), formMappingObservable, ProcessPackage.Literals.FORM_MAPPING__TARGET_FORM));
-        targetFormExpressionViewer.setEditControlBehavior(formMappingObservable, createNewFormListener, repositoryAccessor);
     }
 
 }

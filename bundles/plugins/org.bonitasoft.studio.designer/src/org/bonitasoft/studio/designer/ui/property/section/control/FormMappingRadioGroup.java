@@ -19,7 +19,6 @@ import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFacto
 
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -54,7 +53,7 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
 
     public FormMappingRadioGroup(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory, final IEclipsePreferences preferenceStore,
             final RepositoryAccessor repositoryAccessor, final FormReferenceExpressionValidator formReferenceExpressionValidator,
-            final CreateNewFormProposalListener createNewFormListener) {
+            final CreateOrEditFormProposalListener createOrEditFormListener) {
         super(parent, SWT.NONE);
         setLayout(GridLayoutFactory.fillDefaults().numColumns(3).extendedMargins(10, 10, 10, 10).create());
 
@@ -79,7 +78,7 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
 
         legacyComposite = widgetFactory.createComposite(stackedComposite);
         pageDesignerMappingComposite = new InternalMappingComposite(stackedComposite, widgetFactory, preferenceStore, repositoryAccessor,
-                formReferenceExpressionValidator, createNewFormListener);
+                formReferenceExpressionValidator, createOrEditFormListener);
         urlMappingComposite = new URLMappingComposite(stackedComposite, widgetFactory);
         widgetFactory.adapt(this);
     }

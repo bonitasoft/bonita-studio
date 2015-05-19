@@ -22,7 +22,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.model.process.FormMapping;
@@ -61,7 +60,7 @@ public class FormReferenceExpressionViewerTest {
     @Mock
     private IWorkspace workspace;
     @Mock
-    private CreateNewFormProposalListener createNewFormProposalListener;
+    private CreateOrEditFormProposalListener createNewFormProposalListener;
     @Mock
     private TabbedPropertySheetWidgetFactory widgetFactory;
 
@@ -77,7 +76,7 @@ public class FormReferenceExpressionViewerTest {
     @Test
     public void should_open_file_store_on_createOredit() throws Exception {
         final FormReferenceExpressionViewer formReferenceExpressionViewer = new FormReferenceExpressionViewer(makeComposite(), SWT.BORDER, widgetFactory,
-                webPageRepositoryStore);
+                webPageRepositoryStore, null);
         when(webPageRepositoryStore.getChild("a-page-id")).thenReturn(selectedPage);
 
         formReferenceExpressionViewer.createOReditForm(new WritableValue(aFormMapping().havingTargetForm(anExpression().withContent("a-page-id")).build(),
@@ -90,7 +89,7 @@ public class FormReferenceExpressionViewerTest {
     public void should_createAForm_on_createOrEdit() throws Exception {
         final FormReferenceExpressionViewer formReferenceExpressionViewer = Mockito.spy(new FormReferenceExpressionViewer(makeComposite(), SWT.BORDER,
                 widgetFactory,
-                webPageRepositoryStore));
+                webPageRepositoryStore, null));
 
         when(webPageRepositoryStore.getChild("a-page-id")).thenReturn(selectedPage);
         final FormMapping mapping = aFormMapping().havingTargetForm(anExpression()).build();
