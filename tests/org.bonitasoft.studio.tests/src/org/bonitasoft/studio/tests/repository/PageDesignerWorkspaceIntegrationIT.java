@@ -98,7 +98,7 @@ public class PageDesignerWorkspaceIntegrationIT {
         new ClientResource(String.format("http://localhost:%s/designer/import/page", tomcatPort())).post(formDataSetWithCustomPageZipFile());
 
         final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(WebPageRepositoryStore.class);
-        assertThat(repositoryStore.getChild("886c0557-9ba4-4521-8f29-f66fe7901126").getResource().getFile("886c0557-9ba4-4521-8f29-f66fe7901126.json").exists())
+        assertThat(repositoryStore.getChild("f3ae2099-6298-4b91-add3-bddb3af60b45").getResource().getFile("f3ae2099-6298-4b91-add3-bddb3af60b45.json").exists())
                 .overridingErrorMessage(
                         "Workspace should be in sync with imported page file").isTrue();
     }
