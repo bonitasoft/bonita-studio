@@ -26,7 +26,6 @@ public class Messages extends NLS {
     public static String formRepository;
     public static String fragmentRepository;
     public static String widgetRepository;
-    public static String pageDesigner;
     public static String externalURL;
     public static String targetForm;
     public static String url;
