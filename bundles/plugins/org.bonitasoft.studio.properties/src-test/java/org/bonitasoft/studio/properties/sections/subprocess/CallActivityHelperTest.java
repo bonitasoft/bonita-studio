@@ -45,24 +45,22 @@ import org.bonitasoft.studio.model.process.builders.PoolBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CallActivityHelperTest {
 
+    private CallActivityHelper callActivityHelper;
     @Mock
     private RepositoryAccessor repositoryAccessor;
-    @InjectMocks
-    private CallActivityHelper callActivityHelper;
-
     @Mock
     DiagramRepositoryStore drs;
 
     @Before
     public void setUp() throws Exception {
         doReturn(drs).when(repositoryAccessor).getRepositoryStore(DiagramRepositoryStore.class);
+        callActivityHelper = new CallActivityHelper(repositoryAccessor);
     }
 
     @Test
