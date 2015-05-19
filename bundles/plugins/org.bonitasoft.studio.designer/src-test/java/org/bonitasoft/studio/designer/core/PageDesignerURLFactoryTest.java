@@ -19,7 +19,6 @@ import static org.mockito.Mockito.doReturn;
 
 import java.net.URL;
 
-import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.junit.After;
@@ -71,19 +70,19 @@ public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
     @Test
     public void should_newPage_return_URL_to_post_a_new_page() throws Exception {
         assertThat(pageDesignerURLBuilder.newPage()).isEqualTo(
-                new URL("http://localhost:8080/designer/api/rest/pages/"));
+                new URL("http://localhost:8080/designer/rest/pages/"));
     }
 
     @Test
     public void should_exportPage_return_URL_to_export_the_page_with_given_id() throws Exception {
         assertThat(pageDesignerURLBuilder.exportPage("my-page-id")).isEqualTo(
-                new URL("http://localhost:8080/designer/api/export/page/my-page-id"));
+                new URL("http://localhost:8080/designer/export/page/my-page-id"));
     }
 
     @Test
     public void should_exportPageFromContract_return_URL_to_create_the_page_with_given_name_from_a_contract() throws Exception {
         assertThat(pageDesignerURLBuilder.newPageFromContract("myPageName")).isEqualTo(
-                new URL("http://localhost:8080/designer/api/rest/pages/contract/myPageName"));
+                new URL("http://localhost:8080/designer/rest/pages/contract/myPageName"));
     }
 
 }
