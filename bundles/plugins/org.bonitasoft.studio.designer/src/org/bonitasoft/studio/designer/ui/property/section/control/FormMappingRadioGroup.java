@@ -52,7 +52,8 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
     private final Composite legacyComposite;
 
     public FormMappingRadioGroup(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory, final IEclipsePreferences preferenceStore,
-            final RepositoryAccessor repositoryAccessor, final FormReferenceExpressionValidator formReferenceExpressionValidator) {
+            final RepositoryAccessor repositoryAccessor, final FormReferenceExpressionValidator formReferenceExpressionValidator,
+            final CreateOrEditFormProposalListener createOrEditFormListener) {
         super(parent, SWT.NONE);
         setLayout(GridLayoutFactory.fillDefaults().numColumns(3).extendedMargins(10, 10, 10, 10).create());
 
@@ -77,7 +78,7 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
 
         legacyComposite = widgetFactory.createComposite(stackedComposite);
         pageDesignerMappingComposite = new InternalMappingComposite(stackedComposite, widgetFactory, preferenceStore, repositoryAccessor,
-                formReferenceExpressionValidator);
+                formReferenceExpressionValidator, createOrEditFormListener);
         urlMappingComposite = new URLMappingComposite(stackedComposite, widgetFactory);
         widgetFactory.adapt(this);
     }
