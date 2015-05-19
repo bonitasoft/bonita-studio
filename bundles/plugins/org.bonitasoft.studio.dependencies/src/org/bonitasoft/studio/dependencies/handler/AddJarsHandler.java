@@ -14,19 +14,9 @@
  */
 package org.bonitasoft.studio.dependencies.handler;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.zip.ZipEntry;
 
-import org.bonitasoft.studio.common.ZipInputStreamIFileFriendly;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.commands.AbstractHandler;
@@ -57,83 +47,7 @@ public class AddJarsHandler extends AbstractHandler {
             final DependencyRepositoryStore libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
             final String[] jars = fd.getFileNames();
             final IProgressService progressManager = PlatformUI.getWorkbench().getProgressService();
-            final IRunnableWithProgress runnable = new IRunnableWithProgress() {
-
-                @Override
-                public void run(final IProgressMonitor monitor)
-                        throws InvocationTargetException, InterruptedException {
-                    monitor.beginTask(Messages.beginToAddJars, jars.length);
-                    final Map<String, InputStream> jarsToImportMap = new HashMap<String, InputStream>();
-                    FileInputStream fis = null;
-                    ZipInputStreamIFileFriendly zip = null;
-                    for (final String jar : jars) {
-                        try {
-                            if (monitor.isCanceled()) {
-                                return;
-                            }
-                            File file = null;
-                            if (jar.contains(fd.getFilterPath())) {
-                                file = new File(jar);
-                            } else {
-                                file = new File(fd.getFilterPath() + File.separator + jar);
-                            }
-
-                            fis = new FileInputStream(file);
-                            if (file.getName().endsWith(".jar")) { //$NON-NLS-1$
-                                monitor.setTaskName(Messages.addingJar + " " + file.getName());
-                                jarsToImportMap.put(file.getName(), fis);
-                            } else if (file.getName().endsWith(".zip")) { //$NON-NLS-1$
-                                zip = new ZipInputStreamIFileFriendly(fis);
-                                ZipEntry entry = zip.getNextEntry();
-                                if (entry == null) {
-                                    throw new InvocationTargetException(new Exception(org.bonitasoft.studio.dependencies.i18n.Messages.zipFileIsCorrupted),
-                                            org.bonitasoft.studio.dependencies.i18n.Messages.zipFileIsCorrupted);
-                                }
-                                while (entry != null) {
-                                    if (entry.getName().endsWith(".jar")) { //$NON-NLS-1$
-                                        monitor.setTaskName(Messages.addingJar + " " + entry.getName()); //$NON-NLS-1$
-                                        libStore.createRepositoryFileStore(entry.getName()).save(zip);
-                                    }
-                                    entry = zip.getNextEntry();
-                                }
-                                zip.forceClose();
-                            }
-
-                        } catch (final Exception ex) {
-                            BonitaStudioLog.error(ex);
-                            throw new InvocationTargetException(ex);
-                        } finally {
-                            if (zip != null) {
-                                zip.close();
-                            }
-                            if (fis != null) {
-                                try {
-                                    fis.close();
-                                } catch (final IOException e) {
-                                }
-                            }
-                        }
-                    }
-
-                    for (final Entry<String, InputStream> entry : jarsToImportMap.entrySet()) {
-                        Display.getDefault().syncExec(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                InputStream is = null;
-                                try {
-                                    is = entry.getValue();
-                                    libStore.createRepositoryFileStore(entry.getKey()).save(is);
-                                    is.close();
-                                } catch (final Exception e) {
-                                    BonitaStudioLog.error(e);
-                                }
-                            }
-                        });
-                    }
-                }
-
-            };
+            final IRunnableWithProgress runnable = new ImportLibsRunnable(libStore, jars, fd.getFilterPath());
 
             try {
 

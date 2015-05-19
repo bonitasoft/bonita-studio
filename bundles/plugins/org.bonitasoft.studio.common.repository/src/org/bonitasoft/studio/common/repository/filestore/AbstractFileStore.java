@@ -143,8 +143,11 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
         return getParentStore().isShared();
     }
 
+    /**
+     * DON'T OVERRIDE , cannot put final for test purpose
+     */
     @Override
-    final public void save(final Object content) {
+    public void save(final Object content) {
         if(!isReadOnly()){
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_SAVE, this)) ;
             doSave(content) ;
