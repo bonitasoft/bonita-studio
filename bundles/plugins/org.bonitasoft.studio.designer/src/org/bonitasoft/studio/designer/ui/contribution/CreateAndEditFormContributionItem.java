@@ -181,10 +181,6 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
         if (pageFlow != null) {
             final FormMapping formMapping = pageFlow.getFormMapping();
             return formMapping.getTargetForm().hasName();
-<<<<<<< Upstream, based on branch 'BS-13395_enableUIDesigner' of https://github.com/bonitasoft/bonita-studio.git
-
-=======
->>>>>>> aa7673a BS-13395 Enable UI Designer icon in contract view (edit form) -add a popup when form type is not internal (text should be reviewed) -add tests
         }
         return false;
     }
