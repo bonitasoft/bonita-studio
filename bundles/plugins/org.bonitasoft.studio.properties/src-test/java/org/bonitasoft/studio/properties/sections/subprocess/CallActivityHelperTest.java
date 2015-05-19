@@ -76,7 +76,7 @@ public class CallActivityHelperTest {
     }
 
     @Test
-    public void testAutoMap_simple() {
+    public void testAutoMap_basicCase_withString() {
         final Data callActivityData = DataBuilder.aData().havingDataType(ModelHelper.createStringDataType()).withName("name1").build();
         final CallActivity callActivity = CallActivityBuilder
                 .aCallActivity()
