@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -96,27 +95,21 @@ public class FormReferenceExpressionViewer extends ExpressionViewer {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer#editControlListener(org.eclipse.swt.widgets.ToolBar)
+     * @see org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer#editControlSelected(org.eclipse.swt.widgets.ToolBar, org.eclipse.swt.widgets.Event,
+     * org.eclipse.emf.edit.domain.EditingDomain)
      */
     @Override
-    protected Listener createEditControlListener(final ToolBar tb) {
-        return new Listener() {
-
-            @Override
-            public void handleEvent(final Event event) {
-                Preconditions.checkState(context instanceof FormMapping);
-                final String newPageId = createOrEditFormListener.handleEvent(context, null);
-                if (newPageId != null) {
-                    pageStore.refresh();
-                    final WebPageFileStore webPageFileStore = pageStore.getChild(newPageId);
-                    if (webPageFileStore != null) {
-                        final EditingDomain editingDomain = getEditingDomain();
-                        editingDomain.getCommandStack().execute(new UpdateFormMappingCommand(editingDomain, (FormMapping) context,
-                                ExpressionHelper.createFormReferenceExpression(webPageFileStore.getDisplayName(), newPageId)));
-                    }
-                }
+    protected void editControlSelected(final ToolBar tb, final Event event, final EditingDomain editingDomain) {
+        Preconditions.checkState(context instanceof FormMapping);
+        final String newPageId = createOrEditFormListener.handleEvent(context, null);
+        if (newPageId != null) {
+            pageStore.refresh();
+            final WebPageFileStore webPageFileStore = pageStore.getChild(newPageId);
+            if (webPageFileStore != null) {
+                editingDomain.getCommandStack().execute(new UpdateFormMappingCommand(editingDomain, (FormMapping) context,
+                        ExpressionHelper.createFormReferenceExpression(webPageFileStore.getDisplayName(), newPageId)));
             }
-        };
+        }
     }
 
 }

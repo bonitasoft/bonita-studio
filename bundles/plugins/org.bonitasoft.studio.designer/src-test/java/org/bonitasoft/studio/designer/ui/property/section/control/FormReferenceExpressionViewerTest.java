@@ -14,25 +14,23 @@
  */
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
+import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
-import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.junit.Before;
 import org.junit.Rule;
@@ -60,9 +58,11 @@ public class FormReferenceExpressionViewerTest {
     @Mock
     private IWorkspace workspace;
     @Mock
-    private CreateOrEditFormProposalListener createNewFormProposalListener;
+    private CreateOrEditFormProposalListener createOrEditNewFormProposalListener;
     @Mock
     private TabbedPropertySheetWidgetFactory widgetFactory;
+    @Mock
+    ToolBar toolBar;
 
     /**
      * @throws java.lang.Exception
@@ -74,32 +74,34 @@ public class FormReferenceExpressionViewerTest {
     }
 
     @Test
-    public void should_open_file_store_on_createOredit() throws Exception {
+    public void should_call_createOrEditListener_when_editing_an_existing_form() throws Exception {
         final FormReferenceExpressionViewer formReferenceExpressionViewer = new FormReferenceExpressionViewer(makeComposite(), SWT.BORDER, widgetFactory,
-                webPageRepositoryStore, null);
+                webPageRepositoryStore, createOrEditNewFormProposalListener);
+
+        final FormMapping mapping = aFormMapping().havingTargetForm(anExpression().withContent("a-page-id")).build();
+        formReferenceExpressionViewer.setInput(mapping);
+        when(createOrEditNewFormProposalListener.handleEvent(mapping, null)).thenReturn(null);
         when(webPageRepositoryStore.getChild("a-page-id")).thenReturn(selectedPage);
+        formReferenceExpressionViewer.editControlSelected(toolBar, null, editingDomain());
 
-        formReferenceExpressionViewer.createOReditForm(new WritableValue(aFormMapping().havingTargetForm(anExpression().withContent("a-page-id")).build(),
-                FormMapping.class), createNewFormProposalListener, repositoryAccessor);
-
-        verify(selectedPage).open();
+        Mockito.verify(createOrEditNewFormProposalListener).handleEvent(mapping, null);
+        Mockito.verify(webPageRepositoryStore, Mockito.never()).refresh();
+        ExpressionAssert.assertThat(mapping.getTargetForm()).hasContent("a-page-id");
     }
 
     @Test
-    public void should_createAForm_on_createOrEdit() throws Exception {
-        final FormReferenceExpressionViewer formReferenceExpressionViewer = Mockito.spy(new FormReferenceExpressionViewer(makeComposite(), SWT.BORDER,
+    public void should_call_createOrEditListener_and_update_expression_content_when_creating_a_new_form() throws Exception {
+        final FormReferenceExpressionViewer formReferenceExpressionViewer = new FormReferenceExpressionViewer(makeComposite(), SWT.BORDER,
                 widgetFactory,
-                webPageRepositoryStore, null));
-
-        when(webPageRepositoryStore.getChild("a-page-id")).thenReturn(selectedPage);
+                webPageRepositoryStore, createOrEditNewFormProposalListener);
         final FormMapping mapping = aFormMapping().havingTargetForm(anExpression()).build();
-        when(createNewFormProposalListener.handleEvent(mapping, null)).thenReturn("a-page-id");
-        doReturn(editingDomain()).when(formReferenceExpressionViewer).getEditingDomain(mapping);
+        formReferenceExpressionViewer.setInput(mapping);
 
-        formReferenceExpressionViewer.createOReditForm(new WritableValue(mapping,
-                FormMapping.class), createNewFormProposalListener, repositoryAccessor);
+        when(createOrEditNewFormProposalListener.handleEvent(mapping, null)).thenReturn("a-new-page-id");
+        when(webPageRepositoryStore.getChild("a-new-page-id")).thenReturn(selectedPage);
+        formReferenceExpressionViewer.editControlSelected(toolBar, null, editingDomain());
 
-        assertThat(mapping.getTargetForm().hasContent()).isTrue();
+        ExpressionAssert.assertThat(mapping.getTargetForm()).hasContent("a-new-page-id");
     }
 
     private TransactionalEditingDomain editingDomain() {
@@ -109,6 +111,6 @@ public class FormReferenceExpressionViewerTest {
     private InternalMappingComposite makeComposite() {
         return new InternalMappingComposite(realmWithDisplay.createComposite(),
                 new TabbedPropertySheetWidgetFactory(), preferenceStore, repositoryAccessor,
-                formReferenceExpressionValidator, createNewFormProposalListener);
+                formReferenceExpressionValidator, createOrEditNewFormProposalListener);
     }
 }
