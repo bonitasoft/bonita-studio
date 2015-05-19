@@ -21,8 +21,6 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Properties;
 
-import junit.framework.TestCase;
-
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -42,17 +40,21 @@ import org.bonitasoft.studio.parameters.action.ImportParametersAction;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.PlatformUI;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Romain Bioteau
  */
-public class TestProcessParameters extends TestCase {
+public class TestProcessParameters {
 
     private static final String CONF_NAME = "TestConfiguration";
     private static AbstractProcess pool;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         if (pool == null) {
             final NewDiagramCommandHandler newDiagram = new NewDiagramCommandHandler();
             final DiagramFileStore diagramFileStore = newDiagram.execute(null);
@@ -87,22 +89,24 @@ public class TestProcessParameters extends TestCase {
         }
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
     }
 
+    @Test
     public void testNewProcessParameterInitialized() throws Exception {
-        assertNotNull(pool);
-        assertTrue("Configuration should be available", pool.getConfigurations().size() == 1);
+        Assert.assertNotNull(pool);
+        Assert.assertTrue("Configuration should be available", pool.getConfigurations().size() == 1);
     }
 
+    @Test
     public void testImportParameters() throws Exception {
-        assertNotNull(pool);
-        assertEquals("Parameter import failed", 3, pool.getParameters().size());
+        Assert.assertNotNull(pool);
+        Assert.assertEquals("Parameter import failed", 3, pool.getParameters().size());
 
         new ConfigurationSynchronizer(pool, pool.getConfigurations().get(0)).synchronize();
-        assertEquals("Parameter import failed", 3, pool.getConfigurations().get(0).getParameters().size());
+        Assert.assertEquals("Parameter import failed", 3, pool.getConfigurations().get(0).getParameters().size());
 
         importParamters();
 
@@ -112,7 +116,7 @@ public class TestProcessParameters extends TestCase {
                 allValueImported = false;
             }
         }
-        assertTrue("Parameter import failed", allValueImported);
+        Assert.assertTrue("Parameter import failed", allValueImported);
     }
 
     protected void importParamters() throws IOException {
@@ -128,8 +132,9 @@ public class TestProcessParameters extends TestCase {
         action.run();
     }
 
+    @Test
     public void testExportProperties() throws Exception {
-        assertNotNull(pool);
+        Assert.assertNotNull(pool);
         importParamters();
         final File exportedFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), "parameters.properties");
         exportedFile.delete();
@@ -139,18 +144,19 @@ public class TestProcessParameters extends TestCase {
         action.setTargetPath(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
         action.run();
 
-        assertTrue("Exported file doesn't exists", exportedFile.exists() && exportedFile.length() > 0);
+        Assert.assertTrue("Exported file doesn't exists", exportedFile.exists() && exportedFile.length() > 0);
 
         final Properties p = new Properties();
         p.load(new FileInputStream(exportedFile));
-        assertEquals("Exported file not xpected parameters count", 3, p.size());
+        Assert.assertEquals("Exported file not xpected parameters count", 3, p.size());
     }
 
+    @Test
     public void testDeployProcessWithParameters() throws Exception {
-        assertNotNull(pool);
+        Assert.assertNotNull(pool);
         importParamters();
         final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(pool, pool.getConfigurations().get(0).getName(), Collections.EMPTY_SET);
-        assertEquals("Missing parameter in bar", 3, bar.getParameters().size());
+        Assert.assertEquals("Missing parameter in bar", 3, bar.getParameters().size());
     }
 
 }
