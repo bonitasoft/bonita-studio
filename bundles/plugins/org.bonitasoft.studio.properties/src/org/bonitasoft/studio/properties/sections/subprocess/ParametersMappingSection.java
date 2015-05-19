@@ -75,7 +75,6 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 public class ParametersMappingSection extends EObjectSelectionProviderSection {
 
     private final CallActivityHelper callAcitivtyHelper;
-    private static final String SUBPROCESS_MAPPING_DATA_PREFIX = "sub_";
     private Composite inputMappingControl;
     private Composite outputMappingControl;
     private Composite parent;
@@ -377,11 +376,12 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
                 } else {
                     newValue = InputMappingAssignationType.DATA;
                 }
-                getEditingDomain().getCommandStack().execute(
-                        new SetCommand(getEditingDomain(), mapping, ProcessPackage.Literals.INPUT_MAPPING__ASSIGNATION_TYPE, newValue));
-                targetCombo.removeAll();
-                updateAvailableValuesInputMappingTargetCombo(targetCombo, newValue);
-                //TODO: keep old value when switching in the middle
+                if (newValue != mapping.getAssignationType()) {
+                    getEditingDomain().getCommandStack().execute(
+                            new SetCommand(getEditingDomain(), mapping, ProcessPackage.Literals.INPUT_MAPPING__ASSIGNATION_TYPE, newValue));
+                    targetCombo.removeAll();
+                    updateAvailableValuesInputMappingTargetCombo(targetCombo, newValue);
+                }
             }
         });
 
