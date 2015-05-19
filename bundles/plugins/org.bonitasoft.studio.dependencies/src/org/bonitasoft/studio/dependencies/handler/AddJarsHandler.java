@@ -47,7 +47,7 @@ public class AddJarsHandler extends AbstractHandler {
             final DependencyRepositoryStore libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
             final String[] jars = fd.getFileNames();
             final IProgressService progressManager = PlatformUI.getWorkbench().getProgressService();
-            final IRunnableWithProgress runnable = new ImportLibsRunnable(libStore, jars, fd.getFilterPath());
+            final IRunnableWithProgress runnable = new ImportLibsOperation(libStore, jars, fd.getFilterPath());
 
             try {
 

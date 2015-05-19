@@ -34,7 +34,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 
-public class ImportLibsRunnable implements IRunnableWithProgress {
+public class ImportLibsOperation implements IRunnableWithProgress {
 
     private static final String ZIP_EXTENSION = ".zip";
     private static final String JAR_EXTENSION = ".jar";
@@ -42,7 +42,7 @@ public class ImportLibsRunnable implements IRunnableWithProgress {
     private final String[] jarAndZips;
     private final String filterPath;
 
-    public ImportLibsRunnable(final DependencyRepositoryStore libStore, final String[] jarAndZips, final String filterPath) {
+    public ImportLibsOperation(final DependencyRepositoryStore libStore, final String[] jarAndZips, final String filterPath) {
         this.libStore = libStore;
         this.jarAndZips = jarAndZips;
         this.filterPath = filterPath;

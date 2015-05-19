@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.dependencies.handler.ImportLibsRunnable;
+import org.bonitasoft.studio.dependencies.handler.ImportLibsOperation;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.After;
@@ -69,7 +69,7 @@ public class ImportLibsRunnableIT {
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied1.toString(), tmpFileWhichWillBeCopied2.toString(),
                 tmpJarFileWhichWillBeCopied1.toString(), tmpJarFileWhichWillBeCopied2.toString() };
         final DependencyRepositoryStore libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
-        final ImportLibsRunnable importLibsRunnable = new ImportLibsRunnable(libStore, jarAndZips, "");
+        final ImportLibsOperation importLibsRunnable = new ImportLibsOperation(libStore, jarAndZips, "");
         importLibsRunnable.run(new NullProgressMonitor());
 
         assertThat(libStore.getChild("test.jar")).isNotNull();

@@ -40,7 +40,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ImportLibsRunnableTest {
+public class ImportLibsOperationTest {
 
     @Mock
     private DependencyRepositoryStore libStore;
@@ -68,7 +68,7 @@ public class ImportLibsRunnableTest {
         toClean.add(tmpFileWhichWillBeCopied);
         FileUtil.copy(this.getClass().getResourceAsStream("test.jar"), new FileOutputStream(tmpFileWhichWillBeCopied));
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied.toString() };
-        final ImportLibsRunnable importLibsRunnable = new ImportLibsRunnable(libStore, jarAndZips, "");
+        final ImportLibsOperation importLibsRunnable = new ImportLibsOperation(libStore, jarAndZips, "");
         importLibsRunnable.run(new NullProgressMonitor());
 
         verify(libStore).createRepositoryFileStore(tmpFileWhichWillBeCopied.getName());
@@ -84,7 +84,7 @@ public class ImportLibsRunnableTest {
         toClean.add(tmpFileWhichWillBeCopied2);
         FileUtil.copy(this.getClass().getResourceAsStream("test.jar"), new FileOutputStream(tmpFileWhichWillBeCopied2));
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied1.toString(), tmpFileWhichWillBeCopied2.toString() };
-        final ImportLibsRunnable importLibsRunnable = new ImportLibsRunnable(libStore, jarAndZips, "");
+        final ImportLibsOperation importLibsRunnable = new ImportLibsOperation(libStore, jarAndZips, "");
         importLibsRunnable.run(new NullProgressMonitor());
 
         verify(libStore).createRepositoryFileStore(tmpFileWhichWillBeCopied1.getName());
@@ -98,7 +98,7 @@ public class ImportLibsRunnableTest {
         toClean.add(tmpFileWhichWillBeCopied1);
         FileUtil.copy(this.getClass().getResourceAsStream("test.zip"), new FileOutputStream(tmpFileWhichWillBeCopied1));
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied1.toString() };
-        final ImportLibsRunnable importLibsRunnable = new ImportLibsRunnable(libStore, jarAndZips, "");
+        final ImportLibsOperation importLibsRunnable = new ImportLibsOperation(libStore, jarAndZips, "");
         importLibsRunnable.run(new NullProgressMonitor());
 
         verify(libStore).createRepositoryFileStore("test.jar");
@@ -112,7 +112,7 @@ public class ImportLibsRunnableTest {
         toClean.add(tmpFileWhichWillBeCopied1);
         FileUtil.copy(this.getClass().getResourceAsStream("NoJar.zip"), new FileOutputStream(tmpFileWhichWillBeCopied1));
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied1.toString() };
-        final ImportLibsRunnable importLibsRunnable = new ImportLibsRunnable(libStore, jarAndZips, "");
+        final ImportLibsOperation importLibsRunnable = new ImportLibsOperation(libStore, jarAndZips, "");
         importLibsRunnable.run(new NullProgressMonitor());
 
         verify(libStore, never()).createRepositoryFileStore(anyString());
@@ -129,7 +129,7 @@ public class ImportLibsRunnableTest {
         FileUtil.copy(this.getClass().getResourceAsStream("test-2.zip"), new FileOutputStream(tmpFileWhichWillBeCopied2));
 
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied1.toString(), tmpFileWhichWillBeCopied2.toString() };
-        final ImportLibsRunnable importLibsRunnable = new ImportLibsRunnable(libStore, jarAndZips, "");
+        final ImportLibsOperation importLibsRunnable = new ImportLibsOperation(libStore, jarAndZips, "");
         importLibsRunnable.run(new NullProgressMonitor());
 
         verify(libStore).createRepositoryFileStore("test.jar");
@@ -157,7 +157,7 @@ public class ImportLibsRunnableTest {
 
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied1.toString(), tmpFileWhichWillBeCopied2.toString(),
                 tmpJarFileWhichWillBeCopied1.toString(), tmpJarFileWhichWillBeCopied2.toString() };
-        final ImportLibsRunnable importLibsRunnable = new ImportLibsRunnable(libStore, jarAndZips, "");
+        final ImportLibsOperation importLibsRunnable = new ImportLibsOperation(libStore, jarAndZips, "");
         importLibsRunnable.run(new NullProgressMonitor());
 
         verify(libStore).createRepositoryFileStore("test.jar");
@@ -175,7 +175,7 @@ public class ImportLibsRunnableTest {
         toClean.add(tmpFileWhichWillBeCopied);
         FileUtil.copy(this.getClass().getResourceAsStream("test.jar"), new FileOutputStream(tmpFileWhichWillBeCopied));
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied.toString() };
-        final ImportLibsRunnable importLibsRunnable = new ImportLibsRunnable(libStore, jarAndZips, "");
+        final ImportLibsOperation importLibsRunnable = new ImportLibsOperation(libStore, jarAndZips, "");
         final NullProgressMonitor monitor = new NullProgressMonitor();
         monitor.setCanceled(true);
         importLibsRunnable.run(monitor);
