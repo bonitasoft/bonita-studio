@@ -56,7 +56,7 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
         super(parent, SWT.NONE);
         setLayout(GridLayoutFactory.fillDefaults().numColumns(3).extendedMargins(10, 10, 10, 10).create());
 
-        final Button pageDesignerRadio = widgetFactory.createButton(this, Messages.pageDesigner, SWT.RADIO);
+        final Button pageDesignerRadio = widgetFactory.createButton(this, Messages.uiDesignerLabel, SWT.RADIO);
         pageDesignerRadio.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
         final Button externalRadio = widgetFactory.createButton(this, Messages.externalURL, SWT.RADIO);
         externalRadio.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());

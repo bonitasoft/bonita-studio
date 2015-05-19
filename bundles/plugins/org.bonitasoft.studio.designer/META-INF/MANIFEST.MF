@@ -15,6 +15,7 @@ Export-Package: org.bonitasoft.studio.designer,
  org.bonitasoft.studio.designer.core.preference,
  org.bonitasoft.studio.designer.core.repository,
  org.bonitasoft.studio.designer.core.resources,
+ org.bonitasoft.studio.designer.i18n;x-friends:="org.bonitasoft.studio.swtbot.framework",
  org.bonitasoft.studio.designer.ui.contribution
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
