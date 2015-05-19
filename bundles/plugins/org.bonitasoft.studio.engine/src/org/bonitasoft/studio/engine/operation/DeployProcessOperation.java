@@ -382,12 +382,4 @@ public class DeployProcessOperation {
                 process, processResolutionProblems);
     }
 
-    /**
-     * @return
-     */
-    public IStatus getStatus() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }
