@@ -51,7 +51,7 @@ import org.restlet.resource.ClientResource;
 /**
  * @author Romain Bioteau
  */
-public class PageDesignerWorkspaceIntegrationIT {
+public class UIDesignerWorkspaceIntegrationIT {
 
     private IFile newPageResource;
 
@@ -115,7 +115,7 @@ public class PageDesignerWorkspaceIntegrationIT {
     }
 
     private File customPageToImport() throws URISyntaxException, IOException {
-        return Paths.get(FileLocator.toFileURL(PageDesignerWorkspaceIntegrationIT.class.getResource("/page-APageToImport.zip")).toURI()).toFile();
+        return Paths.get(FileLocator.toFileURL(UIDesignerWorkspaceIntegrationIT.class.getResource("/page-APageToImport.zip")).toURI()).toFile();
     }
 
     private void waitForServer() {
