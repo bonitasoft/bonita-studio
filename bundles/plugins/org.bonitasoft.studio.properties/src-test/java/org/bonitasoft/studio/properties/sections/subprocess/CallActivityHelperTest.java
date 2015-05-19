@@ -70,7 +70,7 @@ public class CallActivityHelperTest {
         final CallActivity callActivity = CallActivityBuilder
                 .aCallActivity()
                 .build();
-        final CallActivityMapper mapper = callActivityHelper.automapSubProcess(callActivity);
+        final CallActivityMapper mapper = callActivityHelper.findAutomapingCandidatesForContractInputsAndDataWithCalledProcess(callActivity);
         assertThat(mapper.getInputMappingToCreate()).isEmpty();
         assertThat(mapper.getOutputMappingToCreate()).isEmpty();
     }
@@ -94,7 +94,7 @@ public class CallActivityHelperTest {
         pools.add(pool);
         doReturn(pools).when(drs).getAllProcesses();
 
-        final CallActivityMapper mapper = callActivityHelper.automapSubProcess(callActivity);
+        final CallActivityMapper mapper = callActivityHelper.findAutomapingCandidatesForContractInputsAndDataWithCalledProcess(callActivity);
         assertThat(mapper.getInputMappingToCreate()).containsExactly(callActivityData);
         assertThat(mapper.getOutputMappingToCreate()).containsExactly(callActivityData);
     }
@@ -123,7 +123,7 @@ public class CallActivityHelperTest {
         pools.add(pool);
         doReturn(pools).when(drs).getAllProcesses();
 
-        final CallActivityMapper mapper = callActivityHelper.automapSubProcess(callActivity);
+        final CallActivityMapper mapper = callActivityHelper.findAutomapingCandidatesForContractInputsAndDataWithCalledProcess(callActivity);
         assertThat(mapper.getInputMappingToCreate()).isEmpty();
         assertThat(mapper.getOutputMappingToCreate()).containsExactly(callActivityData);
     }
@@ -153,7 +153,7 @@ public class CallActivityHelperTest {
         pools.add(pool);
         doReturn(pools).when(drs).getAllProcesses();
 
-        final CallActivityMapper mapper = callActivityHelper.automapSubProcess(callActivity);
+        final CallActivityMapper mapper = callActivityHelper.findAutomapingCandidatesForContractInputsAndDataWithCalledProcess(callActivity);
         assertThat(mapper.getInputMappingToCreate()).containsExactly(callActivityData);
         assertThat(mapper.getOutputMappingToCreate()).isEmpty();
     }
@@ -177,7 +177,7 @@ public class CallActivityHelperTest {
         pools.add(pool);
         doReturn(pools).when(drs).getAllProcesses();
 
-        final CallActivityMapper mapper = callActivityHelper.automapSubProcess(callActivity);
+        final CallActivityMapper mapper = callActivityHelper.findAutomapingCandidatesForContractInputsAndDataWithCalledProcess(callActivity);
         assertThat(mapper.getInputMappingToCreate()).isEmpty();
         assertThat(mapper.getOutputMappingToCreate()).isEmpty();
     }
@@ -202,7 +202,7 @@ public class CallActivityHelperTest {
         pools.add(pool);
         doReturn(pools).when(drs).getAllProcesses();
 
-        final CallActivityMapper mapper = callActivityHelper.automapSubProcess(callActivity);
+        final CallActivityMapper mapper = callActivityHelper.findAutomapingCandidatesForContractInputsAndDataWithCalledProcess(callActivity);
         assertThat(mapper.getInputMappingToCreate()).containsExactly(callActivityData);
         assertThat(mapper.getOutputMappingToCreate()).containsExactly(callActivityData);
     }
@@ -227,7 +227,7 @@ public class CallActivityHelperTest {
         pools.add(pool);
         doReturn(pools).when(drs).getAllProcesses();
 
-        final CallActivityMapper mapper = callActivityHelper.automapSubProcess(callActivity);
+        final CallActivityMapper mapper = callActivityHelper.findAutomapingCandidatesForContractInputsAndDataWithCalledProcess(callActivity);
         assertThat(mapper.getInputMappingToCreate()).containsExactly(callActivityData);
         assertThat(mapper.getOutputMappingToCreate()).containsExactly(callActivityData);
     }
@@ -252,7 +252,7 @@ public class CallActivityHelperTest {
         pools.add(pool);
         doReturn(pools).when(drs).getAllProcesses();
 
-        final CallActivityMapper mapper = callActivityHelper.automapSubProcess(callActivity);
+        final CallActivityMapper mapper = callActivityHelper.findAutomapingCandidatesForContractInputsAndDataWithCalledProcess(callActivity);
         assertThat(mapper.getInputMappingToCreate()).isEmpty();
         assertThat(mapper.getOutputMappingToCreate()).isEmpty();
     }
@@ -281,7 +281,7 @@ public class CallActivityHelperTest {
         pools.add(pool);
         doReturn(pools).when(drs).getAllProcesses();
 
-        final CallActivityMapper mapper = callActivityHelper.automapSubProcess(callActivity);
+        final CallActivityMapper mapper = callActivityHelper.findAutomapingCandidatesForContractInputsAndDataWithCalledProcess(callActivity);
         assertThat(mapper.getInputMappingToCreate()).containsExactly(callActivityData);
         assertThat(mapper.getOutputMappingToCreate()).containsExactly(callActivityData);
     }
@@ -313,7 +313,7 @@ public class CallActivityHelperTest {
         pools.add(pool);
         doReturn(pools).when(drs).getAllProcesses();
 
-        final CallActivityMapper mapper = callActivityHelper.automapSubProcess(callActivity);
+        final CallActivityMapper mapper = callActivityHelper.findAutomapingCandidatesForContractInputsAndDataWithCalledProcess(callActivity);
         assertThat(mapper.getInputMappingToCreate()).containsExactly(callActivityData);
         assertThat(mapper.getOutputMappingToCreate()).containsExactly(callActivityData);
     }

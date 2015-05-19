@@ -48,7 +48,7 @@ public class CallActivityHelper {
         this.repositoryAccessor = repositoryAccessor;
     }
 
-    protected CallActivityMapper automapSubProcess(final CallActivity callActivity) {
+    protected CallActivityMapper findAutomapingCandidatesForContractInputsAndDataWithCalledProcess(final CallActivity callActivity) {
         final CallActivityMapper res = new CallActivityMapper();
         final List<String> subprocessData = getCallActivityData(callActivity);
         final Map<String, Data> subprocessTypes = getCalledProcessData(callActivity);

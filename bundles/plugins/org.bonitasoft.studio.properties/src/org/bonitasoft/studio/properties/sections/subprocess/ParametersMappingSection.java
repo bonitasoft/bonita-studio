@@ -147,7 +147,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         automapButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                final CallActivityMapper mapper = callAcitivtyHelper.automapSubProcess(getCallActivity());
+                final CallActivityMapper mapper = callAcitivtyHelper.findAutomapingCandidatesForContractInputsAndDataWithCalledProcess(getCallActivity());
                 for (final Data data : mapper.getInputMappingToCreate()) {
                     createInputMapping(data, InputMappingAssignationType.CONTRACT_INPUT, data.getName());
                 }
