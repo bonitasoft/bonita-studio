@@ -26,10 +26,13 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,14 +47,25 @@ public class ImportLibsRunnableTest {
     @Mock
     private DependencyFileStore libFileStore;
 
+    private List<File> toClean;
+
     @Before
     public void setup(){
         doReturn(libFileStore).when(libStore).createRepositoryFileStore(anyString());
+        toClean = new ArrayList<File>();
+    }
+
+    @After
+    public void tearDown() {
+        for (final File file : toClean) {
+            file.delete();
+        }
     }
 
     @Test
     public void testImportASingleJar() throws Exception {
         final File tmpFileWhichWillBeCopied = File.createTempFile("testImport", ".jar");
+        toClean.add(tmpFileWhichWillBeCopied);
         Files.copy(this.getClass().getResourceAsStream("test.jar"), tmpFileWhichWillBeCopied.toPath(), StandardCopyOption.REPLACE_EXISTING);
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied.toString() };
         final ImportLibsRunnable importLibsRunnable = new ImportLibsRunnable(libStore, jarAndZips, "");
@@ -64,8 +78,10 @@ public class ImportLibsRunnableTest {
     @Test
     public void testImportSeveralJars() throws Exception {
         final File tmpFileWhichWillBeCopied1 = File.createTempFile("testImport1-", ".jar");
+        toClean.add(tmpFileWhichWillBeCopied1);
         Files.copy(this.getClass().getResourceAsStream("test.jar"), tmpFileWhichWillBeCopied1.toPath(), StandardCopyOption.REPLACE_EXISTING);
         final File tmpFileWhichWillBeCopied2 = File.createTempFile("testImport2-", ".jar");
+        toClean.add(tmpFileWhichWillBeCopied2);
         Files.copy(this.getClass().getResourceAsStream("test.jar"), tmpFileWhichWillBeCopied2.toPath(), StandardCopyOption.REPLACE_EXISTING);
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied1.toString(), tmpFileWhichWillBeCopied2.toString() };
         final ImportLibsRunnable importLibsRunnable = new ImportLibsRunnable(libStore, jarAndZips, "");
@@ -79,6 +95,7 @@ public class ImportLibsRunnableTest {
     @Test
     public void testImportASingleZip() throws Exception {
         final File tmpFileWhichWillBeCopied1 = File.createTempFile("testImport1-", ".zip");
+        toClean.add(tmpFileWhichWillBeCopied1);
         Files.copy(this.getClass().getResourceAsStream("test.zip"), tmpFileWhichWillBeCopied1.toPath(), StandardCopyOption.REPLACE_EXISTING);
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied1.toString() };
         final ImportLibsRunnable importLibsRunnable = new ImportLibsRunnable(libStore, jarAndZips, "");
@@ -92,6 +109,7 @@ public class ImportLibsRunnableTest {
     @Test
     public void testImportASingleZipWithNoJarInside() throws Exception {
         final File tmpFileWhichWillBeCopied1 = File.createTempFile("testImportNoJar-", ".zip");
+        toClean.add(tmpFileWhichWillBeCopied1);
         Files.copy(this.getClass().getResourceAsStream("NoJar.zip"), tmpFileWhichWillBeCopied1.toPath(), StandardCopyOption.REPLACE_EXISTING);
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied1.toString() };
         final ImportLibsRunnable importLibsRunnable = new ImportLibsRunnable(libStore, jarAndZips, "");
@@ -104,8 +122,10 @@ public class ImportLibsRunnableTest {
     @Test
     public void testImportTwoZips() throws Exception {
         final File tmpFileWhichWillBeCopied1 = File.createTempFile("testImport1-", ".zip");
+        toClean.add(tmpFileWhichWillBeCopied1);
         Files.copy(this.getClass().getResourceAsStream("test.zip"), tmpFileWhichWillBeCopied1.toPath(), StandardCopyOption.REPLACE_EXISTING);
         final File tmpFileWhichWillBeCopied2 = File.createTempFile("testImport2-", ".zip");
+        toClean.add(tmpFileWhichWillBeCopied2);
         Files.copy(this.getClass().getResourceAsStream("test-2.zip"), tmpFileWhichWillBeCopied2.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied1.toString(), tmpFileWhichWillBeCopied2.toString() };
@@ -122,13 +142,17 @@ public class ImportLibsRunnableTest {
     @Test
     public void testImportJarsAndZips() throws Exception {
         final File tmpJarFileWhichWillBeCopied1 = File.createTempFile("testImport1-", ".jar");
+        toClean.add(tmpJarFileWhichWillBeCopied1);
         Files.copy(this.getClass().getResourceAsStream("test.jar"), tmpJarFileWhichWillBeCopied1.toPath(), StandardCopyOption.REPLACE_EXISTING);
         final File tmpJarFileWhichWillBeCopied2 = File.createTempFile("testImport2-", ".jar");
+        toClean.add(tmpJarFileWhichWillBeCopied2);
         Files.copy(this.getClass().getResourceAsStream("test.jar"), tmpJarFileWhichWillBeCopied2.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         final File tmpFileWhichWillBeCopied1 = File.createTempFile("testImport1-", ".zip");
+        toClean.add(tmpFileWhichWillBeCopied1);
         Files.copy(this.getClass().getResourceAsStream("test.zip"), tmpFileWhichWillBeCopied1.toPath(), StandardCopyOption.REPLACE_EXISTING);
         final File tmpFileWhichWillBeCopied2 = File.createTempFile("testImport2-", ".zip");
+        toClean.add(tmpFileWhichWillBeCopied2);
         Files.copy(this.getClass().getResourceAsStream("test-2.zip"), tmpFileWhichWillBeCopied2.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied1.toString(), tmpFileWhichWillBeCopied2.toString(),
@@ -148,6 +172,7 @@ public class ImportLibsRunnableTest {
     @Test
     public void tesNoImportIfMonitorCancelled() throws IOException, InvocationTargetException, InterruptedException {
         final File tmpFileWhichWillBeCopied = File.createTempFile("testImport", ".jar");
+        toClean.add(tmpFileWhichWillBeCopied);
         Files.copy(this.getClass().getResourceAsStream("test.jar"), tmpFileWhichWillBeCopied.toPath(), StandardCopyOption.REPLACE_EXISTING);
         final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied.toString() };
         final ImportLibsRunnable importLibsRunnable = new ImportLibsRunnable(libStore, jarAndZips, "");
