@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
+import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
@@ -166,7 +167,7 @@ public class CreateAndEditFormContributionItemTest {
                 selectionProvider)
                 .getSelection();
 
-        assertThat(contribution.getFormMappingTypeName()).isEqualTo(FormMappingType.URL.name());
+        assertThat(contribution.getFormMappingTypeName()).isEqualTo(Messages.externalURL);
     }
 
 }

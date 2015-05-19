@@ -164,7 +164,14 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
         final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
         if (pageFlow != null) {
             final FormMapping formMapping = pageFlow.getFormMapping();
-            return formMapping.getType().name();
+            switch (formMapping.getType()) {
+                case LEGACY:
+                    return Messages.legacyForm;
+                case URL:
+                    return Messages.externalURL;
+                case INTERNAL:
+                    return Messages.uiDesignerLabel;
+            }
         }
         return null;
     }
