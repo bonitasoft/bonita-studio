@@ -24,6 +24,7 @@ import java.util.Map;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.predicate.ContractInputPredicates;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -80,7 +81,8 @@ public class CallActivityHelper {
                     }
                 }
             }
-            final Collection<ContractInput> matchingContractInputs = Collections2.filter(accessibleContractInput, new ContractInputNamePredicate(currentDataName));
+            final Collection<ContractInput> matchingContractInputs = Collections2.filter(accessibleContractInput,
+                    ContractInputPredicates.withContractInputName(currentDataName));
             if (!matchingContractInputs.isEmpty()) {
                 final ContractInput contractInput = matchingContractInputs.iterator().next();
                 if (contractInput.getName().equals(currentDataName)) {
