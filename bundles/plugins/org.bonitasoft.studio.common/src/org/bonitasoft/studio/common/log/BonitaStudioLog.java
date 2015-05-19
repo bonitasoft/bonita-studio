@@ -129,6 +129,13 @@ public class BonitaStudioLog {
         }
     }
 
+    public static void debug(final String message, final Throwable throwable, final String bundleId) {
+        final Logger logger = getLogger(bundleId);
+        if (logger != null) {
+            logger.info(message, throwable);
+        }
+    }
+
     public static boolean isLoggable(final int level) {
         final Logger logger = getLogger(Activator.PLUGIN_ID);
         if (logger != null) {
