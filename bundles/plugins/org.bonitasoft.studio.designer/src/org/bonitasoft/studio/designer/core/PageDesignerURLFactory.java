@@ -51,15 +51,15 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     }
 
     public URL newPage() throws MalformedURLException {
-        return new URL(baseURL() + "/api/rest/pages/");
+        return new URL(baseURL() + "/rest/pages/");
     }
 
     public URL newPageFromContract(final String formName) throws MalformedURLException {
-        return new URL("http://" + host() + ":" + port() + "/" + WAR_CONTEXT_NAME + "/api/rest/pages/contract/" + formName);
+        return new URL("http://" + host() + ":" + port() + "/" + WAR_CONTEXT_NAME + "/rest/pages/contract/" + formName);
     }
 
     public URL exportPage(final String pageId) throws MalformedURLException {
-        return new URL(baseURL() + "/api/export/page/" + pageId);
+        return new URL(baseURL() + "/export/page/" + pageId);
     }
 
     private String host() {
