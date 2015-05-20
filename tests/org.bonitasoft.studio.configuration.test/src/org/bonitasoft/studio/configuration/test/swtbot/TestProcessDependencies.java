@@ -38,7 +38,7 @@ public class TestProcessDependencies extends SWTBotGefTestCase {
     @Test
     public void testImportAndRunProcessWithLotOfDependencies() throws IOException, ExecutionException{
     	
-    	SWTBotTestUtil.importProcessWIthPathFromClass(bot, "DiagramWithLotOfDependencies-1.0.bos", "Bonita 6.x", "MyDiagram1", getClass(), false);
+    	SWTBotTestUtil.importProcessWIthPathFromClass(bot, "DiagramWithLotOfDependencies-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "MyDiagram1", getClass(), false);
 
 		IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
 		assertTrue(status.getMessage(), status.isOK());

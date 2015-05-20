@@ -23,6 +23,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -72,20 +73,15 @@ public class DeployProcessOperation {
 
     private static final int MAX_RESULTS = 1000;
 
-    private Set<EObject> excludedObject;
+    private Set<EObject> excludedObject = new HashSet<EObject>();
 
     private String configurationId;
 
-    private final List<AbstractProcess> processes;
+    private final List<AbstractProcess> processes = new ArrayList<AbstractProcess>();
 
-    private final Map<AbstractProcess, Long> processIdsMap;
+    private final Map<AbstractProcess, Long> processIdsMap = new HashMap<AbstractProcess, Long>();
 
     private int problemResolutionResult;
-
-    public DeployProcessOperation() {
-        processes = new ArrayList<AbstractProcess>();
-        processIdsMap = new HashMap<AbstractProcess, Long>();
-    }
 
     public void setObjectToExclude(final Set<EObject> excludedObject) {
         this.excludedObject = excludedObject;
@@ -359,7 +355,7 @@ public class DeployProcessOperation {
             monitor.subTask(Messages.bind(Messages.disablingProcessDefinition, getProcessLabel(process)));
             processApi.disableProcess(processDefinitionId);
         } catch (final ProcessActivationException e) {
-
+            BonitaStudioLog.debug("Failed to disable the process", e, EnginePlugin.PLUGIN_ID);
         }
     }
 

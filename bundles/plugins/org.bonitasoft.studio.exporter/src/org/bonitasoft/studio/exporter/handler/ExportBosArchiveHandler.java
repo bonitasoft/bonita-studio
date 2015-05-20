@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -81,24 +81,26 @@ public class ExportBosArchiveHandler extends AbstractHandler {
                     final List<? extends IRepositoryFileStore> files = store.getChildren();
                     if (files != null) {
                         for (final IRepositoryFileStore fStore : files) {
-                            if (fStore != null) {
+                            if (fStore != null && fStore.canBeExported()) {
                                 selectedFiles.add(fStore);
                             }
                         }
                     }
                 }
             }
-            if (selectedFiles != null){
-                final ExportRepositoryWizard wizard = new ExportRepositoryWizard(RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores(),true,selectedFiles,getDefaultName(),Messages.ExportButtonLabel) ;
+            if (selectedFiles != null) {
+                final ExportRepositoryWizard wizard = new ExportRepositoryWizard(RepositoryManager.getInstance().getCurrentRepository()
+                        .getAllExportableStores(), true, selectedFiles, getDefaultName(), Messages.ExportButtonLabel);
                 final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard) {
+
                     @Override
                     protected void initializeBounds() {
                         super.initializeBounds();
                         getShell().setSize(500, 600);
-                }
-            };
-            dialog.setTitle(Messages.ExportButtonLabel);
-            dialog.open() ;
+                    }
+                };
+                dialog.setTitle(Messages.ExportButtonLabel);
+                dialog.open();
             }
         }
         return null;
