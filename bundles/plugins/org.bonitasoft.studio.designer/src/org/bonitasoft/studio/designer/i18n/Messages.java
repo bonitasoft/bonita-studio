@@ -40,6 +40,8 @@ public class Messages extends NLS {
     public static String openUIDesigner;
     public static String uiDesignerLabel;
     public static String creatingNewForm;
+    public static String switchTypeOfFormQuestionTitle;
+    public static String switchTypeOfFormQuestion;
     public static String internalFormMappingUndefined;
 
     static {
