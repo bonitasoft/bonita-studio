@@ -12,15 +12,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.model.process.builders;
+package org.bonitasoft.studio.properties.sections.subprocess;
 
-import org.bonitasoft.studio.model.process.JavaObjectData;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import java.util.ArrayList;
+import java.util.List;
 
-public class JavaObjectDataBuilder extends AbstractJavaObjectDataBuilder<JavaObjectData, JavaObjectDataBuilder> {
+import org.bonitasoft.studio.model.process.Data;
 
-    public static JavaObjectDataBuilder aJavaObjectData() {
-        return new JavaObjectDataBuilder().havingDataType(ProcessFactory.eINSTANCE.createJavaType());
+
+public class CallActivityMapper {
+
+    private final List<Data> inputMappingToCreate = new ArrayList<Data>();
+    private final List<Data> outputMappingToCreate = new ArrayList<Data>();
+
+    public List<Data> getInputMappingToCreate() {
+        return inputMappingToCreate;
+    }
+
+    public List<Data> getOutputMappingToCreate() {
+        return outputMappingToCreate;
     }
 
 }

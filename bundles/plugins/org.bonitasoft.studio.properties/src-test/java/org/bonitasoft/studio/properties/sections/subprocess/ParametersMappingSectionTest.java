@@ -82,15 +82,6 @@ public class ParametersMappingSectionTest {
     }
 
 
-    protected Composite initSection(final CallActivity callActivity) {
-        section = new ParametersMappingSection(expressionEditorService, sharedImages);
-        section.setEditingDomain(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory()));
-        section.setInput(fakePart, new StructuredSelection(new EObjectAdapter(callActivity)));
-        final Composite createComposite = realm.createComposite();
-        section.createControls(createComposite, aTabbedPropertySheetPage);
-        section.refresh();
-        return createComposite;
-    }
 
     @Test
     public void testAddInputMappingLine() throws Exception {
@@ -150,4 +141,13 @@ public class ParametersMappingSectionTest {
         return currentComposite;
     }
 
+    protected Composite initSection(final CallActivity callActivity) {
+        section = new ParametersMappingSection(expressionEditorService, sharedImages, repositoryAccessor);
+        section.setEditingDomain(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory()));
+        section.setInput(fakePart, new StructuredSelection(new EObjectAdapter(callActivity)));
+        final Composite createComposite = realm.createComposite();
+        section.createControls(createComposite, aTabbedPropertySheetPage);
+        section.refresh();
+        return createComposite;
+    }
 }

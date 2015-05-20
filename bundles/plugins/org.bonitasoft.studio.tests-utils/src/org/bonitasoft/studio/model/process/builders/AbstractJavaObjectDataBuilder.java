@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Bonitasoft S.A.
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,20 @@ package org.bonitasoft.studio.model.process.builders;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 
-public class JavaObjectDataBuilder extends AbstractJavaObjectDataBuilder<JavaObjectData, JavaObjectDataBuilder> {
+/**
+ * @author Romain Bioteau
+ *
+ */
+public abstract class AbstractJavaObjectDataBuilder<T extends JavaObjectData, B extends AbstractJavaObjectDataBuilder<T, B>> extends DataBuilder<T, B> {
 
-    public static JavaObjectDataBuilder aJavaObjectData() {
-        return new JavaObjectDataBuilder().havingDataType(ProcessFactory.eINSTANCE.createJavaType());
+    public B withClassname(final String classname) {
+        getBuiltInstance().setClassName(classname);
+        return getThis();
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    protected T newInstance() {
+        return (T) ProcessFactory.eINSTANCE.createJavaObjectData();
+    }
 }
