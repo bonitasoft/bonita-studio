@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
-import org.bonitasoft.studio.designer.ui.contribution.NewFormContributionItem;
+import org.bonitasoft.studio.designer.ui.contribution.CreateAndEditFormContributionItem;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -59,7 +59,7 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
     private ContractContainerAdaptableSelectionProvider selectionProvider;
 
     @Mock
-    private NewFormContributionItem contributionItem;
+    private CreateAndEditFormContributionItem contributionItem;
 
     @Mock
     private IEclipseContext eclipseContext;
@@ -80,7 +80,7 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
         parent = createDisplayAndRealm();
         section = spy(new ContractPropertySection(eclipseContext, selectionProvider, progressService));
         when(tabbedPropertySheetPage.getWidgetFactory()).thenReturn(new TabbedPropertySheetWidgetFactory());
-        doReturn(contributionItem).when(section).newContributionItem(NewFormContributionItem.class);
+        doReturn(contributionItem).when(section).newContributionItem(CreateAndEditFormContributionItem.class);
     }
 
     /**
