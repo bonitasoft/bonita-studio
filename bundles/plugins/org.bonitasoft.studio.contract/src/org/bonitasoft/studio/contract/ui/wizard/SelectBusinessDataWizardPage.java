@@ -71,7 +71,7 @@ public class SelectBusinessDataWizardPage extends WizardPage {
 
     public void createTableViewer(final Composite parent) {
         final DataBindingContext dbc = new DataBindingContext();
-        final TableViewer businessDataTableViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL);
+        final TableViewer businessDataTableViewer = new TableViewer(parent, SWT.BORDER | SWT.SINGLE | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL);
         businessDataTableViewer.getTable().setLayout(GridLayoutFactory.fillDefaults().create());
         businessDataTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
         final ObservableListContentProvider contentProvider = new ObservableListContentProvider();
