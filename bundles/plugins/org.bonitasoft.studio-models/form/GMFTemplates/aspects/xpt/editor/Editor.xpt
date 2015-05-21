@@ -377,7 +377,7 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 		@Override
 		protected org.eclipse.gef.EditPartViewer getViewer() {
 			if(viewer == null){
-				viewer = new org.bonitasoft.studio.common.gmf.tools.tree.BonitaFormTreeViewer() ;
+				viewer = new org.bonitasoft.studio.common.gmf.tools.tree.BonitaTreeViewer() ;
 			}
 			return viewer;
 		}

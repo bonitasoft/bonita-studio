@@ -17,6 +17,8 @@ package org.bonitasoft.studio.model.process.builders;
 import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.form.builders.FormBuilder;
 import org.bonitasoft.studio.model.process.Actor;
+import org.bonitasoft.studio.model.process.ActorFilter;
+import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
@@ -74,6 +76,16 @@ public class TaskBuilder extends ActivityBuilder<Task, TaskBuilder> {
 
     public TaskBuilder in(final Container container) {
         container.getElements().add(getBuiltInstance());
+        return this;
+    }
+
+    public TaskBuilder havingConnector(final Buildable<? extends Connector> connectorBuildable) {
+        getBuiltInstance().getConnectors().add(connectorBuildable.build());
+        return this;
+    }
+
+    public TaskBuilder havingActorFilter(final Buildable<? extends ActorFilter> actorFilterBuildable) {
+        getBuiltInstance().getFilters().add(actorFilterBuildable.build());
         return this;
     }
 

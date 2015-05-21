@@ -604,7 +604,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/inputNames"/>
     </genClasses>
     <genClasses image="false" ecoreClass="process.ecore#//ContractContainer">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//ContractContainer/contract"/>
+      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"
+          ecoreFeature="ecore:EReference process.ecore#//ContractContainer/contract"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Connection">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Connection/target"/>
