@@ -85,5 +85,7 @@ public class Messages extends NLS {
     public static String attributeName;
     public static String warningAddFromData_noDataAvailable;
     public static String warningAddFromData_noDataSelected;
+    public static String reminderForStepMessage;
+    public static String reminderForProcessMessage;
 
 }
