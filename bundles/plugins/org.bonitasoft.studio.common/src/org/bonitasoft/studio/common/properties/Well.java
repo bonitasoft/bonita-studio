@@ -39,6 +39,15 @@ public class Well extends Composite {
 
     private final Label label;
 
+    /**
+     * Display the given text in colored frame starting with a bold separator
+     * The displayed color depends on the severity of the message (info, warning or error)
+     *
+     * @param parent
+     * @param text
+     * @param toolkit
+     * @param severity
+     */
     public Well(final Composite parent, final String text, final FormToolkit toolkit, final int severity) {
         super(parent, SWT.NONE);
         setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 10, 5, 8).create());
