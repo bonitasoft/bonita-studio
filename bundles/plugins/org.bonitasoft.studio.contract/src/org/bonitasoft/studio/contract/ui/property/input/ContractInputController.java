@@ -68,6 +68,29 @@ public class ContractInputController implements IViewerController {
     private static final int NAME_COLUMN_INDEX = 0;
     private final IProgressService progressService;
 
+    class EditNameRunnable implements Runnable {
+
+        private final ColumnViewer viewer;
+        private final ContractInput input;
+
+        public EditNameRunnable(final ColumnViewer viewer, final ContractInput input) {
+            this.viewer = viewer;
+            this.input = input;
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see java.lang.Runnable#run()
+         */
+        @Override
+        public void run() {
+            if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
+                viewer.editElement(input, NAME_COLUMN_INDEX);
+            }
+        }
+
+    }
+
     public ContractInputController(final IProgressService progressService) {
         this.progressService = progressService;
     }
@@ -81,7 +104,7 @@ public class ContractInputController implements IViewerController {
         final ContractInput defaultInput = createDefaultInput(contract);
         final EObject targetContainer = targetContainer(parentInput, contract);
         CustomEMFEditObservables.observeList(targetContainer, inputContainerFeature(targetContainer)).add(defaultInput);
-        viewer.editElement(defaultInput, NAME_COLUMN_INDEX);
+        viewer.getControl().getDisplay().asyncExec(new EditNameRunnable(viewer, defaultInput));
         return defaultInput;
     }
 
@@ -96,16 +119,7 @@ public class ContractInputController implements IViewerController {
         final ContractInput parentInput = (ContractInput) selection.getFirstElement();
         final ContractInput defaultInput = createDefaultInput(ModelHelper.getFirstContainerOfType(parentInput, Contract.class));
         CustomEMFEditObservables.observeList(parentInput, ProcessPackage.Literals.CONTRACT_INPUT__INPUTS).add(defaultInput);
-        Display.getDefault().asyncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
-                    viewer.editElement(defaultInput, NAME_COLUMN_INDEX);
-                }
-            }
-        });
-
+        viewer.getControl().getDisplay().asyncExec(new EditNameRunnable(viewer, defaultInput));
         return defaultInput;
     }
 

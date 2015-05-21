@@ -17,6 +17,7 @@ package org.bonitasoft.studio.model.process.builders;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.InputMapping;
+import org.bonitasoft.studio.model.process.OutputMapping;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 
 /**
@@ -48,6 +49,15 @@ public class CallActivityBuilder extends ActivityBuilder<CallActivity, CallActiv
         if (inputMappings != null) {
             for (final InputMapping inputMapping : inputMappings) {
                 getBuiltInstance().getInputMappings().add(inputMapping);
+            }
+        }
+        return this;
+    }
+
+    public CallActivityBuilder havingOutputMapping(final OutputMapping... outputMappings) {
+        if (outputMappings != null) {
+            for (final OutputMapping outputMapping : outputMappings) {
+                getBuiltInstance().getOutputMappings().add(outputMapping);
             }
         }
         return this;

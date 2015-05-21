@@ -60,6 +60,9 @@ public class ContractInputTypeEditingSupportTest extends AbstractSWTTestCase {
 
     private Composite parent;
 
+    @Mock
+    private ContractInputController contractInputController;
+
     /**
      * @throws java.lang.Exception
      */
@@ -67,7 +70,7 @@ public class ContractInputTypeEditingSupportTest extends AbstractSWTTestCase {
     public void setUp() throws Exception {
         parent = createDisplayAndRealm();
         contractInputTypeEditingSupport = new ContractInputTypeEditingSupport(viewer,
-                new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory()), new ContractInputController(new FakeProgressService()));
+                new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory()), contractInputController);
     }
 
     /**
@@ -110,7 +113,8 @@ public class ContractInputTypeEditingSupportTest extends AbstractSWTTestCase {
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(contractInput)));
         contractInputTypeEditingSupport.setValue(contractInput, ContractInputType.COMPLEX);
         contractInputTypeEditingSupport.applyEditorValue();
-        assertThat(contractInput.getInputs()).hasSize(1);
+
+        verify(contractInputController).addChildInput(viewer);
     }
 
     @Test

@@ -34,13 +34,19 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
 
     protected Form form;
     private TabbedPropertySheetPage tabbedPropertySheetPage;
+    private TogglePropertyHelpContributionItem togglePropertyHelpContributionItem;
 
     @Override
     public void refresh() {
         super.refresh();
         if (form != null) {
             form.setText(getSectionTitle());
+            updateSectionDescription();
         }
+    }
+
+    protected void updateSectionDescription() {
+        togglePropertyHelpContributionItem.setHelpContent(getSectionDescription());
     }
 
     @Override
@@ -61,7 +67,7 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
 
         form.setToolBarVerticalAlignment(SWT.CENTER);
 
-        final TogglePropertyHelpContributionItem togglePropertyHelpContributionItem = new TogglePropertyHelpContributionItem(widgetFactory, form,
+        togglePropertyHelpContributionItem = new TogglePropertyHelpContributionItem(widgetFactory, form,
                 getSectionDescription());
         updateToolbar(form.getToolBarManager());
         form.getToolBarManager().add(togglePropertyHelpContributionItem);

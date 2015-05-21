@@ -20,7 +20,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 /**
  * @author Romain Bioteau
  */
-public class BusinessObjectDataBuilder extends JavaObjectDataBuilder<BusinessObjectData, BusinessObjectDataBuilder> {
+public class BusinessObjectDataBuilder extends AbstractJavaObjectDataBuilder<BusinessObjectData, BusinessObjectDataBuilder> {
 
     public static BusinessObjectDataBuilder aBusinessData() {
         return new BusinessObjectDataBuilder().havingDataType(BusinessObjectDataTypeBuilder.aBusinessObjectDataType());

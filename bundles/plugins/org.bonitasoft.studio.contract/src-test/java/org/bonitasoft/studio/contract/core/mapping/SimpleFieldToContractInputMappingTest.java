@@ -63,7 +63,7 @@ public class SimpleFieldToContractInputMappingTest {
 
         final ContractInput input = fieldToContractInputMapping.toContractInput();
 
-        ContractInputAssert.assertThat(input).hasName("timeStamp").hasType(ContractInputType.INTEGER).hasNoInputs();
+        ContractInputAssert.assertThat(input).hasName("timeStamp").hasType(ContractInputType.TEXT).hasNoInputs();
     }
 
     @Test
