@@ -20,10 +20,25 @@ import static org.bonitasoft.studio.model.form.builders.FormBuilder.aForm;
 import static org.bonitasoft.studio.model.form.builders.ViewFormBuilder.aViewForm;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.mockito.Mockito.when;
 
+import org.eclipse.ui.IEditorReference;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ApplicationFormTabbedPropertyProviderTest {
+
+    @Mock
+    private IEditorReference processEditorRef;
+
+    @Before
+    public void setUp() throws Exception {
+        when(processEditorRef.getId()).thenReturn("org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorID");
+    }
 
     @Test
     public void should_return_application_viewId() throws Exception {
@@ -57,20 +72,20 @@ public class ApplicationFormTabbedPropertyProviderTest {
     public void should_appliesTo_Form() throws Exception {
         final ApplicationFormTabbedPropertyProvider provider = new ApplicationFormTabbedPropertyProvider();
 
-        assertThat(provider.appliesTo(aForm().build(), null)).isTrue();
+        assertThat(provider.appliesTo(aForm().build(), processEditorRef)).isTrue();
     }
 
     @Test
     public void should_appliesTo_form_child() throws Exception {
         final ApplicationFormTabbedPropertyProvider provider = new ApplicationFormTabbedPropertyProvider();
 
-        assertThat(provider.appliesTo(aForm().havingWidget(aFileWidget()).in(aTask()).build().getWidgets().get(0), null)).isTrue();
+        assertThat(provider.appliesTo(aForm().havingWidget(aFileWidget()).in(aTask()).build().getWidgets().get(0), processEditorRef)).isTrue();
     }
 
     @Test
     public void should_not_appliesTo_to_element_not_contained_in_a_form() throws Exception {
         final ApplicationFormTabbedPropertyProvider provider = new ApplicationFormTabbedPropertyProvider();
 
-        assertThat(provider.appliesTo(aPool().build(), null)).isFalse();
+        assertThat(provider.appliesTo(aPool().build(), processEditorRef)).isFalse();
     }
 }
