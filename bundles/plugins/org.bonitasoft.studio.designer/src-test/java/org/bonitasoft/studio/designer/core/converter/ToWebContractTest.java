@@ -21,9 +21,9 @@ import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aCont
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 
+import java.io.File;
 import java.util.Date;
 
-import org.bonitasoft.studio.designer.core.converter.ToWebContract;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.web.designer.model.contract.Contract;
 import org.bonitasoft.web.designer.model.contract.ContractType;
@@ -97,7 +97,7 @@ public class ToWebContractTest {
         final Contract contract = contractConverter.apply(aContract()
                 .havingInput(aContractInput().withType(ContractInputType.INTEGER)).build());
 
-        assertThat(contract.getInput()).extracting("type").containsExactly(Long.class.getName());
+        assertThat(contract.getInput()).extracting("type").containsExactly(Integer.class.getName());
     }
 
     @Test
@@ -128,6 +128,16 @@ public class ToWebContractTest {
                 .havingInput(aContractInput().withType(ContractInputType.DECIMAL)).build());
 
         assertThat(contract.getInput()).extracting("type").containsExactly(Double.class.getName());
+    }
+
+    @Test
+    public void transform_an_emf_contract_into_a_designer_contract_with_FILE_input() throws Exception {
+        final ToWebContract contractConverter = new ToWebContract();
+
+        final Contract contract = contractConverter.apply(aContract()
+                .havingInput(aContractInput().withType(ContractInputType.FILE)).build());
+
+        assertThat(contract.getInput()).extracting("type").containsExactly(File.class.getName());
     }
 
     @Test
