@@ -73,7 +73,7 @@ public class RefactorWidgetIT extends SWTBotGefTestCase {
 
         diagramPerspective.activeFormDiagramEditor().addWidget("Checkbox", 1, 1).save();
         diagramPerspective.activeFormDiagramEditor().selectElement("Checkbox1");
-        diagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab().editOutputOperationExpression().selectFormFieldType()
+        diagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab().getOutputOperation().editRightOperand().selectFormFieldType()
                 .selectFormField("Check Box Single Form Field Checkbox1").ok();
 
         diagramPerspective.getFormPropertiesPart().selectGeneralTab().selectGeneralTab().setName("ValidCheckbox");
