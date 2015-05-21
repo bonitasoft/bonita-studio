@@ -321,26 +321,31 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
             @Override
             public void handleEvent(final Event event) {
-                boolean connectorEdit = false;
-                final Expression selectedExpression = getSelectedExpression();
-                if (tb != null && withConnector && selectedExpression != null && ExpressionConstants.CONNECTOR_TYPE.equals(selectedExpression.getType())) {
-                    for (final ToolItem ti : tb.getItems()) {
-                        final Object data = ti.getData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY);
-                        if (data != null && data.equals(SWTBotConstants.SWTBOT_ID_CONNECTORBUTTON)) {
-                            connectorEdit = true;
-                            ti.notifyListeners(SWT.Selection, event);
-                        }
-                    }
-                }
-                if (!connectorEdit) {
-                    final EditExpressionDialog dialog = createEditDialog();
-                    openEditDialog(dialog);
-                }
+                editControlSelected(tb, event, getEditingDomain());
             }
+
         });
 
         editControl.addDisposeListener(disposeListener);
         return editControl;
+    }
+
+    protected void editControlSelected(final ToolBar tb, final Event event, final EditingDomain editingDomain) {
+        boolean connectorEdit = false;
+        final Expression selectedExpression = getSelectedExpression();
+        if (tb != null && withConnector && selectedExpression != null && ExpressionConstants.CONNECTOR_TYPE.equals(selectedExpression.getType())) {
+            for (final ToolItem ti : tb.getItems()) {
+                final Object data = ti.getData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY);
+                if (data != null && data.equals(SWTBotConstants.SWTBOT_ID_CONNECTORBUTTON)) {
+                    connectorEdit = true;
+                    ti.notifyListeners(SWT.Selection, event);
+                }
+            }
+        }
+        if (!connectorEdit) {
+            final EditExpressionDialog dialog = createEditDialog();
+            openEditDialog(dialog);
+        }
     }
 
     protected ToolItem createEraseToolItem(final ToolBar tb) {
