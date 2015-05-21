@@ -25,7 +25,8 @@ public class Messages extends NLS {
         NLS.initializeMessages("messages", Messages.class);//$NON-NLS-1$
     }
 
-    public static String contractSectionDescription;
+    public static String processContractSectionDescription;
+    public static String stepContractSectionDescription;
     public static String name;
     public static String type;
     public static String mandatory;

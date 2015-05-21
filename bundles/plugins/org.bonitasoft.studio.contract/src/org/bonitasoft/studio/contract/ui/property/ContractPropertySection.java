@@ -34,6 +34,7 @@ import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -95,7 +96,11 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     @Override
     public String getSectionDescription() {
-        return Messages.contractSectionDescription;
+        final Object selection = selectionProvider.getAdapter(EObject.class);
+        if (selection != null && selection instanceof Task) {
+            return Messages.stepContractSectionDescription;
+        }
+        return Messages.processContractSectionDescription;
     }
 
     @Override
