@@ -86,4 +86,12 @@ public class BonitaRegistrationTest {
         verify(bonitaRegistration, never()).createSystemSendJob(eq(prefStore), anyString(), anyString());
     }
 
+    @Test
+    public void testSendUserInfoIfNotSent_incrementNbOfTry() throws Exception {
+        doReturn(2).when(prefStore).getInt(BonitaRegistration.BONITA_USER_REGISTER_TRY);
+        bonitaRegistration.sendUserInfoIfNotSent();
+
+        verify(prefStore).setValue(BonitaRegistration.BONITA_USER_REGISTER_TRY, 3);;
+    }
+
 }
