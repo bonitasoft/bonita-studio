@@ -29,6 +29,7 @@ import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
 import org.bonitasoft.studio.application.contribution.IPreStartupContribution;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.job.StartEngineJob;
+import org.bonitasoft.studio.application.registration.BonitaRegistration;
 import org.bonitasoft.studio.application.splash.BOSSplashHandler;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.FileUtil;
@@ -64,7 +65,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
@@ -389,45 +389,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     private void sendUserInfo() {
-        final String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$
-        if (noRegister == null || !noRegister.equals("1")) { //$NON-NLS-1$
-
-            final IPreferenceStore prefStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
-            final int ok = prefStore.getInt(BonitaRegistration.BONITA_USER_REGISTERED);
-            int nbTry = prefStore.getInt(BonitaRegistration.BONITA_USER_REGISTER_TRY);
-            final int infoSent = prefStore.getInt(BonitaRegistration.BONITA_INFO_SENT);
-            if (nbTry <= BonitaRegistration.BONITA_USER_REGISTER_MAXTRY) {
-                if (ok != 1) {
-
-                    final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                            "org.bonitasoft.studio.application.registration"); //$NON-NLS-1$
-                    IPostStartupContribution contrib = null;
-                    for (final IConfigurationElement elem : elements) {
-                        try {
-                            contrib = (IPostStartupContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-                        } catch (final CoreException e) {
-                            BonitaStudioLog.error(e);
-                        }
-                        if (contrib != null) {
-                            prefStore.setValue(BonitaRegistration.BONITA_USER_REGISTER_TRY, ++nbTry);
-                            contrib.execute();
-                            break;
-                        }
-                    }
-
-                    if (elements.length == 0) {
-
-                        prefStore.setValue(BonitaRegistration.BONITA_USER_REGISTERED, 1);
-                        BonitaRegistration.sendUserInfo(prefStore, "bonita_sp");
-                    }
-                } else if (infoSent == 0) {
-                    // registered but was offline
-                    // try to send data
-                    BonitaRegistration.sendUserInfo(prefStore, prefStore.getString(BonitaRegistration.BONITA_USER_MAIL));
-
-                }
-            }
-        }
+        new BonitaRegistration(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()).sendUserInfoIfNotSent();;
     }
 
     @Override

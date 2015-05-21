@@ -72,7 +72,6 @@
 		<module>org.bonitasoft.studio.profiles</module>
 		<module>org.bonitasoft.studio.properties</module>
 		<module>org.bonitasoft.studio.properties.bos</module>
-		<module>org.bonitasoft.studio.registration</module>
 		<module>org.bonitasoft.studio.repository.themes</module>
 		<module>org.bonitasoft.studio.repository.themes.bonitasoft</module>
 		<module>org.bonitasoft.studio.scripting</module>
