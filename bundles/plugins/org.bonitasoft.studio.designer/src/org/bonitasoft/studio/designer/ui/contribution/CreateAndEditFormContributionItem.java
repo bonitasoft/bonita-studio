@@ -99,18 +99,25 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                boolean canCreateOrEdit = true;
-                if (!isInternalForm()) {
-                    canCreateOrEdit = MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), Messages.switchTypeOfFormQuestionTitle,
-                            Messages.bind(Messages.switchTypeOfFormQuestion, getFormMappingTypeName()));
-                }
-                if (canCreateOrEdit) {
+                if (shoudCreateNewForm()) {
                     if (!isEditable()) {
                         createNewForm();
                     } else {
                         editForm();
                     }
                 }
+            }
+
+            /**
+             * @param canCreateOrEdit
+             * @return
+             */
+            protected boolean shoudCreateNewForm() {
+                if (!isInternalForm()) {
+                    return MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), Messages.switchTypeOfFormQuestionTitle,
+                            Messages.bind(Messages.switchTypeOfFormQuestion, getFormMappingTypeName()));
+                }
+                return true;
             }
         });
     }
@@ -145,8 +152,12 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
         final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
         final FormMapping mapping = pageFlow.getFormMapping();;
         final Expression targetForm = mapping.getTargetForm();
-        if (targetForm.hasContent()) {
-            repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent()).open();
+        final WebPageFileStore pageStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent());
+        if (pageStore != null) {
+            pageStore.open();
+        } else {
+            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.formDoesntExistAnymoreTitle,
+                    Messages.bind(Messages.bind(Messages.formDoesntExistAnymoreMessage, targetForm.getName()), targetForm.getName()));
         }
     }
 

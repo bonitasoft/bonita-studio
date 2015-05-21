@@ -20,12 +20,16 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
 import org.bonitasoft.studio.designer.core.operation.CreateFormFromContractOperation;
+import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
+import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
@@ -49,7 +53,13 @@ public class CreateOrEditFormProposalListener extends CreateNewFormProposalListe
         final FormMapping mapping = (FormMapping) context;
         final Expression targetForm = mapping.getTargetForm();
         if (targetForm.hasContent()) {
-            repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent()).open();
+            final WebPageFileStore pageStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent());
+            if (pageStore != null) {
+                pageStore.open();
+            } else {
+                MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.formDoesntExistAnymoreTitle,
+                        Messages.bind(Messages.bind(Messages.formDoesntExistAnymoreMessage, targetForm.getName()), targetForm.getName()));
+            }
             return null;
         } else {
             return super.handleEvent(context, fixedReturnType);
