@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -13,9 +13,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.model.edit.custom.process;
-
-import java.util.Collection;
-import java.util.Collections;
 
 import org.bonitasoft.studio.model.edit.custom.i18n.Messages;
 import org.bonitasoft.studio.model.process.FormMapping;
@@ -41,9 +38,6 @@ public class CustomFormMappingItemProvider extends FormMappingItemProvider {
                 return isOverview(mapping) ? Messages.bind(Messages.overviewUrlFormMapping, url)
                         : Messages.bind(Messages.urlFormMapping, url);
             case INTERNAL:
-                final String formName = mapping.getTargetForm().getName();
-                return isOverview(mapping) ? Messages.bind(Messages.overviewInternalFormMapping, formName)
-                        : Messages.bind(Messages.internalFormMapping, formName);
             case LEGACY:
             default:
                 return super.getText(object);
@@ -52,11 +46,6 @@ public class CustomFormMappingItemProvider extends FormMappingItemProvider {
 
     private boolean isOverview(final FormMapping mapping) {
         return ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING.equals(mapping.eContainingFeature());
-    }
-
-    @Override
-    public Collection<?> getChildren(final Object object) {
-        return Collections.emptySet();
     }
 
 }

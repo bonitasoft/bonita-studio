@@ -16,6 +16,7 @@ package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process;
 
 import java.util.Objects;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -25,10 +26,11 @@ import org.eclipse.ui.IEditorReference;
 public class FormMappingTabbedPropertyProvider extends ExecutionViewTabbedPropertySelectionProvider {
 
     @Override
-    public String tabId(final EObject mapping) {
-        final EObject eContainer = mapping.eContainer();
+    public String tabId(final EObject element) {
+        final FormMapping formMapping = ModelHelper.getFirstContainerOfType(element, FormMapping.class);
+        final EObject eContainer = formMapping.eContainer();
         if (eContainer instanceof Pool) {
-            return Objects.equals(mapping.eContainingFeature(), ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING) ? "tab.form.mapping.overview"
+            return Objects.equals(formMapping.eContainingFeature(), ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING) ? "tab.form.mapping.overview"
                     : "tab.form.mapping.caseStart";
         }
         return "tab.form.mapping.entry";
@@ -39,8 +41,8 @@ public class FormMappingTabbedPropertyProvider extends ExecutionViewTabbedProper
      * @see org.bonitasoft.studio.common.gmf.tools.tree.selection.ITabbedPropertySelectionProvider#appliesTo(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public boolean appliesTo(final EObject element, IEditorReference activeEditor) {
-        return element instanceof FormMapping;
+    public boolean appliesTo(final EObject element, final IEditorReference activeEditor) {
+        return ModelHelper.getFirstContainerOfType(element, FormMapping.class) != null;
     }
 
 }
