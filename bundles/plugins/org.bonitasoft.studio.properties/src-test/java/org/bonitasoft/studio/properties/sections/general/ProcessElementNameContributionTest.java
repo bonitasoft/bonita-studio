@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.properties.sections.general;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -101,5 +115,19 @@ public class ProcessElementNameContributionTest extends AbstractSWTTestCase {
 
         assertThat(((IStatus) validationStatusProvider.getValidationStatus().getValue()).isOK()).isFalse();
         assertThat(modelValue.getValue()).isEqualTo(targetValue.getValue()).isEqualTo("a #invalid name");
+    }
+
+    @Test
+    public void should_validationStatusProvider_fail_name_with_reservedKeywords() throws Exception {
+        final WritableValue targetValue = new WritableValue();
+        final WritableValue modelValue = new WritableValue();
+        dbc.bindValue(targetValue, modelValue);
+        final MultiValidator validationStatusProvider = nameGridPropertySectionContribution.nameValidationStatusProvider(targetValue);
+        dbc.addValidationStatusProvider(validationStatusProvider);
+
+        targetValue.setValue("content");
+
+        assertThat(((IStatus) validationStatusProvider.getValidationStatus().getValue()).isOK()).isFalse();
+        assertThat(modelValue.getValue()).isEqualTo(targetValue.getValue()).isEqualTo("content");
     }
 }
