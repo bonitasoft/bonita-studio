@@ -37,3 +37,4 @@ Export-Package: org.bonitasoft.studio.common.diagram,
  org.bonitasoft.studio.common.gmf.tools.tree,
  org.bonitasoft.studio.common.handlers,
  org.bonitasoft.studio.common.preferences
+Import-Package: org.bonitasoft.engine.bpm.connector

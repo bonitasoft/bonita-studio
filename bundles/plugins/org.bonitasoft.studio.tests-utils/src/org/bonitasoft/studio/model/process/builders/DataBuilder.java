@@ -5,27 +5,28 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.model.process.builders;
 
+import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DataAware;
+import org.bonitasoft.studio.model.process.DataType;
+import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.RecapFlow;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class DataBuilder<T extends Data, B extends DataBuilder<T, B>> extends ElementBuilder<T, B> {
-
 
     public static <B extends DataBuilder<Data, B>> DataBuilder<Data, B> aData() {
         return new DataBuilder<Data, B>();
@@ -73,6 +74,26 @@ public class DataBuilder<T extends Data, B extends DataBuilder<T, B>> extends El
 
     public B havingDataType(final DataTypeBuilder<?, ?> dataType) {
         getBuiltInstance().setDataType(dataType.build());
+        return getThis();
+    }
+
+    public B havingDataType(final DataType dataType) {
+        getBuiltInstance().setDataType(dataType);
+        return getThis();
+    }
+
+    public B in(final Buildable<? extends DataAware> dataAwareBuildable) {
+        dataAwareBuildable.build().getData().add(getBuiltInstance());
+        return getThis();
+    }
+
+    public B inPageflow(final Buildable<? extends PageFlow> pageFlowBuildable) {
+        pageFlowBuildable.build().getTransientData().add(getBuiltInstance());
+        return getThis();
+    }
+
+    public B inOverviewPageflow(final Buildable<? extends RecapFlow> pageFlowBuildable) {
+        pageFlowBuildable.build().getRecapTransientData().add(getBuiltInstance());
         return getThis();
     }
 

@@ -45,13 +45,6 @@ This software is licensed under GPL v2.
          version="0.0.0"/>
 
    <plugin
-         id="org.bonitasoft.studio.registration"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.designer.war"
          download-size="0"
          install-size="0"

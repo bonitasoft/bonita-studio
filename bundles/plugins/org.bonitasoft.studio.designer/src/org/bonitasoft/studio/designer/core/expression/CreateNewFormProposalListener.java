@@ -45,7 +45,7 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
 
     private final PageDesignerURLFactory pageDesignerURLFactory;
 
-    private final RepositoryAccessor repositoryAccessor;
+    protected final RepositoryAccessor repositoryAccessor;
 
     @Inject
     public CreateNewFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory, final IProgressService progressService,
