@@ -65,9 +65,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
+
+import com.google.common.base.Objects;
 
 /**
  * @author Romain Bioteau
@@ -202,16 +206,39 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
                         try {
                             final IGraphicalEditPart editPart = editPartResolver.findEditPart(diagramEditPart, treeElementSelection);
                             if (!editPart.equals(diagramSelectedPart)) {
-                                filteredTree.getViewer().setSelection(new StructuredSelection(diagramSelectedPart.resolveSemanticElement()));
+                                selectTreeItem(diagramSelectedPart);
                             }
                         } catch (final EditPartNotFoundException e) {
-                            filteredTree.getViewer().setSelection(new StructuredSelection(diagramSelectedPart.resolveSemanticElement()));
+                            selectTreeItem(diagramSelectedPart);
                         }
                     }
                 }
+
             });
 
         }
+    }
+
+    private void selectTreeItem(final IGraphicalEditPart diagramSelectedPart) {
+        final Tree tree = filteredTree.getViewer().getTree();
+        filteredTree.getViewer().expandToLevel(diagramSelectedPart.resolveSemanticElement(), TreeViewer.ALL_LEVELS);
+        final TreeItem item = findTreeItem(tree.getItems(), diagramSelectedPart.resolveSemanticElement());
+        if (item != null) {
+            filteredTree.getViewer().getTree().setSelection(item);
+        }
+    }
+
+    private TreeItem findTreeItem(final TreeItem[] items, final EObject resolveSemanticElement) {
+        for (final TreeItem item : items) {
+            if (item != null && Objects.equal(item.getData(), resolveSemanticElement)) {
+                return item;
+            }
+            final TreeItem findTreeItem = findTreeItem(item.getItems(), resolveSemanticElement);
+            if (findTreeItem != null) {
+                return findTreeItem;
+            }
+        }
+        return null;
     }
 
     protected void handlTreeDoubleClick() {
