@@ -21,7 +21,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    
-   <extension-point id="registration" name="Registration Dialog" schema="schema/org.bonitasoft.studio.application.registration.exsd"/>
    <extension-point id="PropertiesView" name="Properties View Contribution" schema="schema/PropertiesView.exsd"/>
    
    <extension-point id="prestartup" name="Actions to hoot at the preStartup of the workbench" schema="schema/prestartup.exsd"/>

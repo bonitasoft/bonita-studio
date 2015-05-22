@@ -49,10 +49,13 @@ public class TabbedPropertySynchronizerListener implements ISelectionChangedList
 
     private final TabbedPropertySelectionProviderRegistry registry;
     private final IWorkbenchPage activePage;
+    private final EditPartResolver editPartResolver;
 
-    public TabbedPropertySynchronizerListener(final TabbedPropertySelectionProviderRegistry registry, final IWorkbenchPage activePage) {
+    public TabbedPropertySynchronizerListener(final EditPartResolver editPartResolver, final TabbedPropertySelectionProviderRegistry registry,
+            final IWorkbenchPage activePage) {
         this.registry = registry;
         this.activePage = activePage;
+        this.editPartResolver = editPartResolver;
     }
 
     /*
@@ -79,7 +82,7 @@ public class TabbedPropertySynchronizerListener implements ISelectionChangedList
             final TabbedPropertySheetPage page = (TabbedPropertySheetPage) part.getAdapter(TabbedPropertySheetPage.class);
             final DiagramEditor diagramEditor = (DiagramEditor) editorPart;
             try {
-                final IGraphicalEditPart editPart = new EditPartResolver(diagramEditor.getDiagramEditPart()).findEditPart(element);
+                final IGraphicalEditPart editPart = editPartResolver.findEditPart(diagramEditor.getDiagramEditPart(), element);
                 updateDiagramSelection(diagramEditor, editPart);
                 if (page != null) {
                     page.selectionChanged(editorPart, new StructuredSelection(editPart));
@@ -100,7 +103,7 @@ public class TabbedPropertySynchronizerListener implements ISelectionChangedList
     private void updateDiagramSelection(final DiagramEditor diagramEditor, final IGraphicalEditPart editPart) {
         final IDiagramGraphicalViewer diagramGraphicalViewer = diagramEditor.getDiagramGraphicalViewer();
         diagramGraphicalViewer.select(editPart);
-        diagramEditor.getDiagramGraphicalViewer().reveal(editPart);
+        diagramGraphicalViewer.reveal(editPart);
     }
 
     private IEditorReference activeEditorReference(final IWorkbenchPage activePage) {

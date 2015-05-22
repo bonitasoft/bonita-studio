@@ -34,7 +34,7 @@ public class ApplicationFormTabbedPropertyProvider extends ApplicationViewTabbed
      */
     @Override
     public boolean appliesTo(final EObject element, final IEditorReference activeEditor) {
-        return ModelHelper.getFirstContainerOfType(element, Form.class) != null;
+        return ModelHelper.getFirstContainerOfType(element, Form.class) != null && isProcessDiagramEditor(activeEditor);
     }
 
     /*

@@ -19,7 +19,9 @@ import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.filter;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.WeakHashMap;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.form.Widget;
@@ -41,18 +43,25 @@ import com.google.common.base.Predicate;
 
 public class EditPartResolver {
 
-    private final DiagramEditPart diagramEditPart;
+    private final Map<EObject, IGraphicalEditPart> cache = new WeakHashMap<EObject, IGraphicalEditPart>();
 
-    public EditPartResolver(final DiagramEditPart diagramEditPart) {
-        this.diagramEditPart = diagramEditPart;
-    }
-
-    public IGraphicalEditPart findEditPart(final EObject semanticModelElement) throws EditPartNotFoundException {
+    public IGraphicalEditPart findEditPart(final DiagramEditPart diagramEditPart, final EObject semanticModelElement) throws EditPartNotFoundException {
+        if (semanticModelElement == null) {
+            throw new EditPartNotFoundException();
+        }
+        if (cache.containsKey(semanticModelElement)) {
+            return cache.get(semanticModelElement);
+        }
         final IGraphicalEditPart result = findEditPartRecursively(diagramEditPart, semanticModelElement);
         if (result == null) {
             throw new EditPartNotFoundException();
         }
+        cache.put(semanticModelElement, result);
         return result;
+    }
+
+    public void dispose() {
+        cache.clear();
     }
 
     private boolean semanticElementMatches(final EditPart editPart, final EObject semanticModelElement) {

@@ -203,7 +203,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
     }
 
     public static void selectTabbedPropertyView(final SWTBot viewerBot, final String tabeText) {
-        viewerBot.sleep(1000); //DO NOT REMOVE ME //TODO : find a way to remove bot.sleep, can save almost one minute
+        viewerBot.sleep(1000);
         UIThreadRunnable.syncExec(new VoidResult() {
 
             /*

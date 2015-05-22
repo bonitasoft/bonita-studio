@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.DefaultTabbedPropertyProvider;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.ecore.EObject;
@@ -35,6 +36,6 @@ public class FormConnectorTabbedPropertyProvider extends FormGeneralTabbedProper
     public boolean appliesTo(final EObject element, final IEditorReference activeEditor) {
         final Connector connector = ModelHelper.getFirstContainerOfType(element, Connector.class);
         return connector != null && connector.eContainingFeature().equals(ProcessPackage.Literals.CONNECTABLE_ELEMENT__CONNECTORS)
-                && isFormDiagramEditor(activeEditor);
+                && DefaultTabbedPropertyProvider.isFormDiagramEditor(activeEditor);
     }
 }

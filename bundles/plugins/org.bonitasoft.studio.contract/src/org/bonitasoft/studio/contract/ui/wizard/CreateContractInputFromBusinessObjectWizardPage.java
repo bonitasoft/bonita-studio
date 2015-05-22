@@ -35,6 +35,7 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
@@ -118,7 +119,22 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         createRootNameControl(dbc, composite);
         createProcessDataMappingTreeViewer(composite, dbc);
+        createReminderText(composite);
         setControl(composite);
+    }
+
+    /**
+     * @param composite
+     */
+    private void createReminderText(final Composite composite) {
+        final Label reminder = new Label(composite, SWT.WRAP);
+        reminder.setLayoutData(GridDataFactory.fillDefaults().hint(500, SWT.DEFAULT).create());
+        if (contract.eContainer() instanceof Task) {
+            reminder.setText(Messages.reminderForStepMessage);
+        } else {
+            reminder.setText(Messages.reminderForProcessMessage);
+        }
+
     }
 
     /**

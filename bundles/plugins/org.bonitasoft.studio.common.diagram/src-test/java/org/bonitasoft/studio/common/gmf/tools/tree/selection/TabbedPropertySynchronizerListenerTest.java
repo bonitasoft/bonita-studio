@@ -15,11 +15,11 @@
 package org.bonitasoft.studio.common.gmf.tools.tree.selection;
 
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.ITabbedPro
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
@@ -64,6 +65,10 @@ public class TabbedPropertySynchronizerListenerTest {
     private IDiagramGraphicalViewer viewer;
     @Mock
     private TabbedPropertySheetPage page;
+    @Mock
+    private EditPartResolver editPartResolver;
+    @Mock
+    private IGraphicalEditPart editPart;
 
     @Before
     public void setUp() throws Exception {
@@ -74,6 +79,7 @@ public class TabbedPropertySynchronizerListenerTest {
         when(viewPart.getAdapter(TabbedPropertySheetPage.class)).thenReturn(page);
         when(editorPart.getDiagramEditPart()).thenReturn(new DiagramEditPart(NotationFactory.eINSTANCE.createDiagram()));
         when(editorPart.getDiagramGraphicalViewer()).thenReturn(viewer);
+        when(editPartResolver.findEditPart(any(DiagramEditPart.class), notNull(EObject.class))).thenReturn(editPart);
         doReturn(new IEditorReference[] { processEditorReference }).when(activePage).getEditorReferences();
     }
 
@@ -91,36 +97,29 @@ public class TabbedPropertySynchronizerListenerTest {
     @Test
     public void should_update_diagram_selection_when_handling_selection_change_event() throws Exception {
         when(registry.findSelectionProvider(notNull(EObject.class), eq(processEditorReference))).thenReturn(selectionProvider);
-        final DiagramEditPart diagramEditPart = mock(DiagramEditPart.class);
-        when(editorPart.getDiagramEditPart()).thenReturn(diagramEditPart);
-        final Task task = aTask().build();
-        when(diagramEditPart.resolveSemanticElement()).thenReturn(task);
         final TabbedPropertySynchronizerListener listener = newFixture();
 
-        listener.selectionChanged(new SelectionChangedEvent(source, new StructuredSelection(task)));
+        listener.selectionChanged(new SelectionChangedEvent(source, new StructuredSelection(aTask().build())));
 
-        verify(viewer).select(diagramEditPart);
-        verify(viewer).reveal(diagramEditPart);
+        verify(viewer).select(editPart);
+        verify(viewer).reveal(editPart);
     }
 
     @Test
     public void should_update_selectedTab_when_handling_selection_change_event() throws Exception {
         when(registry.findSelectionProvider(notNull(EObject.class), eq(processEditorReference))).thenReturn(selectionProvider);
-        final DiagramEditPart diagramEditPart = mock(DiagramEditPart.class);
-        when(editorPart.getDiagramEditPart()).thenReturn(diagramEditPart);
         final Task task = aTask().build();
-        when(diagramEditPart.resolveSemanticElement()).thenReturn(task);
         when(selectionProvider.tabId(task)).thenReturn("aTabId");
         final TabbedPropertySynchronizerListener listener = newFixture();
 
         listener.selectionChanged(new SelectionChangedEvent(source, new StructuredSelection(task)));
 
-        verify(page).selectionChanged(editorPart, new StructuredSelection(diagramEditPart));
+        verify(page).selectionChanged(editorPart, new StructuredSelection(editPart));
         verify(page).setSelectedTab("aTabId");
     }
 
     private TabbedPropertySynchronizerListener newFixture() {
-        return new TabbedPropertySynchronizerListener(registry, activePage);
+        return new TabbedPropertySynchronizerListener(editPartResolver, registry, activePage);
     }
 
 }

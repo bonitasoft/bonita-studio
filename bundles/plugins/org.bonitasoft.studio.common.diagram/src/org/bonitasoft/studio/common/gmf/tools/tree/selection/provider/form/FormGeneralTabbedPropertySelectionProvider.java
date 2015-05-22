@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form;
 
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.ITabbedPropertySelectionProvider;
-import org.eclipse.ui.IEditorReference;
 
 public abstract class FormGeneralTabbedPropertySelectionProvider implements ITabbedPropertySelectionProvider {
 
@@ -24,8 +23,4 @@ public abstract class FormGeneralTabbedPropertySelectionProvider implements ITab
         return "org.bonitasoft.studio.views.properties.form.general";
     }
 
-    protected boolean isFormDiagramEditor(final IEditorReference activeEditor) {
-        return "org.bonitasoft.studio.diagram.form.custom.ex.part.FormDiagramEditorEx".equals(activeEditor.getId()) ||
-                "org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorID".equals(activeEditor.getId());
-    }
 }

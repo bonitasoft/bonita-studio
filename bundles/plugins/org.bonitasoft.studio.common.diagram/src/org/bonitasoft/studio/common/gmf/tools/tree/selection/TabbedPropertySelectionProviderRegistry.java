@@ -15,11 +15,11 @@
 package org.bonitasoft.studio.common.gmf.tools.tree.selection;
 
 import static com.google.common.collect.Iterables.tryFind;
+import static org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.DefaultTabbedPropertyProvider.defaultProvider;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.DefaultTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.ITabbedPropertySelectionProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.ButtonActionTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.FormActionTabbedPropertyProvider;
@@ -83,7 +83,7 @@ public class TabbedPropertySelectionProviderRegistry {
         if (provider.isPresent()) {
             return provider.get();
         }
-        return DefaultTabbedPropertyProvider.INSTANCE;
+        return defaultProvider(activeEditor);
     }
 
     private Predicate<ITabbedPropertySelectionProvider> appliesTo(final EObject element, final IEditorReference activeEditor) {
