@@ -103,7 +103,7 @@ public class TabbedPropertySynchronizerListener implements ISelectionChangedList
     private void updateDiagramSelection(final DiagramEditor diagramEditor, final IGraphicalEditPart editPart) {
         final IDiagramGraphicalViewer diagramGraphicalViewer = diagramEditor.getDiagramGraphicalViewer();
         diagramGraphicalViewer.select(editPart);
-        diagramEditor.getDiagramGraphicalViewer().reveal(editPart);
+        diagramGraphicalViewer.reveal(editPart);
     }
 
     private IEditorReference activeEditorReference(final IWorkbenchPage activePage) {

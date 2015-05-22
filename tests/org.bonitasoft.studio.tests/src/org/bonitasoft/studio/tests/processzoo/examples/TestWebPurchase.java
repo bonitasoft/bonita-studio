@@ -83,9 +83,9 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
     }
 
     private void configurePool(final SWTBotGefEditor gmfEditor) {
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Pool");
+        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
+        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
+        bot.tree().select(0);
         bot.button(org.bonitasoft.studio.common.Messages.edit).click();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
         bot.textWithLabel(Messages.name).setText("Web Purchase");
@@ -117,7 +117,6 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
     }
 
     private void stepGateWayXor(final SWTBotGefEditor gmfEditor) {
-        //  SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Start1",1,new Point(200,100));
         SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Start1", SWTBotTestUtil.CONTEXTUALPALETTE_GATEWAY, PositionConstants.EAST);
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.comboBoxWithLabel(Messages.gatewayType).setSelection(Messages.gatwetypeXor);
@@ -125,7 +124,6 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
     }
 
     private void stepSalesReview(final SWTBotGefEditor gmfEditor) {
-        // SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Gateway1",0,new Point(350,100));
         SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Gateway1", SWTBotTestUtil.CONTEXTUALPALETTE_STEP, PositionConstants.EAST);
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.textWithLabel("Name").setText("Sales Review");
