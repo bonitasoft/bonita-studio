@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.businessobject.ui.wizard;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
@@ -43,6 +44,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -172,9 +174,38 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         ctx.bindValue(ViewersObservables.observeSingleSelection(defaultValueExpressionViewer),
                 EMFObservables.observeValue(businessObjectData, ProcessPackage.Literals.DATA__DEFAULT_VALUE));
         defaultReturnTypeObservable = PojoObservables.observeValue(defaultValueExpressionViewer, "defaultReturnType");
-        ctx.bindValue(defaultReturnTypeObservable, classNameObservable);
+        ctx.bindValue(defaultReturnTypeObservable, classNameObservable, neverUpdateValueStrategy().create(),
+                updateValueStrategy().withConverter(listConverter()).create());
+        ctx.bindValue(defaultReturnTypeObservable, multipleObservableValue, neverUpdateValueStrategy().create(),
+                updateValueStrategy().withConverter(multipleConverter()).create());
         return defaultValueExpressionViewer;
 
+    }
+
+    private IConverter listConverter() {
+        return new Converter(String.class, String.class) {
+
+            @Override
+            public Object convert(final Object fromObject) {
+                if (businessObjectData.isMultiple()) {
+                    return List.class.getName();
+                }
+                return fromObject;
+            }
+        };
+    }
+
+    private IConverter multipleConverter() {
+        return new Converter(Boolean.class, String.class) {
+
+            @Override
+            public Object convert(final Object fromObject) {
+                if ((boolean) fromObject) {
+                    return List.class.getName();
+                }
+                return classNameObservable.getValue();
+            }
+        };
     }
 
     protected void createIsMultipleControl(final Composite mainComposite, final EMFDataBindingContext ctx) {
