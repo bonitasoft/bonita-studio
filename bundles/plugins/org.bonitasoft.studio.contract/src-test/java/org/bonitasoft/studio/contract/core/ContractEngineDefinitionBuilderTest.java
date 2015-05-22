@@ -15,15 +15,17 @@
 package org.bonitasoft.studio.contract.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.eq;
+import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.studio.model.process.builders.ContractConstraintBuilder.aContractConstraint;
+import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.engine.bpm.contract.ComplexInputDefinition;
 import org.bonitasoft.engine.bpm.contract.Type;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
+import org.bonitasoft.engine.bpm.process.impl.ContractInputDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
 import org.bonitasoft.studio.common.Messages;
@@ -35,7 +37,6 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.core.runtime.AssertionFailedException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,12 +62,16 @@ public class ContractEngineDefinitionBuilderTest {
 
     @Mock
     private ContractDefinitionBuilder contractDefBuilder;
+    @Mock
+    private ContractInputDefinitionBuilder contractInputDefinitionBuilder;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
+        when(contractInputDefinitionBuilder.addComplexInput(anyString(), anyString(), anyBoolean())).thenReturn(contractInputDefinitionBuilder);
+        when(contractDefBuilder.addComplexInput(anyString(), anyString(), anyBoolean())).thenReturn(contractInputDefinitionBuilder);
         when(processBuilder.addContract()).thenReturn(contractDefBuilder);
         aContract = ProcessFactory.eINSTANCE.createContract();
         processengineContractBuilder = new ProcessContractEngineBuilder();
@@ -76,13 +81,6 @@ public class ContractEngineDefinitionBuilderTest {
         aContract = ProcessFactory.eINSTANCE.createContract();
         userTaskengineContractBuilder = new TaskContractEngineDefinitionBuilder();
         userTaskengineContractBuilder.setEngineBuilder(taskBuilder);
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
     }
 
     @Test
@@ -118,11 +116,11 @@ public class ContractEngineDefinitionBuilderTest {
         addInput(aContract, "isMarried", ContractInputType.BOOLEAN, null);
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
-        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", false);
-        verify(contractDefBuilder).addSimpleInput("birthDate", Type.DATE, "Birth date of an employee", false);
-        verify(contractDefBuilder).addSimpleInput("age", Type.INTEGER, null, false);
-        verify(contractDefBuilder).addSimpleInput("salary", Type.DECIMAL, null, false);
-        verify(contractDefBuilder).addSimpleInput("isMarried", Type.BOOLEAN, null, false);
+        verify(contractDefBuilder).addInput("name", Type.TEXT, "name of an employee", false);
+        verify(contractDefBuilder).addInput("birthDate", Type.DATE, "Birth date of an employee", false);
+        verify(contractDefBuilder).addInput("age", Type.INTEGER, null, false);
+        verify(contractDefBuilder).addInput("salary", Type.DECIMAL, null, false);
+        verify(contractDefBuilder).addInput("isMarried", Type.BOOLEAN, null, false);
     }
 
     @Test
@@ -134,11 +132,11 @@ public class ContractEngineDefinitionBuilderTest {
         addInput(aContract, "isMarried", ContractInputType.BOOLEAN, null);
         processengineContractBuilder.build(aContract);
         verify(processBuilder).addContract();
-        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", false);
-        verify(contractDefBuilder).addSimpleInput("birthDate", Type.DATE, "Birth date of an employee", false);
-        verify(contractDefBuilder).addSimpleInput("age", Type.INTEGER, null, false);
-        verify(contractDefBuilder).addSimpleInput("salary", Type.DECIMAL, null, false);
-        verify(contractDefBuilder).addSimpleInput("isMarried", Type.BOOLEAN, null, false);
+        verify(contractDefBuilder).addInput("name", Type.TEXT, "name of an employee", false);
+        verify(contractDefBuilder).addInput("birthDate", Type.DATE, "Birth date of an employee", false);
+        verify(contractDefBuilder).addInput("age", Type.INTEGER, null, false);
+        verify(contractDefBuilder).addInput("salary", Type.DECIMAL, null, false);
+        verify(contractDefBuilder).addInput("isMarried", Type.BOOLEAN, null, false);
     }
 
     private ContractInput addInput(final Contract contract, final String inputName, final ContractInputType type, final String description) {
@@ -173,28 +171,26 @@ public class ContractEngineDefinitionBuilderTest {
     @Test
     public void should_build_create_a_contract_with_constraint() throws Exception {
         final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
-        nameInput.setMandatory(false);
-        aContract.getConstraints().add(ContractConstraintUtil.createConstraint("myConstraint", "name.length < 50", "name is too long", nameInput));
+        aContract.getConstraints().add(
+                aContractConstraint().withName("myConstraint").withExpression("name.length < 50").withErrorMessage("name is too long")
+                        .havingInput(nameInput.getName()).build());
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
-        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
+        verify(contractDefBuilder).addInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
         verify(contractDefBuilder).addConstraint("myConstraint", "name.length < 50", "name is too long", nameInput.getName());
     }
 
     @Test
     public void should_build_create_a_contract_with_mandatory_constraint() throws Exception {
         final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
-        nameInput.setMandatory(true);
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
-        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
-        verify(contractDefBuilder).addMandatoryConstraint("name");
+        verify(contractDefBuilder).addInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
     }
 
     @Test
     public void should_build_create_operation_for_input_mapping() throws Exception {
         final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
-        nameInput.setMandatory(true);
         final ContractInputMapping mapping = ProcessFactory.eINSTANCE.createContractInputMapping();
         final Data textData = ProcessFactory.eINSTANCE.createData();
         final DataType textDt = ProcessFactory.eINSTANCE.createStringType();
@@ -205,56 +201,36 @@ public class ContractEngineDefinitionBuilderTest {
         nameInput.setMapping(mapping);
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
-        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
-        verify(contractDefBuilder).addMandatoryConstraint("name");
+        verify(contractDefBuilder).addInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
     }
 
     @Test
-    public void should_build_add_a_complex_input() throws Exception {
+    public void should_create_complex_input_recursively() throws Exception {
         final ContractInput employeeInput = addInput(aContract, "employee", ContractInputType.COMPLEX, "employee complex type");
-        addInput(employeeInput, "firstName", ContractInputType.TEXT, null).setMandatory(true);;
-
+        addInput(employeeInput, "firstName", ContractInputType.TEXT, null);
         addInput(employeeInput, "lastName", ContractInputType.TEXT, null);
         addInput(employeeInput, "birthDate", ContractInputType.DATE, null);
         final ContractInput skillsInput = addInput(employeeInput, "skills", ContractInputType.COMPLEX, null);
         skillsInput.setMultiple(true);
-        skillsInput.setMandatory(true);
         addInput(skillsInput, "name", ContractInputType.TEXT, "name of the skills");
         addInput(skillsInput, "rate", ContractInputType.INTEGER, "rate of the skill");
 
         userTaskengineContractBuilder.build(aContract);
-        verify(taskBuilder).addContract();
 
-        verify(contractDefBuilder).addComplexInput(eq(employeeInput.getName()), eq(employeeInput.getDescription()), eq(employeeInput.isMultiple()), anyList(),
-                anyList());
-        verify(contractDefBuilder).addMandatoryConstraint("firstName");
-        verify(contractDefBuilder).addMandatoryConstraint("skills");
+        verify(contractDefBuilder).addComplexInput("employee", "employee complex type", false);
+        verify(contractInputDefinitionBuilder).addInput("firstName", Type.TEXT, null, false);
+        verify(contractInputDefinitionBuilder).addInput("lastName", Type.TEXT, null, false);
+        verify(contractInputDefinitionBuilder).addInput("birthDate", Type.DATE, null, false);
+        verify(contractInputDefinitionBuilder).addComplexInput("skills", null, true);
+        verify(contractInputDefinitionBuilder).addInput("name", Type.TEXT, "name of the skills", false);
+        verify(contractInputDefinitionBuilder).addInput("rate", Type.INTEGER, "rate of the skill", false);
     }
 
     @Test
-    public void should_buildComplexInput_create_a_complex_input_recursively() throws Exception {
-        final ContractInput employeeInput = addInput(aContract, "employee", ContractInputType.COMPLEX, "employee complex type");
-        addInput(employeeInput, "firstName", ContractInputType.TEXT, null).setMandatory(false);
-        addInput(employeeInput, "lastName", ContractInputType.TEXT, null);
-        addInput(employeeInput, "birthDate", ContractInputType.DATE, null);
-        final ContractInput skillsInput = addInput(employeeInput, "skills", ContractInputType.COMPLEX, null);
-        skillsInput.setMultiple(true);
-        skillsInput.setMandatory(false);
-        addInput(skillsInput, "name", ContractInputType.TEXT, "name of the skills");
-        addInput(skillsInput, "rate", ContractInputType.INTEGER, "rate of the skill");
+    public void should_add_a_file_contrac_input() throws Exception {
+        userTaskengineContractBuilder.build(aContract().havingInput(aContractInput().withName("myFile").withType(ContractInputType.FILE)).build());
 
-        final ComplexInputDefinition complexInput = userTaskengineContractBuilder.buildComplexInput(employeeInput, contractDefBuilder);
-        assertThat(complexInput.getName()).isEqualTo(employeeInput.getName());
-        assertThat(complexInput.getDescription()).isEqualTo(employeeInput.getDescription());
-        assertThat(complexInput.getSimpleInputs()).extracting("name", "type").contains(
-                tuple("firstName", Type.TEXT),
-                tuple("lastName", Type.TEXT),
-                tuple("birthDate", Type.DATE));
-        assertThat(complexInput.getComplexInputs()).extracting("name").contains("skills");
-        final ComplexInputDefinition complexInputDefinition = complexInput.getComplexInputs().get(0);
-        assertThat(complexInputDefinition.getSimpleInputs()).extracting("name", "type").contains(
-                tuple("name", Type.TEXT),
-                tuple("rate", Type.INTEGER));
+        verify(contractDefBuilder).addFileInput("myFile", null, false);
     }
 
 }

@@ -26,12 +26,7 @@ import org.eclipse.emf.validation.IValidationContext;
 
 public class OperatorConsistencyConstraint extends AbstractLiveValidationMarkerConstraint {
 
-    OperatorLabelProvider labelProvider = new OperatorLabelProvider();
-
-    @Override
-    protected IStatus performLiveValidation(final IValidationContext context) {
-        return context.createSuccessStatus();
-    }
+    private final OperatorLabelProvider labelProvider = new OperatorLabelProvider();
 
     @Override
     protected IStatus performBatchValidation(final IValidationContext context) {
@@ -49,7 +44,7 @@ public class OperatorConsistencyConstraint extends AbstractLiveValidationMarkerC
             return context.createFailureStatus(
                     Messages.bind(Messages.validation_OperatorConsistency,
                             new String[] { labelProvider.getText(operator),
-                            leftOperand.getName() }));
+                                    leftOperand.getName() }));
         }
         return context.createSuccessStatus();
     }

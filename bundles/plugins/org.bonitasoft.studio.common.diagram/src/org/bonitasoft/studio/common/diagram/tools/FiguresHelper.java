@@ -1,17 +1,14 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -44,12 +41,9 @@ import org.eclipse.gmf.runtime.notation.Bounds;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mickael Istria
- * 
  */
 public class FiguresHelper {
 
@@ -73,17 +67,6 @@ public class FiguresHelper {
 
     private static final int NB_POINTS_DRAW_CIRCLE = 50;
 
-    private static Color ACTIVITY_BLUE = new Color(Display.getCurrent(), 54, 107, 163);
-
-    private static Color GATEWAY_DARK_GREEN = new Color(Display.getCurrent(), 151, 170, 36);
-
-    // private static Color LIGHT_GREEN = new Color(Display.getCurrent(), 243,245, 211);
-    private static Color STARTEVENT_DARK_GREEN = new Color(Display.getCurrent(), 106, 172, 37);
-
-    // private static Color STARTEVENT_LIGHT_GREEN = new Color(Display.getCurrent(), 106,172,37);
-    private static Color ENDEVENT_DARK_RED = new Color(Display.getCurrent(), 131, 20, 29);
-
-    // private static Color ENDEVENT_LIGHT_RED = new Color(Display.getCurrent(), 248,221,214);
     public final static String CONNECTOR_DECORATOR = "connecteur.svgz";
 
     public final static String HUMAN_DECORATOR = "task.svgz";
@@ -128,14 +111,12 @@ public class FiguresHelper {
 
     private static final int LINE_LENGTH = 20;
 
-    public static final Color COMPARTMENT_FEEDBACK_COLOR = new Color(PlatformUI.getWorkbench().getDisplay(), 240, 245, 245);
-
     public static boolean AVOID_OVERLAP_ENABLE = true;
 
-    public static IFigure getSelectedFigure(EClass eClass, int width, int height, Color foreground, Color background) {
+    public static IFigure getSelectedFigure(final EClass eClass, final int width, final int height, final Color foreground, final Color background) {
 
-        String eclassName = eClass.getName();
-        CustomSVGFigure svgFigure = new CustomSVGFigure();
+        final String eclassName = eClass.getName();
+        final CustomSVGFigure svgFigure = new CustomSVGFigure();
         svgFigure.setURI("platform:/plugin/org.bonitasoft.studio.pics/icons/figures/" + eclassName + "_selected.svgz"); //$NON-NLS-1$ //$NON-NLS-2$
 
         if (ProcessPackage.Literals.ACTIVITY.isSuperTypeOf(eClass) || ProcessPackage.Literals.SUB_PROCESS_EVENT.equals(eClass)) {
@@ -167,16 +148,16 @@ public class FiguresHelper {
 
     /**
      * Convenient method to translate bounds to Absolute coordinate
-     * 
+     *
      * @param owner
      * @param b
      */
-    public static void translateToAbsolute(IFigure owner, Rectangle b) {
+    public static void translateToAbsolute(final IFigure owner, final Rectangle b) {
         owner.translateToAbsolute(b);
         IFigure parentFigure = owner.getParent();
         while (parentFigure != null) {
             if (parentFigure instanceof Viewport) {
-                Viewport viewport = (Viewport) parentFigure;
+                final Viewport viewport = (Viewport) parentFigure;
                 b.translate(
                         viewport.getHorizontalRangeModel().getValue(),
                         viewport.getVerticalRangeModel().getValue());
@@ -190,14 +171,14 @@ public class FiguresHelper {
 
     /**
      * Convenient method to translate bounds to Absolute coordinate
-     * 
+     *
      * @param owner
      * @param p
      */
-    public static void translateToAbsolute(IFigure owner, Point p) {
+    public static void translateToAbsolute(IFigure owner, final Point p) {
         while (owner != null) {
             if (owner instanceof Viewport) {
-                Viewport viewport = (Viewport) owner;
+                final Viewport viewport = (Viewport) owner;
                 p.translate(
                         viewport.getHorizontalRangeModel().getValue(),
                         viewport.getVerticalRangeModel().getValue());
@@ -209,12 +190,12 @@ public class FiguresHelper {
         }
     }
 
-    public static Point handleCompartmentMargin(IGraphicalEditPart ep, int x, int y, boolean notAllowExentedMargins) {
-        IFigure editPartFigure = ep.getFigure();
+    public static Point handleCompartmentMargin(final IGraphicalEditPart ep, final int x, final int y, final boolean notAllowExentedMargins) {
+        final IFigure editPartFigure = ep.getFigure();
         if (ep.getParent() instanceof ShapeCompartmentEditPart) {
-            GraphicalEditPart epCompartment = (GraphicalEditPart) ep.getParent();
-            Dimension parentSize = ((GraphicalEditPart) ep.getParent()).getFigure().getSize().getCopy();
-            Point parentLoc = ((GraphicalEditPart) ep.getParent()).getFigure().getBounds().getCopy().getLocation();
+            final GraphicalEditPart epCompartment = (GraphicalEditPart) ep.getParent();
+            final Dimension parentSize = ((GraphicalEditPart) ep.getParent()).getFigure().getSize().getCopy();
+            final Point parentLoc = ((GraphicalEditPart) ep.getParent()).getFigure().getBounds().getCopy().getLocation();
             if (!(parentSize.height == 0 && parentSize.width == 0)) {
                 Rectangle newBounds = null;
                 if (editPartFigure.getSize().width == 0 && editPartFigure.getSize().height == 0) {
@@ -222,13 +203,13 @@ public class FiguresHelper {
                 } else {
                     newBounds = new Rectangle(new Point(x, y), editPartFigure.getSize());
                 }
-                EditPart parent = ep.getParent().getParent();
+                final EditPart parent = ep.getParent().getParent();
 
-                for (Object child : epCompartment.getChildren()) {
+                for (final Object child : epCompartment.getChildren()) {
 
                     if (child instanceof IGraphicalEditPart && !child.equals(ep)) {
                         boolean compartment = false;
-                        for (Object o : ((IGraphicalEditPart) child).getChildren()) {
+                        for (final Object o : ((IGraphicalEditPart) child).getChildren()) {
                             if (o instanceof ShapeCompartmentEditPart) {
                                 if (((ShapeCompartmentEditPart) o).getCompartmentFigure().isExpanded() && ep.getTargetConnections().isEmpty()
                                         && ep.getSourceConnections().isEmpty()) {
@@ -285,7 +266,7 @@ public class FiguresHelper {
                     }
                 }
 
-                Point res = new Point(newBounds.x, newBounds.y);
+                final Point res = new Point(newBounds.x, newBounds.y);
                 return res;
             }
         }
@@ -293,9 +274,9 @@ public class FiguresHelper {
         return new Point(0, 0);
     }
 
-    private static Rectangle translate(IGraphicalEditPart child, Rectangle newBounds) {
-        Rectangle childBounds = child.getFigure().getBounds().getCopy();
-        Bounds b = (Bounds) ((Node) child.getModel()).getLayoutConstraint();
+    private static Rectangle translate(final IGraphicalEditPart child, final Rectangle newBounds) {
+        final Rectangle childBounds = child.getFigure().getBounds().getCopy();
+        final Bounds b = (Bounds) ((Node) child.getModel()).getLayoutConstraint();
         childBounds.x = b.getX();
         childBounds.y = b.getY();
         if (childBounds.width <= 0) {
@@ -304,13 +285,13 @@ public class FiguresHelper {
         if (childBounds.height <= 0) {
             childBounds.height = child.getFigure().getPreferredSize().height;
         }
-        Rectangle oldBound = newBounds.getCopy();
+        final Rectangle oldBound = newBounds.getCopy();
         childBounds.expand(new Insets(15, 15, 15, 15));
 
         if (childBounds.intersects(newBounds)) {
 
-            Set<Integer> directionTry = new HashSet<Integer>();
-            Set<Integer> allDirection = new HashSet<Integer>();
+            final Set<Integer> directionTry = new HashSet<Integer>();
+            final Set<Integer> allDirection = new HashSet<Integer>();
             allDirection.add(PositionConstants.NORTH_WEST);
             allDirection.add(PositionConstants.NORTH_EAST);
             allDirection.add(PositionConstants.SOUTH_EAST);
@@ -340,19 +321,19 @@ public class FiguresHelper {
         return newBounds;
     }
 
-    public static Dimension getMinimumCompartmentSize(ShapeCompartmentEditPart ep) {
-        Dimension size = new Dimension(50, 100);
+    public static Dimension getMinimumCompartmentSize(final ShapeCompartmentEditPart ep) {
+        final Dimension size = new Dimension(50, 100);
 
-        for (Object child : ep.getChildren()) {
+        for (final Object child : ep.getChildren()) {
             if (child instanceof GraphicalEditPart) {
-                int y = ((Integer) ((GraphicalEditPart) child).getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y())).intValue();
+                final int y = ((Integer) ((GraphicalEditPart) child).getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y())).intValue();
                 int h = ((GraphicalEditPart) child).getFigure().getPreferredSize().height + y;
                 if (h < 100) {
                     h = 100;
                 }
-                int w = ((IGraphicalEditPart) child).getFigure().getPreferredSize().width
+                final int w = ((IGraphicalEditPart) child).getFigure().getPreferredSize().width
                         + ((IGraphicalEditPart) child).getFigure().getBounds().getLocation().x;
-                Dimension tmp = new Dimension(w, h);
+                final Dimension tmp = new Dimension(w, h);
                 if (size.height < tmp.height) {
                     size.height = tmp.height;
                 }
@@ -366,23 +347,23 @@ public class FiguresHelper {
         return size;
     }
 
-    public static void translateToRelative(IFigure owner, Rectangle b) {
+    public static void translateToRelative(final IFigure owner, final Rectangle b) {
         owner.translateToRelative(b);
     }
 
     public static void resizeActivitiesFigure(final IGraphicalEditPart parentEp, final String text) {
 
-        int lineNumber = text.length() / LINE_LENGTH;
+        final int lineNumber = text.length() / LINE_LENGTH;
 
-        ChangeBoundsRequest req = new ChangeBoundsRequest(RequestConstants.REQ_RESIZE);
+        final ChangeBoundsRequest req = new ChangeBoundsRequest(RequestConstants.REQ_RESIZE);
 
-        int currentWidth = parentEp.getFigure().getSize().width;
-        int defaultWidth = parentEp.getFigure().getPreferredSize().width;
-        int withDeltaFromDefault = currentWidth - defaultWidth;
+        final int currentWidth = parentEp.getFigure().getSize().width;
+        final int defaultWidth = parentEp.getFigure().getPreferredSize().width;
+        final int withDeltaFromDefault = currentWidth - defaultWidth;
 
-        int currentHeight = parentEp.getFigure().getSize().height;
-        int defaultHeight = parentEp.getFigure().getPreferredSize().height;
-        int heightDeltaFromDefault = currentHeight - defaultHeight;
+        final int currentHeight = parentEp.getFigure().getSize().height;
+        final int defaultHeight = parentEp.getFigure().getPreferredSize().height;
+        final int heightDeltaFromDefault = currentHeight - defaultHeight;
 
         req.setSizeDelta(new Dimension(20 * lineNumber - withDeltaFromDefault, 10 * lineNumber - heightDeltaFromDefault));
         req.setConstrainedResize(true);
@@ -399,46 +380,46 @@ public class FiguresHelper {
 
     }
 
-    public static Color getFeedbackColor(EClass eClass) {
+    public static Color getFeedbackColor(final EClass eClass) {
         if (ProcessPackage.Literals.ACTIVITY.isSuperTypeOf(eClass)) {
-            return ACTIVITY_BLUE;
+            return ColorRegistry.ACTIVITY_BLUE;
         } else if (ProcessPackage.Literals.GATEWAY.isSuperTypeOf(eClass)) {
-            return GATEWAY_DARK_GREEN;
+            return ColorRegistry.GATEWAY_DARK_GREEN;
         } else if (ProcessPackage.Literals.END_EVENT.isSuperTypeOf(eClass)) {
-            return ENDEVENT_DARK_RED;
+            return ColorRegistry.ENDEVENT_DARK_RED;
         } else if (ProcessPackage.Literals.END_ERROR_EVENT.isSuperTypeOf(eClass)) {
-            return ENDEVENT_DARK_RED;
+            return ColorRegistry.ENDEVENT_DARK_RED;
         } else if (ProcessPackage.Literals.END_MESSAGE_EVENT.isSuperTypeOf(eClass)) {
-            return ENDEVENT_DARK_RED;
+            return ColorRegistry.ENDEVENT_DARK_RED;
         } else if (ProcessPackage.Literals.END_SIGNAL_EVENT.isSuperTypeOf(eClass)) {
-            return ENDEVENT_DARK_RED;
+            return ColorRegistry.ENDEVENT_DARK_RED;
         } else if (ProcessPackage.Literals.END_TERMINATED_EVENT.isSuperTypeOf(eClass)) {
-            return ENDEVENT_DARK_RED;
+            return ColorRegistry.ENDEVENT_DARK_RED;
         } else if (ProcessPackage.Literals.START_EVENT.isSuperTypeOf(eClass)) {
-            return STARTEVENT_DARK_GREEN;
+            return ColorRegistry.STARTEVENT_DARK_GREEN;
         } else if (ProcessPackage.Literals.START_ERROR_EVENT.isSuperTypeOf(eClass)) {
-            return STARTEVENT_DARK_GREEN;
+            return ColorRegistry.STARTEVENT_DARK_GREEN;
         } else if (ProcessPackage.Literals.START_TIMER_EVENT.isSuperTypeOf(eClass)) {
-            return STARTEVENT_DARK_GREEN;
+            return ColorRegistry.STARTEVENT_DARK_GREEN;
         } else if (ProcessPackage.Literals.START_MESSAGE_EVENT.isSuperTypeOf(eClass)) {
-            return STARTEVENT_DARK_GREEN;
+            return ColorRegistry.STARTEVENT_DARK_GREEN;
         } else if (ProcessPackage.Literals.START_SIGNAL_EVENT.isSuperTypeOf(eClass)) {
-            return STARTEVENT_DARK_GREEN;
+            return ColorRegistry.STARTEVENT_DARK_GREEN;
         } else if (ProcessPackage.Literals.BOUNDARY_EVENT.isSuperTypeOf(eClass)) {
-            return ACTIVITY_BLUE;
+            return ColorRegistry.ACTIVITY_BLUE;
         } else {
-            return ACTIVITY_BLUE;
+            return ColorRegistry.ACTIVITY_BLUE;
         }
     }
 
-    public static DecoratorSVGFigure getDecoratorFigure(String figurePath) {
-        DecoratorSVGFigure svgFigure = new DecoratorSVGFigure();
+    public static DecoratorSVGFigure getDecoratorFigure(final String figurePath) {
+        final DecoratorSVGFigure svgFigure = new DecoratorSVGFigure();
         svgFigure.setURI("platform:/plugin/org.bonitasoft.studio.pics/icons/decoration/svg/" + figurePath);
         svgFigure.setSize(16, 16);
         return svgFigure;
     }
 
-    public static int getWidthFor(IElementType elementType) {
+    public static int getWidthFor(final IElementType elementType) {
         if (elementType.getId().contains("Event")) {
             return BIG_EVENT_WIDTH;
         } else if (elementType.getId().contains("Gateway")) {
@@ -448,7 +429,7 @@ public class FiguresHelper {
         }
     }
 
-    public static int getHeightFor(IElementType elementType) {
+    public static int getHeightFor(final IElementType elementType) {
         if (elementType.getId().contains("Event")) {
             return BIG_EVENT_WIDTH;
         } else if (elementType.getId().contains("Gateway")) {
@@ -458,23 +439,23 @@ public class FiguresHelper {
         }
     }
 
-    public static PointList CirclePointList(Rectangle anchRect) {
-        PointList points = new PointList(NB_POINTS_DRAW_CIRCLE);
-        double angle = TWO_PI / NB_POINTS_DRAW_CIRCLE;
-        Point center = anchRect.getCenter();
-        int centerX = center.x;
-        int centerY = center.y;
+    public static PointList CirclePointList(final Rectangle anchRect) {
+        final PointList points = new PointList(NB_POINTS_DRAW_CIRCLE);
+        final double angle = TWO_PI / NB_POINTS_DRAW_CIRCLE;
+        final Point center = anchRect.getCenter();
+        final int centerX = center.x;
+        final int centerY = center.y;
 
-        int halfWidth = anchRect.width / 2;
-        int halfHeight = anchRect.height / 2;
+        final int halfWidth = anchRect.width / 2;
+        final int halfHeight = anchRect.height / 2;
 
         double angleT = 0;
         while (angleT < TWO_PI) {
-            points.addPoint((int) ((halfWidth * Math.cos(angleT)) + centerX), (int) ((halfHeight * Math.sin(angleT)) + centerY));
+            points.addPoint((int) (halfWidth * Math.cos(angleT) + centerX), (int) (halfHeight * Math.sin(angleT) + centerY));
             angleT += angle;
         }
         // add last point, the same than the first point
-        points.addPoint((int) ((halfWidth * Math.cos(0)) + centerX), (int) ((halfHeight * Math.sin(0)) + centerY));
+        points.addPoint((int) (halfWidth * Math.cos(0) + centerX), (int) (halfHeight * Math.sin(0) + centerY));
         return points;
     }
 }

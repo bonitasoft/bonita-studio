@@ -42,7 +42,7 @@
       <coolbarItem
             class="org.bonitasoft.studio.form.preview.coolbar.FormPreviewCoolbarItem"
             priority="0"
-            toolbarPosition="13">
+            toolbarPosition="14">
       </coolbarItem>
    </extension>
    <extension
@@ -55,6 +55,16 @@
                icon="icons/preview.png"
                label="%formPreviewLabel"
                style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeWorkbenchWindow">
+                  <test
+                        forcePluginActivation="true"
+                        property="org.bonitasoft.is6XLegacyEnabled">
+                  </test>
+               </with>
+            </visibleWhen>
          </command>
          <separator
                name="org.bonitasoft.studio.form.preview.separator2"

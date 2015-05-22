@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@ package org.bonitasoft.studio.pagedesigner.core;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
-import java.net.BindException;
 import java.net.ServerSocket;
 
 import org.eclipse.jdt.launching.SocketUtil;
@@ -105,25 +104,6 @@ public class WorkspaceResourceServerManagerTest {
     public void should_stop_the_restlet_component() throws Exception {
         workspaceResourceServerManager.stop();
         assertThat(workspaceResourceServerManager.getComponent()).isNull();
-    }
-
-    @Test(expected = BindException.class)
-    public void should_throw_an_exception_if_port_already_in_use() throws Exception {
-        workspaceResourceServerManager.stop();
-        final int port = SocketUtil.findFreePort();
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try (ServerSocket serverSocket = new ServerSocket(port);) {
-                    serverSocket.accept();
-                } catch (final IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-        workspaceResourceServerManager.start(port);
     }
 
     @Test

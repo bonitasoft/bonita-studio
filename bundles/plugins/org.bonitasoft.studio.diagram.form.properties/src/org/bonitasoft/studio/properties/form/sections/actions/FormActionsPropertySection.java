@@ -16,6 +16,7 @@ package org.bonitasoft.studio.properties.form.sections.actions;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.data.provider.DataExpressionNatureProviderForFormOutput;
 import org.bonitasoft.studio.data.provider.DataExpressionProviderForOutput;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
@@ -59,7 +60,10 @@ public class FormActionsPropertySection extends AbstractBonitaDescriptionSection
 
         final OperationsComposite operationsComposite = new PropertyOperationsComposite(getTabbedPropertySheetPage(), mainComposite, actionFilter,
                 storageFilter);
-        operationsComposite.setStorageExpressionNatureContentProvider(new DataExpressionNatureProviderForFormOutput(new DataExpressionProviderForOutput()));
+        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        operationsComposite.setStorageExpressionNatureContentProvider(new DataExpressionNatureProviderForFormOutput(new DataExpressionProviderForOutput(
+                repositoryAccessor)));
         return operationsComposite;
     }
 

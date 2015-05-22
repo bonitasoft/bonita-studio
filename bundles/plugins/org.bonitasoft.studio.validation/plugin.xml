@@ -1012,9 +1012,40 @@
                   {0}
                </message>
                <target
-                     class="Task:http://www.bonitasoft.org/ns/studio/process">
+                     class="ContractConstraint:http://www.bonitasoft.org/ns/studio/process">
                </target>
             </constraint>
+      <constraint
+            class="org.bonitasoft.studio.validation.constraints.process.SequenceFlowContainmentConsitencyConstraint"
+            id="org.bonitasoft.studio.validation.constraints.sequenceflow.consistency"
+            isEnabledByDefault="true"
+            lang="Java"
+            mode="Batch"
+            name="%SequenceFlowConsistencyConstraint"
+            severity="WARNING"
+            statusCode="1">
+         <message>
+            {0}
+         </message>
+         <target
+               class="SequenceFlow:http://www.bonitasoft.org/ns/studio/process">
+         </target>
+      </constraint>
+      <constraint
+            class="org.bonitasoft.studio.validation.constraints.process.DocumentWithContractInputContentConstraint"
+            id="org.bonitasoft.studio.validation.constraints.documentWithContract"
+            lang="java"
+            mode="Batch"
+            name="Document default contract input"
+            severity="WARNING"
+            statusCode="1">
+         <message>
+            {0}
+         </message>
+         <target
+               class="Document:http://www.bonitasoft.org/ns/studio/process">
+         </target>
+      </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">

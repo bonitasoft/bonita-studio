@@ -18,27 +18,24 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * @author Romain Bioteau
  */
-public interface IRepositoryFileStore {
+public interface IRepositoryFileStore extends IDisplayable {
 
     String getName();
 
-    String getDisplayName();
-
-    Image getIcon();
-
-    IRepositoryStore getParentStore();
+    IRepositoryStore<? extends IRepositoryFileStore> getParentStore();
 
     Object getContent() throws ReadFileStoreException;
 
     IResource getResource();
 
     Set<IResource> getRelatedResources();
+
+    Set<IRepositoryFileStore> getRelatedFileStore();
 
     boolean isShared();
 
@@ -61,5 +58,7 @@ public interface IRepositoryFileStore {
     boolean canBeExported();
 
     void export(String targetAbsoluteFilePath) throws IOException;
+
+    byte[] toByteArray() throws IOException;
 
 }

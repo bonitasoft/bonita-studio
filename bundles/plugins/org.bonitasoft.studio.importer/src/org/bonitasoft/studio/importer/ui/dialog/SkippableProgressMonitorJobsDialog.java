@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.importer.ui.dialog;
 
+import org.bonitasoft.studio.importer.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -38,7 +39,7 @@ public class SkippableProgressMonitorJobsDialog extends ProgressMonitorJobsDialo
     @Override
     protected void createDetailsButton(final Composite parent) {
         skipButton = createButton(parent, IDialogConstants.DETAILS_ID,
-                "Skip validation >>",
+                Messages.skipValidation,
                 false);
         skipButton.addSelectionListener(new SelectionAdapter() {
 

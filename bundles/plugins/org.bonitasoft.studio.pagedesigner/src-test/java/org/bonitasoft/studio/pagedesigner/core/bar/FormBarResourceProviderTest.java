@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,13 +21,16 @@ import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
+import org.bonitasoft.engine.bpm.bar.form.model.FormMappingDefinition;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingModel;
 import org.bonitasoft.engine.form.FormMappingTarget;
 import org.bonitasoft.engine.form.FormMappingType;
@@ -120,6 +123,26 @@ public class FormBarResourceProviderTest {
         verify(builder).addExternalResource(taskFormCustomPage);
     }
 
+    @Test
+    public void should_not_add_form_custom_page_if_target_form_is_empty() throws Exception {
+        //When
+        formMappingBarResourceProvider.addResourcesForConfiguration(builder, aPoolWithEmptyFormMappings(), aConfiguration()
+                .build(),
+                Collections.<EObject> emptySet());
+
+        //Then
+        verify(builder, never()).addExternalResource(any(BarResource.class));
+    }
+
+    @Test
+    public void should_create_a_mapping_for_empty_internal_overview() throws Exception {
+        final FormMappingModel formMappingModel = formMappingBarResourceProvider.newFormMappingModel(builder, aPoolWithEmptyOverviewInternalFormMappings());
+
+        assertThat(formMappingModel.getFormMappings()).hasSize(1);
+        assertThat(formMappingModel.getFormMappings().get(0)).isEqualToComparingFieldByField(
+                new FormMappingDefinition("custompage_caseoverview", FormMappingType.PROCESS_OVERVIEW, FormMappingTarget.INTERNAL));
+    }
+
     private Pool aPoolAndTaskWithAllTypeOfFormMappings() {
         return aPool()
                 .withName("Pool1")
@@ -130,6 +153,26 @@ public class FormBarResourceProviderTest {
                 .havingElements(
                         aTask().withName("Step1").havingFormMapping(
                                 aFormMapping().havingTargetForm(anExpression().withName("StepForm").withContent("step-form-id"))))
+                .build();
+    }
+
+    private Pool aPoolWithEmptyFormMappings() {
+        return aPool()
+                .withName("Pool1")
+                .withVersion("1.0")
+                .havingFormMapping(
+                        aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.INTERNAL)
+                                .havingTargetForm(anExpression().withContent("")))
+                .build();
+    }
+
+    private Pool aPoolWithEmptyOverviewInternalFormMappings() {
+        return aPool()
+                .withName("Pool1")
+                .withVersion("1.0")
+                .havingOverviewFormMapping(
+                        aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.INTERNAL)
+                                .havingTargetForm(anExpression().withContent("")))
                 .build();
     }
 

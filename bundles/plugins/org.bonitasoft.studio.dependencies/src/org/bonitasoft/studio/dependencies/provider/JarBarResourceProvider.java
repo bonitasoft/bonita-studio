@@ -24,7 +24,6 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
-import org.bonitasoft.studio.common.extension.BarResourcesProviderUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -35,6 +34,8 @@ import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.emf.ecore.EObject;
+
+import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
@@ -58,7 +59,7 @@ public class JarBarResourceProvider implements BARResourcesProvider {
                         if (jarArtifact != null) {
                             final File file = jarArtifact.getResource().getLocation().toFile();
                             try {
-                                BarResourcesProviderUtil.addFileContents(resources, file);
+                                resources.add(new BarResource(file.getName(), Files.toByteArray(file)));
                             } catch (final Exception e) {
                                 BonitaStudioLog.error(e);
                             }

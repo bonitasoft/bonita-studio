@@ -14,26 +14,27 @@
  */
 package org.bonitasoft.studio.groovy.provider;
 
+import static com.google.common.collect.Iterables.toArray;
+import static com.google.common.io.Files.toByteArray;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
+
+import javax.inject.Inject;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.FragmentTypes;
+import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.jdt.CreateJarOperation;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
@@ -42,17 +43,18 @@ import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.jobs.IJobManager;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jdt.core.ICompilationUnit;
 
 /**
  * @author Romain Bioteau
  */
 public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
+
+    private static final String EXTERNAL_LIB_BAR_LOCATION = BARResourcesProvider.FORMS_FOLDER_IN_BAR + "/lib/";
+
+    @Inject
+    private RepositoryAccessor repositoryAccessor;
 
     /*
      * (non-Javadoc)
@@ -62,117 +64,80 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
     @Override
     public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
             final Set<EObject> exludedObject) throws Exception {
-        final List<BarResource> classpathResources = new ArrayList<BarResource>();
-        final List<BarResource> resources = new ArrayList<BarResource>();
         if (configuration != null) {
-            final IJobManager jobManager = Job.getJobManager();
-            jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
-            addGroovyScriptDependencies(configuration, classpathResources, configuration.getProcessDependencies(), "");
-            addGroovyScriptDependencies(configuration, resources, configuration.getApplicationDependencies(), BARResourcesProvider.FORMS_FOLDER_IN_BAR
-                    + "/lib/");
-            for (final BarResource barResource : resources) {
-                builder.addExternalResource(barResource);
-            }
+            addGroovyScriptDependenciesToClasspath(builder, configuration, configuration.getProcessDependencies());
+            addGroovyScriptDependenciesToExternalLib(builder, configuration, configuration.getApplicationDependencies());
         }
-        final List<File> providedscripts = new ArrayList<File>();
-        final ProvidedGroovyRepositoryStore providedStore = RepositoryManager.getInstance().getRepositoryStore(ProvidedGroovyRepositoryStore.class);
-        for (final IRepositoryFileStore file : providedStore.getChildren()) {
-            final List<IFile> classFiles = ((GroovyFileStore) file).getClassFiles();
-            if (!classFiles.isEmpty()) {
-                for (final IFile classFile : classFiles) {
-                    providedscripts.add(classFile.getLocation().toFile());
-                }
-            }
-        }
-        if (!providedscripts.isEmpty()) {
-            final File jar = new File(providedStore.getResource().getLocation().toFile().getAbsolutePath() + File.separatorChar
-                    + ProvidedGroovyRepositoryStore.EXPORTED_PROVIDED_JAR_NAME);
-            if (jar.exists()) {
-                jar.delete();
-            }
-            jar.createNewFile();
-            final JarOutputStream jo = new JarOutputStream(new FileOutputStream(jar));
-            for (final File entry : providedscripts) {
-                final JarEntry jarEntry = new JarEntry(entry.getName());
-                jo.putNextEntry(jarEntry);
-                final FileInputStream fis = new FileInputStream(entry);
-                final byte[] buf = new byte[1024];
-                int nbBytes;
-                while ((nbBytes = fis.read(buf)) != -1) {
-                    jo.write(buf, 0, nbBytes);
-                }
-                fis.close();
-            }
+        addProvidedScriptsToClasspath(builder);
+    }
 
-            jo.close();
-            addFileContents(classpathResources, jar, "");
-            jar.delete();
+    private void addProvidedScriptsToClasspath(final BusinessArchiveBuilder builder) throws InvocationTargetException, InterruptedException, IOException {
+        final Set<ICompilationUnit> compilationUnits = new HashSet<ICompilationUnit>();
+        final ProvidedGroovyRepositoryStore providedStore = repositoryAccessor.getRepositoryStore(ProvidedGroovyRepositoryStore.class);
+        for (final GroovyFileStore file : providedStore.getChildren()) {
+            compilationUnits.add(file.getCompilationUnit());
         }
-
-        for (final BarResource barResource : classpathResources) {
-            builder.addClasspathResource(barResource);
+        if (!compilationUnits.isEmpty()) {
+            final File targetJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), ProvidedGroovyRepositoryStore.EXPORTED_PROVIDED_JAR_NAME);
+            final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar, toArray(compilationUnits, ICompilationUnit.class));
+            createJarOperation.run(Repository.NULL_PROGRESS_MONITOR);
+            if (createJarOperation.getStatus().isOK()) {
+                builder.addClasspathResource(new BarResource(targetJar.getName(), toByteArray(targetJar)));
+            }
+            targetJar.delete();
         }
     }
 
-    protected void addGroovyScriptDependencies(final Configuration configuration, final List<BarResource> resources, final List<FragmentContainer> containers,
-            final String barPath) throws Exception, IOException, FileNotFoundException {
-        final Set<File> scripts = new HashSet<File>();
-        final GroovyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class);
+    protected void addGroovyScriptDependenciesToClasspath(
+            final BusinessArchiveBuilder builder,
+            final Configuration configuration,
+            final List<FragmentContainer> containers) throws InvocationTargetException, InterruptedException, IOException {
+        final ICompilationUnit[] compilationUnits = collectCompilationUnits(configuration, containers);
+        if (compilationUnits.length > 0) {
+            final File targetJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), GroovyRepositoryStore.EXPORTED_JAR_NAME);
+            final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar, compilationUnits);
+            createJarOperation.run(Repository.NULL_PROGRESS_MONITOR);
+            if (createJarOperation.getStatus().isOK()) {
+                builder.addClasspathResource(new BarResource(targetJar.getName(), toByteArray(targetJar)));
+            }
+            targetJar.delete();
+        }
+    }
+
+    protected void addGroovyScriptDependenciesToExternalLib(
+            final BusinessArchiveBuilder builder,
+            final Configuration configuration,
+            final List<FragmentContainer> containers) throws InvocationTargetException, InterruptedException, IOException {
+        final ICompilationUnit[] compilationUnits = collectCompilationUnits(configuration, containers);
+        if (compilationUnits.length > 0) {
+            final File targetJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), GroovyRepositoryStore.EXPORTED_JAR_NAME);
+            final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar, compilationUnits);
+            createJarOperation.run(Repository.NULL_PROGRESS_MONITOR);
+            if (createJarOperation.getStatus().isOK()) {
+                builder.addExternalResource(new BarResource(EXTERNAL_LIB_BAR_LOCATION + targetJar.getName(), toByteArray(targetJar)));
+            }
+            targetJar.delete();
+        }
+    }
+
+    private ICompilationUnit[] collectCompilationUnits(final Configuration configuration, final List<FragmentContainer> containers) {
+        final Set<ICompilationUnit> result = new HashSet<ICompilationUnit>();
         if (configuration != null) {
+            final GroovyRepositoryStore store = repositoryAccessor.getRepositoryStore(GroovyRepositoryStore.class);
             for (final FragmentContainer fc : containers) {
                 for (final EObject fragment : ModelHelper.getAllItemsOfType(fc, ConfigurationPackage.Literals.FRAGMENT)) {
                     if (((Fragment) fragment).getType().equals(FragmentTypes.GROOVY_SCRIPT)) {
                         if (((Fragment) fragment).isExported()) {
                             final GroovyFileStore file = store.getChild(((Fragment) fragment).getValue());
-                            scripts.add(file.getResource().getLocation().toFile()); //source file
-                            final List<IFile> classFiles = file.getClassFiles();
-                            if (classFiles.isEmpty()) {
-                                throw new Exception("Groovy file " + file.getName() + " has compilation failure and cannot be exported.");
-                            }
-                            for (final IFile classFile : classFiles) {
-                                scripts.add(classFile.getLocation().toFile()); //class file
+                            if (file != null) {
+                                result.add(file.getCompilationUnit());
                             }
                         }
                     }
                 }
             }
         }
-
-        if (!scripts.isEmpty()) {
-            final File jar = new File(store.getResource().getLocation().toFile().getAbsolutePath() + File.separatorChar
-                    + GroovyRepositoryStore.EXPORTED_JAR_NAME);
-            if (jar.exists()) {
-                jar.delete();
-            }
-
-            jar.createNewFile();
-
-            final JarOutputStream jo = new JarOutputStream(new FileOutputStream(jar));
-            for (final File entry : scripts) {
-                final JarEntry jarEntry = new JarEntry(entry.getName());
-                jo.putNextEntry(jarEntry);
-                final FileInputStream fis = new FileInputStream(entry);
-                final byte[] buf = new byte[1024];
-                int nbBytes;
-                while ((nbBytes = fis.read(buf)) != -1) {
-                    jo.write(buf, 0, nbBytes);
-                }
-                fis.close();
-            }
-
-            jo.close();
-            addFileContents(resources, jar, barPath);
-            jar.delete();
-        }
+        return toArray(result, ICompilationUnit.class);
     }
 
-    private void addFileContents(final List<BarResource> resources, final File file, final String barPath) throws FileNotFoundException, IOException {
-        if (file.exists()) {
-            final byte[] jarBytes = new byte[(int) file.length()];
-            final InputStream stream = new FileInputStream(file);
-            stream.read(jarBytes);
-            stream.close();
-            resources.add(new BarResource(barPath + file.getName(), jarBytes));
-        }
-    }
 }

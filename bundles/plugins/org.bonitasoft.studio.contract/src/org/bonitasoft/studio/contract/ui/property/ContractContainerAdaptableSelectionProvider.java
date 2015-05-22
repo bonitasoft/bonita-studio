@@ -14,8 +14,10 @@
  */
 package org.bonitasoft.studio.contract.ui.property;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.selection.EObjectAdaptableSelectionProvider;
 import org.bonitasoft.studio.model.process.ContractContainer;
+import org.bonitasoft.studio.model.process.Lane;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;
@@ -34,7 +36,12 @@ public class ContractContainerAdaptableSelectionProvider extends EObjectAdaptabl
     @Override
     public Object getAdapter(final Class adapter) {
         if (EObject.class.equals(adapter)) {
-            return asContractContainer((EObject) ((IAdaptable) unwrap(selection)).getAdapter(EObject.class));
+            final Object unwrapSelection = unwrap(selection);
+            if (unwrapSelection instanceof IAdaptable) {
+                return asContractContainer((EObject) ((IAdaptable) unwrapSelection).getAdapter(EObject.class));
+            } else if (unwrapSelection instanceof EObject) {
+                return asContractContainer((EObject) unwrapSelection);
+            }
         }
         return null;
     }
@@ -42,6 +49,9 @@ public class ContractContainerAdaptableSelectionProvider extends EObjectAdaptabl
     private static ContractContainer asContractContainer(final EObject semanticElement) {
         if (semanticElement instanceof ContractContainer) {
             return (ContractContainer) semanticElement;
+        }
+        if (semanticElement instanceof Lane) {
+            return ModelHelper.getFirstContainerOfType(semanticElement, ContractContainer.class);
         }
         return null;
     }

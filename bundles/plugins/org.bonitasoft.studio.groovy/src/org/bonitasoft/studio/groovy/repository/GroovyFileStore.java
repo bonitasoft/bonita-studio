@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.groovy.repository;
 
@@ -23,8 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -35,22 +33,24 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class GroovyFileStore extends AbstractFileStore {
 
     private static final String UTF_8 = "UTF-8";
 
-    public GroovyFileStore(String fileName, IRepositoryStore<?> parentStore) {
+    public GroovyFileStore(final String fileName, final IRepositoryStore<?> parentStore) {
         super(fileName, parentStore);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
      */
     @Override
@@ -58,54 +58,61 @@ public class GroovyFileStore extends AbstractFileStore {
         return Pics.getImage(PicsConstants.groovyScript);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
      */
     @Override
     public String getContent() {
-        try{
-            if(getResource().exists()){
-                final FileInputStream fis = (FileInputStream) getResource().getContents() ;
-                byte[] buffer = new byte[fis.available()];
+        try {
+            if (getResource().exists()) {
+                final FileInputStream fis = (FileInputStream) getResource().getContents();
+                final byte[] buffer = new byte[fis.available()];
                 fis.read(buffer);
                 fis.close();
-                return new String(buffer,UTF_8);
+                return new String(buffer, UTF_8);
             }
-        }catch (Exception e) {
-            BonitaStudioLog.error(e) ;
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
         }
-        return "" ;
+        return "";
     }
 
-    /* (non-Javadoc)
+    public ICompilationUnit getCompilationUnit() {
+        return JavaCore.createCompilationUnitFrom(getResource());
+    }
+
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
      */
     @Override
-    protected void doSave(Object content) {
-        if(content instanceof String){
-            if(getResource().exists() && content != null && content.equals(getContent())){
-                return ;
+    protected void doSave(final Object content) {
+        if (content instanceof String) {
+            if (getResource().exists() && content != null && content.equals(getContent())) {
+                return;
             }
-            try{
-                String scriptContent = (String) content ;
-                InputStream is = new ByteArrayInputStream(scriptContent.getBytes(UTF_8));
-                IFile sourceFile = getResource() ;
-                if(sourceFile.exists() && FileActionDialog.overwriteQuestion(getName())){
-                    sourceFile.setContents(is, IResource.FOLDER, Repository.NULL_PROGRESS_MONITOR) ;
-                }else{
-                    sourceFile.create(is, true, Repository.NULL_PROGRESS_MONITOR) ;
+            try {
+                final String scriptContent = (String) content;
+                final InputStream is = new ByteArrayInputStream(scriptContent.getBytes(UTF_8));
+                final IFile sourceFile = getResource();
+                if (sourceFile.exists() && FileActionDialog.overwriteQuestion(getName())) {
+                    sourceFile.setContents(is, IResource.FOLDER, Repository.NULL_PROGRESS_MONITOR);
+                } else {
+                    sourceFile.create(is, true, Repository.NULL_PROGRESS_MONITOR);
                 }
-                if(!UTF_8.equals(sourceFile.getCharset())){
+                if (!UTF_8.equals(sourceFile.getCharset())) {
                     sourceFile.setCharset(UTF_8, Repository.NULL_PROGRESS_MONITOR);
                 }
-            }catch (Exception e) {
-                BonitaStudioLog.error(e) ;
+            } catch (final Exception e) {
+                BonitaStudioLog.error(e);
             }
         }
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doOpen()
      */
     @Override
@@ -113,7 +120,8 @@ public class GroovyFileStore extends AbstractFileStore {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doClose()
      */
     @Override
@@ -122,31 +130,31 @@ public class GroovyFileStore extends AbstractFileStore {
     }
 
     public List<IFile> getClassFiles() {
-        if(getResource().exists()){
-        	List<IFile> res = new ArrayList<IFile>();
-            IProject project = getParentStore().getResource().getProject() ;
-            IFolder binFolder = project.getFolder("bin") ;
-            IFile classFile = binFolder.getFile(getName().replace(".groovy",".class"));
+        if (getResource().exists()) {
+            final List<IFile> res = new ArrayList<IFile>();
+            final IProject project = getParentStore().getResource().getProject();
+            final IFolder binFolder = project.getFolder("bin");
+            final IFile classFile = binFolder.getFile(getName().replace(".groovy", ".class"));
             if (classFile.exists()) {
-            	res.add(classFile);
-            	//Search for closure files
-				try {
-					IResource[] potentialClosureFiles = ((IFolder)classFile.getParent()).members();
-					final String fileNameWithoutEnd = classFile.getName().replaceAll(".class", "");
-					for (IResource potentialClosureFile : potentialClosureFiles) {
-						if(potentialClosureFile instanceof IFile){
-							final String name = potentialClosureFile.getName();
-							int indexOfSuffix = name.indexOf("$");
-							if(indexOfSuffix != -1){						
-								if(name.startsWith(fileNameWithoutEnd) && indexOfSuffix == fileNameWithoutEnd.length()){
-									res.add((IFile) potentialClosureFile);
-								}
-							}
-						}
-					}
-				} catch (CoreException e) {
-					BonitaStudioLog.error(e);
-				}				
+                res.add(classFile);
+                //Search for closure files
+                try {
+                    final IResource[] potentialClosureFiles = ((IFolder) classFile.getParent()).members();
+                    final String fileNameWithoutEnd = classFile.getName().replaceAll(".class", "");
+                    for (final IResource potentialClosureFile : potentialClosureFiles) {
+                        if (potentialClosureFile instanceof IFile) {
+                            final String name = potentialClosureFile.getName();
+                            final int indexOfSuffix = name.indexOf("$");
+                            if (indexOfSuffix != -1) {
+                                if (name.startsWith(fileNameWithoutEnd) && indexOfSuffix == fileNameWithoutEnd.length()) {
+                                    res.add((IFile) potentialClosureFile);
+                                }
+                            }
+                        }
+                    }
+                } catch (final CoreException e) {
+                    BonitaStudioLog.error(e);
+                }
                 return res;
             }
         }

@@ -552,9 +552,18 @@
       </view>
       <view
             category="org.bonitasoft.studio.application.bonita"
-            class="org.bonitasoft.studio.application.views.process.BonitaFormMappingPropertiesView"
-            id="org.bonitasoft.studio.views.properties.process.formMapping"
-            name="Form Mapping"
+            class="org.bonitasoft.studio.application.views.process.BonitaDataPropertiesView"
+            icon="icons/Picto_Studio_Data_16x16.png"
+            id="org.bonitasoft.studio.views.properties.process.data"
+            name="%Data"
+            restorable="true">
+      </view>
+      <view
+            category="org.bonitasoft.studio.application.bonita"
+            class="org.bonitasoft.studio.application.views.process.BonitaExecutionPropertiesView"
+            icon="icons/Picto_Studio_Exe_16x16.png"
+            id="org.bonitasoft.studio.views.properties.process.execution"
+            name="%Execution"
             restorable="true">
       </view>
    </extension>
@@ -927,22 +936,22 @@
       <coolbarItem
             class="org.bonitasoft.studio.application.coolbar.PreferenceCoolbarItem"
             priority="0"
-            toolbarPosition="17">
+            toolbarPosition="18">
       </coolbarItem>
       <coolbarItem
             class="org.bonitasoft.studio.application.coolbar.HelpCoolbarItem"
             priority="0"
-            toolbarPosition="18">
+            toolbarPosition="19">
       </coolbarItem>
       <coolbarItem
             class="org.bonitasoft.studio.application.coolbar.WelcomeCoolbarItem"
             priority="0"
-            toolbarPosition="19">
+            toolbarPosition="20">
       </coolbarItem>
       <coolbarItem
             class="org.bonitasoft.studio.application.coolbar.SeparatorCoolbarItem"
             priority="0"
-            toolbarPosition="14">
+            toolbarPosition="15">
       </coolbarItem>
    </extension>
    <extension

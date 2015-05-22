@@ -166,8 +166,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//ContractInputType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiple" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mandatory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        defaultValueLiteral="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="mapping" eType="#//ContractInputMapping"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputs" upperBound="-1"
@@ -191,6 +189,7 @@
     <eLiterals name="BOOLEAN" value="3"/>
     <eLiterals name="DATE" value="4" literal="DATE"/>
     <eLiterals name="COMPLEX" value="5"/>
+    <eLiterals name="FILE" value="6" literal="FILE"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Connection" eSuperTypes="#//Element simulation.ecore#//SimulationTransition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//TargetElement"
@@ -244,11 +243,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="initialMultipleContent"
         eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiple" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contractInput" eType="#//ContractInput"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="DocumentType">
     <eLiterals name="NONE"/>
     <eLiterals name="INTERNAL" value="1"/>
     <eLiterals name="EXTERNAL" value="2"/>
+    <eLiterals name="CONTRACT" value="3" literal="CONTRACT"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DoubleType" eSuperTypes="#//DataType"/>
   <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true" interface="true">

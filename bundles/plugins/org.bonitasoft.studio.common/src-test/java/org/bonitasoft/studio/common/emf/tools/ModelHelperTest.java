@@ -5,26 +5,31 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.emf.tools;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.BooleanDataTypeBuilder.aBooleanDataType;
+import static org.bonitasoft.studio.model.process.builders.DateDataTypeBuilder.aDateDataType;
+import static org.bonitasoft.studio.model.process.builders.DoubleDataTypeBuilder.aDoubleDataType;
+import static org.bonitasoft.studio.model.process.builders.IntegerDataTypeBuilder.anIntegerDataType;
+import static org.bonitasoft.studio.model.process.builders.JavaDataTypeBuilder.aJavaDataType;
+import static org.bonitasoft.studio.model.process.builders.LongDataTypeBuilder.aLongDataType;
+import static org.bonitasoft.studio.model.process.builders.MainProcessBuilder.aMainProcess;
+import static org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder.aStringDataType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Set;
+import java.util.Date;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
@@ -34,11 +39,18 @@ import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.parameter.ParameterFactory;
 import org.bonitasoft.studio.model.process.Activity;
+import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DateType;
 import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.studio.model.process.DoubleType;
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.IntegerType;
+import org.bonitasoft.studio.model.process.JavaType;
+import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -48,7 +60,6 @@ import org.junit.Test;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ModelHelperTest {
 
@@ -91,7 +102,6 @@ public class ModelHelperTest {
         process.getElements().add(task1);
         process.getElements().add(task2);
 
-
     }
 
     /**
@@ -120,17 +130,17 @@ public class ModelHelperTest {
 
     @Test
     public void shouldGetAccessibleData_ForTask1ReturnProcessDataAndT1Data() throws Exception {
-        assertThat(ModelHelper.getAccessibleData(task1, false)).isNotNull().containsOnly(processData,t1Data);
+        assertThat(ModelHelper.getAccessibleData(task1, false)).isNotNull().containsOnly(processData, t1Data);
     }
 
     @Test
     public void shouldGetAccessibleData_ForWidgetReturnAllAccessibleAndPageflowTransientData() throws Exception {
-        assertThat(ModelHelper.getAccessibleData(textField, true)).isNotNull().containsOnly(processData,t1Data,pageFlowTransientData);
+        assertThat(ModelHelper.getAccessibleData(textField, true)).isNotNull().containsOnly(processData, t1Data, pageFlowTransientData);
     }
 
     @Test
     public void shouldGetAccessibleData_ForWidgetReturnAllAccessibleWithoutPageflowTransientData_IfIncludeTransientDataIsFalse() throws Exception {
-        assertThat(ModelHelper.getAccessibleData(textField, false)).isNotNull().containsOnly(processData,t1Data);
+        assertThat(ModelHelper.getAccessibleData(textField, false)).isNotNull().containsOnly(processData, t1Data);
     }
 
     @Test
@@ -240,7 +250,6 @@ public class ModelHelperTest {
         final EObject container = ModelHelper.getReferencedDataActivityContainer(refData);
         assertEquals(container, activity);
     }
-
 
     @Test
     public void shouldReturnReferencedDataPoolContainer() {
@@ -483,100 +492,51 @@ public class ModelHelperTest {
     }
 
     @Test
-    public void isElementIsReferencedInScriptReturnsExpressionWhenExpressionIsScript() {
-        final Expression expr = ExpressionFactory.eINSTANCE.createExpression();
-        final Data refData = ProcessFactory.eINSTANCE.createData();
-        refData.setName("myData");
-        expr.setType(ExpressionConstants.SCRIPT_TYPE);
-        expr.getReferencedElements().add(refData);
-        final Operation op = ExpressionFactory.eINSTANCE.createOperation();
-        op.setRightOperand(expr);
-
-        final Activity activity = ProcessFactory.eINSTANCE.createActivity();
-        activity.getOperations().add(op);
-        final Data data = ProcessFactory.eINSTANCE.createData();
-        data.setName("myData");
-        final Data anotherData = ProcessFactory.eINSTANCE.createData();
-        anotherData.setName("anotherData");
-
-        activity.getData().add(data);
-        activity.getData().add(anotherData);
-
-        final Set<Expression> exprList = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(activity, data);
-        assertTrue(!exprList.isEmpty());
+    public void should_get_StringType_for_String_classname() throws Exception {
+        final StringType stringDataType = aStringDataType().build();
+        assertThat(ModelHelper.getDataTypeByClassName(aMainProcess().havingDatatypes(stringDataType).build()
+                , String.class.getName())).isEqualTo(stringDataType);
     }
 
     @Test
-    public void isElementIsReferencedInScriptReturnsExpressionWhenExpressionIsCondition() {
-        final Expression expr = ExpressionFactory.eINSTANCE.createExpression();
-        final Data refData = ProcessFactory.eINSTANCE.createData();
-        refData.setName("myData");
-        expr.setType(ExpressionConstants.CONDITION_TYPE);
-        expr.getReferencedElements().add(refData);
-        final Operation op = ExpressionFactory.eINSTANCE.createOperation();
-        op.setRightOperand(expr);
-
-        final Activity activity = ProcessFactory.eINSTANCE.createActivity();
-        activity.getOperations().add(op);
-        final Data data = ProcessFactory.eINSTANCE.createData();
-        data.setName("myData");
-        final Data anotherData = ProcessFactory.eINSTANCE.createData();
-        anotherData.setName("anotherData");
-
-        activity.getData().add(data);
-        activity.getData().add(anotherData);
-
-        final Set<Expression> exprList = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(activity, data);
-        assertTrue(!exprList.isEmpty());
+    public void should_get_BooleanType_for_Boolean_classname() throws Exception {
+        final BooleanType booleanDataType = aBooleanDataType().build();
+        assertThat(ModelHelper.getDataTypeByClassName(aMainProcess().havingDatatypes(booleanDataType).build()
+                , Boolean.class.getName())).isEqualTo(booleanDataType);
     }
 
     @Test
-    public void isElementIsReferencedInScriptReturnsExpressionWhenExpressionIsPattern() {
-        final Expression expr = ExpressionFactory.eINSTANCE.createExpression();
-        final Data refData = ProcessFactory.eINSTANCE.createData();
-        refData.setName("myData");
-        expr.setType(ExpressionConstants.PATTERN_TYPE);
-        expr.getReferencedElements().add(refData);
-        final Operation op = ExpressionFactory.eINSTANCE.createOperation();
-        op.setRightOperand(expr);
-
-        final Activity activity = ProcessFactory.eINSTANCE.createActivity();
-        activity.getOperations().add(op);
-        final Data data = ProcessFactory.eINSTANCE.createData();
-        data.setName("myData");
-        final Data anotherData = ProcessFactory.eINSTANCE.createData();
-        anotherData.setName("anotherData");
-
-        activity.getData().add(data);
-        activity.getData().add(anotherData);
-
-        final Set<Expression> exprList = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(activity, data);
-        assertTrue(!exprList.isEmpty());
+    public void should_get_IntegerType_for_Integer_classname() throws Exception {
+        final IntegerType integerDataType = anIntegerDataType().build();
+        assertThat(ModelHelper.getDataTypeByClassName(aMainProcess().havingDatatypes(integerDataType).build()
+                , Integer.class.getName())).isEqualTo(integerDataType);
     }
 
     @Test
-    public void isElementIsReferencedInScriptReturnsEmptyList() {
-        final Expression expr = ExpressionFactory.eINSTANCE.createExpression();
-        final Data refData = ProcessFactory.eINSTANCE.createData();
-        refData.setName("myData");
-        expr.setType(ExpressionConstants.PATTERN_TYPE);
-        expr.getReferencedElements().add(refData);
-        final Operation op = ExpressionFactory.eINSTANCE.createOperation();
-        op.setRightOperand(expr);
-
-        final Activity activity = ProcessFactory.eINSTANCE.createActivity();
-        activity.getOperations().add(op);
-        final Activity activity1 = ProcessFactory.eINSTANCE.createActivity();
-        final Data data = ProcessFactory.eINSTANCE.createData();
-        data.setName("myData");
-        final Data anotherData = ProcessFactory.eINSTANCE.createData();
-        anotherData.setName("anotherData");
-
-        activity1.getData().add(data);
-        activity1.getData().add(anotherData);
-
-        final Set<Expression> exprList = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(activity1, data);
-        assertTrue(exprList.isEmpty());
+    public void should_get_DoubleType_for_Double_classname() throws Exception {
+        final DoubleType doubleDataType = aDoubleDataType().build();
+        assertThat(ModelHelper.getDataTypeByClassName(aMainProcess().havingDatatypes(doubleDataType).build()
+                , Double.class.getName())).isEqualTo(doubleDataType);
     }
 
+    @Test
+    public void should_get_LongType_for_Long_classname() throws Exception {
+        final LongType longDataType = aLongDataType().build();
+        assertThat(ModelHelper.getDataTypeByClassName(aMainProcess().havingDatatypes(longDataType).build()
+                , Long.class.getName())).isEqualTo(longDataType);
+    }
+
+    @Test
+    public void should_get_DateType_for_Date_classname() throws Exception {
+        final DateType dataDataType = aDateDataType().build();
+        assertThat(ModelHelper.getDataTypeByClassName(aMainProcess().havingDatatypes(dataDataType).build()
+                , Date.class.getName())).isEqualTo(dataDataType);
+    }
+
+    @Test
+    public void should_get_JavaType_for_Other_classname() throws Exception {
+        final JavaType javaDataType = aJavaDataType().build();
+        assertThat(ModelHelper.getDataTypeByClassName(aMainProcess().havingDatatypes(javaDataType).build()
+                , Object.class.getName())).isEqualTo(javaDataType);
+    }
 }

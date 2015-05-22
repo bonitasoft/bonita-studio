@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.tests.document;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -127,7 +129,7 @@ public class TestDocument extends SWTBotGefTestCase {
 
         botAddDocumentDialog = botDocumentsPropertySection.addDocument();
         botAddDocumentDialog.setName("doc1");
-        final boolean errorMessageAlreadyExist = botAddDocumentDialog.isErrorMessageAlreadyExist();
+        final boolean errorMessageAlreadyExist = botAddDocumentDialog.isErrorMessageAlreadyExist("doc1");
         botAddDocumentDialog.setName("");
         final boolean errorMessageNameEmpty = botAddDocumentDialog.isErrorMessageNameEmpty();
         botAddDocumentDialog.setName("doc2");
@@ -150,7 +152,7 @@ public class TestDocument extends SWTBotGefTestCase {
         final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
 
         // Open Dialog
-        assertNoErrorMessage(botAddDocumentDialog);
+        assertThat(botAddDocumentDialog.hasNoValidationError()).isTrue();
         Assertions.assertThat(botAddDocumentDialog.isFinishEnabled()).isFalse();
         Assertions.assertThat(botAddDocumentDialog.isFinishAndAddEnabled()).isFalse();
 
@@ -164,20 +166,23 @@ public class TestDocument extends SWTBotGefTestCase {
 
         // None
         botAddDocumentDialog.chooseNoneInitialContent();
-        assertNoErrorMessage(botAddDocumentDialog, true);
+        assertThat(botAddDocumentDialog.hasNoValidationError()).isTrue();
+        assertThat(botAddDocumentDialog.canFinish()).isTrue();
 
         // External Content
         botAddDocumentDialog.chooseExternalInitialContent();
         assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageUrl());
         botAddDocumentDialog.setURL("http://internet.com/logo.jpg");
-        bot.sleep(500); // wait the 500ms delay
-        assertNoErrorMessage(botAddDocumentDialog, true);
+        bot.sleep(200); // wait the 500ms delay
+        assertThat(botAddDocumentDialog.hasNoValidationError()).isTrue();
+        assertThat(botAddDocumentDialog.canFinish()).isTrue();
 
         // Internal Content
         botAddDocumentDialog.chooseInternalInitialContent();
         assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageFile());
         botAddDocumentDialog.setFile("toto.txt");
-        assertNoErrorMessage(botAddDocumentDialog, true);
+        assertThat(botAddDocumentDialog.hasNoValidationError()).isTrue();
+        assertThat(botAddDocumentDialog.canFinish()).isTrue();
 
         botAddDocumentDialog.finish();
     }
@@ -188,23 +193,7 @@ public class TestDocument extends SWTBotGefTestCase {
         Assertions.assertThat(botAddDocumentDialog.isFinishAndAddEnabled()).isFalse();
     }
 
-    private void assertNoErrorMessage(final BotAddDocumentDialog botAddDocumentDialog) {
-        assertNoErrorMessage(botAddDocumentDialog, false);
-    }
-
-    private void assertNoErrorMessage(final BotAddDocumentDialog botAddDocumentDialog, final boolean checkFinishButtons) {
-        Assertions.assertThat(botAddDocumentDialog.isErrorMessageUrl()).isFalse();
-        Assertions.assertThat(botAddDocumentDialog.isErrorMessageAlreadyExist()).isFalse();
-        Assertions.assertThat(botAddDocumentDialog.isErrorMessageFile()).isFalse();
-        Assertions.assertThat(botAddDocumentDialog.isErrorMessageNameEmpty()).isFalse();
-        if (checkFinishButtons) {
-            Assertions.assertThat(botAddDocumentDialog.isFinishEnabled()).isTrue();
-            Assertions.assertThat(botAddDocumentDialog.isFinishAndAddEnabled()).isTrue();
-        }
-    }
-
     private void assertInitialContentNotEmpty(final BotAddDocumentDialog botAddDocumentDialog) {
-
         Assertions.assertThat(botAddDocumentDialog.isInitialContentEmpty()).isFalse();
     }
 
@@ -213,14 +202,14 @@ public class TestDocument extends SWTBotGefTestCase {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective.getDiagramPropertiesPart();
-        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectGeneralTab().selectDocumentsTab();
+        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab().selectDocumentsTab();
         final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
         botAddDocumentDialog.setName("doc1");
         botAddDocumentDialog.finish();
 
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
 
-        final BotOperationsPropertySection botOperationsPropertySection = botProcessDiagramPropertiesViewFolder.selectGeneralTab().selectOperationTab();
+        final BotOperationsPropertySection botOperationsPropertySection = botProcessDiagramPropertiesViewFolder.selectExecutionTab().selectOperationTab();
         botOperationsPropertySection.addOperation();
         final BotOperationComposite botOperationComposite = botOperationsPropertySection.getOperation(0);
         botOperationComposite.selectLeftOperand("doc1", String.class.getName());
@@ -238,7 +227,7 @@ public class TestDocument extends SWTBotGefTestCase {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective.getDiagramPropertiesPart();
-        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectGeneralTab().selectDocumentsTab();
+        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab().selectDocumentsTab();
         return botDocumentsPropertySection;
     }
 
@@ -256,7 +245,7 @@ public class TestDocument extends SWTBotGefTestCase {
         assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageNameEmpty());
 
         botAddDocumentDialog.setName("newDoc1");
-        assertNoErrorMessage(botAddDocumentDialog);
+        assertThat(botAddDocumentDialog.hasNoValidationError()).isTrue();
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
 
         // INTERNAL
@@ -265,7 +254,7 @@ public class TestDocument extends SWTBotGefTestCase {
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isTrue();
 
         botAddDocumentDialog.chooseMultipleContent();
-        assertNoErrorMessage(botAddDocumentDialog);
+        assertThat(botAddDocumentDialog.hasNoValidationError()).isTrue();
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
 
         botAddDocumentDialog.chooseSingleContent();
@@ -278,7 +267,7 @@ public class TestDocument extends SWTBotGefTestCase {
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isTrue();
 
         botAddDocumentDialog.chooseMultipleContent();
-        assertNoErrorMessage(botAddDocumentDialog);
+        assertThat(botAddDocumentDialog.hasNoValidationError()).isTrue();
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
 
         botAddDocumentDialog.chooseSingleContent();
@@ -297,7 +286,7 @@ public class TestDocument extends SWTBotGefTestCase {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective.getDiagramPropertiesPart();
-        BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectGeneralTab().selectDocumentsTab();
+        BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab().selectDocumentsTab();
 
         final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
         botAddDocumentDialog.setName("doc1");
@@ -336,7 +325,7 @@ public class TestDocument extends SWTBotGefTestCase {
 
         // change name of the document
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Pool");
-        botDocumentsPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDocumentsTab();
+        botDocumentsPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDocumentsTab();
 
         final BotEditDocumentDialog editDocDialog = botDocumentsPropertySection.editDocument("doc1");
         editDocDialog.setName("docEdited");

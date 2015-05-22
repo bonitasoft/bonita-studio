@@ -443,11 +443,13 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/BOOLEAN"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/DATE"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/COMPLEX"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/FILE"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//DocumentType">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/NONE"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/INTERNAL"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/EXTERNAL"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/CONTRACT"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//EntryPageFlowType">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//EntryPageFlowType/PAGEFLOW"/>
@@ -588,7 +590,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/multiple"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/mandatory"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractInput/mapping"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractInput/inputs"/>
     </genClasses>
@@ -633,6 +634,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/documentType"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Document/initialMultipleContent"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/multiple"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Document/contractInput"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//DoubleType"/>
     <genClasses ecoreClass="process.ecore#//Element">

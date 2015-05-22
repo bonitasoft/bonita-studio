@@ -17,13 +17,11 @@ package org.bonitasoft.studio.diagram.custom.repository;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
@@ -44,7 +42,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Romain Bioteau
  */
-public class ApplicationResourceRepositoryStore extends AbstractRepositoryStore<IRepositoryFileStore> {
+public class ApplicationResourceRepositoryStore extends AbstractRepositoryStore<ApplicationResourceFileStore> {
 
     private static final String STORE_NAME = "application_resources";
 
@@ -53,7 +51,7 @@ public class ApplicationResourceRepositoryStore extends AbstractRepositoryStore<
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
      */
     @Override
-    public IRepositoryFileStore createRepositoryFileStore(final String processUUID) {
+    public ApplicationResourceFileStore createRepositoryFileStore(final String processUUID) {
         if (processUUID.contains(".")) {
             return null;
         }
@@ -62,6 +60,11 @@ public class ApplicationResourceRepositoryStore extends AbstractRepositoryStore<
             return null;
         }
         return new ApplicationResourceFileStore(processUUID, this);
+    }
+
+    @Override
+    public boolean canBeExported() {
+        return false;
     }
 
     /*
@@ -91,17 +94,8 @@ public class ApplicationResourceRepositoryStore extends AbstractRepositoryStore<
         return Pics.getImage("resources.gif", Activator.getDefault());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getCompatibleExtensions()
-     */
     @Override
-    public Set<String> getCompatibleExtensions() {
-        return null;
-    }
-
-    @Override
-    public IRepositoryFileStore getChild(final String processUUID) {
+    public ApplicationResourceFileStore getChild(final String processUUID) {
         if (processUUID != null) {
             final IFolder folder = getResource().getFolder(processUUID);
             if (!folder.isSynchronized(IResource.DEPTH_INFINITE) && folder.isAccessible()) {
@@ -119,10 +113,10 @@ public class ApplicationResourceRepositoryStore extends AbstractRepositoryStore<
     }
 
     @Override
-    public List<IRepositoryFileStore> getChildren() {
+    public List<ApplicationResourceFileStore> getChildren() {
         refresh();
 
-        final List<IRepositoryFileStore> result = new ArrayList<IRepositoryFileStore>();
+        final List<ApplicationResourceFileStore> result = new ArrayList<ApplicationResourceFileStore>();
         final IFolder folder = getResource();
         try {
             for (final IResource r : folder.members()) {
@@ -146,7 +140,7 @@ public class ApplicationResourceRepositoryStore extends AbstractRepositoryStore<
     }
 
     @Override
-    protected IRepositoryFileStore doImportIResource(final String fileName, final IResource resource) {
+    protected ApplicationResourceFileStore doImportIResource(final String fileName, final IResource resource) {
         try {
             if (resource instanceof IFile) {
                 return doImportInputStream(fileName, ((IFile) resource).getContents());

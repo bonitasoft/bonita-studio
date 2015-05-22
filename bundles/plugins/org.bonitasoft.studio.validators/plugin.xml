@@ -79,6 +79,16 @@
                   icon="icons/validator-edit.png"
                   style="push">
             </command>
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeWorkbenchWindow">
+                  <test
+                        forcePluginActivation="true"
+                        property="org.bonitasoft.is6XLegacyEnabled">
+                  </test>
+               </with>
+            </visibleWhen>
          </menu>
       </menuContribution>
    </extension>

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,12 @@ import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.ui.property.section.control.FormMappingRadioGroup;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -58,12 +61,23 @@ public class EntryFormMappingPropertySectionTest {
     private EntryFormMappingPropertySection section;
 
     @Mock
+    private RepositoryAccessor repositoryAccessor;
+
+    @Mock
     private IWorkbenchPart part;
+
+    @Mock
+    private WebPageRepositoryStore webPageStore;
+
+    @Mock
+    private IWorkspace workspace;
 
     @Test
     public void should_create_a_FormMappingGroup() throws Exception {
         final Composite parent = realmWithDisplay.createComposite();
         doReturn(new TabbedPropertySheetWidgetFactory()).when(tabbedPropertySheetPage).getWidgetFactory();
+        doReturn(webPageStore).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
+        doReturn(workspace).when(repositoryAccessor).getWorkspace();
 
         section.createContent(parent);
 

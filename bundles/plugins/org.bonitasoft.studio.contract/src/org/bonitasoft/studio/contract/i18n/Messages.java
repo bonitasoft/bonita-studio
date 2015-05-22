@@ -63,5 +63,24 @@ public class Messages extends NLS {
     public static String editContentToConstraint;
     public static String emptyExpressionContent;
     public static String noContractInputReferencedInExpression;
+    public static String nullable;
+    public static String refactorFailedTitle;
+    public static String refactorFailedMsg;
+    public static String removeInputErrorTitle;
+    public static String removeInputErrorMsg;
+    public static String severalCompilationErrors;
+    public static String SelectBusinessDataWizardPageTitle;
+    public static String selectBusinessDataWizardPageDescription;
+    public static String contentAssistHint;
+    public static String generate;
+    public static String contractInputGenerationTitle;
+    public static String rootContractInputName;
+    public static String selectFieldToGenerateTitle;
+    public static String selectFieldToGenerateDescription;
+    public static String inputOfType;
+    public static String inputType;
+    public static String attributetype;
+    public static String atLeastOneAttributeShouldBeSelectedError;
+    public static String attributeName;
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,9 @@ public class Messages extends NLS {
     public static String pool;
     public static String task;
     public static String legacyForm;
+    public static String openUIDesigner;
+    public static String uiDesignerLabel;
+    public static String creatingNewForm;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

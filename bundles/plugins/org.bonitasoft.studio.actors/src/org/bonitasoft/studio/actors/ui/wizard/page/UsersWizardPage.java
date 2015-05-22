@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -1162,7 +1162,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             names.add(u.getUserName());
         }
 
-        return NamingUtils.generateNewName(names, Messages.defaultUserName);
+        return NamingUtils.generateNewName(names, Messages.defaultUserName, 1);
     }
 
     @Override

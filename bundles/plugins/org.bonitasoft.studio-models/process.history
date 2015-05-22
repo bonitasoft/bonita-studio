@@ -9204,12 +9204,12 @@
       </changes>
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Create" target="process.ecore#//ContractInput"
-            referenceName="eStructuralFeatures" element="process.ecore#//ContractInput/mandatory">
-          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/mandatory"
+            referenceName="eStructuralFeatures" element="#//@releases.26/@changes.0/@changes.0/@element">
+          <changes xsi:type="history:Set" element="#//@releases.26/@changes.0/@changes.0/@element"
               featureName="name" dataValue="mandatory"/>
-          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/mandatory"
+          <changes xsi:type="history:Set" element="#//@releases.26/@changes.0/@changes.0/@element"
               featureName="defaultValueLiteral" dataValue="true"/>
-          <changes xsi:type="history:Set" element="process.ecore#//ContractInput/mandatory"
+          <changes xsi:type="history:Set" element="#//@releases.26/@changes.0/@changes.0/@element"
               featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
         </changes>
         <operation name="newAttribute">
@@ -9729,6 +9729,71 @@
           referenceValue="process.ecore#//ContractContainer"/>
     </changes>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.contract.CreatePoolContractCustomMigration"/>
+  </releases>
+  <releases date="2015-04-29T09:36:01.782+0200" label="7.0.0-003">
+    <changes xsi:type="history:Create" target="process.ecore#//ContractInputType"
+        referenceName="eLiterals" element="process.ecore#//ContractInputType/FILE">
+      <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/FILE"
+          featureName="literal" dataValue="FILE"/>
+      <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/FILE"
+          featureName="name" dataValue="FILE"/>
+      <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/FILE"
+          featureName="value" dataValue="6" oldDataValue="0"/>
+    </changes>
+  </releases>
+  <releases date="2015-04-30T14:45:30.530+0200" label="7.0.0-004">
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="process.ecore#//ContractInput" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="mandatory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+            defaultValueLiteral="true"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.26/@changes.0/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+  </releases>
+  <releases date="2015-05-06T15:27:41.594+0200" label="7.0.0-005">
+    <changes xsi:type="history:Create" target="process.ecore#//DocumentType" referenceName="eLiterals"
+        element="process.ecore#//DocumentType/CONTRACT">
+      <changes xsi:type="history:Set" element="process.ecore#//DocumentType/CONTRACT"
+          featureName="literal" dataValue="CONTRACT"/>
+      <changes xsi:type="history:Set" element="process.ecore#//DocumentType/CONTRACT"
+          featureName="value" dataValue="3" oldDataValue="0"/>
+      <changes xsi:type="history:Set" element="process.ecore#//DocumentType/CONTRACT"
+          featureName="name" dataValue="CONTRACT"/>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
+          element="process.ecore#//Document/contractInput">
+        <changes xsi:type="history:Set" element="process.ecore#//Document/contractInput"
+            featureName="name" dataValue="contractInput"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Document/contractInput"
+            featureName="eType" referenceValue="process.ecore#//ContractInput"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//Document"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>contractInput</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="process.ecore#//ContractInput"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>false</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
   </releases>
   <releases/>
 </history:History>

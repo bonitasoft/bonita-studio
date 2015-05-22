@@ -5,7 +5,7 @@ Bundle-Localization: plugin
 Bundle-SymbolicName: org.bonitasoft.studio.contract;singleton:=true
 Bundle-Version: 7.0.0.qualifier
 Bundle-Vendor: Bonitasoft S.A.
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.9.0",
  org.eclipse.ui;bundle-version="3.105.0",
  org.bonitasoft.studio.model;bundle-version="6.4.0",
@@ -46,13 +46,18 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.9.0",
  org.bonitasoft.studio.pagedesigner;bundle-version="7.0.0",
  org.bonitasoft.studio.preferences;bundle-version="7.0.0",
  org.eclipse.e4.core.di.extensions,
- org.eclipse.e4.core.contexts
+ org.eclipse.e4.core.contexts,
+ org.bonitasoft.studio.refactoring,
+ org.bonitasoft.studio.businessobject,
+ org.eclipse.core.databinding.beans
 Bundle-Activator: org.bonitasoft.studio.contract.ContractPlugin
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.contract.core,
  org.bonitasoft.studio.contract.core.validation,
  org.bonitasoft.studio.contract.i18n;x-friends:="org.bonitasoft.studio.swtbot.framework,org.bonitasoft.studio.tests"
-Import-Package: org.bonitasoft.engine.bpm,
+Import-Package: org.bonitasoft.engine.bdm.model,
+ org.bonitasoft.engine.bdm.model.field,
+ org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.contract,
  org.bonitasoft.engine.bpm.contract.impl,
  org.bonitasoft.engine.bpm.process.impl,

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -105,7 +105,7 @@ public class WorkspaceServerResource extends ServerResource {
                 return LockStatus.LOCKED_BY_OTHER.name();
             }
         } catch (final InvocationTargetException | CoreException e) {
-            BonitaStudioLog.error(e);
+            logException("Failed to retrieve lock status", e);
         } catch (final LockStatusOperationNotFound e) {
             return LockStatus.UNLOCKED.name();
         }
@@ -149,6 +149,11 @@ public class WorkspaceServerResource extends ServerResource {
                 response.setStatus(Status.CLIENT_ERROR_LOCKED, cause);
             }
         }
+        logException("WorkspaceServerResource interal error", throwable);
+    }
+
+    protected void logException(final String message, final Throwable throwable) {
+        BonitaStudioLog.error(message, throwable);
     }
 
 }

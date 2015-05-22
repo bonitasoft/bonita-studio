@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.engine.export;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,8 +93,9 @@ public class BarExporter {
 
     public BusinessArchive createBusinessArchive(final AbstractProcess process, final Configuration configuration, final Set<EObject> excludedObject,
             final boolean addProcessImage) throws Exception {
-        BonitaStudioLog.info("Building bar for process " + process.getName() + " (" + process.getVersion() + " )...", EnginePlugin.PLUGIN_ID);
 
+        checkArgument(configuration != null);
+        BonitaStudioLog.info("Building bar for process " + process.getName() + " (" + process.getVersion() + " )...", EnginePlugin.PLUGIN_ID);
         final DesignProcessDefinitionBuilder procBuilder = getProcessDefinitionBuilder();
         procBuilder.seteObjectNotExported(excludedObject);
         final DesignProcessDefinition def = procBuilder.createDefinition(process);
@@ -104,12 +107,10 @@ public class BarExporter {
         final BusinessArchiveBuilder builder = new BusinessArchiveBuilder().createNewBusinessArchive();
         builder.setProcessDefinition(def);
 
-        if (configuration != null) {
-            builder.setParameters(getParameterMapFromConfiguration(configuration));
-            final byte[] content = new ActorMappingExporter().toByteArray(configuration);
-            if (content != null) {
-                builder.setActorMapping(content);
-            }
+        builder.setParameters(getParameterMapFromConfiguration(configuration));
+        final byte[] content = new ActorMappingExporter().toByteArray(configuration);
+        if (content != null) {
+            builder.setActorMapping(content);
         }
 
         for (final BARResourcesProvider resourceProvider : getBARResourcesProvider()) {
@@ -120,7 +121,6 @@ public class BarExporter {
         final BARResourcesProvider provider = getBARApplicationResourcesProvider();
         if (provider != null) {
             provider.addResourcesForConfiguration(builder, process, configuration, excludedObject);
-
         }
 
         if (!(process instanceof SubProcessEvent)) {
@@ -162,13 +162,7 @@ public class BarExporter {
      */
     public BusinessArchive createBusinessArchive(final AbstractProcess process, final String configurationId, final Set<EObject> excludedObject)
             throws Exception {
-        Configuration configuration = null;
-        if (configurationId != null) {
-            configuration = getConfiguration(process, configurationId);
-        } else {
-            //  configuration = getConfiguration(process,)
-        }
-        return createBusinessArchive(process, configuration, excludedObject);
+        return createBusinessArchive(process, getConfiguration(process, configurationId), excludedObject);
     }
 
     public Configuration getConfiguration(final AbstractProcess process, String configurationId) {

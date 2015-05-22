@@ -49,11 +49,8 @@ public class CreateBusinessDataProposalListener implements IDataProposalListener
         while (!(context instanceof Pool)) {
             context = context.eContainer();
         }
-        final BusinessObjectData businessObjectData = ProcessFactory.eINSTANCE.createBusinessObjectData();
-        businessObjectData.setDataType(ModelHelper.getDataTypeForID(context, DataTypeLabels.businessObjectType));
-        businessObjectData.setMultiple(multipleData);
         final BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        final AddBusinessObjectDataWizard newWizard = new AddBusinessObjectDataWizard((DataAware) context, businessObjectData, repositoryStore,
+        final AddBusinessObjectDataWizard newWizard = new AddBusinessObjectDataWizard((DataAware) context, newMultipleBusinessData(context), repositoryStore,
                 TransactionUtil.getEditingDomain(context));
         Shell activeShell = Display
                 .getDefault().getActiveShell();
@@ -72,6 +69,13 @@ public class CreateBusinessDataProposalListener implements IDataProposalListener
             }
         }
         return null;
+    }
+
+    private BusinessObjectData newMultipleBusinessData(final EObject context) {
+        final BusinessObjectData businessObjectData = ProcessFactory.eINSTANCE.createBusinessObjectData();
+        businessObjectData.setDataType(ModelHelper.getDataTypeForID(context, DataTypeLabels.businessObjectType));
+        businessObjectData.setMultiple(multipleData);
+        return businessObjectData;
     }
 
     @Override

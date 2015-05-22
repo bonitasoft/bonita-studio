@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.engine.bpm.contract.FileInputValue;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
@@ -28,6 +29,7 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFacto
 import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory;
 import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.form.Duplicable;
@@ -50,28 +52,12 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @author Romain Bioteau
  */
 public class ExpressionHelperTest {
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
 
     /**
      * Test method for {@link org.bonitasoft.studio.common.emf.tools.ExpressionHelper#createDependencyFromEObject(org.eclipse.emf.ecore.EObject)}.
@@ -153,7 +139,7 @@ public class ExpressionHelperTest {
         widget.setReturnTypeModifier(Integer.class.getName());
 
         final EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
-        assertThat(((Widget)dependencyFromEObject).getReturnTypeModifier()).isEqualTo(Integer.class.getName());
+        assertThat(((Widget) dependencyFromEObject).getReturnTypeModifier()).isEqualTo(Integer.class.getName());
     }
 
     @Test
@@ -162,7 +148,7 @@ public class ExpressionHelperTest {
         ((Duplicable) widget).setDuplicate(true);
 
         final EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
-        assertThat(((Duplicable)dependencyFromEObject).isDuplicate()).isTrue();
+        assertThat(((Duplicable) dependencyFromEObject).isDuplicate()).isTrue();
     }
 
     @Test
@@ -205,6 +191,54 @@ public class ExpressionHelperTest {
         assertThat(expression.getReturnType()).isEqualTo(String.class.getName());
     }
 
+    @Test
+    public void shouldClearExpressionWithEditingDomain_SetEmptyExpressionButKeeptFixedReturnType() throws Exception {
+        final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
+        expression.setName("Toto");
+        expression.setContent("Titi2014");
+        expression.setType(ExpressionConstants.SCRIPT_TYPE);
+        expression.setReturnType(DocumentValue.class.getName());
+        expression.setReturnTypeFixed(true);
+        expression.getReferencedElements().add(ProcessFactory.eINSTANCE.createData());
+
+        final CompoundCommand compoundCommand = ExpressionHelper.clearExpression(expression, new AdapterFactoryEditingDomain(
+                new ExpressionItemProviderAdapterFactory(), new BasicCommandStack()));
+        assertThat(compoundCommand).isNotNull();
+        assertThat(compoundCommand.canExecute()).isTrue();
+
+        compoundCommand.execute();
+
+        assertThat(expression.getName()).isEmpty();
+        assertThat(expression.getContent()).isEmpty();
+        assertThat(expression.getType()).isEqualTo(ExpressionConstants.CONSTANT_TYPE);
+        assertThat(expression.getReferencedElements()).isEmpty();
+        assertThat(expression.getReturnType()).isEqualTo(DocumentValue.class.getName());
+    }
+
+    @Test
+    public void shouldClearExpressionWithEditingDomain_SetEmptyExpressionKeepingConditionType() throws Exception {
+        final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
+        expression.setName("Toto");
+        expression.setContent("Titi2014");
+        expression.setType(ExpressionConstants.CONDITION_TYPE);
+        expression.setReturnType(DocumentValue.class.getName());
+        expression.setReturnTypeFixed(true);
+        expression.getReferencedElements().add(ProcessFactory.eINSTANCE.createData());
+
+        final CompoundCommand compoundCommand = ExpressionHelper.clearExpression(expression, new AdapterFactoryEditingDomain(
+                new ExpressionItemProviderAdapterFactory(), new BasicCommandStack()));
+        assertThat(compoundCommand).isNotNull();
+        assertThat(compoundCommand.canExecute()).isTrue();
+
+        compoundCommand.execute();
+
+        assertThat(expression.getName()).isEmpty();
+        assertThat(expression.getContent()).isEmpty();
+        assertThat(expression.getType()).isEqualTo(ExpressionConstants.CONDITION_TYPE);
+        assertThat(expression.getReferencedElements()).isEmpty();
+        assertThat(expression.getReturnType()).isEqualTo(DocumentValue.class.getName());
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void shouldClearExpression_ThrowIllegalArgumentException() throws Exception {
         ExpressionHelper.clearExpression(null);
@@ -214,10 +248,10 @@ public class ExpressionHelperTest {
     public void shouldCreateEmptyListGroovyScriptExpression_ReturnAValidEmptyListExpression() throws Exception {
         final Expression expression = ExpressionHelper.createEmptyListGroovyScriptExpression();
         assertThat(expression).hasContent("[]").
-        hasInterpreter(ExpressionConstants.GROOVY).
-        hasType(ExpressionConstants.SCRIPT_TYPE).
-        hasName(Messages.emptyListExpressionName).
-        hasReturnType(Collection.class.getName());
+                hasInterpreter(ExpressionConstants.GROOVY).
+                hasType(ExpressionConstants.SCRIPT_TYPE).
+                hasName(Messages.emptyListExpressionName).
+                hasReturnType(Collection.class.getName());
     }
 
     @Test
@@ -347,7 +381,6 @@ public class ExpressionHelperTest {
         assertThat(EcoreUtil.equals(expression, inputExpression)).isTrue();
     }
 
-
     @Test
     public void should_createExpressionFromEObject_Returns_a_ContractInputExpression_if_EObject_is_a_ContractInput() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
@@ -398,10 +431,42 @@ public class ExpressionHelperTest {
     }
 
     @Test
+    public void should_createExpressionFromEObject_Returns_a_ContractInputExpression_of_type_FileInputValue_if_EObject_is_a_FILE_ContractInput()
+            throws Exception {
+        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
+        input.setName("inputName");
+        input.setType(ContractInputType.FILE);
+        final Expression expression = ExpressionHelper.createExpressionFromEObject(input);
+        assertThat(expression).hasContent(input.getName()).
+                hasInterpreter("").
+                hasType(ExpressionConstants.CONTRACT_INPUT_TYPE).
+                hasName(input.getName()).
+                hasReturnType(FileInputValue.class.getName());
+        assertThat(expression.getReferencedElements()).hasSize(1);
+        final EObject refElement = expression.getReferencedElements().get(0);
+        assertThat(EcoreUtil.equals(input, refElement)).isTrue();
+    }
+
+    @Test
     public void returnTypeForInputType_contains_all_ContractInputType() throws Exception {
         for (final ContractInputType type : ContractInputType.values()) {
             assertThat(ExpressionHelper.returnTypeForInputType).containsKey(type);
         }
+    }
+
+    @Test
+    public void should_createOperationFromOutput() {
+        final Output output = ConnectorDefinitionFactory.eINSTANCE.createOutput();
+        output.setName("outputName");
+        output.setType(Integer.class.getName());
+        final Operation createDefaultConnectorOutputOperation = ExpressionHelper.createDefaultConnectorOutputOperation(output);
+        assertThat(createDefaultConnectorOutputOperation.getOperator().getType()).isEqualTo(ExpressionConstants.ASSIGNMENT_OPERATOR);
+        assertThat(createDefaultConnectorOutputOperation.getRightOperand())
+                .hasType(ExpressionConstants.CONNECTOR_OUTPUT_TYPE)
+                .hasReturnType(Integer.class.getName())
+                .hasName("outputName")
+                .hasContent("outputName");
+        assertThat(createDefaultConnectorOutputOperation.getLeftOperand()).isNotNull();
     }
 
 }

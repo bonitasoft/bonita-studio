@@ -22,7 +22,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.views.properties.tabbed.ITabDescriptor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
@@ -33,7 +32,6 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  */
 public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPropertySection {
 
-    private Section section;
     protected Form form;
     private TabbedPropertySheetPage tabbedPropertySheetPage;
 
@@ -49,7 +47,7 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
     public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
         parent.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
-
+        parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         tabbedPropertySheetPage = aTabbedPropertySheetPage;
         final TabbedPropertySheetWidgetFactory widgetFactory = tabbedPropertySheetPage.getWidgetFactory();
         form = widgetFactory.createForm(parent);
@@ -85,8 +83,8 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
     @Override
     public void dispose() {
         super.dispose();
-        if (section != null) {
-            section.dispose();
+        if (form != null) {
+            form.dispose();
         }
     }
 

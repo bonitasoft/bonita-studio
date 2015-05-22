@@ -1,17 +1,29 @@
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.engine.export;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.bonitasoft.engine.expression.ExpressionBuilder;
 import org.bonitasoft.engine.expression.ExpressionType;
+import org.bonitasoft.studio.assertions.EngineExpressionAssert;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.document.core.expression.DocumentReferenceExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
@@ -20,8 +32,8 @@ import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
 import org.eclipse.emf.ecore.EObject;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class EngineExpressionUtilTest {
@@ -47,11 +59,14 @@ public class EngineExpressionUtilTest {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
 
         //then
-        assertEquals(new ExpressionBuilder().createDocumentReferenceExpression("document1"), engineExpression);
+        EngineExpressionAssert.assertThat(engineExpression)
+                .hasName("document1")
+                .hasContent("document1")
+                .hasReturnType(org.bonitasoft.engine.bpm.document.Document.class.getName())
+                .hasExpressionType(ExpressionType.TYPE_DOCUMENT.name());
     }
 
     @Test
-    @Ignore("interpreter null vs empty")
     public void should_createExpression_constant() throws Exception {
         //given
         final Expression studioExpression = createStudioExpression("12", "12", Long.class.getName(), ExpressionConstants.CONSTANT_TYPE);
@@ -60,7 +75,12 @@ public class EngineExpressionUtilTest {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
 
         //then
-        assertEquals(new ExpressionBuilder().createConstantLongExpression(12), engineExpression);
+        EngineExpressionAssert.assertThat(engineExpression)
+                .hasName("12")
+                .hasContent("12")
+                .hasReturnType(Long.class.getName())
+                .hasExpressionType(ExpressionType.TYPE_CONSTANT.name())
+                .hasNoDependencies();
     }
 
     @Test
@@ -72,11 +92,15 @@ public class EngineExpressionUtilTest {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
 
         //then
-        assertEquals(new ExpressionBuilder().createGroovyScriptExpression("myScript", "return 12", Long.class.getName()), engineExpression);
+        EngineExpressionAssert.assertThat(engineExpression)
+                .hasName("myScript")
+                .hasContent("return 12")
+                .hasReturnType(Long.class.getName())
+                .hasExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name())
+                .hasInterpreter(ExpressionConstants.GROOVY);
     }
 
     @Test
-    @Ignore("interpreter null vs empty")
     public void should_createExpression_data() throws Exception {
         //given
 
@@ -86,11 +110,15 @@ public class EngineExpressionUtilTest {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
 
         //then
-        assertEquals(new ExpressionBuilder().createDataExpression("a", String.class.getName()), engineExpression);
+        EngineExpressionAssert.assertThat(engineExpression)
+                .hasName("a")
+                .hasContent("a")
+                .hasReturnType(String.class.getName())
+                .hasExpressionType(ExpressionType.TYPE_VARIABLE.name())
+                .hasNoDependencies();
     }
 
     @Test
-    @Ignore("interpreter null vs empty")
     public void should_createExpression_form_transient_data() throws Exception {
         //given
 
@@ -100,11 +128,15 @@ public class EngineExpressionUtilTest {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
 
         //then
-        assertEquals(new ExpressionBuilder().createInputExpression("a", String.class.getName()), engineExpression);
+        EngineExpressionAssert.assertThat(engineExpression)
+                .hasName("a")
+                .hasContent("a")
+                .hasReturnType(String.class.getName())
+                .hasExpressionType(ExpressionType.TYPE_INPUT.name())
+                .hasNoDependencies();
     }
 
     @Test
-    @Ignore("interpreter null vs empty")
     public void should_createExpression_transient_data() throws Exception {
         //given
 
@@ -114,7 +146,12 @@ public class EngineExpressionUtilTest {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
 
         //then
-        assertEquals(new ExpressionBuilder().createTransientDataExpression("a", String.class.getName()), engineExpression);
+        EngineExpressionAssert.assertThat(engineExpression)
+                .hasName("a")
+                .hasContent("a")
+                .hasReturnType(String.class.getName())
+                .hasExpressionType(ExpressionType.TYPE_TRANSIENT_VARIABLE.name())
+                .hasNoDependencies();
     }
 
     @Test
@@ -129,9 +166,14 @@ public class EngineExpressionUtilTest {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
 
         //then
-        final org.bonitasoft.engine.expression.Expression excpectedExpression = new ExpressionBuilder().createGroovyScriptExpression("myScript",
-                "return myData+'plop'", String.class.getName(), new ExpressionBuilder().createDataExpression("myData", String.class.getName()));
-        assertEquals(excpectedExpression, engineExpression);
+        EngineExpressionAssert.assertThat(engineExpression)
+                .hasName("myScript")
+                .hasContent("return myData+'plop'")
+                .hasReturnType(String.class.getName())
+                .hasExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name())
+                .hasInterpreter(ExpressionConstants.GROOVY);
+        EngineExpressionAssert.assertThat(engineExpression.getDependencies().get(0))
+                .hasName("myData").hasReturnType(String.class.getName()).hasExpressionType(ExpressionType.TYPE_VARIABLE.name());
     }
 
     @Test
@@ -146,9 +188,14 @@ public class EngineExpressionUtilTest {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
 
         //then
-        final org.bonitasoft.engine.expression.Expression excpectedExpression = new ExpressionBuilder().createGroovyScriptExpression("myScript",
-                "return myData+'plop'", String.class.getName(), new ExpressionBuilder().createTransientDataExpression("myData", String.class.getName()));
-        assertEquals(excpectedExpression, engineExpression);
+        EngineExpressionAssert.assertThat(engineExpression)
+                .hasName("myScript")
+                .hasContent("return myData+'plop'")
+                .hasReturnType(String.class.getName())
+                .hasExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name())
+                .hasInterpreter(ExpressionConstants.GROOVY);
+        EngineExpressionAssert.assertThat(engineExpression.getDependencies().get(0))
+                .hasName("myData").hasReturnType(String.class.getName()).hasExpressionType(ExpressionType.TYPE_TRANSIENT_VARIABLE.name());
     }
 
     @Test
@@ -162,9 +209,14 @@ public class EngineExpressionUtilTest {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
 
         //then
-        final org.bonitasoft.engine.expression.Expression excpectedExpression = new ExpressionBuilder().createGroovyScriptExpression("myScript",
-                "return myData+'plop'", String.class.getName(), new ExpressionBuilder().createInputExpression("myData", String.class.getName()));
-        assertEquals(excpectedExpression, engineExpression);
+        EngineExpressionAssert.assertThat(engineExpression)
+                .hasName("myScript")
+                .hasContent("return myData+'plop'")
+                .hasReturnType(String.class.getName())
+                .hasExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name())
+                .hasInterpreter(ExpressionConstants.GROOVY);
+        EngineExpressionAssert.assertThat(engineExpression.getDependencies().get(0))
+                .hasName("myData").hasReturnType(String.class.getName()).hasExpressionType(ExpressionType.TYPE_INPUT.name());
     }
 
     private Data createData(final String name, final boolean isTransient, final String datasource) {
@@ -282,17 +334,17 @@ public class EngineExpressionUtilTest {
     }
 
     @Test
-    public void toEngineExpressionType_returnDocumentListForDocumentReferenceList(){
+    public void toEngineExpressionType_returnDocumentListForDocumentReferenceList() {
         final Document document = ProcessFactory.eINSTANCE.createDocument();
         document.setMultiple(true);
-        final Expression expression= new DocumentReferenceExpressionProvider().createDocRefExpression(document);
+        final Expression expression = ExpressionHelper.createDocumentReferenceExpression(document);
         assertThat(EngineExpressionUtil.toEngineExpressionType(expression)).isEqualTo(ExpressionType.TYPE_DOCUMENT_LIST);
     }
 
     @Test
     public void toEngineExpressionType_returnDocumentListForDocumentReferenceSimple() {
         final Document document = ProcessFactory.eINSTANCE.createDocument();
-        final Expression expression = new DocumentReferenceExpressionProvider().createDocRefExpression(document);
+        final Expression expression = ExpressionHelper.createDocumentReferenceExpression(document);
         assertThat(EngineExpressionUtil.toEngineExpressionType(expression)).isEqualTo(ExpressionType.TYPE_CONSTANT);
     }
 
@@ -368,5 +420,16 @@ public class EngineExpressionUtilTest {
         final List<org.bonitasoft.engine.expression.Expression> dependenciesList = EngineExpressionUtil.createDependenciesList(expression);
 
         assertThat(dependenciesList.get(0).getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT.name());
+    }
+
+    @Test
+    public void testCreateBusinessDataObjectReference() {
+        final BusinessObjectData data = BusinessObjectDataBuilder.aBusinessData().withName("bName").withClassname("my.classname").build();
+
+        final org.bonitasoft.engine.expression.Expression expression = EngineExpressionUtil.createBusinessObjectDataReferenceExpression(data);
+
+        assertThat(expression.getName()).isEqualTo("bName");
+        assertThat(expression.getExpressionType()).isEqualTo(ExpressionType.TYPE_BUSINESS_DATA_REFERENCE.name());
+
     }
 }

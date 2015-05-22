@@ -797,7 +797,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                     final IContentProposal[] newProposals = proposalProvider.getProposals("", 0);
                     setProposals(newProposals);
                     for (int i = 0; i < newProposals.length; i++) {
-                        if (newProposals[i].getContent().equals(newObjectLabel)) {
+                        if (newProposals[i].toString().equals(newObjectLabel)) {
                             proposalAccepted(newProposals[i]);
                             break;
                         }

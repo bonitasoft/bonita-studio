@@ -51,7 +51,7 @@ public class ReadOnlyCheckboxLabelProviderTest extends AbstractSWTTestCase {
 
     @Test
     public void shouldIsSelected_ReturnTrue() throws Exception {
-        final Data data = DataBuilder.aData().havingDataType(BooleanDataTypeBuilder.create()).build();
+        final Data data = DataBuilder.aData().havingDataType(BooleanDataTypeBuilder.aBooleanDataType()).build();
         final WidgetMapping mapping = new WidgetMapping(data);
         mapping.setReadOnly(true);
         assertThat(readOnlyCheckboxLabelProvider.isSelected(mapping)).isTrue();
@@ -59,7 +59,7 @@ public class ReadOnlyCheckboxLabelProviderTest extends AbstractSWTTestCase {
 
     @Test
     public void shouldIsSelected_ReturnFalse() throws Exception {
-        final Data data = DataBuilder.aData().havingDataType(BooleanDataTypeBuilder.create()).build();
+        final Data data = DataBuilder.aData().havingDataType(BooleanDataTypeBuilder.aBooleanDataType()).build();
         final WidgetMapping mapping = new WidgetMapping(data);
         mapping.setReadOnly(false);
         assertThat(readOnlyCheckboxLabelProvider.isSelected(mapping)).isFalse();

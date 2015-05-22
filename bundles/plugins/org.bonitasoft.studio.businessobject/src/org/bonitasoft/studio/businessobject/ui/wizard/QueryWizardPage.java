@@ -435,7 +435,7 @@ public class QueryWizardPage extends WizardPage {
         for (final QueryParameter param : query.getQueryParameters()) {
             existingNames.add(param.getName());
         }
-        return NamingUtils.generateNewName(existingNames, Messages.parameter);
+        return NamingUtils.generateNewName(existingNames, Messages.parameter, 1);
     }
 
     public Query getQuery() {

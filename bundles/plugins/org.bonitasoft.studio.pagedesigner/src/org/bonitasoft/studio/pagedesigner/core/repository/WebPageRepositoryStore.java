@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,25 @@ package org.bonitasoft.studio.pagedesigner.core.repository;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
+import javax.inject.Inject;
+
+import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
+import org.bonitasoft.studio.pagedesigner.core.bos.WebFormBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.edapt.migration.MigrationException;
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
  */
-public class WebPageRepositoryStore extends AbstractRepositoryStore<WebPageFileStore> {
+public class WebPageRepositoryStore extends AbstractFolderRepositoryStore<WebPageFileStore> {
 
     private final static Set<String> extensions = new HashSet<String>();
     public static final String JSON_EXTENSION = "json";
     public static final String WEB_FORM_REPOSITORY_NAME = "web_page";
+
+    @Inject
+    private WebFormBOSArchiveFileStoreProvider filseStoreProvider;
 
     static {
         extensions.add(JSON_EXTENSION);
@@ -49,7 +53,7 @@ public class WebPageRepositoryStore extends AbstractRepositoryStore<WebPageFileS
 
     @Override
     public Image getIcon() {
-        return null;
+        return Pics.getImage("page.png", PageDesignerPlugin.getDefault());
     }
 
     @Override
@@ -59,11 +63,9 @@ public class WebPageRepositoryStore extends AbstractRepositoryStore<WebPageFileS
 
     @Override
     public WebPageFileStore createRepositoryFileStore(final String fileName) {
-        return new WebPageFileStore(fileName, this);
+        final WebPageFileStore webPageFileStore = new WebPageFileStore(fileName, this);
+        webPageFileStore.setWebFormBOSArchiveFileStoreProvider(filseStoreProvider);
+        return webPageFileStore;
     }
 
-    @Override
-    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
-        //NOTHING TO MIGRATE
-    }
 }

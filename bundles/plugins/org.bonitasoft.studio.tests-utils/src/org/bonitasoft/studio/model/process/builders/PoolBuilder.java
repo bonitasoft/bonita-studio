@@ -14,8 +14,12 @@
  */
 package org.bonitasoft.studio.model.process.builders;
 
+import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.parameter.builders.ParameterBuilder;
 import org.bonitasoft.studio.model.process.Connection;
+import org.bonitasoft.studio.model.process.Container;
+import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.Pool;
@@ -85,6 +89,15 @@ public class PoolBuilder extends ElementBuilder<Pool, PoolBuilder> {
         return getThis();
     }
 
+    public PoolBuilder havingDocuments(final Document... documents) {
+        if (documents != null) {
+            for (final Document document : documents) {
+                getBuiltInstance().getDocuments().add(document);
+            }
+        }
+        return getThis();
+    }
+
     public PoolBuilder havingParameters(final ParameterBuilder... parameters) {
         if (parameters != null) {
             for (final ParameterBuilder parameter : parameters) {
@@ -100,6 +113,21 @@ public class PoolBuilder extends ElementBuilder<Pool, PoolBuilder> {
                 getBuiltInstance().getData().add(dataBuilder.build());
             }
         }
+        return getThis();
+    }
+
+    public PoolBuilder havingContract(final ContractBuilder contract) {
+        getBuiltInstance().setContract(contract.build());
+        return getThis();
+    }
+
+    public PoolBuilder havingContract(final Contract contract) {
+        getBuiltInstance().setContract(contract);
+        return getThis();
+    }
+
+    public PoolBuilder in(final Buildable<? extends Container> containerBuildable) {
+        containerBuildable.build().getElements().add(getBuiltInstance());
         return getThis();
     }
 

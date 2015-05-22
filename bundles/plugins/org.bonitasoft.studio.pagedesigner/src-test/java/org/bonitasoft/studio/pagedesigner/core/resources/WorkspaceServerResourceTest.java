@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,10 @@
 package org.bonitasoft.studio.pagedesigner.core.resources;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -74,6 +77,7 @@ public class WorkspaceServerResourceTest {
         doReturn(WorkspaceServerResource.GET_LOCK_STATUS).when(workspaceServerResource).getAttribute("action");
         doReturn("a/file/path").when(workspaceServerResource).getAttribute("filePath");
         doReturn(locakStatusOperation).when(locakStatusOperationFactory).newLockStatusOperation();
+        doNothing().when(workspaceServerResource).logException(anyString(), any(Throwable.class));
     }
 
     @Test
@@ -242,5 +246,14 @@ public class WorkspaceServerResourceTest {
         final String lockStatus = workspaceServerResource.getLockStatus();
 
         assertThat(LockStatus.valueOf(lockStatus)).isEqualTo(LockStatus.UNLOCKED);
+    }
+
+    @Test
+    public void log_catched_throwable() throws Exception {
+        final Throwable throwable = new Throwable();
+
+        workspaceServerResource.doCatch(throwable);
+
+        verify(workspaceServerResource).logException("WorkspaceServerResource interal error", throwable);
     }
 }

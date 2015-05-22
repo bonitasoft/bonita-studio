@@ -25,7 +25,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class BooleanDataTypeBuilder extends DataTypeBuilder<BooleanType, BooleanDataTypeBuilder> {
 
-    public static BooleanDataTypeBuilder create() {
+    public static BooleanDataTypeBuilder aBooleanDataType() {
         return new BooleanDataTypeBuilder();
     }
 

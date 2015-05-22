@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 
 import java.net.URL;
-import java.util.Locale;
 
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -46,6 +45,7 @@ public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
     public void setUp() throws Exception {
         doReturn("localhost").when(preferenceStore).get(CONSOLE_HOST, DEFAULT_HOST);
         doReturn(8080).when(preferenceStore).getInt(CONSOLE_PORT, DEFAULT_PORT);
+        doReturn("en").when(preferenceStore).get(CURRENT_STUDIO_LOCALE, "en");
         pageDesignerURLBuilder = new PageDesignerURLFactory(preferenceStore);
     }
 
@@ -58,25 +58,31 @@ public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
 
     @Test
     public void should_openPageDesignerHome_return_URL_pointing_to_page_builder_webapp() throws Exception {
-        assertThat(pageDesignerURLBuilder.openPageDesignerHome()).isEqualTo(new URL("http://localhost:8080/page-designer"));
+        assertThat(pageDesignerURLBuilder.openPageDesignerHome()).isEqualTo(new URL("http://localhost:8080/designer/#/en"));
     }
 
     @Test
     public void should_openPage_return_URL_pointing_to_page_builder_webapp_on_the_given_page() throws Exception {
         assertThat(pageDesignerURLBuilder.openPage("page-id")).isEqualTo(
-                new URL("http://localhost:8080/page-designer/#/" + Locale.getDefault().getLanguage() + "/pages/page-id"));
+                new URL("http://localhost:8080/designer/#/en/pages/page-id"));
     }
 
     @Test
     public void should_newPage_return_URL_to_post_a_new_page() throws Exception {
         assertThat(pageDesignerURLBuilder.newPage()).isEqualTo(
-                new URL("http://localhost:8080/page-designer/api/rest/pages/"));
+                new URL("http://localhost:8080/designer/api/rest/pages/"));
     }
 
     @Test
-    public void should_exportPage_return_URL_to_that_export_the_page_with_given_id() throws Exception {
+    public void should_exportPage_return_URL_to_export_the_page_with_given_id() throws Exception {
         assertThat(pageDesignerURLBuilder.exportPage("my-page-id")).isEqualTo(
-                new URL("http://localhost:8080/page-designer/api/export/page/my-page-id"));
+                new URL("http://localhost:8080/designer/api/export/page/my-page-id"));
+    }
+
+    @Test
+    public void should_exportPageFromContract_return_URL_to_create_the_page_with_given_name_from_a_contract() throws Exception {
+        assertThat(pageDesignerURLBuilder.newPageFromContract("myPageName")).isEqualTo(
+                new URL("http://localhost:8080/designer/api/rest/pages/contract/myPageName"));
     }
 
 }

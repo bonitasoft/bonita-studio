@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +14,21 @@
  */
 package org.bonitasoft.studio.pagedesigner.core.expression;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.lang.reflect.InvocationTargetException;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.expression.editor.provider.IProposalAdapter;
+import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.pagedesigner.core.operation.CreateFormOperation;
+import org.bonitasoft.studio.pagedesigner.core.operation.CreateFormFromContractOperation;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.e4.core.di.annotations.Creatable;
@@ -36,19 +41,13 @@ import org.eclipse.ui.progress.IProgressService;
 @Creatable
 public class CreateNewFormProposalListener extends IProposalAdapter implements BonitaPreferenceConstants {
 
-    @Inject
-    private IProgressService progressService;
+    private final IProgressService progressService;
+
+    private final PageDesignerURLFactory pageDesignerURLFactory;
+
+    private final RepositoryAccessor repositoryAccessor;
 
     @Inject
-    private PageDesignerURLFactory pageDesignerURLFactory;
-
-    @Inject
-    private RepositoryAccessor repositoryAccessor;
-
-    CreateNewFormProposalListener() {
-
-    }
-
     public CreateNewFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory, final IProgressService progressService,
             final RepositoryAccessor repositoryAccessor) {
         this.progressService = progressService;
@@ -62,11 +61,10 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
      */
     @Override
     public String handleEvent(final EObject context, final String fixedReturnType) {
-        final CreateFormOperation operation = doCreateFormOperation(pageDesignerURLFactory);
         final PageFlow pageFlow = pageFlowFor(context);
-        if (pageFlow != null) {
-            operation.setFormName(pageFlow.getName());
-        }
+        checkState(pageFlow != null);
+        final CreateFormFromContractOperation operation = doCreateFormOperation(pageDesignerURLFactory, "newForm", contractFor(context));
+
         try {
             progressService.busyCursorWhile(operation);
         } catch (InvocationTargetException | InterruptedException e) {
@@ -74,20 +72,28 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
         }
 
         final String newPageId = operation.getNewPageId();
-        repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newPageId + ".json").open();
+        repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newPageId).open();
         return newPageId;
     }
 
     private static PageFlow pageFlowFor(final EObject context) {
-        EObject pageflow = context;
-        while (pageflow != null && !(pageflow instanceof PageFlow)) {
-            pageflow = pageflow.eContainer();
-        }
-        return (PageFlow) pageflow;
+        return ModelHelper.getFirstContainerOfType(context, PageFlow.class);
     }
 
-    protected CreateFormOperation doCreateFormOperation(final PageDesignerURLFactory pageDesignerURLBuilder) {
-        return new CreateFormOperation(pageDesignerURLBuilder);
+    private Contract contractFor(final EObject context) {
+        EObject contractContainer = context;
+        while (contractContainer != null && !(contractContainer instanceof ContractContainer)) {
+            contractContainer = contractContainer.eContainer();
+        }
+        if (contractContainer instanceof ContractContainer) {
+            return ((ContractContainer) contractContainer).getContract();
+        }
+        throw new IllegalStateException("No contract found for context " + context);
+    }
+
+    protected CreateFormFromContractOperation doCreateFormOperation(final PageDesignerURLFactory pageDesignerURLBuilder, final String formName,
+            final Contract contract) {
+        return new CreateFormFromContractOperation(pageDesignerURLBuilder, formName, contract);
     }
 
 }

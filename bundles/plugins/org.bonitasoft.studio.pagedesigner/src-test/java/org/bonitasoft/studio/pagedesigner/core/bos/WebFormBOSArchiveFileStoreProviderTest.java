@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,21 +75,22 @@ public class WebFormBOSArchiveFileStoreProviderTest {
         repositoryAccessor = mock(RepositoryAccessor.class, RETURNS_DEEP_STUBS);
         final WebPageRepositoryStore formRepositoryStore = mock(WebPageRepositoryStore.class);
         doReturn(formRepositoryStore).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
-        when(formRepositoryStore.getChild("process-form-id.json")).thenReturn(processFormFileStore);
-        when(formRepositoryStore.getChild("step-form-id.json")).thenReturn(taskFormFileStore);
+        when(formRepositoryStore.getChild("process-form-id")).thenReturn(processFormFileStore);
+        when(formRepositoryStore.getChild("step-form-id")).thenReturn(taskFormFileStore);
 
         final WebFragmentRepositoryStore fragmentRepositoryStore = mock(WebFragmentRepositoryStore.class);
         doReturn(fragmentRepositoryStore).when(repositoryAccessor).getRepositoryStore(WebFragmentRepositoryStore.class);
-        when(fragmentRepositoryStore.getChild("fragmentDep.json")).thenReturn(fragmentFileStore);
+        when(fragmentRepositoryStore.getChild("fragmentDep")).thenReturn(fragmentFileStore);
 
         final WebWidgetRepositoryStore widgetRepositoryStore = mock(WebWidgetRepositoryStore.class);
         doReturn(widgetRepositoryStore).when(repositoryAccessor).getRepositoryStore(WebWidgetRepositoryStore.class);
         when(widgetRepositoryStore.getChild("customTestWidget")).thenReturn(customWidgetFileStore);
+        when(customWidgetFileStore.canBeExported()).thenReturn(true);
 
         webFormArtifactsFileStoreProvider = spy(new WebFormBOSArchiveFileStoreProvider(repositoryAccessor, null));
         doReturn(newHashSet("resources/widgets/customTestWidget/customTestWidget.json")).when(webFormArtifactsFileStoreProvider)
                 .findFormRelatedEntries(processFormFileStore);
-        doReturn(newHashSet("resources/fragments/fragmentDep.json")).when(webFormArtifactsFileStoreProvider)
+        doReturn(newHashSet("resources/fragments/fragmentDep/fragmentDep.json")).when(webFormArtifactsFileStoreProvider)
                 .findFormRelatedEntries(taskFormFileStore);
 
     }

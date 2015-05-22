@@ -49,8 +49,8 @@ public class TestDatabaseConnectorOutputMode extends SWTBotGefTestCase implement
 	@Test
     public void testPatternExpressionViewer(){
 		SWTBotTestUtil.createNewDiagram(bot);
-		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
+        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES);
         bot.button(Messages.Add).click();
 		SWTBotTestUtil.addNewData(bot, DATA_NAME_1, "Text", false, null);
 		String connectorLabel = getConnectorLabel(JDBC_DB_CONNECTOR_ID);
@@ -67,7 +67,8 @@ public class TestDatabaseConnectorOutputMode extends SWTBotGefTestCase implement
 	private void addDBConnectorWithPatternExpression(String connectorLabel,
 			String connectorVersion, String[] dbCategoryLabel,String connectorName) {
 		//SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorLabel,connectorVersion,dbCategoryLabel, connectorName);
-		SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
+		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION).show();
+		SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_IN);
 		bot.button("Add...").click();
 		bot.text().setText(connectorLabel);
 		bot.table().select(0);

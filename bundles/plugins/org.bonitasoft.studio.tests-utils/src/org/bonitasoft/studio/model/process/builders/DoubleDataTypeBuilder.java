@@ -25,7 +25,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class DoubleDataTypeBuilder extends DataTypeBuilder<DoubleType, DoubleDataTypeBuilder> {
 
-    public static DoubleDataTypeBuilder create() {
+    public static DoubleDataTypeBuilder aDoubleDataType() {
         return new DoubleDataTypeBuilder();
     }
 

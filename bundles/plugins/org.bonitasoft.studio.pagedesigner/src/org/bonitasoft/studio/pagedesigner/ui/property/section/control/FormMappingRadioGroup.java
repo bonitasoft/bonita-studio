@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -114,5 +114,20 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
                 return compositeFor((FormMappingType) mappingType);
             }
         };
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.swt.widgets.Widget#dispose()
+     */
+    @Override
+    public void dispose() {
+        if (pageDesignerMappingComposite != null) {
+            pageDesignerMappingComposite.dispose();
+        }
+        if (urlMappingComposite != null) {
+            urlMappingComposite.dispose();
+        }
+        super.dispose();
     }
 }

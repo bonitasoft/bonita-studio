@@ -14,6 +14,13 @@
  */
 package org.bonitasoft.studio.data.ui.wizard;
 
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -35,13 +42,12 @@ import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IWidgetContribtution;
-import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
+import org.bonitasoft.studio.data.provider.DataExpressionProvider;
 import org.bonitasoft.studio.data.ui.dialog.EnumDataTypeDialog;
 import org.bonitasoft.studio.data.ui.wizard.provider.BooleanExpressionNatureProvider;
 import org.bonitasoft.studio.data.ui.wizard.provider.NowDateExpressionNatureProvider;
@@ -64,6 +70,7 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.JavaType;
+import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -153,6 +160,10 @@ import org.eclipse.wst.xml.ui.internal.wizards.NewXMLGenerator;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDResourceFactoryImpl;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
+
 /**
  * @author Romain Bioteau
  */
@@ -162,11 +173,11 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     private Data data;
 
-    private final EObject container;
+    final EObject container;
 
     private EMFDataBindingContext emfDatabindingContext;
 
-    private final Set<EStructuralFeature> featureToCheckForUniqueID;
+    final Set<EStructuralFeature> featureToCheckForUniqueID;
 
     private final boolean allowXML;
 
@@ -535,77 +546,76 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     }
 
     protected void bindNameAndDescription() {
-        final UpdateValueStrategy nameStrategy = new UpdateValueStrategy();
-        nameStrategy.setAfterGetValidator(new InputLengthValidator(Messages.name, 50));
-        nameStrategy.setBeforeSetValidator(new IValidator() {
-
-            @Override
-            public IStatus validate(final Object value) {
-                /* Search to check at the same level and under */
-                for (final EStructuralFeature featureToCheck : featureToCheckForUniqueID) {
-                    final Object eGet = container.eGet(featureToCheck);
-                    if (eGet instanceof Collection) {
-                        for (final Object object : (List<?>) eGet) {
-                            if (object instanceof Data) {
-                                final Data otherData = (Data) object;
-                                final Data originalData = ((DataWizard) getWizard()).getOriginalData();
-                                if (!otherData.equals(originalData) && value.toString().equalsIgnoreCase(otherData.getName())) {
-                                    return new Status(IStatus.ERROR, DataPlugin.PLUGIN_ID, Messages.dataAlreadyExist);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                /* Search above level */
-                List<Data> allData = null;
-                if (container instanceof AbstractProcess) {
-                    allData = ModelHelper.getAllItemsOfType(ModelHelper.getParentProcess(container), ProcessPackage.Literals.DATA);
-                } else {
-                    // allData = ModelHelper.getAccessibleData(container, true);
-                    allData = getAllAccessibleDatas(container);
-                }
-                for (final Data object : allData) {
-                    if (object instanceof Data && !(object.eContainer() instanceof Expression)) {
-                        final Data otherData = object;
-                        final Data originalData = ((DataWizard) getWizard()).getOriginalData();
-                        if (!otherData.equals(originalData) && value.toString().equalsIgnoreCase(otherData.getName())) {
-                            return new Status(IStatus.ERROR, DataPlugin.PLUGIN_ID, Messages.dataAlreadyExist);
-                        }
-                    }
-                }
-
-                return new GroovyReferenceValidator(Messages.name).validate(value);
-            }
-
-            private List<Data> getAllAccessibleDatas(final EObject container) {
-                final List<Data> allDatas = ModelHelper.getAccessibleData(container, true);
-                for (final Object o : ModelHelper.getAllItemsOfType(container, ProcessPackage.Literals.DATA)) {
-                    if (o instanceof Data && !allDatas.contains(o)) {
-                        allDatas.add((Data) o);
-                    }
-                }
-
-                return allDatas;
-            }
-        });
-
-        final UpdateValueStrategy descTargetToModel = new UpdateValueStrategy();
-        descTargetToModel.setAfterGetValidator(new InputLengthValidator(Messages.dataDescriptionLabel, 255));
         String previousName = null;
         if (nameText != null && !nameText.isDisposed() && nameText.getText() != null) {
             previousName = nameText.getText();
         }
         final ISWTObservableValue observeText = SWTObservables.observeText(nameText, SWT.Modify);
+
         emfDatabindingContext.bindValue(observeText,
-                EMFObservables.observeValue(data, ProcessPackage.Literals.ELEMENT__NAME), nameStrategy, null);
+                EMFObservables.observeValue(data, ProcessPackage.Literals.ELEMENT__NAME), updateValueStrategy().withValidator(multiValidator()
+                        .addValidator(maxLengthValidator(Messages.name, 50))
+                        .addValidator(groovyReferenceValidator(Messages.name).startsWithLowerCase())
+                        .addValidator(new DataNameUnicityValidator(findDataInScope(), ((DataWizard) getWizard()).getOriginalData()))).create(),
+                null);
+
         emfDatabindingContext.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify),
                 EMFObservables.observeValue(data, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),
-                descTargetToModel,
+                updateValueStrategy().withValidator(maxLengthValidator(Messages.dataDescriptionLabel, 255)).create(),
                 null);
         if (previousName != null && !previousName.isEmpty()) {
             observeText.setValue(previousName);
         }
+    }
+
+    private Iterable<Data> findDataInScope() {
+        final Set<Data> dataInScope = new HashSet<Data>();
+        //Data in same scope
+        for (final EStructuralFeature featureToCheck : featureToCheckForUniqueID) {
+            final Object eGet = container.eGet(featureToCheck);
+            if (eGet instanceof Collection) {
+                for (final Object object : (List<?>) eGet) {
+                    if (object instanceof Data) {
+                        dataInScope.add((Data) object);
+                    }
+                }
+            }
+        }
+        dataInScope.addAll(allAboveDataNotContainedInAnExpression(container));
+        return dataInScope;
+    }
+
+    private Set<Data> allAboveDataNotContainedInAnExpression(final EObject container) {
+        final List<Data> allData = ModelHelper.getAllItemsOfType(container, ProcessPackage.Literals.DATA);
+        final Set<Data> allAboveData = Sets.newHashSet(filter(allData,
+                notInAnExpression()));
+        if (!(container instanceof AbstractProcess)) {
+            allAboveData.addAll(ModelHelper.getAccessibleData(container, true));
+        } else {
+            final List<MultiInstantiable> multiInstantiables = ModelHelper.getAllItemsOfType(container, ProcessPackage.Literals.MULTI_INSTANTIABLE);
+            allAboveData.addAll(Sets.newHashSet(transform(multiInstantiables, iteratorExpressionToData())));
+        }
+        return allAboveData;
+    }
+
+    private Function<MultiInstantiable, Data> iteratorExpressionToData() {
+        return new Function<MultiInstantiable, Data>() {
+
+            @Override
+            public Data apply(final MultiInstantiable input) {
+                return DataExpressionProvider.dataFromIteratorExpression(input, input.getIteratorExpression(), ModelHelper.getMainProcess(container));
+            }
+        };
+    }
+
+    private Predicate<Data> notInAnExpression() {
+        return new Predicate<Data>() {
+
+            @Override
+            public boolean apply(final Data input) {
+                return !(input.eContainer() instanceof Expression);
+            }
+        };
     }
 
     protected void bindDataTypeCombo() {
@@ -1347,4 +1357,3 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     }
 }
-

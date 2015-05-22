@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,8 +20,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
-import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputController;
+import org.bonitasoft.studio.fakes.FakeProgressService;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -44,10 +42,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ContractInputTypeEditingSupportTest extends AbstractSWTTestCase {
@@ -71,8 +67,7 @@ public class ContractInputTypeEditingSupportTest extends AbstractSWTTestCase {
     public void setUp() throws Exception {
         parent = createDisplayAndRealm();
         contractInputTypeEditingSupport = new ContractInputTypeEditingSupport(viewer,
-                new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory()), new ContractInputController(
-                        new ContractDefinitionValidator()));
+                new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory()), new ContractInputController(new FakeProgressService()));
     }
 
     /**
@@ -93,8 +88,8 @@ public class ContractInputTypeEditingSupportTest extends AbstractSWTTestCase {
     public void should_initializeCellEditorValue_add_ICellEditorListener() throws Exception {
         viewer = new TableViewer(parent);
         contractInputTypeEditingSupport = new ContractInputTypeEditingSupport(viewer,
-                new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory()), new ContractInputController(
-                        new ContractDefinitionValidator()));
+                new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory()), new ContractInputController(new FakeProgressService()));
+
         when(cell.getElement()).thenReturn(ProcessFactory.eINSTANCE.createContractInput());
         contractInputTypeEditingSupport.initializeCellEditorValue(cellEditor, cell);
         verify(cellEditor).addListener(contractInputTypeEditingSupport);

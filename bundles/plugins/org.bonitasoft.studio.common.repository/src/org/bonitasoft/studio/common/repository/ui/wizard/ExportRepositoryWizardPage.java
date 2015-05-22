@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.repository.ui.wizard;
 
@@ -79,243 +77,241 @@ import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ExportRepositoryWizardPage extends WizardPage {
 
+    public static final String FILE_EXTENSION = "bos";
 
-	public static final String FILE_EXTENSION = "bos";
+    private static final String STORE_DESTINATION_NAMES_ID = "ExportRepositoryWizardPage.STORE_DESTINATION_NAMES_ID";
 
-	private static final String STORE_DESTINATION_NAMES_ID = "ExportRepositoryWizardPage.STORE_DESTINATION_NAMES_ID";
+    private static final int COMBO_HISTORY_LENGTH = 5;
 
-	private static final int COMBO_HISTORY_LENGTH = 5;
+    private String detinationPath;
 
-	private String detinationPath ;
+    private CheckboxRepositoryTreeViewer treeViewer;
+    private final Object input;
+    private final boolean isZip;
 
-	private CheckboxRepositoryTreeViewer treeViewer;
-	private final Object input;
-	private final boolean isZip;
+    private DataBindingContext dbc;
+    private Set<Object> selectedFiles = new HashSet<Object>();
+    private Button destinationBrowseButton;
+    private Combo destinationCombo;
 
-	private DataBindingContext dbc;
-	private Set<Object> selectedFiles = new HashSet<Object>();
-	private Button destinationBrowseButton;
-	private Combo destinationCombo;
+    private WizardPageSupport pageSupport;
 
-	private WizardPageSupport pageSupport;
+    private final String defaultFileName;
+    private ViewerFilter[] filters = {};
 
-	private final String defaultFileName;
-	private ViewerFilter[] filters={};
+    public ExportRepositoryWizardPage(final Object input, final boolean isZip, final String defaultFileName, final String wizardTitle) {
+        super(ExportRepositoryWizardPage.class.getName());
+        this.isZip = isZip;
+        this.defaultFileName = defaultFileName;
+        setTitle(wizardTitle);
+        if (isZip) {
+            setDescription(Messages.exportArtifactsWizard_desc);
+        } else {
+            setDescription(Messages.exportArtifactsWizard_desc_toFile);
+        }
+        this.input = input;
+    }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void createControl(final Composite parent) {
+        dbc = new DataBindingContext();
 
-	public ExportRepositoryWizardPage(final Object input, final boolean isZip, final String defaultFileName ,final String wizardTitle) {
-		super(ExportRepositoryWizardPage.class.getName());
-		this.isZip = isZip;
-		this.defaultFileName = defaultFileName ;
-		setTitle(wizardTitle);
-		if(isZip){
-			setDescription(Messages.exportArtifactsWizard_desc);
-		}else{
-			setDescription(Messages.exportArtifactsWizard_desc_toFile);
-		}
-		this.input = input;
-	}
+        final Composite composite = new Composite(parent, SWT.NONE);
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        composite.setLayout(new GridLayout(3, false));
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public void createControl(final Composite parent) {
-		dbc = new DataBindingContext() ;
+        final Section browseRepoSection = new Section(composite, Section.NO_TITLE_FOCUS_BOX | Section.TWISTIE);
+        browseRepoSection.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        browseRepoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(3, 1).create());
 
-		final  Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		composite.setLayout(new GridLayout(3,false));
+        browseRepoSection.setText(Messages.browseRepository);
+        browseRepoSection.addExpansionListener(new IExpansionListener() {
 
-		final Section browseRepoSection = new Section(composite, Section.NO_TITLE_FOCUS_BOX | Section.TWISTIE);
-		browseRepoSection.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
-		browseRepoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).span(3, 1).create()) ;
+            @Override
+            public void expansionStateChanging(final ExpansionEvent event) {
+            }
 
-		browseRepoSection.setText(Messages.browseRepository) ;
-		browseRepoSection.addExpansionListener(new IExpansionListener() {
+            @Override
+            public void expansionStateChanged(final ExpansionEvent event) {
+                browseRepoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, browseRepoSection.isExpanded()).span(3, 1).create());
+                final Point defaultSize = getShell().getSize();
+                final Point size = getShell().computeSize(SWT.DEFAULT, 500, true);
+                getShell().setSize(defaultSize.x, size.y);
+                getShell().layout(true, true);
 
-			@Override
-			public void expansionStateChanging(final ExpansionEvent event) {}
+            }
+        });
+        browseRepoSection.setExpanded(true);
+        browseRepoSection.setClient(createViewer(browseRepoSection));
+        createDestination(composite);
+        pageSupport = WizardPageSupport.create(this, dbc);
+        setControl(composite);
+    }
 
-			@Override
-			public void expansionStateChanged(final ExpansionEvent event) {
-				browseRepoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true,browseRepoSection.isExpanded()).span(3, 1).create()) ;
-				final Point defaultSize = getShell().getSize() ;
-				final Point size = getShell().computeSize(SWT.DEFAULT, 500, true) ;
-				getShell().setSize(defaultSize.x, size.y) ;
-				getShell().layout(true, true) ;
+    protected Control createViewer(final Composite composite) {
+        final Composite treeComposite = new Composite(composite, SWT.NONE);
+        treeComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        treeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-			}
-		}) ;
-		browseRepoSection.setExpanded(true) ;
-		browseRepoSection.setClient(createViewer(browseRepoSection)) ;
-		createDestination(composite) ;
-		pageSupport = WizardPageSupport.create(this, dbc) ;
-		setControl(composite);
-	}
+        treeViewer = new CheckboxRepositoryTreeViewer(treeComposite, SWT.BORDER | SWT.V_SCROLL);
+        treeViewer.setFilters(filters);
+        treeViewer.setInput(input);
+        treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-	protected Control createViewer(final Composite composite) {
-		final Composite treeComposite = new Composite(composite, SWT.NONE);
-		treeComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-		treeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        final IObservableSet checkedElementsObservable = ViewersObservables.observeCheckedElements(treeViewer, Object.class);
+        final MultiValidator notEmptyValidator = new MultiValidator() {
 
-		treeViewer = new CheckboxRepositoryTreeViewer(treeComposite, SWT.BORDER | SWT.V_SCROLL );
-		treeViewer.setFilters(filters);
-		treeViewer.setInput(input) ;
-		treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+            @Override
+            protected IStatus validate() {
+                if (checkedElementsObservable.isEmpty()) {
+                    return ValidationStatus.error(Messages.selectAtLeastOneArtifact);
+                }
+                return ValidationStatus.ok();
+            }
+        };
 
-		final IObservableSet checkedElementsObservable =  ViewersObservables.observeCheckedElements(treeViewer,Object.class) ;
-		final MultiValidator notEmptyValidator = new MultiValidator() {
-			@Override
-			protected IStatus validate() {
-				if (checkedElementsObservable.isEmpty()) {
-					return ValidationStatus.error(Messages.selectAtLeastOneArtifact);
-				}
-				return ValidationStatus.ok();
-			}
-		}  ;
+        treeViewer.collapseAll();
 
-		treeViewer.collapseAll() ;
+        dbc.addValidationStatusProvider(notEmptyValidator);
+        dbc.bindSet(checkedElementsObservable, PojoObservables.observeSet(this, "selectedFiles"));
 
-		dbc.addValidationStatusProvider(notEmptyValidator);
-		dbc.bindSet(checkedElementsObservable, PojoObservables.observeSet(this, "selectedFiles")) ;
+        final Set<IRepositoryFileStore> selectedChild = getArtifacts();
+        for (final IRepositoryStore<? extends IRepositoryFileStore> store : RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores()) {
+            final List<? extends IRepositoryFileStore> children = store.getChildren();
+            boolean containsAllChildren = !children.isEmpty();
+            int cpt = children.size();
+            int unexportable = 0;
+            for (final IRepositoryFileStore file : children) {
+                if (!file.canBeExported()) {
+                    unexportable++;
+                }
+                if (!contains(selectedChild, file) && file != null && file.canBeExported()) {
+                    cpt--;
+                    containsAllChildren = false;
+                }
+            }
 
-		final Set<IRepositoryFileStore> selectedChild = getArtifacts() ;
-		for(final IRepositoryStore<? extends IRepositoryFileStore> store : RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores()){
-			final List<? extends IRepositoryFileStore> children =  store.getChildren() ;
+            if (containsAllChildren) {
+                treeViewer.setChecked(store, true);
+            } else if (cpt != unexportable && cpt < children.size() && cpt > 0) {
+                treeViewer.setGrayChecked(store, true);
+            }
+        }
 
-			boolean containsAllChildren = !children.isEmpty() ;
-			int cpt = children.size();
-			int unexportable = 0;
-			for(final IRepositoryFileStore file : children){
-				if(!file.canBeExported()){
-					unexportable++;
-				}
-				if(!contains(selectedChild,file) && (file != null && file.canBeExported())){
-					cpt--;
-					containsAllChildren= false;
-				}
-			}
+        createButtonsComposite(treeComposite, checkedElementsObservable);
 
-			if(containsAllChildren){
-				treeViewer.setChecked(store, true) ;
-			}else if(cpt != unexportable && cpt < children.size() && cpt > 0){
-				treeViewer.setGrayChecked(store, true) ;
-			}
-		}
+        return treeComposite;
+    }
 
-		createButtonsComposite(treeComposite, checkedElementsObservable);
+    private void createButtonsComposite(final Composite treeComposite,
+            final IObservableSet checkedElementsObservable) {
+        final Composite buttonsComposite = new Composite(treeComposite, SWT.NONE);
+        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
+        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
 
-		return treeComposite ;
-	}
+        final Button selectAllButton = new Button(buttonsComposite, SWT.FLAT);
+        selectAllButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        selectAllButton.setText(Messages.selectAll);
+        selectAllButton.addSelectionListener(new SelectionAdapter() {
 
-	private void createButtonsComposite(final Composite treeComposite,
-			final IObservableSet checkedElementsObservable) {
-		final Composite buttonsComposite = new Composite(treeComposite, SWT.NONE);
-		buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
-		buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                final ITreeContentProvider provider = (ITreeContentProvider) treeViewer.getContentProvider();
+                checkedElementsObservable.addAll(Arrays.asList(provider.getElements(input)));
+            }
+        });
 
-		final Button selectAllButton = new Button(buttonsComposite, SWT.FLAT);
-		selectAllButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		selectAllButton.setText(Messages.selectAll);
-		selectAllButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				final ITreeContentProvider provider = (ITreeContentProvider) treeViewer.getContentProvider();
-				checkedElementsObservable.addAll(Arrays.asList(provider.getElements(input)));
-			}
-		});
+        final Button deSelectAllButton = new Button(buttonsComposite, SWT.FLAT);
+        deSelectAllButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        deSelectAllButton.setText(Messages.deselectAll);
+        deSelectAllButton.addSelectionListener(new SelectionAdapter() {
 
-		final Button deSelectAllButton = new Button(buttonsComposite, SWT.FLAT);
-		deSelectAllButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		deSelectAllButton.setText(Messages.deselectAll);
-		deSelectAllButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				checkedElementsObservable.clear();
-			}
-		});
-	}
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                checkedElementsObservable.clear();
+            }
+        });
+    }
 
-	private boolean contains(final Set<IRepositoryFileStore> selectedChild, final IRepositoryFileStore file) {
-		for(final IRepositoryFileStore f : selectedChild){
-			if(f.equals(file)){
-				return true ;
-			}
-		}
-		return false;
-	}
+    private boolean contains(final Set<IRepositoryFileStore> selectedChild, final IRepositoryFileStore file) {
+        for (final IRepositoryFileStore f : selectedChild) {
+            if (f.equals(file)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		if(pageSupport != null){
-			pageSupport.dispose() ;
-		}
-		if(dbc != null){
-			dbc.dispose() ;
-		}
-	}
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (pageSupport != null) {
+            pageSupport.dispose();
+        }
+        if (dbc != null) {
+            dbc.dispose();
+        }
+    }
 
+    public Set<IRepositoryFileStore> getArtifacts() {
+        final Set<IRepositoryFileStore> checkedArtifacts = new HashSet<IRepositoryFileStore>();
+        for (final Object element : selectedFiles) {
+            if (element instanceof IRepositoryFileStore) {
+                checkedArtifacts.add((IRepositoryFileStore) element);
+                checkedArtifacts.addAll(((IRepositoryFileStore) element).getRelatedFileStore());
+            }
+        }
+        return checkedArtifacts;
+    }
 
-	public Set<IRepositoryFileStore> getArtifacts() {
-		final Set<IRepositoryFileStore> checkedArtifacts = new HashSet<IRepositoryFileStore>();
-		for (final Object element : treeViewer.getCheckedElements()) {
-			if(element instanceof IRepositoryFileStore){
-				checkedArtifacts.add((IRepositoryFileStore) element);
-			}
-		}
-		return checkedArtifacts ;
-	}
+    public boolean finish() {
+        saveWidgetValues();
 
-
-
-
-	public boolean finish() {
-		saveWidgetValues() ;
-
-		if(isZip){
+        if (isZip) {
             return performFinishForZipExport();
-		}else{
-			return performFinishForNotZipExport();
-		}
-	}
+        } else {
+            return performFinishForNotZipExport();
+        }
+    }
 
     protected boolean performFinishForNotZipExport() {
         try {
-        	getContainer().run(false, false, new IRunnableWithProgress() {
+            getContainer().run(false, false, new IRunnableWithProgress() {
 
-        		@Override
-        		public void run(final IProgressMonitor monitor) throws InvocationTargetException,
-        		InterruptedException {
-        			monitor.beginTask(Messages.exporting, getArtifacts().size()) ;
-        			final File dest = new File(getDetinationPath()) ;
-        			if(!dest.exists()){
-        				dest.mkdirs() ;
-        			}
-        			for(final IRepositoryFileStore file : getArtifacts()){
-        				if(file.getResource() != null && file.getResource().exists()){
-        					try {
-        						file.export(dest.getAbsolutePath()) ;
-        					} catch (final IOException e) {
-        						throw new InvocationTargetException(e);
-        					}
-        					monitor.worked(1) ;
-        				}
-        			}
+                @Override
+                public void run(final IProgressMonitor monitor) throws InvocationTargetException,
+                        InterruptedException {
+                    monitor.beginTask(Messages.exporting, getArtifacts().size());
+                    final File dest = new File(getDetinationPath());
+                    if (!dest.exists()) {
+                        dest.mkdirs();
+                    }
+                    for (final IRepositoryFileStore file : getArtifacts()) {
+                        if (file.getResource() != null && file.getResource().exists()) {
+                            try {
+                                file.export(dest.getAbsolutePath());
+                            } catch (final IOException e) {
+                                throw new InvocationTargetException(e);
+                            }
+                            monitor.worked(1);
+                        }
+                    }
 
-        		}
-        	}) ;
-        } catch (final Exception e){
-        	MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, e.getCause().getMessage());
-        	return false;
+                }
+            });
+        } catch (final Exception e) {
+            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, e.getCause().getMessage());
+            return false;
         }
 
-        return true ;
+        return true;
     }
 
     protected boolean performFinishForZipExport() {
@@ -376,246 +372,240 @@ public class ExportRepositoryWizardPage extends WizardPage {
         for (final IRepositoryFileStore file : getArtifacts()) {
             if (file.getResource() != null && file.getResource().exists()) {
                 resourcesToExport.add(file.getResource());
-            }
-            if (!file.getRelatedResources().isEmpty()) {
                 resourcesToExport.addAll(file.getRelatedResources());
             }
         }
         return resourcesToExport;
     }
 
-	protected void createDestination(final Composite group) {
-		final Label destPath = new Label(group, SWT.NONE) ;
-		destPath.setText(Messages.destinationPath +" *") ;
-		destPath.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
+    protected void createDestination(final Composite group) {
+        final Label destPath = new Label(group, SWT.NONE);
+        destPath.setText(Messages.destinationPath + " *");
+        destPath.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
 
-		// destination name entry field
-		destinationCombo = new Combo(group, SWT.SINGLE | SWT.BORDER);
-		destinationCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).align(SWT.FILL, SWT.CENTER).create());
+        // destination name entry field
+        destinationCombo = new Combo(group, SWT.SINGLE | SWT.BORDER);
+        destinationCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
 
-		restoreWidgetValues() ;
-		final UpdateValueStrategy pathStrategy = new UpdateValueStrategy() ;
-		pathStrategy.setAfterGetValidator(new EmptyInputValidator(Messages.destinationPath)) ;
-		if(isZip){
-			pathStrategy.setBeforeSetValidator(new IValidator() {
+        restoreWidgetValues();
+        final UpdateValueStrategy pathStrategy = new UpdateValueStrategy();
+        pathStrategy.setAfterGetValidator(new EmptyInputValidator(Messages.destinationPath));
+        if (isZip) {
+            pathStrategy.setBeforeSetValidator(new IValidator() {
 
-				@Override
-				public IStatus validate(final Object input) {
-					if(!input.toString().endsWith(".bos") ){
-						return ValidationStatus.error(Messages.invalidFileFormat) ;
-					}
-					if(new File(input.toString()).isDirectory()){
-						return ValidationStatus.error(Messages.invalidFileFormat) ;
-					}
-					return ValidationStatus.ok();
-				}
-			}) ;
-		}else{
-			pathStrategy.setBeforeSetValidator(new IValidator() {
+                @Override
+                public IStatus validate(final Object input) {
+                    if (!input.toString().endsWith(".bos")) {
+                        return ValidationStatus.error(Messages.invalidFileFormat);
+                    }
+                    if (new File(input.toString()).isDirectory()) {
+                        return ValidationStatus.error(Messages.invalidFileFormat);
+                    }
+                    return ValidationStatus.ok();
+                }
+            });
+        } else {
+            pathStrategy.setBeforeSetValidator(new IValidator() {
 
-				@Override
-				public IStatus validate(final Object input) {
-					if(!new File(input.toString()).isDirectory()){
-						return ValidationStatus.error(Messages.destinationPathMustBeADirectory) ;
-					}
-					return ValidationStatus.ok();
-				}
-			}) ;
-		}
+                @Override
+                public IStatus validate(final Object input) {
+                    if (!new File(input.toString()).isDirectory()) {
+                        return ValidationStatus.error(Messages.destinationPathMustBeADirectory);
+                    }
+                    return ValidationStatus.ok();
+                }
+            });
+        }
 
+        dbc.bindValue(SWTObservables.observeText(destinationCombo), PojoProperties.value(ExportRepositoryWizardPage.class, "detinationPath").observe(this),
+                pathStrategy, null);
 
-		dbc.bindValue(SWTObservables.observeText(destinationCombo), PojoProperties.value(ExportRepositoryWizardPage.class, "detinationPath").observe(this),pathStrategy,null) ;
+        // destination browse button
+        destinationBrowseButton = new Button(group, SWT.PUSH);
+        destinationBrowseButton.setText(Messages.browse);
+        destinationBrowseButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create());
 
+        destinationBrowseButton.addSelectionListener(new SelectionAdapter() {
 
-		// destination browse button
-		destinationBrowseButton= new Button(group, SWT.PUSH);
-		destinationBrowseButton.setText(Messages.browse);
-		destinationBrowseButton.setLayoutData(GridDataFactory.fillDefaults().hint(85,SWT.DEFAULT).create());
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                handleDestinationBrowseButtonPressed();
+            }
+        });
+    }
 
-		destinationBrowseButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				handleDestinationBrowseButtonPressed();
-			}
-		});
-	}
+    /**
+     * Open an appropriate destination browser so that the user can specify a source
+     * to import from
+     */
+    protected void handleDestinationBrowseButtonPressed() {
+        if (isZip) {
+            final FileDialog dialog = new FileDialog(getContainer().getShell(), SWT.SAVE | SWT.SHEET);
+            // dialog.setFilterExtensions(new String[] { "*.bar" }); //$NON-NLS-1$
+            dialog.setText(Messages.selectDestinationTitle);
+            final String currentSourceString = getDetinationPath();
+            final int lastSeparatorIndex = currentSourceString.lastIndexOf(File.separator);
+            if (lastSeparatorIndex != -1) {
+                dialog.setFilterPath(currentSourceString.substring(0,
+                        lastSeparatorIndex));
+                final File f = new File(currentSourceString);
+                if (!f.isDirectory()) {
+                    dialog.setFileName(f.getName());
+                }
 
+                dialog.setFilterExtensions(new String[] { "*." + FILE_EXTENSION });
+            }
+            final String selectedFileName = dialog.open();
 
-	/**
-	 *  Open an appropriate destination browser so that the user can specify a source
-	 *  to import from
-	 */
-	protected void handleDestinationBrowseButtonPressed() {
-		if(isZip){
-			final FileDialog dialog = new FileDialog(getContainer().getShell(), SWT.SAVE | SWT.SHEET);
-			// dialog.setFilterExtensions(new String[] { "*.bar" }); //$NON-NLS-1$
-			dialog.setText(Messages.selectDestinationTitle);
-			final String currentSourceString = getDetinationPath();
-			final int lastSeparatorIndex = currentSourceString.lastIndexOf(File.separator);
-			if (lastSeparatorIndex != -1) {
-				dialog.setFilterPath(currentSourceString.substring(0,
-						lastSeparatorIndex));
-				final File f = new File(currentSourceString) ;
-				if(!f.isDirectory()){
-					dialog.setFileName(f.getName()) ;
-				}
+            if (selectedFileName != null) {
+                destinationCombo.setText(selectedFileName);
+            }
+        } else {
+            final DirectoryDialog dialog = new DirectoryDialog(getContainer().getShell(), SWT.SAVE | SWT.SHEET);
+            // dialog.setFilterExtensions(new String[] { "*.bar" }); //$NON-NLS-1$
+            dialog.setText(Messages.selectDestinationTitle);
+            final String currentSourceString = getDetinationPath();
+            final int lastSeparatorIndex = currentSourceString.lastIndexOf(File.separator);
+            if (lastSeparatorIndex != -1) {
+                dialog.setFilterPath(currentSourceString.substring(0,
+                        lastSeparatorIndex));
+            }
+            final String selectedFileName = dialog.open();
 
-				dialog.setFilterExtensions(new String[]{"*."+FILE_EXTENSION}) ;
-			}
-			final String selectedFileName = dialog.open();
+            if (selectedFileName != null) {
+                destinationCombo.setText(selectedFileName);
+            }
+        }
 
-			if (selectedFileName != null) {
-				destinationCombo.setText(selectedFileName);
-			}
-		}else{
-			final DirectoryDialog dialog = new DirectoryDialog(getContainer().getShell(), SWT.SAVE | SWT.SHEET);
-			// dialog.setFilterExtensions(new String[] { "*.bar" }); //$NON-NLS-1$
-			dialog.setText(Messages.selectDestinationTitle);
-			final String currentSourceString = getDetinationPath();
-			final int lastSeparatorIndex = currentSourceString.lastIndexOf(File.separator);
-			if (lastSeparatorIndex != -1) {
-				dialog.setFilterPath(currentSourceString.substring(0,
-						lastSeparatorIndex));
-			}
-			final String selectedFileName = dialog.open();
+    }
 
-			if (selectedFileName != null) {
-				destinationCombo.setText(selectedFileName);
-			}
-		}
+    /**
+     * Hook method for restoring widget values to the values that they held
+     * last time this wizard was used to completion.
+     */
+    protected void restoreWidgetValues() {
+        final IDialogSettings settings = getDialogSettings();
+        if (settings != null) {
+            final String[] directoryNames = settings
+                    .getArray(STORE_DESTINATION_NAMES_ID);
+            if (directoryNames == null || directoryNames.length == 0) {
+                String path = System.getProperty("user.home");
+                if (defaultFileName != null && isZip) {
+                    path = path + File.separator + defaultFileName;
+                }
+                setDetinationPath(path);
+                return; // ie.- no settings stored
+            }
 
-	}
+            // destination
 
+            String oldPath = directoryNames[0];
+            if (defaultFileName != null && isZip) {
+                final File f = new File(oldPath);
+                if (f.isFile()) {
+                    oldPath = f.getParentFile().getAbsolutePath() + File.separator + defaultFileName;
+                } else {
+                    oldPath = oldPath + File.separator + defaultFileName;
+                }
 
-	/**
-	 *  Hook method for restoring widget values to the values that they held
-	 *  last time this wizard was used to completion.
-	 */
-	protected void restoreWidgetValues() {
-		final IDialogSettings settings = getDialogSettings();
-		if (settings != null) {
-			final String[] directoryNames = settings
-					.getArray(STORE_DESTINATION_NAMES_ID);
-			if (directoryNames == null || directoryNames.length == 0) {
-				String path = System.getProperty("user.home") ;
-				if(defaultFileName != null && isZip){
-					path =  path + File.separator + defaultFileName ;
-				}
-				setDetinationPath(path);
-				return; // ie.- no settings stored
-			}
+            } else if (!isZip) {
+                final File f = new File(oldPath);
+                if (f.isFile()) {
+                    oldPath = f.getParentFile().getAbsolutePath();
+                }
+            }
+            setDetinationPath(oldPath);
+            for (int i = 0; i < directoryNames.length; i++) {
+                addDestinationItem(directoryNames[i]);
+            }
+        }
+    }
 
-			// destination
+    public void setViewerFilter(final ViewerFilter[] filters) {
+        this.filters = filters;
+    }
 
-			String oldPath = directoryNames[0] ;
-			if(defaultFileName != null && isZip){
-				final File f =  new File(oldPath) ;
-				if(f.isFile()){
-					oldPath =  f.getParentFile().getAbsolutePath() + File.separator + defaultFileName ;
-				}else{
-					oldPath =  oldPath + File.separator + defaultFileName ;
-				}
+    /**
+     * Hook method for saving widget values for restoration by the next instance
+     * of this class.
+     */
+    protected void saveWidgetValues() {
+        // update directory names history
+        final IDialogSettings settings = getDialogSettings();
+        if (settings != null) {
+            String[] directoryNames = settings
+                    .getArray(STORE_DESTINATION_NAMES_ID);
+            if (directoryNames == null) {
+                directoryNames = new String[0];
+            }
 
-			}else if(!isZip){
-				final File f =  new File(oldPath) ;
-				if(f.isFile()){
-					oldPath =  f.getParentFile().getAbsolutePath()  ;
-				}
-			}
-			setDetinationPath(oldPath);
-			for (int i = 0; i < directoryNames.length; i++) {
-				addDestinationItem(directoryNames[i]);
-			}
-		}
-	}
+            String dest = getDetinationPath();
+            if (dest.endsWith(".bos")) {
+                dest = new File(dest).getParentFile().getAbsolutePath();
+            }
+            directoryNames = addToHistory(directoryNames, dest);
+            settings.put(STORE_DESTINATION_NAMES_ID, directoryNames);
+        }
+    }
 
-	public void setViewerFilter(final ViewerFilter[] filters){
-		this.filters = filters;
-	}
+    /**
+     * Adds an entry to a history, while taking care of duplicate history items
+     * and excessively long histories. The assumption is made that all histories
+     * should be of length <code>WizardDataTransferPage.COMBO_HISTORY_LENGTH</code>.
+     *
+     * @param history the current history
+     * @param newEntry the entry to add to the history
+     */
+    protected String[] addToHistory(final String[] history, final String newEntry) {
+        final java.util.ArrayList l = new java.util.ArrayList(Arrays.asList(history));
+        addToHistory(l, newEntry);
+        final String[] r = new String[l.size()];
+        l.toArray(r);
+        return r;
+    }
 
-	/**
-	 *  Hook method for saving widget values for restoration by the next instance
-	 *  of this class.
-	 */
-	protected void saveWidgetValues() {
-		// update directory names history
-		final IDialogSettings settings = getDialogSettings();
-		if (settings != null) {
-			String[] directoryNames = settings
-					.getArray(STORE_DESTINATION_NAMES_ID);
-			if (directoryNames == null) {
-				directoryNames = new String[0];
-			}
+    /**
+     * Adds an entry to a history, while taking care of duplicate history items
+     * and excessively long histories. The assumption is made that all histories
+     * should be of length <code>WizardDataTransferPage.COMBO_HISTORY_LENGTH</code>.
+     *
+     * @param history the current history
+     * @param newEntry the entry to add to the history
+     */
+    protected void addToHistory(final List history, final String newEntry) {
+        history.remove(newEntry);
+        history.add(0, newEntry);
 
-			String dest = getDetinationPath();
-			if(dest.endsWith(".bos")){
-				dest = new File(dest).getParentFile().getAbsolutePath();
-			}
-			directoryNames = addToHistory(directoryNames,dest);
-			settings.put(STORE_DESTINATION_NAMES_ID, directoryNames);
-		}
-	}
+        // since only one new item was added, we can be over the limit
+        // by at most one item
+        if (history.size() > COMBO_HISTORY_LENGTH) {
+            history.remove(COMBO_HISTORY_LENGTH);
+        }
+    }
 
-	/**
-	 * Adds an entry to a history, while taking care of duplicate history items
-	 * and excessively long histories.  The assumption is made that all histories
-	 * should be of length <code>WizardDataTransferPage.COMBO_HISTORY_LENGTH</code>.
-	 *
-	 * @param history the current history
-	 * @param newEntry the entry to add to the history
-	 */
-	protected String[] addToHistory(final String[] history, final String newEntry) {
-		final java.util.ArrayList l = new java.util.ArrayList(Arrays.asList(history));
-		addToHistory(l, newEntry);
-		final String[] r = new String[l.size()];
-		l.toArray(r);
-		return r;
-	}
+    /**
+     * Add the passed value to self's destination widget's history
+     *
+     * @param value java.lang.String
+     */
+    protected void addDestinationItem(final String value) {
+        destinationCombo.add(value);
+    }
 
-	/**
-	 * Adds an entry to a history, while taking care of duplicate history items
-	 * and excessively long histories.  The assumption is made that all histories
-	 * should be of length <code>WizardDataTransferPage.COMBO_HISTORY_LENGTH</code>.
-	 *
-	 * @param history the current history
-	 * @param newEntry the entry to add to the history
-	 */
-	protected void addToHistory(final List history, final String newEntry) {
-		history.remove(newEntry);
-		history.add(0, newEntry);
+    public String getDetinationPath() {
+        return detinationPath;
+    }
 
-		// since only one new item was added, we can be over the limit
-		// by at most one item
-		if (history.size() > COMBO_HISTORY_LENGTH) {
-			history.remove(COMBO_HISTORY_LENGTH);
-		}
-	}
+    public void setDetinationPath(final String detinationPath) {
+        this.detinationPath = detinationPath;
+    }
 
+    public Set<Object> getSelectedFiles() {
+        return selectedFiles;
+    }
 
-	/**
-	 *  Add the passed value to self's destination widget's history
-	 *
-	 *  @param value java.lang.String
-	 */
-	protected void addDestinationItem(final String value) {
-		destinationCombo.add(value);
-	}
-
-	public String getDetinationPath() {
-		return detinationPath;
-	}
-
-	public void setDetinationPath(final String detinationPath) {
-		this.detinationPath = detinationPath;
-	}
-
-	public Set<Object> getSelectedFiles() {
-		return selectedFiles;
-	}
-
-	public void setSelectedFiles(final Set<Object> selectedFiles) {
-		this.selectedFiles = selectedFiles;
-	}
-
+    public void setSelectedFiles(final Set<Object> selectedFiles) {
+        this.selectedFiles = selectedFiles;
+    }
 
 }

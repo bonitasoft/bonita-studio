@@ -26,6 +26,7 @@ public abstract class FinishAndAddCustomWizardDialog extends CustomWizardDialog 
 
     private static final int CREATE_AND_NEW_ID = 1245;
     private Button finishAndNewButton;
+
     protected boolean withFinishAndAddButton = false;
 
     public FinishAndAddCustomWizardDialog(final Shell parentShell, final IWizard newWizard, final boolean withFinishAndAddButton) {
@@ -36,6 +37,7 @@ public abstract class FinishAndAddCustomWizardDialog extends CustomWizardDialog 
     public FinishAndAddCustomWizardDialog(final Shell parentShell, final IWizard newWizard, final String finishLabel) {
         super(parentShell, newWizard, finishLabel);
     }
+
     @Override
     protected void createButtonsForButtonBar(final Composite parent) {
         super.createButtonsForButtonBar(parent);
@@ -48,7 +50,7 @@ public abstract class FinishAndAddCustomWizardDialog extends CustomWizardDialog 
         }
     }
 
-    private void moveFinishButton() {
+    public void moveFinishButton() {
         final Button cancelButton = getButton(IDialogConstants.CANCEL_ID);
         final Button finishButton = getButton(IDialogConstants.FINISH_ID);
         finishAndNewButton.moveAbove(cancelButton);
@@ -86,4 +88,12 @@ public abstract class FinishAndAddCustomWizardDialog extends CustomWizardDialog 
             finishAndNewButton.setEnabled(canFinish);
         }
     }
+
+    /**
+     * @return the finishAndNewButton
+     */
+    public Button getFinishAndNewButton() {
+        return finishAndNewButton;
+    }
+
 }

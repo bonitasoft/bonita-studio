@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014-2015 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -14,11 +14,9 @@
  */
 package org.bonitasoft.studio.contract.core;
 
-import org.bonitasoft.engine.bpm.contract.ComplexInputDefinition;
 import org.bonitasoft.engine.bpm.contract.Type;
-import org.bonitasoft.engine.bpm.contract.impl.ComplexInputDefinitionImpl;
-import org.bonitasoft.engine.bpm.contract.impl.SimpleInputDefinitionImpl;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
+import org.bonitasoft.engine.bpm.process.impl.InputContainerDefinitionBuilder;
 import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.model.process.Contract;
@@ -43,12 +41,7 @@ public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefin
 
         final ContractDefinitionBuilder contractBuilder = addContract();
         for (final ContractInput input : contract.getInputs()) {
-            if (input.getType() == ContractInputType.COMPLEX) {
-                addComplexInput(contractBuilder, input);
-            } else {
-                final Type inputType = getInputType(input);
-                addSimpleInput(contractBuilder, input, inputType);
-            }
+            addInput(input, contractBuilder);
         }
         buildConstraints(contract, contractBuilder);
     }
@@ -69,44 +62,24 @@ public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefin
         builder = engineBuilder;
     }
 
-    protected void addSimpleInput(final ContractDefinitionBuilder contractBuilder, final ContractInput input, final Type inputType) {
-        contractBuilder.addSimpleInput(input.getName(), inputType,
-                input.getDescription(), input.isMultiple());
-        if (input.isMandatory()) {
-            contractBuilder.addMandatoryConstraint(input.getName());
-        }
-    }
-
-    protected void addComplexInput(final ContractDefinitionBuilder contractBuilder, final ContractInput input) {
-        final ComplexInputDefinition complexInput = buildComplexInput(input, contractBuilder);
-        contractBuilder.addComplexInput(complexInput.getName(), complexInput.getDescription(), complexInput.isMultiple(), complexInput.getSimpleInputs(),
-                complexInput.getComplexInputs());
-    }
-
-    protected ComplexInputDefinition buildComplexInput(final ContractInput input, final ContractDefinitionBuilder contractBuilder) {
-        final ComplexInputDefinitionImpl complexInput = new ComplexInputDefinitionImpl(input.getName(), input.getDescription(), input.isMultiple());
-        if (input.isMandatory()) {
-            contractBuilder.addMandatoryConstraint(complexInput.getName());
-        }
+    private void addChildInput(final ContractInput input, final InputContainerDefinitionBuilder contractInputDefinitionBuilder) {
         for (final ContractInput child : input.getInputs()) {
-            if (ContractInputType.COMPLEX == child.getType()) {
-                complexInput.getComplexInputs().add(buildComplexInput(child, contractBuilder));
-            } else {
-                buildLeafInput(contractBuilder, complexInput, child);
-            }
-        }
-        return complexInput;
-    }
-
-    protected void buildLeafInput(final ContractDefinitionBuilder contractBuilder, final ComplexInputDefinitionImpl complexInput, final ContractInput child) {
-        final Type inputType = getInputType(child);
-        complexInput.getSimpleInputs().add(new SimpleInputDefinitionImpl(child.getName(), inputType, child.getDescription(), child.isMultiple()));
-        if (child.isMandatory()) {
-            contractBuilder.addMandatoryConstraint(child.getName());
+            addInput(child, contractInputDefinitionBuilder);
         }
     }
 
-    public Type getInputType(final ContractInput input) {
+    private void addInput(final ContractInput input, final InputContainerDefinitionBuilder contractInputDefinitionBuilder) {
+        if (ContractInputType.COMPLEX == input.getType()) {
+            addChildInput(input, contractInputDefinitionBuilder.addComplexInput(input.getName(),
+                    input.getDescription(), input.isMultiple()));
+        } else if (Type.FILE == getInputType(input)) {
+            contractInputDefinitionBuilder.addFileInput(input.getName(), input.getDescription(), input.isMultiple());
+        } else {
+            contractInputDefinitionBuilder.addInput(input.getName(), getInputType(input), input.getDescription(), input.isMultiple());
+        }
+    }
+
+    private Type getInputType(final ContractInput input) {
         return org.bonitasoft.engine.bpm.contract.Type.valueOf(input.getType().getName());
     }
 

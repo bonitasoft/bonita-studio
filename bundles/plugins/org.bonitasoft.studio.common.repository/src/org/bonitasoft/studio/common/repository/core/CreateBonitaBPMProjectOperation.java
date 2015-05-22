@@ -14,19 +14,23 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
-import java.io.InputStream;
+import static org.bonitasoft.studio.common.NamingUtils.toJavaIdentifier;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
@@ -35,6 +39,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.pde.internal.core.util.ManifestUtils;
 import org.osgi.framework.BundleReference;
 
 /**
@@ -93,14 +98,34 @@ public class CreateBonitaBPMProjectOperation implements IWorkspaceRunnable {
         return this;
     }
 
-    private void createProjectManifest(final IProgressMonitor monitor) throws CoreException {
+    protected void createProjectManifest(final IProgressMonitor monitor) throws CoreException {
         final IFolder metaInf = project.getFolder(META_INF_FOLDER_NAME);
         metaInf.create(false, true, monitor);
         final IFile projectManifest = project.getFolder(META_INF_FOLDER_NAME).getFile("MANIFEST.MF");
-        final InputStream is = Repository.class.getResourceAsStream("MANIFEST.MF.template");
-        final InputStream is2 = FileUtil.replaceStringInFile(is, "XXX_ENGINE_BUNDLE_XXX", engineBundleSymbolicName());
-        projectManifest.create(is2, false, monitor);
+        try (PrintWriter writer = new PrintWriter(projectManifest.getLocation().toFile())) {
+            ManifestUtils.writeManifest(createManifestHeaders(), writer);
+            projectManifest.refreshLocal(IResource.DEPTH_ONE, monitor);
+        } catch (final IOException e) {
+            throw new CoreException(new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, "Failed to create MANIFEST.MF", e));
+        }
+    }
 
+    protected Map<String, String> createManifestHeaders() {
+        final Map<String, String> headers = new HashMap<String, String>();
+        headers.put(ManifestUtils.MANIFEST_VERSION, "1.0");
+        headers.put(org.osgi.framework.Constants.BUNDLE_MANIFESTVERSION, "2");
+        headers.put(org.osgi.framework.Constants.BUNDLE_NAME, projectName);
+        headers.put(org.osgi.framework.Constants.BUNDLE_SYMBOLICNAME, toJavaIdentifier(projectName, false));
+        headers.put(org.osgi.framework.Constants.BUNDLE_VERSION, "1.0.0.qualifier");
+        headers.put(org.osgi.framework.Constants.BUNDLE_VENDOR, "BonitaSoft S.A.");
+        headers.put(org.osgi.framework.Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, "JavaSE-1.7");
+        headers.put(org.osgi.framework.Constants.REQUIRE_BUNDLE,
+                new StringBuilder()
+                        .append("javax.persistence;bundle-version=\"2.0.3\"").append(",")
+                        .append(System.lineSeparator())
+                        .append(" ")
+                        .append(engineBundleSymbolicName()).toString());
+        return headers;
     }
 
     protected String engineBundleSymbolicName() {

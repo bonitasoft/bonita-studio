@@ -23,7 +23,7 @@
                       filter="org.bonitasoft.studio.document.ui.DocumentSectionFilter"
                       id="section.general.tab.document"
                       tab="tab.document"
-                      viewID="org.bonitasoft.studio.views.properties.process.general">
+                      viewID="org.bonitasoft.studio.views.properties.process.data">
                 </propertySection>
       </propertySections>
    </extension>
@@ -53,6 +53,12 @@
       <bosArchiveProvider
             providerClass="org.bonitasoft.studio.document.core.repository.DocumentFilseStoreProvider">
       </bosArchiveProvider>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.engine.definition.builder">
+      <EngineDefinitionBuilder
+            class="org.bonitasoft.studio.document.core.export.DocumentEngineDefinitionBuilder">
+      </EngineDefinitionBuilder>
    </extension>
 
 </plugin>

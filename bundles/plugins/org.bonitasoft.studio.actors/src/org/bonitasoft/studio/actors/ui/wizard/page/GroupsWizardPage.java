@@ -17,10 +17,10 @@
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.mandatoryValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.maxLengthValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
-import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.regExpValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.regExpValidator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -487,7 +487,7 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
             names.add(g.getName()) ;
         }
 
-        return NamingUtils.generateNewName(names, Messages.defaultGroupName);
+        return NamingUtils.generateNewName(names, Messages.defaultGroupName, 1);
     }
 
     @Override

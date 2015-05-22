@@ -27,8 +27,6 @@
 		<module>org.bonitasoft.studio.engine.test</module>
 		<module>org.bonitasoft.studio.exporter.tests</module>
 		<module>org.bonitasoft.studio.expressions.test</module>
-		<module>org.bonitasoft.studio.groovy.tests</module>
-		<module>org.bonitasoft.studio.groovy.ui.test</module>
 		<module>org.bonitasoft.studio.importer.jpdl.tests</module>
 		<module>org.bonitasoft.studio.importer.tests</module>
 		<module>org.bonitasoft.studio.importer.bar.tests</module>

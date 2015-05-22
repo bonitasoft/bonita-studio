@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,6 +54,7 @@ import org.bonitasoft.studio.pagedesigner.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebWidgetFileStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebWidgetRepositoryStore;
+import org.eclipse.e4.core.di.annotations.Creatable;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -62,22 +63,18 @@ import com.google.common.io.ByteStreams;
 /**
  * @author Romain Bioteau
  */
+@Creatable
 public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreProvider {
 
     private static final String WIDGET_ENTRY_REGEXP = "^resources/widgets/(.*)/.*\\.json";
-    private static final String FRAGMENT_ENTRY_REGEXP = "^resources/fragments/(.*\\.json)";
+    private static final String FRAGMENT_ENTRY_REGEXP = "^resources/fragments/(.*)/.*\\.json";
+
+    private final RepositoryAccessor repositoryAccessor;
+
+    private final CustomPageBarResourceFactory customPageBarResourceFactory;
 
     @Inject
-    private RepositoryAccessor repositoryAccessor;
-
-    @Inject
-    private CustomPageBarResourceFactory customPageBarResourceFactory;
-
-    public WebFormBOSArchiveFileStoreProvider() {
-        //NEEDED FOR EXTENSION FRAMEWORK INSTANTIATION
-    }
-
-    WebFormBOSArchiveFileStoreProvider(final RepositoryAccessor repositoryAccessor, final CustomPageBarResourceFactory customPageBarResourceFactory) {
+    public WebFormBOSArchiveFileStoreProvider(final RepositoryAccessor repositoryAccessor, final CustomPageBarResourceFactory customPageBarResourceFactory) {
         this.repositoryAccessor = repositoryAccessor;
         this.customPageBarResourceFactory = customPageBarResourceFactory;
     }
@@ -95,18 +92,12 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
                 formMappingToFileStore())) {
             result.add(fStore);
             try {
-                addRelatedFileStore(result, fStore);
+                result.addAll(getRelatedFileStore(fStore));
             } catch (final BarResourceCreationException | IOException e) {
                 BonitaStudioLog.error("Failed to retrieve related Form resoruces", e);
             }
         }
         return result;
-    }
-
-    protected void addRelatedFileStore(final Set<IRepositoryFileStore> result, final WebPageFileStore fStore) throws BarResourceCreationException, IOException {
-        final Set<String> zipEntries = findFormRelatedEntries(fStore);
-        result.addAll(relatedFragments(zipEntries));
-        result.addAll(relatedWidgets(zipEntries));
     }
 
     protected Set<String> findFormRelatedEntries(final WebPageFileStore fStore) throws BarResourceCreationException, IOException {
@@ -130,7 +121,18 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
     }
 
     private Set<WebWidgetFileStore> relatedWidgets(final Set<String> zipEntries) {
-        return newHashSet(transform(filter(zipEntries, containsPattern(WIDGET_ENTRY_REGEXP)), toWidgetFileStore(compile(WIDGET_ENTRY_REGEXP))));
+        return newHashSet(filter(transform(filter(zipEntries, containsPattern(WIDGET_ENTRY_REGEXP)), toWidgetFileStore(compile(WIDGET_ENTRY_REGEXP))),
+                customWidgetOnly()));
+    }
+
+    private Predicate<WebWidgetFileStore> customWidgetOnly() {
+        return new Predicate<WebWidgetFileStore>() {
+
+            @Override
+            public boolean apply(final WebWidgetFileStore input) {
+                return input.canBeExported();
+            }
+        };
     }
 
     private Function<String, WebWidgetFileStore> toWidgetFileStore(final Pattern widgetPattern) {
@@ -175,7 +177,7 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
 
     private WebPageFileStore fileStoreFromFormUUID(final String formUUID) {
         checkArgument(!isNullOrEmpty(formUUID));
-        return repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(String.format("%s.json", formUUID));
+        return repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(formUUID);
     }
 
     private Predicate<FormMapping> withInternalType() {
@@ -186,6 +188,14 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
                 return mapping.getType() == FormMappingType.INTERNAL && mapping.getTargetForm().hasContent();
             }
         };
+    }
+
+    public Set<IRepositoryFileStore> getRelatedFileStore(final WebPageFileStore webPageFileStore) throws BarResourceCreationException, IOException {
+        final Set<String> zipEntries = findFormRelatedEntries(webPageFileStore);
+        final Set<IRepositoryFileStore> result = new HashSet<IRepositoryFileStore>();
+        result.addAll(relatedFragments(zipEntries));
+        result.addAll(relatedWidgets(zipEntries));
+        return result;
     }
 
 }

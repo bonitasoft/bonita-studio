@@ -1,16 +1,14 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014-2015 BonitaSoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -31,29 +29,32 @@ import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class ContractConstraintExpressionWizardPage extends WizardPage implements IDocumentListener {
 
-    protected static final String MVEL_BASICS_URL = "http://mvel.codehaus.org/Language+Guide+for+2.0";
+    protected static final String GROOVY_BASICS_URL = "http://groovy-lang.org/single-page-documentation.html";
 
     private final ContractConstraint constraint;
     private final List<ContractInput> inputs;
@@ -62,14 +63,14 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
 
     private GroovyViewer groovyViewer;
     private final GroovySourceViewerFactory groovyViewerFactory;
-    private final MVELEditorFactory editorFactory;
+    private final ContractConstraintEditorFactory editorFactory;
 
     private final WebBrowserFactory browserFactory;
 
     public ContractConstraintExpressionWizardPage(final ContractConstraint constraint,
             final List<ContractInput> inputs,
             final GroovySourceViewerFactory sourceViewerFactory,
-            final MVELEditorFactory editorFactory,
+            final ContractConstraintEditorFactory editorFactory,
             final WebBrowserFactory browserFactory) {
         super(ContractConstraintExpressionWizardPage.class.getName());
         setDescription(Messages.constraintEditorDescription);
@@ -79,7 +80,6 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         this.editorFactory = editorFactory;
         this.browserFactory = browserFactory;
     }
-
 
     @Override
     public void dispose() {
@@ -97,8 +97,13 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
     public void createControl(final Composite parent) {
         final EMFDataBindingContext context = new EMFDataBindingContext();
         final Composite container = new Composite(parent, SWT.NONE);
-        container.setLayout(new FillLayout());
-        final GroovyViewer viewer = createSourceViewer(container);
+        container.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+
+        final Composite editorContainer = new Composite(container, SWT.NONE);
+        editorContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        editorContainer.setLayout(new FillLayout());
+        final GroovyViewer viewer = createSourceViewer(editorContainer);
+
         getSourceViewer().getTextWidget().setData(ContractInputCompletionProposalComputer.INPUTS, inputs);
         getSourceViewer().getDocument().addDocumentListener(this);
 
@@ -107,7 +112,13 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         final IObservableList inputsObservable = EMFObservables.observeList(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES);
         inputIndexer = new ConstraintInputIndexer(constraint, inputs, viewer.getGroovyCompilationUnit());
         getSourceViewer().getDocument().set(expressionContentObservable.getValue().toString());
-        context.addValidationStatusProvider(new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable));
+        context.addValidationStatusProvider(new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable, viewer
+                .getGroovyCompilationUnit(), new CompilationProblemRequestor()));
+
+        final CLabel contentAssistHint = new CLabel(container, SWT.NONE);
+        contentAssistHint.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).create());
+        contentAssistHint.setText(Messages.contentAssistHint);
+        contentAssistHint.setImage(Pics.getImage(PicsConstants.hint));
 
         setControl(container);
         WizardPageSupport.create(this, context);
@@ -132,19 +143,18 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
     @Override
     public void documentChanged(final DocumentEvent event) {
         final String expression = event.getDocument().get();
-        expressionContentObservable.setValue(expression);
         if (inputIndexer != null) {
             inputIndexer.schedule();
         }
+        expressionContentObservable.setValue(expression);
     }
-
 
     @Override
     public void performHelp() {
         try {
-            browserFactory.openExteranlBrowser(MVEL_BASICS_URL);
+            browserFactory.openExteranlBrowser(GROOVY_BASICS_URL);
         } catch (final MalformedURLException e) {
-            BonitaStudioLog.error("Invalid URL format for :" + MVEL_BASICS_URL, e, ContractPlugin.PLUGIN_ID);
+            BonitaStudioLog.error("Invalid URL format for :" + GROOVY_BASICS_URL, e, ContractPlugin.PLUGIN_ID);
         }
     }
 

@@ -53,10 +53,15 @@
       <propertyTabs
             contributorId="org.bonitasoft.studio.diagram">
          <propertyTab
-               afterTab="tab.actors"
+               afterTab="tab.operations"
                category="domain"
-               id="tab.connectors"
-               label="%tab.connectors">
+               id="tab.connectors.out"
+               label="%tab.connectors.out">
+         </propertyTab>
+         <propertyTab
+               category="domain"
+               id="tab.connectors.in"
+               label="%tab.connectors.in">
          </propertyTab>
       </propertyTabs>
    </extension>
@@ -65,12 +70,20 @@
       <propertySections
             contributorId="org.bonitasoft.studio.diagram">
          <propertySection
-              class="org.bonitasoft.studio.connectors.ui.property.section.ConnectorSection"
+              class="org.bonitasoft.studio.connectors.ui.property.section.ConnectorOutSection"
               enablesFor="1"
               filter="org.bonitasoft.studio.connectors.ui.property.filter.ConnectableElementWithoutSendTaskAndSubProcessEvent"
-              id="ConnectorsSection"
-              tab="tab.connectors"
-              viewID="org.bonitasoft.studio.views.properties.process.general">
+              id="ConnectorsOutSection"
+              tab="tab.connectors.out"
+              viewID="org.bonitasoft.studio.views.properties.process.execution">
+         </propertySection>
+         <propertySection
+               class="org.bonitasoft.studio.connectors.ui.property.section.ConnectorInSection"
+               enablesFor="1"
+               filter="org.bonitasoft.studio.connectors.ui.property.filter.ConnectableElementWithoutSendTaskAndSubProcessEvent"
+               id="ConnectorsInSection"
+               tab="tab.connectors.in"
+               viewID="org.bonitasoft.studio.views.properties.process.execution">
          </propertySection>
       </propertySections>
    </extension>

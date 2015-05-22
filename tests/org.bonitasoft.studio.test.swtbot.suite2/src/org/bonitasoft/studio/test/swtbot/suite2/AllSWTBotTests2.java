@@ -37,7 +37,6 @@ import org.bonitasoft.studio.exporter.tests.bpmn.BPMNEventSubProcessExportImport
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNExportTests;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNGatewayExportImportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
-import org.bonitasoft.studio.groovy.tests.TestBonitaGroovyEditorDialog;
 import org.bonitasoft.studio.migration.tests.MigrationReporTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -54,6 +53,7 @@ import org.bonitasoft.studio.tests.document.TestDocument;
 import org.bonitasoft.studio.tests.document.TestRunWithDocument;
 import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
 import org.bonitasoft.studio.tests.form.DeleteWidgetWithContextMenuIT;
+import org.bonitasoft.studio.tests.groovy.TestBonitaGroovyEditorDialog;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.migration.BarImportReportIT;
 import org.bonitasoft.studio.tests.refactoring.widget.RefactorWidgetIT;
@@ -71,6 +71,7 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaTestSuite.class)
 @Suite.SuiteClasses({
+        TestBonitaGroovyEditorDialog.class,
         CopyPasteTests.class,
         DeleteCommandTest.class,
         TestBug1640.class,
@@ -103,7 +104,6 @@ import org.junit.runners.Suite;
         TestMoveBetweenLane.class,
         MigrationReporTest.class,
         TestTimer.class,
-        TestBonitaGroovyEditorDialog.class,
         TestProcessDependencies.class,
         ContractIT.class,
         RefactorWidgetIT.class,

@@ -175,7 +175,6 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         }
         final ImportBosArchiveStatusBuilder statusBuilder = new ImportBosArchiveStatusBuilder();
         if (validate) {
-            monitor.setTaskName("Validation");
             for (final IRepositoryFileStore diagramFileStore : iResourceImporter.getImportedProcesses()) {
                 try {
                     final AbstractProcess process = (AbstractProcess) diagramFileStore.getContent();
@@ -348,12 +347,14 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         this.archiveFile = archiveFile;
     }
 
-    public void disableValidation() {
+    public ImportBosArchiveOperation disableValidation() {
         validate = false;
+        return this;
     }
 
-    public void enableValidation() {
+    public ImportBosArchiveOperation enableValidation() {
         validate = true;
+        return this;
     }
 
     public IStatus getStatus() {

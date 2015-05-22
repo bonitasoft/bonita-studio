@@ -61,21 +61,16 @@ public class VariablesTypeCompletionProposal implements IJavaCompletionProposalC
 
     private IJavaProject javaProject;
 
-    public VariablesTypeCompletionProposal() {
-
-    }
-
     @Override
     public void sessionStarted() {
         javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-
     }
 
     @Override
     public List<ICompletionProposal> computeCompletionProposals(final ContentAssistInvocationContext context, final IProgressMonitor monitor) {
         final List<ICompletionProposal> list = new ArrayList<ICompletionProposal>();
         if (context instanceof JavaContentAssistInvocationContext) {
-            CompletionContext coreContext = ((JavaContentAssistInvocationContext) context).getCoreContext();
+            final CompletionContext coreContext = ((JavaContentAssistInvocationContext) context).getCoreContext();
             if (coreContext != null && !coreContext.isExtended()) {
                 // must use reflection to set the fields
                 ReflectionUtils.setPrivateField(InternalCompletionContext.class, "isExtended", coreContext, true);
@@ -103,6 +98,9 @@ public class VariablesTypeCompletionProposal implements IJavaCompletionProposalC
                             for (final ScriptVariable f : scriptVariables) {
                                 if (expr.getName().equals(f.getName())) {
                                     final IType type = javaProject.findType(f.getType());
+                                    if (type == null) {
+                                        return list;
+                                    }
                                     for (final IMethod m : type.getMethods()) {
                                         if (m.getElementName().startsWith(prefix.toString())) {
                                             final GroovyCompletionProposal proposal = new GroovyCompletionProposal(CompletionProposal.METHOD_REF,
@@ -127,7 +125,7 @@ public class VariablesTypeCompletionProposal implements IJavaCompletionProposalC
                                                         .getSignatureSimpleName(m.getParameterTypes()[i])), m.getParameterNames()[i]));
                                             }
 
-                                            ClassNode classNode = ClassHelper.make(m.getDeclaringType()
+                                            final ClassNode classNode = ClassHelper.make(m.getDeclaringType()
                                                     .getFullyQualifiedName());
                                             proposal.setDeclarationSignature(ProposalUtils.createTypeSignature(classNode));
                                             proposal.setParameterNames(parametersArray);
@@ -135,13 +133,14 @@ public class VariablesTypeCompletionProposal implements IJavaCompletionProposalC
                                                 proposal.setRelevance(100);
                                             }
 
-                                            MethodNode methodNode = new MethodNode(m.getElementName(), m.getFlags(), ClassHelper.make(Signature
+                                            final MethodNode methodNode = new MethodNode(m.getElementName(), m.getFlags(), ClassHelper.make(Signature
                                                     .getSignatureSimpleName(m.getReturnType())),
                                                     parameters.toArray(new Parameter[parameters.size()]), new ClassNode[0], null);
-                                            char[] methodSignature = ProposalUtils.createMethodSignature(methodNode);
+                                            final char[] methodSignature = ProposalUtils.createMethodSignature(methodNode);
                                             proposal.setSignature(methodSignature);
 
-                                            GroovyJavaGuessingCompletionProposal groovyProposal = GroovyJavaGuessingCompletionProposal.createProposal(proposal,
+                                            final GroovyJavaGuessingCompletionProposal groovyProposal = GroovyJavaGuessingCompletionProposal.createProposal(
+                                                    proposal,
                                                     (JavaContentAssistInvocationContext) context, true, "Groovy", ProposalFormattingOptions.newFromOptions());
                                             if (groovyProposal != null) {
                                                 list.add(groovyProposal);

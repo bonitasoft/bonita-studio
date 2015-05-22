@@ -50,8 +50,8 @@ public class TestTextAreaInConnectorWizard extends SWTBotGefTestCase {
         createConnector(connectorId);
         SWTBotTestUtil.createNewDiagram(bot);
 
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
+        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES);
         bot.button("Add...").click();
         SWTBotTestUtil.addNewData(bot, "name", "Text", false, null);
         bot.button("Add...").click();
@@ -59,8 +59,8 @@ public class TestTextAreaInConnectorWizard extends SWTBotGefTestCase {
         bot.button("Add...").click();
         SWTBotTestUtil.addNewData(bot, "mariage", "Boolean", false, null);
 
-
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION).show();
+        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_IN);
         bot.button("Add...").click();
         Assert.assertFalse(IDialogConstants.NEXT_LABEL + " should be disabled", bot
                 .button(IDialogConstants.NEXT_LABEL).isEnabled());

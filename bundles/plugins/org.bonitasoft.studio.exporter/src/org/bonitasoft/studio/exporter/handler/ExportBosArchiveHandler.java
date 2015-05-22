@@ -52,7 +52,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 
@@ -73,11 +72,12 @@ public class ExportBosArchiveHandler extends AbstractHandler {
         if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(true)) {
             Set<Object> selectedFiles = new HashSet<Object>();
             final MainProcess diagram = getDiagramInEditor();
+            final List<IRepositoryStore<? extends IRepositoryFileStore>> exportableStores = RepositoryManager.getInstance().getCurrentRepository()
+                    .getAllExportableStores();
             if (diagram != null) {
                 selectedFiles = getAllDiagramRelatedFiles(diagram);
             } else {
-                for (final IRepositoryStore<? extends IRepositoryFileStore> store : RepositoryManager.getInstance().getCurrentRepository()
-                        .getAllExportableStores()) {
+                for (final IRepositoryStore<? extends IRepositoryFileStore> store : exportableStores) {
                     final List<? extends IRepositoryFileStore> files = store.getChildren();
                     if (files != null) {
                         for (final IRepositoryFileStore fStore : files) {
@@ -88,18 +88,18 @@ public class ExportBosArchiveHandler extends AbstractHandler {
                     }
                 }
             }
-
-            final ExportRepositoryWizard wizard = new ExportRepositoryWizard(RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores(),
-                    true, selectedFiles, getDefaultName(), Messages.ExportButtonLabel);
-            final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard) {
-
-                @Override
-                protected Point getInitialSize() {
-                    return new Point(500, 600);
+            if (selectedFiles != null){
+                final ExportRepositoryWizard wizard = new ExportRepositoryWizard(RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores(),true,selectedFiles,getDefaultName(),Messages.ExportButtonLabel) ;
+                final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard) {
+                    @Override
+                    protected void initializeBounds() {
+                        super.initializeBounds();
+                        getShell().setSize(500, 600);
                 }
             };
             dialog.setTitle(Messages.ExportButtonLabel);
-            dialog.open();
+            dialog.open() ;
+            }
         }
         return null;
     }

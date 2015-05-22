@@ -25,7 +25,7 @@ import java.io.UnsupportedEncodingException;
 public class PortalURLBuilder extends ApplicationURLBuilder {
 
     public PortalURLBuilder() {
-        super(null, null);
+        super(null, null, 0L);
     }
 
     /*

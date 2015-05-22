@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -73,7 +74,7 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
         if (statusContainsError()) {
             if (!FileActionDialog.getDisablePopup()) {
                 final String errorMessage = Messages.errorValidationMessage
-                        + PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getTitle()
+                        + getActiveEditorTitle()
                         + Messages.errorValidationContinueAnywayMessage;
                 final int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle, errorMessage,
                         ValidationDialog.YES_NO_SEEDETAILS).open();
@@ -90,10 +91,24 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
         return true;
     }
 
+    protected String getActiveEditorTitle() {
+        final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        if (activeWorkbenchWindow != null) {
+            final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+            if (activePage != null) {
+                final IEditorPart activeEditor = activePage.getActiveEditor();
+                if (activeEditor != null) {
+                    return activeEditor.getTitle();
+                }
+            }
+        }
+        return "";
+    }
+
     public boolean displayOkSeeMoreDetailsDialog() {
         if (statusContainsError()) {
             final String errorMessage = Messages.errorValidationMessage
-                    + PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getTitle();
+                    + getActiveEditorTitle();
             final int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle, errorMessage,
                     ValidationDialog.OK_SEEDETAILS).open();
             if (result == ValidationDialog.SEE_DETAILS) {

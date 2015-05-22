@@ -22,11 +22,14 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.net;bundle-version="1.2.100",
  org.junit;bundle-version="4.11.0";resolution:=optional,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
- assertj-core;bundle-version="1.5.0";resolution:=optional
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
+ org.eclipse.debug.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Export-Package: org.bonitasoft.studio.preferences,org.bonitasoft.studi
- o.preferences.dialog,org.bonitasoft.studio.preferences.extension,org.
- bonitasoft.studio.preferences.pages
+Export-Package: org.bonitasoft.studio.preferences,
+ org.bonitasoft.studio.preferences.dialog,
+ org.bonitasoft.studio.preferences.extension,
+ org.bonitasoft.studio.preferences.i18n,
+ org.bonitasoft.studio.preferences.pages
 Bundle-ClassPath: .

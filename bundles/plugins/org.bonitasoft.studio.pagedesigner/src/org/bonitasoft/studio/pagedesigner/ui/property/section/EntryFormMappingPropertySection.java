@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,10 +54,12 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
     @Inject
     private FormReferenceExpressionValidator formReferenceExpressionValidator;
 
+    private FormMappingRadioGroup formMappingRadioGroup;
+
     @Override
     protected void createContent(final Composite parent) {
         context = new EMFDataBindingContext();
-        final FormMappingRadioGroup formMappingRadioGroup = new FormMappingRadioGroup(parent, getWidgetFactory(), preferenceStore,
+        formMappingRadioGroup = new FormMappingRadioGroup(parent, getWidgetFactory(), preferenceStore,
                 repositoryAccessor, formReferenceExpressionValidator);
         formMappingRadioGroup.doBindControl(context, CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(selectionProvider),
@@ -71,9 +73,13 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
 
     @Override
     public void dispose() {
+        if (formMappingRadioGroup != null) {
+            formMappingRadioGroup.dispose();
+        }
         if (context != null) {
             context.dispose();
         }
+        super.dispose();
     }
 
     @Override
