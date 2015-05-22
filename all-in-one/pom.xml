@@ -62,8 +62,8 @@
                             <baseImgPath>${basedir}/installer/images/splash_without_version.png</baseImgPath>
                             <outputImagePath>${basedir}/installer/images/splash.png</outputImagePath>
                             <outputImageFormat>png</outputImageFormat>
-                            <xLocation>110</xLocation>
-                            <yLocation>112</yLocation>
+                            <xLocation>90</xLocation>
+                            <yLocation>100</yLocation>
                             <fontSize>22</fontSize>
                             <color>#0B4361</color>
                             <versionLabel>7.0.0</versionLabel>
