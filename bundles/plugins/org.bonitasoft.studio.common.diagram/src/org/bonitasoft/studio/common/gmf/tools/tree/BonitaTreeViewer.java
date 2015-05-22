@@ -18,6 +18,8 @@ import java.util.Collection;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
+import org.bonitasoft.studio.common.gmf.tools.tree.selection.EditPartNotFoundException;
+import org.bonitasoft.studio.common.gmf.tools.tree.selection.EditPartResolver;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.TabbedPropertySelectionProviderRegistry;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.TabbedPropertySynchronizerListener;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -50,8 +52,10 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -114,6 +118,7 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
         }
 
     };
+    private final EditPartResolver editPartResolver = new EditPartResolver();
 
     /**
      * Constructs a TreeViewer with the default root editpart.
@@ -144,8 +149,9 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
         treeViewer.setContentProvider(adapterFactoryContentProvider);
 
         addFilters(treeViewer);
-        treeViewer.addSelectionChangedListener(new TabbedPropertySynchronizerListener(new TabbedPropertySelectionProviderRegistry(), PlatformUI.getWorkbench()
-                .getActiveWorkbenchWindow().getActivePage()));
+        treeViewer.addSelectionChangedListener(new TabbedPropertySynchronizerListener(editPartResolver, new TabbedPropertySelectionProviderRegistry(),
+                PlatformUI.getWorkbench()
+                        .getActiveWorkbenchWindow().getActivePage()));
         treeViewer.getTree().addListener(SWT.MouseDoubleClick, new Listener() {
 
             @Override
@@ -186,6 +192,23 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
         this.diagramEditPart = diagramEditPart;
         if (filteredTree != null) {
             filteredTree.getViewer().setInput(((IGraphicalEditPart) diagramEditPart).resolveSemanticElement());
+            diagramEditPart.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+
+                @Override
+                public void selectionChanged(final SelectionChangedEvent event) {
+                    final IGraphicalEditPart diagramSelectedPart = (IGraphicalEditPart) ((IStructuredSelection) event.getSelection()).getFirstElement();
+                    final EObject treeElementSelection = (EObject) ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement();
+                    try {
+                        final IGraphicalEditPart editPart = editPartResolver.findEditPart(diagramEditPart, treeElementSelection);
+                        if (!editPart.equals(diagramSelectedPart)) {
+                            filteredTree.getViewer().setSelection(new StructuredSelection(diagramSelectedPart.resolveSemanticElement()));
+                        }
+                    } catch (final EditPartNotFoundException e) {
+                        filteredTree.getViewer().setSelection(new StructuredSelection(diagramSelectedPart.resolveSemanticElement()));
+                    }
+                }
+            });
+
         }
     }
 
@@ -284,6 +307,9 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
         }
         if (adapterFactory != null) {
             adapterFactory.dispose();
+        }
+        if (editPartResolver != null) {
+            editPartResolver.dispose();
         }
         super.unhookControl();
     }
