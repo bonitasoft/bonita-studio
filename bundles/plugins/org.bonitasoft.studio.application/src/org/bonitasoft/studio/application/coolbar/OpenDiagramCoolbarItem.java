@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.coolbar;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
@@ -57,7 +58,11 @@ public class OpenDiagramCoolbarItem extends ContributionItem implements IBonitaC
      */
     @Override
     public boolean isEnabled() {
-        return !RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class).isEmpty();
+        final Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        if (currentRepository != null && currentRepository.isLoaded()) {
+            return !currentRepository.getRepositoryStore(DiagramRepositoryStore.class).isEmpty();
+        }
+        return false;
     }
 
     @Override
