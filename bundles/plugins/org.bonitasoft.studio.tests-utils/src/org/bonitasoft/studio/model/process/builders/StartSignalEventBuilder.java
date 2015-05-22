@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -15,20 +15,20 @@
 package org.bonitasoft.studio.model.process.builders;
 
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.StartEvent;
+import org.bonitasoft.studio.model.process.StartSignalEvent;
 
 /**
  * @author Romain Bioteau
  */
-public class StartEventBuilder extends FlowElementBuilder<StartEvent, StartEventBuilder> {
+public class StartSignalEventBuilder extends FlowElementBuilder<StartSignalEvent, StartSignalEventBuilder> {
 
-    public static StartEventBuilder aStartEvent() {
-        return new StartEventBuilder();
+    public static StartSignalEventBuilder aStartSignalEvent() {
+        return new StartSignalEventBuilder();
     }
 
     @Override
-    protected StartEvent newInstance() {
-        return ProcessFactory.eINSTANCE.createStartEvent();
+    protected StartSignalEvent newInstance() {
+        return ProcessFactory.eINSTANCE.createStartSignalEvent();
     }
 
 }

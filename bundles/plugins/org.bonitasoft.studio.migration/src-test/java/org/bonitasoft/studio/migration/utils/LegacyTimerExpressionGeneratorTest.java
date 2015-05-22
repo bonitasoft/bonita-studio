@@ -53,48 +53,48 @@ public class LegacyTimerExpressionGeneratorTest {
 
     @Test
     public void should_isCycle_return_false() throws Exception {
-        assertThat(LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.createStartTimerEventBuilder().withScriptType(StartTimerScriptType.CONSTANT)
+        assertThat(LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.aStartTimerEvent().withScriptType(StartTimerScriptType.CONSTANT)
                 .build())).isFalse();
         assertThat(
-                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.createStartTimerEventBuilder().withScriptType(StartTimerScriptType.GROOVY)
+                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.aStartTimerEvent().withScriptType(StartTimerScriptType.GROOVY)
                         .build())).isFalse();
     }
 
     @Test
     public void should_isCycle_return_true() throws Exception {
         assertThat(
-                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.createStartTimerEventBuilder().withScriptType(StartTimerScriptType.DAILY)
+                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.aStartTimerEvent().withScriptType(StartTimerScriptType.DAILY)
                         .build())).isTrue();
         assertThat(
-                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.createStartTimerEventBuilder().withScriptType(StartTimerScriptType.HOURLY)
+                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.aStartTimerEvent().withScriptType(StartTimerScriptType.HOURLY)
                         .build())).isTrue();
         assertThat(
-                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.createStartTimerEventBuilder().withScriptType(StartTimerScriptType.MINUTELY)
+                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.aStartTimerEvent().withScriptType(StartTimerScriptType.MINUTELY)
                         .build())).isTrue();
         assertThat(
-                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.createStartTimerEventBuilder().withScriptType(StartTimerScriptType.MONTHLY)
+                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.aStartTimerEvent().withScriptType(StartTimerScriptType.MONTHLY)
                         .build())).isTrue();
         assertThat(
-                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.createStartTimerEventBuilder()
+                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.aStartTimerEvent()
                         .withScriptType(StartTimerScriptType.YEARLY_DAY_OF_MONTH)
                         .build())).isTrue();
         assertThat(
-                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.createStartTimerEventBuilder()
+                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.aStartTimerEvent()
                         .withScriptType(StartTimerScriptType.YEARLY_DAY_OF_YEAR)
                         .build())).isTrue();
         assertThat(
-                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.createStartTimerEventBuilder()
+                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.aStartTimerEvent()
                         .withScriptType(StartTimerScriptType.MONTHLY_DAY_NUMBER)
                         .build())).isTrue();
         assertThat(
-                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.createStartTimerEventBuilder()
+                LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.aStartTimerEvent()
                         .withScriptType(StartTimerScriptType.MONTHLY_DAY_OF_WEEK)
                         .build())).isTrue();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void should_isCycle_throw_IllegalArgumentException() throws Exception {
-        assertThat(LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.createStartTimerEventBuilder().withScriptType(StartTimerScriptType.CUSTOM)
+        assertThat(LegacyTimerExpressionGenerator.isCycle(StartTimerEventBuilder.aStartTimerEvent().withScriptType(StartTimerScriptType.CUSTOM)
                 .build()));
     }
 
@@ -109,7 +109,7 @@ public class LegacyTimerExpressionGeneratorTest {
     @Test
     public void should_getTimerExpressionContent_return_expression_content_for_GROOVY_type() throws Exception {
         final String content = "new Date()";
-        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.createStartTimerEventBuilder()
+        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.aStartTimerEvent()
                 .withScriptType(StartTimerScriptType.GROOVY).havingConditionExpression(ExpressionBuilder.anExpression().withContent(content))
                 .build());
         assertThat(expressionContent).isEqualTo(content);
@@ -117,7 +117,7 @@ public class LegacyTimerExpressionGeneratorTest {
 
     @Test
     public void should_getTimerExpressionContent_return_null_for_GROOVY_type() throws Exception {
-        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.createStartTimerEventBuilder()
+        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.aStartTimerEvent()
                 .withScriptType(StartTimerScriptType.GROOVY)
                 .build());
         assertThat(expressionContent).isNull();
@@ -126,7 +126,7 @@ public class LegacyTimerExpressionGeneratorTest {
     @Test
     public void should_getTimerExpressionContent_return_cron_for_YEARLY_DAY_OF_MONTH_type() throws Exception {
         final Date at = new Date(2014, 11, 2, 9, 30);
-        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.createStartTimerEventBuilder()
+        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.aStartTimerEvent()
                 .withScriptType(StartTimerScriptType.YEARLY_DAY_OF_MONTH).at(at).withDayNumber(2).withMonth(2)
                 .build());
         assertThat(expressionContent).isEqualTo("0 30 9 2 3 ?");
@@ -135,7 +135,7 @@ public class LegacyTimerExpressionGeneratorTest {
     @Test
     public void should_getTimerExpressionContent_return_cron_for_YEARLY_DAY_OF_YEAR_type() throws Exception {
         final Date at = new Date(2014, 11, 2, 9, 30);
-        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.createStartTimerEventBuilder()
+        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.aStartTimerEvent()
                 .withScriptType(StartTimerScriptType.YEARLY_DAY_OF_YEAR).at(at).withDayNumber(2)
                 .build());
         assertThat(expressionContent).isEqualTo("0 30 9 2 1 ?");
@@ -144,7 +144,7 @@ public class LegacyTimerExpressionGeneratorTest {
     @Test
     public void should_getTimerExpressionContent_return_cron_for_MONTHLY_DAY_NUMBER_type() throws Exception {
         final Date at = new Date(2014, 11, 2, 9, 30);
-        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.createStartTimerEventBuilder()
+        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.aStartTimerEvent()
                 .withScriptType(StartTimerScriptType.MONTHLY_DAY_NUMBER).at(at).withDayNumber(2)
                 .build());
         assertThat(expressionContent).isEqualTo("0 30 9 2 * ?");
@@ -153,7 +153,7 @@ public class LegacyTimerExpressionGeneratorTest {
     @Test
     public void should_getTimerExpressionContent_return_cron_for_MONTHLY_DAY_OF_WEEK_type() throws Exception {
         final Date at = new Date(2014, 11, 2, 9, 30);
-        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.createStartTimerEventBuilder()
+        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.aStartTimerEvent()
                 .withScriptType(StartTimerScriptType.MONTHLY_DAY_OF_WEEK).at(at).withDayNumber(2).withDay(1)
                 .build());
         assertThat(expressionContent).isEqualTo("0 30 9 ? * 1#2");
@@ -162,7 +162,7 @@ public class LegacyTimerExpressionGeneratorTest {
     @Test
     public void should_getTimerExpressionContent_return_cron_for_WEEKLY_type() throws Exception {
         final Date at = new Date(2014, 11, 2, 9, 30);
-        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.createStartTimerEventBuilder()
+        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.aStartTimerEvent()
                 .withScriptType(StartTimerScriptType.WEEKLY).at(at).withDay(2)
                 .build());
         assertThat(expressionContent).isEqualTo("0 30 9 ? * 2");
@@ -171,7 +171,7 @@ public class LegacyTimerExpressionGeneratorTest {
     @Test
     public void should_getTimerExpressionContent_return_cron_for_DAILY_type() throws Exception {
         final Date at = new Date(2014, 11, 2, 9, 30);
-        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.createStartTimerEventBuilder()
+        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.aStartTimerEvent()
                 .withScriptType(StartTimerScriptType.DAILY).at(at).withDay(2)
                 .build());
         assertThat(expressionContent).isEqualTo("0 30 9 * * ?");
@@ -180,7 +180,7 @@ public class LegacyTimerExpressionGeneratorTest {
     @Test
     public void should_getTimerExpressionContent_return_cron_for_HOURLY_type() throws Exception {
         final Date at = new Date(2014, 11, 2, 9, 30);
-        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.createStartTimerEventBuilder()
+        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.aStartTimerEvent()
                 .withScriptType(StartTimerScriptType.HOURLY).at(at).withHours(2)
                 .build());
         assertThat(expressionContent).isEqualTo("0 * */2 * * ?");
@@ -189,7 +189,7 @@ public class LegacyTimerExpressionGeneratorTest {
     @Test
     public void should_getTimerExpressionContent_return_cron_for_MINUTELY_type() throws Exception {
         final Date at = new Date(2014, 11, 2, 9, 30);
-        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.createStartTimerEventBuilder()
+        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.aStartTimerEvent()
                 .withScriptType(StartTimerScriptType.MINUTELY).at(at).withMinutes(30)
                 .build());
         assertThat(expressionContent).isEqualTo("0 */30 * * * ?");
@@ -199,7 +199,7 @@ public class LegacyTimerExpressionGeneratorTest {
     public void should_getTimerExpressionContent_return_cron_for_CONSTANT_type() throws Exception {
         final Date at = new Date(2014, 11, 2, 9, 30);
         final long time = at.getTime();
-        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.createStartTimerEventBuilder()
+        final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.aStartTimerEvent()
                 .withScriptType(StartTimerScriptType.CONSTANT).at(at).withMinutes(30)
                 .build());
         assertThat(expressionContent).isEqualTo("return new Date(" + time + ");");
@@ -207,7 +207,7 @@ public class LegacyTimerExpressionGeneratorTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void should_getTimerExpressionContent_throw_IllegalArgumentException() throws Exception {
-        legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.createStartTimerEventBuilder()
+        legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.aStartTimerEvent()
                 .withScriptType(StartTimerScriptType.CUSTOM)
                 .build());
     }

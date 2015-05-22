@@ -1061,6 +1061,21 @@
                class="FormMapping:http://www.bonitasoft.org/ns/studio/process">
          </target>
       </constraint>
+      <constraint
+            class="org.bonitasoft.studio.validation.constraints.process.StartEventWithContractConstraint"
+            id="org.bonitasoft.studio.validation.constraints.startEventAndContract"
+            lang="Java"
+            mode="Batch"
+            name="Start event with contract"
+            severity="WARNING"
+            statusCode="1">
+         <message>
+            {0}
+         </message>
+         <target
+               class="Event:http://www.bonitasoft.org/ns/studio/process">
+         </target>
+      </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">
