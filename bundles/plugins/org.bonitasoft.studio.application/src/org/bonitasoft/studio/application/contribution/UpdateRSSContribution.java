@@ -138,12 +138,12 @@ public class UpdateRSSContribution implements IPreStartupContribution {
      */
     @Override
     public void execute() {
-        new UpdateRSSThread("6-3-community", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=163&bos_redirect_product=bos&bos_redirect_major_version=6.5&bos_redirect_minor_version=2", getClass()).start();
-        new UpdateRSSThread("6-3-blogs", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=152&bos_redirect_product=bos&bos_redirect_major_version=6.5&bos_redirect_minor_version=2", getClass()).start();
-        new UpdateRSSThread("6-3-documentation", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=158&bos_redirect_product=bos&bos_redirect_major_version=6.5&bos_redirect_minor_version=2", getClass()).start();
-        new UpdateRSSThread("6-5-2-examples-community", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=159&bos_redirect_product=bos&bos_redirect_major_version=6.5&bos_redirect_minor_version=2", getClass()).start();
-        new UpdateRSSThread("6-3-training", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=153&bos_redirect_product=bos&bos_redirect_major_version=6.5&bos_redirect_minor_version=2", getClass()).start();
-        new UpdateRSSThread("6-3-videos", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=154&bos_redirect_product=bos&bos_redirect_major_version=6.5&bos_redirect_minor_version=2", getClass()).start();
+        new UpdateRSSThread("7-0-community", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=163&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=0", getClass()).start();
+        new UpdateRSSThread("7-0-blogs", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=152&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=0", getClass()).start();
+        new UpdateRSSThread("7-0-documentation", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=158&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=0", getClass()).start();
+        new UpdateRSSThread("7-0-examples-community", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=159&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=0", getClass()).start();
+        new UpdateRSSThread("7-0-training", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=153&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=0", getClass()).start();
+        new UpdateRSSThread("7-0-videos-community", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=154&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=0", getClass()).start();
     }
 
     /*

@@ -80,6 +80,7 @@ import org.bonitasoft.studio.model.process.EndSignalEvent;
 import org.bonitasoft.studio.model.process.EndTerminatedEvent;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.InputMapping;
+import org.bonitasoft.studio.model.process.InputMappingAssignationType;
 import org.bonitasoft.studio.model.process.IntermediateCatchMessageEvent;
 import org.bonitasoft.studio.model.process.IntermediateCatchSignalEvent;
 import org.bonitasoft.studio.model.process.IntermediateCatchTimerEvent;
@@ -420,24 +421,46 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         final CallActivityBuilder activityBuilder = builder.addCallActivity(object.getName(),
                 EngineExpressionUtil.createExpression(object.getCalledActivityName()),
                 EngineExpressionUtil.createExpression(version));
-        for (final InputMapping mapping : object.getInputMappings()) {
-            final OperationBuilder opBuilder = new OperationBuilder();
-            opBuilder.createNewInstance();
-            opBuilder.setRightOperand(EngineExpressionUtil.createExpression(mapping.getProcessSource()));
-            final LeftOperandBuilder builder = new LeftOperandBuilder() ;
-            builder.createNewInstance() ;
-            builder.setName(mapping.getSubprocessTarget()) ;
-            final EList<EObject> referencedElements = mapping.getProcessSource().getReferencedElements();
-            String type = LeftOperand.TYPE_DATA;
-            if (!referencedElements.isEmpty()) {
-                type = getLeftOperandTypeForData((Data) referencedElements.get(0));
-            }
-            builder.setType(type);
-            opBuilder.setLeftOperand(builder.done());
-            opBuilder.setType(OperatorType.ASSIGNMENT);
-            activityBuilder.addDataInputOperation(opBuilder.done());
-        }
+        exportInputMappingsForCallActivity(object, activityBuilder);
+        exportOutputMappingForCallActivities(object, activityBuilder);
 
+        handleCommonActivity(object, activityBuilder);
+        return object;
+    }
+
+    protected void exportInputMappingsForCallActivity(final CallActivity object, final CallActivityBuilder activityBuilder) {
+        for (final InputMapping mapping : object.getInputMappings()) {
+            if (InputMappingAssignationType.DATA == mapping.getAssignationType()) {
+                exportInputMappingAssignedToDataForCallActivity(activityBuilder, mapping);
+            } else {
+                exportInputMappingAssignedToContractInputForCallActivity(activityBuilder, mapping);
+            }
+        }
+    }
+
+    private void exportInputMappingAssignedToContractInputForCallActivity(final CallActivityBuilder activityBuilder, final InputMapping mapping) {
+        activityBuilder.addProcessStartContractInput(mapping.getSubprocessTarget(), EngineExpressionUtil.createExpression(mapping.getProcessSource()));
+    }
+
+    private void exportInputMappingAssignedToDataForCallActivity(final CallActivityBuilder activityBuilder, final InputMapping mapping) {
+        final OperationBuilder opBuilder = new OperationBuilder();
+        opBuilder.createNewInstance();
+        opBuilder.setRightOperand(EngineExpressionUtil.createExpression(mapping.getProcessSource()));
+        final LeftOperandBuilder builder = new LeftOperandBuilder();
+        builder.createNewInstance();
+        builder.setName(mapping.getSubprocessTarget());
+        final EList<EObject> referencedElements = mapping.getProcessSource().getReferencedElements();
+        String type = LeftOperand.TYPE_DATA;
+        if (!referencedElements.isEmpty()) {
+            type = getLeftOperandTypeForData((Data) referencedElements.get(0));
+        }
+        builder.setType(type);
+        opBuilder.setLeftOperand(builder.done());
+        opBuilder.setType(OperatorType.ASSIGNMENT);
+        activityBuilder.addDataInputOperation(opBuilder.done());
+    }
+
+    protected void exportOutputMappingForCallActivities(final CallActivity object, final CallActivityBuilder activityBuilder) {
         for (final OutputMapping mapping : object.getOutputMappings()) {
             final OperationBuilder opBuilder = new OperationBuilder();
             opBuilder.createNewInstance();
@@ -452,9 +475,6 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
             opBuilder.setType(OperatorType.ASSIGNMENT);
             activityBuilder.addDataOutputOperation(opBuilder.done());
         }
-
-        handleCommonActivity(object, activityBuilder);
-        return object;
     }
 
     private String getLeftOperandTypeForData(final Data data) {

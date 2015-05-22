@@ -12,15 +12,10 @@ import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.BotQAUtil;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorAssignementPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorDefinitionPropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.connectors.BotConnectorsPropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractPropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotDocumentsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotDiagramPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotGeneralPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotReccurencePropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.lane.BotLanePropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.operations.BotOperationsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.pool.BotPoolPropertySection;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
@@ -85,15 +80,16 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
         return new BotActorAssignementPropertySection(bot);
     }
 
-  
- 
-
     public BotReccurencePropertySection selectIterationTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Iteration");
         return new BotReccurencePropertySection(bot);
     }
 
-  
-  
+    public BotCallActivityMappingPropertySection selectMappingTab() {
+        BotQAUtil.selectTabbedPropertyView(bot, "Mapping");
+        return new BotCallActivityMappingPropertySection(bot);
+    }
+
+
 
 }

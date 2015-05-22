@@ -48,7 +48,7 @@
 		<module>org.bonitasoft.studio.jpdl.nl_it</module>
 		<module>org.bonitasoft.studio.migration.nl_it</module>
 		<module>org.bonitasoft.studio.model.edit.custom.nl_it</module>
-        <module>org.bonitasoft.studio.pagedesigner.nl_it</module>
+        <module>org.bonitasoft.studio.designer.nl_it</module>
         <module>org.bonitasoft.studio.parameters.nl_it</module>
 		<module>org.bonitasoft.studio.preferences.nl_it</module>
 		<module>org.bonitasoft.studio.profiles.nl_it</module>
