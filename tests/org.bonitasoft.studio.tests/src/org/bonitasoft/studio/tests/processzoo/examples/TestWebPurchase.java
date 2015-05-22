@@ -164,39 +164,20 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         final SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
         properties.bot().button("Add...").click();
         bot.waitUntil(Conditions.shellIsActive("Add form..."));
-
         bot.tabItem(Messages.processData).activate();
         bot.checkBox("Select all").select();
         final SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
-
         bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
         bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
         bot.tree().select("customerPhone1");
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.comboBoxWithLabel("Field type").setSelection("Text");
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
         bot.tree().select("customerEmail1");
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.comboBoxWithLabel("Field type").setSelection("Text");
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
         bot.tree().select("customerName1");
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.comboBoxWithLabel("Field type").setSelection("Text");
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
         bot.tree().select("products1");
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).setFocus();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Options");
         bot.checkBox(2).select();
     }
@@ -204,7 +185,6 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
     private void stepMoreInfo(final SWTBotGefEditor gmfEditor) {
         bot.editorByTitle(diagramTitle).show();
         bot.editorByTitle(diagramTitle).setFocus();
-        //  SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Sales Review",SWTBotTestUtil.CONTEXTUALPALETTE_STEP,new Point(350,180));
         SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Sales Review", SWTBotTestUtil.CONTEXTUALPALETTE_STEP, PositionConstants.SOUTH);
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.textWithLabel("Name").setText("More Info");
@@ -241,29 +221,12 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
         bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
         bot.tree().select("customerPhone1");
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.comboBoxWithLabel("Field type").setSelection("Text");
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
         bot.tree().select("customerEmail1");
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.comboBoxWithLabel("Field type").setSelection("Text");
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
         bot.tree().select("customerName1");
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.comboBoxWithLabel("Field type").setSelection("Text");
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
         bot.tree().select("products1");
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).setFocus();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Options");
         bot.checkBox(2).select();
     }

@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form;
 
+import static org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.DefaultTabbedPropertyProvider.isFormDiagramEditor;
+
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.FormPackage;

@@ -14,17 +14,22 @@
  */
 package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider;
 
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.ProcessGeneralTabbedPropertySelectionProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.IEditorReference;
 
-public class DefaultTabbedPropertyProvider extends ProcessGeneralTabbedPropertySelectionProvider {
+public class DefaultTabbedPropertyProvider implements ITabbedPropertySelectionProvider {
 
-    public static DefaultTabbedPropertyProvider INSTANCE = new DefaultTabbedPropertyProvider();
+    private final String viewId;
+    private final String tabId;
+
+    private DefaultTabbedPropertyProvider(final String viewId, final String tabId) {
+        this.viewId = viewId;
+        this.tabId = tabId;
+    }
 
     @Override
-    public String tabId(final EObject mapping) {
-        return "tab.general";
+    public String tabId(final EObject element) {
+        return tabId;
     }
 
     /*
@@ -32,8 +37,33 @@ public class DefaultTabbedPropertyProvider extends ProcessGeneralTabbedPropertyS
      * @see org.bonitasoft.studio.common.gmf.tools.tree.selection.ITabbedPropertySelectionProvider#appliesTo(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public boolean appliesTo(final EObject element, IEditorReference activeEditor) {
+    public boolean appliesTo(final EObject element, final IEditorReference activeEditor) {
         return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.ITabbedPropertySelectionProvider#viewId()
+     */
+    @Override
+    public String viewId() {
+        return viewId;
+    }
+
+    public static ITabbedPropertySelectionProvider defaultProvider(final IEditorReference activeEditor) {
+        return isProcessDiagramEditor(activeEditor)
+                ? new DefaultTabbedPropertyProvider("org.bonitasoft.studio.views.properties.process.general", "tab.general") :
+                new DefaultTabbedPropertyProvider("org.bonitasoft.studio.views.properties.form.general", "Form.GeneralTab");
+    }
+
+    public static boolean isProcessDiagramEditor(final IEditorReference activeEditor) {
+        return "org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorID".equals(activeEditor.getId()) ||
+                "org.bonitasoft.studio.model.process.diagram.custom.ex.part.ProcessDiagramEditorExID".equals(activeEditor.getId());
+    }
+
+    public static boolean isFormDiagramEditor(final IEditorReference activeEditor) {
+        return "org.bonitasoft.studio.diagram.form.custom.ex.part.FormDiagramEditorEx".equals(activeEditor.getId()) ||
+                "org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorID".equals(activeEditor.getId());
     }
 
 }

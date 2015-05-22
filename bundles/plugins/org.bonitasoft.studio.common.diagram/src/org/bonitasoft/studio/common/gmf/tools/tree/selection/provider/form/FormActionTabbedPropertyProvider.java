@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form;
 
+import static org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.DefaultTabbedPropertyProvider.isFormDiagramEditor;
+
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.FormPackage;
@@ -34,6 +36,7 @@ public class FormActionTabbedPropertyProvider extends FormGeneralTabbedPropertyS
     @Override
     public boolean appliesTo(final EObject element, final IEditorReference activeEditor) {
         final Operation operation = ModelHelper.getFirstContainerOfType(element, Operation.class);
-        return operation != null && operation.eContainingFeature().equals(FormPackage.Literals.FORM__ACTIONS) && isFormDiagramEditor(activeEditor);
+        return operation != null && operation.eContainingFeature().equals(FormPackage.Literals.FORM__ACTIONS)
+                && isFormDiagramEditor(activeEditor);
     }
 }
