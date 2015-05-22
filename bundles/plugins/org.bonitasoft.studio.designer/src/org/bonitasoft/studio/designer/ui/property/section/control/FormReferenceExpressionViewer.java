@@ -59,7 +59,7 @@ public class FormReferenceExpressionViewer extends ExpressionViewer {
     }
 
     @Override
-    protected String overrideDefaultReturnType() {
+    protected String defaultExpressionType() {
         return ExpressionConstants.FORM_REFERENCE_TYPE;
     }
 

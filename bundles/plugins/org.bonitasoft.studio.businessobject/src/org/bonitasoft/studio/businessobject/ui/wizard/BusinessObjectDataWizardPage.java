@@ -33,7 +33,6 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.handler.ManageBusinessObjectHandler;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.jface.databinding.validator.ValidatorEvent;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -42,6 +41,7 @@ import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -93,6 +93,8 @@ public class BusinessObjectDataWizardPage extends WizardPage {
     private IObservableValue defaultValueContentObservable;
 
     private final HintImageProvider imageProvider;
+
+    private IObservableValue defaultReturnTypeObservable;
 
     protected BusinessObjectDataWizardPage(final DataAware container, final BusinessObjectData businessObjectData,
             final BusinessObjectModelRepositoryStore businessObjectDefinitionStore,
@@ -169,7 +171,8 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         defaultValueExpressionViewer.setInput(container);
         ctx.bindValue(ViewersObservables.observeSingleSelection(defaultValueExpressionViewer),
                 EMFObservables.observeValue(businessObjectData, ProcessPackage.Literals.DATA__DEFAULT_VALUE));
-
+        defaultReturnTypeObservable = PojoObservables.observeValue(defaultValueExpressionViewer, "defaultReturnType");
+        ctx.bindValue(defaultReturnTypeObservable, classNameObservable);
         return defaultValueExpressionViewer;
 
     }
@@ -210,7 +213,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         classNameObservable = EMFObservables.observeValue(businessObjectData, ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME);
         ctx.bindValue(observeSingleSelection,
                 classNameObservable,
-                updateValueStrategy().withConverter(businessObjectToFQN()).withValidator(mandatoryValidator(Messages.businessObject), ValidatorEvent.AFTER_GET)
+                updateValueStrategy().withConverter(businessObjectToFQN()).withValidator(mandatoryValidator(Messages.businessObject))
                         .create(),
                 updateValueStrategy().withConverter(fqnToBusinessObject())
                         .create());
