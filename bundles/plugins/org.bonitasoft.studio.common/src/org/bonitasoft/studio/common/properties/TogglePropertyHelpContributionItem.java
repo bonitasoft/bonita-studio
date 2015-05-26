@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.properties;
 
 import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.dialogs.Dialog;
@@ -29,6 +30,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author Romain Bioteau
@@ -40,16 +42,33 @@ public class TogglePropertyHelpContributionItem extends ContributionItem impleme
     private final FormToolkit toolkit;
     private Label decriptionLabel;
     private MenuItem menuItem;
+    private final PropertySectionHistory propertySectionHistory;
 
-    public TogglePropertyHelpContributionItem(final FormToolkit toolkit, final Form form, final String helpContent) {
+    public TogglePropertyHelpContributionItem(final FormToolkit toolkit, final Form form, final String helpContent,
+            final PropertySectionHistory propertySectionHistory) {
         this.helpContent = helpContent;
         this.form = form;
         this.toolkit = toolkit;
+        this.propertySectionHistory = propertySectionHistory;
     }
 
     @Override
     public boolean isVisible() {
         return helpContent != null && !helpContent.isEmpty();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.ContributionItem#dispose()
+     */
+    @Override
+    public void dispose() {
+        try {
+            propertySectionHistory.save();
+        } catch (final BackingStoreException e) {
+            BonitaStudioLog.error(e);
+        }
+        super.dispose();
     }
 
     protected void toggleHelp() {
@@ -60,13 +79,16 @@ public class TogglePropertyHelpContributionItem extends ContributionItem impleme
             if (menuItem != null) {
                 menuItem.setText(Messages.showHelp);
             }
+            propertySectionHistory.hideDescription();
         } else {
             decriptionLabel = toolkit.createLabel(form.getHead(), helpContent, SWT.WRAP);
             form.setHeadClient(decriptionLabel);
             if (menuItem != null) {
                 menuItem.setText(Messages.hideHelp);
             }
+            propertySectionHistory.showDescription();
         }
+
         form.getParent().getParent().layout(true, true);
     }
 
@@ -82,6 +104,9 @@ public class TogglePropertyHelpContributionItem extends ContributionItem impleme
                 toggleHelp();
             }
         });
+        if (propertySectionHistory.isDescriptionVisible()) {
+            toggleHelp();
+        }
     }
 
     @Override
