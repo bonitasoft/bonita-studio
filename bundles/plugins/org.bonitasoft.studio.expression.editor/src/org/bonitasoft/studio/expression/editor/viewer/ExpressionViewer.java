@@ -183,6 +183,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     private final ExpressionEditorService expressionEditorService;
     private final Set<String> filteredEditor = new HashSet<String>();
     protected final ExpressionItemProvider expressionItemProvider = new ExpressionItemProvider(new ExpressionItemProviderAdapterFactory());
+    private String defaultReturnType;
 
     public ExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
         this(composite, style, widgetFactory, null);
@@ -412,27 +413,28 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         final EditingDomain editingDomain = getEditingDomain();
         if (editingDomain != null) {
             final CompoundCommand cc = ExpressionHelper.clearExpression(selectedExpression, editingDomain);
-            if (overrideDefaultReturnType() != null) {
-                cc.append(SetCommand.create(editingDomain, selectedExpression,
-                        ExpressionPackage.Literals.EXPRESSION__TYPE, overrideDefaultReturnType()));
-            }
+            cc.append(SetCommand.create(editingDomain, selectedExpression,
+                    ExpressionPackage.Literals.EXPRESSION__TYPE, defaultExpressionType()));
             final boolean hasBeenExecuted = executeRemoveOperation(cc);
             if (!hasBeenExecuted) {
                 editingDomain.getCommandStack().execute(cc);
             }
         } else {
             ExpressionHelper.clearExpression(selectedExpression);
-            if (overrideDefaultReturnType() != null) {
-                selectedExpression.setReturnType(overrideDefaultReturnType());
-            }
+            selectedExpression.setType(defaultExpressionType());
         }
     }
 
-    /**
-     * @return the overrided default return type for subtype or null otherwise
-     */
-    protected String overrideDefaultReturnType() {
-        return null;
+    protected String defaultExpressionType() {
+        return ExpressionConstants.CONSTANT_TYPE;
+    }
+
+    public void setDefaultReturnType(final String defaultReturnType) {
+        this.defaultReturnType = defaultReturnType;
+    }
+
+    public String getDefaultReturnType() {
+        return defaultReturnType;
     }
 
     public void setExpressionProposalLableProvider(final IExpressionProposalLabelProvider expressionProposalLableProvider) {

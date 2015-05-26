@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
+
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -37,8 +39,10 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -46,6 +50,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
@@ -240,6 +245,10 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
         context.bindValue(
                 ViewerProperties.singleSelection().observe(getActionExpression()),
                 actionExpressionObservableValue);
+        context.bindValue(PojoObservables.observeValue(getActionExpression(), "defaultReturnType"),
+                EMFObservables.observeDetailValue(Realm.getDefault(),
+                        EMFObservables.observeValue(operation, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND),
+                        ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE), neverUpdateValueStrategy().create(), null);
 
         returnTypeExpressionObservableValue.addValueChangeListener(new RevalidateActionExpressionValueChangedListener());
     }
