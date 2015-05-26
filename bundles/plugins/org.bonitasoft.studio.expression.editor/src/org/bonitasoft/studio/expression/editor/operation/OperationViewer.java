@@ -158,6 +158,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
     public void refreshDatabinding() {
         final Operation action = getOperation();
         if (action != null) {
+            defaultReturnTypeResolver = new DefaultReturnTypeResolver(action);
             getActionExpression().setExternalDataBindingContext(context);
             storageViewer.setExternalDataBindingContext(context);
 
@@ -479,7 +480,6 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
 
     public void setOperation(final Operation operation) {
         this.operation = operation;
-        defaultReturnTypeResolver = new DefaultReturnTypeResolver(this.operation);
     }
 
     private Operation getOperation() {
