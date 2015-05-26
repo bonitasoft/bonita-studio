@@ -41,29 +41,13 @@
                 <artifactId>image-overlay-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>topRightVersion</id>
-                        <configuration>
-                            <baseImgPath>${basedir}/installer/images/topRight_without_version.png</baseImgPath>
-                            <outputImagePath>${basedir}/installer/images/logo-installer.png</outputImagePath>
-                            <outputImageFormat>png</outputImageFormat>
-                            <xLocation>52</xLocation>
-                            <yLocation>44</yLocation>
-                            <fontSize>14</fontSize>
-                            <color>55738c</color>
-                            <versionLabel>7.0.0</versionLabel>
-                        </configuration>
-                        <goals>
-                            <goal>create-image</goal>
-                        </goals>
-                    </execution>
-                    <execution>
                         <id>splashVersion</id>
                         <configuration>
                             <baseImgPath>${basedir}/installer/images/splash_without_version.png</baseImgPath>
                             <outputImagePath>${basedir}/installer/images/splash.png</outputImagePath>
                             <outputImageFormat>png</outputImageFormat>
                             <xLocation>90</xLocation>
-                            <yLocation>100</yLocation>
+                            <yLocation>120</yLocation>
                             <fontSize>22</fontSize>
                             <color>#0B4361</color>
                             <versionLabel>7.0.0</versionLabel>
