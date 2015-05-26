@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009-2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -19,6 +19,7 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
 
+import org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory;
 import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.GroupIterator;
 import org.bonitasoft.studio.model.process.Element;
@@ -74,7 +75,8 @@ public class EmptyNameConstraint extends AbstractLiveValidationMarkerConstraint 
         final String inputName = String.format("%s %s", eClassName(element), Messages.elementName);
         final IStatus status = multiValidator()
                 .addValidator(forbiddenCharactersValidator(inputName, '#', '%', '$'))
-                .addValidator(maxLengthValidator(inputName, MAX_NAME_LENGTH)).create().validate(element.getName());
+                .addValidator(maxLengthValidator(inputName, MAX_NAME_LENGTH))
+                .addValidator(ValidatorFactory.reservedRESTAPIKeywordsValidator()).create().validate(element.getName());
         if (!status.isOK()) {
             return ctx.createFailureStatus(status.getMessage());
         }
