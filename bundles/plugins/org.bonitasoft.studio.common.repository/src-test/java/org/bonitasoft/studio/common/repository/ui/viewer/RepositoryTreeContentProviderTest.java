@@ -16,6 +16,7 @@ package org.bonitasoft.studio.common.repository.ui.viewer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,6 +25,7 @@ import java.util.Collections;
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -38,6 +40,11 @@ public class RepositoryTreeContentProviderTest {
 
     @Mock
     IRepositoryFileStore repoFileStore;
+
+    @Before
+    public void setUp() throws Exception {
+        when(repoFileStore.canBeExported()).thenReturn(true);
+    }
 
     @Test
     public void testGetChildren() {

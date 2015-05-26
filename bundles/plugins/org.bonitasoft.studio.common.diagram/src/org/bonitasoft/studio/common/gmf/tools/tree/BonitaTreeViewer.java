@@ -16,16 +16,26 @@ package org.bonitasoft.studio.common.gmf.tools.tree;
 
 import java.util.Collection;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.gmf.tools.GMFTools;
+import org.bonitasoft.studio.common.gmf.tools.tree.selection.EditPartNotFoundException;
+import org.bonitasoft.studio.common.gmf.tools.tree.selection.EditPartResolver;
+import org.bonitasoft.studio.common.gmf.tools.tree.selection.TabbedPropertySelectionProviderRegistry;
+import org.bonitasoft.studio.common.gmf.tools.tree.selection.TabbedPropertySynchronizerListener;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.FormPackage;
+import org.bonitasoft.studio.model.form.Validator;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.draw2d.FigureCanvas;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.common.ui.URIEditorInput;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -34,8 +44,11 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.editparts.RootTreeEditPart;
 import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
+import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -52,15 +65,18 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
+
+import com.google.common.base.Objects;
 
 /**
  * @author Romain Bioteau
  */
-public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements ISelectionProvider, SWTBotConstants {
+public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelectionProvider, SWTBotConstants {
 
     private static final class SearchPatternFilter extends PatternFilter {
 
@@ -106,6 +122,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
         }
 
     };
+    private final EditPartResolver editPartResolver = new EditPartResolver();
 
     /**
      * Constructs a TreeViewer with the default root editpart.
@@ -136,7 +153,9 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
         treeViewer.setContentProvider(adapterFactoryContentProvider);
 
         addFilters(treeViewer);
-
+        treeViewer.addSelectionChangedListener(new TabbedPropertySynchronizerListener(editPartResolver, new TabbedPropertySelectionProviderRegistry(),
+                PlatformUI.getWorkbench()
+                        .getActiveWorkbenchWindow().getActivePage()));
         treeViewer.getTree().addListener(SWT.MouseDoubleClick, new Listener() {
 
             @Override
@@ -176,38 +195,90 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
     public void setDiagramEditPart(final DiagramEditPart diagramEditPart) {
         this.diagramEditPart = diagramEditPart;
         if (filteredTree != null) {
-            final EObject resolveSemanticElement = ((IGraphicalEditPart) diagramEditPart).resolveSemanticElement();
-            filteredTree.getViewer().setInput(resolveSemanticElement);
+            filteredTree.getViewer().setInput(((IGraphicalEditPart) diagramEditPart).resolveSemanticElement());
             diagramEditPart.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
                 @Override
                 public void selectionChanged(final SelectionChangedEvent event) {
-                    if (!filteredTree.isDisposed()) {
-                        filteredTree.getViewer().refresh();
-                        final EditPartViewer viewer = diagramEditPart.getViewer();
-                        if (viewer != null) {
-                            final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-                            final Object ep = selection.getFirstElement();
-                            if (ep instanceof IGraphicalEditPart) {
-                                final EObject element = ((IGraphicalEditPart) ep).resolveSemanticElement();
-                                if (element != null) {
-                                    final Object selected = ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement();
-                                    if (selected != null && selected instanceof EObject) {
-                                        final IGraphicalEditPart foundEP = findEditPartFor((EObject) selected);
-                                        if (!foundEP.equals(ep)) {
-                                            filteredTree.getViewer().setSelection(new StructuredSelection(element));
-                                        }
-                                    }
-                                }
+                    final IGraphicalEditPart diagramSelectedPart = (IGraphicalEditPart) ((IStructuredSelection) event.getSelection()).getFirstElement();
+                    if (diagramSelectedPart != null && filteredTree != null && !filteredTree.isDisposed()) {
+                        final EObject treeElementSelection = (EObject) ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement();
+                        try {
+                            final IGraphicalEditPart editPart = editPartResolver.findEditPart(diagramEditPart, treeElementSelection);
+                            if (!editPart.equals(diagramSelectedPart)) {
+                                selectTreeItem(diagramSelectedPart);
                             }
+                        } catch (final EditPartNotFoundException e) {
+                            selectTreeItem(diagramSelectedPart);
                         }
                     }
                 }
+
             });
+
         }
     }
 
-    protected abstract void handlTreeDoubleClick();
+    private void selectTreeItem(final IGraphicalEditPart diagramSelectedPart) {
+        final Tree tree = filteredTree.getViewer().getTree();
+        filteredTree.getViewer().expandToLevel(diagramSelectedPart.resolveSemanticElement(), TreeViewer.ALL_LEVELS);
+        final TreeItem item = findTreeItem(tree.getItems(), diagramSelectedPart.resolveSemanticElement());
+        if (item != null) {
+            filteredTree.getViewer().getTree().setSelection(item);
+        }
+    }
+
+    private TreeItem findTreeItem(final TreeItem[] items, final EObject resolveSemanticElement) {
+        for (final TreeItem item : items) {
+            if (item != null && Objects.equal(item.getData(), resolveSemanticElement)) {
+                return item;
+            }
+            final TreeItem findTreeItem = findTreeItem(item.getItems(), resolveSemanticElement);
+            if (findTreeItem != null) {
+                return findTreeItem;
+            }
+        }
+        return null;
+    }
+
+    protected void handlTreeDoubleClick() {
+        if (!filteredTree.getViewer().getSelection().isEmpty()) {
+            EObject element = (EObject) ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement();
+            if (element.eClass().getEPackage().getName().equals(FormPackage.eINSTANCE.getName())) {
+                while (element != null && !(element instanceof Form)) {
+                    element = element.eContainer();
+                }
+            }
+
+            if (element instanceof Form) {
+                openFormEditor((Form) element);
+            }
+        }
+    }
+
+    private void openFormEditor(final Form element) {
+        final Diagram diag = ModelHelper.getDiagramFor(element);
+
+        /*
+         * need to get the URI after save because the name can change as it is
+         * synchronized with the MainProcess name
+         */
+        final URI uri = EcoreUtil.getURI(diag);
+
+        /* open the form editor */
+        final DiagramEditor editor = (DiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, ((Element) element).getName()));
+        editor.getDiagramEditPart().getViewer().deselectAll();
+        final EObject elem = (EObject) ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement();
+        Element selectedElem = null;
+        if (elem instanceof Validator || elem instanceof Expression) {
+            selectedElem = (Element) elem.eContainer();
+        } else {
+            selectedElem = (Element) elem;
+        }
+        final IGraphicalEditPart ep = GMFTools.findEditPart(editor.getDiagramEditPart(), selectedElem);
+        editor.getDiagramEditPart().getViewer().select(ep);
+        editor.getDiagramEditPart().getViewer().setSelection(new StructuredSelection(ep));
+    }
 
     /**
      * @see org.eclipse.gef.EditPartViewer#findObjectAtExcluding(Point, Collection, EditPartViewer.Conditional)
@@ -236,21 +307,8 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
         if (getControl() == null) {
             return;
         }
-
-        final Tree tree = filteredTree.getViewer().getTree();
-        filteredTree.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-
-            @Override
-            public void selectionChanged(final SelectionChangedEvent event) {
-                handleTreeSelection(tree);
-            }
-        });
         super.hookControl();
     }
-
-    protected abstract void handleTreeSelection(final Tree tree);
-
-    protected abstract IGraphicalEditPart findEditPartFor(EObject elem);
 
     /**
      * @see org.eclipse.gef.ui.parts.AbstractEditPartViewer#reveal(org.eclipse.gef.EditPart)
@@ -279,35 +337,15 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
         if (adapterFactory != null) {
             adapterFactory.dispose();
         }
-        super.unhookControl();
-    }
-
-    protected void scrollDiagram(final IGraphicalEditPart ep) {
-        final org.eclipse.draw2d.geometry.Rectangle bounds = ep.getFigure().getBounds().getCopy();
-        //Get the absolute coordinate
-        final IFigure referenceFigure = ep.getFigure();
-        referenceFigure.translateToAbsolute(bounds);
-        IFigure parentFigure = referenceFigure.getParent();
-        while (parentFigure != null) {
-            if (parentFigure instanceof Viewport) {
-                final Viewport viewport = (Viewport) parentFigure;
-                bounds.translate(
-                        viewport.getHorizontalRangeModel().getValue(),
-                        viewport.getVerticalRangeModel().getValue());
-                parentFigure = parentFigure.getParent();
-            }
-            else {
-                parentFigure = parentFigure.getParent();
-            }
+        if (editPartResolver != null) {
+            editPartResolver.dispose();
         }
-        final Point loc = bounds.getLocation();
-        final Scrollable f = diagramEditPart.getScrollableControl();
-        ((FigureCanvas) f).scrollTo(loc.x - f.getBounds().width / 2, loc.y - f.getBounds().height / 2);
+        super.unhookControl();
     }
 
     @Override
     public void setRootEditPart(final RootEditPart editpart) {
-        //super.setRootEditPart(editpart);
+
     }
 
     @Override
@@ -320,7 +358,4 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
         return null;
     }
 
-    public Tree getTree() {
-        return filteredTree.getViewer().getTree();
-    }
 }

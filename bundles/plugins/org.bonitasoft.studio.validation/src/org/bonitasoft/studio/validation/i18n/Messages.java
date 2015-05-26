@@ -218,6 +218,7 @@ public class Messages extends NLS {
     public static String invalidFileContractInputType;
     public static String invalidSingleFileContractInput;
     public static String missingFileContractInput;
+    public static String emptyFormMappingWarning;
 
     static {
         // initialize resource bundle

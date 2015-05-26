@@ -41,7 +41,7 @@ public class SimpleFieldToContractInputMapping extends FieldToContractInputMappi
             case INTEGER:
                 return ContractInputType.INTEGER;
             case LONG:
-                return ContractInputType.INTEGER;
+                return ContractInputType.TEXT;
             case DOUBLE:
                 return ContractInputType.DECIMAL;
             case FLOAT:

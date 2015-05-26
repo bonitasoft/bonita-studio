@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
+ * Bonitasoft is a trademark of Bonitasoft SA.
  * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
  * For commercial licensing information, contact:
- * BonitaSoft, 32 rue Gustave Eiffel 38000 Grenoble
- * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
+ * Bonitasoft, 32 rue Gustave Eiffel 38000 Grenoble
+ * or Bonitasoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.diagram.general.form.data;
 
@@ -72,18 +72,6 @@ public class BotDataFormPropertySection extends BotBase {
     public BotDataFormPropertySection selectOutputVariable(final String variableName, final String returnType) {
         SWTBotTestUtil.selectExpressionProposal(bot, variableName, returnType, 1);
         return this;
-    }
-
-    /**
-     * Edit output expression.
-     *
-     * @deprecated use {@link #getOutputOperation()}
-     * @return
-     */
-    @Deprecated
-    public BotExpressionEditorDialog editOutputOperationExpression() {
-        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, 1).click();
-        return new BotExpressionEditorDialog(bot);
     }
 
     /**

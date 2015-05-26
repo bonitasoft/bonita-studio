@@ -30,7 +30,7 @@ public class TestResources extends SWTBotGefTestCase implements SWTBotConstants{
 
 
     public void testCorrectLabelProvider() throws Exception{
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestExportToBPMNDiagram_1_0.bos", "Bonita 6.x", "TestExportToBPMNDiagram", TestResources.class, false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestExportToBPMNDiagram_1_0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "TestExportToBPMNDiagram", TestResources.class, false);
         SWTBotGefEditor gefEditor = bot.gefEditor(bot.activeEditor().getTitle());
         gefEditor.getEditPart("Pool1").parent().select();
 

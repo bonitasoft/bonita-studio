@@ -48,11 +48,21 @@ public class SelectBusinessDataWizardPageTest {
     }
 
     @Test
-    public void should_isPageComplete_ReturnTrue_when_available_data_is_not_empty() {
+    public void should_isPageComplete_ReturnTrue_when_available_data_is_not_empty_selection_not_empty() {
+        final List<Data> availableBusinessData = new ArrayList<Data>();
+        availableBusinessData.add(aBusinessData().build());
+        final WritableValue selectedDataObservable = new WritableValue();
+        selectedDataObservable.setValue(new Object());
+        final SelectBusinessDataWizardPage page = new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable, store);
+        assertThat(page.isPageComplete()).isTrue();
+    }
+
+    @Test
+    public void should_isPageComplete_ReturnFalse_when_available_data_is_not_empty_and_selection_is_empty() {
         final List<Data> availableBusinessData = new ArrayList<Data>();
         availableBusinessData.add(aBusinessData().build());
         final WritableValue selectedDataObservable = new WritableValue();
         final SelectBusinessDataWizardPage page = new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable, store);
-        assertThat(page.isPageComplete()).isTrue();
+        assertThat(page.isPageComplete()).isFalse();
     }
 }

@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.properties;
 
@@ -45,11 +42,8 @@ import org.eclipse.ui.internal.views.properties.tabbed.view.TabbedPropertyTitle;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
-
-
 /**
  * @author Aurelien Pupier
- *
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractNamePropertySectionContribution implements IExtensibleGridPropertySectionContribution {
@@ -59,20 +53,18 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
     protected TransactionalEditingDomain editingDomain;
     protected ISelection selection;
     protected TabbedPropertySheetPage tabbedPropertySheetPage;
-    protected EMFDataBindingContext context ;
-
+    protected EMFDataBindingContext context;
 
     public AbstractNamePropertySectionContribution(final TabbedPropertySheetPage tabbedPropertySheetPage,
             final ExtensibleGridPropertySection extensibleGridPropertySection) {
         this.tabbedPropertySheetPage = tabbedPropertySheetPage;
     }
 
-    /** Create the Data binding*/
+    /** Create the Data binding */
     protected abstract void createBinding(EMFDataBindingContext context);
 
     /*
      * (non-Javadoc)
-     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution
      * #isRelevantFor(org.eclipse.emf.ecore.EObject)
@@ -84,7 +76,6 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
 
     /*
      * (non-Javadoc)
-     *
      * @seeorg.bonitasoft.studio.common.properties.
      * IExtensibleGridPropertySectionContribution#refresh()
      */
@@ -93,10 +84,8 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
 
     }
 
-
     /*
      * (non-Javadoc)
-     *
      * @seeorg.bonitasoft.studio.common.properties.
      * IExtensibleGridPropertySectionContribution
      * #setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
@@ -114,17 +103,15 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
         if (text != null && !text.isDisposed()) {
             final TabbedPropertyComposite tabbedPropertyComposite = (TabbedPropertyComposite) tabbedPropertySheetPage.getControl();
             final TabbedPropertyTitle title = tabbedPropertyComposite.getTitle();
-            if(title != null){
+            if (title != null) {
                 final Image image = tabbedPropertySheetPage.getTitleImage(selection);
                 title.setTitle(text.getText(), image);
             }
         }
     }
 
-
     /*
      * (non-Javadoc)
-     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution
      * #createControl(org.eclipse.swt.widgets.Composite,
@@ -146,34 +133,32 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
 
         rd.grabExcessVerticalSpace = true;
         text.setLayoutData(rd);
-        text.setText(element.getName()) ;
-        if(useEditButton()){
-            text.setEnabled(false) ;
+        text.setText(element.getName());
+        if (useEditButton()) {
+            text.setEnabled(false);
         }
         if (!(element instanceof SequenceFlow)) {
 
-            if(useEditButton()){
-                final Button editDiagramNameButton =  widgetFactory.createButton(composite, Messages.edit, SWT.FLAT) ;
+            if (useEditButton()) {
+                final Button editDiagramNameButton = widgetFactory.createButton(composite, Messages.edit, SWT.FLAT);
                 editDiagramNameButton.addSelectionListener(new SelectionAdapter() {
+
                     @Override
                     public void widgetSelected(final SelectionEvent e) {
-                        editProcessNameAndVersion() ;
-                        //   text.setText(element.getName()) ;
-                        // composite.layout(true, true) ;
+                        editProcessNameAndVersion();
                     }
-                }) ;
+                });
             }
 
         }
         createBinding(context);
-        updatePropertyTabTitle() ;
+        updatePropertyTabTitle();
     }
 
     private boolean useEditButton() {
         //  return element instanceof MainProcess || element instanceof Pool|| (element instanceof Widget && element.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) element.eContainer()));
         return element instanceof MainProcess || element instanceof Pool || element instanceof Widget && isContainerIsAFormOrAGroup(element.eContainer());
     }
-
 
     protected void editProcessNameAndVersion() {
         //TO IMPLEMENT IN SUBCLASS
@@ -191,11 +176,10 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
         }
     }
 
-
     @Override
     public void dispose() {
         selection = null;
-        if(context != null){
+        if (context != null) {
             context.dispose();
         }
     }

@@ -99,8 +99,8 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
         final PasswordFieldEditor password = new PasswordFieldEditor(BonitaPreferenceConstants.USER_PASSWORD, Messages.userPasswordLabel, loginGroup);
         addField(password);
 
-        defaultTheme = new ComboFieldEditor(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, Messages.bind(Messages.defaultUserXPThemeLabel,
-                new Object[] { bonitaPortalModuleName }), getAvailableThemes(), getFieldEditorParent());
+        defaultTheme = new ComboFieldEditor(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, Messages.defaultUserXPThemeLabel + " " + bonitaPortalModuleName,
+                getAvailableThemes(), getFieldEditorParent());
         addField(defaultTheme);
 
     }

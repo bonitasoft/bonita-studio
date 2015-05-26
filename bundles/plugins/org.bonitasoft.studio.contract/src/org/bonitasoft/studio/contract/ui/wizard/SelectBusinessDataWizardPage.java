@@ -26,10 +26,13 @@ import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TableViewer;
@@ -43,7 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 public class SelectBusinessDataWizardPage extends WizardPage {
 
     List<Data> availableBusinessData;
-    private final WritableValue selectedDataObservable;
+    final WritableValue selectedDataObservable;
     private final BusinessObjectModelRepositoryStore businessObjectStore;
 
     public SelectBusinessDataWizardPage(final List<Data> availableBusinessData, final WritableValue selectedDataObservable,
@@ -71,7 +74,7 @@ public class SelectBusinessDataWizardPage extends WizardPage {
 
     public void createTableViewer(final Composite parent) {
         final DataBindingContext dbc = new DataBindingContext();
-        final TableViewer businessDataTableViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL);
+        final TableViewer businessDataTableViewer = new TableViewer(parent, SWT.BORDER | SWT.SINGLE | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL);
         businessDataTableViewer.getTable().setLayout(GridLayoutFactory.fillDefaults().create());
         businessDataTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
         final ObservableListContentProvider contentProvider = new ObservableListContentProvider();
@@ -81,7 +84,12 @@ public class SelectBusinessDataWizardPage extends WizardPage {
                 ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME });
         businessDataTableViewer.setLabelProvider(new BusinessObjectDataStyledLabelProvider(businessObjectStore, labelMaps));
         businessDataTableViewer.setInput(new WritableList(availableBusinessData, ProcessPackage.Literals.BUSINESS_OBJECT_DATA));
-        dbc.bindValue(ViewersObservables.observeSingleSelection(businessDataTableViewer), selectedDataObservable);
+        final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(businessDataTableViewer);
+        dbc.bindValue(observeSingleSelection, selectedDataObservable);
+
+        final MultiValidator multiValidator = new BusinessDataSelectedValidator(availableBusinessData, selectedDataObservable);
+        dbc.addValidationStatusProvider(multiValidator);
+        WizardPageSupport.create(this, dbc);
     }
 
     /*
@@ -90,10 +98,14 @@ public class SelectBusinessDataWizardPage extends WizardPage {
      */
     @Override
     public boolean isPageComplete() {
-        if (availableBusinessData.isEmpty()) {
+        if (isABusinessDataSelected()) {
             return false;
         }
         return super.isPageComplete();
+    }
+
+    protected boolean isABusinessDataSelected() {
+        return availableBusinessData.isEmpty() || selectedDataObservable.getValue() == null;
     }
 
 }
