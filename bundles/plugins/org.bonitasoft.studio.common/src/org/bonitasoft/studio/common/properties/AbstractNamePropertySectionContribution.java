@@ -165,10 +165,10 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
     }
 
     protected boolean isContainerIsAFormOrAGroup(final EObject element) {
-        if (element != null && element instanceof Group) {
+        if (element instanceof Group) {
             return isContainerIsAFormOrAGroup(element.eContainer());
         } else {
-            return element != null && element instanceof Form;
+            return element instanceof Form;
         }
     }
 
