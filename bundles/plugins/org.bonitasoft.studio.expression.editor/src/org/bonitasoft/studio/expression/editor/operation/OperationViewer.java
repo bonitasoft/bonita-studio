@@ -257,13 +257,13 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
         context.bindValue(
                 ViewerProperties.singleSelection().observe(getActionExpression()),
                 actionExpressionObservableValue);
+
         context.bindValue(PojoObservables.observeValue(getActionExpression(), "defaultReturnType"),
                 EMFObservables.observeDetailValue(Realm.getDefault(),
-                        EMFObservables.observeValue(operation, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND),
+                        EMFObservables.observeValue(action, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND),
                         ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE),
                 neverUpdateValueStrategy().create(),
                 updateValueStrategy().withConverter(returnTypeConverter()).create());
-
         returnTypeExpressionObservableValue.addValueChangeListener(new RevalidateActionExpressionValueChangedListener());
     }
 
