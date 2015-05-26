@@ -149,7 +149,7 @@ public class WorkspaceServerResource extends ServerResource {
                 response.setStatus(Status.CLIENT_ERROR_LOCKED, cause);
             }
         }
-        logException("WorkspaceServerResource interal error", throwable);
+        logException("WorkspaceServerResource internal error", throwable);
     }
 
     protected void logException(final String message, final Throwable throwable) {
