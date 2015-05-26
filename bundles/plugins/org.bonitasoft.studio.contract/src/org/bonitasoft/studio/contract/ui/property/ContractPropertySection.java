@@ -27,13 +27,14 @@ import org.bonitasoft.studio.contract.ui.property.input.ContractInputController;
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputTreeViewer;
 import org.bonitasoft.studio.contract.ui.wizard.AddInputContractFromDataWizardDialog;
 import org.bonitasoft.studio.contract.ui.wizard.ContractInputGenerationWizard;
-import org.bonitasoft.studio.designer.ui.contribution.NewFormContributionItem;
+import org.bonitasoft.studio.designer.ui.contribution.CreateAndEditFormContributionItem;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -95,7 +96,11 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     @Override
     public String getSectionDescription() {
-        return Messages.contractSectionDescription;
+        final Object selection = selectionProvider.getAdapter(EObject.class);
+        if (selection != null && selection instanceof Task) {
+            return Messages.stepContractSectionDescription;
+        }
+        return Messages.processContractSectionDescription;
     }
 
     @Override
@@ -111,7 +116,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     @Override
     protected void updateToolbar(final IToolBarManager toolbarManager) {
-        final NewFormContributionItem newFormContributionItem = newContributionItem(NewFormContributionItem.class);
+        final CreateAndEditFormContributionItem newFormContributionItem = newContributionItem(CreateAndEditFormContributionItem.class);
         newFormContributionItem.setSelectionProvider(selectionProvider);
         toolbarManager.add(newFormContributionItem);
     }

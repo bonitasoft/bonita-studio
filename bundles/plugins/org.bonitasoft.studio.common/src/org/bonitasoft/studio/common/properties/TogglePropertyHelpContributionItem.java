@@ -15,15 +15,13 @@
 package org.bonitasoft.studio.common.properties;
 
 import org.bonitasoft.studio.common.Messages;
+import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -35,9 +33,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 /**
  * @author Romain Bioteau
  */
-public class TogglePropertyHelpContributionItem implements IContributionItem {
+public class TogglePropertyHelpContributionItem extends ContributionItem implements IContributionItem {
 
-    private final String helpContent;
+    private String helpContent;
     private final Form form;
     private final FormToolkit toolkit;
     private Label decriptionLabel;
@@ -50,67 +48,8 @@ public class TogglePropertyHelpContributionItem implements IContributionItem {
     }
 
     @Override
-    public void update(final String arg0) {
-
-    }
-
-    @Override
-    public void update() {
-    }
-
-    @Override
-    public void setVisible(final boolean arg0) {
-
-    }
-
-    @Override
-    public void setParent(final IContributionManager arg0) {
-
-    }
-
-    @Override
-    public void saveWidgetState() {
-
-    }
-
-    @Override
     public boolean isVisible() {
         return helpContent != null && !helpContent.isEmpty();
-    }
-
-    @Override
-    public boolean isSeparator() {
-        return false;
-    }
-
-    @Override
-    public boolean isGroupMarker() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isDynamic() {
-        return false;
-    }
-
-    @Override
-    public boolean isDirty() {
-        return false;
-    }
-
-    @Override
-    public String getId() {
-        return null;
-    }
-
-    @Override
-    public void fill(final CoolBar arg0, final int arg1) {
-
     }
 
     protected void toggleHelp() {
@@ -164,13 +103,15 @@ public class TogglePropertyHelpContributionItem implements IContributionItem {
         menuItem.setSelection(decriptionLabel != null);
     }
 
-    @Override
-    public void fill(final Composite arg0) {
-
+    public void setHelpContent(final String helpContent) {
+        this.helpContent = helpContent;
+        if (decriptionLabel != null) {
+            decriptionLabel.setText(helpContent);
+        }
     }
 
-    @Override
-    public void dispose() {
-
+    public String getHelpContent() {
+        return helpContent;
     }
+
 }

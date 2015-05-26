@@ -25,7 +25,8 @@ public class Messages extends NLS {
         NLS.initializeMessages("messages", Messages.class);//$NON-NLS-1$
     }
 
-    public static String contractSectionDescription;
+    public static String processContractSectionDescription;
+    public static String stepContractSectionDescription;
     public static String name;
     public static String type;
     public static String mandatory;
@@ -82,5 +83,9 @@ public class Messages extends NLS {
     public static String attributetype;
     public static String atLeastOneAttributeShouldBeSelectedError;
     public static String attributeName;
+    public static String warningAddFromData_noDataAvailable;
+    public static String warningAddFromData_noDataSelected;
+    public static String reminderForStepMessage;
+    public static String reminderForProcessMessage;
 
 }

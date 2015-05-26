@@ -18,6 +18,7 @@ import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.io.File;
 import java.util.Date;
 
 import org.bonitasoft.studio.model.process.Contract;
@@ -48,13 +49,15 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
                     case TEXT:
                         return createLeafContractInput(input, String.class);
                     case INTEGER:
-                        return createLeafContractInput(input, Long.class);
+                        return createLeafContractInput(input, Integer.class);
                     case DECIMAL:
                         return createLeafContractInput(input, Double.class);
                     case DATE:
                         return createLeafContractInput(input, Date.class);
                     case BOOLEAN:
                         return createLeafContractInput(input, Boolean.class);
+                    case FILE:
+                        return createLeafContractInput(input, File.class);
                     case COMPLEX:
                         return createNodeContractInput(input);
                     default:
