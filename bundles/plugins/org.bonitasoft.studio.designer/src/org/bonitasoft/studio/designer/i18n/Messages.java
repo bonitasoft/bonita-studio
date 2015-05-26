@@ -45,6 +45,15 @@ public class Messages extends NLS {
     public static String internalFormMappingUndefined;
     public static String formDoesntExistAnymoreMessage;
     public static String formDoesntExistAnymoreTitle;
+    public static String stepUIDesignerInfo;
+    public static String processUIDesignerInfo;
+    public static String overviewUIDesignerInfo;
+    public static String overviewURLInfo;
+    public static String stepURLInfo;
+    public static String processURLInfo;
+    public static String overviewLegacyInfo;
+    public static String stepLegacyInfo;
+    public static String processLegacyInfo;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
