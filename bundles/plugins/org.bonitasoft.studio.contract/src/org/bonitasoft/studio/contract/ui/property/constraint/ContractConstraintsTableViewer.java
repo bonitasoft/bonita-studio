@@ -33,9 +33,6 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
-import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
@@ -91,28 +88,6 @@ public class ContractConstraintsTableViewer extends TableViewer {
                 ColumnViewerEditor.KEYBOARD_ACTIVATION);
 
         ColumnViewerToolTipSupport.enableFor(this);
-        getColumnViewerEditor().addEditorActivationListener(new ColumnViewerEditorActivationListener() {
-
-            @Override
-            public void beforeEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) {
-
-            }
-
-            @Override
-            public void beforeEditorActivated(final ColumnViewerEditorActivationEvent event) {
-
-            }
-
-            @Override
-            public void afterEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) {
-                messageManager.removeAllMessages();
-            }
-
-            @Override
-            public void afterEditorActivated(final ColumnViewerEditorActivationEvent event) {
-
-            }
-        });
         configureTableLayout();
         createColumns();
     }
