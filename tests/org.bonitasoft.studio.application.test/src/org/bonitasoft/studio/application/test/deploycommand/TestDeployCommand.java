@@ -28,6 +28,10 @@ import org.bonitasoft.engine.api.ProcessManagementAPI;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoCriterion;
+import org.bonitasoft.engine.bpm.process.ProcessInstanceSearchDescriptor;
+import org.bonitasoft.engine.search.Order;
+import org.bonitasoft.engine.search.SearchOptions;
+import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -42,6 +46,7 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
+import org.bonitasoft.studio.util.test.async.TestAsyncThread;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -187,6 +192,16 @@ public class TestDeployCommand {
         final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
         assertNotNull(processDef);
         processApi.startProcess(processId);
+        new TestAsyncThread(5, 500) {
+
+            @Override
+            public boolean isTestGreen() throws Exception {
+                final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10)
+                        .filter(ProcessInstanceSearchDescriptor.PROCESS_DEFINITION_ID, processId)
+                        .sort(ProcessInstanceSearchDescriptor.ID, Order.ASC).done();
+                return processApi.searchProcessInstances(searchOptions).getCount() > 0;
+            }
+        }.evaluate();
     }
 
 }
