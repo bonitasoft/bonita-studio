@@ -28,14 +28,14 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class Well extends Composite {
 
-    private static Color infoSeprator = new Color(Display.getDefault(), 51, 102, 153);
-    private static Color infoBackground = new Color(Display.getDefault(), 229, 245, 255);
+    static Color infoSeprator = new Color(Display.getDefault(), 51, 102, 153);
+    static Color infoBackground = new Color(Display.getDefault(), 229, 245, 255);
 
-    private static Color warningSeprator = new Color(Display.getDefault(), 255, 204, 51);
-    private static Color warningBackground = new Color(Display.getDefault(), 255, 255, 204);
+    static Color warningSeprator = new Color(Display.getDefault(), 255, 204, 51);
+    static Color warningBackground = new Color(Display.getDefault(), 255, 255, 204);
 
-    private static Color errorSeprator = new Color(Display.getDefault(), 204, 0, 0);
-    private static Color errorBackground = new Color(Display.getDefault(), 255, 229, 229);
+    static Color errorSeprator = new Color(Display.getDefault(), 204, 0, 0);
+    static Color errorBackground = new Color(Display.getDefault(), 255, 229, 229);
 
     private final Label label;
 
@@ -51,7 +51,6 @@ public class Well extends Composite {
     public Well(final Composite parent, final String text, final FormToolkit toolkit, final int severity) {
         super(parent, SWT.NONE);
         setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 10, 5, 8).create());
-
         addPaintListener(new PaintListener() {
 
             @Override
@@ -65,7 +64,6 @@ public class Well extends Composite {
             }
 
         });
-        toolkit.adapt(this);
         label = toolkit.createLabel(this, text, SWT.WRAP);
         label.setBackground(backgroundColor(toolkit, severity));
         label.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(parent.computeSize(SWT.DEFAULT, SWT.DEFAULT).x, SWT.DEFAULT)
@@ -98,6 +96,10 @@ public class Well extends Composite {
 
     public void setText(final String text) {
         label.setText(text);
+    }
+
+    public String getText() {
+        return label.getText();
     }
 
 }
