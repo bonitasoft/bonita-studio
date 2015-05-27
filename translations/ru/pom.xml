@@ -49,7 +49,6 @@
 	<module>org.bonitasoft.studio.preferences.nl_ru</module>
 	<module>org.bonitasoft.studio.profiles.nl_ru</module>
 	<module>org.bonitasoft.studio.properties.nl_ru</module>
-	<module>org.bonitasoft.studio.registration.nl_ru</module>
 	<module>org.bonitasoft.studio.repository.themes.nl_ru</module>
 	<module>org.bonitasoft.studio.scripting.nl_ru</module>
 	<module>org.bonitasoft.studio.simulation.nl_ru</module>
