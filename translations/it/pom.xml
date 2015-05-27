@@ -53,6 +53,7 @@
 		<module>org.bonitasoft.studio.preferences.nl_it</module>
 		<module>org.bonitasoft.studio.profiles.nl_it</module>
 		<module>org.bonitasoft.studio.properties.nl_it</module>
+		<module>org.bonitasoft.studio.repository.themes.nl_it</module>
 		<module>org.bonitasoft.studio.scripting.nl_it</module>
 		<module>org.bonitasoft.studio.simulation.nl_it</module>
 		<module>org.bonitasoft.studio.validation.nl_it</module>
