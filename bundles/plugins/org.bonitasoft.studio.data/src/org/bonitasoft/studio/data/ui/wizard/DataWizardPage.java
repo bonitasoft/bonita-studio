@@ -125,6 +125,7 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.osgi.util.NLS;
@@ -956,6 +957,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         typeCombo.setContentProvider(new ArrayContentProvider());
         typeCombo.setLabelProvider(new DataTypeLabelProvider());
         typeCombo.addFilter(typeViewerFilter);
+        typeCombo.setSorter(new ViewerSorter());
         typeCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
 
         typeDescriptionDecorator = new ControlDecoration(typeCombo.getCombo(), SWT.LEFT);

@@ -28,9 +28,9 @@ import org.bonitasoft.studio.contract.ui.property.input.labelProvider.Descriptio
 import org.bonitasoft.studio.contract.ui.property.input.labelProvider.InputNameCellLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.input.labelProvider.MultipleInputCheckboxLabelProvider;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
@@ -108,7 +108,7 @@ public class ContractInputTreeViewer extends TreeViewer {
         this.messageManager = messageManager;
         this.inputController = inputController;
         this.emfDataBindingContext = emfDataBindingContext;
-        final ProcessItemProviderAdapterFactory adapterFactory = new ProcessItemProviderAdapterFactory();
+        final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         propertySourceProvider = new AdapterFactoryContentProvider(adapterFactory);
         adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
         getTree().setHeaderVisible(true);
