@@ -264,24 +264,32 @@ public class DeployProcessOperation {
         try {
             processApi.enableProcess(processDefinitionId);
         } catch (final ProcessEnablementException e) {
-            final List<Problem> processResolutionProblems = processApi.getProcessResolutionProblems(processDefinitionId);
-            IStatus status = openProcessEnablementProblemsDialog(process, processResolutionProblems);
-            if (status.isOK()) {
-                undeployProcess(process, monitor);
-                status = deployProcess(process, monitor);
-                if (status.getSeverity() != IStatus.OK) {
-                    return status;
-                }
-                return enableProcess(process, monitor);
-            } else {
-                return Status.CANCEL_STATUS;
-            }
+            return handleProcessEnablementException(process, monitor, processApi, processDefinitionId, e);
         } finally {
             if (session != null) {
                 BOSEngineManager.getInstance().logoutDefaultTenant(session);
             }
         }
         return Status.OK_STATUS;
+    }
+
+    protected IStatus handleProcessEnablementException(final AbstractProcess process, final IProgressMonitor monitor, final ProcessAPI processApi,
+            final Long processDefinitionId, final ProcessEnablementException e) throws ProcessDefinitionNotFoundException, Exception {
+        final List<Problem> processResolutionProblems = processApi.getProcessResolutionProblems(processDefinitionId);
+        if (processResolutionProblems.isEmpty()) {
+            BonitaStudioLog.error(e);
+        }
+        IStatus status = openProcessEnablementProblemsDialog(process, processResolutionProblems);
+        if (status.isOK()) {
+            undeployProcess(process, monitor);
+            status = deployProcess(process, monitor);
+            if (status.getSeverity() != IStatus.OK) {
+                return status;
+            }
+            return enableProcess(process, monitor);
+        } else {
+            return Status.CANCEL_STATUS;
+        }
     }
 
     /**
