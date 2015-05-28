@@ -152,7 +152,7 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
     protected void selectDataVariablesTabbedPropertyView() {
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Variables");
+        SWTBotTestUtil.selectTabbedPropertyView(bot, "Local variables");
     }
 
     private void createSalesReviewForm(final SWTBotGefEditor gmfEditor) {
