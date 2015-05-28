@@ -39,7 +39,7 @@ public class TomcatVmArgsBuilderTest {
         tomcatVmArgsBuilder = spy(new TomcatVmArgsBuilder(repositoryAccessor));
         doNothing().when(tomcatVmArgsBuilder).addUIDesignerOptions(any(StringBuilder.class));
         doNothing().when(tomcatVmArgsBuilder).addWatchDogProperties(any(StringBuilder.class));
-        doReturn("test.bonita.produict.application.id").when(tomcatVmArgsBuilder).getProductApplicationId();
+        doReturn("test.bonita.product.application.id").when(tomcatVmArgsBuilder).getProductApplicationId();
     }
 
     @Test
