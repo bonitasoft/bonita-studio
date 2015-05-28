@@ -20,11 +20,12 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.studio.designer.i18n.Messages;
-import org.bonitasoft.studio.designer.ui.contribution.OpenUIDesignerCoolBarItem;
 import org.bonitasoft.studio.designer.ui.handler.OpenUIDesignerHandler;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.commands.ICommandService;
@@ -43,6 +44,8 @@ public class OpenUIDesignerCoolBarItemTest {
     private ICommandService commandService;
     @Mock
     private OpenUIDesignerHandler openDesignerHandler;
+    @Mock
+    private IPreferenceStore prefStore;
 
     @Test
     public void create_a_toolItem_to_open_ui_designer() throws Exception {
@@ -60,6 +63,10 @@ public class OpenUIDesignerCoolBarItemTest {
     public void call_open_ui_designer_command_on_selection() throws Exception {
         final OpenUIDesignerCoolBarItem openUIDesignerCoolBarItem = spy(new OpenUIDesignerCoolBarItem());
         doReturn(openDesignerHandler).when(openUIDesignerCoolBarItem).getHandler();
+        doReturn(prefStore).when(openUIDesignerCoolBarItem).getPreferenceStore();
+        doReturn("true").when(prefStore).getString(OpenUIDesignerCoolBarItem.HIDE_UIDESIGNER_INFO_DIALOG);
+        final Shell shell = realmWithDisplay.getShell();
+        doReturn(shell).when(openUIDesignerCoolBarItem).getShell();
 
         final ToolBar toolbar = new ToolBar(realmWithDisplay.createComposite(), SWT.NONE);
         openUIDesignerCoolBarItem.fill(toolbar, 0, -1);

@@ -54,6 +54,9 @@ public class Messages extends NLS {
     public static String overviewLegacyInfo;
     public static String stepLegacyInfo;
     public static String processLegacyInfo;
+    public static String openUiDesignerInformationWindowTitle;
+    public static String openUiDesignerInformationMessage;
+    public static String openUiDesignerInformationToggleMessage;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

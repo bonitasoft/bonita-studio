@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.designer.ui.contribution;
 
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
+import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.i18n.Messages;
@@ -22,13 +23,19 @@ import org.bonitasoft.studio.designer.ui.handler.OpenUIDesignerHandler;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.ContributionItem;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.PlatformUI;
 
 public class OpenUIDesignerCoolBarItem extends ContributionItem implements IBonitaContributionItem {
+
+    protected static final String HIDE_UIDESIGNER_INFO_DIALOG = "HIDE_UIDESIGNER_INFO_DIALOG";
 
     /*
      * (non-Javadoc)
@@ -46,6 +53,7 @@ public class OpenUIDesignerCoolBarItem extends ContributionItem implements IBoni
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
+                openInformationDialogOnUiDesigner();
                 try {
                     getHandler().execute();
                 } catch (final ExecutionException ex) {
@@ -58,6 +66,31 @@ public class OpenUIDesignerCoolBarItem extends ContributionItem implements IBoni
 
     protected OpenUIDesignerHandler getHandler() {
         return new OpenUIDesignerHandler();
+    }
+
+    protected void openInformationDialogOnUiDesigner() {
+        final String displayDialog = getPreferenceStore().getString(HIDE_UIDESIGNER_INFO_DIALOG);
+        if (!"true".equals(displayDialog)) {
+            MessageDialogWithPrompt
+                    .open(
+                            MessageDialog.INFORMATION,
+                            getShell(),
+                            Messages.openUiDesignerInformationWindowTitle,
+                            Messages.openUiDesignerInformationMessage,
+                            Messages.openUiDesignerInformationToggleMessage,
+                            false,
+                            getPreferenceStore(),
+                            HIDE_UIDESIGNER_INFO_DIALOG,
+                            SWT.NONE);
+        }
+    }
+
+    protected Shell getShell() {
+        return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+    }
+
+    protected IPreferenceStore getPreferenceStore() {
+        return UIDesignerPlugin.getDefault().getPreferenceStore();
     }
 
     private void configureItemImage(final ToolItem item, final String imageFileName) {
