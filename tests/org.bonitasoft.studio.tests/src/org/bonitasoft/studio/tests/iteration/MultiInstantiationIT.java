@@ -27,6 +27,7 @@ import org.bonitasoft.studio.model.process.assertions.MultiInstantiableAssert;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
+import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotAddFormWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotPageflowPropertySection;
@@ -109,20 +110,55 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
 
         iterationTabBot.selectSequentialType();
         MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.SEQUENTIAL);
+
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.SEQUENTIAL);
+            }
+        });
+
         final BotMultiInstanceTypeStackPanel botParallelType = iterationTabBot.selectParallelType();
-        MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.PARALLEL);
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.PARALLEL);
+            }
+        });
+
         final BotNumberBasedStackPanel botNumberBasedStackPanel = botParallelType.definedNumberOfInstances();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                MultiInstantiableAssert.assertThat(multiInstantiable).isUseCardinality();
+            }
+        });
+
         botNumberBasedStackPanel.editNumberOfInstances().selectConstantType().setValue("8").ok();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                ExpressionAssert.assertThat(multiInstantiable.getCardinalityExpression()).hasName("8").hasContent("8")
+                        .hasType(ExpressionConstants.CONSTANT_TYPE)
+                        .hasReturnType(Integer.class.getName());
+            }
+        });
+
         botNumberBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("completion").setScriptContent("true").ok();
+        bot.waitUntil(new AssertionCondition() {
 
-        MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.PARALLEL).isUseCardinality();
-        ExpressionAssert.assertThat(multiInstantiable.getCardinalityExpression()).hasName("8").hasContent("8")
-                .hasType(ExpressionConstants.CONSTANT_TYPE)
-                .hasReturnType(Integer.class.getName());
+            @Override
+            protected void makeAssert() throws Exception {
+                ExpressionAssert.assertThat(multiInstantiable.getCompletionCondition()).hasName("completion").hasContent("true")
+                        .hasType(ExpressionConstants.SCRIPT_TYPE)
+                        .hasReturnType(Boolean.class.getName());
+            }
+        });
 
-        ExpressionAssert.assertThat(multiInstantiable.getCompletionCondition()).hasName("completion").hasContent("true")
-                .hasType(ExpressionConstants.SCRIPT_TYPE)
-                .hasReturnType(Boolean.class.getName());
     }
 
     @Test
