@@ -66,6 +66,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -86,12 +87,16 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private final IProgressService progressService;
 
+    private final ISharedImages sharedImages;
+
     @Inject
-    public ContractPropertySection(final IEclipseContext eclipseContext, final ContractContainerAdaptableSelectionProvider selectionProvider,
+    public ContractPropertySection(final ISharedImages sharedImages, final IEclipseContext eclipseContext,
+            final ContractContainerAdaptableSelectionProvider selectionProvider,
             final IProgressService progressService) {
         this.eclipseContext = eclipseContext;
         this.selectionProvider = selectionProvider;
         this.progressService = progressService;
+        this.sharedImages = sharedImages;
     }
 
     @Override
@@ -198,7 +203,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final Button addChildButton = createButton(buttonsComposite, Messages.addChild);
         final Button removeButton = createButton(buttonsComposite, Messages.remove);
 
-        final ContractInputTreeViewer inputsTableViewer = new ContractInputTreeViewer(parent, getWidgetFactory(), progressService);
+        final ContractInputTreeViewer inputsTableViewer = new ContractInputTreeViewer(parent, getWidgetFactory(), progressService, sharedImages);
         inputsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).create());
         inputsTableViewer.initialize(inputController, getMessageManager(), context);
         inputsTableViewer.setInput(observeContractValue);
