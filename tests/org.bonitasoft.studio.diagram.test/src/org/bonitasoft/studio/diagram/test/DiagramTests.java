@@ -156,7 +156,7 @@ public class DiagramTests extends SWTBotGefTestCase {
         gmfEditor.click(200, 200);
 
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES);
+        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_TASK_DATA_VARIABLES);
 
         // Create 3 new variables
         setNewVariable("varText", "Text", false);
@@ -165,7 +165,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 
         // check 3 variables where created
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES);
+        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_TASK_DATA_VARIABLES);
 
         // check the table has 3 variables
         final SWTBotTable table = bot.table(0);
