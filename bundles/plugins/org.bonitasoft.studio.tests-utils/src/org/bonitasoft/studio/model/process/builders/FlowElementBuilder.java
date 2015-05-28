@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -18,13 +16,14 @@ package org.bonitasoft.studio.model.process.builders;
 
 import static org.bonitasoft.studio.model.process.builders.SequenceFlowBuilder.aSequenceFlow;
 
+import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.Connection;
+import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.FlowElement;
 
 /**
  * @author Romain Bioteau
- *
  */
 public abstract class FlowElementBuilder<T extends FlowElement, B extends FlowElementBuilder<T, B>> extends ElementBuilder<T, B> {
 
@@ -63,6 +62,16 @@ public abstract class FlowElementBuilder<T extends FlowElement, B extends FlowEl
                 getBuiltInstance().getOutgoing().add(connectionBuilder.build());
             }
         }
+        return getThis();
+    }
+
+    public B in(final Buildable<? extends Container> containerBuildable) {
+        containerBuildable.build().getElements().add(getBuiltInstance());
+        return getThis();
+    }
+
+    public B in(final Container container) {
+        container.getElements().add(getBuiltInstance());
         return getThis();
     }
 

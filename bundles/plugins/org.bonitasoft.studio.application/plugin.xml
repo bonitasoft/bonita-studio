@@ -560,7 +560,7 @@
       <view
             category="org.bonitasoft.studio.application.bonita"
             class="org.bonitasoft.studio.application.views.process.BonitaExecutionPropertiesView"
-            icon="icons/Picto_Studio_Exe_16x16.png"
+            icon="icons/Execution-D.png"
             id="org.bonitasoft.studio.views.properties.process.execution"
             name="%Execution"
             restorable="true">

@@ -37,6 +37,7 @@ import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.Do
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.FormMappingTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.KPITabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.LaneTabbedPropertyProvider;
+import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.OperationTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.PageflowConnectorTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.PageflowDataTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.PageflowTransitionTabbedPropertyProvider;
@@ -69,6 +70,7 @@ public class TabbedPropertySelectionProviderRegistry {
         registry.add(new ApplicationFormTabbedPropertyProvider());
         registry.add(new KPITabbedPropertyProvider());
         registry.add(new LaneTabbedPropertyProvider());
+        registry.add(new OperationTabbedPropertyProvider());
         registry.add(new PageflowDataTabbedPropertyProvider());
         registry.add(new PageflowConnectorTabbedPropertyProvider());
         registry.add(new PageflowTransitionTabbedPropertyProvider());

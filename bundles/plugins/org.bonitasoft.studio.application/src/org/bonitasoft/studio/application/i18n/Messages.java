@@ -62,6 +62,7 @@ public class Messages extends NLS {
     public static String incompatibleJavaVersionTitle;
     public static String incompatibleJavaVersionMessage;
 
+    public static String exitWarningMessage;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

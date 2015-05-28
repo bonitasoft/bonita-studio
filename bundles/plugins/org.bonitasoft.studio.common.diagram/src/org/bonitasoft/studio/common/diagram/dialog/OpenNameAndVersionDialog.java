@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2011-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -23,6 +23,7 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.reservedRESTAPIKeywordsValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.utf8InputValidator;
 
 import java.io.File;
@@ -227,7 +228,8 @@ public class OpenNameAndVersionDialog extends Dialog {
                 .addValidator(mandatoryValidator(Messages.name))
                 .addValidator(maxLengthValidator(Messages.name, MAX_LENGTH))
                 .addValidator(forbiddenCharactersValidator(Messages.name, '#', '%', '$'))
-                .addValidator(utf8InputValidator(Messages.name))).create();
+                .addValidator(utf8InputValidator(Messages.name))
+                .addValidator(reservedRESTAPIKeywordsValidator())).create();
     }
 
     public Identifier getIdentifier() {
