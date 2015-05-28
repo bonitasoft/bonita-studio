@@ -63,7 +63,7 @@ public class ExpressionHelper {
         returnTypeForInputType.put(ContractInputType.TEXT, String.class.getName());
         returnTypeForInputType.put(ContractInputType.BOOLEAN, Boolean.class.getName());
         returnTypeForInputType.put(ContractInputType.DATE, Date.class.getName());
-        returnTypeForInputType.put(ContractInputType.INTEGER, Long.class.getName());
+        returnTypeForInputType.put(ContractInputType.INTEGER, Integer.class.getName());
         returnTypeForInputType.put(ContractInputType.DECIMAL, Double.class.getName());
         returnTypeForInputType.put(ContractInputType.COMPLEX, Map.class.getName());
         returnTypeForInputType.put(ContractInputType.FILE, FileInputValue.class.getName());
@@ -337,7 +337,11 @@ public class ExpressionHelper {
         exp.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
         exp.setContent(d.getName());
         exp.setName(d.getName());
-        exp.setReturnType(String.class.getName());
+        if (d.isMultiple()) {
+            exp.setReturnType(List.class.getName());
+        } else {
+            exp.setReturnType(String.class.getName());
+        }
         exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(d));
         return exp;
     }

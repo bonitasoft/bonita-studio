@@ -99,4 +99,14 @@ public class BotDialog extends BotBase {
         }
     }
 
+    protected boolean hasTextVisible(final String aText) {
+        try {
+            bot.text(aText);
+            return true;
+        } catch (final WidgetNotFoundException e) {
+            BonitaStudioLog.warning(aText + " not found.", this.getClass().getName());
+            return false;
+        }
+    }
+
 }

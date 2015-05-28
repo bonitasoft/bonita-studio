@@ -36,12 +36,12 @@ public class ConstraintExpressionEditorValidator extends MultiValidator {
     private final IObservableValue expressionObservable;
     private final IObservableList dependenciesObservable;
     private final GroovyCompilationUnit groovyCompilationUnit;
-    private final MVELProblemRequestor compilationErrorRequestor;
+    private final CompilationProblemRequestor compilationErrorRequestor;
 
     public ConstraintExpressionEditorValidator(final IObservableValue expressionObservable,
             final IObservableList dependenciesObservable,
             final GroovyCompilationUnit groovyCompilationUnit,
-            final MVELProblemRequestor compilationErrorRequestor) {
+            final CompilationProblemRequestor compilationErrorRequestor) {
         this.expressionObservable = expressionObservable;
         this.dependenciesObservable = dependenciesObservable;
         this.groovyCompilationUnit = groovyCompilationUnit;

@@ -25,7 +25,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class ActorBuilder extends ElementBuilder<Actor, ActorBuilder> {
 
-    public static ActorBuilder create() {
+    public static ActorBuilder anActor() {
         return new ActorBuilder();
     }
 

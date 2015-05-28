@@ -21,7 +21,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    
-   <extension-point id="registration" name="Registration Dialog" schema="schema/org.bonitasoft.studio.application.registration.exsd"/>
    <extension-point id="PropertiesView" name="Properties View Contribution" schema="schema/PropertiesView.exsd"/>
    
    <extension-point id="prestartup" name="Actions to hoot at the preStartup of the workbench" schema="schema/prestartup.exsd"/>
@@ -561,7 +560,7 @@
       <view
             category="org.bonitasoft.studio.application.bonita"
             class="org.bonitasoft.studio.application.views.process.BonitaExecutionPropertiesView"
-            icon="icons/Picto_Studio_Exe_16x16.png"
+            icon="icons/Execution-D.png"
             id="org.bonitasoft.studio.views.properties.process.execution"
             name="%Execution"
             restorable="true">

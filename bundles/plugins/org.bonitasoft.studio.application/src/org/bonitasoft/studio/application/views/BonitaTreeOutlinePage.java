@@ -5,23 +5,17 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.application.views;
 
-import org.bonitasoft.studio.common.gmf.tools.tree.BonitaFormTreeViewer;
-import org.bonitasoft.studio.common.gmf.tools.tree.BonitaProcessTreeViewer;
 import org.bonitasoft.studio.common.gmf.tools.tree.BonitaTreeViewer;
-import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
-import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -54,181 +48,175 @@ import org.eclipse.ui.part.PageBook;
 
 /**
  * @author Aurelie Zara
- *
  */
 public class BonitaTreeOutlinePage extends ContentOutlinePage implements IAdaptable {
 
-	private EditPartViewer viewer;
-	private PageBook pageBook;
-	private Control outline;
-	private DisposeListener disposeListener;
-	private DiagramEditor diagramEditor;
-	private SelectionSynchronizer selectionSynchronizer;
+    private EditPartViewer viewer;
+    private PageBook pageBook;
+    private Control outline;
+    private DisposeListener disposeListener;
+    private final DiagramEditor diagramEditor;
+    private SelectionSynchronizer selectionSynchronizer;
 
-	/**
-	 * @param viewer
-	 * @param diagramEditor 
-	 */
-	public BonitaTreeOutlinePage(EditPartViewer viewer, DiagramEditor diagramEditor) {
-		super(viewer);
-		this.diagramEditor = diagramEditor;
-	}
+    /**
+     * @param viewer
+     * @param diagramEditor
+     */
+    public BonitaTreeOutlinePage(final EditPartViewer viewer, final DiagramEditor diagramEditor) {
+        super(viewer);
+        this.diagramEditor = diagramEditor;
+    }
 
-	/**
-	 * configures the outline viewer
-	 */
-	protected void configureOutlineViewer() {
-		getViewer().setEditPartFactory(getOutlineViewEditPartFactory());
-		getViewer().setKeyHandler(getKeyHandler());
-		getViewer().setContextMenu(new MenuManager());
-		pageBook.showPage(outline);
-	}
+    /**
+     * configures the outline viewer
+     */
+    protected void configureOutlineViewer() {
+        getViewer().setEditPartFactory(getOutlineViewEditPartFactory());
+        getViewer().setKeyHandler(getKeyHandler());
+        getViewer().setContextMenu(new MenuManager());
+        pageBook.showPage(outline);
+    }
 
+    /**
+     * @return
+     */
+    private EditPartFactory getOutlineViewEditPartFactory() {
+        return new EditPartFactory() {
 
-	/**
-	 * @return
-	 */
-	private EditPartFactory getOutlineViewEditPartFactory() {
-		return new EditPartFactory() {
-
-			public EditPart createEditPart(EditPart context, Object model) {
-				if (model instanceof Diagram) {
-					return new TreeDiagramEditPart(model);
+            @Override
+            public EditPart createEditPart(final EditPart context, final Object model) {
+                if (model instanceof Diagram) {
+                    return new TreeDiagramEditPart(model);
                 } else if (model instanceof View
-                    && ViewType.GROUP.equals(((View) model).getType())) {
+                        && ViewType.GROUP.equals(((View) model).getType())) {
                     return new TreeContainerEditPart(model);
-				} else {
-					return new TreeEditPart(model);
-				}
-			}
-		};
-	}
-	
+                } else {
+                    return new TreeEditPart(model);
+                }
+            }
+        };
+    }
 
-	/**
-	 * @return
-	 */
-	private KeyHandler getKeyHandler() {
-		return new KeyHandler();
-	}
+    /**
+     * @return
+     */
+    private KeyHandler getKeyHandler() {
+        return new KeyHandler();
+    }
 
-	public void createControl(Composite parent) {
-		pageBook = new PageBook(parent, SWT.NONE);
-		outline = getViewer().createControl(pageBook);
-		pageBook.showPage(outline);
-		configureOutlineViewer();
-		hookOutlineViewer();
-		initializeOutlineViewer();
-	}
+    @Override
+    public void createControl(final Composite parent) {
+        pageBook = new PageBook(parent, SWT.NONE);
+        outline = getViewer().createControl(pageBook);
+        pageBook.showPage(outline);
+        configureOutlineViewer();
+        hookOutlineViewer();
+        initializeOutlineViewer();
+    }
 
-	public void dispose() {
-		unhookOutlineViewer();
-		super.dispose();
-	}
+    @Override
+    public void dispose() {
+        unhookOutlineViewer();
+        super.dispose();
+    }
 
-	public Object getAdapter(Class type) {
-		return null;
-	}
+    @Override
+    public Object getAdapter(final Class type) {
+        return null;
+    }
 
-	public Control getControl() {
-		return pageBook;
-	}
+    @Override
+    public Control getControl() {
+        return pageBook;
+    }
 
-	/**
-	 * hook the outline viewer
-	 */
-	protected void hookOutlineViewer() {
-		getSelectionSynchronizer().addViewer(getViewer());
-	}
+    /**
+     * hook the outline viewer
+     */
+    protected void hookOutlineViewer() {
+        getSelectionSynchronizer().addViewer(getViewer());
+    }
 
-	/**
-	 * @return
-	 */
-	private SelectionSynchronizer getSelectionSynchronizer() {
-		if(selectionSynchronizer == null){
-			selectionSynchronizer = new SelectionSynchronizer();
-		}
-		return selectionSynchronizer;
-	}
+    /**
+     * @return
+     */
+    private SelectionSynchronizer getSelectionSynchronizer() {
+        if (selectionSynchronizer == null) {
+            selectionSynchronizer = new SelectionSynchronizer();
+        }
+        return selectionSynchronizer;
+    }
 
+    /**
+     * initialize the outline viewer
+     */
+    protected void initializeOutlineViewer() {
+        try {
+            TransactionUtil.getEditingDomain(getDiagram()).runExclusive(
+                    new Runnable() {
 
-	/**
-	 * initialize the outline viewer
-	 */
-	protected void initializeOutlineViewer() {
-		try {
-			TransactionUtil.getEditingDomain(getDiagram()).runExclusive(
-					new Runnable() {
+                        @Override
+                        public void run() {
+                            getViewer().setContents(getDiagram());
+                        }
+                    });
+        } catch (final InterruptedException e) {
+            Trace.catching(DiagramUIPlugin.getInstance(),
+                    DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(), "initializeOutlineViewer", e); //$NON-NLS-1$
+            Log.error(DiagramUIPlugin.getInstance(),
+                    DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING, "initializeOutlineViewer", e); //$NON-NLS-1$
+        }
+        ((BonitaTreeViewer) getViewer())
+                .setDiagramEditPart(getDiagramEditPart());
+    }
 
-						public void run() {
-							getViewer().setContents(getDiagram());
-						}
-					});
-		} catch (InterruptedException e) {
-			Trace.catching(DiagramUIPlugin.getInstance(),
-					DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
-					"initializeOutlineViewer", e); //$NON-NLS-1$
-			Log.error(DiagramUIPlugin.getInstance(),
-					DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
-					"initializeOutlineViewer", e); //$NON-NLS-1$
-		}
-		((BonitaTreeViewer) getViewer())
-		.setDiagramEditPart(getDiagramEditPart());
-	}
+    /**
+     * @return
+     */
+    private DiagramEditPart getDiagramEditPart() {
+        return diagramEditor.getDiagramEditPart();
+    }
 
-	/**
-	 * @return
-	 */
-	private DiagramEditPart getDiagramEditPart() {
-		return diagramEditor.getDiagramEditPart();
-	}
+    /**
+     * @return
+     */
+    private EObject getDiagram() {
+        return diagramEditor.getDiagram();
+    }
 
-	/**
-	 * @return
-	 */
-	private EObject getDiagram() {
-		return diagramEditor.getDiagram();
-	}
+    @Override
+    protected EditPartViewer getViewer() {
+        if (viewer == null) {
+            viewer = new BonitaTreeViewer();
+        }
+        return viewer;
+    }
 
-	@Override
-	protected EditPartViewer getViewer() {
-		if (viewer == null) {
-			if(diagramEditor instanceof ProcessDiagramEditor){
-				viewer = new BonitaProcessTreeViewer();
-			}else if(diagramEditor instanceof FormDiagramEditor){
-				viewer = new BonitaFormTreeViewer();
-			}
-			
-		}
-		return viewer;
-	}
+    /**
+     * unhook the outline viewer
+     */
+    protected void unhookOutlineViewer() {
+        getSelectionSynchronizer().removeViewer(getViewer());
+        if (disposeListener != null && getEditor() != null
+                && !getEditor().isDisposed()) {
+            getEditor().removeDisposeListener(disposeListener);
+        }
+    }
 
+    /**
+     * getter for the editor conrolo
+     * 
+     * @return <code>Control</code>
+     */
+    protected Control getEditor() {
+        return getGraphicalViewer().getControl();
+    }
 
-
-	/**
-	 * unhook the outline viewer
-	 */
-	protected void unhookOutlineViewer() {
-		getSelectionSynchronizer().removeViewer(getViewer());
-		if (disposeListener != null && getEditor() != null
-				&& !getEditor().isDisposed())
-			getEditor().removeDisposeListener(disposeListener);
-	}
-
-	/**
-	 * getter for the editor conrolo
-	 * 
-	 * @return <code>Control</code>
-	 */
-	protected Control getEditor() {
-		return getGraphicalViewer().getControl();
-	}
-
-	/**
-	 * @return
-	 */
-	private AbstractEditPartViewer getGraphicalViewer() {
-		return (AbstractEditPartViewer) diagramEditor.getDiagramGraphicalViewer();
-	}
+    /**
+     * @return
+     */
+    private AbstractEditPartViewer getGraphicalViewer() {
+        return (AbstractEditPartViewer) diagramEditor.getDiagramGraphicalViewer();
+    }
 
 }

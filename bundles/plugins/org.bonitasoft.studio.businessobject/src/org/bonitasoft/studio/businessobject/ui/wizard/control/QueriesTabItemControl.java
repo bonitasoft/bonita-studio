@@ -176,7 +176,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         for (Query q : queries) {
             existingNames.add(q.getName());
         }
-        return NamingUtils.generateNewName(existingNames, DEFAULT_QUERY_NAME);
+        return NamingUtils.generateNewName(existingNames, DEFAULT_QUERY_NAME, 1);
     }
 
     protected TableViewerColumn createQueryContentColumn(DataBindingContext ctx, TableViewer queriesTableViewer) {

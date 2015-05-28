@@ -45,7 +45,9 @@ public class RelationFieldToContractInputMapping extends FieldToContractInputMap
         final ContractInput input = super.toContractInput();
         if (shouldAddChildInput()) {
             for (final FieldToContractInputMapping child : getChildren()) {
-                input.getInputs().add(child.toContractInput());
+                if (child.isGenerated()) {
+                    input.getInputs().add(child.toContractInput());
+                }
             }
         }
         return input;

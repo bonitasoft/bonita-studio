@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2011-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -18,18 +18,16 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.assertions.MultiInstantiableAssert;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
+import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotAddFormWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotPageflowPropertySection;
@@ -47,37 +45,25 @@ import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotConstantExpressionEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.expression.BotScriptExpressionEditor;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
-import org.junit.After;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author Romain Bioteau
  */
+@RunWith(SWTBotJunit4ClassRunner.class)
 public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotConstants {
 
-    private boolean disablePopup;
-
-    @Override
-    @Before
-    public void setUp() {
-        disablePopup = FileActionDialog.getDisablePopup();
-        FileActionDialog.setDisablePopup(true);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
-    }
-
-    @Override
-    @After
-    public void tearDown() {
-        bot.saveAllEditors();
-        bot.closeAllEditors();
-        FileActionDialog.setDisablePopup(disablePopup);
-    }
+    @Rule
+    public SWTGefBotRule swtGefBotRule = new SWTGefBotRule(bot);
 
     @Test
     public void testStandardLoop() {
@@ -105,11 +91,11 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.STANDARD);
         MultiInstantiableAssert.assertThat(multiInstantiable).hasTestBefore(false);
         ExpressionAssert.assertThat(multiInstantiable.getLoopCondition()).hasName("condition").hasContent("instanceCount < 5")
-        .hasType(ExpressionConstants.SCRIPT_TYPE)
-        .hasReturnType(Boolean.class.getName());
+                .hasType(ExpressionConstants.SCRIPT_TYPE)
+                .hasReturnType(Boolean.class.getName());
         ExpressionAssert.assertThat(multiInstantiable.getLoopMaximum()).hasName("3").hasContent("3")
-        .hasType(ExpressionConstants.CONSTANT_TYPE)
-        .hasReturnType(Integer.class.getName());
+                .hasType(ExpressionConstants.CONSTANT_TYPE)
+                .hasReturnType(Integer.class.getName());
     }
 
     @Test
@@ -124,20 +110,55 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
 
         iterationTabBot.selectSequentialType();
         MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.SEQUENTIAL);
+
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.SEQUENTIAL);
+            }
+        });
+
         final BotMultiInstanceTypeStackPanel botParallelType = iterationTabBot.selectParallelType();
-        MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.PARALLEL);
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.PARALLEL);
+            }
+        });
+
         final BotNumberBasedStackPanel botNumberBasedStackPanel = botParallelType.definedNumberOfInstances();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                MultiInstantiableAssert.assertThat(multiInstantiable).isUseCardinality();
+            }
+        });
+
         botNumberBasedStackPanel.editNumberOfInstances().selectConstantType().setValue("8").ok();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                ExpressionAssert.assertThat(multiInstantiable.getCardinalityExpression()).hasName("8").hasContent("8")
+                        .hasType(ExpressionConstants.CONSTANT_TYPE)
+                        .hasReturnType(Integer.class.getName());
+            }
+        });
+
         botNumberBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("completion").setScriptContent("true").ok();
+        bot.waitUntil(new AssertionCondition() {
 
-        MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.PARALLEL).isUseCardinality();
-        ExpressionAssert.assertThat(multiInstantiable.getCardinalityExpression()).hasName("8").hasContent("8")
-        .hasType(ExpressionConstants.CONSTANT_TYPE)
-        .hasReturnType(Integer.class.getName());
+            @Override
+            protected void makeAssert() throws Exception {
+                ExpressionAssert.assertThat(multiInstantiable.getCompletionCondition()).hasName("completion").hasContent("true")
+                        .hasType(ExpressionConstants.SCRIPT_TYPE)
+                        .hasReturnType(Boolean.class.getName());
+            }
+        });
 
-        ExpressionAssert.assertThat(multiInstantiable.getCompletionCondition()).hasName("completion").hasContent("true")
-        .hasType(ExpressionConstants.SCRIPT_TYPE)
-        .hasReturnType(Boolean.class.getName());
     }
 
     @Test
@@ -188,17 +209,18 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
 
         final BotDataFormPropertySection botDataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
         botDataPropertySection.editInitialValue().selectScriptTab().setName("nbTicketsAvailable")
-        .setScriptContent("\"Only \"+nbTicketsAvailable+\" tickets available.\"").setReturnType(String.class.getName()).ok();
+                .setScriptContent("\"Only \"+nbTicketsAvailable+\" tickets available.\"").setReturnType(String.class.getName()).ok();
 
         botProcessDiagramPerspective.activeFormDiagramEditor().selectWidget("Nb Tickets");
         botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectGeneralTab().setFieldType("Text field")
-        .setDisplayName("Nbr de Tickets à reserver");
+                .setDisplayName("Nbr de Tickets à reserver");
 
         final BotDataFormPropertySection dataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
         dataPropertySection.editInitialValue().selectConstantType().setValue("0").ok();
         dataPropertySection.selectOutputVariable("nbTickets", Integer.class.getName());
-        dataPropertySection.editOutputOperationExpression().selectScriptTab().setName("nbTickets").setScriptContent("Integer.valueOf(field_nbTickets1)")
-        .setReturnType(Integer.class.getName()).ok();
+        dataPropertySection.getOutputOperation().editRightOperand().selectScriptTab().setName("nbTickets")
+                .setScriptContent("Integer.valueOf(field_nbTickets1)")
+                .setReturnType(Integer.class.getName()).ok();
 
         // Save the form
         bot.saveAllEditors();
@@ -221,7 +243,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         final BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object").setClassname("java.util.List")
                 .editDefaultValueExpression();
         botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]")
-        .setReturnType("java.util.List").ok();
+                .setReturnType("java.util.List").ok();
         addDataBot.finish();
 
         botApplicationWorkbenchWindow.save();
@@ -282,10 +304,10 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         final BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object").setClassname("java.util.List")
                 .editDefaultValueExpression();
         botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]")
-        .setReturnType("java.util.List").ok();
+                .setReturnType("java.util.List").ok();
         addDataBot = (BotAddDataWizardPage) addDataBot.finishAndAdd();
         addDataBot.setName("vip2").setType("Java Object").setClassname("java.util.List")
-        .editDefaultValueExpression();
+                .editDefaultValueExpression();
         botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[\"A\",\"B\",\"C\",\"D\"]").ok();
         addDataBot.finish();
 
@@ -330,7 +352,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection selectDataTab = botProcessDiagramPerspective
                 .getDiagramPropertiesPart().selectDataTab().selectDataTab();
         botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab().dataList()
-        .select("vip -- java.util.List -- Default value: vipScript");
+                .select("vip -- java.util.List -- Default value: vipScript");
         selectDataTab.remove();
 
         // Check empty comboBox in MultiInstance
@@ -338,7 +360,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         selectDataTab = botProcessDiagramPerspective
                 .getDiagramPropertiesPart().selectDataTab().selectDataTab();
         botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab().dataList()
-        .select("vipName -- Text");
+                .select("vipName -- Text");
         selectDataTab.remove();
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
 
@@ -350,7 +372,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
                 multiInstantiable.getListDataContainingOutputResults());
 
         botProcessDiagramPerspective
-        .getDiagramPropertiesPart().selectGeneralTab().selectIterationTab();
+                .getDiagramPropertiesPart().selectGeneralTab().selectIterationTab();
         // check Collection empty
         Assert.assertTrue("Error: Collection is not empty !", bot.comboBox(0).getText().isEmpty());
 
@@ -381,12 +403,12 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object").setClassname("java.util.List")
                 .editDefaultValueExpression();
         botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]")
-        .setReturnType("java.util.List").ok();
+                .setReturnType("java.util.List").ok();
         addDataBot = (BotAddDataWizardPage) addDataBot.finishAndAdd();
         addDataBot.setName("alreadyVip").setType("Java Object").setClassname("java.util.List")
-        .editDefaultValueExpression();
+                .editDefaultValueExpression();
         botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[null]")
-        .setReturnType("java.util.List").ok();
+                .setReturnType("java.util.List").ok();
         addDataBot.finish();
 
         final BotActorDefinitionPropertySection botActorDefinitionPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab()
@@ -424,7 +446,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
 
         // Edit the Completion condition
         botDataBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("isOK").setScriptContent("(vip.isEmpty())||(nbTicketsAvailable==0)")
-        .ok();
+                .ok();
 
         // Add operation to update the number of available tickets
         final BotOperationsPropertySection operationTab = botProcessDiagramPerspective.getDiagramPropertiesPart().selectExecutionTab().selectOperationTab();
@@ -432,9 +454,9 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         final BotOperationComposite botOperationComposite = operationTab.getOperation(0);
         botOperationComposite.selectLeftOperand("vip", "java.util.List");
         botOperationComposite.editRightOperand().selectScriptTab().setName("removeUser")
-        .setScriptContent("List vipList = new ArrayList(vip)\nvipList.remove(vipName)\nreturn vipList")
-        .setReturnType(List.class.getName())
-        .ok();
+                .setScriptContent("List vipList = new ArrayList(vip)\nvipList.remove(vipName)\nreturn vipList")
+                .setReturnType(List.class.getName())
+                .ok();
 
         botApplicationWorkbenchWindow.save();
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);

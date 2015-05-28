@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,6 +19,7 @@ import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValida
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.expression.editor.constant.ExpressionReturnTypeContentProvider;
+import org.bonitasoft.studio.expression.editor.filter.ExpressionReturnTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -30,7 +29,6 @@ import org.bonitasoft.studio.scripting.extensions.IScriptLanguageProvider;
 import org.bonitasoft.studio.scripting.extensions.ScriptLanguageService;
 import org.bonitasoft.studio.scripting.i18n.Messages;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -68,7 +66,6 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class ScriptExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor {
 
@@ -92,7 +89,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 
     private boolean isPageFlowContext = false;
 
-    public ScriptExpressionEditor(Expression expression) {
+    public ScriptExpressionEditor(final Expression expression) {
         if (expression != null) {
             if (expression.getInterpreter() == null || expression.getInterpreter().isEmpty()) {
                 expression.setInterpreter(ScriptLanguageService.getInstance().getDefaultLanguage());
@@ -108,7 +105,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx) {
+    public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         GridLayout layout = new GridLayout(4, false);
@@ -120,21 +117,21 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         layout.marginLeft = 0;
         mainComposite.setLayout(layout);
 
-        Label scriptNameLabel = new Label(mainComposite, SWT.NONE);
+        final Label scriptNameLabel = new Label(mainComposite, SWT.NONE);
         scriptNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         scriptNameLabel.setText(Messages.name + " *");
 
         expressionNameText = new Text(mainComposite, SWT.BORDER | SWT.SINGLE);
         expressionNameText.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
 
-        Label interpreterLabel = new Label(mainComposite, SWT.NONE);
+        final Label interpreterLabel = new Label(mainComposite, SWT.NONE);
         interpreterLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         interpreterLabel.setText(Messages.interpreter);
 
         expressionInterpreterCombo = new Combo(mainComposite, SWT.READ_ONLY | SWT.BORDER);
         expressionInterpreterCombo.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
 
-        for (IScriptLanguageProvider provider : ScriptLanguageService.getInstance().getScriptLanguageProviders()) {
+        for (final IScriptLanguageProvider provider : ScriptLanguageService.getInstance().getScriptLanguageProviders()) {
             expressionInterpreterCombo.add(provider.getLanguageName());
         }
 
@@ -142,10 +139,10 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
             expressionInterpreterCombo.setEnabled(false);
         }
 
-        IScriptLanguageProvider provider = ScriptLanguageService.getInstance().getScriptLanguageProvider(languageId);
+        final IScriptLanguageProvider provider = ScriptLanguageService.getInstance().getScriptLanguageProvider(languageId);
         editor = provider.getExpressionEditor();
         editor.setIsPageFlowContext(isPageFlowContext);
-        Composite editorComposite = new Composite(mainComposite, SWT.NONE);
+        final Composite editorComposite = new Composite(mainComposite, SWT.NONE);
         editorComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(4, 1).create());
         layout = new GridLayout(1, false);
         layout.marginBottom = 0;
@@ -162,10 +159,10 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         return mainComposite;
     }
 
-    protected void createReturnTypeComposite(Composite parent) {
-        Composite typeComposite = new Composite(parent, SWT.NONE);
+    protected void createReturnTypeComposite(final Composite parent) {
+        final Composite typeComposite = new Composite(parent, SWT.NONE);
         typeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        GridLayout gl = new GridLayout(3, false);
+        final GridLayout gl = new GridLayout(3, false);
         gl.marginWidth = 0;
         gl.marginHeight = 0;
         typeComposite.setLayout(gl);
@@ -181,16 +178,16 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         typeCombo.setSorter(new ViewerSorter() {
 
             @Override
-            public int compare(Viewer viewer, Object e1, Object e2) {
-                String t1 = (String) e1;
-                String t2 = (String) e2;
+            public int compare(final Viewer viewer, final Object e1, final Object e2) {
+                final String t1 = (String) e1;
+                final String t2 = (String) e2;
                 return t1.compareTo(t2);
             }
         });
         typeCombo.getCombo().addModifyListener(new ModifyListener() {
 
             @Override
-            public void modifyText(ModifyEvent e) {
+            public void modifyText(final ModifyEvent e) {
                 fireSelectionChanged();
             }
         });
@@ -201,7 +198,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         browseClassesButton.addListener(SWT.Selection, new Listener() {
 
             @Override
-            public void handleEvent(Event event) {
+            public void handleEvent(final Event event) {
                 openClassSelectionDialog();
             }
         });
@@ -212,34 +209,33 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
      */
     @SuppressWarnings("restriction")
     private void openClassSelectionDialog() {
-        JavaSearchScope scope = new JavaSearchScope();
+        final JavaSearchScope scope = new JavaSearchScope();
         try {
             scope.add(RepositoryManager.getInstance().getCurrentRepository().getJavaProject());
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             BonitaStudioLog.error(ex);
         }
-        FilteredTypesSelectionDialog searchDialog = new FilteredTypesSelectionDialog(Display.getDefault().getActiveShell(), false, null, scope,
+        final FilteredTypesSelectionDialog searchDialog = new FilteredTypesSelectionDialog(Display.getDefault().getActiveShell(), false, null, scope,
                 IJavaSearchConstants.TYPE);
         if (searchDialog.open() == Dialog.OK) {
-            String selectedTypeName = ((IType) searchDialog.getFirstResult()).getFullyQualifiedName();
+            final String selectedTypeName = ((IType) searchDialog.getFirstResult()).getFullyQualifiedName();
             typeCombo.setInput(selectedTypeName);
             inputExpression.setReturnType(selectedTypeName);
         }
     }
 
     @Override
-    public void bindExpression(EMFDataBindingContext dataBindingContext, EObject context, Expression inputExpression, ViewerFilter[] filters,
-            ExpressionViewer viewer) {
+    public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context, final Expression inputExpression,
+            final ViewerFilter[] filters,
+            final ExpressionViewer viewer) {
         this.inputExpression = inputExpression;
-        IObservableValue nameModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
-        IObservableValue interpreterModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__INTERPRETER);
-        // IObservableValue propagationModelObservable = EMFObservables.observeValue(inputExpression,
-        // ExpressionPackage.Literals.EXPRESSION__PROPAGATE_VARIABLE_CHANGE) ;
+        final IObservableValue nameModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
+        final IObservableValue interpreterModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__INTERPRETER);
 
-        UpdateValueStrategy opposite = new UpdateValueStrategy();
+        final UpdateValueStrategy opposite = new UpdateValueStrategy();
         opposite.setConverter(new BooleanInverserConverter());
 
-        UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+        final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
         targetToModel.setAfterConvertValidator(new EmptyInputValidator(Messages.name));
         ControlDecorationSupport.create(
                 dataBindingContext.bindValue(SWTObservables.observeText(expressionNameText, SWT.Modify), nameModelObservable, targetToModel, null), SWT.LEFT);
@@ -247,7 +243,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         nameModelObservable.addValueChangeListener(new IValueChangeListener() {
 
             @Override
-            public void handleValueChange(ValueChangeEvent arg0) {
+            public void handleValueChange(final ValueChangeEvent arg0) {
                 fireSelectionChanged();
             }
         });
@@ -260,6 +256,10 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
             typeCombo.setInput(new Object());
         }
         returnTypeModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
+        final String defaultReturnType = viewer.getDefaultReturnType();
+        if (defaultReturnType != null && !inputExpression.isReturnTypeFixed() && shouldChangeReturnType(inputExpression.getReturnType(), defaultReturnType)) {
+            returnTypeModelObservable.setValue(defaultReturnType);
+        }
         dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable);
         dataBindingContext.bindValue(SWTObservables.observeText(typeCombo.getCombo()), returnTypeModelObservable);
 
@@ -267,8 +267,13 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         browseClassesButton.setEnabled(!inputExpression.isReturnTypeFixed());
     }
 
+    private boolean shouldChangeReturnType(final String inputExpressionReturnType, final String defaultReturnType) {
+        return Object.class.getName().equals(inputExpressionReturnType)
+                || !new ExpressionReturnTypeFilter().compatibleReturnTypes(inputExpressionReturnType, defaultReturnType);
+    }
+
     @Override
-    public void addListener(Listener listener) {
+    public void addListener(final Listener listener) {
         super.addListener(listener);
         editor.addListener(listener);
     }
@@ -317,7 +322,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
     }
 
     @Override
-    public void setIsPageFlowContext(boolean isPageFlowContext) {
+    public void setIsPageFlowContext(final boolean isPageFlowContext) {
         this.isPageFlowContext = isPageFlowContext;
 
     }
@@ -336,7 +341,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override
-    public void setIsOverviewContext(boolean isOverviewContext) {
+    public void setIsOverviewContext(final boolean isOverviewContext) {
     }
 
 }

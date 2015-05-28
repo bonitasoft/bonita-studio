@@ -278,5 +278,7 @@ public class Messages extends NLS {
     public static String hideHelp;
     public static String toggleHelp;
     public static String unicityErrorMessage;
+    public static String validationFailureReservedKeywordsAPIREST;
+    public static String uiDesignerModuleName;
 
 }

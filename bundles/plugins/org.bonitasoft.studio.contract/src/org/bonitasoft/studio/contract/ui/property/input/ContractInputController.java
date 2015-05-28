@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -68,6 +68,29 @@ public class ContractInputController implements IViewerController {
     private static final int NAME_COLUMN_INDEX = 0;
     private final IProgressService progressService;
 
+    class EditNameRunnable implements Runnable {
+
+        private final ColumnViewer viewer;
+        private final ContractInput input;
+
+        public EditNameRunnable(final ColumnViewer viewer, final ContractInput input) {
+            this.viewer = viewer;
+            this.input = input;
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see java.lang.Runnable#run()
+         */
+        @Override
+        public void run() {
+            if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
+                viewer.editElement(input, NAME_COLUMN_INDEX);
+            }
+        }
+
+    }
+
     public ContractInputController(final IProgressService progressService) {
         this.progressService = progressService;
     }
@@ -81,7 +104,7 @@ public class ContractInputController implements IViewerController {
         final ContractInput defaultInput = createDefaultInput(contract);
         final EObject targetContainer = targetContainer(parentInput, contract);
         CustomEMFEditObservables.observeList(targetContainer, inputContainerFeature(targetContainer)).add(defaultInput);
-        viewer.editElement(defaultInput, NAME_COLUMN_INDEX);
+        viewer.getControl().getDisplay().asyncExec(new EditNameRunnable(viewer, defaultInput));
         return defaultInput;
     }
 
@@ -96,16 +119,7 @@ public class ContractInputController implements IViewerController {
         final ContractInput parentInput = (ContractInput) selection.getFirstElement();
         final ContractInput defaultInput = createDefaultInput(ModelHelper.getFirstContainerOfType(parentInput, Contract.class));
         CustomEMFEditObservables.observeList(parentInput, ProcessPackage.Literals.CONTRACT_INPUT__INPUTS).add(defaultInput);
-        Display.getDefault().asyncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
-                    viewer.editElement(defaultInput, NAME_COLUMN_INDEX);
-                }
-            }
-        });
-
+        viewer.getControl().getDisplay().asyncExec(new EditNameRunnable(viewer, defaultInput));
         return defaultInput;
     }
 
@@ -119,7 +133,7 @@ public class ContractInputController implements IViewerController {
 
     private String defaultContractInputName(final Contract contract) {
         return NamingUtils.generateNewName(
-                newHashSet(transform(getAllElementOfTypeIn(contract, ContractInput.class), toInputName())), "input");
+                newHashSet(transform(getAllElementOfTypeIn(contract, ContractInput.class), toInputName())), "input", 1);
     }
 
     private Function<ContractInput, String> toInputName() {
@@ -152,12 +166,10 @@ public class ContractInputController implements IViewerController {
                     continue;
                 }
                 refactorOperation.addItemToRefactor(null, contractInput);
-                final EObject eContainer = contractInput.eContainer();
-                compoundCommand.append(RemoveCommand.create(editingDomain, eContainer, inputContainerFeature(eContainer), contractInput));
+                compoundCommand.append(DeleteCommand.create(editingDomain, contractInput));
                 final Collection<ContractConstraint> constraintsReferencingInput = constraintsReferencingSingleInput(contract, contractInput);
                 if (!constraintsReferencingInput.isEmpty()) {
-                    compoundCommand.append(RemoveCommand.create(editingDomain, eContainer, ProcessPackage.Literals.CONTRACT__CONSTRAINTS,
-                            constraintsReferencingInput));
+                    compoundCommand.append(DeleteCommand.create(editingDomain, constraintsReferencingInput));
                 }
             }
             try {

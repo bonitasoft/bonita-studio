@@ -65,7 +65,7 @@ public class ChangeConnectorContainerCommand extends AbstractTransactionalComman
 			for(Connector c : target.getConnectors()){
 				existingNames.add(c.getName());
 			}
-			String name = NamingUtils.generateNewName(existingNames, connectorCopy.getName());
+			String name = NamingUtils.generateNewName(existingNames, connectorCopy.getName(), 1);
 			connectorCopy.setName(name) ;
 			target.getConnectors().add(connectorCopy);
 		}

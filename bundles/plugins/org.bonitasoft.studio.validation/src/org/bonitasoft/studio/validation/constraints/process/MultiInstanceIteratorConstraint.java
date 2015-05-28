@@ -19,12 +19,10 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 
 import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
-import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
  * @author Romain Bioteau
@@ -32,11 +30,6 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 public class MultiInstanceIteratorConstraint extends AbstractLiveValidationMarkerConstraint {
 
     private static final String CONSTRAINT_ID = "org.bonitasoft.studio.validation.multiInstanceIterator";
-
-    @Override
-    protected IStatus performLiveValidation(final IValidationContext context) {
-        return context.createSuccessStatus();
-    }
 
     @Override
     protected IStatus performBatchValidation(final IValidationContext context) {
@@ -60,11 +53,6 @@ public class MultiInstanceIteratorConstraint extends AbstractLiveValidationMarke
     private boolean isMultiInstantied(final MultiInstantiable multiInstantiable) {
         return multiInstantiable.getType() == MultiInstanceType.PARALLEL
                 || multiInstantiable.getType() == MultiInstanceType.SEQUENTIAL;
-    }
-
-    @Override
-    protected String getMarkerType(final DiagramEditor editor) {
-        return ProcessMarkerNavigationProvider.MARKER_TYPE;
     }
 
     @Override

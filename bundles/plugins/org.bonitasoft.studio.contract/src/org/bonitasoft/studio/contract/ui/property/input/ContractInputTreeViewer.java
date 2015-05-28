@@ -141,8 +141,8 @@ public class ContractInputTreeViewer extends TreeViewer {
     protected void configureTableLayout() {
         final TableLayout tableLayout = new TableLayout();
         tableLayout.addColumnData(new ColumnWeightData(4));
-        tableLayout.addColumnData(new ColumnWeightData(1));
-        tableLayout.addColumnData(new ColumnWeightData(1));
+        tableLayout.addColumnData(new ColumnWeightData(2));
+        tableLayout.addColumnData(new ColumnWeightData(2));
         tableLayout.addColumnData(new ColumnWeightData(6));
         getTree().setLayout(tableLayout);
     }

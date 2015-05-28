@@ -14,10 +14,9 @@
  */
 package org.bonitasoft.studio.contract.core;
 
-import org.bonitasoft.engine.bpm.contract.InputDefinition;
 import org.bonitasoft.engine.bpm.contract.Type;
-import org.bonitasoft.engine.bpm.contract.impl.InputDefinitionImpl;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
+import org.bonitasoft.engine.bpm.process.impl.InputContainerDefinitionBuilder;
 import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.model.process.Contract;
@@ -42,11 +41,7 @@ public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefin
 
         final ContractDefinitionBuilder contractBuilder = addContract();
         for (final ContractInput input : contract.getInputs()) {
-            if (input.getType() == ContractInputType.COMPLEX) {
-                addComplexInput(contractBuilder, input);
-            } else {
-                contractBuilder.addInput(input.getName(), getInputType(input), input.getDescription(), input.isMultiple());
-            }
+            addInput(input, contractBuilder);
         }
         buildConstraints(contract, contractBuilder);
     }
@@ -67,29 +62,24 @@ public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefin
         builder = engineBuilder;
     }
 
-    protected void addComplexInput(final ContractDefinitionBuilder contractBuilder, final ContractInput input) {
-        final InputDefinition complexInput = buildComplexInput(input, contractBuilder);
-        contractBuilder.addInput(complexInput.getName(), complexInput.getDescription(), complexInput.isMultiple(), complexInput.getInputs());
-    }
-
-    protected InputDefinition buildComplexInput(final ContractInput input, final ContractDefinitionBuilder contractBuilder) {
-        final InputDefinitionImpl complexInput = new InputDefinitionImpl(input.getName(), null, input.getDescription(), input.isMultiple());
+    private void addChildInput(final ContractInput input, final InputContainerDefinitionBuilder contractInputDefinitionBuilder) {
         for (final ContractInput child : input.getInputs()) {
-            if (ContractInputType.COMPLEX == child.getType()) {
-                complexInput.getInputs().add(buildComplexInput(child, contractBuilder));
-            } else {
-                buildLeafInput(contractBuilder, complexInput, child);
-            }
+            addInput(child, contractInputDefinitionBuilder);
         }
-        return complexInput;
     }
 
-    protected void buildLeafInput(final ContractDefinitionBuilder contractBuilder, final InputDefinitionImpl complexInput, final ContractInput child) {
-        final Type inputType = getInputType(child);
-        complexInput.getInputs().add(new InputDefinitionImpl(child.getName(), inputType, child.getDescription(), child.isMultiple()));
+    private void addInput(final ContractInput input, final InputContainerDefinitionBuilder contractInputDefinitionBuilder) {
+        if (ContractInputType.COMPLEX == input.getType()) {
+            addChildInput(input, contractInputDefinitionBuilder.addComplexInput(input.getName(),
+                    input.getDescription(), input.isMultiple()));
+        } else if (Type.FILE == getInputType(input)) {
+            contractInputDefinitionBuilder.addFileInput(input.getName(), input.getDescription(), input.isMultiple());
+        } else {
+            contractInputDefinitionBuilder.addInput(input.getName(), getInputType(input), input.getDescription(), input.isMultiple());
+        }
     }
 
-    public Type getInputType(final ContractInput input) {
+    private Type getInputType(final ContractInput input) {
         return org.bonitasoft.engine.bpm.contract.Type.valueOf(input.getType().getName());
     }
 

@@ -449,6 +449,7 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/NONE"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/INTERNAL"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/EXTERNAL"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/CONTRACT"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//EntryPageFlowType">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//EntryPageFlowType/PAGEFLOW"/>
@@ -465,6 +466,10 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//GatewayType/OR"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//GatewayType/COMPLEX"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//GatewayType/AND"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//InputMappingAssignationType">
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//InputMappingAssignationType/ContractInput"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//InputMappingAssignationType/Data"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//MultiInstanceType">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//MultiInstanceType/NONE"/>
@@ -599,7 +604,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/inputNames"/>
     </genClasses>
     <genClasses image="false" ecoreClass="process.ecore#//ContractContainer">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//ContractContainer/contract"/>
+      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"
+          ecoreFeature="ecore:EReference process.ecore#//ContractContainer/contract"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Connection">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Connection/target"/>
@@ -633,6 +639,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/documentType"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Document/initialMultipleContent"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/multiple"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Document/contractInput"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//DoubleType"/>
     <genClasses ecoreClass="process.ecore#//Element">
@@ -670,6 +677,7 @@
     <genClasses ecoreClass="process.ecore#//InputMapping">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//InputMapping/processSource"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//InputMapping/subprocessTarget"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//InputMapping/assignationType"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//IntegerType"/>
     <genClasses ecoreClass="process.ecore#//IntermediateErrorCatchEvent"/>

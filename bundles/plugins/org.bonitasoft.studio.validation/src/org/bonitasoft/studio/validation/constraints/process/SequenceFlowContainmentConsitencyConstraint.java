@@ -23,13 +23,11 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.TargetElement;
-import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
  * @author Romain Bioteau
@@ -37,16 +35,6 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 public class SequenceFlowContainmentConsitencyConstraint extends AbstractLiveValidationMarkerConstraint {
 
     public static final String ID = "org.bonitasoft.studio.validation.constraints.sequenceflow.consistency";
-
-    @Override
-    protected IStatus performLiveValidation(final IValidationContext ctx) {
-        return ctx.createSuccessStatus();
-    }
-
-    @Override
-    protected String getMarkerType(final DiagramEditor editor) {
-        return ProcessMarkerNavigationProvider.MARKER_TYPE;
-    }
 
     @Override
     protected String getConstraintId() {

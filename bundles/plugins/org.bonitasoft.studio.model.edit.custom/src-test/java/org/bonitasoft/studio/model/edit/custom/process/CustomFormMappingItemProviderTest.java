@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -43,7 +43,7 @@ public class CustomFormMappingItemProviderTest {
     }
 
     @Test
-    public void should_display_target_form_name_for_internal_form_mapping() throws Exception {
+    public void should_display_internal_mode_form_mapping() throws Exception {
         //Given
         final FormMapping internalFormMapping = aFormMapping().withType(FormMappingType.INTERNAL).havingTargetForm(anExpression().withName("Step1 form"))
                 .build();
@@ -52,21 +52,7 @@ public class CustomFormMappingItemProviderTest {
         final String text = customFormMappingItemProvider.getText(internalFormMapping);
 
         //Then
-        assertThat(text).isEqualTo(Messages.bind(Messages.internalFormMapping, "Step1"));
-    }
-
-    @Test
-    public void should_display_when_internal_form_mapping_is_for_overview() throws Exception {
-        //Given
-        final FormMapping overviewFormMapping = aPool()
-                .havingOverviewFormMapping(aFormMapping().withType(FormMappingType.INTERNAL).havingTargetForm(anExpression().withName("Step1 form")))
-                .build().getOverviewFormMapping();
-
-        //When
-        final String text = customFormMappingItemProvider.getText(overviewFormMapping);
-
-        //Then
-        assertThat(text).isEqualTo(Messages.bind(Messages.overviewInternalFormMapping, "Step1"));
+        assertThat(text).isEqualTo("Form Mapping INTERNAL");
     }
 
     @Test

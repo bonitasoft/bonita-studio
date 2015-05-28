@@ -16,7 +16,9 @@
 package org.bonitasoft.studio.common.emf.tools;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.find;
 
 import java.util.ArrayList;
@@ -474,7 +476,7 @@ public class ModelHelper {
         if (returnTypeClassname.equals(Boolean.class.getName())) {
             return find(dataTypeContainer.getDatatypes(), instanceOf(BooleanType.class), null);
         } else if (returnTypeClassname.equals(String.class.getName())) {
-            return find(dataTypeContainer.getDatatypes(), instanceOf(StringType.class), null);
+            return find(dataTypeContainer.getDatatypes(), and(instanceOf(StringType.class), not(instanceOf(DateType.class))), null);
         } else if (returnTypeClassname.equals(Double.class.getName())) {
             return find(dataTypeContainer.getDatatypes(), instanceOf(DoubleType.class), null);
         } else if (returnTypeClassname.equals(Long.class.getName())) {

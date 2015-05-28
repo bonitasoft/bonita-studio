@@ -536,7 +536,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.pagedesigner"
+         id="org.bonitasoft.studio.designer"
          download-size="0"
          install-size="0"
          version="0.0.0"

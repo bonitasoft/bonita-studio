@@ -12,13 +12,11 @@ package org.bonitasoft.studio.validation.constraints.process;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
  * @author Romain Bioteau
@@ -26,11 +24,6 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 public class BusinessObjectDefinitionValidationConstraint extends AbstractLiveValidationMarkerConstraint {
 
     public static final String ID = "org.bonitasoft.studio.validation.ex.constraint.businessobject.checkBusinessObjectExist";
-
-    @Override
-    protected IStatus performLiveValidation(final IValidationContext context) {
-        return null;
-    }
 
     @Override
     protected IStatus performBatchValidation(final IValidationContext context) {
@@ -56,11 +49,6 @@ public class BusinessObjectDefinitionValidationConstraint extends AbstractLiveVa
     @Override
     protected String getConstraintId() {
         return ID;
-    }
-
-    @Override
-    protected String getMarkerType(final DiagramEditor editor) {
-        return ProcessMarkerNavigationProvider.MARKER_TYPE;
     }
 
 }

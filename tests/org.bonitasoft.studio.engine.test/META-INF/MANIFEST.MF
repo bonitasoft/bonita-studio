@@ -26,7 +26,8 @@ Require-Bundle: org.junit,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide;bundle-version="1.2.1",
  org.bonitasoft.studio.util.tests;bundle-version="6.0.0",
  assertj-core;bundle-version="1.5.0",
- org.bonitasoft.studio.importer.bos;bundle-version="7.0.0"
+ org.bonitasoft.studio.importer.bos;bundle-version="7.0.0",
+ org.bonitasoft.studio.swtbot.framework;bundle-version="7.0.0"
 Eclipse-RegisterBuddy: org.bonitasoft.studio.engine
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,

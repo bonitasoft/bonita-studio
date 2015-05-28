@@ -1,29 +1,28 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.engine.test.bar;
 
 import java.io.File;
 import java.util.Vector;
 
-import junit.framework.Assert;
-
 import org.bonitasoft.studio.common.ProjectUtil;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPropertiesViewFolder;
+import org.bonitasoft.studio.swtbot.framework.diagram.execution.BotExecutionDiagramPropertiesView;
+import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.bonitasoft.studio.util.test.conditions.ShellIsActiveWithThreadSTacksOnFailure;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -35,33 +34,20 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 /**
  * @author Florine Boudin
- *
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class BarExporterTest extends SWTBotGefTestCase {
 
-    private static boolean disablePopup;
     final public static String EditorTitleRegex = "(.*)\\s\\((.*)\\)";
 
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        disablePopup = FileActionDialog.getDisablePopup();
-        FileActionDialog.setDisablePopup(true);
-    }
-
-
-    @AfterClass
-    public static void tearDownAfterClass() {
-        FileActionDialog.setDisablePopup(disablePopup);
-    }
+    @Rule
+    public SWTGefBotRule gefBotRule = new SWTGefBotRule(bot);
 
     @Test
     public void testServerBuild() {
@@ -70,18 +56,25 @@ public class BarExporterTest extends SWTBotGefTestCase {
         final SWTBotEditor activeEditor = bot.activeEditor();
         final String editorTitle = activeEditor.getTitle();
         //System.out.println("editorTitle1 = "+editorTitle1);
-        Assert.assertFalse("Error: first diagram name is empty.", editorTitle.isEmpty());
+        assertFalse("Error: first diagram name is empty.", editorTitle.isEmpty());
+
+        new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab().selectInstantiationFormTab().selectLegacy();
+        new BotGefProcessDiagramEditor(bot).selectElement("Step1");
+        new BotExecutionDiagramPropertiesView(bot).selectFormTab().selectLegacy();
 
         // get the GEF editor to activate tools
         final SWTBotGefEditor gmfEditor = bot.gefEditor(editorTitle);
 
-
-
         // Create 2 Pools
         gmfEditor.activateTool("Pool");
         gmfEditor.click(200, 500);
+
+        new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab().selectInstantiationFormTab().selectLegacy();
+
         gmfEditor.activateTool("Pool");
         gmfEditor.click(200, 800);
+
+        new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab().selectInstantiationFormTab().selectLegacy();
 
         // Save Diagram
         bot.menu("Diagram").menu("Save").click();
@@ -105,9 +98,9 @@ public class BarExporterTest extends SWTBotGefTestCase {
         diagramTreeItem.expand();
 
         // Number of pool in the diagram
-        final int poolListSize = diagramTreeItem.getItems().length ;
+        final int poolListSize = diagramTreeItem.getItems().length;
         //System.out.println("Diagram contains "+ poolListSize + " items");
-        Assert.assertEquals("Error: Diagram must contain 3 Pools.",3,poolListSize );
+        assertEquals("Error: Diagram must contain 3 Pools.", 3, poolListSize);
 
         // unselect the first pool of the list
 
@@ -118,21 +111,21 @@ public class BarExporterTest extends SWTBotGefTestCase {
         final int poolTitleListSize = poolTitleList.size();
 
         // check the selected pools
-        for(int i=1; i<poolTitleListSize;i++){
+        for (int i = 1; i < poolTitleListSize; i++) {
             final SWTBotTreeItem poolTreeItem = diagramTreeItem.getNode(i);
             poolTitleList.set(i, poolTreeItem.getText());
             final String poolName = getItemName(poolTitleList.get(i));
 
             // test the good pool is checked
-            Assert.assertFalse("Error: Pool "+i+" should be checked.", !poolTreeItem.isChecked());
-            Assert.assertFalse("Error: Pool selected is not the good one.",!poolName.equals("Pool"+i));
+            assertFalse("Error: Pool " + i + " should be checked.", !poolTreeItem.isChecked());
+            assertFalse("Error: Pool selected is not the good one.", !poolName.equals("Pool" + i));
         }
         // create tmp directory to write diagrams
-        final File tmpBarFolder = new File(ProjectUtil.getBonitaStudioWorkFolder(),"testExportBar");
+        final File tmpBarFolder = new File(ProjectUtil.getBonitaStudioWorkFolder(), "testExportBar");
         tmpBarFolder.mkdirs();
         //set the path where files are saved
         final String tmpBarFolderPath = tmpBarFolder.getAbsolutePath();
-        bot.comboBoxWithLabel(Messages.destinationPath+" *").setText(tmpBarFolderPath);
+        bot.comboBoxWithLabel(Messages.destinationPath + " *").setText(tmpBarFolderPath);
         //		String tmpBarFolderPath = bot.comboBoxWithLabel(Messages.destinationPath+" *").getText();
         //		System.out.println("tmpBarFolder = "+tmpBarFolderPath);
 
@@ -147,49 +140,45 @@ public class BarExporterTest extends SWTBotGefTestCase {
         // wait the shell to close before checking creation of files
         bot.waitUntil(Conditions.shellCloses(shell));
 
-        // check directory exists
-        final String diagramDir1    = getItemName(editorTitle) + "--"+getItemVersion(editorTitle);
-        //System.out.println("diagramDir1 = "+diagramDir1);
-
         // check pools files exist
-        for(int i=1; i<poolTitleListSize;i++){
+        for (int i = 1; i < poolTitleListSize; i++) {
             final String tmpPoolTitle = poolTitleList.get(i);
-            final String poolFileName = getItemName(tmpPoolTitle)+"--"+getItemVersion(tmpPoolTitle)+".bar";
-            final  File poolFile = new File(tmpBarFolderPath, poolFileName);
+            final String poolFileName = getItemName(tmpPoolTitle) + "--" + getItemVersion(tmpPoolTitle) + ".bar";
+            final File poolFile = new File(tmpBarFolderPath, poolFileName);
 
-            assertTrue(	"Error: The Pool export must exist",     poolFile.exists());
-            assertTrue(	"Error: The Pool export must be a file", poolFile.isFile());
+            assertTrue("Error: The Pool export must exist", poolFile.exists());
+            assertTrue("Error: The Pool export must be a file", poolFile.isFile());
         }
     }
 
-    /**Return the name of a Diagram from the Title of the Editor
+    /**
+     * Return the name of a Diagram from the Title of the Editor
      *
      * @param s title of the editor
      * @return the name of the diagram
-     * <p>
-     * <b>Example:</b>
-     * <p>
-     * entry  : "MyDiagram (1.0)"<br>
-     * return : "MyDiagram"
+     *         <p>
+     *         <b>Example:</b>
+     *         <p>
+     *         entry : "MyDiagram (1.0)"<br>
+     *         return : "MyDiagram"
      */
-    public String getItemName(final String s){
+    public String getItemName(final String s) {
         return s.replaceFirst(EditorTitleRegex, "$1");
     }
 
-    /**Return the version of a Diagram from the Title of the Editor
+    /**
+     * Return the version of a Diagram from the Title of the Editor
      *
      * @param s title of the editor
      * @return the name of the diagram
-     * <p>
-     * <b>Example:</b>
-     * <p>
-     * entry  : "MyDiagram (1.0)"<br>
-     * return : "1.0"
+     *         <p>
+     *         <b>Example:</b>
+     *         <p>
+     *         entry : "MyDiagram (1.0)"<br>
+     *         return : "1.0"
      */
-    public String getItemVersion(final String s){
+    public String getItemVersion(final String s) {
         return s.replaceFirst(EditorTitleRegex, "$2");
     }
-
-
 
 }

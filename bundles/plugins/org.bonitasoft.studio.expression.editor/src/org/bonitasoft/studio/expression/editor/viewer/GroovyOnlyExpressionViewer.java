@@ -48,7 +48,7 @@ public class GroovyOnlyExpressionViewer extends ExpressionViewer {
     }
 
     @Override
-    protected String overrideDefaultReturnType() {
+    protected String defaultExpressionType() {
         return ExpressionConstants.SCRIPT_TYPE;
     }
 
