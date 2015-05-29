@@ -43,10 +43,9 @@ public abstract class BotWizardDialog extends BotDialog {
 
     public boolean canFlipToNextPage() {
         try {
-            bot.button(IDialogConstants.NEXT_LABEL);
+            return bot.button(IDialogConstants.NEXT_LABEL).isEnabled();
         } catch (final WidgetNotFoundException e) {
             return false;
         }
-        return bot.button(IDialogConstants.NEXT_LABEL).isEnabled();
     }
 }
