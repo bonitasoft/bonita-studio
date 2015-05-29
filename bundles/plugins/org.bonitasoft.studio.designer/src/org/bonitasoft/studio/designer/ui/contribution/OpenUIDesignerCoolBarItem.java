@@ -22,6 +22,8 @@ import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.designer.ui.handler.OpenUIDesignerHandler;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -69,8 +71,7 @@ public class OpenUIDesignerCoolBarItem extends ContributionItem implements IBoni
     }
 
     protected void openInformationDialogOnUiDesigner() {
-        final String displayDialog = getPreferenceStore().getString(HIDE_UIDESIGNER_INFO_DIALOG);
-        if (!"true".equals(displayDialog)) {
+        if (!getEclipsePreferences().getBoolean(HIDE_UIDESIGNER_INFO_DIALOG, false)) {
             MessageDialogWithPrompt
                     .open(
                             MessageDialog.INFORMATION,
@@ -91,6 +92,10 @@ public class OpenUIDesignerCoolBarItem extends ContributionItem implements IBoni
 
     protected IPreferenceStore getPreferenceStore() {
         return UIDesignerPlugin.getDefault().getPreferenceStore();
+    }
+
+    protected IEclipsePreferences getEclipsePreferences() {
+        return InstanceScope.INSTANCE.getNode(UIDesignerPlugin.PLUGIN_ID);
     }
 
     private void configureItemImage(final ToolItem item, final String imageFileName) {
