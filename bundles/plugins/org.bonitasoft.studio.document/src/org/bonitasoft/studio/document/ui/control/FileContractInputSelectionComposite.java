@@ -29,11 +29,11 @@ import java.util.List;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.ui.ContractInputLabelProvider;
-import org.bonitasoft.studio.document.ui.validator.ContractInputValidator;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -51,7 +51,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-public class FileContractInputSelectionComposite extends Composite {
+public abstract class FileContractInputSelectionComposite extends Composite {
 
     private final ComboViewer contractInputComboViewer;
 
@@ -89,8 +89,11 @@ public class FileContractInputSelectionComposite extends Composite {
         final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(getContractInputComboViewer());
         ControlDecorationSupport.create(emfDataBindingContext.bindValue(observeSingleSelection,
                 EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__CONTRACT_INPUT)), SWT.LEFT);
-        emfDataBindingContext.addValidationStatusProvider(new ContractInputValidator(document, observeSingleSelection, observeInput));
+        emfDataBindingContext.addValidationStatusProvider(createContractInputParameter(document, observeInput, observeSingleSelection));
     }
+
+    protected abstract ValidationStatusProvider createContractInputParameter(Document document, IObservableValue observeInput,
+            IObservableValue observeSingleSelection);
 
     private IConverter toInputList(final Document document, final EObject context) {
         return new Converter(Boolean.class, List.class) {

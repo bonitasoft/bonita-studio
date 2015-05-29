@@ -19,7 +19,6 @@ import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.bonitasoft.studio.model.process.builders.DocumentBuilder.aDocument;
 
-import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
@@ -30,35 +29,22 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class ContractInputValidatorTest {
+public class MultipleContractInputValidatorTest {
 
     @Rule
     public RealmWithDisplay realm = new RealmWithDisplay();
 
     @Test
-    public void should_fail_when_updating_viewer_input_and_contract_input_is_null() throws Exception {
+    public void should_not_fail_when_updating_viewer_input_and_contract_input_is_null() throws Exception {
         final WritableValue selectionObservable = new WritableValue();
         final WritableValue viewerInputObservable = new WritableValue();
         final EMFDataBindingContext emfDataBindingContext = new EMFDataBindingContext();
-        emfDataBindingContext.addValidationStatusProvider(new ContractInputValidator(aDocument().withDocumentType(DocumentType.CONTRACT).build(),
+        emfDataBindingContext.addValidationStatusProvider(new MultipleContractInputValidator(aDocument().withDocumentType(DocumentType.CONTRACT).build(),
                 selectionObservable, viewerInputObservable));
 
         viewerInputObservable.setValue(newArrayList(aContractInput().build()));
 
-        assertThat(statusFromContext(emfDataBindingContext)).isNotOK();
-    }
-
-    @Test
-    public void should_fail_when_updating_viewer_selection_and_contract_input_is_null() throws Exception {
-        final WritableValue selectionObservable = new WritableValue(aContractInput().build(), ContractInput.class);
-        final WritableValue viewerInputObservable = new WritableValue();
-        final EMFDataBindingContext emfDataBindingContext = new EMFDataBindingContext();
-        emfDataBindingContext.addValidationStatusProvider(new ContractInputValidator(aDocument().withDocumentType(DocumentType.CONTRACT).build(),
-                selectionObservable, viewerInputObservable));
-
-        selectionObservable.setValue(null);
-
-        assertThat(statusFromContext(emfDataBindingContext)).isNotOK();
+        assertThat(statusFromContext(emfDataBindingContext)).isOK();
     }
 
     @Test
@@ -67,7 +53,7 @@ public class ContractInputValidatorTest {
         final WritableValue viewerInputObservable = new WritableValue();
         final EMFDataBindingContext emfDataBindingContext = new EMFDataBindingContext();
         final Document document = aDocument().withDocumentType(DocumentType.CONTRACT).build();
-        emfDataBindingContext.addValidationStatusProvider(new ContractInputValidator(document,
+        emfDataBindingContext.addValidationStatusProvider(new MultipleContractInputValidator(document,
                 selectionObservable, viewerInputObservable));
 
         document.setMultiple(true);
@@ -81,7 +67,7 @@ public class ContractInputValidatorTest {
         final WritableValue viewerInputObservable = new WritableValue();
         final EMFDataBindingContext emfDataBindingContext = new EMFDataBindingContext();
         final Document document = aDocument().withDocumentType(DocumentType.NONE).build();
-        emfDataBindingContext.addValidationStatusProvider(new ContractInputValidator(document,
+        emfDataBindingContext.addValidationStatusProvider(new MultipleContractInputValidator(document,
                 selectionObservable, viewerInputObservable));
 
         document.setMultiple(true);
@@ -95,7 +81,7 @@ public class ContractInputValidatorTest {
         final WritableValue viewerInputObservable = new WritableValue();
         final EMFDataBindingContext emfDataBindingContext = new EMFDataBindingContext();
         final Document document = aDocument().withDocumentType(DocumentType.CONTRACT).build();
-        emfDataBindingContext.addValidationStatusProvider(new ContractInputValidator(document,
+        emfDataBindingContext.addValidationStatusProvider(new MultipleContractInputValidator(document,
                 selectionObservable, viewerInputObservable));
 
         selectionObservable.setValue(aContractInput().build());
@@ -106,4 +92,5 @@ public class ContractInputValidatorTest {
     protected IStatus statusFromContext(final EMFDataBindingContext emfDataBindingContext) {
         return (IStatus) ((ValidationStatusProvider) emfDataBindingContext.getValidationStatusProviders().get(0)).getValidationStatus().getValue();
     }
+
 }

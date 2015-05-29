@@ -22,23 +22,25 @@ import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 
 import java.util.List;
 
+import org.bonitasoft.studio.document.ui.validator.SingleContractInputValidator;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class FileContractInputSelectionCompositeTest {
+public class SingleFileContractInputSelectionCompositeTest {
 
     @Rule
     public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
 
     @Test
     public void should_fill_combo_with_single_file_contract_input_if_document_is_single() throws Exception {
-        final FileContractInputSelectionComposite control = new FileContractInputSelectionComposite(
+        final FileContractInputSelectionComposite control = new SingleFileContractInputSelectionComposite(
                 realmWithDisplay.createComposite());
 
         control.bindControl(aDocument().build(),
@@ -50,7 +52,7 @@ public class FileContractInputSelectionCompositeTest {
 
     @Test
     public void should_fill_combo_with_multiple_file_contract_input_if_document_is_multiple() throws Exception {
-        final FileContractInputSelectionComposite control = new FileContractInputSelectionComposite(
+        final FileContractInputSelectionComposite control = new SingleFileContractInputSelectionComposite(
                 realmWithDisplay.createComposite());
 
         control.bindControl(aDocument().multiple().build(),
@@ -63,7 +65,7 @@ public class FileContractInputSelectionCompositeTest {
 
     @Test
     public void should_not_fill_combo_with_single_file_contract_inputif_document_is_multiple() throws Exception {
-        final FileContractInputSelectionComposite control = new FileContractInputSelectionComposite(
+        final FileContractInputSelectionComposite control = new SingleFileContractInputSelectionComposite(
                 realmWithDisplay.createComposite());
 
         control.bindControl(aDocument().multiple().build(),
@@ -75,7 +77,7 @@ public class FileContractInputSelectionCompositeTest {
 
     @Test
     public void should_fill_combo_with_single_file_contract_input_contained_in_a_single_comlex_input() throws Exception {
-        final FileContractInputSelectionComposite control = new FileContractInputSelectionComposite(
+        final FileContractInputSelectionComposite control = new SingleFileContractInputSelectionComposite(
                 realmWithDisplay.createComposite());
 
         control.bindControl(aDocument().build(),
@@ -88,7 +90,7 @@ public class FileContractInputSelectionCompositeTest {
 
     @Test
     public void should_not_fill_combo_with_multiple_file_contract_input() throws Exception {
-        final FileContractInputSelectionComposite control = new FileContractInputSelectionComposite(
+        final FileContractInputSelectionComposite control = new SingleFileContractInputSelectionComposite(
                 realmWithDisplay.createComposite());
 
         control.bindControl(aDocument().build(),
@@ -100,7 +102,7 @@ public class FileContractInputSelectionCompositeTest {
 
     @Test
     public void should_not_fill_combo_with_single_file_contract_input_contained_in_a_multiple_complex_input() throws Exception {
-        final FileContractInputSelectionComposite control = new FileContractInputSelectionComposite(
+        final FileContractInputSelectionComposite control = new SingleFileContractInputSelectionComposite(
                 realmWithDisplay.createComposite());
 
         control.bindControl(aDocument().build(),
@@ -113,7 +115,7 @@ public class FileContractInputSelectionCompositeTest {
 
     @Test
     public void should_fill_combo_with_single_file_contract_input_contained_in_a_multiple_complex_input_if_document_is_multiple() throws Exception {
-        final FileContractInputSelectionComposite control = new FileContractInputSelectionComposite(
+        final FileContractInputSelectionComposite control = new SingleFileContractInputSelectionComposite(
                 realmWithDisplay.createComposite());
 
         control.bindControl(aDocument().multiple().build(),
@@ -126,7 +128,7 @@ public class FileContractInputSelectionCompositeTest {
 
     @Test
     public void should_combo_selection_set_document_contract_input() throws Exception {
-        final FileContractInputSelectionComposite control = new FileContractInputSelectionComposite(
+        final FileContractInputSelectionComposite control = new SingleFileContractInputSelectionComposite(
                 realmWithDisplay.createComposite());
 
         final Document document = aDocument().build();
@@ -137,5 +139,14 @@ public class FileContractInputSelectionCompositeTest {
         control.getContractInputComboViewer().setSelection(new StructuredSelection(contractInput));
 
         assertThat(document.getContractInput()).isEqualTo(contractInput);
+    }
+
+    @Test
+    public void should_create_a_SingleContratInputValidator() throws Exception {
+        final FileContractInputSelectionComposite control = new SingleFileContractInputSelectionComposite(
+                realmWithDisplay.createComposite());
+
+        assertThat(control.createContractInputParameter(aDocument().build(), new WritableValue(), new WritableValue())).isInstanceOf(
+                SingleContractInputValidator.class);
     }
 }

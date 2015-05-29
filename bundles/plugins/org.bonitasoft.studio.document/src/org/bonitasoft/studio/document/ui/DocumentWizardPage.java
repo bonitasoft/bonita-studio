@@ -23,6 +23,8 @@ import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.ui.control.DocumentDescriptionComposite;
 import org.bonitasoft.studio.document.ui.control.DocumentNameComposite;
 import org.bonitasoft.studio.document.ui.control.FileContractInputSelectionComposite;
+import org.bonitasoft.studio.document.ui.control.MultipleFileContractInputSelectionComposite;
+import org.bonitasoft.studio.document.ui.control.SingleFileContractInputSelectionComposite;
 import org.bonitasoft.studio.document.ui.validator.DocumentInitialContentValidator;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -286,7 +288,7 @@ public class DocumentWizardPage extends WizardPage {
         noneCompo = new Composite(stackedComposite, SWT.NONE);
         noneCompo.setLayoutData(GridDataFactory.swtDefaults().grab(false, false).create());
 
-        singleContractComposite = new FileContractInputSelectionComposite(stackedComposite);
+        singleContractComposite = new SingleFileContractInputSelectionComposite(stackedComposite);
         singleContractComposite.bindControl(document, context, emfDataBindingContext);
         createLocalFileComposite(stackedComposite, emfDataBindingContext);
         createExternalURLComposite(stackedComposite, emfDataBindingContext);
@@ -332,7 +334,7 @@ public class DocumentWizardPage extends WizardPage {
         multipleStack = new StackLayout();
         multipleStackedComposite.setLayout(multipleStack);
 
-        multipleContractComposite = new FileContractInputSelectionComposite(multipleStackedComposite);
+        multipleContractComposite = new MultipleFileContractInputSelectionComposite(multipleStackedComposite);
         multipleContractComposite.bindControl(document, context, emfDataBindingContext);
         scriptComposite = createScriptComposite(multipleStackedComposite, emfDataBindingContext);
     }

@@ -24,7 +24,7 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFObservables;
 
-public class ContractInputValidator extends MultiValidator {
+public abstract class ContractInputValidator extends MultiValidator {
 
     private final Document document;
     private final IObservableValue selectionObservable;
@@ -45,13 +45,14 @@ public class ContractInputValidator extends MultiValidator {
         //Trigger validation when input is updated
         viewerInputObservable.getValue();
         //Trigger validation when multiple is updated
-        EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__MULTIPLE).getValue();
+        final boolean isMultiple = (boolean) EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__MULTIPLE).getValue();
 
         final Object type = EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE).getValue();
-        if (selectionObservable.getValue() == null && type == DocumentType.CONTRACT) {
+        if (shouldValidate(isMultiple) && selectionObservable.getValue() == null && type == DocumentType.CONTRACT) {
             return ValidationStatus.error(Messages.contractInputNotSet);
         }
         return ValidationStatus.ok();
     }
 
+    protected abstract boolean shouldValidate(final boolean isMultiple);
 }
