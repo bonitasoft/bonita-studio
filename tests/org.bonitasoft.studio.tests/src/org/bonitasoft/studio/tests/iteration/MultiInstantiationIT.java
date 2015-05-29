@@ -169,7 +169,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         final AbstractProcess proc = ModelHelper.getParentProcess(multiInstantiable);
         drawDiagram.selectElement(proc.getName());
 
-        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab()
+        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectPoolDataTab()
                 .addData();
         BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("nbTicketsAvailable").setType("Integer").editDefaultValueExpression();
         botExpressionEditorDialog.selectConstantType().setValue("20").ok();
@@ -187,7 +187,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         botNumberBasedStackPanel.editNumberOfInstances().selectConstantType().setValue("15").ok();
         botNumberBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("isThereTickets").setScriptContent("nbTicketsAvailable == 0").ok();
 
-        addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab()
+        addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab()
                 .addData();
         botExpressionEditorDialog = addDataBot.setName("nbTickets").setType("Integer").editDefaultValueExpression();
         botExpressionEditorDialog.selectConstantType().setValue("0").ok();
@@ -238,7 +238,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         final AbstractProcess proc = ModelHelper.getParentProcess(multiInstantiable);
         drawDiagram.selectElement(proc.getName());
 
-        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab()
+        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectPoolDataTab()
                 .addData();
         final BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object").setClassname("java.util.List")
                 .editDefaultValueExpression();
@@ -250,7 +250,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
 
         // Add MultiInstance on The human Task
         drawDiagram.selectElement("Step1");
-        addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab()
+        addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab()
                 .addData();
         addDataBot.setName("vipName").setType("Text").finish();
 
@@ -299,7 +299,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         final AbstractProcess proc = ModelHelper.getParentProcess(multiInstantiable);
         drawDiagram.selectElement(proc.getName());
 
-        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab()
+        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectPoolDataTab()
                 .addData();
         final BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object").setClassname("java.util.List")
                 .editDefaultValueExpression();
@@ -315,7 +315,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
 
         // Add MultiInstance on The human Task
         drawDiagram.selectElement("Step1");
-        addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab()
+        addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab()
                 .addData();
         addDataBot = (BotAddDataWizardPage) addDataBot.setName("vipName").setType("Text").finishAndAdd();
         addDataBot.setName("nbTickets").setType("Integer").editDefaultValueExpression().selectConstantType().setValue("0").ok();
@@ -350,16 +350,16 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         // remove vip collection and vipName Text
         drawDiagram.selectElement(proc.getName());
         org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection selectDataTab = botProcessDiagramPerspective
-                .getDiagramPropertiesPart().selectDataTab().selectDataTab();
-        botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab().dataList()
+                .getDiagramPropertiesPart().selectDataTab().selectPoolDataTab();
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectPoolDataTab().processDataList()
                 .select("vip -- java.util.List -- Default value: vipScript");
         selectDataTab.remove();
 
         // Check empty comboBox in MultiInstance
         drawDiagram.selectElement("Step1");
         selectDataTab = botProcessDiagramPerspective
-                .getDiagramPropertiesPart().selectDataTab().selectDataTab();
-        botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab().dataList()
+                .getDiagramPropertiesPart().selectDataTab().selectLocalDataTab();
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab().processDataList()
                 .select("vipName -- Text");
         selectDataTab.remove();
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
@@ -395,7 +395,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         final AbstractProcess proc = ModelHelper.getParentProcess(multiInstantiable);
         drawDiagram.selectElement(proc.getName());
 
-        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab()
+        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectPoolDataTab()
                 .addData();
         BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("nbTicketsAvailable").setType("Integer").editDefaultValueExpression();
         botExpressionEditorDialog.selectConstantType().setValue("20").ok();
@@ -418,7 +418,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         drawDiagram.selectElement("Step1");
         botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectActorAssignementTab().useBelowActor().selectActor("Employee actor");
 
-        addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDataTab()
+        addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab()
                 .addData();
         botExpressionEditorDialog = addDataBot.setName("nbTickets").setType("Integer").editDefaultValueExpression();
         botExpressionEditorDialog.selectConstantType().setValue("0").ok();
