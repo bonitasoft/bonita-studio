@@ -27,8 +27,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
 import org.bonitasoft.studio.designer.core.operation.CreateFormFromContractOperation;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
@@ -87,7 +87,7 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
         when(preferenceStore.get(CONSOLE_HOST, DEFAULT_HOST)).thenReturn(DEFAULT_HOST);
         when(preferenceStore.getInt(CONSOLE_PORT, DEFAULT_PORT)).thenReturn(DEFAULT_PORT);
         doReturn(createFormOperation).when(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory), anyString(),
-                any(Contract.class));
+                any(Contract.class), any(FormScope.class));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
         createNewFormProposal.handleEvent(task.getFormMapping(), null);
 
         //Then
-        verify(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory), eq("newForm"), any(Contract.class));
+        verify(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory), eq("newForm"), any(Contract.class), any(FormScope.class));
     }
 
 }
