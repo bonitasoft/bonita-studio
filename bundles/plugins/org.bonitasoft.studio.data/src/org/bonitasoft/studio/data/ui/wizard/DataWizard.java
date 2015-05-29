@@ -198,7 +198,9 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
         } else {
             editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, dataContainmentFeature, workingCopy));
         }
-        page.setWorkingCopy(createWorkingCopy(container));
+        if (page != null) {
+            page.setWorkingCopy(createWorkingCopy(container));
+        }
         refreshXtextReferences();
         return true;
     }
