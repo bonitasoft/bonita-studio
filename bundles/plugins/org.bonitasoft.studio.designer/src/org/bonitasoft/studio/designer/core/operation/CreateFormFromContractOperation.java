@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.converter.ToWebContract;
 import org.bonitasoft.studio.designer.i18n.Messages;
@@ -45,14 +46,17 @@ public class CreateFormFromContractOperation implements IRunnableWithProgress {
     private final PageDesignerURLFactory pageDesignerURLBuilder;
     private String formName = "newPage";
     private final Contract contract;
+    private final FormScope formScope;
 
-    public CreateFormFromContractOperation(final PageDesignerURLFactory pageDesignerURLBuilder, final String formName, final Contract contract) {
+    public CreateFormFromContractOperation(final PageDesignerURLFactory pageDesignerURLBuilder, final String formName, final Contract contract,
+            final FormScope formScope) {
         checkArgument(pageDesignerURLBuilder != null);
         checkArgument(!isNullOrEmpty(formName));
         checkArgument(contract != null);
         this.pageDesignerURLBuilder = pageDesignerURLBuilder;
         this.contract = contract;
         this.formName = formName;
+        this.formScope = formScope;
     }
 
     /*
@@ -64,7 +68,7 @@ public class CreateFormFromContractOperation implements IRunnableWithProgress {
         monitor.beginTask(Messages.creatingNewForm, IProgressMonitor.UNKNOWN);
         responseObject = null;
         try {
-            final String source = doPost(pageDesignerURLBuilder.newPageFromContract(formName), new ToWebContract().apply(contract));
+            final String source = doPost(pageDesignerURLBuilder.newPageFromContract(formScope, formName), new ToWebContract().apply(contract));
             responseObject = new JSONObject(source);
         } catch (ResourceException | IOException | JSONException | URISyntaxException e) {
             throw new InvocationTargetException(e, "Failed to post request to create a new page.");

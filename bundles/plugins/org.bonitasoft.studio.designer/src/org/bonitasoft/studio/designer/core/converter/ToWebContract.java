@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.designer.core.converter;
 
-import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -23,8 +22,6 @@ import java.util.Date;
 
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.web.designer.model.contract.ContractType;
 import org.bonitasoft.web.designer.model.contract.LeafContractInput;
 import org.bonitasoft.web.designer.model.contract.NodeContractInput;
 
@@ -35,7 +32,6 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
     @Override
     public org.bonitasoft.web.designer.model.contract.Contract apply(final Contract fromContract) {
         final org.bonitasoft.web.designer.model.contract.Contract contract = new org.bonitasoft.web.designer.model.contract.Contract();
-        contract.setContractType(contractType(fromContract));
         contract.getInput().addAll(newArrayList(transform(fromContract.getInputs(), toWebContractInput())));
         return contract;
     }
@@ -65,10 +61,6 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
                 }
             }
         };
-    }
-
-    private ContractType contractType(final Contract fromContract) {
-        return instanceOf(Pool.class).apply(fromContract.eContainer()) ? ContractType.PROCESS : ContractType.TASK;
     }
 
     private org.bonitasoft.web.designer.model.contract.ContractInput createLeafContractInput(final ContractInput input, final Class<?> type) {
