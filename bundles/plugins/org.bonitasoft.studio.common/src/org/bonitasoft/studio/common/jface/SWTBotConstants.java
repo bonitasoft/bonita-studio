@@ -45,7 +45,8 @@ public interface SWTBotConstants {
     public static final String VIEWS_OVERVIEW = "org.bonitasoft.studio.views.overview";
     public static final String VIEWS_TREE_OVERVIEW = "org.bonitasoft.studio.views.overview.tree";
 
-    public static final String VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES = "Variables";
+    public static final String VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES = "Process variables";
+    public static final String VIEWS_PROPERTIES_TASK_DATA_VARIABLES = "Local variables";
     public static final String VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_IN = "Connectors in";
     public static final String VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_OUT = "Connectors out";
 
@@ -80,5 +81,8 @@ public interface SWTBotConstants {
     public static final String SWTBOT_ID_CALLACTIVITY_MAPPING_OUTPUT_ASSIGNATIONTYPE = "SWTBOT_ID_CALLACTIVITY_MAPPING_OUTPUT_ASSIGNATIONTYPE";
     public static final String SWTBOT_ID_CALLACTIVITY_MAPPING_OUTPUT_CALLEDTARGET = "SWTBOT_ID_CALLACTIVITY_MAPPING_OUTPUT_CALLEDTARGET";
     public static final String SWTBOT_ID_CALLACTIVITY_MAPPING_DELETE_OUTPUT = "SWTBOT_ID_CALLACTIVITY_MAPPING_DELETE_OUTPUT";
+
+    public static final String SWTBOT_ID_ITERATOR_TABLE = "SWTBOT_ID_ITERATOR_TABLE";
+    public static final String SWTBOT_ID_ITERATOR_NAME_EDITOR = "SWTBOT_ID_ITERATOR_NAME_EDITOR";
 
 }

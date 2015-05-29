@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -37,8 +40,12 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -46,6 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
@@ -114,6 +122,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
     private Operation operation;
     private EObject eObjectContext;
     private boolean isPageFlowContext;
+    private DefaultReturnTypeResolver defaultReturnTypeResolver;
 
     public OperationViewer(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory, final EditingDomain editingDomain,
             final ViewerFilter actionExpressionFilter,
@@ -149,6 +158,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
     public void refreshDatabinding() {
         final Operation action = getOperation();
         if (action != null) {
+            defaultReturnTypeResolver = new DefaultReturnTypeResolver(action);
             getActionExpression().setExternalDataBindingContext(context);
             storageViewer.setExternalDataBindingContext(context);
 
@@ -176,6 +186,13 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
         final IObservableValue operatorObservedValue = EMFEditObservables.observeValue(getEditingDomain(), getOperation().getOperator(),
                 ExpressionPackage.Literals.OPERATOR__TYPE);
         operatorObservedValue.addChangeListener(new RevalidateActionExpressionChangeListener());
+        operatorObservedValue.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                getActionExpression().setDefaultReturnType(defaultReturnTypeResolver.guessRightOperandReturnType());
+            }
+        });
 
         context.bindValue(SWTObservables.observeText(getOperatorLink()), operatorObservedValue, null, uvsOperator);
         context.bindValue(SWTObservables.observeText(getOperatorLink()), operatorExpressionObserveValue, null, uvsOperator);
@@ -241,7 +258,23 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                 ViewerProperties.singleSelection().observe(getActionExpression()),
                 actionExpressionObservableValue);
 
+        context.bindValue(PojoObservables.observeValue(getActionExpression(), "defaultReturnType"),
+                EMFObservables.observeDetailValue(Realm.getDefault(),
+                        EMFObservables.observeValue(action, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND),
+                        ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE),
+                neverUpdateValueStrategy().create(),
+                updateValueStrategy().withConverter(returnTypeConverter()).create());
         returnTypeExpressionObservableValue.addValueChangeListener(new RevalidateActionExpressionValueChangedListener());
+    }
+
+    private IConverter returnTypeConverter() {
+        return new Converter(String.class, String.class) {
+
+            @Override
+            public Object convert(final Object fromObject) {
+                return defaultReturnTypeResolver.guessRightOperandReturnType();
+            }
+        };
     }
 
     private void updateVisibilityOfActionExpressionControl(final Operation action) {
@@ -342,6 +375,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                     cc.append(SetCommand.create(getEditingDomain(), operator, ExpressionPackage.Literals.OPERATOR__INPUT_TYPES, newOperator.getInputTypes()));
                     getEditingDomain().getCommandStack().execute(cc);
                 }
+                getActionExpression().setDefaultReturnType(defaultReturnTypeResolver.guessRightOperandReturnType());
                 return newOperator;
             }
         });

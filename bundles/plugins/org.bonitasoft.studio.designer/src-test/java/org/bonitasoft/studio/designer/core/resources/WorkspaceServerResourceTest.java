@@ -23,21 +23,12 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 import org.bonitasoft.studio.common.repository.extension.IGetLockStatusOperation;
 import org.bonitasoft.studio.common.repository.extension.ILockedResourceStatus;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.designer.core.resources.LockStatus;
-import org.bonitasoft.studio.designer.core.resources.LockStatusOperationFactory;
-import org.bonitasoft.studio.designer.core.resources.LockStatusOperationNotFound;
-import org.bonitasoft.studio.designer.core.resources.LockedResourceException;
-import org.bonitasoft.studio.designer.core.resources.RepositoryNotifier;
-import org.bonitasoft.studio.designer.core.resources.ResourceNotFoundException;
-import org.bonitasoft.studio.designer.core.resources.WorkspaceAPIEvent;
-import org.bonitasoft.studio.designer.core.resources.WorkspaceServerResource;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -152,26 +143,6 @@ public class WorkspaceServerResourceTest {
         workspaceServerResource.dispatch(null);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
-    public void should_throw_a_ResourceNotFoundException_if_no_fileStore_is_found_for_the_givent_filePath() throws Exception {
-        doReturn(WorkspaceAPIEvent.PRE_OPEN.name()).when(workspaceServerResource).getAttribute("action");
-        doReturn("").when(workspaceServerResource).getAttribute("filePath");
-        doReturn(null).when(repository).asRepositoryFileStore(notNull(Path.class));
-        workspaceServerResource.doInit();
-
-        workspaceServerResource.dispatch("aFilePath");
-    }
-
-    @Test(expected = ResourceNotFoundException.class)
-    public void should_throw_a_ResourceNotFoundException_if_repository_throw_an_IOException() throws Exception {
-        doReturn(WorkspaceAPIEvent.PRE_OPEN.name()).when(workspaceServerResource).getAttribute("action");
-        doReturn("").when(workspaceServerResource).getAttribute("filePath");
-        doThrow(new IOException()).when(repository).asRepositoryFileStore(notNull(Path.class));
-        workspaceServerResource.doInit();
-
-        workspaceServerResource.dispatch("aFilePath");
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void should_throw_an_IllegalArgumentException_if_get_action_is_invalid() throws Exception {
         doReturn("invalidAction").when(workspaceServerResource).getAttribute("action");
@@ -262,6 +233,6 @@ public class WorkspaceServerResourceTest {
 
         workspaceServerResource.doCatch(throwable);
 
-        verify(workspaceServerResource).logException("WorkspaceServerResource interal error", throwable);
+        verify(workspaceServerResource).logException("WorkspaceServerResource internal error", throwable);
     }
 }

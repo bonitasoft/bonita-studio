@@ -200,16 +200,16 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
 
                 @Override
                 public void selectionChanged(final SelectionChangedEvent event) {
-                    final IGraphicalEditPart diagramSelectedPart = (IGraphicalEditPart) ((IStructuredSelection) event.getSelection()).getFirstElement();
-                    if (diagramSelectedPart != null && filteredTree != null && !filteredTree.isDisposed()) {
+                    final Object diagramSelectedPart = ((IStructuredSelection) event.getSelection()).getFirstElement();
+                    if (diagramSelectedPart instanceof IGraphicalEditPart && filteredTree != null && !filteredTree.isDisposed()) {
                         final EObject treeElementSelection = (EObject) ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement();
                         try {
                             final IGraphicalEditPart editPart = editPartResolver.findEditPart(diagramEditPart, treeElementSelection);
                             if (!editPart.equals(diagramSelectedPart)) {
-                                selectTreeItem(diagramSelectedPart);
+                                selectTreeItem((IGraphicalEditPart) diagramSelectedPart);
                             }
                         } catch (final EditPartNotFoundException e) {
-                            selectTreeItem(diagramSelectedPart);
+                            selectTreeItem((IGraphicalEditPart) diagramSelectedPart);
                         }
                     }
                 }

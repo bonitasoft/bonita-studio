@@ -55,7 +55,7 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 	@Test
 	public void testConditionExpressions() throws Exception{
 		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
-		SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES);
+		SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_TASK_DATA_VARIABLES);
         bot.button(Messages.Add).click();
 		SWTBotTestUtil.addNewData(bot, "myData","Text" , false, null);
 

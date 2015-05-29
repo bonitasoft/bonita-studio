@@ -122,18 +122,13 @@ public class WorkspaceServerResource extends ServerResource {
         return decodedPath;
     }
 
-    protected IRepositoryFileStore toFileStore(final String filePath) throws ResourceNotFoundException {
+    protected IRepositoryFileStore toFileStore(final String filePath) {
         checkArgument(!isNullOrEmpty(filePath), "filePath is null or empty");
-        IRepositoryFileStore fileStore;
         try {
-            fileStore = repository.asRepositoryFileStore(new File(filePath).toPath());
+            return repository.asRepositoryFileStore(new File(filePath).toPath());
         } catch (final IOException | CoreException e) {
-            throw new ResourceNotFoundException(filePath);
+            return null;
         }
-        if (fileStore == null) {
-            throw new ResourceNotFoundException(filePath);
-        }
-        return fileStore;
     }
 
     @Override
@@ -149,7 +144,7 @@ public class WorkspaceServerResource extends ServerResource {
                 response.setStatus(Status.CLIENT_ERROR_LOCKED, cause);
             }
         }
-        logException("WorkspaceServerResource interal error", throwable);
+        logException("WorkspaceServerResource internal error", throwable);
     }
 
     protected void logException(final String message, final Throwable throwable) {

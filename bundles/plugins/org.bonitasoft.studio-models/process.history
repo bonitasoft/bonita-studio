@@ -9849,5 +9849,31 @@
     <changes xsi:type="history:Set" element="process.ecore#//InputMapping/assignationType"
         featureName="defaultValueLiteral" dataValue="ContractInput" oldDataValue=""/>
   </releases>
+  <releases date="2015-05-28T17:11:11.267+0200" label="7.0.0-007">
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Create" target="process.ecore#//ContractInput" referenceName="eOperations"
+          element="process.ecore#//ContractInput/getJavaType"/>
+      <changes xsi:type="history:Set" element="process.ecore#//ContractInput/getJavaType"
+          featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <changes xsi:type="history:Set" element="process.ecore#//ContractInput/getJavaType"
+          featureName="name" dataValue="getJavaType"/>
+      <changes xsi:type="history:Create" target="process.ecore#//ContractInput/getJavaType"
+          referenceName="eAnnotations" element="process.ecore#//ContractInput/getJavaType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+      <changes xsi:type="history:Set" element="process.ecore#//ContractInput/getJavaType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
+      <changes xsi:type="history:Create" target="process.ecore#//ContractInput/getJavaType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="process.ecore#//ContractInput/getJavaType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+      <changes xsi:type="history:Set" element="process.ecore#//ContractInput/getJavaType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+          featureName="key" dataValue="body"/>
+      <changes xsi:type="history:Set" element="process.ecore#//ContractInput/getJavaType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+          featureName="value" dataValue="switch(getType()){&#xD;&#xA;case TEXT:return java.lang.String.class.getName();&#xD;&#xA;case DATE: return java.util.Date.class.getName();&#xD;&#xA;case INTEGER: return java.lang.Integer.class.getName();&#xD;&#xA;case DECIMAL: return java.lang.Double.class.getName();&#xD;&#xA;case FILE:return &quot;org.bonitasoft.&quot;;&#xD;&#xA;case COMPLEX:return java.util.Map.class.getName();&#xD;&#xA;default: reutrn java.lang.String.class.getName();&#xD;&#xA;}"/>
+      <changes xsi:type="history:Set" element="process.ecore#//ContractInput/getJavaType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+          featureName="value" dataValue="switch(getType()){&#xD;&#xA;case TEXT:return java.lang.String.class.getName();&#xD;&#xA;case BOOLEAN:return java.lang.Boolean.class.getName();&#xD;&#xA;case DATE: return java.util.Date.class.getName();&#xD;&#xA;case INTEGER: return java.lang.Integer.class.getName();&#xD;&#xA;case DECIMAL: return java.lang.Double.class.getName();&#xD;&#xA;case FILE:return &quot;org.bonitasoft.engine.bpm.contract.FileInputValue&quot;;&#xD;&#xA;case COMPLEX:return java.util.Map.class.getName();&#xD;&#xA;default: reutrn java.lang.String.class.getName();&#xD;&#xA;}"
+          oldDataValue="switch(getType()){&#xD;&#xA;case TEXT:return java.lang.String.class.getName();&#xD;&#xA;case DATE: return java.util.Date.class.getName();&#xD;&#xA;case INTEGER: return java.lang.Integer.class.getName();&#xD;&#xA;case DECIMAL: return java.lang.Double.class.getName();&#xD;&#xA;case FILE:return &quot;org.bonitasoft.&quot;;&#xD;&#xA;case COMPLEX:return java.util.Map.class.getName();&#xD;&#xA;default: reutrn java.lang.String.class.getName();&#xD;&#xA;}"/>
+      <changes xsi:type="history:Set" element="process.ecore#//ContractInput/getJavaType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+          featureName="value" dataValue="switch(getType()){&#xD;&#xA;case BOOLEAN:return java.lang.Boolean.class.getName();&#xD;&#xA;case DATE: return java.util.Date.class.getName();&#xD;&#xA;case INTEGER: return java.lang.Integer.class.getName();&#xD;&#xA;case DECIMAL: return java.lang.Double.class.getName();&#xD;&#xA;case FILE:return &quot;org.bonitasoft.engine.bpm.contract.FileInputValue&quot;;&#xD;&#xA;case COMPLEX:return java.util.Map.class.getName();&#xD;&#xA;case TEXT:&#xD;&#xA;default: return java.lang.String.class.getName();&#xD;&#xA;}"
+          oldDataValue="switch(getType()){&#xD;&#xA;case TEXT:return java.lang.String.class.getName();&#xD;&#xA;case BOOLEAN:return java.lang.Boolean.class.getName();&#xD;&#xA;case DATE: return java.util.Date.class.getName();&#xD;&#xA;case INTEGER: return java.lang.Integer.class.getName();&#xD;&#xA;case DECIMAL: return java.lang.Double.class.getName();&#xD;&#xA;case FILE:return &quot;org.bonitasoft.engine.bpm.contract.FileInputValue&quot;;&#xD;&#xA;case COMPLEX:return java.util.Map.class.getName();&#xD;&#xA;default: reutrn java.lang.String.class.getName();&#xD;&#xA;}"/>
+    </changes>
+  </releases>
   <releases/>
 </history:History>

@@ -28,10 +28,12 @@ import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAda
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -53,6 +55,7 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
     private final FormReferenceExpressionViewer targetFormExpressionViewer;
     private final RepositoryAccessor repositoryAccessor;
     private final WebPageNameResourceChangeListener webPageNameResourceChangeListener;
+    private final Label info;
 
     public InternalMappingComposite(final Composite parent,
             final TabbedPropertySheetWidgetFactory widgetFactory,
@@ -66,12 +69,25 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
                 new ExpressionItemProviderAdapterFactory()));
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 0, 10, 0).create());
         final Label label = widgetFactory.createLabel(this, Messages.targetForm);
-        label.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
+        label.setLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).create());
 
+        targetFormExpressionViewer = createFormExpressionViewer(widgetFactory, repositoryAccessor, formReferenceExpressionValidator, createOrEditFormListener);
+        addResourceChangeListener(webPageNameResourceChangeListener);
+
+        info = widgetFactory.createLabel(this, "", SWT.WRAP);
+        info.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).align(SWT.RIGHT, SWT.CENTER).create());
+        widgetFactory.adapt(this);
+    }
+
+    protected FormReferenceExpressionViewer createFormExpressionViewer(
+            final TabbedPropertySheetWidgetFactory widgetFactory,
+            final RepositoryAccessor repositoryAccessor,
+            final FormReferenceExpressionValidator formReferenceExpressionValidator,
+            final CreateOrEditFormProposalListener createOrEditFormListener) {
         final WebPageRepositoryStore webPageRepositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
-        targetFormExpressionViewer = new FormReferenceExpressionViewer(this, SWT.BORDER, widgetFactory,
+        final FormReferenceExpressionViewer targetFormExpressionViewer = new FormReferenceExpressionViewer(this, SWT.BORDER, widgetFactory,
                 webPageRepositoryStore, createOrEditFormListener);
-        targetFormExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(WIDTH_HINT, SWT.DEFAULT).create());
+        targetFormExpressionViewer.getControl().setLayoutData(GridDataFactory.swtDefaults().hint(WIDTH_HINT, SWT.DEFAULT).grab(false, false).create());
         targetFormExpressionViewer.setExpressionProposalLableProvider(new FormReferenceProposalLabelProvider());
         targetFormExpressionViewer.addExpressionValidator(formReferenceExpressionValidator);
         targetFormExpressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.FORM_REFERENCE_TYPE }));
@@ -92,8 +108,7 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
                 }
             }
         });
-        addResourceChangeListener(webPageNameResourceChangeListener);
-        widgetFactory.adapt(this);
+        return targetFormExpressionViewer;
     }
 
     /*
@@ -118,6 +133,13 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
         context.bindValue(ViewersObservables.observeInput(targetFormExpressionViewer), formMappingObservable);
         context.bindValue(ViewersObservables.observeSingleSelection(targetFormExpressionViewer),
                 CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), formMappingObservable, ProcessPackage.Literals.FORM_MAPPING__TARGET_FORM));
+        doBindInfo(context, formMappingObservable);
+    }
+
+    protected void doBindInfo(final DataBindingContext context, final IObservableValue formMappingObservable) {
+        final UpdateValueStrategy infoStrategy = new UpdateValueStrategy();
+        infoStrategy.setConverter(new InfoMessageConverter(org.bonitasoft.studio.model.process.FormMappingType.INTERNAL));
+        context.bindValue(SWTObservables.observeText(info), formMappingObservable, null, infoStrategy);
     }
 
 }

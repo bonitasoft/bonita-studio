@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -43,6 +44,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
@@ -82,15 +84,19 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
     @Mock
     private IWorkbenchPart part;
 
+    @Mock
+    private ISharedImages sharedImages;
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         parent = createDisplayAndRealm();
-        section = spy(new ContractPropertySection(eclipseContext, selectionProvider, progressService));
+        section = spy(new ContractPropertySection(sharedImages,eclipseContext, selectionProvider, progressService));
         when(tabbedPropertySheetPage.getWidgetFactory()).thenReturn(new TabbedPropertySheetWidgetFactory());
         doReturn(contributionItem).when(section).newContributionItem(CreateAndEditFormContributionItem.class);
+        doReturn(createImage()).when(sharedImages).getImage(anyString());
     }
 
     /**

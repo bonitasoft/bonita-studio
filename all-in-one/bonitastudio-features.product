@@ -71,7 +71,6 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <feature id="studio-bos-specific-feature"/>
       <feature id="bos-branding-feature"/>
       <feature id="rootfiles-feature"/>
-      <feature id="org.bonitasoft.studio.bos.translations"/>
       <feature id="org.bonitasoft.studio.translations"/>
    </features>
 
@@ -87,11 +86,11 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <property name="engine.version" value="${engine.version}" />
       <property name="file.encoding" value="UTF-8" />
       <property name="osgi.instance.area" value="@noDefault" />
+      <property name="osgi.nl" value="en" />
       <property name="osgi.nls.warnings" value="ignore" />
       <property name="portal.version" value="${bundle.version}" />
       <property name="product.version" value="${project.version}" />
       <property name="simulation.version" value="${simulation.version}" />
-       <property name="osgi.nl" value="en" />
    </configurations>
 
 </product>

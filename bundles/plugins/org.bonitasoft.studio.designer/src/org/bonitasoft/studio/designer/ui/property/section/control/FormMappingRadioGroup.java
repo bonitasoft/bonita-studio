@@ -31,6 +31,7 @@ import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -49,34 +50,38 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
     private final InternalMappingComposite pageDesignerMappingComposite;
     private final URLMappingComposite urlMappingComposite;
     private final CustomStackLayout stackLayout;
-    private final Composite legacyComposite;
+    private final LegacyComposite legacyComposite;
 
     public FormMappingRadioGroup(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory, final IEclipsePreferences preferenceStore,
             final RepositoryAccessor repositoryAccessor, final FormReferenceExpressionValidator formReferenceExpressionValidator,
             final CreateOrEditFormProposalListener createOrEditFormListener) {
         super(parent, SWT.NONE);
-        setLayout(GridLayoutFactory.fillDefaults().numColumns(3).extendedMargins(10, 10, 10, 10).create());
+        setLayout(GridLayoutFactory.swtDefaults().numColumns(3).extendedMargins(10, 10, 10, 10).create());
+        setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        setBackground(ColorConstants.lightBlue);
 
         final Button pageDesignerRadio = widgetFactory.createButton(this, Messages.uiDesignerLabel, SWT.RADIO);
         pageDesignerRadio.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
+
         final Button externalRadio = widgetFactory.createButton(this, Messages.externalURL, SWT.RADIO);
         externalRadio.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
 
         final Button legacyRadio = widgetFactory.createButton(this, Messages.legacyForm, SWT.RADIO);
         legacyRadio.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
 
-        mappingTypeObservable = new SelectObservableValue(Boolean.class);
+        mappingTypeObservable = new SelectObservableValue(FormMappingType.class);
         mappingTypeObservable.addOption(FormMappingType.INTERNAL, SWTObservables.observeSelection(pageDesignerRadio));
         mappingTypeObservable.addOption(FormMappingType.URL, SWTObservables.observeSelection(externalRadio));
         mappingTypeObservable.addOption(FormMappingType.LEGACY, SWTObservables.observeSelection(legacyRadio));
 
         final Composite stackedComposite = widgetFactory.createComposite(this);
-        stackedComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(3, 1).create());
+        stackedComposite.setLayoutData(GridDataFactory.swtDefaults().grab(true, false)/* .hint(SWT.FILL, 30) */.span(3, 1).create());
+        stackedComposite.setBackground(ColorConstants.red);
 
         stackLayout = new CustomStackLayout(stackedComposite);
         stackedComposite.setLayout(stackLayout);
 
-        legacyComposite = widgetFactory.createComposite(stackedComposite);
+        legacyComposite = new LegacyComposite(stackedComposite, widgetFactory);
         pageDesignerMappingComposite = new InternalMappingComposite(stackedComposite, widgetFactory, preferenceStore, repositoryAccessor,
                 formReferenceExpressionValidator, createOrEditFormListener);
         urlMappingComposite = new URLMappingComposite(stackedComposite, widgetFactory);
@@ -103,12 +108,14 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
                 CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                         formMappingObservable,
                         ProcessPackage.Literals.FORM_MAPPING__TYPE));
+
         pageDesignerMappingComposite.doBindControl(context, formMappingObservable);
         urlMappingComposite.doBindControl(context, formMappingObservable);
+        legacyComposite.doBindControl(context, formMappingObservable);
     }
 
     private IConverter mappingTypeToCompositeConverter() {
-        return new Converter(Boolean.class, Composite.class) {
+        return new Converter(FormMappingType.class, Composite.class) {
 
             @Override
             public Object convert(final Object mappingType) {
@@ -128,6 +135,9 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
         }
         if (urlMappingComposite != null) {
             urlMappingComposite.dispose();
+        }
+        if (legacyComposite != null) {
+            legacyComposite.dispose();
         }
         super.dispose();
     }

@@ -87,5 +87,6 @@ public class Messages extends NLS {
     public static String warningAddFromData_noDataSelected;
     public static String reminderForStepMessage;
     public static String reminderForProcessMessage;
+    public static String contractInputDescriptionTooltip;
 
 }

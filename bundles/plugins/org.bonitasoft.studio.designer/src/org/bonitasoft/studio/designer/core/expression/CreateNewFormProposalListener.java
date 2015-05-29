@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateFormFromContractOperation;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
@@ -30,6 +31,8 @@ import org.bonitasoft.studio.expression.editor.provider.IProposalAdapter;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.PageFlow;
+import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;
@@ -63,7 +66,7 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
     public String handleEvent(final EObject context, final String fixedReturnType) {
         final PageFlow pageFlow = pageFlowFor(context);
         checkState(pageFlow != null);
-        final CreateFormFromContractOperation operation = doCreateFormOperation(pageDesignerURLFactory, "newForm", contractFor(context));
+        final CreateFormFromContractOperation operation = doCreateFormOperation(pageDesignerURLFactory, "newForm", contractFor(context), formScopeFor(context));
 
         try {
             progressService.busyCursorWhile(operation);
@@ -74,6 +77,11 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
         final String newPageId = operation.getNewPageId();
         repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newPageId).open();
         return newPageId;
+    }
+
+    private FormScope formScopeFor(final EObject context) {
+        return context.eContainingFeature().equals(ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING) ? FormScope.OVERVIEW
+                : context.eContainer() instanceof Pool ? FormScope.PROCESS : FormScope.TASK;
     }
 
     private static PageFlow pageFlowFor(final EObject context) {
@@ -92,8 +100,8 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
     }
 
     protected CreateFormFromContractOperation doCreateFormOperation(final PageDesignerURLFactory pageDesignerURLBuilder, final String formName,
-            final Contract contract) {
-        return new CreateFormFromContractOperation(pageDesignerURLBuilder, formName, contract);
+            final Contract contract, final FormScope formScope) {
+        return new CreateFormFromContractOperation(pageDesignerURLBuilder, formName, contract, formScope);
     }
 
 }

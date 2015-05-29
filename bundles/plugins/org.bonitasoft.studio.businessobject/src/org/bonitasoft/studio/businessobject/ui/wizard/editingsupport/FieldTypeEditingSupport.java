@@ -14,8 +14,10 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -27,7 +29,7 @@ import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.ui.wizard.provider.FieldTypeLabelProvider;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -35,6 +37,9 @@ import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Ordering;
 
 /**
  * @author Romain Bioteau
@@ -45,10 +50,10 @@ public class FieldTypeEditingSupport extends EditingSupport {
 
     private final IObservableList fieldsList;
 
-    private final IViewerObservableValue selectedFieldObservableValue;
+    private final IObservableValue selectedFieldObservableValue;
 
     public FieldTypeEditingSupport(final ColumnViewer viewer, final BusinessObjectModel bom, final IObservableList fieldsList,
-            final IViewerObservableValue selectedFieldObservableValue) {
+            final IObservableValue selectedFieldObservableValue) {
         super(viewer);
         this.bom = bom;
         this.fieldsList = fieldsList;
@@ -59,15 +64,25 @@ public class FieldTypeEditingSupport extends EditingSupport {
     protected CellEditor getCellEditor(final Object element) {
         final ComboBoxViewerCellEditor cellEditor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(), SWT.READ_ONLY);
         cellEditor.setContentProvider(ArrayContentProvider.getInstance());
-        cellEditor.setLabelProvider(new FieldTypeLabelProvider());
-        cellEditor.setInput(getInput(element));
+        final FieldTypeLabelProvider labelProvider = new FieldTypeLabelProvider();
+        cellEditor.setLabelProvider(labelProvider);
+        cellEditor.setInput(getInput(labelProvider));
         return cellEditor;
     }
 
-    protected List<Object> getInput(final Object element) {
-        final List<Object> result = new ArrayList<Object>(Arrays.asList(FieldType.STRING, FieldType.TEXT, FieldType.BOOLEAN, FieldType.INTEGER, FieldType.LONG,
-                FieldType.FLOAT, FieldType.DOUBLE,
-                FieldType.DATE));
+    protected List<Object> getInput(final FieldTypeLabelProvider labelProvider) {
+        final List<Object> result = new ArrayList<>();
+        final ImmutableList<FieldType> sortedFieldTypes = Ordering.from(new Comparator<FieldType>() {
+
+            @Override
+            public int compare(final FieldType o1, final FieldType o2) {
+                return labelProvider.getText(o1).compareTo(labelProvider.getText(o2));
+            }
+
+        }).immutableSortedCopy(newArrayList(FieldType.STRING, FieldType.TEXT, FieldType.BOOLEAN, FieldType.INTEGER, FieldType.LONG,
+                FieldType.FLOAT, FieldType.DOUBLE, FieldType.DATE));
+
+        result.addAll(sortedFieldTypes);
         result.addAll(bom.getBusinessObjects());
         return result;
     }

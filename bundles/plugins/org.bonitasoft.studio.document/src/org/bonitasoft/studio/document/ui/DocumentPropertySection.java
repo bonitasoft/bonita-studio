@@ -147,8 +147,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                super.widgetSelected(e);
-                editDocumentAction();
+                editDocumentAction(documentListViewer.getSelection());
             }
         });
 
@@ -253,8 +252,8 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
     }
 
     @Override
-    public void doubleClick(final DoubleClickEvent arg0) {
-        editDocumentAction();
+    public void doubleClick(final DoubleClickEvent event) {
+        editDocumentAction(event.getSelection());
 
     }
 
@@ -266,13 +265,15 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
 
     }
 
-    private void editDocumentAction() {
-        final Document selectedDocument = (Document) ((IStructuredSelection) documentListViewer.getSelection()).getFirstElement();
-        final DocumentWizard documentWizard = new DocumentWizard(getEObject(), selectedDocument, true);
-        final Dialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(), documentWizard, IDialogConstants.OK_LABEL);
-        dialog.open();
-        documentListViewer.refresh();
-        documentListViewer.setSelection(new StructuredSelection(documentWizard.getDocument()));
+    private void editDocumentAction(final ISelection selection) {
+        if (!selection.isEmpty()) {
+            final Document selectedDocument = (Document) ((IStructuredSelection) selection).getFirstElement();
+            final DocumentWizard documentWizard = new DocumentWizard(getEObject(), selectedDocument, true);
+            final Dialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(), documentWizard, IDialogConstants.OK_LABEL);
+            dialog.open();
+            documentListViewer.refresh();
+            documentListViewer.setSelection(new StructuredSelection(documentWizard.getDocument()));
+        }
     }
 
     private int openOutlineDialog(final IStructuredSelection selection) {
