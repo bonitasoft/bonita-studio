@@ -139,15 +139,16 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
                 ViewersObservables.observeSingleSelection(selectionProvider),
                 ProcessPackage.Literals.CONTRACT_CONTAINER__CONTRACT);
         init(observeContractValue);
-        final CTabFolder tabFolder = getWidgetFactory().createTabFolder(parent, SWT.FLAT | SWT.TOP);
+
+        final CTabFolder tabFolder = getWidgetFactory().createTabFolder(parent, SWT.TOP);
         tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        getWidgetFactory().adapt(tabFolder, true, true);
+        getWidgetFactory().adapt(tabFolder);
 
         final CTabItem inputTabItem = getWidgetFactory().createTabItem(tabFolder, SWT.NULL);
         inputTabItem.setText(Messages.inputTabLabel);
         final Composite inputComposite = getWidgetFactory().createComposite(tabFolder);
         inputComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        inputComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 25, 10, 5).create());
+        inputComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).extendedMargins(15, 0, 10, 5).create());
 
         createInputTabContent(inputComposite, observeContractValue);
 
@@ -155,7 +156,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
         final Composite constraintComposite = getWidgetFactory().createComposite(tabFolder);
         constraintComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        constraintComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 25, 10, 5).create());
+        constraintComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 0, 10, 5).create());
 
         createConstraintTabContent(constraintComposite, observeContractValue);
 
@@ -173,7 +174,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final Button removeButton = createButton(buttonsComposite, Messages.remove);
 
         final ContractConstraintsTableViewer constraintsTableViewer = new ContractConstraintsTableViewer(parent, getWidgetFactory());
-        constraintsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        constraintsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).create());
         constraintsTableViewer.initialize(constraintController, getMessageManager(), context);
         constraintsTableViewer.setInput(CustomEMFEditObservables.observeDetailList(Realm.getDefault(), observeContractValue,
                 ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
@@ -198,7 +199,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final Button removeButton = createButton(buttonsComposite, Messages.remove);
 
         final ContractInputTreeViewer inputsTableViewer = new ContractInputTreeViewer(parent, getWidgetFactory(), progressService);
-        inputsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        inputsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).create());
         inputsTableViewer.initialize(inputController, getMessageManager(), context);
         inputsTableViewer.setInput(observeContractValue);
 
@@ -241,8 +242,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private Composite createButtonContainer(final Composite parent) {
         final Composite buttonsComposite = getWidgetFactory().createComposite(parent);
-        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.FILL, SWT.TOP).create());
-        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 3).extendedMargins(0, 0, 25, 0).create());
+        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.LEFT, SWT.TOP).create());
+        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 3).create());
         return buttonsComposite;
     }
 

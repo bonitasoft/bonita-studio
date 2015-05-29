@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -13,11 +13,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.properties.sections.iteration;
-
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.uniqueValidator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
@@ -49,13 +44,13 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.bonitasoft.studio.properties.sections.iteration.control.IteratorNameEditor;
 import org.bonitasoft.studio.refactoring.core.RefactorDataOperation;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.bonitasoft.studio.refactoring.core.emf.DetailObservableValueWithRefactor;
 import org.bonitasoft.studio.refactoring.core.emf.EMFEditWithRefactorObservables;
 import org.bonitasoft.studio.refactoring.core.emf.EditingDomainEObjectObservableValueWithRefactoring;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -68,7 +63,6 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.internal.databinding.observable.masterdetail.DetailObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -81,8 +75,6 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.internal.core.search.JavaSearchScope;
 import org.eclipse.jdt.internal.ui.dialogs.FilteredTypesSelectionDialog;
-import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
-import org.eclipse.jface.databinding.fieldassist.ControlDecorationUpdater;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -110,11 +102,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.progress.ProgressManager;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
@@ -130,8 +122,15 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 
     private IObservableValue expressionReturnTypeDetailValue;
 
+    private final MultiInstantiableAdaptableSelectionProvider selectionProvider;
+
+    private final IProgressService progressService;
+
     @Inject
-    private MultiInstantiableAdaptableSelectionProvider selectionProvider;
+    public IterationPropertySection(final MultiInstantiableAdaptableSelectionProvider selectionProvider, final IProgressService progressService) {
+        this.selectionProvider = selectionProvider;
+        this.progressService = progressService;
+    }
 
     /*
      * (non-Javadoc)
@@ -584,64 +583,20 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 
     protected void createIteratorControl(final TabbedPropertySheetWidgetFactory widgetFactory, final Composite parent,
             final ControlDecoration ieratorLabelDecoration) {
-        final Composite iteratorComposite = widgetFactory.createPlainComposite(parent, SWT.NONE);
+        final Composite iteratorComposite = widgetFactory.createComposite(parent);
         iteratorComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(6, 0).create());
         iteratorComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).extendedMargins(0, 10, 0, 0).create());
 
-        final Text instanceDataNameText = widgetFactory.createText(iteratorComposite, "", SWT.BORDER);
-        instanceDataNameText.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
+        final IteratorNameEditor iteratorNameEditor = new IteratorNameEditor(iteratorComposite, widgetFactory);
+        iteratorNameEditor.getControl().setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).hint(150, 2).create());
+        iteratorNameEditor.bindControl(context, selectionProvider, progressService, getMessageManager());
 
         final IObservableValue iteratorObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(selectionProvider),
                 ProcessPackage.Literals.MULTI_INSTANTIABLE__ITERATOR_EXPRESSION);
-        final IObservableValue expressionNameDetailValue = EMFEditWithRefactorObservables.observeDetailValueWithRefactor(Realm.getDefault(),
-                iteratorObservable,
-                ExpressionPackage.Literals.EXPRESSION__NAME);
 
-        final IObservableValue expressionContentDetailValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), iteratorObservable,
-                ExpressionPackage.Literals.EXPRESSION__CONTENT);
-        expressionNameDetailValue.addValueChangeListener(new IValueChangeListener() {
-
-            @Override
-            public void handleValueChange(final ValueChangeEvent event) {
-                expressionContentDetailValue.setValue(event.diff.getNewValue());
-            }
-        });
         expressionReturnTypeDetailValue = EMFEditWithRefactorObservables.observeDetailValueWithRefactor(Realm.getDefault(), iteratorObservable,
                 ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
-
-        final ISWTObservableValue observeinstanceDataNameText = SWTObservables.observeText(instanceDataNameText, SWT.Modify);
-        final ISWTObservableValue observeDelayedValue = SWTObservables.observeDelayedValue(200, observeinstanceDataNameText);
-        context.bindValue(observeDelayedValue, expressionNameDetailValue,
-                refactorNameStrategy(expressionNameDetailValue, iteratorObservable), null);
-
-        final MultiValidator groovyReferenceValidatorStatusProvider = new MultiValidator() {
-
-            @Override
-            protected IStatus validate() {
-                return multiValidator()
-                        .addValidator(groovyReferenceValidator(Messages.iterator).startsWithLowerCase())
-                        .addValidator(uniqueValidator().in(visibleData()).onProperty("name")).create()
-                        .validate(observeDelayedValue.getValue());
-            }
-        };
-
-        context.addValidationStatusProvider(groovyReferenceValidatorStatusProvider);
-        ControlDecorationSupport.create(groovyReferenceValidatorStatusProvider, SWT.LEFT, iteratorComposite.getParent(),
-                new ControlDecorationUpdater() {
-
-                    @Override
-                    protected void update(final ControlDecoration decoration, final IStatus status) {
-                        if (status.isOK()) {
-                            ieratorLabelDecoration.show();
-                        } else {
-                            ieratorLabelDecoration.hide();
-                        }
-                        decoration.setMarginWidth(2);
-                        super.update(decoration, status);
-                    }
-
-                });
 
         final Label iteratorTypeLabel = widgetFactory.createLabel(iteratorComposite, Messages.type + " *");
         iteratorTypeLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
@@ -686,10 +641,6 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 
     }
 
-    private Iterable<?> visibleData() {
-        return ModelHelper.getAccessibleData(ModelHelper.getParentPool(getEObject()));
-    }
-
     private UpdateValueStrategy refactorReturnTypeStrategy(final IObservableValue expressionReturnTypeDetailValue, final IObservableValue iteratorObservable) {
         final UpdateValueStrategy strategy = new UpdateValueStrategy();
         strategy.setConverter(new Converter(String.class, String.class) {
@@ -723,33 +674,8 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
         return ModelHelper.getMainProcess(element);
     }
 
-    private UpdateValueStrategy refactorNameStrategy(final IObservableValue expressionNameDetailValue, final IObservableValue iteratorObservable) {
-        return updateValueStrategy().withConverter(new Converter(String.class, String.class) {
-
-            @Override
-            public Object convert(final Object value) {
-                final String name = (String) value;
-                final EditingDomainEObjectObservableValueWithRefactoring innerObservableValue = (EditingDomainEObjectObservableValueWithRefactoring) ((DetailObservableValueWithRefactor) expressionNameDetailValue)
-                        .getInnerObservableValue();
-                final Expression expression = (Expression) iteratorObservable.getValue();
-                if (expression != null && name != null) {
-                    final MultiInstantiable parentFlowElement = (MultiInstantiable) ModelHelper.getParentFlowElement(expression);
-                    final Data oldItem = DataExpressionProvider.dataFromIteratorExpression(
-                            parentFlowElement, expression, mainProcess(parentFlowElement));
-                    final Data newItem = EcoreUtil.copy(oldItem);
-                    newItem.setName(name.toString());
-                    innerObservableValue.setRefactoringCommand(getRefactorCommand(oldItem, newItem, parentFlowElement));
-                } else {
-                    innerObservableValue.setRefactoringCommand(null);
-                }
-                return value;
-            }
-        }).create();
-    }
-
     protected CompoundCommand getRefactorCommand(final Data oldItem, final Data newItem, final MultiInstantiable container) {
         final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
-        op.setCanExecute(validContext());
         op.setDataContainer((DataAware) container);
         op.addItemToRefactor(newItem, oldItem);
         op.setEditingDomain(getEditingDomain());
@@ -764,21 +690,6 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
         }
     }
 
-    protected boolean validContext() {
-        final Iterator<?> iterator = context.getValidationStatusProviders().iterator();
-        while (iterator.hasNext()) {
-            final ValidationStatusProvider object = (ValidationStatusProvider) iterator.next();
-            final IStatus status = (IStatus) object.getValidationStatus().getValue();
-            if (!status.isOK()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * @param classText
-     */
     private String openClassSelectionDialog() {
         final JavaSearchScope scope = new JavaSearchScope();
         try {

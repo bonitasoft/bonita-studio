@@ -30,14 +30,6 @@ import org.bonitasoft.studio.common.repository.extension.IGetLockStatusOperation
 import org.bonitasoft.studio.common.repository.extension.ILockedResourceStatus;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.designer.core.resources.LockStatus;
-import org.bonitasoft.studio.designer.core.resources.LockStatusOperationFactory;
-import org.bonitasoft.studio.designer.core.resources.LockStatusOperationNotFound;
-import org.bonitasoft.studio.designer.core.resources.LockedResourceException;
-import org.bonitasoft.studio.designer.core.resources.RepositoryNotifier;
-import org.bonitasoft.studio.designer.core.resources.ResourceNotFoundException;
-import org.bonitasoft.studio.designer.core.resources.WorkspaceAPIEvent;
-import org.bonitasoft.studio.designer.core.resources.WorkspaceServerResource;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -262,6 +254,6 @@ public class WorkspaceServerResourceTest {
 
         workspaceServerResource.doCatch(throwable);
 
-        verify(workspaceServerResource).logException("WorkspaceServerResource interal error", throwable);
+        verify(workspaceServerResource).logException("WorkspaceServerResource internal error", throwable);
     }
 }

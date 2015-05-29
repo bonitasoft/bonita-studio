@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.common.properties;
 
 import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.dialogs.Dialog;
@@ -22,13 +24,13 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author Romain Bioteau
@@ -38,13 +40,16 @@ public class TogglePropertyHelpContributionItem extends ContributionItem impleme
     private String helpContent;
     private final Form form;
     private final FormToolkit toolkit;
-    private Label decriptionLabel;
     private MenuItem menuItem;
+    private final PropertySectionHistory propertySectionHistory;
+    private Well descriptionWell;
 
-    public TogglePropertyHelpContributionItem(final FormToolkit toolkit, final Form form, final String helpContent) {
+    public TogglePropertyHelpContributionItem(final FormToolkit toolkit, final Form form, final String helpContent,
+            final PropertySectionHistory propertySectionHistory) {
         this.helpContent = helpContent;
         this.form = form;
         this.toolkit = toolkit;
+        this.propertySectionHistory = propertySectionHistory;
     }
 
     @Override
@@ -52,22 +57,37 @@ public class TogglePropertyHelpContributionItem extends ContributionItem impleme
         return helpContent != null && !helpContent.isEmpty();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.ContributionItem#dispose()
+     */
+    @Override
+    public void dispose() {
+        try {
+            propertySectionHistory.save();
+        } catch (final BackingStoreException e) {
+            BonitaStudioLog.error(e);
+        }
+        super.dispose();
+    }
+
     protected void toggleHelp() {
-        if (decriptionLabel != null) {
-            decriptionLabel.dispose();
+        if (descriptionWell != null) {
+            descriptionWell.dispose();
             form.setHeadClient(null);
-            decriptionLabel = null;
+            descriptionWell = null;
             if (menuItem != null) {
                 menuItem.setText(Messages.showHelp);
             }
+            propertySectionHistory.hideDescription();
         } else {
-            decriptionLabel = toolkit.createLabel(form.getHead(), helpContent, SWT.WRAP);
-            form.setHeadClient(decriptionLabel);
+            descriptionWell = new Well(form.getHead(), helpContent, toolkit, IStatus.INFO);
+            form.setHeadClient(descriptionWell);
             if (menuItem != null) {
                 menuItem.setText(Messages.hideHelp);
             }
+            propertySectionHistory.showDescription();
         }
-        form.getParent().getParent().layout(true, true);
     }
 
     @Override
@@ -82,12 +102,15 @@ public class TogglePropertyHelpContributionItem extends ContributionItem impleme
                 toggleHelp();
             }
         });
+        if (propertySectionHistory.isDescriptionVisible()) {
+            toggleHelp();
+        }
     }
 
     @Override
     public void fill(final Menu parent, final int index) {
         menuItem = new MenuItem(parent, SWT.PUSH);
-        if (decriptionLabel == null) {
+        if (descriptionWell == null) {
             menuItem.setText(Messages.showHelp);
         } else {
             menuItem.setText(Messages.hideHelp);
@@ -100,13 +123,13 @@ public class TogglePropertyHelpContributionItem extends ContributionItem impleme
                 toggleHelp();
             };
         });
-        menuItem.setSelection(decriptionLabel != null);
+        menuItem.setSelection(descriptionWell != null);
     }
 
     public void setHelpContent(final String helpContent) {
         this.helpContent = helpContent;
-        if (decriptionLabel != null) {
-            decriptionLabel.setText(helpContent);
+        if (descriptionWell != null) {
+            descriptionWell.setText(helpContent);
         }
     }
 

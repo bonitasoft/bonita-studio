@@ -1,19 +1,16 @@
 /**
- * Copyright (C) 2010 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
+ * Copyright (C) 2010-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.properties.sections.resources;
 
@@ -64,6 +61,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.ModifyEvent;
@@ -121,9 +119,9 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
             if (res != null) {
                 final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
                 final String processUUID = ModelHelper.getEObjectID(resourceContainer) ;
-                ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+                ApplicationResourceFileStore artifact = resourceStore.getChild(processUUID) ;
                 if (artifact == null) {
-                    artifact = (ApplicationResourceFileStore) resourceStore.createRepositoryFileStore(processUUID) ;
+                    artifact = resourceStore.createRepositoryFileStore(processUUID) ;
                 }
                 if (event.widget.equals(changeWelcome)) {
                     res = artifact.setWelcomePage(res);
@@ -310,7 +308,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                     if(parentFolder == null){
                         final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
                         final String processUUID = ModelHelper.getEObjectID(resourceContainer) ;
-                        final ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+                        final ApplicationResourceFileStore artifact = resourceStore.getChild(processUUID) ;
                         if (artifact != null && af !=null) {
                             tv.add(ResourceTreeContentProvider.RESOURCES_CATEGORY, af);
                         }
@@ -354,7 +352,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                             if(parentFolder == null){
                                 final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
                                 final String processUUID = ModelHelper.getEObjectID(resourceContainer) ;
-                                final ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+                                final ApplicationResourceFileStore artifact = resourceStore.getChild(processUUID) ;
                                 if (artifact != null) {
                                     tv.add(ResourceTreeContentProvider.RESOURCES_CATEGORY, af);
                                 }
@@ -436,13 +434,13 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                     if (temp instanceof String && !containsPath(resourceContainer, (String) temp)) {
                         toRemove = temp;
                         if (WebTemplatesUtil.isInUserTemplate(toRemove)) {
-                            final ApplicationResourceFileStore file = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+                            final ApplicationResourceFileStore file = resourceStore.getChild(processUUID) ;
                             file.removeResource((String) toRemove);
                         }
                     } else if (temp instanceof ResourceFolder) {
                         toRemove = temp;
                         if (WebTemplatesUtil.isInUserTemplate(toRemove)) {
-                            final ApplicationResourceFileStore file = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+                            final ApplicationResourceFileStore file = resourceStore.getChild(processUUID) ;
                             file.removeResource(((ResourceFolder) toRemove).getPath());
                         }
                         getEditingDomain().getCommandStack().execute(
@@ -451,14 +449,14 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                     } else if (temp instanceof ResourceFile) {
                         toRemove = temp;
                         if (WebTemplatesUtil.isInUserTemplate(toRemove)) {
-                            final ApplicationResourceFileStore file = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+                            final ApplicationResourceFileStore file = resourceStore.getChild(processUUID) ;
                             file.removeResource(((ResourceFile) toRemove).getPath());
                         }
                         getEditingDomain().getCommandStack().execute(
                                 new RemoveCommand(getEditingDomain(), resourceContainer, ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES, toRemove));
 
                     } else if (temp instanceof IResource) {
-                        final ApplicationResourceFileStore file = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+                        final ApplicationResourceFileStore file = resourceStore.getChild(processUUID) ;
                         file.removeResource((IResource) temp);
                         tv.remove(temp);
                     } else if (temp instanceof File) {
@@ -655,7 +653,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
 
     @Override
     public String getSectionDescription() {
-        return Messages.resourcePropertySectionDescription;
+        return NLS.bind(Messages.resourcePropertySectionDescription, org.bonitasoft.studio.common.Messages.bonitaPortalModuleName);
     }
 
 
