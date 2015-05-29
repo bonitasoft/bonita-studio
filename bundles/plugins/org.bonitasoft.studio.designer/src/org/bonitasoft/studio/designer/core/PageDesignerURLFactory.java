@@ -43,7 +43,7 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     }
 
     public URL openPageDesignerHome() throws MalformedURLException {
-        return new URL(baseURL() + "/#/" + locale());
+        return new URL(baseURL() + "/#/" + locale() + "/home");
     }
 
     public URL openPage(final String pageId) throws MalformedURLException {
