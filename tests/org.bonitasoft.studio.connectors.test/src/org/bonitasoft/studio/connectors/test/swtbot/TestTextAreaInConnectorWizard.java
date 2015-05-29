@@ -51,7 +51,7 @@ public class TestTextAreaInConnectorWizard extends SWTBotGefTestCase {
         SWTBotTestUtil.createNewDiagram(bot);
 
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES);
+        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_TASK_DATA_VARIABLES);
         bot.button("Add...").click();
         SWTBotTestUtil.addNewData(bot, "name", "Text", false, null);
         bot.button("Add...").click();

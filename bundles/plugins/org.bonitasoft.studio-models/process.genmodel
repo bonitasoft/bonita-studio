@@ -591,11 +591,12 @@
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ContractInput">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/type"/>
+      <genFeatures createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/multiple"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractInput/mapping"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractInput/inputs"/>
+      <genOperations ecoreOperation="process.ecore#//ContractInput/getJavaType"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ContractConstraint">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/expression"/>

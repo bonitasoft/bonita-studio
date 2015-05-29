@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -28,9 +28,9 @@ import org.bonitasoft.studio.contract.ui.property.input.labelProvider.Descriptio
 import org.bonitasoft.studio.contract.ui.property.input.labelProvider.InputNameCellLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.input.labelProvider.MultipleInputCheckboxLabelProvider;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
@@ -51,6 +51,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.IProgressService;
@@ -66,11 +67,13 @@ public class ContractInputTreeViewer extends TreeViewer {
     private EMFDataBindingContext emfDataBindingContext;
     private final IProgressService progressService;
     private IMessageManager messageManager;
+    private final ISharedImages sharedImages;
 
-    public ContractInputTreeViewer(final Composite parent, final FormToolkit toolkit, final IProgressService progressService) {
+    public ContractInputTreeViewer(final Composite parent, final FormToolkit toolkit, final IProgressService progressService, final ISharedImages sharedImages) {
         super(toolkit.createTree(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI));
         getTree().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE);
         this.progressService = progressService;
+        this.sharedImages = sharedImages;
     }
 
     public void createAddListener(final Button button) {
@@ -108,7 +111,7 @@ public class ContractInputTreeViewer extends TreeViewer {
         this.messageManager = messageManager;
         this.inputController = inputController;
         this.emfDataBindingContext = emfDataBindingContext;
-        final ProcessItemProviderAdapterFactory adapterFactory = new ProcessItemProviderAdapterFactory();
+        final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         propertySourceProvider = new AdapterFactoryContentProvider(adapterFactory);
         adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
         getTree().setHeaderVisible(true);
@@ -167,8 +170,10 @@ public class ContractInputTreeViewer extends TreeViewer {
 
     protected void createInputDescriptionColumn() {
         final TreeViewerColumn descriptionColumnViewer = createColumnViewer(Messages.description, SWT.FILL);
-        descriptionColumnViewer.setLabelProvider(new DescriptionCellLabelProvider(propertySourceProvider,
-                knownElements()));
+        final TreeColumn column = descriptionColumnViewer.getColumn();
+        column.setToolTipText(Messages.contractInputDescriptionTooltip);
+        column.setImage(sharedImages.getImage(ISharedImages.IMG_OBJS_INFO_TSK));
+        descriptionColumnViewer.setLabelProvider(new DescriptionCellLabelProvider(propertySourceProvider, knownElements()));
         final DescriptionObservableEditingSupport editingSupport = new DescriptionObservableEditingSupport(this,
                 messageManager, emfDataBindingContext);
         editingSupport.setControlId(SWTBotConstants.SWTBOT_ID_INPUT_DESCRIPTION_TEXTEDITOR);

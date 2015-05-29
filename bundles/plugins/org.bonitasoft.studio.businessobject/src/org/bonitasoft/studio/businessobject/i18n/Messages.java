@@ -311,6 +311,8 @@ public class Messages extends NLS {
     public static String defaultValue;
 
     public static String defaultValueReturnTypeValidationMessage;
+    public static String addBusinessObjectDataWindowTitle;
+    public static String editBusinessObjectDataWindowTitle;
 
     private Messages() {
     }

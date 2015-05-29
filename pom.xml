@@ -14,6 +14,7 @@
 		<tychoExtrasVersion>0.21.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>7.0.0-SNAPSHOT</bundle.version>
+        <ui.designer.version>1.0.0-M22</ui.designer.version>
 		<engine.version>7.0.0-SNAPSHOT</engine.version>
 		<connector.version>6.1.1</connector.version>
 		<simulation.version>6.1.0</simulation.version>
@@ -33,7 +34,6 @@
 		<sonar.exclusions>src/org/w3/**/*,src/org/omg/**/*,src/org/wfmc/**/*,src/org/jbpm/**/*,**/Messages.java,file:**/src-gen/**/*,src/org/bonitasoft/studio/connector/model/definition/provider/**/*,src/org/bonitasoft/studio/connector/model/implementation/provider/**/*,src/org/bonitasoft/studio/actors/model/organization/**/*,src/org/bonitasoft/studio/validators/descriptor/validator/**/*</sonar.exclusions>
 		<sonar.skipDesign>true</sonar.skipDesign><!-- Takes too much time -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <ui.designer.version>1.0.0-M21.2</ui.designer.version>
 	</properties>
 
     <modules>

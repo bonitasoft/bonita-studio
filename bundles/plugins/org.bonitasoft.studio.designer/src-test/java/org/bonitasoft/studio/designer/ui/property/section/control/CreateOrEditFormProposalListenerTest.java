@@ -27,6 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateFormFromContractOperation;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
@@ -61,7 +62,7 @@ public class CreateOrEditFormProposalListenerTest {
     @Test
     public void should_execute_create_form_operation_if_new_form() throws Exception {
         final CreateOrEditFormProposalListener listener = spy(new CreateOrEditFormProposalListener(pageDesignerURLFactory, progressService, repositoryAccessor));
-        doReturn(operation).when(listener).doCreateFormOperation(eq(pageDesignerURLFactory), anyString(), any(Contract.class));
+        doReturn(operation).when(listener).doCreateFormOperation(eq(pageDesignerURLFactory), anyString(), any(Contract.class), any(FormScope.class));
         when(operation.getNewPageId()).thenReturn("page-id");
         when(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)).thenReturn(pageStore);
         when(pageStore.getChild("page-id")).thenReturn(fileStore);

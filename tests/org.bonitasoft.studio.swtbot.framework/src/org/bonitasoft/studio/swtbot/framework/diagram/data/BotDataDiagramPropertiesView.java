@@ -20,7 +20,6 @@ import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.BotQAUtil;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotDocumentsPropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotDiagramPropertySection;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**
@@ -32,20 +31,20 @@ public class BotDataDiagramPropertiesView extends BotBase {
 	/**
 	 * @param bot
 	 */
-	public BotDataDiagramPropertiesView(SWTGefBot bot) {
+	public BotDataDiagramPropertiesView(final SWTGefBot bot) {
 		super(bot);
 	}
-	
+
 	  /**
      * Select the data tab.
      *
      * @return
      */
     public BotDataPropertySection selectDataTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Variables");
+        BotQAUtil.selectTabbedPropertyView(bot, "Local variables");
         return new BotDataPropertySection(bot);
     }
-    
+
 
     public BotDocumentsPropertySection selectDocumentsTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Documents");

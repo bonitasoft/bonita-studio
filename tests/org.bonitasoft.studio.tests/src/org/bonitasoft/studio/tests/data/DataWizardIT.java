@@ -252,7 +252,7 @@ public class DataWizardIT extends SWTBotGefTestCase {
      */
     private void addDataOnSelectedElementWithName(final String dataName) {
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
-        SWTBotTestUtil.selectTabbedPropertyView(bot,SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES);
+        SWTBotTestUtil.selectTabbedPropertyView(bot,SWTBotTestUtil.VIEWS_PROPERTIES_TASK_DATA_VARIABLES);
 
         bot.button("Add...").click();
         // Shell "New variable"
@@ -280,7 +280,7 @@ public class DataWizardIT extends SWTBotGefTestCase {
         gmfEditor.getEditPart(pool.getName()).parent().select();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
 
-        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES);
+        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_TASK_DATA_VARIABLES);
 
         bot.button("Add...").click();
         // Shell "New variable"

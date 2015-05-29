@@ -78,19 +78,19 @@ public class ContractIT extends SWTBotGefTestCase {
         final BotContractInputTab inputTab = contractTabBot.selectInputTab();
         final BotContractInputRow contractInputRow = inputTab.add();
 
-        contractInputRow.setName("expenseReport").setDescription("An expense report").setType("COMPLEX");
+        contractInputRow.setName("expenseReport").setDescription("An expense report").setType("COMPLEX (java.util.Map)");
 
         BotContractInputRow childRow = contractInputRow.getChildRow(0);
-        childRow.setName("expenseLines").clickMultiple().setType("COMPLEX");
+        childRow.setName("expenseLines").clickMultiple().setType("COMPLEX (java.util.Map)");
 
         childRow = childRow.getChildRow(0);
         childRow.setName("nature").setDescription("The nature of the expense");
 
         childRow = inputTab.add();
-        childRow.setName("amount").setType("DECIMAL").setDescription("The amount of the expense VAT included in euros");
+        childRow.setName("amount").setType("DECIMAL (java.lang.Double)").setDescription("The amount of the expense VAT included in euros");
 
         childRow = inputTab.add();
-        childRow.setName("expenseDate").setType("DATE").setDescription("When the expense was done");
+        childRow.setName("expenseDate").setType("DATE (java.util.Date)").setDescription("When the expense was done");
 
         bot.waitUntil(new AssertionCondition() {
 

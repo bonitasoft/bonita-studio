@@ -215,7 +215,7 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
     }
     
     private void createData(String dataName) {
-		SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES);
+		SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_TASK_DATA_VARIABLES);
 		bot.button("Add...").click();
 		assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
 				.button(IDialogConstants.FINISH_LABEL).isEnabled());
