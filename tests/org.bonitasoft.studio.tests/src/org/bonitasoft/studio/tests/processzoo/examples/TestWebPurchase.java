@@ -91,12 +91,12 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         bot.textWithLabel(Messages.name).setText("Web Purchase");
         bot.textWithLabel(Messages.version).setText("1.6");
         bot.button(IDialogConstants.OK_LABEL).click();
-        selectDataVariablesTabbedPropertyView();
-        bot.button(Messages.Add).click();
+        selectPoolVariablesTabbedPropertyView();
+        bot.buttonWithId(SWTBOT_ID_ADD_PROCESS_DATA).click();
         SWTBotTestUtil.addNewData(bot, "customerEmail", "Text", false, null);
-        bot.button(Messages.Add).click();
+        bot.buttonWithId(SWTBOT_ID_ADD_PROCESS_DATA).click();
         SWTBotTestUtil.addNewData(bot, "customerName", "Text", false, null);
-        bot.button(Messages.Add).click();
+        bot.buttonWithId(SWTBOT_ID_ADD_PROCESS_DATA).click();
         SWTBotTestUtil.addNewData(bot, "customerPhone", "Text", false, null);
         final Map<String, List<String>> options = new HashMap<String, List<String>>();
         final ArrayList<String> choices = new ArrayList<String>();
@@ -104,7 +104,7 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         choices.add("Mobile Phone");
         choices.add("Laptop");
         options.put("PromotionalProducts", choices);
-        bot.button(Messages.Add).click();
+        bot.buttonWithId(SWTBOT_ID_ADD_PROCESS_DATA).click();
         SWTBotTestUtil.addListOfOptionData(bot, "products", "Text", options, false, "TV");
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
@@ -153,6 +153,12 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Local variables");
+    }
+
+    protected void selectPoolVariablesTabbedPropertyView() {
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
+        SWTBotTestUtil.selectTabbedPropertyView(bot, "Pool variables");
     }
 
     private void createSalesReviewForm(final SWTBotGefEditor gmfEditor) {

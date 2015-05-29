@@ -30,6 +30,7 @@ import java.util.Vector;
 
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.diagram.custom.editPolicies.ActivitySwitchEditPolicy;
 import org.bonitasoft.studio.diagram.custom.figures.SlideMenuBarFigure;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -149,14 +150,14 @@ public class DiagramTests extends SWTBotGefTestCase {
         assertThat(bot.viewById("org.bonitasoft.studio.views.overview.tree").isActive()).isFalse();
         bot.menu("Edit").menu("Find").click();
         assertThat(bot.viewById("org.bonitasoft.studio.views.overview.tree").isActive()).isTrue();
-        
+
         //Create 3 variables
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
         gmfEditor.click(200, 200);
 
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_TASK_DATA_VARIABLES);
+        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_POOL_DATA_VARIABLES);
 
         // Create 3 new variables
         setNewVariable("varText", "Text", false);
@@ -165,10 +166,10 @@ public class DiagramTests extends SWTBotGefTestCase {
 
         // check 3 variables where created
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_TASK_DATA_VARIABLES);
+        SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_POOL_DATA_VARIABLES);
 
         // check the table has 3 variables
-        final SWTBotTable table = bot.table(0);
+        final SWTBotTable table = bot.tableWithId(SWTBotConstants.SWTBOT_ID_PROCESS_DATA_LIST);
         Assert.assertEquals("Error: wrong number of variable created", 3, table.rowCount());
 
         final Vector<String> taskNameList = new Vector<String>(Arrays.asList(new String[] { "Step1", "Step2", "Step3", "Step4" }));
@@ -354,7 +355,7 @@ public class DiagramTests extends SWTBotGefTestCase {
      * @param autoGenerateForm BOS-SP only : true if the checkBox must be selected, else false
      */
     private void setNewVariable(final String varName, final String varType, final boolean autoGenerateForm) {
-        bot.button("Add...").click();
+        bot.buttonWithId(SWTBotConstants.SWTBOT_ID_ADD_PROCESS_DATA).click();
 
         // open shell "New variable"
         bot.waitUntil(Conditions.shellIsActive(newVariable));

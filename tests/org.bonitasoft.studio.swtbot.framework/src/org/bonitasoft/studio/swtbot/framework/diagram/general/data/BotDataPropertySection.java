@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.diagram.general.data;
 
-import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.widget.BotTableWidget;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -27,21 +26,21 @@ public class BotDataPropertySection extends BotBase {
     }
 
     public BotAddDataWizardPage addData() {
-        bot.button(Messages.addData).click();
+        bot.buttonWithId(SWTBOT_ID_ADD_PROCESS_DATA).click();
         return new BotAddDataWizardPage(bot);
     }
 
-    public BotTableWidget dataList() {
-        return new BotTableWidget(bot.table());
+    public BotTableWidget processDataList() {
+        return new BotTableWidget(bot.tableWithId(SWTBOT_ID_PROCESS_DATA_LIST));
     }
 
     public BotEditDataDialog edit() {
-        bot.button(org.bonitasoft.studio.common.Messages.edit).click();
+        bot.buttonWithId(SWTBOT_ID_EDIT_PROCESS_DATA).click();
         return new BotEditDataDialog(bot);
     }
 
     public BotDataPropertySection remove() {
-        bot.button(Messages.removeData).click();
+        bot.buttonWithId(SWTBOT_ID_REMOVE_PROCESS_DATA).click();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle));
         bot.button(IDialogConstants.OK_LABEL).click();
         return this;

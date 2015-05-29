@@ -49,10 +49,6 @@ public class ApplicationTransientDataSection extends AbstractDataSection {
 		label.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).create());
 	}
 
-	@Override
-    protected void createBusinessData() {
-
-    }
 
     @Override
 	protected Set<EStructuralFeature> getDataFeatureToCheckUniqueID() {

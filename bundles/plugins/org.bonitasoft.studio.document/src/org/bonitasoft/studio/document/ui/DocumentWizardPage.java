@@ -49,6 +49,7 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
@@ -312,15 +313,14 @@ public class DocumentWizardPage extends WizardPage {
         radioButtonScript.setText(Messages.initialValueButtonScript);
 
         final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(ProcessPackage.DOCUMENT_TYPE);
-        documentTypeObservableValue.addOption(DocumentType.NONE, SWTObservables.observeSelection(radioButtonScript));
-        documentTypeObservableValue.addOption(DocumentType.INTERNAL, SWTObservables.observeSelection(radioButtonScript));
-        documentTypeObservableValue.addOption(DocumentType.EXTERNAL, SWTObservables.observeSelection(radioButtonScript));
+        final ISWTObservableValue scriptObserveSelection = SWTObservables.observeSelection(radioButtonScript);
+        documentTypeObservableValue.addOption(DocumentType.NONE, scriptObserveSelection);
+        documentTypeObservableValue.addOption(DocumentType.INTERNAL, scriptObserveSelection);
+        documentTypeObservableValue.addOption(DocumentType.EXTERNAL, scriptObserveSelection);
         documentTypeObservableValue.addOption(DocumentType.CONTRACT, SWTObservables.observeSelection(radioButtonContract));
 
         final IObservableValue documentTypeObservable = EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE);
-        emfDataBindingContext.bindValue(
-                documentTypeObservableValue,
-                documentTypeObservable);
+        emfDataBindingContext.bindValue(documentTypeObservableValue, documentTypeObservable);
         documentTypeObservable.addValueChangeListener(new IValueChangeListener() {
 
             @Override
