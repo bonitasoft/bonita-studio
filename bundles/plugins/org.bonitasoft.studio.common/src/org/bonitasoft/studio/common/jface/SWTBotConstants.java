@@ -47,6 +47,7 @@ public interface SWTBotConstants {
 
     public static final String VIEWS_PROPERTIES_PROCESS_DATA_VARIABLES = "Process variables";
     public static final String VIEWS_PROPERTIES_TASK_DATA_VARIABLES = "Local variables";
+    public static final String VIEWS_PROPERTIES_POOL_DATA_VARIABLES = "Pool variables";
     public static final String VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_IN = "Connectors in";
     public static final String VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_OUT = "Connectors out";
 
@@ -84,5 +85,17 @@ public interface SWTBotConstants {
 
     public static final String SWTBOT_ID_ITERATOR_TABLE = "SWTBOT_ID_ITERATOR_TABLE";
     public static final String SWTBOT_ID_ITERATOR_NAME_EDITOR = "SWTBOT_ID_ITERATOR_NAME_EDITOR";
+
+    public static final String SWTBOT_ID_ADD_PROCESS_DATA = "SWTBOT_ID_ADD_PROCESS_DATA";
+    public static final String SWTBOT_ID_ADD_BUSINESS_DATA = "SWTBOT_ID_ADD_BUSINESS_DATA";
+
+    public static final String SWTBOT_ID_REMOVE_PROCESS_DATA = "SWTBOT_ID_REMOVE_PROCESS_DATA";
+    public static final String SWTBOT_ID_REMOVE_BUSINESS_DATA = "SWTBOT_ID_REMOVE_BUSINESS_DATA";
+
+    public static final String SWTBOT_ID_EDIT_PROCESS_DATA = "SWTBOT_ID_EDIT_PROCESS_DATA";
+    public static final String SWTBOT_ID_EDIT_BUSINESS_DATA = "SWTBOT_ID_EDIT_BUSINESS_DATA";
+
+    public static final String SWTBOT_ID_PROCESS_DATA_LIST = "SWTBOT_ID_PROCESS_DATA_LIST";
+    public static final String SWTBOT_ID_BUSINESS_DATA_LIST = "SWTBOT_ID_BUSINESS_DATA_LIST";
 
 }
