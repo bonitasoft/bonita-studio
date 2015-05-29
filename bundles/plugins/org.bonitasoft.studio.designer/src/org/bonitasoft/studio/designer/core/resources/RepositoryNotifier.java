@@ -49,9 +49,11 @@ public class RepositoryNotifier {
     }
 
     public void preOpen(final IRepositoryFileStore fileStore) throws LockedResourceException, ResourceNotFoundException {
-        fileStore.getParentStore().refresh();
-        checkExists(fileStore);
-        repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, fileStore));
+        if (fileStore != null) {
+            fileStore.getParentStore().refresh();
+            checkExists(fileStore);
+            repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, fileStore));
+        }
     }
 
     public void postSave(final IRepositoryFileStore fileStore) {
