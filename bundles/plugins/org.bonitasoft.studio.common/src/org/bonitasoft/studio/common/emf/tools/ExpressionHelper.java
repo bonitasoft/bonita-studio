@@ -15,12 +15,8 @@
 package org.bonitasoft.studio.common.emf.tools;
 
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.bonitasoft.engine.bpm.contract.FileInputValue;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
@@ -36,7 +32,6 @@ import org.bonitasoft.studio.model.form.GroupIterator;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.EnumType;
@@ -57,17 +52,6 @@ public class ExpressionHelper {
 
     protected static final String EMPTY_LIST_NAME = Messages.emptyListExpressionName;
     protected static final String EMPTY_LIST_CONTENT = "[]";
-    protected static final Map<ContractInputType, String> returnTypeForInputType;
-    static {
-        returnTypeForInputType = new HashMap<ContractInputType, String>();
-        returnTypeForInputType.put(ContractInputType.TEXT, String.class.getName());
-        returnTypeForInputType.put(ContractInputType.BOOLEAN, Boolean.class.getName());
-        returnTypeForInputType.put(ContractInputType.DATE, Date.class.getName());
-        returnTypeForInputType.put(ContractInputType.INTEGER, Integer.class.getName());
-        returnTypeForInputType.put(ContractInputType.DECIMAL, Double.class.getName());
-        returnTypeForInputType.put(ContractInputType.COMPLEX, Map.class.getName());
-        returnTypeForInputType.put(ContractInputType.FILE, FileInputValue.class.getName());
-    }
 
     private ExpressionHelper() {
 
@@ -309,7 +293,7 @@ public class ExpressionHelper {
         if (input == null) {
             return null;
         }
-        String returnType = returnTypeForInputType.get(input.getType());
+        String returnType = input.getJavaType();
         if (input.isMultiple()) {
             returnType = List.class.getName();
         }

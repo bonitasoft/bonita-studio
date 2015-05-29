@@ -17,6 +17,7 @@ package org.bonitasoft.studio.designer.ui.property.section.control;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
 import org.bonitasoft.studio.designer.core.operation.CreateFormFromContractOperation;
@@ -74,8 +75,8 @@ public class CreateOrEditFormProposalListener extends CreateNewFormProposalListe
      */
     @Override
     protected CreateFormFromContractOperation doCreateFormOperation(final PageDesignerURLFactory pageDesignerURLBuilder, final String formName,
-            final Contract contract) {
-        return super.doCreateFormOperation(pageDesignerURLBuilder, formName, contract);
+            final Contract contract, final FormScope scope) {
+        return super.doCreateFormOperation(pageDesignerURLBuilder, formName, contract, scope);
     }
 
 }

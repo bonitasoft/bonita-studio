@@ -54,8 +54,8 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
         return new URL(baseURL() + "/rest/pages/");
     }
 
-    public URL newPageFromContract(final String formName) throws MalformedURLException {
-        return new URL("http://" + host() + ":" + port() + "/" + WAR_CONTEXT_NAME + "/rest/pages/contract/" + formName);
+    public URL newPageFromContract(final FormScope scope, final String formName) throws MalformedURLException {
+        return new URL("http://" + host() + ":" + port() + "/" + WAR_CONTEXT_NAME + "/rest/pages/contract/" + scope.name().toLowerCase() + "/" + formName);
     }
 
     public URL exportPage(final String pageId) throws MalformedURLException {

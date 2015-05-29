@@ -19,36 +19,16 @@ import static com.google.common.collect.Iterables.all;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 
 import java.io.File;
 import java.util.Date;
 
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.web.designer.model.contract.Contract;
-import org.bonitasoft.web.designer.model.contract.ContractType;
 import org.bonitasoft.web.designer.model.contract.NodeContractInput;
 import org.junit.Test;
 
 public class ToWebContractTest {
-
-    @Test
-    public void transform_an_emf_contract_into_a_designer_contract_with_TASK_type() throws Exception {
-        final ToWebContract contractConverter = new ToWebContract();
-
-        final Contract contract = contractConverter.apply(aContract().build());
-
-        assertThat(contract.getContractType()).isEqualTo(ContractType.TASK);
-    }
-
-    @Test
-    public void transform_an_emf_contract_into_a_designer_contract_with_PROCESS_type() throws Exception {
-        final ToWebContract contractConverter = new ToWebContract();
-
-        final Contract contract = contractConverter.apply(aContract().in(aPool()).build());
-
-        assertThat(contract.getContractType()).isEqualTo(ContractType.PROCESS);
-    }
 
     @Test
     public void transform_an_emf_contract_into_a_designer_contract_with_input_with_a_name() throws Exception {

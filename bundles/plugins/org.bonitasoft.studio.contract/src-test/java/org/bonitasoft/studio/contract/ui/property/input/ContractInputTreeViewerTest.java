@@ -36,6 +36,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.IProgressService;
@@ -59,6 +60,8 @@ public class ContractInputTreeViewerTest extends AbstractSWTTestCase {
     private IProgressService progressService;
     @Mock
     private IMessageManager messageManager;
+    @Mock
+    private ISharedImages sharedImages;
 
     /**
      * @throws java.lang.Exception
@@ -67,7 +70,7 @@ public class ContractInputTreeViewerTest extends AbstractSWTTestCase {
     public void setUp() throws Exception {
         parent = createDisplayAndRealm();
         FileActionDialog.setDisablePopup(true);
-        inputTreeViewer = new ContractInputTreeViewer(parent, new FormToolkit(display), progressService);
+        inputTreeViewer = new ContractInputTreeViewer(parent, new FormToolkit(display), progressService, sharedImages);
         final ContractInputController inputController = spy(new ContractInputController(new FakeProgressService()));
         doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(inputController).editingDomain(any(Contract.class));
         inputTreeViewer.initialize(inputController, messageManager, new EMFDataBindingContext());
