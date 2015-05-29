@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.data.commands.MoveDataCommand;
 import org.bonitasoft.studio.data.i18n.Messages;
+import org.bonitasoft.studio.data.ui.property.section.IAddData;
 import org.bonitasoft.studio.data.ui.property.section.RemoveDataHandler;
 import org.bonitasoft.studio.data.ui.wizard.DataWizardDialog;
 import org.bonitasoft.studio.data.ui.wizard.MoveDataWizard;
@@ -51,7 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
-public class ProcessDataViewer extends DataViewer {
+public class ProcessDataViewer extends DataViewer implements IAddData {
 
     private final DataWizardFactory dataWizardFactory;
 
@@ -106,10 +107,10 @@ public class ProcessDataViewer extends DataViewer {
     }
 
     @Override
-    protected void addData(final IObservableValue observable) {
-        final DataAware container = (DataAware) observable.getValue();
-        new DataWizardDialog(Display.getDefault().getActiveShell(), dataWizardFactory.createAddWizard(TransactionUtil.getEditingDomain(container), container))
-                .open();
+    public void addData() {
+        final DataAware container = (DataAware) getDataContainerObservable().getValue();
+        new DataWizardDialog(Display.getDefault().getActiveShell(), dataWizardFactory.createAddWizard(TransactionUtil.getEditingDomain(container), container),
+                this).open();
     }
 
     private ViewerFilter hideBusinessObjectData() {

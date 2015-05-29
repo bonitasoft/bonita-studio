@@ -15,9 +15,9 @@
 package org.bonitasoft.studio.data.ui.wizard;
 
 import org.bonitasoft.studio.common.jface.dialog.FinishAndAddCustomWizardDialog;
+import org.bonitasoft.studio.data.ui.property.section.IAddData;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -31,8 +31,11 @@ public class DataWizardDialog extends FinishAndAddCustomWizardDialog {
     // Minimum dialog height (in dialog units)
     private static final int MIN_DIALOG_HEIGHT = 270;
 
-    public DataWizardDialog(final Shell parentShell, final Wizard newWizard) {
-        super(parentShell, newWizard, true);
+    private final IAddData addData;
+
+    public DataWizardDialog(final Shell parentShell, final Wizard newWizard, final IAddData addData) {
+        super(parentShell, newWizard, addData != null);
+        this.addData = addData;
     }
 
     @Override
@@ -46,8 +49,8 @@ public class DataWizardDialog extends FinishAndAddCustomWizardDialog {
 
     @Override
     protected void actionOnFinishAndAdd() {
-        close();
-        final DataWizardDialog dataWizardDialog = new DataWizardDialog(Display.getDefault().getActiveShell(), (Wizard) getWizard());
-        dataWizardDialog.open();
+        if (addData != null) {
+            addData.addData();
+        }
     }
 }

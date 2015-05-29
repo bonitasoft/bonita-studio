@@ -88,7 +88,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * @author Romain Bioteau
  */
-public abstract class AbstractDataSection extends AbstractBonitaDescriptionSection implements IDoubleClickListener, IBonitaVariableContext {
+public abstract class AbstractDataSection extends AbstractBonitaDescriptionSection implements IDoubleClickListener, IBonitaVariableContext, IAddData {
 
     private Button updateDataButton;
 
@@ -274,11 +274,12 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         });
     }
 
+    @Override
     public void addData() {
         final DataWizard wizard = new DataWizard(getEditingDomain(), getEObject(), getDataFeature(), getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
         wizard.setIsPageFlowContext(isPageFlowContext());
         wizard.setIsOverviewContext(isOverViewContext());
-        if (new DataWizardDialog(Display.getCurrent().getActiveShell(), wizard).open() == Dialog.OK) {
+        if (new DataWizardDialog(Display.getCurrent().getActiveShell(), wizard, this).open() == Dialog.OK) {
             dataTableViewer.refresh();
         }
     }

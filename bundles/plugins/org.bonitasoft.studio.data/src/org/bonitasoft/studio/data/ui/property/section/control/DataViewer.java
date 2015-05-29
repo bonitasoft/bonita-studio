@@ -184,7 +184,7 @@ public abstract class DataViewer extends Composite {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                addData(dataContainerObservable);
+                addData();
             }
         });
     }
@@ -237,7 +237,7 @@ public abstract class DataViewer extends Composite {
         return new CustomWizardDialog(Display.getDefault().getActiveShell(), wizard, finishLabel);
     }
 
-    protected abstract void addData(IObservableValue observable);
+    protected abstract void addData();
 
     protected abstract void editData();
 

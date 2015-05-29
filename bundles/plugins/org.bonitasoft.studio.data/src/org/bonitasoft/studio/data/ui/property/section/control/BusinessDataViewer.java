@@ -53,8 +53,8 @@ public class BusinessDataViewer extends DataViewer {
     }
 
     @Override
-    protected void addData(final IObservableValue observable) {
-        final Pool pool = (Pool) observable.getValue();
+    protected void addData() {
+        final Pool pool = (Pool) getDataContainerObservable().getValue();
         createWizardDialog(new AddBusinessObjectDataWizard(pool, store, TransactionUtil.getEditingDomain(pool)), IDialogConstants.FINISH_LABEL).open();
     }
 
