@@ -1046,7 +1046,6 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
         descriptionText = new Text(parent, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         descriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 70).span(2, 1).create());
-        descriptionText.setTextLimit(255);
     }
 
     protected void createDataOptions(final Composite parent) {
@@ -1357,5 +1356,9 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     public void setIsOverviewContext(final boolean isOverviewContext) {
         this.isOverviewContext = isOverviewContext;
 
+    }
+
+    public void setWorkingCopy(final Data workingCopy) {
+        data = workingCopy;
     }
 }

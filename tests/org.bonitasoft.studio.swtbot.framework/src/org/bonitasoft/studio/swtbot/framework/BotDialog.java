@@ -41,7 +41,9 @@ public class BotDialog extends BotBase {
      */
     public void ok() {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.OK_LABEL)));
+        final SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.OK_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
     }
 
     /**

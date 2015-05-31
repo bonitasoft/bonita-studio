@@ -18,6 +18,7 @@ import java.util.Collections;
 
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IDataProposalListener;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -32,6 +33,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -57,8 +59,7 @@ public class CreateVariableProposalListener implements IDataProposalListener {
                 Collections.singleton(feature), true,
                 fixedReturnType);
         newWizard.setIsPageFlowContext(isPageFlowContext);
-        final DataWizardDialog wizardDialog = new DataWizardDialog(activeShell(),
-                newWizard, null);
+        final CustomWizardDialog wizardDialog = new CustomWizardDialog(activeShell(), newWizard, IDialogConstants.FINISH_LABEL);
         if (wizardDialog.open() == Dialog.OK) {
             final EObject obj = newWizard.getWorkingCopy();
             if (obj instanceof Data) {
