@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009-2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramD
 import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractNamePropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
@@ -252,7 +253,8 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
                 return multiValidator()
                         .addValidator(minMaxLengthValidator(Messages.name, element instanceof SequenceFlow ? 0 : 1, 255))
                         .addValidator(utf8InputValidator(Messages.name))
-                        .addValidator(forbiddenCharactersValidator(Messages.name, '#', '%', '$')).create()
+                        .addValidator(forbiddenCharactersValidator(Messages.name, '#', '%', '$'))
+                        .addValidator(ValidatorFactory.reservedRESTAPIKeywordsValidator()).create()
                         .validate(nameTextObservable.getValue());
             }
         };

@@ -12,6 +12,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 /**
  * Base of dialog.
@@ -29,7 +30,9 @@ public abstract class BotWizardDialog extends BotDialog {
      */
     public void finish() {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
+        final SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.FINISH_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
     }
 
     /**
@@ -43,10 +46,9 @@ public abstract class BotWizardDialog extends BotDialog {
 
     public boolean canFlipToNextPage() {
         try {
-            bot.button(IDialogConstants.NEXT_LABEL);
+            return bot.button(IDialogConstants.NEXT_LABEL).isEnabled();
         } catch (final WidgetNotFoundException e) {
             return false;
         }
-        return bot.button(IDialogConstants.NEXT_LABEL).isEnabled();
     }
 }

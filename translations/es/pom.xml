@@ -48,12 +48,11 @@
 		<module>org.bonitasoft.studio.jpdl.nl_es</module>
 		<module>org.bonitasoft.studio.migration.nl_es</module>
 		<module>org.bonitasoft.studio.model.edit.custom.nl_es</module>
-        <module>org.bonitasoft.studio.pagedesigner.nl_es</module>
+        <module>org.bonitasoft.studio.designer.nl_es</module>
         <module>org.bonitasoft.studio.parameters.nl_es</module>
 		<module>org.bonitasoft.studio.preferences.nl_es</module>
 		<module>org.bonitasoft.studio.profiles.nl_es</module>
 		<module>org.bonitasoft.studio.properties.nl_es</module>
-		<module>org.bonitasoft.studio.registration.nl_es</module>
 		<module>org.bonitasoft.studio.repository.themes.nl_es</module>
 		<module>org.bonitasoft.studio.scripting.nl_es</module>
 		<module>org.bonitasoft.studio.simulation.nl_es</module>

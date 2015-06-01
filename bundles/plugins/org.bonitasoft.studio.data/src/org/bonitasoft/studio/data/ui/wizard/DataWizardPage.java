@@ -125,6 +125,7 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.osgi.util.NLS;
@@ -956,6 +957,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         typeCombo.setContentProvider(new ArrayContentProvider());
         typeCombo.setLabelProvider(new DataTypeLabelProvider());
         typeCombo.addFilter(typeViewerFilter);
+        typeCombo.setSorter(new ViewerSorter());
         typeCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
 
         typeDescriptionDecorator = new ControlDecoration(typeCombo.getCombo(), SWT.LEFT);
@@ -1044,7 +1046,6 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
         descriptionText = new Text(parent, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         descriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 70).span(2, 1).create());
-        descriptionText.setTextLimit(255);
     }
 
     protected void createDataOptions(final Composite parent) {
@@ -1355,5 +1356,9 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     public void setIsOverviewContext(final boolean isOverviewContext) {
         this.isOverviewContext = isOverviewContext;
 
+    }
+
+    public void setWorkingCopy(final Data workingCopy) {
+        data = workingCopy;
     }
 }

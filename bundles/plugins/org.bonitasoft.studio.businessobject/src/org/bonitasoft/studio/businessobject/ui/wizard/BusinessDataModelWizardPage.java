@@ -465,7 +465,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
         for (final BusinessObject businessObject : businessObjectModel.getBusinessObjects()) {
             existingNames.add(businessObject.getQualifiedName());
         }
-        return NamingUtils.generateNewName(existingNames, getPackageName() + ".BusinessObject");
+        return NamingUtils.generateNewName(existingNames, getPackageName() + ".BusinessObject", 1);
     }
 
     public String getPackageName() {

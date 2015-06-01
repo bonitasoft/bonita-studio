@@ -101,4 +101,16 @@ public class CustomProcessItemProviderAdapterFactory extends ProcessItemProvider
         }
         return formMappingItemProvider;
     }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory#createContractInputAdapter()
+     */
+    @Override
+    public Adapter createContractInputAdapter() {
+        if (contractInputItemProvider == null) {
+            contractInputItemProvider = new CustomContractInputItemProvider(this);
+        }
+        return contractInputItemProvider;
+    }
 }

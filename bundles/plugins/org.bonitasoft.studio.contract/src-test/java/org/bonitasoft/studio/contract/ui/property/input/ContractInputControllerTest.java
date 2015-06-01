@@ -39,6 +39,7 @@ import java.util.Arrays;
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.contract.core.refactoring.RefactorContractInputOperation;
+import org.bonitasoft.studio.contract.ui.property.input.ContractInputController.EditNameRunnable;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -54,6 +55,8 @@ import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.progress.IProgressService;
 import org.junit.Before;
 import org.junit.Rule;
@@ -88,6 +91,8 @@ public class ContractInputControllerTest {
     private IScriptRefactoringOperation refactorScriptOperation;
     @Mock
     private IProgressService progressService;
+    @Mock
+    private Display display;
 
     /**
      * @throws java.lang.Exception
@@ -101,6 +106,9 @@ public class ContractInputControllerTest {
         when(scriptRefactoringOperationFactory.createScriptOperationFactory(anyString(), anyList())).thenReturn(refactorScriptOperation);
         observableValue = new WritableValue(Realm.getDefault());
         when(viewer.getInput()).thenReturn(observableValue);
+        final Tree tree = mock(Tree.class);
+        when(tree.getDisplay()).thenReturn(display);
+        when(viewer.getControl()).thenReturn(tree);
     }
 
     @Test
@@ -112,7 +120,7 @@ public class ContractInputControllerTest {
         final ContractInput input = contractInputController.add(viewer);
 
         ContractInputAssert.assertThat(input).hasName("input1").hasType(ContractInputType.TEXT);
-        verify(viewer).editElement(input, 0);
+        verify(display).asyncExec(notNull(EditNameRunnable.class));
     }
 
     @Test
@@ -160,6 +168,8 @@ public class ContractInputControllerTest {
 
         final ContractInput input = contractInputController.addChildInput(viewer);
         ContractInputAssert.assertThat(input1).hasInputs(input);
+
+        verify(display).asyncExec(notNull(EditNameRunnable.class));
     }
 
     @Test(expected = IllegalArgumentException.class)

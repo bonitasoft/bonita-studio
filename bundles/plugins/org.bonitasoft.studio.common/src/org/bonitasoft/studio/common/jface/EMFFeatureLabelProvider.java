@@ -27,17 +27,17 @@ import org.eclipse.jface.viewers.LabelProvider;
  */
 public class EMFFeatureLabelProvider extends LabelProvider {
 
-	
-	private EStructuralFeature feature;
 
-	public EMFFeatureLabelProvider(EStructuralFeature feature) {
+	private final EStructuralFeature feature;
+
+	public EMFFeatureLabelProvider(final EStructuralFeature feature) {
 		this.feature = feature;
 	}
-	
+
 	@Override
-	public String getText(Object input) {
-		Object eGet = ((EObject)input).eGet(feature);
+	public String getText(final Object input) {
+		final Object eGet = ((EObject)input).eGet(feature);
 		return eGet != null ? eGet.toString() : "";
 	}
-	
+
 }

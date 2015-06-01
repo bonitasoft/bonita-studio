@@ -254,7 +254,7 @@ public class BotQAUtil implements SWTBotConstants{
     }
 
     /**
-     * 
+     *
      * @param dataName
      * @param defaultValue
      * @param classType
@@ -396,7 +396,7 @@ public class BotQAUtil implements SWTBotConstants{
     }
 
     /** Select an actor in a Human task in the list of Process Actor
-     * 
+     *
      * @param bot
      * @param actor
      *
@@ -410,7 +410,7 @@ public class BotQAUtil implements SWTBotConstants{
 	}*/
 
     /**
-     * 
+     *
      * @param scriptName
      * @param expression
      * @param returnTypeOfScript
@@ -462,6 +462,7 @@ public class BotQAUtil implements SWTBotConstants{
                     final List<? extends Widget> widgets = viewerBot.getFinder().findControls(WidgetMatcherFactory.widgetOfType(TabbedPropertyList.class));
                     Assert.assertTrue("No widget of type " + TabbedPropertyList.class.getName() + " has been found", widgets.size() > 0);
                     final TabbedPropertyList tabbedPropertyList = (TabbedPropertyList) widgets.get(0);
+                    final StringBuilder availableTabbedPropertySection = new StringBuilder("");
                     int i = 0;
                     boolean found = false;
                     ListElement currentTab;
@@ -471,6 +472,7 @@ public class BotQAUtil implements SWTBotConstants{
                         currentTab = (org.eclipse.ui.internal.views.properties.tabbed.view.TabbedPropertyList.ListElement) tabbedPropertyList.getElementAt(i);
                         if (currentTab != null) {
                             final String label = currentTab.getTabItem().getText();
+                            availableTabbedPropertySection.append(label);
                             if (label.equals(tabeText)) {
                                 found = true;
                                 selectMethod.invoke(tabbedPropertyList, i);
@@ -479,7 +481,8 @@ public class BotQAUtil implements SWTBotConstants{
                         i++;
                     } while (currentTab != null && !found);
                     if (!found) {
-                        throw new WidgetNotFoundException("Can't find a tab item with " + tabeText + " label");
+                        throw new WidgetNotFoundException("Can't find a tab item with " + tabeText + " label. Only found: "
+                                + availableTabbedPropertySection.toString());
                     }
                 } catch (final Exception ex) {
                     BonitaStudioLog.error(ex);

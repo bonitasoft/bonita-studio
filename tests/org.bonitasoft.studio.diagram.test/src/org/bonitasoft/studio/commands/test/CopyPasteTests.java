@@ -155,7 +155,7 @@ public class CopyPasteTests extends SWTBotGefTestCase {
     @Test
     @Ignore
     public void testBug2610() throws Exception {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcessWithData_1_0.bos", "Bonita 6.x", "ProcessWithData", this.getClass(), false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcessWithData_1_0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "ProcessWithData", this.getClass(), false);
         final SWTBotGefEditor editor = bot.gefEditor(bot.activeEditor().getTitle());
         final SWTBotGefEditPart part = editor.getEditPart("StepWithData");
         part.click();

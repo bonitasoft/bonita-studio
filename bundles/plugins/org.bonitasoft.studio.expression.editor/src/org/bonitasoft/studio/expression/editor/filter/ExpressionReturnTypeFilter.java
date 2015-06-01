@@ -16,6 +16,7 @@ package org.bonitasoft.studio.expression.editor.filter;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
@@ -40,17 +41,18 @@ public class ExpressionReturnTypeFilter {
             final Class<?> targetReturnTypeClass = Class.forName(targetReturnType);
             return currentReturnTypeClass.isAssignableFrom(targetReturnTypeClass);
         } catch (final ClassNotFoundException e) {
-            final IJavaProject javaProject = getJavaProject();
+            final IJavaContainer javaContainer = javaContainer();
+            final IJavaProject javaProject = javaContainer.getJavaProject();
             if (javaProject != null) {
                 try {
                     final IType currentType = javaProject.findType(currentReturnType);
                     final IType targetType = javaProject.findType(targetReturnType);
                     if (currentType != null && targetType != null) {
-                        return RepositoryManager.getInstance().getCurrentRepository().getJdtTypeHierarchyManager().getTypeHierarchy(targetType)
+                        return javaContainer.getJdtTypeHierarchyManager().getTypeHierarchy(currentType)
                                 .contains(targetType);
                     }
                 } catch (final JavaModelException e1) {
-
+                    BonitaStudioLog.error(e1);
                 }
             }
             BonitaStudioLog.debug("Failed to determine the compatibility between " + targetReturnType + " and "
@@ -59,8 +61,8 @@ public class ExpressionReturnTypeFilter {
         return true;
     }
 
-    protected IJavaProject getJavaProject() {
-        return RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+    protected IJavaContainer javaContainer() {
+        return RepositoryManager.getInstance().getCurrentRepository();
     }
 
 }

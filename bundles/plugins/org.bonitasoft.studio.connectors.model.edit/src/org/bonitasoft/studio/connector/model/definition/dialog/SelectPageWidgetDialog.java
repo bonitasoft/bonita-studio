@@ -652,7 +652,7 @@ public class SelectPageWidgetDialog extends Dialog {
 			names.add(item);
 		}
 
-		return NamingUtils.generateNewName(names, Messages.item);
+		return NamingUtils.generateNewName(names, Messages.item, 1);
 	}
 
 	private Control createArrayComposite(final Array widget) {
@@ -827,7 +827,7 @@ public class SelectPageWidgetDialog extends Dialog {
 			names.add(item);
 		}
 
-		return NamingUtils.generateNewName(names, Messages.header);
+		return NamingUtils.generateNewName(names, Messages.header, 1);
 	}
 
 	private Control createRadioGroupComposite(final RadioGroup widget) {
@@ -971,7 +971,7 @@ public class SelectPageWidgetDialog extends Dialog {
 			names.add(item);
 		}
 
-		return NamingUtils.generateNewName(names, Messages.item);
+		return NamingUtils.generateNewName(names, Messages.item, 1);
 	}
 
 	@Override

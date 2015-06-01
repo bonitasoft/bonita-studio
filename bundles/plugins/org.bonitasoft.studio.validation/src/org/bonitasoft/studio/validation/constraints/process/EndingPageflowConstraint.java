@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.validation.constraints.process;
@@ -32,35 +30,27 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Aurelie Zara
- *
  */
-public class EndingPageflowConstraint extends
-AbstractLiveValidationMarkerConstraint {
+public class EndingPageflowConstraint extends AbstractLiveValidationMarkerConstraint {
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint#performLiveValidation(org.eclipse.emf.validation.IValidationContext)
-     */
-    @Override
-    protected IStatus performLiveValidation(final IValidationContext context) {
-        return context.createSuccessStatus();
-    }
-
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint#performBatchValidation(org.eclipse.emf.validation.IValidationContext)
+    /*
+     * (non-Javadoc)
+     * @see
+     * org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint#performBatchValidation(org.eclipse.emf.validation.IValidationContext)
      */
     @Override
     protected IStatus performBatchValidation(final IValidationContext context) {
-        if (context.getTarget() instanceof PageFlow){
-            final PageFlow flow  = (PageFlow)context.getTarget();
+        if (context.getTarget() instanceof PageFlow) {
+            final PageFlow flow = (PageFlow) context.getTarget();
             final List<Form> forms = flow.getForm();
-            for (final Form form :forms){
+            for (final Form form : forms) {
                 final List<Widget> widgets = form.getWidgets();
-                if (containsSubmitButton(widgets)){
+                if (containsSubmitButton(widgets)) {
                     return context.createSuccessStatus();
                 }
             }
-            if (!forms.isEmpty()){
-                return context.createFailureStatus(new Object[] { NLS.bind(Messages.validation_errorEndingPageflow,"") });
+            if (!forms.isEmpty()) {
+                return context.createFailureStatus(new Object[] { NLS.bind(Messages.validation_errorEndingPageflow, "") });
             }
         }
         return context.createSuccessStatus();
@@ -68,19 +58,20 @@ AbstractLiveValidationMarkerConstraint {
 
     protected boolean containsSubmitButton(final List<Widget> widgets) {
         for (final Widget widget : widgets) {
-            if (widget instanceof SubmitFormButton){
+            if (widget instanceof SubmitFormButton) {
                 return true;
             }
             if (widget instanceof Group) {
                 if (containsSubmitButton(((Group) widget).getWidgets())) {
-                   return true;
-               }
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint#getConstraintId()
      */
     @Override

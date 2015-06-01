@@ -10,7 +10,7 @@
               afterSection="tab.poolData"
               class="org.bonitasoft.studio.properties.bos.sections.data.DataSectionBOS.DataSectionBOS"
               enablesFor="1"
-              filter="org.bonitasoft.studio.properties.filters.HasDataFilter"
+              filter="org.bonitasoft.studio.properties.filters.LocalDataFilter"
               id="DataSection"
               tab="tab.data"
               viewID="org.bonitasoft.studio.views.properties.process.data">
@@ -49,7 +49,7 @@
         </propertySection>
         <propertySection
               class="org.bonitasoft.studio.properties.bos.sections.data.DataSectionBOS.PoolDataSectionBOS"
-              filter="org.bonitasoft.studio.properties.filters.ActivityFilter"
+              filter="org.bonitasoft.studio.properties.filters.HasDataFilter"
               id="PoolDataSection"
               tab="tab.poolData"
               viewID="org.bonitasoft.studio.views.properties.process.data">

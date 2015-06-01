@@ -82,8 +82,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
         initDataWizard(dataContainmentFeature, showAutogenerateForm);
         this.editingDomain = editingDomain;
         this.container = container;
-        dataWorkingCopy = ProcessFactory.eINSTANCE.createData();
-        dataWorkingCopy.setDataType(ModelHelper.getDataTypeForID(container, DataTypeLabels.stringDataType));
+        dataWorkingCopy = createWorkingCopy(container);
         editMode = false;
         this.featureToCheckForUniqueID = new HashSet<EStructuralFeature>();
         this.featureToCheckForUniqueID.add(dataContainmentFeature);
@@ -96,13 +95,18 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
         initDataWizard(dataContainmentFeature, showAutogenerateForm);
         this.editingDomain = editingDomain;
         this.container = container;
-        dataWorkingCopy = ProcessFactory.eINSTANCE.createData();
-        dataWorkingCopy.setDataType(ModelHelper.getDataTypeForID(container, DataTypeLabels.stringDataType));
+        dataWorkingCopy = createWorkingCopy(container);
         editMode = false;
         this.featureToCheckForUniqueID = new HashSet<EStructuralFeature>();
         this.featureToCheckForUniqueID.add(dataContainmentFeature);
         this.fixedReturnType = fixedReturnType;
         setWindowTitle(Messages.newVariable);
+    }
+
+    private Data createWorkingCopy(final EObject container) {
+        final Data dataWorkingCopy = ProcessFactory.eINSTANCE.createData();
+        dataWorkingCopy.setDataType(ModelHelper.getDataTypeForID(container, DataTypeLabels.stringDataType));
+        return dataWorkingCopy;
     }
 
     public DataWizard(final TransactionalEditingDomain editingDomain, final Data data, final EStructuralFeature dataContainmentFeature,
@@ -134,8 +138,10 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 
     @Override
     public void addPages() {
-        page = getWizardPage();
-        addPage(page);
+        if (page == null) {
+            page = getWizardPage();
+            addPage(page);
+        }
     }
 
     protected DataWizardPage getWizardPage() {
@@ -191,6 +197,9 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
             }
         } else {
             editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, dataContainmentFeature, workingCopy));
+        }
+        if (page != null) {
+            page.setWorkingCopy(createWorkingCopy(container));
         }
         refreshXtextReferences();
         return true;

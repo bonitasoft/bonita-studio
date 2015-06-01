@@ -34,4 +34,5 @@ Export-Package: org.bonitasoft.studio.application.test,org.bonitasoft.
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.process,
+ org.bonitasoft.engine.search,
  org.bonitasoft.engine.session

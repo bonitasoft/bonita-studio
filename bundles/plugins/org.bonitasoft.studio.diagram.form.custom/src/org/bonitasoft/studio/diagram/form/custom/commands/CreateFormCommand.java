@@ -30,7 +30,6 @@ import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetContainer;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
-import org.bonitasoft.studio.document.core.expression.DocumentReferenceExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
@@ -368,8 +367,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
     }
 
     protected void addInputExpressionForDocument(final Document key, final FileWidget widget) {
-        final DocumentReferenceExpressionProvider drep = new DocumentReferenceExpressionProvider();
-        final Expression inputExpression = drep.createDocRefExpression(key);
+        final Expression inputExpression = ExpressionHelper.createDocumentReferenceExpression(key);
         if (!(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool)) { //Do not set input expression if we are in an instantiation form
             widget.setInputExpression(inputExpression);
         }

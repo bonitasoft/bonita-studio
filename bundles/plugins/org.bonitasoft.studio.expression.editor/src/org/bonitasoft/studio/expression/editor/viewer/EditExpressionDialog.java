@@ -124,9 +124,13 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         getShell().removeListener(SWT.Resize, getShell().getListeners(SWT.Resize)[0]);
     }
 
-    protected EditExpressionDialog(final Shell parentShell, final boolean isPassword, final Expression inputExpression, final EObject context,
+    protected EditExpressionDialog(final Shell parentShell,
+            final boolean isPassword,
+            final Expression inputExpression,
+            final EObject context,
             final EditingDomain domain,
-            final ViewerFilter[] viewerTypeFilters, final ExpressionViewer expressionViewer) {
+            final ViewerFilter[] viewerTypeFilters,
+            final ExpressionViewer expressionViewer) {
         super(parentShell);
         this.inputExpression = inputExpression;
         if (this.inputExpression == null) {

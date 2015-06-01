@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.contract.core.mapping;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.field.Field;
@@ -33,6 +34,8 @@ public abstract class FieldToContractInputMapping {
 
     private FieldToContractInputMapping parent;
 
+    private boolean generated = true;
+
     public FieldToContractInputMapping(final Field field) {
         this.field = field;
     }
@@ -43,12 +46,16 @@ public abstract class FieldToContractInputMapping {
         }
     }
 
+    public Field getField() {
+        return field;
+    }
+
     public void setParent(final FieldToContractInputMapping parentField) {
         parent = parentField;
     }
 
     public List<FieldToContractInputMapping> getChildren() {
-        return children;
+        return Collections.<FieldToContractInputMapping> unmodifiableList(children);
     }
 
     public FieldToContractInputMapping getParent() {
@@ -64,5 +71,13 @@ public abstract class FieldToContractInputMapping {
     }
 
     protected abstract ContractInputType toContractInputType();
+
+    public boolean isGenerated() {
+        return generated;
+    }
+
+    public void setGenerated(final boolean generated) {
+        this.generated = generated;
+    }
 
 }

@@ -2256,7 +2256,7 @@
          fragment="true"/>
 
    <plugin
-         id="org.bonitasoft.studio.pagedesigner.nl_de"
+         id="org.bonitasoft.studio.designer.nl_de"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -2264,7 +2264,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.pagedesigner.nl_es"
+         id="org.bonitasoft.studio.designer.nl_es"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -2272,7 +2272,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.pagedesigner.nl_fr"
+         id="org.bonitasoft.studio.designer.nl_fr"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -2280,7 +2280,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.pagedesigner.nl_it"
+         id="org.bonitasoft.studio.designer.nl_it"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -2288,7 +2288,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.pagedesigner.nl_pt"
+         id="org.bonitasoft.studio.designer.nl_pt"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -2296,7 +2296,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.pagedesigner.nl_ja"
+         id="org.bonitasoft.studio.designer.nl_ja"
          download-size="0"
          install-size="0"
          version="0.0.0"

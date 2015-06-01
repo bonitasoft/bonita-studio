@@ -7,7 +7,7 @@
             description="%import_BOS_desc"
             filterExtensions="*.bos"
             importerFactoryClass="org.bonitasoft.studio.importer.bos.factory.BosArchiveImporterFactory"
-            inputName="Bonita 6.x"
+            inputName="%import_BOS_Name"
             menuIcon="icons/bos-desc.png"
             priorityDisplay="1">
       </importFactory>

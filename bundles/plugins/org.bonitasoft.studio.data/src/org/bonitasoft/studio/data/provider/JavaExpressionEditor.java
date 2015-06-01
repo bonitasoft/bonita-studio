@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,7 +25,6 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
@@ -42,12 +39,14 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.MultiValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -55,6 +54,7 @@ import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.corext.template.java.SignatureUtil;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaUILabelProvider;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -70,6 +70,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -80,7 +81,6 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class JavaExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor {
 
@@ -141,6 +141,9 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
                     }
                     if (className != null) {
                         javaTreeviewer.setInput(className);
+                        if (editorInputExpression != null && editorInputExpression.isReturnTypeFixed()) {
+                            javaTreeviewer.addFilter(showOnlyMethodWithReturnType(editorInputExpression.getReturnType()));
+                        }
                         javaTreeviewer.expandAll();
                         javaTreeviewer.getTree().setFocus();
                         javaTreeviewer.getTree().getShell().layout(true, true);
@@ -154,6 +157,23 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
         createReturnTypeComposite(parent);
 
         return mainComposite;
+    }
+
+    protected ViewerFilter showOnlyMethodWithReturnType(final String returnType) {
+        return new ViewerFilter() {
+
+            @Override
+            public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+                if (element instanceof IMethod) {
+                    try {
+                        return returnType.equals(toQualifiedName(element));
+                    } catch (final JavaModelException e) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        };
     }
 
     protected void createReturnTypeComposite(final Composite parent) {
@@ -185,7 +205,7 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
             public String getText(final Object item) {
                 if (item instanceof IMethod) {
                     try {
-                        return super.getText(item) + " - " + SignatureUtil.stripSignatureToFQN(((IMethod) item).getReturnType());
+                        return super.getText(item) + " - " + toQualifiedName(item);
                     } catch (final JavaModelException e) {
                         BonitaStudioLog.error(e);
                         return null;
@@ -194,6 +214,7 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
                     return super.getText(item);
                 }
             }
+
         });
 
         javaTreeviewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -212,35 +233,8 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
         javaTreeviewer.getTree().setEnabled(false);
     }
 
-    private IMethod getJavaSelectionFromContent() {
-        String className = null;
-        if (data != null) {
-            if (data.isMultiple()) {
-                className = List.class.getName();
-            } else if (data instanceof JavaObjectData) {
-                className = ((JavaObjectData) data).getClassName();
-            }
-            if (className != null) {
-                final String content = editorInputExpression.getContent();
-                if (content != null) {
-                    final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-                    IType type = null;
-                    try {
-                        type = ((PojoBrowserContentProvider) getContentProvider()).getType();
-                        for (final IMethod m : type.getMethods()) {
-                            final String method = m.getElementName();
-                            if (method.equals(content)) {
-                                return m;
-                            }
-                        }
-                    } catch (final JavaModelException e) {
-                        BonitaStudioLog.error(e);
-                    }
-
-                }
-            }
-        }
-        return null;
+    private String toQualifiedName(final Object item) throws JavaModelException {
+        return SignatureUtil.stripSignatureToFQN(((IMethod) item).getReturnType());
     }
 
     protected ITreeContentProvider getContentProvider() {
@@ -305,7 +299,8 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
     }
 
     @Override
-    public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context, final Expression inputExpression, final ViewerFilter[] filters,
+    public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context, final Expression inputExpression,
+            final ViewerFilter[] filters,
             final ExpressionViewer expressionViewer) {
 
         editorInputExpression = inputExpression;
@@ -451,15 +446,23 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
                 referencedDataToSelection);
         dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), nameObservable, selectionToName, new UpdateValueStrategy(
                 UpdateValueStrategy.POLICY_NEVER));
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(javaTreeviewer), nameObservable, selectionToName, new UpdateValueStrategy(
+        final IViewerObservableValue javaViewerSingleSelection = ViewersObservables.observeSingleSelection(javaTreeviewer);
+        dataBindingContext.bindValue(javaViewerSingleSelection, nameObservable, selectionToName, new UpdateValueStrategy(
                 UpdateValueStrategy.POLICY_NEVER));
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(javaTreeviewer), contentObservable, selectionToContent, methodToSelection);
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(javaTreeviewer), returnTypeObservable, selectionToReturnType,
+        dataBindingContext.bindValue(javaViewerSingleSelection, contentObservable, selectionToContent, methodToSelection);
+        dataBindingContext.bindValue(javaViewerSingleSelection, returnTypeObservable, selectionToReturnType,
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
         dataBindingContext.bindValue(SWTObservables.observeText(typeText, SWT.Modify), returnTypeObservable);
+        dataBindingContext.addValidationStatusProvider(new MultiValidator() {
+
+            @Override
+            protected IStatus validate() {
+                return javaViewerSingleSelection.getValue() instanceof IMethod ? ValidationStatus.ok() : ValidationStatus.error("");
+            }
+        });
     }
 
-    private boolean acceptExpression(final ExpressionViewer viewer,final Expression e, final EObject context ,final ViewerFilter[] filters) {
+    private boolean acceptExpression(final ExpressionViewer viewer, final Expression e, final EObject context, final ViewerFilter[] filters) {
         if (filters != null) {
             for (final ViewerFilter f : filters) {
                 if (!f.select(viewer, context, e)) {

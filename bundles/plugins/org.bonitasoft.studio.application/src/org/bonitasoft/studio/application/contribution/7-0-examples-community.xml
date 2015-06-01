@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" ?>
+<rss version="2.0">
+  <channel>
+    <pubDate>2015-05-13</pubDate>
+    <author>Bonitasoft</author>
+    <category>Examples</category>
+    <title>Bonitasoft examples: Community</title>
+    <!-- TODO update link -->
+    <link>http://www.bonitasoft.com/for-you-to-read/process-library?type=&amp;resource=community_example</link>
+    <description>Bonitasoft Examples</description>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Examples</category>
+       <title>Vacation management</title>
+       <!-- TODO fix link -->
+       <link>http://www.bonitasoft.com/</link>
+       <description></description>
+    </item>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Examples</category>
+       <title>Procurement</title>
+       <!-- TODO fix link -->
+       <link>http://www.bonitasoft.com/</link>
+       <description></description>
+    </item>
+   	<item>
+       <author>Antoine Mottier</author>
+       <category>Examples</category>
+       <title>Ticketing</title>
+       <!-- TODO fix link -->
+       <link>http://www.bonitasoft.com/</link>
+       <description></description>
+    </item>
+   </channel>
+</rss>
+
+

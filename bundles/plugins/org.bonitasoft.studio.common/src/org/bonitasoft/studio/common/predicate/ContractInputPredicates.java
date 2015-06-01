@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.predicate;
 import java.util.Objects;
 
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 
 import com.google.common.base.Predicate;
 
@@ -32,4 +33,40 @@ public class ContractInputPredicates {
         };
     }
 
+    public static Predicate<ContractInput> withContractInputType(final ContractInputType type) {
+        return new Predicate<ContractInput>() {
+
+            @Override
+            public boolean apply(final ContractInput input) {
+                return Objects.equals(type, input.getType());
+            }
+        };
+    }
+
+    public static Predicate<ContractInput> multipleContractInput() {
+        return new Predicate<ContractInput>() {
+
+            @Override
+            public boolean apply(final ContractInput input) {
+                return input.isMultiple();
+            }
+        };
+    }
+
+    public static Predicate<ContractInput> withMultipleInHierarchy() {
+        return new Predicate<ContractInput>() {
+
+            @Override
+            public boolean apply(final ContractInput input) {
+                ContractInput current = input;
+                while (current.eContainer() instanceof ContractInput) {
+                    if (current.isMultiple()) {
+                        return true;
+                    }
+                    current = (ContractInput) current.eContainer();
+                }
+                return current.isMultiple();
+            }
+        };
+    }
 }

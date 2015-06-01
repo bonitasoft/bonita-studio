@@ -162,6 +162,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="setterParamType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ContractInput">
+    <eOperations name="getJavaType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="switch(getType()){&#xD;&#xA;case BOOLEAN:return java.lang.Boolean.class.getName();&#xD;&#xA;case DATE: return java.util.Date.class.getName();&#xD;&#xA;case INTEGER: return java.lang.Integer.class.getName();&#xD;&#xA;case DECIMAL: return java.lang.Double.class.getName();&#xD;&#xA;case FILE:return &quot;org.bonitasoft.engine.bpm.contract.FileInputValue&quot;;&#xD;&#xA;case COMPLEX:return java.util.Map.class.getName();&#xD;&#xA;case TEXT:&#xD;&#xA;default: return java.lang.String.class.getName();&#xD;&#xA;}"/>
+      </eAnnotations>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//ContractInputType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -243,11 +248,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="initialMultipleContent"
         eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiple" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contractInput" eType="#//ContractInput"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="DocumentType">
     <eLiterals name="NONE"/>
     <eLiterals name="INTERNAL" value="1"/>
     <eLiterals name="EXTERNAL" value="2"/>
+    <eLiterals name="CONTRACT" value="3" literal="CONTRACT"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DoubleType" eSuperTypes="#//DataType"/>
   <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true" interface="true">
@@ -311,6 +318,12 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="processSource" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="subprocessTarget" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="assignationType" lowerBound="1"
+        eType="#//InputMappingAssignationType" defaultValueLiteral="ContractInput"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="InputMappingAssignationType">
+    <eLiterals name="ContractInput"/>
+    <eLiterals name="Data" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IntegerType" eSuperTypes="#//DataType"/>
   <eClassifiers xsi:type="ecore:EClass" name="IntermediateErrorCatchEvent" eSuperTypes="#//BoundaryEvent #//ErrorEvent"/>

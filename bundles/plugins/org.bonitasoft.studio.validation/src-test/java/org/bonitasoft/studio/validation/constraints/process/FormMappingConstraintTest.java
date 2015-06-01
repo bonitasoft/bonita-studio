@@ -23,10 +23,10 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
+import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.pagedesigner.core.repository.WebPageFileStore;
-import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.validation.IValidationContext;

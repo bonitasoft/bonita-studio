@@ -43,6 +43,13 @@ public class ContractBuilder implements Buildable<Contract> {
         return this;
     }
 
+    public ContractBuilder havingInput(final ContractInput... contractInput) {
+        for (final ContractInput input : contractInput) {
+            contract.getInputs().add(input);
+        }
+        return this;
+    }
+
     public ContractBuilder havingConstraint(final Buildable<ContractConstraint>... contractConstraints) {
         for (final Buildable<ContractConstraint> cc : contractConstraints) {
             contract.getConstraints().add(cc.build());

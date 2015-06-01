@@ -41,7 +41,9 @@ public class BotDialog extends BotBase {
      */
     public void ok() {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.OK_LABEL)));
+        final SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.OK_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
     }
 
     /**
@@ -95,6 +97,16 @@ public class BotDialog extends BotBase {
             return true;
         } catch (final WidgetNotFoundException e) {
             BonitaStudioLog.warning(pMessage + " error message not found.", this.getClass().getName());
+            return false;
+        }
+    }
+
+    protected boolean hasTextVisible(final String aText) {
+        try {
+            bot.text(aText);
+            return true;
+        } catch (final WidgetNotFoundException e) {
+            BonitaStudioLog.warning(aText + " not found.", this.getClass().getName());
             return false;
         }
     }

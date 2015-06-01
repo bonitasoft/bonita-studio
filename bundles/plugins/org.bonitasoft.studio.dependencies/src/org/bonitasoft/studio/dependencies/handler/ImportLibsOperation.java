@@ -28,7 +28,7 @@ import java.util.zip.ZipEntry;
 
 import org.bonitasoft.studio.common.ZipInputStreamIFileFriendly;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;

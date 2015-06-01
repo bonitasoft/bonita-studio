@@ -71,7 +71,7 @@ public class ContractConstraintController implements IViewerController {
     private String defaultConstraintName() {
         final Contract contract = (Contract) contractObservableValue.getValue();
         return NamingUtils.generateNewName(
-                newHashSet(transform(getAllElementOfTypeIn(contract, ContractConstraint.class), toConstraintName())), "constraint");
+                newHashSet(transform(getAllElementOfTypeIn(contract, ContractConstraint.class), toConstraintName())), "constraint", 1);
     }
 
     private Function<ContractConstraint, String> toConstraintName() {

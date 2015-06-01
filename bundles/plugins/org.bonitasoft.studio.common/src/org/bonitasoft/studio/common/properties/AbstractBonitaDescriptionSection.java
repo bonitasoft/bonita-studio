@@ -34,18 +34,28 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
 
     protected Form form;
     private TabbedPropertySheetPage tabbedPropertySheetPage;
+    private TogglePropertyHelpContributionItem togglePropertyHelpContributionItem;
+    private PropertySectionHistory propertySectionHistory;
 
     @Override
     public void refresh() {
         super.refresh();
         if (form != null) {
             form.setText(getSectionTitle());
+            updateSectionDescription();
         }
+    }
+
+    protected void updateSectionDescription() {
+        togglePropertyHelpContributionItem.setHelpContent(getSectionDescription());
     }
 
     @Override
     public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
+        propertySectionHistory = new PropertySectionHistory(getClass().getSimpleName());
+        propertySectionHistory.load();
+
         parent.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
         parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         tabbedPropertySheetPage = aTabbedPropertySheetPage;
@@ -61,14 +71,17 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
 
         form.setToolBarVerticalAlignment(SWT.CENTER);
 
-        final TogglePropertyHelpContributionItem togglePropertyHelpContributionItem = new TogglePropertyHelpContributionItem(widgetFactory, form,
-                getSectionDescription());
+        togglePropertyHelpContributionItem = new TogglePropertyHelpContributionItem(widgetFactory, form,
+                getSectionDescription(), propertySectionHistory);
         updateToolbar(form.getToolBarManager());
         form.getToolBarManager().add(togglePropertyHelpContributionItem);
         form.getToolBarManager().update(true);
         createContent(formBodyComposite);
 
-        form.getMenuManager().add(togglePropertyHelpContributionItem);
+        if (togglePropertyHelpContributionItem.isVisible()) {
+            form.getMenuManager().add(togglePropertyHelpContributionItem);
+            form.getMenuManager().update(true);
+        }
 
         form.update();
         form.setFocus();

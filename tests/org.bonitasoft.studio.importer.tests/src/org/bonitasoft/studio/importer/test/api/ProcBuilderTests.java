@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2011-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -14,22 +14,23 @@
  */
 package org.bonitasoft.studio.importer.test.api;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.ProjectUtil;
-import org.bonitasoft.studio.engine.export.BarExporter;
+import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.engine.operation.DeployProcessOperation;
 import org.bonitasoft.studio.importer.builder.IProcBuilder;
 import org.bonitasoft.studio.importer.builder.IProcBuilder.EventType;
 import org.bonitasoft.studio.importer.builder.ProcBuilder;
 import org.bonitasoft.studio.importer.builder.ProcBuilderException;
-import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -37,26 +38,26 @@ import org.bonitasoft.studio.model.process.StartEvent;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Romain Bioteau
  */
-public class ProcBuilderTests extends TestCase {
+public class ProcBuilderTests {
 
     private IProcBuilder procBuilder;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         procBuilder = new ProcBuilder();
     }
 
+    @Test
     public void testAddGenericAttribute() throws ProcBuilderException, IOException {
-
         final String diagamFileName = "testDiagram.proc";
         final String diagramName = "testDiagram";
         final String poolName = "Pooli";
@@ -99,6 +100,7 @@ public class ProcBuilderTests extends TestCase {
         procBuilder.setAttributeOnCurrentStep(ProcessPackage.eINSTANCE.getElement_Documentation(), description);
     }
 
+    @Test
     public void testStartErrorEvent() throws Exception {
         final String diagamFileName = "testDiagramWithStartErrorEvent.proc";
         final String diagramName = "testDiagramWithStartErrorEvent";
@@ -122,8 +124,10 @@ public class ProcBuilderTests extends TestCase {
         assertTrue("Import as failed", diagramResource.getContents().size() > 0);
         final MainProcess proc = (MainProcess) diagramResource.getContents().get(0);
         final Pool p = (Pool) proc.getElements().get(0);
-        BarExporter.getInstance().createBusinessArchive(p, ConfigurationFactory.eINSTANCE.createConfiguration(), Collections.<EObject> emptySet());
 
+        final DeployProcessOperation deployProcessOperation = new DeployProcessOperation();
+        deployProcessOperation.addProcessToDeploy(p);
+        StatusAssert.assertThat(deployProcessOperation.run(Repository.NULL_PROGRESS_MONITOR)).isOK();
     }
 
 }

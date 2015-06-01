@@ -16,19 +16,25 @@ package org.bonitasoft.studio.contract.ui.property;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraintController;
 import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraintsTableViewer;
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputController;
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputTreeViewer;
+import org.bonitasoft.studio.contract.ui.wizard.AddInputContractFromDataWizardDialog;
+import org.bonitasoft.studio.contract.ui.wizard.ContractInputGenerationWizard;
+import org.bonitasoft.studio.designer.ui.contribution.CreateAndEditFormContributionItem;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.pagedesigner.ui.contribution.NewFormContributionItem;
+import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -41,6 +47,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
@@ -54,8 +61,12 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -76,17 +87,25 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private final IProgressService progressService;
 
+    private final ISharedImages sharedImages;
+
     @Inject
-    public ContractPropertySection(final IEclipseContext eclipseContext, final ContractContainerAdaptableSelectionProvider selectionProvider,
+    public ContractPropertySection(final ISharedImages sharedImages, final IEclipseContext eclipseContext,
+            final ContractContainerAdaptableSelectionProvider selectionProvider,
             final IProgressService progressService) {
         this.eclipseContext = eclipseContext;
         this.selectionProvider = selectionProvider;
         this.progressService = progressService;
+        this.sharedImages = sharedImages;
     }
 
     @Override
     public String getSectionDescription() {
-        return Messages.contractSectionDescription;
+        final Object selection = selectionProvider.getAdapter(EObject.class);
+        if (selection != null && selection instanceof Task) {
+            return Messages.stepContractSectionDescription;
+        }
+        return Messages.processContractSectionDescription;
     }
 
     @Override
@@ -102,7 +121,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     @Override
     protected void updateToolbar(final IToolBarManager toolbarManager) {
-        final NewFormContributionItem newFormContributionItem = newContributionItem(NewFormContributionItem.class);
+        final CreateAndEditFormContributionItem newFormContributionItem = newContributionItem(CreateAndEditFormContributionItem.class);
         newFormContributionItem.setSelectionProvider(selectionProvider);
         toolbarManager.add(newFormContributionItem);
     }
@@ -125,15 +144,16 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
                 ViewersObservables.observeSingleSelection(selectionProvider),
                 ProcessPackage.Literals.CONTRACT_CONTAINER__CONTRACT);
         init(observeContractValue);
-        final CTabFolder tabFolder = getWidgetFactory().createTabFolder(parent, SWT.FLAT | SWT.TOP);
+
+        final CTabFolder tabFolder = getWidgetFactory().createTabFolder(parent, SWT.TOP);
         tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        getWidgetFactory().adapt(tabFolder, true, true);
+        getWidgetFactory().adapt(tabFolder);
 
         final CTabItem inputTabItem = getWidgetFactory().createTabItem(tabFolder, SWT.NULL);
         inputTabItem.setText(Messages.inputTabLabel);
         final Composite inputComposite = getWidgetFactory().createComposite(tabFolder);
         inputComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        inputComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 25, 10, 5).create());
+        inputComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).extendedMargins(15, 0, 10, 5).create());
 
         createInputTabContent(inputComposite, observeContractValue);
 
@@ -141,7 +161,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
         final Composite constraintComposite = getWidgetFactory().createComposite(tabFolder);
         constraintComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        constraintComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 25, 10, 5).create());
+        constraintComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 0, 10, 5).create());
 
         createConstraintTabContent(constraintComposite, observeContractValue);
 
@@ -159,7 +179,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final Button removeButton = createButton(buttonsComposite, Messages.remove);
 
         final ContractConstraintsTableViewer constraintsTableViewer = new ContractConstraintsTableViewer(parent, getWidgetFactory());
-        constraintsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        constraintsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).create());
         constraintsTableViewer.initialize(constraintController, getMessageManager(), context);
         constraintsTableViewer.setInput(CustomEMFEditObservables.observeDetailList(Realm.getDefault(), observeContractValue,
                 ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
@@ -177,12 +197,14 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private void createInputTabContent(final Composite parent, final IObservableValue observeContractValue) {
         final Composite buttonsComposite = createButtonContainer(parent);
+
+        createGenerateButton(buttonsComposite);
         final Button addButton = createButton(buttonsComposite, Messages.add);
         final Button addChildButton = createButton(buttonsComposite, Messages.addChild);
         final Button removeButton = createButton(buttonsComposite, Messages.remove);
 
-        final ContractInputTreeViewer inputsTableViewer = new ContractInputTreeViewer(parent, getWidgetFactory(), progressService);
-        inputsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        final ContractInputTreeViewer inputsTableViewer = new ContractInputTreeViewer(parent, getWidgetFactory(), progressService, sharedImages);
+        inputsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).create());
         inputsTableViewer.initialize(inputController, getMessageManager(), context);
         inputsTableViewer.setInput(observeContractValue);
 
@@ -194,6 +216,29 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         bindAddChildButtonEnablement(addChildButton, inputsTableViewer);
     }
 
+    private void createGenerateButton(final Composite buttonsComposite) {
+        final Button generateButton = createButton(buttonsComposite, Messages.generate);
+        generateButton.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                openAddInputWizardDialog();
+            }
+        });
+    }
+
+    public void openAddInputWizardDialog() {
+        final AddInputContractFromDataWizardDialog dialog = new AddInputContractFromDataWizardDialog(Display.getCurrent().getActiveShell(),
+                new ContractInputGenerationWizard(
+                        (ContractContainer) selectionProvider.getAdapter(EObject.class),
+                        getEditingDomain(), RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class)), this, true);
+        dialog.open();
+    }
+
     private Button createButton(final Composite buttonsComposite, final String label) {
         final Button button = getWidgetFactory().createButton(buttonsComposite, label, SWT.PUSH);
         button.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
@@ -202,8 +247,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private Composite createButtonContainer(final Composite parent) {
         final Composite buttonsComposite = getWidgetFactory().createComposite(parent);
-        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.FILL, SWT.TOP).create());
-        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 3).extendedMargins(0, 0, 25, 0).create());
+        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.LEFT, SWT.TOP).create());
+        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 3).create());
         return buttonsComposite;
     }
 

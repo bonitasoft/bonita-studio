@@ -448,13 +448,6 @@ public class ExpressionHelperTest {
     }
 
     @Test
-    public void returnTypeForInputType_contains_all_ContractInputType() throws Exception {
-        for (final ContractInputType type : ContractInputType.values()) {
-            assertThat(ExpressionHelper.returnTypeForInputType).containsKey(type);
-        }
-    }
-
-    @Test
     public void should_createOperationFromOutput() {
         final Output output = ConnectorDefinitionFactory.eINSTANCE.createOutput();
         output.setName("outputName");

@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -16,20 +16,27 @@ package org.bonitasoft.studio.contract.ui.property;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
+import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.designer.ui.contribution.CreateAndEditFormContributionItem;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.pagedesigner.ui.contribution.NewFormContributionItem;
+import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -37,6 +44,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
@@ -59,7 +68,7 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
     private ContractContainerAdaptableSelectionProvider selectionProvider;
 
     @Mock
-    private NewFormContributionItem contributionItem;
+    private CreateAndEditFormContributionItem contributionItem;
 
     @Mock
     private IEclipseContext eclipseContext;
@@ -72,15 +81,22 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
     @Mock
     private IProgressService progressService;
 
+    @Mock
+    private IWorkbenchPart part;
+
+    @Mock
+    private ISharedImages sharedImages;
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         parent = createDisplayAndRealm();
-        section = spy(new ContractPropertySection(eclipseContext, selectionProvider, progressService));
+        section = spy(new ContractPropertySection(sharedImages,eclipseContext, selectionProvider, progressService));
         when(tabbedPropertySheetPage.getWidgetFactory()).thenReturn(new TabbedPropertySheetWidgetFactory());
-        doReturn(contributionItem).when(section).newContributionItem(NewFormContributionItem.class);
+        doReturn(contributionItem).when(section).newContributionItem(CreateAndEditFormContributionItem.class);
+        doReturn(createImage()).when(sharedImages).getImage(anyString());
     }
 
     /**
@@ -148,4 +164,18 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
         assertThat(button.isEnabled()).isTrue();
     }
 
+    @Test
+    public void should_getSectionDescription_return_processMessage() {
+        final Pool pool = aPool().havingContract(aContract()).build();
+        section.init(new WritableValue(pool.getContract(), Contract.class));
+        assertThat(section.getSectionDescription()).isEqualTo(Messages.processContractSectionDescription);
+    }
+
+    @Test
+    public void should_getSectionDescription_return_stepMessage() {
+        final Task task = aTask().havingContract(aContract()).build();
+        section.init(new WritableValue(task.getContract(), Contract.class));
+        doReturn(aTask().build()).when(selectionProvider).getAdapter(EObject.class);
+        assertThat(section.getSectionDescription()).isEqualTo(Messages.stepContractSectionDescription);
+    }
 }
