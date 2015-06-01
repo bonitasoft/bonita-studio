@@ -21,7 +21,6 @@ import java.net.URL;
 
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,22 +48,28 @@ public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
         pageDesignerURLBuilder = new PageDesignerURLFactory(preferenceStore);
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
+    @Test
+    public void should_openPageDesignerHome_return_URL_pointing_to_page_builder_webapp() throws Exception {
+        assertThat(pageDesignerURLBuilder.openPageDesignerHome()).isEqualTo(new URL("http://localhost:8080/designer/#/en/home"));
     }
 
     @Test
-    public void should_openPageDesignerHome_return_URL_pointing_to_page_builder_webapp() throws Exception {
-        assertThat(pageDesignerURLBuilder.openPageDesignerHome()).isEqualTo(new URL("http://localhost:8080/designer/#/en"));
+    public void should_openPageDesignerHome_return_URL_pointing_to_page_builder_webapp_withLanguageOfStudio() throws Exception {
+        doReturn("fr").when(preferenceStore).get(CURRENT_STUDIO_LOCALE, "en");
+        assertThat(pageDesignerURLBuilder.openPageDesignerHome()).isEqualTo(new URL("http://localhost:8080/designer/#/fr/home"));
     }
 
     @Test
     public void should_openPage_return_URL_pointing_to_page_builder_webapp_on_the_given_page() throws Exception {
         assertThat(pageDesignerURLBuilder.openPage("page-id")).isEqualTo(
                 new URL("http://localhost:8080/designer/#/en/pages/page-id"));
+    }
+
+    @Test
+    public void should_openPage_return_URL_pointing_to_page_builder_webapp_on_the_given_page_withLanguageOfStudio() throws Exception {
+        doReturn("fr").when(preferenceStore).get(CURRENT_STUDIO_LOCALE, "en");
+        assertThat(pageDesignerURLBuilder.openPage("page-id")).isEqualTo(
+                new URL("http://localhost:8080/designer/#/fr/pages/page-id"));
     }
 
     @Test

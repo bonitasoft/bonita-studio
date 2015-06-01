@@ -25,6 +25,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Date;
 
 import org.bonitasoft.engine.session.APISession;
@@ -40,6 +41,7 @@ import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.WorkspaceResourceServerManager;
 import org.bonitasoft.studio.designer.core.WorkspaceSystemProperties;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.engine.server.PortConfigurator;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -539,14 +541,12 @@ public class BOSWebServerManager {
         if (watchdogServer != null) {
             try {
                 if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                    BonitaStudioLog.debug("Shuttingdown watchdog...",
-                            EnginePlugin.PLUGIN_ID);
+                    BonitaStudioLog.debug("Shuttingdown watchdog...", EnginePlugin.PLUGIN_ID);
                 }
                 watchdogServer.close();
                 watchdogServer = null;
                 if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                    BonitaStudioLog.debug("Watchdog shutdown ...",
-                            EnginePlugin.PLUGIN_ID);
+                    BonitaStudioLog.debug("Watchdog shutdown ...", EnginePlugin.PLUGIN_ID);
                 }
             } catch (final IOException e) {
                 BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
@@ -566,8 +566,7 @@ public class BOSWebServerManager {
     }
 
     public boolean serverIsStarted() {
-        return tomcat != null
-                && tomcat.getServerState() == IServer.STATE_STARTED;
+        return tomcat != null && tomcat.getServerState() == IServer.STATE_STARTED;
     }
 
     public void resetServer(final IProgressMonitor monitor) {
@@ -579,8 +578,7 @@ public class BOSWebServerManager {
         if (serverIsStarted()) {
             monitor.subTask(Messages.stoppingWebServer);
             if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                BonitaStudioLog.debug("Stopping tomcat server...",
-                        EnginePlugin.PLUGIN_ID);
+                BonitaStudioLog.debug("Stopping tomcat server...", EnginePlugin.PLUGIN_ID);
             }
             stopWatchdog();
             try {
@@ -611,49 +609,61 @@ public class BOSWebServerManager {
 
     public void cleanBeforeShutdown() {
         if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT)) {
-            final String urlServer = tomcatInstanceLocation + File.separator + "bonita" + File.separator + "server" + File.separator + "tenants"
-                    + File.separator + "tenants" + File.separator + "1";
-            final String urlClient = tomcatInstanceLocation + File.separator + "bonita" + File.separator + "client" + File.separator + "tenants"
-                    + File.separator + "tenants" + File.separator + "1";
-            final File bonitaServerFile = new File(urlServer);
-            final File bonitaClientFile = new File(urlClient);
-            PlatformUtil.delete(bonitaServerFile, null);
-            PlatformUtil.delete(bonitaClientFile, null);
-            final String platformTomcatConfigURL = tomcatInstanceLocation + File.separator + "bonita" + File.separator + "client" + File.separator + "platform"
-                    + File.separator + "conf" + File.separator + "platform-tenant-config.properties";
-            final File platformTomcatConfig = new File(platformTomcatConfigURL);
-            PlatformUtil.delete(platformTomcatConfig, null);
-            try {
-                FileUtil.copyFile(BonitaHomeUtil.getDefaultPlatformTenantConfigFile(), platformTomcatConfig);
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-            }
-            final File workDir = getPlatformWorkDir();
-            if (workDir != null && workDir.exists()) {
-                for (final File file : workDir.listFiles()) {
-                    if (file.getName().endsWith("h2.db")
-                            && file.getName().contains("bonita")) {
-                        PlatformUtil.delete(file, null);
-                        if (file.exists()) {
-                            BonitaStudioLog.info(file.getName()
-                                    + " failed to be deleted",
-                                    EnginePlugin.PLUGIN_ID);
-                        } else {
-                            BonitaStudioLog.info(file.getName()
-                                    + " has been deleted successfuly",
-                                    EnginePlugin.PLUGIN_ID);
-                        }
+            cleanTenant();
+        }
+        if (dropBusinessDataDBOnExit()) {
+            deleteBusinessDataDBFiles();
+        }
+    }
+
+    protected void cleanTenant() {
+        final File bonitaServerFile = Paths.get(getBonitaHomeInTomcat(), "engine-server", "work", "tenants", "1").toFile();
+        PlatformUtil.delete(bonitaServerFile, null);
+        final File bonitaClientFile = Paths.get(getBonitaHomeInTomcat(), "engine-client", "work", "tenants", "1").toFile();
+        PlatformUtil.delete(bonitaClientFile, null);
+        final File bonitaWebClientFile = Paths.get(getBonitaHomeInTomcat(), "client", "tenants", "1").toFile();
+        PlatformUtil.delete(bonitaWebClientFile, null);
+        final File platformTomcatConfig = Paths.get(getBonitaHomeInTomcat(), "client", "platform", "conf", "platform-tenant-config.properties").toFile();
+        PlatformUtil.delete(platformTomcatConfig, null);
+        try {
+            FileUtil.copyFile(BonitaHomeUtil.getDefaultPlatformTenantConfigFile(), platformTomcatConfig);
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
+        }
+        deleteBonitaDbFiles();
+    }
+
+    protected void deleteBusinessDataDBFiles() {
+        deleteDbFiles("business");
+    }
+
+    protected void deleteBonitaDbFiles() {
+        deleteDbFiles("bonita");
+    }
+
+    protected void deleteDbFiles(final String fileStartName) {
+        final File workDir = getPlatformWorkDir();
+        if (workDir != null && workDir.exists()) {
+            for (final File file : workDir.listFiles()) {
+                final String fileName = file.getName();
+                if (fileName.endsWith("h2.db") && fileName.contains(fileStartName)) {
+                    PlatformUtil.delete(file, null);
+                    if (file.exists()) {
+                        BonitaStudioLog.info(fileName + " failed to be deleted", EnginePlugin.PLUGIN_ID);
+                    } else {
+                        BonitaStudioLog.info(fileName + " has been deleted successfuly", EnginePlugin.PLUGIN_ID);
                     }
                 }
             }
         }
     }
 
+    protected String getBonitaHomeInTomcat() {
+        return Paths.get(tomcatInstanceLocation, "bonita").toString();
+    }
+
     protected File getPlatformWorkDir() {
-        final String workURL = tomcatInstanceLocation + File.separator + "bonita" + File.separator + "server" + File.separator + "platform" + File.separator
-                + "work";
-        final File workDir = new File(workURL);
-        return workDir;
+        return Paths.get(getBonitaHomeInTomcat(), "engine-server", "work", "platform").toFile();
     }
 
     public File getBonitaLogFile() {
@@ -675,6 +685,11 @@ public class BOSWebServerManager {
             }
         }
         return lastLogFile;
+    }
+
+    private boolean dropBusinessDataDBOnExit() {
+        final IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
+        return preferenceStore.getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_EXIT_PREF);
     }
 
 }
