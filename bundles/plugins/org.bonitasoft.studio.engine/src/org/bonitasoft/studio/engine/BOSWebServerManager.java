@@ -39,7 +39,6 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.WorkspaceResourceServerManager;
-import org.bonitasoft.studio.designer.core.WorkspaceSystemProperties;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.engine.server.PortConfigurator;
@@ -88,46 +87,27 @@ import org.eclipse.wst.server.core.util.SocketUtil;
 public class BOSWebServerManager {
 
     private static final String BONITA_TOMCAT_SERVER_ID = "bonita-tomcat-server-id";
-
     private static final String BONITA_TOMCAT_RUNTIME_ID = "bonita-tomcat-runtime-id";
-
     public static final String SERVER_CONFIGURATION_PROJECT = "server_configuration";
-
     private static final String LOGINSERVICE_PATH = "/bonita/loginservice?";
-
     protected static final String WEBSERVERMANAGER_EXTENSION_D = "org.bonitasoft.studio.engine.bonitaWebServerManager";
-
     protected static final String TOMCAT_SERVER_TYPE = "org.eclipse.jst.server.tomcat.70";
-
     protected static final String TOMCAT_RUNTIME_TYPE = "org.eclipse.jst.server.tomcat.runtime.70";
-
-    protected static int WATCHDOG_PORT = 6969;
-
     protected static final String START_TIMEOUT = "start-timeout";
 
-    protected static final String TMP_DIR = ProjectUtil
-            .getBonitaStudioWorkFolder().getAbsolutePath();
-
+    protected static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
     protected final String tomcatInstanceLocation = new File(ResourcesPlugin
             .getWorkspace().getRoot().getLocation().toFile(), "tomcat")
             .getAbsolutePath();
-
-    protected static final String WATCHDOG_PORT_PROPERTY = "org.bonitasoft.studio.watchdog.port";
-
-    private static final String WATCHDOG_TIMER = "org.bonitasoft.studio.watchdog.timer";
-
-    private static final int MAX_SERVER_START_TIME = 300000;
-
     private static final String TOMCAT_LOG_FILE = "tomcat.log";
 
+    public static int WATCHDOG_PORT = 6969;
+    private static final int MAX_SERVER_START_TIME = 300000;
     private static final int MAX_LOGGING_TRY = 50;
 
     private ServerSocket watchdogServer;
-
     private static BOSWebServerManager INSTANCE;
-
     private IServer tomcat;
-
     private PortConfigurator portConfigurator;
 
     public synchronized static BOSWebServerManager getInstance() {
@@ -334,14 +314,19 @@ public class BOSWebServerManager {
                     Repository.NULL_PROGRESS_MONITOR);
             workingCopy = conf.getWorkingCopy();
         }
-
+        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
         workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-                getVMArgs());
+                getTomcatVMArgsBuilder(repositoryAccessor).getVMArgs(tomcatInstanceLocation));
         workingCopy.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_FILE,
                 getTomcatLogFile());
         workingCopy.setAttribute(IDebugUIConstants.ATTR_APPEND_TO_FILE, true);
         workingCopy.doSave();
+    }
+
+    protected TomcatVmArgsBuilder getTomcatVMArgsBuilder(final RepositoryAccessor repositoryAccessor) {
+        return new TomcatVmArgsBuilder(repositoryAccessor);
     }
 
     protected String getTomcatLogFile() {
@@ -428,66 +413,6 @@ public class BOSWebServerManager {
         }
         confProject.open(Repository.NULL_PROGRESS_MONITOR);
         return confProject;
-    }
-
-    protected String getVMArgs() {
-        final StringBuilder args = new StringBuilder();
-        args.append("-Xms128m");
-        args.append(" ");
-        args.append("-Xmx512m");
-        args.append(" ");
-        args.append("-XX:MaxPermSize=256m");
-        if (System.getProperty("tomcat.extra.params") != null) {
-            args.append(" " + System.getProperty("tomcat.extra.params"));
-        }
-        addSystemProperty(args, "catalina.home", "\"" + tomcatInstanceLocation
-                + "\"");
-        addSystemProperty(args, "CATALINA_HOME", "\"" + tomcatInstanceLocation
-                + "\"");
-        addSystemProperty(args, "btm.root", "\"" + tomcatInstanceLocation
-                + "\"");
-        addSystemProperty(args, "wtp.deploy", "\"" + tomcatInstanceLocation
-                + File.separatorChar + "webapps\"");
-        addSystemProperty(args, "java.endorsed.dirs", "\""
-                + tomcatInstanceLocation + File.separatorChar + "endorsed\"");
-        addSystemProperty(args, "bonita.home", "\"" + tomcatInstanceLocation
-                + File.separatorChar + "bonita\"");
-        addSystemProperty(args, "sysprop.bonita.db.vendor", "h2");
-        addSystemProperty(args, "bitronix.tm.configuration", "\""
-                + tomcatInstanceLocation + File.separatorChar + "conf"
-                + File.separatorChar + "bitronix-config.properties\"");
-        addSystemProperty(args, "java.util.logging.manager",
-                "org.apache.juli.ClassLoaderLogManager");
-        addSystemProperty(args, "java.util.logging.config.file", "\""
-                + tomcatInstanceLocation + File.separatorChar + "conf"
-                + File.separatorChar + "logging.properties\"");
-        addSystemProperty(args, "file.encoding", "UTF-8");
-        addSystemProperty(args, WATCHDOG_PORT_PROPERTY,
-                String.valueOf(WATCHDOG_PORT));
-        addSystemProperty(args, WATCHDOG_TIMER,
-                System.getProperty(WATCHDOG_TIMER, "20000"));
-        addSystemProperty(args, "eclipse.product", Platform.getProduct()
-                .getApplication());
-
-        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
-        final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties(repositoryAccessor);
-        addSystemProperty(args, workspaceSystemProperties.getPageRepositoryLocation());
-        addSystemProperty(args, workspaceSystemProperties.getWidgetRepositoryLocation());
-        addSystemProperty(args, workspaceSystemProperties.getFragmentRepositoryLocation());
-        addSystemProperty(args, workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()));
-        addSystemProperty(args, workspaceSystemProperties.activateSpringProfile("studio"));
-        return args.toString();
-    }
-
-    protected void addSystemProperty(final StringBuilder sBuilder, final String key, final String value) {
-        sBuilder.append(" ");
-        sBuilder.append("-D" + key + "=" + value);
-    }
-
-    protected void addSystemProperty(final StringBuilder sBuilder, final String systemPropertyArgument) {
-        sBuilder.append(" ");
-        sBuilder.append(systemPropertyArgument);
     }
 
     protected void startWatchdog() {
