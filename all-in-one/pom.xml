@@ -511,7 +511,7 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                       <get src="${jre.url}/${jre.osx.url}.gz" dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/jre/${jre.osx.url}.gz" />
+                                       <get src="${jre.url}/${jre.osx.url}.gz" dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/jre/" />
                                     </tasks>
                                 </configuration>
                             </execution>
@@ -523,7 +523,7 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                       <get src="${jre.url}/${jre.osx.url}.gz" dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/jre/${jre.osx.url}.gz" />
+                                       <get src="${jre.url}/${jre.osx.url}.gz" dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/jre/" />
                                     </tasks>
                                 </configuration>
                             </execution>
