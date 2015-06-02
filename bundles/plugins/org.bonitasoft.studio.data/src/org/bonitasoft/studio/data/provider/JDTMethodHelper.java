@@ -80,4 +80,24 @@ public class JDTMethodHelper {
         }
     }
 
+    public static void allPublicMethodWithoutParameterReturningNonVoid(final IType type, final List<IMethod> res, final IJavaProject javaProject)
+            throws JavaModelException {
+        for (final IMethod method : type.getMethods()) {
+            if (Flags.isPublic(method.getFlags())
+                    && method.getParameterTypes().length == 0
+                    && !method.isConstructor()
+                    && !method.getReturnType().equals("V")
+                    && !res.contains(method)) {
+                res.add(method);
+            }
+        }
+        final String superClassName = type.getSuperclassName();
+        if (superClassName != null && !Object.class.getName().equals(superClassName)) {
+            final IType parentType = javaProject.findType(superClassName);
+            if (parentType instanceof IType) {
+                allPublicMethodWithoutParameterReturningNonVoid(parentType, res, javaProject);
+            }
+        }
+    }
+
 }

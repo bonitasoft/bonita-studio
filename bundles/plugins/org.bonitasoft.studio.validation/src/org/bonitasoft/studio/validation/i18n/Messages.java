@@ -222,6 +222,8 @@ public class Messages extends NLS {
     public static String cannotUseThisStartEventTypeWithAContract;
     public static String failedToRetrieveLeftOperandType;
     public static String methodDoesnotExistInLeftOperandType;
+    public static String failedToRetrieveExpressionType;
+    public static String methodDoesnotExist;
 
     static {
         // initialize resource bundle
