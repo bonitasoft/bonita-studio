@@ -265,6 +265,15 @@
                 </platformTest>
             </ruleList>
         </runProgram>
+          <runProgram>
+            <program>rm</program>
+            <programArguments>-rf "${installdir}/jre-8u45-macosx-x64.gz"</programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
 	</postInstallationActionList>
 		<postBuildActionList>
 	<actionGroup>
