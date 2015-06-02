@@ -9,6 +9,9 @@
    <launcherArgs>
       <programArgs>--launcher.XXMaxPermSize512m -clearPersistedState
       </programArgs>
+      <programArgsMac>-vm
+../../../jre/Contents/Home/bin/java
+      </programArgsMac>
       <vmArgs>-Dosgi.requiredJavaVersion=1.6 -Dfile.encoding=UTF8 -Xmx512m -Xms128m -XX:MaxPermSize=256m
       </vmArgs>
       <vmArgsLin>-Djava.endorsed.dirs=endorsed

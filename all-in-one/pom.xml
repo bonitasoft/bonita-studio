@@ -185,7 +185,7 @@
                 <jre.winx86.x64.url>jre1.7.0_55-windows-x64</jre.winx86.x64.url>
                 <jre.linuxx86.url>jre1.7.0_55-linux</jre.linuxx86.url>
                 <jre.linuxx86.x64.url>jre1.7.0_55-linux-x64</jre.linuxx86.x64.url>
-                <jre.osx.url>jre1.7.0_55-osx</jre.osx.url>
+                <jre.osx.url>jre1.8.0_45-osx</jre.osx.url>
             </properties>
             <build>
                 <plugins>
@@ -524,8 +524,8 @@
                                                 <delete file="${user.home}/${jre.osx.url}.zip" />
                                             </then>
                                         </if>
-                                        <copy todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86/jre/Contents/Home/jre">
-                                            <fileset dir="${user.home}/${jre.osx.url}/jre" />
+                                        <copy todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86/jre/">
+                                            <fileset dir="${user.home}/${jre.osx.url}/jre1.8.0_45.jre" />
                                         </copy>
                                     </tasks>
                                 </configuration>
@@ -551,8 +551,8 @@
                                                 <delete file="${user.home}/${jre.osx.url}.zip" />
                                             </then>
                                         </if>
-                                        <copy todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/jre/Contents/Home/jre">
-                                            <fileset dir="${user.home}/${jre.osx.url}/jre" />
+                                        <copy todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/jre/">
+                                            <fileset dir="${user.home}/${jre.osx.url}/jre1.8.0_45.jre" />
                                         </copy>
                                     </tasks>
                                 </configuration>
