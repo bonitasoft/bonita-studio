@@ -441,10 +441,18 @@ ${msg(retrieve.workspace.message.warning)}
                     <value>true</value>
                 </option>
             </optionList>
-			<postShowPageActionList>
+            <postShowPageActionList>
+                <createDirectory>
+                    <path>${installdir}/jre</path>
+                    <ruleList>
+                        <platformTest>
+                            <type>osx</type>
+                        </platformTest>
+                    </ruleList>
+                </createDirectory>
                 <runProgram>
                      <program>tar</program>
-                     <programArguments>-xzf "${installdir}/jre/jre-8u45-macosx-x64.gz" -C "${installdir}/jre/"</programArguments>
+                     <programArguments>-xzf "${installdir}/jre-8u45-macosx-x64.gz" -C "${installdir}/jre"</programArguments>
                       <progressText>Installing JRE...</progressText>
                      <ruleList>
                         <platformTest>
