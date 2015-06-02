@@ -512,7 +512,7 @@
                                 <configuration>
                                     <tasks>
                                         <taskdef name="if" classname="${if.task}" classpathref="maven.runtime.classpath" />
-                                        <available property="jre.present" file="${user.home}/${jre.osx.url}" />
+                                        <available property="jre.present" file="${user.home}/jre1.8.0_45.jre" />
                                         <if>
                                             <not>
                                                 <isset property="jre.present" />
@@ -525,7 +525,7 @@
                                             </then>
                                         </if>
                                         <copy todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86/jre/">
-                                            <fileset dir="${user.home}/${jre.osx.url}/jre1.8.0_45.jre" />
+                                            <fileset dir="${user.home}/jre1.8.0_45.jre" />
                                         </copy>
                                     </tasks>
                                 </configuration>
@@ -539,7 +539,7 @@
                                 <configuration>
                                     <tasks>
                                         <taskdef name="if" classname="${if.task}" classpathref="maven.runtime.classpath" />
-                                        <available property="jre.present" file="${user.home}/${jre.osx.url}" />
+                                        <available property="jre.present" file="${user.home}/jre1.8.0_45.jre" />
                                         <if>
                                             <not>
                                                 <isset property="jre.present" />
@@ -552,7 +552,7 @@
                                             </then>
                                         </if>
                                         <copy todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/jre/">
-                                            <fileset dir="${user.home}/${jre.osx.url}/jre1.8.0_45.jre" />
+                                            <fileset dir="${user.home}/jre1.8.0_45.jre" />
                                         </copy>
                                     </tasks>
                                 </configuration>
