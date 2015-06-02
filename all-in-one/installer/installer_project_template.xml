@@ -274,6 +274,24 @@
                 </platformTest>
             </ruleList>
         </runProgram>
+        <substitute>
+            <encoding>utf-8</encoding>
+            <files>${installdir}/BonitaBPMCommunity.app/Contents/MacOS/BonitaBPMCommunity.ini</files>
+            <type>exact</type>
+            <substitutionList>
+                <substitution>
+                    <pattern>-clearPersistedState</pattern>
+                    <value>-clearPersistedState
+                            -vm
+                            ../../../jre/Contents/Home/bin/java</value>
+                </substitution>
+            </substitutionList>
+              <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+        </substitute>
 	</postInstallationActionList>
 		<postBuildActionList>
 	<actionGroup>
