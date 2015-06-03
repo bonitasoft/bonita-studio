@@ -472,18 +472,6 @@
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>jre-osx-x86</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <tasks>
-                                       <get src="${jre.url}/${jre.osx.url}.gz" dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86/${jre.osx.url}.gz" />
-                                    </tasks>
-                                </configuration>
-                            </execution>
-                            <execution>
                                 <id>jre-osx-x86-x64</id>
                                 <phase>package</phase>
                                 <goals>
