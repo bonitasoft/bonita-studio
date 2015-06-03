@@ -1105,6 +1105,25 @@
          <target
                class="Expression:http://www.bonitasoft.org/ns/studio/expression">
          </target>
+         </constraint>
+		<constraint
+            class="org.bonitasoft.studio.validation.constraints.process.NameUnicityInProcessScopeValidator"
+            id="org.bonitasoft.studio.validation.constraint.unicityNameInProcess"
+            isEnabledByDefault="true"
+            lang="Java"
+            mode="Batch"
+            name="Unicity of name in process"
+            severity="INFO"
+            statusCode="1">
+         <message>
+            {0}
+         </message>
+         <target
+               class="Pool:http://www.bonitasoft.org/ns/studio/process">
+         </target>
+         <target
+               class="Activity:http://www.bonitasoft.org/ns/studio/process">
+         </target>
       </constraint>
          </constraints>
          <package
