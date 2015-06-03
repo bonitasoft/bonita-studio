@@ -16,6 +16,7 @@ package org.bonitasoft.studio.model.connectorconfiguration.builders;
 
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 
 /**
@@ -40,6 +41,11 @@ public class ConnectorParameterBuilder {
 
     public ConnectorParameterBuilder havingExpression(final ExpressionBuilder expression) {
         instance.setExpression(expression.build());
+        return this;
+    }
+
+    public ConnectorParameterBuilder havingExpression(final AbstractExpression expression) {
+        instance.setExpression(expression);
         return this;
     }
 
