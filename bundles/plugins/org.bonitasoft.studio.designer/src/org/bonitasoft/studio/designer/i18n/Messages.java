@@ -33,7 +33,7 @@ public class Messages extends NLS {
     public static String caseStartFormMappingDescription;
     public static String entryFormMappingDescription;
     public static String caseOverviewFormMappingDescription;
-    public static String newFormTooltip;
+    public static String newFormTooltipForPool;
     public static String pool;
     public static String task;
     public static String legacyForm;
@@ -57,6 +57,7 @@ public class Messages extends NLS {
     public static String openUiDesignerInformationWindowTitle;
     public static String openUiDesignerInformationMessage;
     public static String openUiDesignerInformationToggleMessage;
+    public static String newFormTooltipForTask;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
