@@ -149,7 +149,7 @@
 			<file>${ini_file}</file>
 			<section>Language</section>
 			<key>osgi.nl</key>
-			<value>en</value>
+			<value>${installation_language_code}</value>
 		</iniFileSet>
 		<createSymLink>
 			<explanation>@shortcut.comment@</explanation>
