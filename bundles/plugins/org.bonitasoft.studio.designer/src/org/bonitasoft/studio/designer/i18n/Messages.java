@@ -57,6 +57,9 @@ public class Messages extends NLS {
     public static String openUiDesignerInformationWindowTitle;
     public static String openUiDesignerInformationMessage;
     public static String openUiDesignerInformationToggleMessage;
+    public static String hideEmptyContractDialogTitle;
+    public static String hideEmptyContractDialogMessage;
+    public static String hideEmptyContractDialogToggleMessage;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
