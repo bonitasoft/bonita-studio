@@ -98,13 +98,6 @@
 			<outputDirectory>/</outputDirectory>
 		</fileSet>
 		<fileSet>
-			<directory>${project.build.directory}/products/${productId}/macosx/cocoa/x86</directory>
-			<includes>
-				<include>**</include>
-			</includes>
-			<outputDirectory>/</outputDirectory>
-		</fileSet>
-		<fileSet>
 			<directory>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64</directory>
 			<includes>
 				<include>**</include>

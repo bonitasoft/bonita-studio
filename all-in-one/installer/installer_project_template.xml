@@ -317,10 +317,6 @@
 			<createDirectory>
 				<path>${tempDir}/output/${installerFilename}.app</path>
 			</createDirectory>
-			<!--  <copyFile>
-				<destination>${tempDir}/output</destination>
-				<origin>@mac.installer.icns@</origin>
-			</copyFile>-->
 			<copyFile>
 				<destination>${tempDir}/output/${installerFilename}.app/</destination>
 				<origin>@bitrock.output@/${installerFilename}/Contents</origin>
