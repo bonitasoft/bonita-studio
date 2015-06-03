@@ -117,10 +117,10 @@ public class PoolBuilder extends ElementBuilder<Pool, PoolBuilder> {
         return getThis();
     }
 
-    public PoolBuilder havingData(final Data... datas) {
-        if (datas != null) {
-            for (final Data data : datas) {
-                getBuiltInstance().getData().add(data);
+    public PoolBuilder havingData(final Data... data) {
+        if (data != null) {
+            for (final Data datum : data) {
+                getBuiltInstance().getData().add(datum);
             }
         }
         return getThis();
