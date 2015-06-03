@@ -1076,6 +1076,36 @@
                class="Event:http://www.bonitasoft.org/ns/studio/process">
          </target>
       </constraint>
+      <constraint
+            class="org.bonitasoft.studio.validation.constraints.process.JavaSetterOperatorConstraint"
+            id="org.bonitasoft.studio.validation.constraints.javaSetterOperator"
+            lang="Java"
+            mode="Batch"
+            name="Java Setter constraint"
+            severity="WARNING"
+            statusCode="1">
+         <message>
+            {0}
+         </message>
+         <target
+               class="Operator:http://www.bonitasoft.org/ns/studio/expression">
+         </target>
+      </constraint>
+      <constraint
+            class="org.bonitasoft.studio.validation.constraints.process.JavaGetterExpressionConstraint"
+            id="org.bonitasoft.studio.validation.constraints.javaGetterOperator"
+            lang="Java"
+            mode="Batch"
+            name="Java Getter constraint"
+            severity="WARNING"
+            statusCode="1">
+         <message>
+            {0}
+         </message>
+         <target
+               class="Expression:http://www.bonitasoft.org/ns/studio/expression">
+         </target>
+      </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">

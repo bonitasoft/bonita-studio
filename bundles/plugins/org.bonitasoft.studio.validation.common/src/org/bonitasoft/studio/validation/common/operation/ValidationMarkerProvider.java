@@ -80,7 +80,7 @@ public class ValidationMarkerProvider {
             final Triple<String, String, String> triple = new Triple<String, String, String>(constraintId, nextStatus.getMessage(), view.eResource()
                     .getURIFragment(view));
             if (!createdMarkers.contains(triple)) {
-                addMarker(constraintId, diagramEditPart.getViewer(), target, view.eResource().getURIFragment(view),
+                addMarker(diagramEditPart, constraintId, diagramEditPart.getViewer(), target, view.eResource().getURIFragment(view),
                         EMFCoreUtil.getQualifiedName(nextStatus.getTarget(), true),
                         nextStatus.getMessage(), nextStatus.getSeverity());
                 createdMarkers.add(triple);
@@ -106,19 +106,40 @@ public class ValidationMarkerProvider {
                 final EObject element = (EObject) data.get(0);
                 final View view = ProcessDiagramEditorUtil.findView(
                         diagramEditPart, element, element2ViewMap);
-                addMarker(null, diagramEditPart.getViewer(), target, view.eResource().getURIFragment(view),
+                addMarker(diagramEditPart, null, diagramEditPart.getViewer(), target, view.eResource().getURIFragment(view),
                         EMFCoreUtil.getQualifiedName(element, true),
                         nextDiagnostic.getMessage(), diagnosticToStatusSeverity(nextDiagnostic.getSeverity()));
             }
         }
     }
 
-    private static void addMarker(final String constaintId, final EditPartViewer viewer, final IFile
+    private static void addMarker(final DiagramEditPart diagramEP, final String constaintId, final EditPartViewer viewer, final IFile
+            target, final String elementId, final String location, final String message, final int statusSeverity) {
+        if (target == null) {
+            return;
+        }
+        if (diagramEP.resolveSemanticElement() instanceof Form) {
+            addFormMarker(constaintId, viewer, target, elementId, location, message, statusSeverity);
+        } else {
+            addProcessMarker(constaintId, viewer, target, elementId, location, message, statusSeverity);
+        }
+    }
+
+    private static void addProcessMarker(final String constaintId, final EditPartViewer viewer, final IFile
             target, final String elementId, final String location, final String message, final int statusSeverity) {
         if (target == null) {
             return;
         }
         ProcessMarkerNavigationProvider.addMarker(constaintId,
+                target, elementId, location, message, statusSeverity);
+    }
+
+    private static void addFormMarker(final String constaintId, final EditPartViewer viewer, final IFile
+            target, final String elementId, final String location, final String message, final int statusSeverity) {
+        if (target == null) {
+            return;
+        }
+        org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.addMarker(constaintId,
                 target, elementId, location, message, statusSeverity);
     }
 

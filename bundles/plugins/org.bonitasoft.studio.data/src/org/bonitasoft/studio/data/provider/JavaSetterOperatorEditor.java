@@ -137,7 +137,7 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
             protected String retrieveQualifiedType(final IMethod item, final String type) {
                 final String typeErasure = Signature.getTypeErasure(type);
                 final IType declaringType = item.getDeclaringType();
-                return JavaQualifiedTypeHelper.retrieveQualifiedType(typeErasure, declaringType);
+                return JDTMethodHelper.retrieveQualifiedType(typeErasure, declaringType);
             }
         });
 
