@@ -883,16 +883,24 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
 
     protected void addDataForMultiInstanceIterator(final ActivityDefinitionBuilder taskBuilder, final Expression iteratorExpression,
             final Data collectionDataToMultiInstantiate) {
-        final FlowElement parentFlowElement = ModelHelper.getParentFlowElement(iteratorExpression);
+        if (collectionDataToMultiInstantiate instanceof BusinessObjectData) {
+            taskBuilder.addBusinessData(iteratorExpression.getName(), iteratorExpression.getReturnType());
+        } else {
+            final FlowElement parentFlowElement = ModelHelper.getParentFlowElement(iteratorExpression);
+            if (parentFlowElement instanceof DataAware && !isDataAlreadyExists(iteratorExpression, (DataAware) parentFlowElement)) {
+                taskBuilder.addData(iteratorExpression.getName(), iteratorExpression.getReturnType(), null);
+            }
+        }
+    }
+
+    protected boolean isDataAlreadyExists(final Expression iteratorExpression, final DataAware parentFlowElement) {
         boolean dataAlreadyExists = false;
-        for (final Data d : ((DataAware) parentFlowElement).getData()) {
+        for (final Data d : parentFlowElement.getData()) {
             if (d.getName().equals(iteratorExpression.getName()) && DataUtil.getTechnicalTypeFor(d).equals(iteratorExpression.getReturnType())) {
                 dataAlreadyExists = true;
             }
         }
-        if (!dataAlreadyExists) {
-            taskBuilder.addData(iteratorExpression.getName(), iteratorExpression.getReturnType(), null);
-        }
+        return dataAlreadyExists;
     }
 
 }
