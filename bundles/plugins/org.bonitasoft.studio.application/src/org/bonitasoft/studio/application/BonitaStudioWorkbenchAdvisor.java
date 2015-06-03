@@ -85,6 +85,8 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
 
+import com.google.common.base.Joiner;
+
 public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IStartup {
 
     private final class PreShutdownStudio implements IRunnableWithProgress {
@@ -423,8 +425,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     private void preLoad() {
         //Fix performance issue
-        BeanPropertyHelper.getPropertyDescriptor(
-                ContractInputImpl.class, "name");
+        BeanPropertyHelper.getPropertyDescriptor(ContractInputImpl.class, "name");
         preLoadSVG();
     }
 
@@ -432,18 +433,18 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         final SVGFigure svgFigure = new SVGFigure();
         try {
             final File iconsFolder = new File(FileLocator.toFileURL(Platform.getBundle("org.bonitasoft.studio.pics").getResource("icons")).getFile());
-            for (final String filename : new File(iconsFolder, "figures").list()) {
-                if (filename.endsWith(".svgz")) {
-                    svgFigure.setURI("platform:/plugin/org.bonitasoft.studio.pics/icons/figures/" + filename);
-                }
-            }
-            for (final String filename : new File(iconsFolder, "decoration" + File.separatorChar + "svg").list()) {
-                if (filename.endsWith(".svgz")) {
-                    svgFigure.setURI("platform:/plugin/org.bonitasoft.studio.pics/icons/decoration/svg/" + filename);
-                }
-            }
+            initSVGFigure(svgFigure, iconsFolder, "figures");
+            initSVGFigure(svgFigure, iconsFolder, "decoration", "svg");
         } catch (final IOException e) {
             BonitaStudioLog.error(e);
+        }
+    }
+
+    private void initSVGFigure(final SVGFigure svgFigure, final File iconsFolder, final String... pathToFolder) {
+        for (final String filename : new File(iconsFolder, Joiner.on(File.separatorChar).join(pathToFolder)).list()) {
+            if (filename.endsWith(".svgz")) {
+                svgFigure.setURI("platform:/plugin/org.bonitasoft.studio.pics/icons/" + Joiner.on("/").join(pathToFolder) + "/" + filename);
+            }
         }
     }
 
