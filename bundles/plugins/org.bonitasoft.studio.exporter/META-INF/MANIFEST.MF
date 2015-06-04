@@ -51,8 +51,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.document,
  com.google.guava;bundle-version="11.0.1",
  assertj-core;bundle-version="1.5.0";resolution:=optional,
- org.eclipse.e4.core.di;bundle-version="1.4.0",
- apache-xerces;bundle-version="2.9.0"
+ org.eclipse.e4.core.di;bundle-version="1.4.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.bonitasoft.studio.exporter.Activator
 Import-Package: org.bonitasoft.engine.bpm,
