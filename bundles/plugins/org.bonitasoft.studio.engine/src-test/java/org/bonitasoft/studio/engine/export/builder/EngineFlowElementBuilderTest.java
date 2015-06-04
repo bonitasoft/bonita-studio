@@ -41,10 +41,10 @@ import org.bonitasoft.engine.operation.OperatorType;
 import org.bonitasoft.studio.assertions.EngineExpressionAssert;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorConfigurationBuilder;
+import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorParameterBuilder;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.TableExpression;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.Activity;
@@ -59,6 +59,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.StartMessageEvent;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.model.process.builders.ActorFilterBuilder;
 import org.bonitasoft.studio.model.process.builders.ActivityBuilder;
 import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
 import org.bonitasoft.studio.model.process.builders.CallActivityBuilder;
@@ -112,6 +113,7 @@ public class EngineFlowElementBuilderTest {
         instance = new ProcessDefinitionBuilder().createNewInstance("test", "1.0");
         flowElementSwitch = spy(new EngineFlowElementBuilder(instance, Collections.<EObject> emptySet()));
         doReturn(engineContractBuilder).when(flowElementSwitch).getEngineDefinitionBuilder(any(EObject.class), any(Contract.class));
+        doReturn(userFilterBuilder).when(taskBuilder).addUserFilter(anyString(), anyString(), anyString());
     }
 
     /**
@@ -131,21 +133,6 @@ public class EngineFlowElementBuilderTest {
         flowElementSwitch.caseStartMessageEvent(startMessageEventinSubprocess);
 
         verify(flowElementSwitch).addMessageCorrelation(eq(startMessageEventinSubprocess), any(CatchMessageEventTriggerDefinitionBuilder.class));
-    }
-
-    @Test
-    public void should_addUserFilterToTask_not_export_parameter_if_expression_is_null() throws Exception {
-        final ConnectorParameter parameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
-        final ConnectorConfiguration connectorConfiguration = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
-        connectorConfiguration.getParameters().add(parameter);
-
-        final ActorFilter filter = ProcessFactory.eINSTANCE.createActorFilter();
-        filter.setConfiguration(connectorConfiguration);
-
-        flowElementSwitch.addInputIfExpressionValid(userFilterBuilder, parameter);
-
-        verify(userFilterBuilder, never()).addInput(any(String.class), any(Expression.class));
-
     }
 
     @Test
@@ -245,6 +232,28 @@ public class EngineFlowElementBuilderTest {
     }
 
     @Test
+    public void testAddUserFilterToTask_withTableExpression() {
+        final TableExpression tableExpression = ExpressionFactory.eINSTANCE.createTableExpression();
+        final ListExpression listExpression = ExpressionFactory.eINSTANCE.createListExpression();
+        listExpression.getExpressions().add(ExpressionBuilder.aConstantExpression().withName("test").build());
+        tableExpression.getExpressions().add(listExpression);
+        final ActorFilter actorFilter = ActorFilterBuilder.anActorFilter().havingConfiguration(
+                ConnectorConfigurationBuilder.aConnectorConfiguration().havingParameters(
+                        ConnectorParameterBuilder.aConnectorParameter().withKey("plop").havingExpression(tableExpression))).build();
+        flowElementSwitch.addUserFilterToTask(taskBuilder, "actor", actorFilter);
+        verify(userFilterBuilder).addInput(anyString(), any(Expression.class));
+    }
+
+    @Test
+    public void testAddUserFilterToTask_withEmptyOptionalInputs() {
+        final ActorFilter actorFilter = ActorFilterBuilder.anActorFilter().havingConfiguration(
+                ConnectorConfigurationBuilder.aConnectorConfiguration().havingParameters(
+                        ConnectorParameterBuilder.aConnectorParameter().withKey("plop"))).build();
+        flowElementSwitch.addUserFilterToTask(taskBuilder, "actor", actorFilter);
+        verify(userFilterBuilder, never()).addInput(anyString(), any(Expression.class));
+    }
+	
+	@Test
     public void testAddDataForMultiInstanceIterator_WithBusinessData() {
         final Data collectionDataToMultiInstantiate = BusinessObjectDataBuilder.aBusinessData().withName("bData").withClassname("classname").build();
         final Pool pool = PoolBuilder.aPool()

@@ -73,8 +73,11 @@ public class ExamplePropertySectionContribution implements
         dataBindingContext = new EMFDataBindingContext();
         final ExpressionViewer exampleMessageViewer = new ExpressionViewer(composite, SWT.BORDER, widgetFactory);
         exampleMessageViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        exampleMessageViewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
-                ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.SCRIPT_TYPE));
+        exampleMessageViewer.addFilter(new AvailableExpressionTypeFilter(new String[] {
+                ExpressionConstants.CONSTANT_TYPE,
+                ExpressionConstants.VARIABLE_TYPE,
+                ExpressionConstants.PARAMETER_TYPE,
+                ExpressionConstants.SCRIPT_TYPE }));
         if (element.getExampleMessage() == null) {
             editingDomain.getCommandStack()
                     .execute(
