@@ -52,4 +52,4 @@ Export-Package: org.apache.html.dom,
  org.apache.xml.serializer,
  org.apache.xml.serializer.dom3,
  org.apache.xml.serializer.utils
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
