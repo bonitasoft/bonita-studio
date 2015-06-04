@@ -17,6 +17,7 @@ package org.bonitasoft.studio.engine.export.builder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder.aStringDataType;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -39,10 +40,10 @@ import org.bonitasoft.engine.operation.Operation;
 import org.bonitasoft.engine.operation.OperatorType;
 import org.bonitasoft.studio.assertions.EngineExpressionAssert;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorConfigurationBuilder;
+import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorParameterBuilder;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.TableExpression;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.Activity;
@@ -56,6 +57,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.StartMessageEvent;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.model.process.builders.ActorFilterBuilder;
 import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
 import org.bonitasoft.studio.model.process.builders.CallActivityBuilder;
 import org.bonitasoft.studio.model.process.builders.DataBuilder;
@@ -107,6 +109,7 @@ public class EngineFlowElementBuilderTest {
         instance = new ProcessDefinitionBuilder().createNewInstance("test", "1.0");
         flowElementSwitch = spy(new EngineFlowElementBuilder(instance, Collections.<EObject> emptySet()));
         doReturn(engineContractBuilder).when(flowElementSwitch).getEngineDefinitionBuilder(any(EObject.class), any(Contract.class));
+        doReturn(userFilterBuilder).when(taskBuilder).addUserFilter(anyString(), anyString(), anyString());
     }
 
     /**
@@ -126,21 +129,6 @@ public class EngineFlowElementBuilderTest {
         flowElementSwitch.caseStartMessageEvent(startMessageEventinSubprocess);
 
         verify(flowElementSwitch).addMessageCorrelation(eq(startMessageEventinSubprocess), any(CatchMessageEventTriggerDefinitionBuilder.class));
-    }
-
-    @Test
-    public void should_addUserFilterToTask_not_export_parameter_if_expression_is_null() throws Exception {
-        final ConnectorParameter parameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
-        final ConnectorConfiguration connectorConfiguration = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
-        connectorConfiguration.getParameters().add(parameter);
-
-        final ActorFilter filter = ProcessFactory.eINSTANCE.createActorFilter();
-        filter.setConfiguration(connectorConfiguration);
-
-        flowElementSwitch.addInputIfExpressionValid(userFilterBuilder, parameter);
-
-        verify(userFilterBuilder, never()).addInput(any(String.class), any(Expression.class));
-
     }
 
     @Test
@@ -237,5 +225,27 @@ public class EngineFlowElementBuilderTest {
         EngineExpressionAssert.assertThat(argument.getValue())
                 .hasContent("processData")
                 .hasExpressionType(ExpressionType.TYPE_VARIABLE.name());
+    }
+
+    @Test
+    public void testAddUserFilterToTask_withTableExpression() {
+        final TableExpression tableExpression = ExpressionFactory.eINSTANCE.createTableExpression();
+        final ListExpression listExpression = ExpressionFactory.eINSTANCE.createListExpression();
+        listExpression.getExpressions().add(ExpressionBuilder.aConstantExpression().withName("test").build());
+        tableExpression.getExpressions().add(listExpression);
+        final ActorFilter actorFilter = ActorFilterBuilder.anActorFilter().havingConfiguration(
+                ConnectorConfigurationBuilder.aConnectorConfiguration().havingParameters(
+                        ConnectorParameterBuilder.aConnectorParameter().withKey("plop").havingExpression(tableExpression))).build();
+        flowElementSwitch.addUserFilterToTask(taskBuilder, "actor", actorFilter);
+        verify(userFilterBuilder).addInput(anyString(), any(Expression.class));
+    }
+
+    @Test
+    public void testAddUserFilterToTask_withEmptyOptionalInputs() {
+        final ActorFilter actorFilter = ActorFilterBuilder.anActorFilter().havingConfiguration(
+                ConnectorConfigurationBuilder.aConnectorConfiguration().havingParameters(
+                        ConnectorParameterBuilder.aConnectorParameter().withKey("plop"))).build();
+        flowElementSwitch.addUserFilterToTask(taskBuilder, "actor", actorFilter);
+        verify(userFilterBuilder, never()).addInput(anyString(), any(Expression.class));
     }
 }

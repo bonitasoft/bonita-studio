@@ -521,16 +521,11 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
             final UserFilterDefinitionBuilder filterBuilder = taskBuilder.addUserFilter(filter.getName(), filter.getDefinitionId(),
                     filter.getDefinitionVersion());
             for (final ConnectorParameter parameter : filter.getConfiguration().getParameters()) {
-                addInputIfExpressionValid(filterBuilder, parameter);
+                final org.bonitasoft.engine.expression.Expression inputExpression = EngineExpressionUtil.createExpression(parameter.getExpression());
+                if (inputExpression != null) {
+                    filterBuilder.addInput(parameter.getKey(), inputExpression);
+                }
             }
-        }
-    }
-
-    void addInputIfExpressionValid(final UserFilterDefinitionBuilder filterBuilder, final ConnectorParameter parameter) {
-        final Expression expression = (Expression) parameter.getExpression();
-        if (expression != null && expression.getName() != null && !expression.getName().isEmpty()
-                && !(expression.getContent() == null || expression.getContent().isEmpty())) {
-            filterBuilder.addInput(parameter.getKey(), EngineExpressionUtil.createExpression(parameter.getExpression()));
         }
     }
 
