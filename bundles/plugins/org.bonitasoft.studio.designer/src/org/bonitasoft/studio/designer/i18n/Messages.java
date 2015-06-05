@@ -34,8 +34,6 @@ public class Messages extends NLS {
     public static String entryFormMappingDescription;
     public static String caseOverviewFormMappingDescription;
     public static String newFormTooltipForPool;
-    public static String pool;
-    public static String task;
     public static String legacyForm;
     public static String openUIDesigner;
     public static String uiDesignerLabel;
