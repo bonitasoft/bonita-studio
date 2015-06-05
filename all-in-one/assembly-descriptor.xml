@@ -40,19 +40,19 @@
 		</file>
 		<file>
 			<source>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}.app/Contents/MacOS/${product.short.name}.ini</source>
-			<outputDirectory>/${product.short.name}64.app/Contents/MacOS/</outputDirectory>
+			<outputDirectory>/${product.short.name}.app/Contents/MacOS/</outputDirectory>
 		</file>
 		<file>
 			<source>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}.app/Contents/MacOS/${product.short.name}</source>
-			<outputDirectory>/${product.short.name}64.app/Contents/MacOS/</outputDirectory>
+			<outputDirectory>/${product.short.name}.app/Contents/MacOS/</outputDirectory>
 		</file>
 		<file>
 			<source>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}.app/Contents/Resources/bonitasoft-icon-128-128-transparent.icns</source>
-			<outputDirectory>/${product.short.name}64.app/Contents/Resources/</outputDirectory>
+			<outputDirectory>/${product.short.name}.app/Contents/Resources/</outputDirectory>
 		</file>
 		<file>
 			<source>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}.app/Contents/Info.plist</source>
-			<outputDirectory>/${product.short.name}64.app/Contents/</outputDirectory>
+			<outputDirectory>/${product.short.name}.app/Contents/</outputDirectory>
 		</file>
 	</files>
 	
@@ -95,13 +95,6 @@
 				<exclude>${product.short.name}.exe</exclude>
 				<exclude>${product.short.name}.ini</exclude>
 			</excludes>
-			<outputDirectory>/</outputDirectory>
-		</fileSet>
-		<fileSet>
-			<directory>${project.build.directory}/products/${productId}/macosx/cocoa/x86</directory>
-			<includes>
-				<include>**</include>
-			</includes>
 			<outputDirectory>/</outputDirectory>
 		</fileSet>
 		<fileSet>

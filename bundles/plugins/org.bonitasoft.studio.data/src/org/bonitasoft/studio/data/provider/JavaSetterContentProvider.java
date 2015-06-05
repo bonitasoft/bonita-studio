@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
@@ -113,8 +112,8 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
      * @return
      */
     protected Object[] computeChildren(final IType type, final IJavaProject javaProject) throws Exception {
-        final List<IMember> res = new ArrayList<IMember>();
-        allPublicMethodWithOneParameter(type, res, javaProject);
+        final List<IMethod> res = new ArrayList<IMethod>();
+        JDTMethodHelper.allPublicMethodWithOneParameter(type, res, javaProject);
         Collections.sort(res, new Comparator<IMember>() {
 
             @Override
@@ -130,24 +129,6 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
 
         });
         return res.toArray();
-    }
-
-    private void allPublicMethodWithOneParameter(final IType type, final List<IMember> res, final IJavaProject javaProject) throws JavaModelException {
-        for (final IMethod method : type.getMethods()) {
-            if (Flags.isPublic(method.getFlags())
-                    && method.getParameterNames().length == 1
-                    && !method.isConstructor()
-                    && !res.contains(method)) {
-                res.add(method);
-            }
-        }
-        final String superClassName = type.getSuperclassName();
-        if (superClassName != null && !Object.class.getName().equals(superClassName)) {
-            final IType parentType = javaProject.findType(superClassName);
-            if (parentType instanceof IType) {
-                allPublicMethodWithOneParameter(parentType, res, javaProject);
-            }
-        }
     }
 
     /*

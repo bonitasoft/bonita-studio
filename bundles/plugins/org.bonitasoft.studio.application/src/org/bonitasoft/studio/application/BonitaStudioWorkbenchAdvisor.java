@@ -17,6 +17,8 @@ package org.bonitasoft.studio.application;
 import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
 import static org.bonitasoft.studio.common.Messages.bosProductName;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,11 +51,14 @@ import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobC
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.codehaus.groovy.eclipse.launchers.GroovyConsoleLineTracker;
+import org.eclipse.core.internal.databinding.beans.BeanPropertyHelper;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -62,6 +67,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.gmf.runtime.lite.svg.SVGFigure;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -78,6 +84,8 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
+
+import com.google.common.base.Joiner;
 
 public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IStartup {
 
@@ -409,8 +417,35 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             contrib.execute();
         }
 
+        preLoad();
+
         final long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME;
         BonitaStudioLog.info("Startup duration : " + DateUtil.getDisplayDuration(startupDuration), ApplicationPlugin.PLUGIN_ID);
+    }
+
+    private void preLoad() {
+        //Fix performance issue
+        BeanPropertyHelper.getPropertyDescriptor(ContractInputImpl.class, "name");
+        preLoadSVG();
+    }
+
+    private void preLoadSVG() {
+        final SVGFigure svgFigure = new SVGFigure();
+        try {
+            final File iconsFolder = new File(FileLocator.toFileURL(Platform.getBundle("org.bonitasoft.studio.pics").getResource("icons")).getFile());
+            initSVGFigure(svgFigure, iconsFolder, "figures");
+            initSVGFigure(svgFigure, iconsFolder, "decoration", "svg");
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
+
+    private void initSVGFigure(final SVGFigure svgFigure, final File iconsFolder, final String... pathToFolder) {
+        for (final String filename : new File(iconsFolder, Joiner.on(File.separatorChar).join(pathToFolder)).list()) {
+            if (filename.endsWith(".svgz")) {
+                svgFigure.setURI("platform:/plugin/org.bonitasoft.studio.pics/icons/" + Joiner.on("/").join(pathToFolder) + "/" + filename);
+            }
+        }
     }
 
     @Override
