@@ -119,7 +119,7 @@ public class Messages extends NLS {
     public static String leftOperandMissing;
 
     public static String errorTooltip;
-
+    public static String warningTooltip;
     public static String infoTooltip;
 
     public static String invalidInclusiveMergeConstraints;

@@ -42,18 +42,6 @@ private org.bonitasoft.studio.common.diagram.palette.CustomToolPaletteViewer too
 	 * @generated BonitaSoft
 	 */
 	private static org.eclipse.gef.ui.palette.PaletteViewerPreferences processPref;
-	static{
-		if(processPref == null){
-			processPref = new org.eclipse.gef.ui.palette.DefaultPaletteViewerPreferences(){
-				public int getLayoutSetting() {
-					return getPreferenceStore().getInt(org.eclipse.gef.ui.palette.PaletteViewerPreferences.PREFERENCE_LAYOUT+preferencesKey);
-				}
-				public void setLayoutSetting(int newVal) {
-					getPreferenceStore().setValue(org.eclipse.gef.ui.palette.PaletteViewerPreferences.PREFERENCE_LAYOUT+preferencesKey, newVal);
-				}
-			};
-		}
-	}
 «ENDAROUND»
 «AROUND createPaletteRoot FOR gmfgen::Palette-»
 
@@ -621,6 +609,17 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 	 *  @generated BonitaSoft
 	 */
 		protected org.eclipse.gef.ui.palette.PaletteViewer constructPaletteViewer() {
+			if(processPref == null){
+				processPref = new org.eclipse.gef.ui.palette.DefaultPaletteViewerPreferences(){
+					public int getLayoutSetting() {
+						return getPreferenceStore().getInt(org.eclipse.gef.ui.palette.PaletteViewerPreferences.PREFERENCE_LAYOUT+preferencesKey);
+					}
+					public void setLayoutSetting(int newVal) {
+						getPreferenceStore().setValue(org.eclipse.gef.ui.palette.PaletteViewerPreferences.PREFERENCE_LAYOUT+preferencesKey, newVal);
+					}
+				};
+			}
+		
 			final org.bonitasoft.studio.common.diagram.palette.CustomMainPaletteViewer constructPaletteViewer = new org.bonitasoft.studio.common.diagram.palette.CustomMainPaletteViewer();
 			constructPaletteViewer.hidePaletteEntry("standardGroup");
 			constructPaletteViewer.setPaletteViewerPreferences(processPref);
