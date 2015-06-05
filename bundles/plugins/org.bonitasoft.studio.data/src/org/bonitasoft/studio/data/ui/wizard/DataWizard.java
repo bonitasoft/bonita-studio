@@ -233,6 +233,10 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
         return op;
     }
 
+    public Data getNewData() {
+        return dataWorkingCopy;
+    }
+
     public Data getWorkingCopy() {
         return page.getWorkingCopy();
     }
