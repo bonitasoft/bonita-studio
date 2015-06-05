@@ -45,7 +45,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -79,9 +78,9 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
             final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
             if (pageFlow != null) {
                 if (pageFlow instanceof Pool) {
-                    toolItem.setToolTipText(NLS.bind(Messages.newFormTooltip, Messages.pool));
+                    toolItem.setToolTipText(Messages.newFormTooltipForPool);
                 } else {
-                    toolItem.setToolTipText(NLS.bind(Messages.newFormTooltip, Messages.task));
+                    toolItem.setToolTipText(Messages.newFormTooltipForTask);
                 }
             }
         }
@@ -103,7 +102,7 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
     public void fill(final ToolBar toolbar, final int style) {
         toolItem = new ToolItem(toolbar, SWT.LEFT | SWT.PUSH | SWT.NO_FOCUS);
         toolItem.setEnabled(false);
-        toolItem.setToolTipText(Messages.newFormTooltip);
+        toolItem.setToolTipText(Messages.newFormTooltipForPool);
         toolItem.setImage(Pics.getImage("new_form.png", UIDesignerPlugin.getDefault()));
         toolItem.addSelectionListener(new SelectionAdapter() {
 
