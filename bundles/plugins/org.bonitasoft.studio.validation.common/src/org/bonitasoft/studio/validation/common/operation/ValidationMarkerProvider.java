@@ -202,6 +202,7 @@ public class ValidationMarkerProvider {
                     final IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
                     if (target != null) {
                         ProcessMarkerNavigationProvider.deleteMarkers(target);
+                        org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.deleteMarkers(target);
                         break;
                     }
                 }
