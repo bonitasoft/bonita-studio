@@ -60,6 +60,7 @@ public class Messages extends NLS {
     public static String hideEmptyContractDialogTitle;
     public static String hideEmptyContractDialogMessage;
     public static String hideEmptyContractDialogToggleMessage;
+
     public static String newFormTooltipForTask;
 
     static {
