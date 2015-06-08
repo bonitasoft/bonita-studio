@@ -220,6 +220,16 @@ public class Messages extends NLS {
     public static String missingFileContractInput;
     public static String emptyFormMappingWarning;
     public static String cannotUseThisStartEventTypeWithAContract;
+    public static String failedToRetrieveLeftOperandType;
+    public static String methodDoesnotExistInLeftOperandType;
+    public static String failedToRetrieveExpressionType;
+    public static String methodDoesnotExist;
+    public static String nameUnicityConstraintsDuplicateNameMessage;
+    public static String nameUnicityConstraintsGenericMessage;
+    public static String nameUnicityConstraintDocument;
+    public static String nameUnicityConstraintParameter;
+    public static String nameUnicityConstraintContractInput;
+    public static String nameUnicityConstraintVariable;
 
     static {
         // initialize resource bundle

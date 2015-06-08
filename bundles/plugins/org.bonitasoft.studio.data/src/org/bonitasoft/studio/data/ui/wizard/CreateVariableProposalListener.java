@@ -61,12 +61,9 @@ public class CreateVariableProposalListener implements IDataProposalListener {
         newWizard.setIsPageFlowContext(isPageFlowContext);
         final CustomWizardDialog wizardDialog = new CustomWizardDialog(activeShell(), newWizard, IDialogConstants.FINISH_LABEL);
         if (wizardDialog.open() == Dialog.OK) {
-            final EObject obj = newWizard.getWorkingCopy();
-            if (obj instanceof Data) {
-                final Data d = (Data) obj;
-                if (d != null) {
-                    return d.getName();
-                }
+            final Data newData = newWizard.getNewData();
+            if (newData != null) {
+                return newData.getName();
             }
         }
         return null;

@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.BonitaConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
@@ -45,8 +44,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jdt.core.IField;
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -68,7 +65,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -245,59 +241,6 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
         contentProvider = provider;
     }
 
-    protected String getJavaScript(final ITreeSelection selection) {
-        final StringBuilder builder = new StringBuilder();
-        final TreePath path = selection.getPaths()[0];
-        for (int i = 0; i < path.getSegmentCount(); i++) {
-            final Object item = path.getSegment(i);
-            if (item instanceof IMethod) {
-                builder.append(".");
-                try {
-                    builder.append(((IMethod) item).getElementName() + ((IMethod) item).getSignature());
-                } catch (final JavaModelException e) {
-                    BonitaStudioLog.error(e);
-                }
-            } else if (item instanceof IField) {
-                builder.append(".");
-                builder.append(((IField) item).getElementName());
-            } else if (item instanceof IType) {
-                builder.append(((IType) item).getFullyQualifiedName());
-            }
-        }
-        return builder.toString();
-    }
-
-    protected void setExpressionIsValid(final boolean isValdid) {
-    }
-
-    protected String generateJavaAdditionalPath(final Data data, final ITreeSelection selection) {
-        if (selection == null) {
-            return "";
-        }
-        final TreePath path = selection.getPaths()[0];
-        if (path.getSegmentCount() == 1) {
-            return "";
-        }
-        final StringBuilder res = new StringBuilder(data.getName());
-        res.append(".");
-        for (int i = 1; i < path.getSegmentCount() - 1; i++) {
-            final Object item = path.getSegment(i);
-            final IJavaElement iJavaElement = (IJavaElement) item;
-            res.append(iJavaElement.getElementName());
-            if (iJavaElement.getElementType() == IJavaElement.METHOD) {
-                res.append("()");
-            }
-            res.append(".");
-        }
-        if (res.length() > 0) {
-            res.deleteCharAt(res.length() - 1);
-        }
-        res.append(BonitaConstants.JAVA_VAR_SEPARATOR);
-        final Object item = path.getSegment(path.getSegmentCount() - 1);
-        res.append(((IJavaElement) item).getElementName());
-        return res.toString();
-    }
-
     @Override
     public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context, final Expression inputExpression,
             final ViewerFilter[] filters,
@@ -397,7 +340,7 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
                             return Object.class.getName();
                         }
                         final IType declaringType = ((IMethod) iType).getDeclaringType();
-                        return JavaQualifiedTypeHelper.retrieveQualifiedType(typeErasure, declaringType);
+                        return JDTMethodHelper.retrieveQualifiedType(typeErasure, declaringType);
                     } else if (iType instanceof IType) {
                         return ((IType) iType).getFullyQualifiedName();
                     }

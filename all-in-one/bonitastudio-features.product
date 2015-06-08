@@ -9,7 +9,7 @@
    <launcherArgs>
       <programArgs>--launcher.XXMaxPermSize512m -clearPersistedState
       </programArgs>
-      <vmArgs>-Dosgi.requiredJavaVersion=1.6 -Dfile.encoding=UTF8 -Xmx512m -Xms128m -XX:MaxPermSize=256m
+      <vmArgs>-Dosgi.requiredJavaVersion=1.7 -Dfile.encoding=UTF8 -Xmx512m -Xms128m -XX:MaxPermSize=256m
       </vmArgs>
       <vmArgsLin>-Djava.endorsed.dirs=endorsed
       </vmArgsLin>
@@ -86,7 +86,6 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <property name="engine.version" value="${engine.version}" />
       <property name="file.encoding" value="UTF-8" />
       <property name="osgi.instance.area" value="@noDefault" />
-      <property name="osgi.nl" value="en" />
       <property name="osgi.nls.warnings" value="ignore" />
       <property name="portal.version" value="${bundle.version}" />
       <property name="product.version" value="${project.version}" />
