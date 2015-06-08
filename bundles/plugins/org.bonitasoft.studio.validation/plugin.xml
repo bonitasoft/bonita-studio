@@ -22,7 +22,7 @@
                   lang="Java"
                   mode="Live"
                   name="%NotEmptyNameConstraint"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -52,7 +52,7 @@
                   lang="Java"
                   mode="Live"
                   name="%ActorsSelector"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   %Validation_assignable
@@ -104,7 +104,7 @@
                   lang="Java"
                   mode="Live"
                   name="%Timer"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -140,7 +140,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%CallActivityConstraint"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -170,7 +170,7 @@
                   lang="java"
                   mode="Live"
                   name="XORGateway"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -206,7 +206,7 @@
                   lang="Java"
                   mode="Live"
                   name="%EndErrorEvent"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -242,7 +242,7 @@
                   lang="Java"
                   mode="Live"
                   name="%ExceptionTransition"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -278,7 +278,7 @@
                   lang="Java"
                   mode="Live"
                   name="%SignalEvent"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -314,7 +314,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%SimulationConstraint"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -326,7 +326,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%SubProcessEventConstraint"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -341,7 +341,7 @@
                   lang="java"
                   mode="Live"
                   name="%MessageEventConstraint"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -368,7 +368,7 @@
                   lang="Java"
                   mode="Live"
                   name="%NonEmptyLoopCondition"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   %Validation_loopMissingCondition
@@ -425,7 +425,7 @@
                   lang="Java"
                   mode="Live"
                   name="%MessageDefinition"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   %Validation_nomessage
@@ -513,7 +513,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%UniqueFlowElementIdConstraint"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -531,7 +531,7 @@
                   lang="Java"
                   mode="Live"
                   name="%CatchMessageEventConstaint"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -567,7 +567,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%UniqueContainerIdConstraint"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -582,7 +582,7 @@
                   lang="Java"
                   mode="Live"
                   name="%ThrowLinkEvent"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -618,7 +618,7 @@
                   lang="Java"
                   mode="Live"
                   name="%CatchLinkEvent"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -654,7 +654,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%SequenceFlowConstraint"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -669,7 +669,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%IncompatibleReturnTypeInOperation"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -697,7 +697,7 @@
                   lang="java"
                   mode="Batch"
                   name="Groovy script compilation failures"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -730,7 +730,7 @@
                   lang="java"
                   mode="Batch"
                   name="Pageflow"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -745,7 +745,7 @@
                   lang="java"
                   mode="Batch"
                   name="Output transitions"
-                  severity="INFO"
+                  severity="WARNING"
                   statusCode="1">
                <message>
                   {0}
@@ -760,7 +760,7 @@
                   lang="java"
                   mode="Batch"
                   name="Document default file"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -775,7 +775,7 @@
                   lang="java"
                   mode="Batch"
                   name="outputdataMultiInstanceCollection"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -789,7 +789,7 @@
                   lang="java"
                   mode="Batch"
                   name="inputdataMultiInstanceCollection"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -805,7 +805,7 @@
                   lang="Java"
                   mode="Batch"
                   name="Non-empty Operations"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -975,7 +975,7 @@
                   lang="Java"
                   mode="Batch"
                   name="MultiInstance iterator constraint"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -990,7 +990,7 @@
                   lang="Java"
                   mode="Batch"
                   name="Form Mapping constraint"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -1022,7 +1022,7 @@
             lang="Java"
             mode="Batch"
             name="%SequenceFlowConsistencyConstraint"
-            severity="WARNING"
+            severity="ERROR"
             statusCode="1">
          <message>
             {0}
@@ -1037,7 +1037,7 @@
             lang="java"
             mode="Batch"
             name="Document default contract input"
-            severity="WARNING"
+            severity="ERROR"
             statusCode="1">
          <message>
             {0}
@@ -1067,7 +1067,7 @@
             lang="Java"
             mode="Batch"
             name="Start event with contract"
-            severity="WARNING"
+            severity="ERROR"
             statusCode="1">
          <message>
             {0}
@@ -1082,7 +1082,7 @@
             lang="Java"
             mode="Batch"
             name="Java Setter constraint"
-            severity="WARNING"
+            severity="ERROR"
             statusCode="1">
          <message>
             {0}
@@ -1097,7 +1097,7 @@
             lang="Java"
             mode="Batch"
             name="Java Getter constraint"
-            severity="WARNING"
+            severity="ERROR"
             statusCode="1">
          <message>
             {0}
@@ -1113,7 +1113,7 @@
             lang="Java"
             mode="Batch"
             name="Unicity of name in process"
-            severity="INFO"
+            severity="WARNING"
             statusCode="1">
          <message>
             {0}
@@ -1149,7 +1149,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%FormWidgetUniqueId"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -1164,7 +1164,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%ValidatorErrorMessage"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -1206,7 +1206,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%UniqueWidgetId"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -1221,7 +1221,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%SubmitOrNextButtonInAForm"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -1239,7 +1239,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%ValidatorType"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -1281,7 +1281,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%FormPageTemplateValid"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -1296,7 +1296,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%AvailableValues"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -1312,7 +1312,7 @@
                   lang="Java"
                   mode="Batch"
                   name="%MultipleDocumentConstraint"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -1334,7 +1334,7 @@
                   lang="java"
                   mode="Batch"
                   name="Business Object definition reference consistency"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
@@ -1350,7 +1350,7 @@
                   lang="java"
                   mode="Batch"
                   name="Query Expression consistency"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}
