@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +41,8 @@ import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.dialog.PropertyValue;
 import org.bonitasoft.studio.groovy.ui.dialog.ScriptResultDialog;
+import org.bonitasoft.studio.groovy.ui.job.VariablesVisitor;
 import org.codehaus.groovy.GroovyException;
-import org.codehaus.groovy.ast.Variable;
 import org.codehaus.groovy.ast.VariableScope;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -157,42 +156,38 @@ public class TestGroovyScriptUtil {
         return result;
     }
 
-    private static void initializeVariableTypes(final GroovyCompilationUnit unit, VariableScope scope, final Map<String, Serializable> variableMap,
+    private static void initializeVariableTypes(final GroovyCompilationUnit unit, final VariableScope scope, final Map<String, Serializable> variableMap,
             final List<ScriptVariable> nodes) {
-        while (scope != null) {
-            for (final Iterator<Variable> varIter = scope.getReferencedClassVariablesIterator(); varIter.hasNext();) {
-                final Variable var = varIter.next();
-                final ScriptVariable processVariable = getProcessVariable(var.getName(), nodes);
-                if (processVariable != null) {
-                    String typeName = processVariable.getType();
-                    typeName = typeName.substring(typeName.lastIndexOf('.') + 1, typeName.length());
-                    if (typeName.equals(ActivityInstance.class.getSimpleName()) || typeName.equals(ProcessInstance.class.getSimpleName())
-                            || typeName.equals(ProcessDefinition.class.getSimpleName())) {
+        final VariablesVisitor variablesVisitor = new VariablesVisitor();
+        unit.getModuleNode().getStatementBlock().visit(variablesVisitor);
+        for (final String variable : variablesVisitor.getVariableExpressions()) {
+            final ScriptVariable processVariable = getProcessVariable(variable, nodes);
+            if (processVariable != null) {
+                String typeName = processVariable.getType();
+                typeName = typeName.substring(typeName.lastIndexOf('.') + 1, typeName.length());
+                if (typeName.equals(ActivityInstance.class.getSimpleName()) || typeName.equals(ProcessInstance.class.getSimpleName())
+                        || typeName.equals(ProcessDefinition.class.getSimpleName())) {
 
-                    } else if (TYPES.contains(typeName)) {
-                        variableMap.put(var.getName(), typeName);
+                } else if (TYPES.contains(typeName)) {
+                    variableMap.put(variable, typeName);
+                } else {
+                    final List<String> typeValues = org.bonitasoft.studio.groovy.GroovyUtil.getTypeValues(typeName);
+                    if (typeValues != null
+                            && !typeValues.isEmpty()) {
+                        variableMap.put(variable, LIST);
                     } else {
-                        final List<String> typeValues = org.bonitasoft.studio.groovy.GroovyUtil.getTypeValues(typeName);
-                        if (typeValues != null
-                                && !typeValues.isEmpty()) {
-                            variableMap.put(var.getName(), LIST);
-                        } else {
-                            variableMap.put(var.getName(), OBJECT);
-                        }
+                        variableMap.put(variable, OBJECT);
                     }
-                } else {// Not a process variable (set default type as Object)
-                    final List<String> declaredMethods = GroovyDocumentUtil.getDeclaredMethodsName(unit);
-                    if (!declaredMethods.contains(var.getName())
-                            && !var.getName().equals("DefaultGroovyMethods") && !GroovyDocumentUtil.getDefaultMethodsName().contains(var.getName())) { //$NON-NLS-1$
-                        if (!PROVIDED_VARIABLES.contains(var.getName())) {
-                            variableMap.put(var.getName(), OBJECT);
-                        }
+                }
+            } else if (!variablesVisitor.getDeclaredExpressions().keySet().contains(variable)) {// Not a process variable (set default type as Object)
+                final List<String> declaredMethods = GroovyDocumentUtil.getDeclaredMethodsName(unit);
+                if (!declaredMethods.contains(variable)
+                        && !variable.equals("DefaultGroovyMethods") && !GroovyDocumentUtil.getDefaultMethodsName().contains(variable)) { //$NON-NLS-1$
+                    if (!PROVIDED_VARIABLES.contains(variable)) {
+                        variableMap.put(variable, OBJECT);
                     }
-
                 }
             }
-
-            scope = scope.getParent();
         }
     }
 
