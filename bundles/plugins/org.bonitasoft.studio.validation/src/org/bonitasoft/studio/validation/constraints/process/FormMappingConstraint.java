@@ -38,6 +38,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 
 /**
@@ -116,7 +117,7 @@ public class FormMappingConstraint extends AbstractLiveValidationMarkerConstrain
 
             @Override
             public boolean apply(final FormMapping input) {
-                return formMapping.getTargetForm().getName() == input.getTargetForm().getName();
+                return Objects.equal(formMapping.getTargetForm().getName(), input.getTargetForm().getName());
             }
         };
     }
