@@ -16,18 +16,14 @@ package org.bonitasoft.studio.groovy.ui.viewer;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.security.auth.login.LoginException;
@@ -44,6 +40,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.groovy.GroovyDocumentUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Messages;
+import org.bonitasoft.studio.groovy.ui.dialog.PropertyValue;
 import org.bonitasoft.studio.groovy.ui.dialog.ScriptResultDialog;
 import org.codehaus.groovy.GroovyException;
 import org.codehaus.groovy.ast.Variable;
@@ -51,11 +48,7 @@ import org.codehaus.groovy.ast.VariableScope;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -111,86 +104,38 @@ public class TestGroovyScriptUtil {
     }
 
     public static Map<String, Serializable> getVariableValues(final GroovyCompilationUnit unit, final List<ScriptVariable> nodes,
-            final Map<Label, Control> widgetMap) {
+            final List<PropertyValue<?>> propertyValues) {
         final Map<String, Serializable> variableMap = createVariablesMap(unit, nodes);
-
-        final Iterator<Entry<String, Serializable>> itVar = variableMap.entrySet().iterator();
-        while (itVar.hasNext()) {
-            final Entry<String, Serializable> var = itVar.next();
-
-            final Iterator<Entry<Label, Control>> it = widgetMap.entrySet().iterator();
-            while (it.hasNext()) {
-                final Entry<Label, Control> widget = it.next();
-
-                final String varKey = var.getKey();
-                if (varKey.equals(widget.getKey().getText())) {
-                    String widgetValueText;
-                    if (widget.getValue() instanceof Text) {
-                        widgetValueText = ((Text) widget.getValue()).getText();
-                    } else {// it is a combo
-                        widgetValueText = ((Combo) widget.getValue()).getText();
-                    }
-                    final String varValueString = var.getValue().toString();
-                    /*
-                     * if(varKey.equals(GroovyUtil.USER_LOCALE)){
-                     * variableMap.put(varKey,new Locale(widgetValueText));
-                     * }else
-                     */if (varValueString.equals(LONG)) {
-                         variableMap.put(varKey, new Long(widgetValueText));
-                     } else if (varValueString.equals(INTEGER)) {
-                         variableMap.put(varKey, new Integer(widgetValueText));
-                     } else if (varValueString.equals(STRING)) {
-                         variableMap.put(varKey, widgetValueText);
-                     }  else if (varValueString.equals(BOOLEAN)) {
-                         variableMap.put(varKey, Boolean.valueOf(widgetValueText));
-                     } else if (varValueString.equals(FLOAT)) {
-                         variableMap.put(varKey, new Float(widgetValueText));
-                     } else if (varValueString.equals(DATE)) {
-                         try {
-                             variableMap.put(varKey, DateFormat.getInstance().parse(widgetValueText));
-                         } catch (final ParseException e) {
-                             BonitaStudioLog.error(e);
-                             variableMap.put(varKey, new Date());
-                         }
-                     } else if (varValueString.equals(OBJECT)) {
-                         Object res = null;
-                         try {
-                             try {
-                                 res = testScript(widgetValueText, Object.class.getName(), Collections.EMPTY_MAP, Collections.EMPTY_SET);
-                             } catch (InvocationTargetException e) {
-                                 BonitaStudioLog.error(e);
-                             } catch (InterruptedException e) {
-                                 BonitaStudioLog.error(e);
-                             }
-                             if (res instanceof Serializable) {
-                                 if(res instanceof Exception){
-                                     variableMap.put(varKey, widgetValueText); //Fallback : set string value
-                                 }else{
-                                     variableMap.put(varKey, (Serializable) res);
-                                 }
-
-                             } else {
-                                 variableMap.put(varKey, "Not serializable");
-                             }
-                         } catch (final LoginException e) {
-                             // TODO Auto-generated catch block
-                             e.printStackTrace();
-                         } catch (final ExpressionEvaluationException e) {
-                             // TODO Auto-generated catch block
-                             e.printStackTrace();
-                         } catch (final GroovyException e) {
-                             // TODO Auto-generated catch block
-                             e.printStackTrace();
-                         }
-
-                     } else { // Custom Types which use value from combo
-                         variableMap.put(varKey, widgetValueText);
-                     }
-
-                }
+        for (final PropertyValue<?> p : propertyValues) {
+            if (variableMap.get(p.getKey()).equals(OBJECT)) {
+                variableMap.put(p.getKey(), valueOf((String) p.getValue()));
+            } else {
+                variableMap.put(p.getKey(), p.getValue());
             }
+
         }
         return variableMap;
+    }
+
+    private static Serializable valueOf(final String value) {
+        Object res = null;
+        try {
+            try {
+                res = testScript(value, Object.class.getName(), Collections.EMPTY_MAP, Collections.EMPTY_SET);
+            } catch (final InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+            if (res instanceof Serializable) {
+                if (res instanceof Exception) {
+                    res = value; //Fallback : set string value
+                }
+            } else {
+                res = "Not serializable";
+            }
+        } catch (final LoginException | GroovyException | ExpressionEvaluationException e) {
+            BonitaStudioLog.error(e);
+        }
+        return (Serializable) res;
     }
 
     public static Map<String, Serializable> createVariablesMap(final GroovyCompilationUnit unit, final List<ScriptVariable> nodes) {
@@ -228,7 +173,7 @@ public class TestGroovyScriptUtil {
                         variableMap.put(var.getName(), typeName);
                     } else {
                         final List<String> typeValues = org.bonitasoft.studio.groovy.GroovyUtil.getTypeValues(typeName);
-						if (typeValues != null
+                        if (typeValues != null
                                 && !typeValues.isEmpty()) {
                             variableMap.put(var.getName(), LIST);
                         } else {
@@ -260,7 +205,9 @@ public class TestGroovyScriptUtil {
         return null;
     }
 
-    public static Object testScript(final String expression, final String returnType, final Map<String, Serializable> variableMap, Set<IRepositoryFileStore> additionalJars) throws GroovyException,  LoginException, ExpressionEvaluationException, InvocationTargetException, InterruptedException {
+    public static Object testScript(final String expression, final String returnType, final Map<String, Serializable> variableMap,
+            final Set<IRepositoryFileStore> additionalJars) throws GroovyException, LoginException, ExpressionEvaluationException, InvocationTargetException,
+            InterruptedException {
         final TestExpressionOperation operation = new TestExpressionOperation();
         operation.setExpression(ExpressionHelper.createGroovyScriptExpression(expression, returnType));
         operation.setContextMap(variableMap);
@@ -269,7 +216,8 @@ public class TestGroovyScriptUtil {
         return operation.getResult();
     }
 
-    public static void evaluateExpression(final String expressionContent, final String returnType, final Map<String, Serializable> context, final Set<IRepositoryFileStore> additionalJars) {
+    public static void evaluateExpression(final String expressionContent, final String returnType, final Map<String, Serializable> context,
+            final Set<IRepositoryFileStore> additionalJars) {
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         final IRunnableWithProgress testRunnable = new IRunnableWithProgress() {
 
