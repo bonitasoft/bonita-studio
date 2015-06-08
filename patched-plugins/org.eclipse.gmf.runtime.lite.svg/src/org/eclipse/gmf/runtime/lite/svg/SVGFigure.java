@@ -1,13 +1,11 @@
 /**
  * Copyright (c) 2008 Borland Software Corporation
- *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *    Dmitry Stadnik - initial API and implementation
+ * Dmitry Stadnik - initial API and implementation
  */
 package org.eclipse.gmf.runtime.lite.svg;
 
@@ -15,7 +13,6 @@ import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.WeakHashMap;
 
@@ -71,64 +68,27 @@ public class SVGFigure extends Figure {
         }
     }
 
-
     private void loadDocument() {
         transcoder = null;
         failedToLoadDocument = true;
         if (uri == null) {
             return;
         }
-        final String documentKey = getDocumentKey();
-        Document document;
-        if (documentsMap.containsKey(documentKey)) {
-            document = documentsMap.get(documentKey);
-        } else {
-            document = createDocument();
-            documentsMap.put(documentKey, document);
-        }
-        if (document != null) {
-            transcoder = new SimpleImageTranscoder(document);
-            failedToLoadDocument = false;
-        }
-
-    }
-
-    /**
-     * The key used to store the document.
-     *
-     * @return the key.
-     */
-    protected String getDocumentKey() {
-        return uri;
-    }
-
-    private Document createDocument() {
         final String parser = XMLResourceDescriptor.getXMLParserClassName();
         final SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
-        return createDocument(factory, false);
-    }
-
-    private Document createDocument(final SAXSVGDocumentFactory factory, final boolean forceClassLoader) {
-        ClassLoader originalContextClassloader = null;
-        if (forceClassLoader) {
-            originalContextClassloader = Thread.currentThread().getContextClassLoader();
-            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-        }
         try {
-            return factory.createDocument(uri);
-        } catch (final IOException e) {
-            final boolean saxParserNotFound = !(e instanceof FileNotFoundException);
-            if (!forceClassLoader && saxParserNotFound && Thread.currentThread().getContextClassLoader() == null) {
-                return createDocument(factory, true);
+            Document document;
+            if (documentsMap.containsKey(uri)) {
+                document = documentsMap.get(uri);
             } else {
-                Activator.logError("Error loading SVG file", e);
+                document = factory.createDocument(uri);
+                documentsMap.put(uri, document);
             }
-        } finally {
-            if (forceClassLoader) {
-                Thread.currentThread().setContextClassLoader(originalContextClassloader);
-            }
+            transcoder = new SimpleImageTranscoder(document);
+            failedToLoadDocument = false;
+        } catch (final IOException e) {
+            Activator.logError("Error loading SVG file", e);
         }
-        return null;
     }
 
     protected final Document getDocument() {
@@ -140,8 +100,6 @@ public class SVGFigure extends Figure {
         }
         return transcoder == null ? null : transcoder.getDocument();
     }
-
-
 
     /**
      * Returns true if document was loaded without errors; tries to load document if needed.
@@ -234,7 +192,7 @@ public class SVGFigure extends Figure {
             } else {
                 aaHint = RenderingHints.VALUE_ANTIALIAS_DEFAULT;
             }
-            if (transcoder != null && transcoder.getRenderingHints().get(RenderingHints.KEY_ANTIALIASING) != aaHint) {
+            if (transcoder.getRenderingHints().get(RenderingHints.KEY_ANTIALIASING) != aaHint) {
                 transcoder.getRenderingHints().put(RenderingHints.KEY_ANTIALIASING, aaHint);
                 transcoder.contentChanged();
             }
@@ -254,7 +212,7 @@ public class SVGFigure extends Figure {
             } else {
                 aaHint = RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT;
             }
-            if (transcoder != null && transcoder.getRenderingHints().get(RenderingHints.KEY_TEXT_ANTIALIASING) != aaHint) {
+            if (transcoder.getRenderingHints().get(RenderingHints.KEY_TEXT_ANTIALIASING) != aaHint) {
                 transcoder.getRenderingHints().put(RenderingHints.KEY_TEXT_ANTIALIASING, aaHint);
                 transcoder.contentChanged();
             }
@@ -264,7 +222,7 @@ public class SVGFigure extends Figure {
     /**
      * Converts an AWT based buffered image into an SWT <code>Image</code>. This will always return an <code>Image</code> that
      * has 24 bit depth regardless of the type of AWT buffered image that is passed into the method.
-     *
+     * 
      * @param awtImage the {@link java.awt.image.BufferedImage} to be converted to an <code>Image</code>
      * @return an <code>Image</code> that represents the same image data as the AWT <code>BufferedImage</code> type.
      */

@@ -37,7 +37,13 @@ public class PropertySectionHistory {
                 "ContractPropertySection",
                 "ResourcePropertySection",
                 "LookAndFeelPropertySection",
-                "ConfirmationPropertySection");
+                "ConfirmationPropertySection",
+                "ProcessEntryFormsSection",
+                "ProcessEntryFormsSectionEx",
+                "EntryFormsSection",
+                "EntryFormsSectionEx",
+                "OverviewFormsSection",
+                "OverviewFormsSectionEx");
     }
 
     public PropertySectionHistory(final String sectionId) {

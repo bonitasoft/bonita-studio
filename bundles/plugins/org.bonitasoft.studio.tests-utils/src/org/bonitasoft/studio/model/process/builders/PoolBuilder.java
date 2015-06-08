@@ -19,6 +19,7 @@ import org.bonitasoft.studio.model.parameter.builders.ParameterBuilder;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
@@ -111,6 +112,15 @@ public class PoolBuilder extends ElementBuilder<Pool, PoolBuilder> {
         if (data != null) {
             for (final DataBuilder<?, ?> dataBuilder : data) {
                 getBuiltInstance().getData().add(dataBuilder.build());
+            }
+        }
+        return getThis();
+    }
+
+    public PoolBuilder havingData(final Data... data) {
+        if (data != null) {
+            for (final Data datum : data) {
+                getBuiltInstance().getData().add(datum);
             }
         }
         return getThis();

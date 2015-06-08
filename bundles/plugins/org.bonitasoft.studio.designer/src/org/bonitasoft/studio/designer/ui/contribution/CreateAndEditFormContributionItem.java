@@ -17,6 +17,7 @@ package org.bonitasoft.studio.designer.ui.contribution;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.command.UpdateFormMappingCommand;
@@ -25,20 +26,25 @@ import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.action.ContributionItem;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -51,6 +57,9 @@ import org.eclipse.swt.widgets.ToolItem;
  */
 @Creatable
 public class CreateAndEditFormContributionItem extends ContributionItem {
+
+    protected static final String HIDE_EMPTY_CONTRACT_INFO_DIALOG = "HIDE_EMPTY_CONTRACT_INFO_DIALOG";
+    protected static final String EMPTY_CONTRACT_INFO_DIALOG_ANSWER = "EMPTY_CONTRACT_INFO_DIALOG_ANSWER";
 
     private ToolItem toolItem;
 
@@ -69,9 +78,9 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
             final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
             if (pageFlow != null) {
                 if (pageFlow instanceof Pool) {
-                    toolItem.setToolTipText(NLS.bind(Messages.newFormTooltip, Messages.pool));
+                    toolItem.setToolTipText(Messages.newFormTooltipForPool);
                 } else {
-                    toolItem.setToolTipText(NLS.bind(Messages.newFormTooltip, Messages.task));
+                    toolItem.setToolTipText(Messages.newFormTooltipForTask);
                 }
             }
         }
@@ -93,7 +102,7 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
     public void fill(final ToolBar toolbar, final int style) {
         toolItem = new ToolItem(toolbar, SWT.LEFT | SWT.PUSH | SWT.NO_FOCUS);
         toolItem.setEnabled(false);
-        toolItem.setToolTipText(Messages.newFormTooltip);
+        toolItem.setToolTipText(Messages.newFormTooltipForPool);
         toolItem.setImage(Pics.getImage("new_form.png", UIDesignerPlugin.getDefault()));
         toolItem.addSelectionListener(new SelectionAdapter() {
 
@@ -124,16 +133,55 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
 
     protected void createNewForm() {
         final PageFlow pageflow = unwrap(selectionProvider.getSelection());
-        final String newPageId = createNewFormListener.handleEvent(pageflow.getFormMapping(), null);
-
-        final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
-        repositoryStore.refresh();
-        final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId);
-        if (webPageFileStore != null) {
-            getEditingDomain(pageflow).getCommandStack().execute(new UpdateFormMappingCommand(getEditingDomain(pageflow), pageflow.getFormMapping(),
-                    ExpressionHelper.createFormReferenceExpression(webPageFileStore.getDisplayName(), newPageId)));
-
+        if (shouldCreateNewContract(pageflow)) {
+            final String newPageId = createNewFormListener.handleEvent(pageflow.getFormMapping(), null);
+            final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
+            repositoryStore.refresh();
+            final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId);
+            if (webPageFileStore != null) {
+                getEditingDomain(pageflow).getCommandStack().execute(new UpdateFormMappingCommand(getEditingDomain(pageflow), pageflow.getFormMapping(),
+                        ExpressionHelper.createFormReferenceExpression(webPageFileStore.getDisplayName(), newPageId)));
+            }
         }
+    }
+
+    private boolean shouldCreateNewContract(final PageFlow pageFlow) {
+        if (pageFlow instanceof ContractContainer) {
+            final Contract contract = ((ContractContainer) pageFlow).getContract();
+            if (contract.getInputs().isEmpty()) {
+                return openHideEmptyContractDialog();
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean openHideEmptyContractDialog() {
+        if (!getEclipsePreferences().getBoolean(HIDE_EMPTY_CONTRACT_INFO_DIALOG, false)) {
+            final MessageDialogWithPrompt messageDialog = MessageDialogWithPrompt.open(MessageDialog.QUESTION,
+                    Display.getDefault().getActiveShell(), Messages.hideEmptyContractDialogTitle,
+                    Messages.hideEmptyContractDialogMessage, Messages.hideEmptyContractDialogToggleMessage, false, getPreferenceStore(),
+                    HIDE_EMPTY_CONTRACT_INFO_DIALOG, SWT.NONE);
+            setEmptyContractDialogAnswerPreference(messageDialog.getReturnCode());
+            return messageDialog.getReturnCode() == IDialogConstants.YES_ID;
+        } else {
+            return getEclipsePreferences().getBoolean(EMPTY_CONTRACT_INFO_DIALOG_ANSWER, false);
+        }
+    }
+
+    private void setEmptyContractDialogAnswerPreference(final int returnCode) {
+        if (getEclipsePreferences().getBoolean(HIDE_EMPTY_CONTRACT_INFO_DIALOG, false)) {
+            getEclipsePreferences().putBoolean(EMPTY_CONTRACT_INFO_DIALOG_ANSWER, returnCode == 0);
+        }
+    }
+
+    private IEclipsePreferences getEclipsePreferences() {
+        return InstanceScope.INSTANCE.getNode(UIDesignerPlugin.PLUGIN_ID);
+    }
+
+    private IPreferenceStore getPreferenceStore() {
+        return UIDesignerPlugin.getDefault().getPreferenceStore();
     }
 
     /**
