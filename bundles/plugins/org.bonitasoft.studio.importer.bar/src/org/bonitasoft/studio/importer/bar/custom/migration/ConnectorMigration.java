@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -19,8 +17,10 @@ package org.bonitasoft.studio.importer.bar.custom.migration;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.importer.bar.custom.migration.connector.Connector5Descriptor;
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
+import org.bonitasoft.studio.migration.MigrationPlugin;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -31,32 +31,35 @@ import org.eclipse.emf.edapt.spi.migration.Model;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class ConnectorMigration extends ReportCustomMigration {
 
-    private List<Connector5Descriptor> descriptors = new ArrayList<Connector5Descriptor>();
+    private final List<Connector5Descriptor> descriptors = new ArrayList<Connector5Descriptor>();
 
     @Override
-    public void migrateBefore(Model model, Metamodel metamodel)
+    public void migrateBefore(final Model model, final Metamodel metamodel)
             throws MigrationException {
-        for (Instance connector : model.getAllInstances("process.Connector")) {
-            if (connector.getUuid() == null) {
-                connector.setUuid(EcoreUtil.generateUUID());
-            }
-            final Connector5Descriptor connectorDescriptor = new Connector5Descriptor(connector);
-            if (connectorDescriptor.canBeMigrated()) {
-                descriptors.add(connectorDescriptor);
+        for (final Instance connector : model.getAllInstances("process.Connector")) {
+            if (connector.getContainer() != null) {
+                if (connector.getUuid() == null) {
+                    connector.setUuid(EcoreUtil.generateUUID());
+                }
+                final Connector5Descriptor connectorDescriptor = new Connector5Descriptor(connector);
+                if (connectorDescriptor.canBeMigrated()) {
+                    descriptors.add(connectorDescriptor);
+                } else {
+                    final String legacyConnectorID = connectorDescriptor.getLegacyConnectorID();
+                    final String removeConnectorMigrationDescription = getMigrationReportMessageForNonMigratedConnector(legacyConnectorID);
+                    addReportChange((String) connector.get("name"),
+                            connector.getType().getEClass().getName(),
+                            connector.getContainer().getUuid(),
+                            removeConnectorMigrationDescription,
+                            Messages.connectorProperty,
+                            IStatus.ERROR);
+                    model.delete(connector);
+                }
             } else {
-                final String legacyConnectorID = connectorDescriptor.getLegacyConnectorID();
-                String removeConnectorMigrationDescription = getMigrationReportMessageForNonMigratedConnector(legacyConnectorID);
-
-                addReportChange((String) connector.get("name"),
-                        connector.getType().getEClass().getName(),
-                        connector.getContainer().getUuid(),
-                        removeConnectorMigrationDescription,
-                        Messages.connectorProperty,
-                        IStatus.ERROR);
+                BonitaStudioLog.debug("Connector instance has no container: " + connector.get("name"), MigrationPlugin.PLUGIN_ID);
                 model.delete(connector);
             }
         }
@@ -105,10 +108,10 @@ public class ConnectorMigration extends ReportCustomMigration {
     }
 
     @Override
-    public void migrateAfter(Model model, Metamodel metamodel)
+    public void migrateAfter(final Model model, final Metamodel metamodel)
             throws MigrationException {
-        for (Instance connector : model.getAllInstances("process.Connector")) {
-            for (Connector5Descriptor descriptor : descriptors) {
+        for (final Instance connector : model.getAllInstances("process.Connector")) {
+            for (final Connector5Descriptor descriptor : descriptors) {
                 if (descriptor.appliesTo(connector)) {
                     final String connectorName = (String) connector.get("name");
                     final String connectorTypeName = connector.getType().getEClass().getName();
