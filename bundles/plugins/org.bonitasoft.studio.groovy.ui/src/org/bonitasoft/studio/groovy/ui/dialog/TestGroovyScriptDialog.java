@@ -20,7 +20,6 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -28,21 +27,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
-import org.bonitasoft.studio.common.jface.databinding.DateTimeObservable;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.jface.databinding.UpdateValueStrategyFactory;
 import org.bonitasoft.studio.common.jface.databinding.validator.MultiValidatorFactory;
 import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Messages;
+import org.bonitasoft.studio.groovy.ui.dialog.control.BooleanRadioGroup;
+import org.bonitasoft.studio.groovy.ui.dialog.control.DateTimeControl;
 import org.bonitasoft.studio.groovy.ui.viewer.TestGroovyScriptUtil;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.StringToNumberConverter;
-import org.eclipse.core.databinding.observable.value.IValueChangeListener;
-import org.eclipse.core.databinding.observable.value.SelectObservableValue;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.internal.databinding.validation.StringToDoubleValidator;
 import org.eclipse.core.internal.databinding.validation.StringToFloatValidator;
 import org.eclipse.core.internal.databinding.validation.StringToIntegerValidator;
@@ -62,9 +59,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -175,37 +170,13 @@ public class TestGroovyScriptDialog extends Dialog {
                 ControlDecorationSupport.create(dbc.bindValue(SWTObservables.observeText(varValueCombo), PojoObservables.observeValue(propertyValue, "value"),
                         updateValueStrategy().withValidator(mandatoryValidator(var.getKey())).create(), null), SWT.LEFT);
             } else if (var.getValue().equals(TestGroovyScriptUtil.BOOLEAN)) {
-                final Composite radioGroup = new Composite(group, SWT.NONE);
-                radioGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
-                radioGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-                final Button trueButton = new Button(radioGroup, SWT.RADIO);
-                trueButton.setText("true");
-                final Button falseButton = new Button(radioGroup, SWT.RADIO);
-                falseButton.setText("false");
-                final SelectObservableValue selectObservableValue = new SelectObservableValue(Boolean.class);
-                selectObservableValue.addOption(Boolean.TRUE, SWTObservables.observeSelection(trueButton));
-                selectObservableValue.addOption(Boolean.FALSE, SWTObservables.observeSelection(falseButton));
-                selectObservableValue.setValue(Boolean.TRUE);
-                dbc.bindValue(selectObservableValue, PojoObservables.observeValue(propertyValue, "value"));
+                final BooleanRadioGroup booleanRadioGroup = new BooleanRadioGroup(group);
+                booleanRadioGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
+                booleanRadioGroup.bindControl(dbc, PojoObservables.observeValue(propertyValue, "value"));
             } else if (var.getValue().equals(TestGroovyScriptUtil.DATE)) {
-                final Composite dateAndTime = new Composite(group, SWT.NONE);
-                dateAndTime.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
-                dateAndTime.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-                final DateTime dateControl = new DateTime(dateAndTime, SWT.BORDER | SWT.DATE | SWT.DROP_DOWN);
-                final DateTime timeControl = new DateTime(dateAndTime, SWT.BORDER | SWT.TIME);
-                final DateTimeObservable dateObservable = new DateTimeObservable(dateControl);
-                final DateTimeObservable timeObservable = new DateTimeObservable(timeControl);
-                dbc.bindValue(dateObservable, PojoObservables.observeValue(propertyValue, "value"));
-                dateControl.notifyListeners(SWT.Selection, new Event());
-                timeObservable.addValueChangeListener(new IValueChangeListener() {
-
-                    @Override
-                    public void handleValueChange(final ValueChangeEvent event) {
-                        final Date newValue = (Date) event.diff.getNewValue();
-                        dateControl.setTime(newValue.getHours(), newValue.getMinutes(), newValue.getMinutes());
-                        dateControl.notifyListeners(SWT.Selection, new Event());
-                    }
-                });
+                final DateTimeControl dateTimeControl = new DateTimeControl(group);
+                dateTimeControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
+                dateTimeControl.bindControl(dbc, PojoObservables.observeValue(propertyValue, "value"));
             } else {
                 final Text varValueText = new Text(group, SWT.BORDER);
                 varValueText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
@@ -244,7 +215,6 @@ public class TestGroovyScriptDialog extends Dialog {
                     varValueText.setText(v.getDefaultValue());
                 }
             }
-
             propertyValues.add(propertyValue);
         }
 
