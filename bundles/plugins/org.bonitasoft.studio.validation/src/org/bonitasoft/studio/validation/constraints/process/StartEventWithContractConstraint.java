@@ -62,9 +62,11 @@ public class StartEventWithContractConstraint extends AbstractLiveValidationMark
     }
 
     private IStatus startsProcessWithContract(final IValidationContext ctx, final Event event) {
-        final ContractContainer contractContainer = ModelHelper.getFirstContainerOfType(event, ContractContainer.class);
-        if (!contractContainer.getContract().getInputs().isEmpty()) {
-            return ctx.createFailureStatus(Messages.cannotUseThisStartEventTypeWithAContract);
+        if (!ModelHelper.isInEvenementialSubProcessPool(event)) {
+            final ContractContainer contractContainer = ModelHelper.getFirstContainerOfType(event, ContractContainer.class);
+            if (!contractContainer.getContract().getInputs().isEmpty()) {
+                return ctx.createFailureStatus(Messages.cannotUseThisStartEventTypeWithAContract);
+            }
         }
         return ctx.createSuccessStatus();
     }
