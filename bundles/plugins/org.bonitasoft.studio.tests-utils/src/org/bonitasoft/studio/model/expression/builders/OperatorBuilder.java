@@ -15,7 +15,9 @@
 package org.bonitasoft.studio.model.expression.builders;
 
 import org.bonitasoft.engine.operation.OperatorType;
+import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 
 /**
@@ -53,6 +55,11 @@ public class OperatorBuilder {
                 operator.getInputTypes().add(type);
             }
         }
+        return this;
+    }
+
+    public OperatorBuilder in(final Buildable<? extends Operation> operationBuildable) {
+        operationBuildable.build().setOperator(operator);
         return this;
     }
 

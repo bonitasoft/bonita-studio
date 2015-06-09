@@ -45,6 +45,10 @@ public class OpenUIDesignerHandler extends AbstractHandler {
     }
 
     public void execute() throws ExecutionException {
+        openUiDesignerInBrowser();
+    }
+
+    protected void openUiDesignerInBrowser() throws ExecutionException {
         final PageDesignerURLFactory pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
         try {
             createOpenBrowserOperation(pageDesignerURLBuilder.openPageDesignerHome()).execute();

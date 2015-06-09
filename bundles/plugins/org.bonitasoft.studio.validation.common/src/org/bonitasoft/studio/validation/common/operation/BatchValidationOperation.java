@@ -126,7 +126,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
                 ModelValidationService.getInstance().newValidator(
                         EvaluationMode.BATCH);
         validator.setIncludeLiveConstraints(true);
-        if (view.isSetElement() && view.getElement() != null) {
+        if (view.isSetElement() && view.getElement() != null && view.getElement().eResource() != null) {
             final IStatus status = validator.validate(view.getElement(), monitor);
             validationMarkerProvider.createMarkers(target, status, diagramEditPart);
         }

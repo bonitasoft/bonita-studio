@@ -16,9 +16,12 @@ package org.bonitasoft.studio.designer.ui.contribution;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
@@ -42,6 +45,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -137,7 +141,7 @@ public class CreateAndEditFormContributionItemTest {
     public void isEditableShouldReturnTrue_after_calling_createForm() {
         doReturn(repositoryStore).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
         final PageFlow pagefLow = aTask().havingFormMapping(
-                aFormMapping().havingTargetForm(anExpression())).build();
+                aFormMapping().havingTargetForm(anExpression())).havingContract(aContract()).build();
         doReturn("newForm").when(createNewFormListener).handleEvent(pagefLow.getFormMapping(), null);
         doReturn(
                 new StructuredSelection(pagefLow)).when(
@@ -147,12 +151,30 @@ public class CreateAndEditFormContributionItemTest {
         doReturn(webPageFileStore).when(repositoryStore).getChild("newForm");
         doReturn("newName").when(webPageFileStore).getDisplayName();
         doReturn(editingDomain()).when(contribution).getEditingDomain(pagefLow);
-
+        doReturn(true).when(contribution).openHideEmptyContractDialog();
         contribution.createNewForm();
 
         assertThat(contribution.isInternalForm()).isTrue();
 
         assertThat(contribution.isEditable()).isTrue();
+    }
+
+    @Test
+    public void shouldNotAsk_ToOpenUIDesigner_WhenContractIsNotEmpty() {
+        doReturn(repositoryStore).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
+        final PageFlow pagefLow = aTask().havingFormMapping(
+                aFormMapping().havingTargetForm(anExpression())).havingContract(aContract().havingInput(aContractInput())).build();
+        doReturn("newForm").when(createNewFormListener).handleEvent(pagefLow.getFormMapping(), null);
+        doReturn(
+                new StructuredSelection(pagefLow)).when(
+                selectionProvider)
+                .getSelection();
+
+        doReturn(webPageFileStore).when(repositoryStore).getChild("newForm");
+        doReturn("newName").when(webPageFileStore).getDisplayName();
+        doReturn(editingDomain()).when(contribution).getEditingDomain(pagefLow);
+        contribution.createNewForm();
+        verify(contribution, Mockito.never()).openHideEmptyContractDialog();
     }
 
     private EditingDomain editingDomain() {

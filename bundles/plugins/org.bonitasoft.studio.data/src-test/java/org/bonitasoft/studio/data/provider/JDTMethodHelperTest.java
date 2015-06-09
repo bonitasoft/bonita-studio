@@ -5,32 +5,19 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.data.provider;
 
 import org.assertj.core.api.Assertions;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-
-public class JavaQualifiedTypeHelperTest {
-
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
+public class JDTMethodHelperTest {
 
     @Test
     public void testHandlePrimitiveTypes() {
@@ -46,7 +33,7 @@ public class JavaQualifiedTypeHelperTest {
     }
 
     protected void test(final String input, final String output) {
-        Assertions.assertThat(JavaQualifiedTypeHelper.handlePrimitiveTypes(input)).isEqualTo(output);
+        Assertions.assertThat(JDTMethodHelper.handlePrimitiveTypes(input)).isEqualTo(output);
     }
 
 }

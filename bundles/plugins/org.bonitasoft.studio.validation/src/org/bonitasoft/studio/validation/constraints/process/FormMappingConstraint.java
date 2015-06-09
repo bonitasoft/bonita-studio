@@ -23,6 +23,7 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -116,7 +117,7 @@ public class FormMappingConstraint extends AbstractLiveValidationMarkerConstrain
 
             @Override
             public boolean apply(final FormMapping input) {
-                return formMapping.getTargetForm().getName() == input.getTargetForm().getName();
+                return Objects.equals(formMapping.getTargetForm().getName(), input.getTargetForm().getName());
             }
         };
     }
@@ -126,7 +127,7 @@ public class FormMappingConstraint extends AbstractLiveValidationMarkerConstrain
 
             @Override
             public boolean apply(final FormMapping input) {
-                return formMapping.getTargetForm().getContent() == input.getTargetForm().getContent();
+                return Objects.equals(formMapping.getTargetForm().getContent(), input.getTargetForm().getContent());
             }
         };
     }
