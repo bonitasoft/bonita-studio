@@ -364,12 +364,18 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         selectDataTab.remove();
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
 
-        assertNull("Error: Input Collection is still referenced in the MultiInstantiation Model after being removed.",
-                multiInstantiable.getCollectionDataToMultiInstantiate());
-        assertTrue(multiInstantiable.getIteratorExpression().getName().equals("vipName"));
-        assertNull("Error: Output Data is still referenced in the MultiInstantiation Model after being removed.", multiInstantiable.getOutputData());
-        assertNull("Error: Output Result is still referenced in the MultiInstantiation Model after being removed.",
-                multiInstantiable.getListDataContainingOutputResults());
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                assertNull("Error: Input Collection is still referenced in the MultiInstantiation Model after being removed.",
+                        multiInstantiable.getCollectionDataToMultiInstantiate());
+                assertTrue(multiInstantiable.getIteratorExpression().getName().equals("vipName"));
+                assertNull("Error: Output Data is still referenced in the MultiInstantiation Model after being removed.", multiInstantiable.getOutputData());
+                assertNull("Error: Output Result is still referenced in the MultiInstantiation Model after being removed.",
+                        multiInstantiable.getListDataContainingOutputResults());
+            }
+        });
 
         botProcessDiagramPerspective
                 .getDiagramPropertiesPart().selectGeneralTab().selectIterationTab();
