@@ -118,8 +118,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         }
 
         String defaultLocaleValue = bonitaPreferenceStore.getString(DEFAULT_STUDIO_LOCALE);// Default value is compute on the first the studio is run
-                                                                           // only because Locale.getDefault() is based on osgi.nl
-                                                                           // property
+        // only because Locale.getDefault() is based on osgi.nl
+        // property
         if (defaultLocaleValue == null || defaultLocaleValue.isEmpty()) {
             bonitaPreferenceStore.setValue(DEFAULT_STUDIO_LOCALE,
                     defaultLocalExists ? defaultStudioLocal.getLanguage() : Locale.ENGLISH.getLanguage());
@@ -128,6 +128,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
         bonitaPreferenceStore.setDefault(CURRENT_UXP_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
         bonitaPreferenceStore.setDefault(CURRENT_STUDIO_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
+        LocaleUtil.DEFAULT_LOCALE = Locale.forLanguageTag(defaultLocaleValue);
     }
 
     protected Locale[] getStudioLocales() {
