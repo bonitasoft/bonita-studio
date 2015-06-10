@@ -21,10 +21,12 @@ import static org.bonitasoft.studio.model.process.builders.StartEventBuilder.aSt
 import static org.bonitasoft.studio.model.process.builders.StartMessageEventBuilder.aStartMessageEvent;
 import static org.bonitasoft.studio.model.process.builders.StartSignalEventBuilder.aStartSignalEvent;
 import static org.bonitasoft.studio.model.process.builders.StartTimerEventBuilder.aStartTimerEvent;
+import static org.bonitasoft.studio.model.process.builders.SubProcessEventBuilder.aSubProcessEvent;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.bonitasoft.studio.model.process.StartMessageEvent;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
@@ -34,7 +36,7 @@ public class StartEventWithContractConstraintTest {
 
     @Test
     public void should_fail_if_process_have_a_start_timer_event_and_has_a_non_empty_contract() throws Exception {
-        final StartEventWithContractConstraint constraint = new StartEventWithContractConstraint();
+        final StartEventWithContractConstraint constraint = newConstraint();
 
         final IValidationContext ctx = aValidationContext(aStartTimerEvent().in(aPool().havingContract(aContract().havingInput(aContractInput()))).build());
         constraint.performBatchValidation(ctx);
@@ -44,7 +46,7 @@ public class StartEventWithContractConstraintTest {
 
     @Test
     public void should_fail_if_process_have_a_start_message_event_and_has_a_non_empty_contract() throws Exception {
-        final StartEventWithContractConstraint constraint = new StartEventWithContractConstraint();
+        final StartEventWithContractConstraint constraint = newConstraint();
 
         final IValidationContext ctx = aValidationContext(aStartMessageEvent().in(aPool().havingContract(aContract().havingInput(aContractInput()))).build());
         constraint.performBatchValidation(ctx);
@@ -54,7 +56,7 @@ public class StartEventWithContractConstraintTest {
 
     @Test
     public void should_fail_if_process_have_a_start_signal_event_and_has_a_non_empty_contract() throws Exception {
-        final StartEventWithContractConstraint constraint = new StartEventWithContractConstraint();
+        final StartEventWithContractConstraint constraint = newConstraint();
 
         final IValidationContext ctx = aValidationContext(aStartSignalEvent().in(aPool().havingContract(aContract().havingInput(aContractInput()))).build());
         constraint.performBatchValidation(ctx);
@@ -64,7 +66,7 @@ public class StartEventWithContractConstraintTest {
 
     @Test
     public void should_not_fail_if_process_have_a_start_timer_event_and_has_an_empty_contract() throws Exception {
-        final StartEventWithContractConstraint constraint = new StartEventWithContractConstraint();
+        final StartEventWithContractConstraint constraint = newConstraint();
 
         final IValidationContext ctx = aValidationContext(aStartTimerEvent().in(aPool().havingContract(aContract())).build());
         constraint.performBatchValidation(ctx);
@@ -74,12 +76,30 @@ public class StartEventWithContractConstraintTest {
 
     @Test
     public void should_not_fail_if_process_have_a_none_event_and_has_a_contract() throws Exception {
-        final StartEventWithContractConstraint constraint = new StartEventWithContractConstraint();
+        final StartEventWithContractConstraint constraint = newConstraint();
 
         final IValidationContext ctx = aValidationContext(aStartEvent().in(aPool().havingContract(aContract().havingInput(aContractInput()))).build());
         constraint.performBatchValidation(ctx);
 
         verify(ctx).createSuccessStatus();
+    }
+
+    @Test
+    public void should_not_fail_if_process_have_a_signal_event_in_an_event_subprocess_and_parent_process_has_a_contract() throws Exception {
+        final StartEventWithContractConstraint constraint = newConstraint();
+
+        final StartMessageEvent startMessageEvent = aStartMessageEvent().build();
+        aStartEvent().in(aPool()
+                .havingContract(aContract().havingInput(aContractInput()))
+                .havingElements(aSubProcessEvent().havingElements(startMessageEvent))).build();
+        final IValidationContext ctx = aValidationContext(startMessageEvent);
+        constraint.performBatchValidation(ctx);
+
+        verify(ctx).createSuccessStatus();
+    }
+
+    private StartEventWithContractConstraint newConstraint() {
+        return new StartEventWithContractConstraint();
     }
 
     private IValidationContext aValidationContext(final EObject eObject) {
