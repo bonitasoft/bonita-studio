@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -264,11 +266,6 @@ public class WidgetMigration extends ReportCustomMigration {
                 setDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndConditions(widget, model);
                 setInjectWidgetScripts(widget, model);
                 setScriptAfterEvents(widget, model);
-            }
-        }
-        for (final Instance connector : model.getAllInstances("process.Connector")) {
-            if (connector.getContainer() == null) {
-                System.out.println(connector.get("name"));
             }
         }
     }
@@ -554,7 +551,11 @@ public class WidgetMigration extends ReportCustomMigration {
         if (widgetActions.containsKey(widget.getUuid())) {
             final Pair<String, String> actionScripts = widgetActions.get(widget.getUuid());
             final StringToExpressionConverter converter = getConverter(model, getScope(widget));
-            final Instance action = converter.parseOperation(String.class.getName(), false, actionScripts.getFirst(), actionScripts.getSecond());
+            String rightOperand = actionScripts.getFirst();
+            if (isNullOrEmpty(rightOperand) && !isNullOrEmpty(actionScripts.getSecond())) {
+                rightOperand = "${field_" + widget.get("name") + "}";
+            }
+            final Instance action = converter.parseOperation(String.class.getName(), false, rightOperand, actionScripts.getSecond());
             final Instance actionExp = action.get("rightOperand");
             if (actionExp != null) {
                 if (ExpressionConstants.FORM_FIELD_TYPE.equals(actionExp.get("type"))) {
@@ -574,5 +575,4 @@ public class WidgetMigration extends ReportCustomMigration {
             }
         }
     }
-
 }
