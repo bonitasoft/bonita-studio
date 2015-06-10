@@ -14,10 +14,13 @@
  */
 package org.bonitasoft.studio.common.editingdomain.transaction;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Collections;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
+import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.junit.Test;
 
@@ -29,6 +32,11 @@ public class AlwaysValidTransactionTest {
                 Collections.emptyMap());
 
         StatusAssert.assertThat(alwaysValidTransaction.validate()).isOK();
+    }
+
+    @Test
+    public void should_undo_redo_options_trigger_validation() throws Exception {
+        assertThat(AlwaysValidTransaction.DEFAULT_UNDO_REDO_OPTIONS).containsEntry(Transaction.OPTION_NO_VALIDATION, Boolean.FALSE);
     }
 
 }

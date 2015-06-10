@@ -29,6 +29,9 @@ public class CustomDiagramEditingDomainFactory extends DiagramEditingDomainFacto
 
     private static CustomDiagramEditingDomainFactory instance = new CustomDiagramEditingDomainFactory();
 
+    private final Map<Object, Object> undoRedoOptions = new java.util.HashMap<Object, Object>(
+            AlwaysValidTransaction.DEFAULT_UNDO_REDO_OPTIONS);
+
     public static WorkspaceEditingDomainFactory getInstance() {
         return instance;
     }
@@ -54,6 +57,15 @@ public class CustomDiagramEditingDomainFactory extends DiagramEditingDomainFacto
                 final InternalTransaction result = new AlwaysValidTransaction(this, readOnly, options);
                 result.start();
                 return result;
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl#getUndoRedoOptions()
+             */
+            @Override
+            public Map<Object, Object> getUndoRedoOptions() {
+                return undoRedoOptions;
             }
         };
 

@@ -14,14 +14,26 @@
  */
 package org.bonitasoft.studio.common.editingdomain.transaction;
 
+import java.util.Collections;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.TransactionImpl;
 
 public class AlwaysValidTransaction extends TransactionImpl {
+
+    public static final Map<Object, Object> DEFAULT_UNDO_REDO_OPTIONS;
+    static {
+        final Map<Object, Object> map = new java.util.HashMap<Object, Object>();
+        map.put(Transaction.OPTION_NO_TRIGGERS, Boolean.TRUE);
+        map.put(Transaction.OPTION_NO_UNDO, Boolean.TRUE);
+        map.put(Transaction.OPTION_NO_VALIDATION, Boolean.FALSE);
+        map.put(Transaction.OPTION_IS_UNDO_REDO_TRANSACTION, Boolean.TRUE);
+        DEFAULT_UNDO_REDO_OPTIONS = Collections.unmodifiableMap(map);
+    }
 
     public AlwaysValidTransaction(final TransactionalEditingDomain domain, final boolean readOnly, final Map<?, ?> options) {
         super(domain, readOnly, options);
