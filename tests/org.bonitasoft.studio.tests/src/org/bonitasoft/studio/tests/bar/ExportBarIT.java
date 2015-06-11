@@ -80,14 +80,14 @@ public class ExportBarIT {
         //Expect
         final FormMappingModel formMappingModel = businessArchive.getFormMappingModel();
         assertThat(formMappingModel.getFormMappings()).extracting("form", "type", "taskname", "target").contains(
-                tuple("custompage_Pool", FormMappingType.PROCESS_START, null, FormMappingTarget.INTERNAL),
-                tuple("custompage_PoolOverview", FormMappingType.PROCESS_OVERVIEW, null, FormMappingTarget.INTERNAL),
-                tuple("custompage_Step1", FormMappingType.TASK, "Step1", FormMappingTarget.INTERNAL),
+                tuple("custompage_instantiationForm", FormMappingType.PROCESS_START, null, FormMappingTarget.INTERNAL),
+                tuple("custompage_overviewPage", FormMappingType.PROCESS_OVERVIEW, null, FormMappingTarget.INTERNAL),
+                tuple("custompage_stepForm", FormMappingType.TASK, "Step1", FormMappingTarget.INTERNAL),
                 tuple("http://www.google.com", FormMappingType.TASK, "Step2", FormMappingTarget.URL),
                 tuple("", FormMappingType.TASK, "Step3", FormMappingTarget.LEGACY)
                 );
-        assertThat(businessArchive.getResource("resources/customPages/custompage_Pool.zip")).isNotEmpty();
-        assertThat(businessArchive.getResource("resources/customPages/custompage_PoolOverview.zip")).isNotEmpty();
-        assertThat(businessArchive.getResource("resources/customPages/custompage_Step1.zip")).isNotEmpty();
+        assertThat(businessArchive.getResource("resources/customPages/custompage_instantiationForm.zip")).isNotEmpty();
+        assertThat(businessArchive.getResource("resources/customPages/custompage_overviewPage.zip")).isNotEmpty();
+        assertThat(businessArchive.getResource("resources/customPages/custompage_stepForm.zip")).isNotEmpty();
     }
 }

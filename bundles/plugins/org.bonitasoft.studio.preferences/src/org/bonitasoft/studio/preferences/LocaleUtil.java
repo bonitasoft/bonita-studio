@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.preferences;
 
@@ -27,14 +25,14 @@ import java.util.TreeSet;
 
 import org.bonitasoft.studio.common.BonitaHomeUtil;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class LocaleUtil {
 
-    private  static Comparator<Locale> localeComparator = new Comparator<Locale>() {
+    public static Locale DEFAULT_LOCALE = Locale.ENGLISH;
+
+    private static Comparator<Locale> localeComparator = new Comparator<Locale>() {
 
         @Override
         public int compare(final Locale paramT1, final Locale paramT2) {
@@ -42,7 +40,6 @@ public class LocaleUtil {
         }
 
     };
-
 
     public static Locale[] getProtalLocales() {
         final File portalI18NFolder = BonitaHomeUtil.getPortalI18NFolder();
@@ -55,19 +52,19 @@ public class LocaleUtil {
         });
         final Set<Locale> locales = new TreeSet<Locale>(localeComparator);
         locales.add(Locale.ENGLISH);
-        if(poFiles != null){
-            for(String poFile : poFiles){
+        if (poFiles != null) {
+            for (String poFile : poFiles) {
                 poFile = replacePartNotI18nRelated(poFile);
-                if(!poFile.isEmpty()){
+                if (!poFile.isEmpty()) {
                     String country = null;
                     String language = null;
-                    if(poFile.contains("_")){
+                    if (poFile.contains("_")) {
                         language = poFile.split("_")[0];
                         country = poFile.split("_")[1];
-                    }else{
+                    } else {
                         language = poFile;
                     }
-                    locales.add(country == null ? new Locale(language) : new Locale(language,country));
+                    locales.add(country == null ? new Locale(language) : new Locale(language, country));
                 }
             }
         }
@@ -95,20 +92,20 @@ public class LocaleUtil {
         final Enumeration<URL> findEntries = BonitaStudioPreferencesPlugin.getDefault().getBundle().findEntries("/", "message*_*.properties", false);
         final Set<Locale> locales = new TreeSet<Locale>(localeComparator);
         locales.add(Locale.ENGLISH);
-        if(findEntries != null){
-            while(findEntries.hasMoreElements()){
-                final URL propertiesFile =  findEntries.nextElement();
+        if (findEntries != null) {
+            while (findEntries.hasMoreElements()) {
+                final URL propertiesFile = findEntries.nextElement();
                 final String file = propertiesFile.getFile();
                 final String[] split = file.replace(".properties", "").split("_");
                 String language = null;
                 String country = null;
-                if(split.length == 2){
+                if (split.length == 2) {
                     language = split[1];
-                }else if(split.length == 3){
+                } else if (split.length == 3) {
                     country = split[2];
                 }
-                if(language != null){
-                    locales.add(country == null ? new Locale(language) : new Locale(language,country));
+                if (language != null) {
+                    locales.add(country == null ? new Locale(language) : new Locale(language, country));
                 }
             }
         }

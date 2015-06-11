@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.LocaleUtil;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.di.extensions.Preference;
@@ -69,7 +70,7 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     }
 
     private String locale() {
-        final String locale = preferenceStore.get(CURRENT_STUDIO_LOCALE, "en");
+        final String locale = preferenceStore.get(CURRENT_STUDIO_LOCALE, LocaleUtil.DEFAULT_LOCALE.getLanguage());
         checkNotNull(locale);
         return locale;
     }
