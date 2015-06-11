@@ -46,12 +46,13 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ShapeCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.notation.View;
+
 /**
  * @author Romain Bioteau
  */
 public class CustomPoolCompartmentEditPart extends PoolPoolCompartmentEditPart {
 
-	private final class CustomPoolCompartmentEditPartListener implements EditPartListener {
+    private final class CustomPoolCompartmentEditPartListener implements EditPartListener {
 
         @Override
         public void selectedStateChanged(final EditPart arg0) {
@@ -59,10 +60,10 @@ public class CustomPoolCompartmentEditPart extends PoolPoolCompartmentEditPart {
 
         @Override
         public void removingChild(final EditPart ep, final int arg1) {
-        	((CustomPoolEditPart)getParent()).refreshBoundsAfterRemove(ep);
-        	for(final CustomLaneEditPart l : getPoolLanes()){
-        		l.refreshBounds();
-        	}
+            ((CustomPoolEditPart) getParent()).refreshBoundsAfterRemove(ep);
+            for (final CustomLaneEditPart l : getPoolLanes()) {
+                l.refreshBounds();
+            }
         }
 
         @Override
@@ -72,179 +73,174 @@ public class CustomPoolCompartmentEditPart extends PoolPoolCompartmentEditPart {
 
         @Override
         public void partActivated(final EditPart arg0) {
-        	((CustomPoolEditPart)getParent()).refreshBounds();
+            ((CustomPoolEditPart) getParent()).refreshBounds();
         }
 
         @Override
         public void childAdded(final EditPart ep, final int arg1) {
-        	refreshPoolLanes();
-        	if(ep instanceof CustomLaneEditPart){
-        		reparentContentToNewChild((CustomLaneEditPart) ep);
-        		((CustomPoolEditPart)getParent()).refreshBounds();
-        	}
+            refreshPoolLanes();
+            if (ep instanceof CustomLaneEditPart) {
+                reparentContentToNewChild((CustomLaneEditPart) ep);
+                ((CustomPoolEditPart) getParent()).refreshBounds();
+            }
         }
     }
 
-
-
-    private final List<CustomLaneEditPart> poolLanes ;
+    private final List<CustomLaneEditPart> poolLanes;
     private final CustomPoolCompartmentEditPartListener listener;
 
-	/**
-	 * @return the poolLanes
-	 */
-	public List<CustomLaneEditPart> getPoolLanes() {
-		return poolLanes;
-	}
+    /**
+     * @return the poolLanes
+     */
+    public List<CustomLaneEditPart> getPoolLanes() {
+        return poolLanes;
+    }
 
-	public CustomPoolCompartmentEditPart(final View view) {
-		super(view);
-		poolLanes = new LinkedList<CustomLaneEditPart>();
-		listener = new CustomPoolCompartmentEditPartListener();
-	}
+    public CustomPoolCompartmentEditPart(final View view) {
+        super(view);
+        poolLanes = new LinkedList<CustomLaneEditPart>();
+        listener = new CustomPoolCompartmentEditPartListener();
+    }
 
-
-
-	@Override
+    @Override
     public Object getAdapter(final Class key) {
 
-		if (key == SnapToHelper.class) {
-			EditPart parent = getParent();
-			while (!(parent instanceof DiagramEditPart)) {
-				parent = parent.getParent();
-			}
-			return GMFTools.getSnapHelper((GraphicalEditPart) parent);
-		}
+        if (key == SnapToHelper.class) {
+            EditPart parent = getParent();
+            while (!(parent instanceof DiagramEditPart)) {
+                parent = parent.getParent();
+            }
+            return GMFTools.getSnapHelper((GraphicalEditPart) parent);
+        }
 
-		return super.getAdapter(key);
-	}
+        return super.getAdapter(key);
+    }
 
-	@Override
-	public void setSelected(final int value) {
-		super.setSelected(value);
-	//	getParent().setSelected(value) ;
-	}
-	@Override
-	protected void refreshVisuals() {
-		super.refreshVisuals();
-		figure.setToolTip(null);
-	}
+    @Override
+    public void setSelected(final int value) {
+        super.setSelected(value);
+        //	getParent().setSelected(value) ;
+    }
 
-	public void refreshPoolLanes(){
-		poolLanes.clear();
-		final Pool p = (Pool) resolveSemanticElement() ;
-		for(final Element e : p.getElements()){
-			if(e instanceof Lane){
-				final CustomLaneEditPart lEp = (CustomLaneEditPart) findEditPart(this, e);
-				if(lEp != null) {
-                    poolLanes.add(lEp);
+    @Override
+    protected void refreshVisuals() {
+        super.refreshVisuals();
+        figure.setToolTip(null);
+    }
+
+    public void refreshPoolLanes() {
+        poolLanes.clear();
+        final Pool p = (Pool) resolveSemanticElement();
+        for (final Element e : p.getElements()) {
+            if (e instanceof Lane) {
+                final EditPart lEp = findEditPart(this, e);
+                if (lEp instanceof CustomLaneNameEditPart) {
+                    poolLanes.add((CustomLaneEditPart) lEp.getParent());
+                } else if (lEp instanceof CustomLaneEditPart) {
+                    poolLanes.add((CustomLaneEditPart) lEp);
                 }
-			}
-		}
-	}
+            }
+        }
+    }
 
-	@Override
+    @Override
     protected void createDefaultEditPolicies() {
-		super.createDefaultEditPolicies();
-		removeEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE);
-		installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE,
-				new CustomDragDropEditPolicy());
-		removeEditPolicy(EditPolicyRoles.SNAP_FEEDBACK_ROLE);
-		installEditPolicy(EditPolicyRoles.SNAP_FEEDBACK_ROLE,
-				new CustomSnapFeedbackPolicy());
+        super.createDefaultEditPolicies();
+        removeEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE);
+        installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE,
+                new CustomDragDropEditPolicy());
+        removeEditPolicy(EditPolicyRoles.SNAP_FEEDBACK_ROLE);
+        installEditPolicy(EditPolicyRoles.SNAP_FEEDBACK_ROLE,
+                new CustomSnapFeedbackPolicy());
 
-	}
+    }
 
-	@Override
-	public IFigure createFigure() {
-		final ShapeCompartmentFigure scf = new CustomShapeCompartmentFigure(getCompartmentName(), getMapMode());
-		scf.getContentPane().setLayoutManager(getLayoutManager());
-		scf.getContentPane().addLayoutListener(LayoutAnimator.getDefault());
-		scf.setTitleVisibility(false);
-		return scf;
-	}
+    @Override
+    public IFigure createFigure() {
+        final ShapeCompartmentFigure scf = new CustomShapeCompartmentFigure(getCompartmentName(), getMapMode());
+        scf.getContentPane().setLayoutManager(getLayoutManager());
+        scf.getContentPane().addLayoutListener(LayoutAnimator.getDefault());
+        scf.setTitleVisibility(false);
+        return scf;
+    }
 
-	@Override
-	public ResizableCompartmentFigure getCompartmentFigure() {
-		return (ResizableCompartmentFigure) getFigure();
-	}
+    @Override
+    public ResizableCompartmentFigure getCompartmentFigure() {
+        return (ResizableCompartmentFigure) getFigure();
+    }
 
+    public void reparentContentToNewChild(final CustomLaneEditPart lane) {
 
-	public void reparentContentToNewChild(final CustomLaneEditPart lane) {
+        final List<EditPart> epToMove = new ArrayList<EditPart>();
+        for (final Object o : getChildren()) {
+            if (o instanceof CustomLaneEditPart) {
 
-		final List<EditPart> epToMove = new ArrayList<EditPart>();
-		for(final Object o : getChildren()){
-			if(o instanceof CustomLaneEditPart){
+                for (final Object o1 : getChildren()) {
+                    if (!(o1 instanceof CustomLaneEditPart)) {
+                        epToMove.add((EditPart) o1);
+                    }
+                }
+            }
+        }
 
-				for(final Object o1 : getChildren()){
-					if(!(o1 instanceof CustomLaneEditPart)){
-						epToMove.add((EditPart) o1);
-					}
-				}
-			}
-		}
+        if (poolLanes.size() == 1) {
+            createMoveRequest(lane, epToMove);
+        }
 
-		if(poolLanes.size() == 1){
-			createMoveRequest(lane,epToMove);
-		}
+    }
 
-	}
+    private void createMoveRequest(final GraphicalEditPart lane,
+            final List<EditPart> epToMove2) {
 
+        final ChangeBoundsRequest request = new ChangeBoundsRequest();
+        request.setEditParts(epToMove2);
+        request.setType(RequestConstants.REQ_ADD);
+        CompartmentEditPart compartment = null;
+        for (final Object o : lane.getChildren()) {
+            if (o instanceof CompartmentEditPart) {
+                compartment = (CompartmentEditPart) o;
+            }
+        }
+        if (compartment == null) {
+            compartment = (CompartmentEditPart) lane;
+        }
+        if (compartment.getEditPolicy(EditPolicyRoles.CREATION_ROLE) == null) {
+            compartment.installEditPolicy(EditPolicyRoles.CREATION_ROLE, new CreationEditPolicy());
+        }
 
-	private void createMoveRequest(final GraphicalEditPart lane,
-			final List<EditPart> epToMove2) {
+        final CreationEditPolicy cep = (CreationEditPolicy) compartment.getEditPolicy(EditPolicyRoles.CREATION_ROLE);
+        compartment.getDiagramEditDomain().getDiagramCommandStack().execute(cep.getCommand(request));
+        getViewer().getRootEditPart().refresh();
 
-		final ChangeBoundsRequest request = new ChangeBoundsRequest();
-		request.setEditParts(epToMove2);
-		request.setType(RequestConstants.REQ_ADD);
-		CompartmentEditPart compartment = null ;
-		for(final Object o : lane.getChildren()){
-			if (o instanceof CompartmentEditPart){
-				compartment = (CompartmentEditPart) o ;
-			}
-		}
-		if(compartment == null){
-			compartment =  (CompartmentEditPart) lane;
-		}
-		if(compartment.getEditPolicy(EditPolicyRoles.CREATION_ROLE) == null){
-			compartment.installEditPolicy(EditPolicyRoles.CREATION_ROLE, new CreationEditPolicy());
-		}
+    }
 
-		final CreationEditPolicy cep = (CreationEditPolicy) compartment.getEditPolicy(EditPolicyRoles.CREATION_ROLE);
-		compartment.getDiagramEditDomain().getDiagramCommandStack().execute(cep.getCommand(request));
-		getViewer().getRootEditPart().refresh() ;
-
-	}
-
-
-
-	@Override
-	public DragTracker getDragTracker(final Request req) {
-		if (!supportsDragSelection()) {
+    @Override
+    public DragTracker getDragTracker(final Request req) {
+        if (!supportsDragSelection()) {
             return super.getDragTracker(req);
         }
 
-		if (req instanceof SelectionRequest
-			&& ((SelectionRequest) req).getLastButtonPressed() == 3) {
+        if (req instanceof SelectionRequest
+                && ((SelectionRequest) req).getLastButtonPressed() == 3) {
             return new DeselectAllTracker(this) {
 
-				@Override
+                @Override
                 protected boolean handleButtonDown(final int button) {
-					getCurrentViewer().select(CustomPoolCompartmentEditPart.this);
-					return true;
-				}
-			};
+                    getCurrentViewer().select(CustomPoolCompartmentEditPart.this);
+                    return true;
+                }
+            };
         }
-		return new CustomRubberbandDragTracker() {
+        return new CustomRubberbandDragTracker() {
 
-			@Override
+            @Override
             protected void handleFinished() {
-				if (getViewer().getSelectedEditParts().isEmpty()) {
+                if (getViewer().getSelectedEditParts().isEmpty()) {
                     getViewer().select(CustomPoolCompartmentEditPart.this);
                 }
-			}
-		};
-	}
+            }
+        };
+    }
 
     @Override
     public void activate() {
