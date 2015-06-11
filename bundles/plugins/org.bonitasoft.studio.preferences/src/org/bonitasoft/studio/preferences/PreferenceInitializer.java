@@ -126,9 +126,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
             defaultLocaleValue = bonitaPreferenceStore.getString(DEFAULT_STUDIO_LOCALE);
         }
 
-        bonitaPreferenceStore.setDefault(CURRENT_UXP_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
-        bonitaPreferenceStore.setDefault(CURRENT_STUDIO_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
-        LocaleUtil.DEFAULT_LOCALE = Locale.forLanguageTag(defaultLocaleValue);
+        bonitaPreferenceStore.setDefault(CURRENT_UXP_LOCALE, defaultLocaleValue(defaultLocaleValue));
+        bonitaPreferenceStore.setDefault(CURRENT_STUDIO_LOCALE, defaultLocaleValue(defaultLocaleValue));
+        LocaleUtil.DEFAULT_LOCALE = Locale.forLanguageTag(defaultLocaleValue(defaultLocaleValue));
+    }
+
+    private String defaultLocaleValue(final String defaultLocaleValue) {
+        return defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage();
     }
 
     protected Locale[] getStudioLocales() {
