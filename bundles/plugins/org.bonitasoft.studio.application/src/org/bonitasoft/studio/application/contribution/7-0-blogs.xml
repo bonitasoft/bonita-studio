@@ -1,19 +1,34 @@
 ﻿<?xml version="1.0" ?>
 <rss version="2.0">
   <channel>
-    <pubDate>2015-05-12</pubDate>
+    <pubDate>2015-06-08</pubDate>
     <author>Bonitasoft</author>
     <category>News</category>
     <title>Bonitasoft latest blog posts</title>
     <link>http://www.bonitasoft.com/blog</link>
     <description>Latest posts from the Bonitasoft blog</description>
     <item>
-       <pubDate>2015-05-07</pubDate>
+       <pubDate>2015-06-08</pubDate>
        <author>Laura Balp</author>
        <category>News</category>
-       <!-- TODO update link -->
-       <title>Bonita BPM 7.0.0 now available!</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/</link>
+       <title>Bonita BPM 6.5.3 now available!</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/bonita-bpm-653-now-available</link>
+       <description></description>
+    </item>
+    <item>
+       <pubDate>2015-06-01</pubDate>
+       <author>Mickey Farrance</author>
+       <category>News</category>
+       <title>BPM-CON</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/gartners-bpm-leaders-due-diligence-day</link>
+       <description></description>
+    </item>
+    <item>
+       <pubDate>2015-06-01</pubDate>
+       <author>Mickey Farrance</author>
+       <category>News</category>
+       <title>Bonita BPM 7 - UI designer</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/bonita-bpm-7-first-peek-ui-designer-bpmnext</link>
        <description></description>
     </item>
     <item>
@@ -30,22 +45,6 @@
        <category>News</category>
        <title>bpmNEXT 2015 - Defining the Next...</title>
        <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/bpmnext-2015-defining-next-generation-process-innovation</link>
-       <description></description>
-    </item>	
-    <item>
-       <pubDate>2015-03-19</pubDate>
-       <author>Mickey Farrance</author>
-       <category>News</category>
-       <title>EnerNOC using Bonita BPM to...</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/enernoc-using-bonita-bpm-automate-core-business</link>
-       <description></description>
-    </item>
-    <item>
-       <pubDate>2015-03-06</pubDate>
-       <author>Mickey Farrance</author>
-       <category>News</category>
-       <title>Bonitasoft Customer Support...</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/bonitasoft-customer-support-customer-success-team-won-stevie</link>
        <description></description>
     </item>
    </channel>

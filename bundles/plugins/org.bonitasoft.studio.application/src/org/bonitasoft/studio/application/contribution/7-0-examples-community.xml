@@ -5,31 +5,27 @@
     <author>Bonitasoft</author>
     <category>Examples</category>
     <title>Bonitasoft examples: Community</title>
-    <!-- TODO update link -->
-    <link>http://www.bonitasoft.com/for-you-to-read/process-library?type=&amp;resource=community_example</link>
+    <link>http://community.bonitasoft.com/project?field_project_category_tid=360&amp;title=&amp;term_node_tid_depth=2241</link>
     <description>Bonitasoft Examples</description>
     <item>
        <author>Antoine Mottier</author>
        <category>Examples</category>
+       <title>Expense report</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://community.bonitasoft.com/project?field_project_category_tid%3D360%26title%3D%26term_node_tid_depth%3D2241</link>
+       <description></description>
+    </item>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Examples</category>
        <title>Vacation management</title>
-       <!-- TODO fix link -->
-       <link>http://www.bonitasoft.com/</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://community.bonitasoft.com/project%3Ffield_project_category_tid%3D360%26title%3D%26term_node_tid_depth%3D2241</link>
        <description></description>
     </item>
     <item>
        <author>Antoine Mottier</author>
        <category>Examples</category>
        <title>Procurement</title>
-       <!-- TODO fix link -->
-       <link>http://www.bonitasoft.com/</link>
-       <description></description>
-    </item>
-   	<item>
-       <author>Antoine Mottier</author>
-       <category>Examples</category>
-       <title>Ticketing</title>
-       <!-- TODO fix link -->
-       <link>http://www.bonitasoft.com/</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://community.bonitasoft.com/project/procurement</link>
        <description></description>
     </item>
    </channel>
