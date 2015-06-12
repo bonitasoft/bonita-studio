@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.businessobject.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
@@ -150,11 +151,22 @@ public class ManageBusinessDataModelWizard extends Wizard {
                 }
             });
         } catch (final InvocationTargetException e) {
-            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.installFailedTitle, Messages.installFailedMessage, e.getTargetException())
+            final Throwable targetException = e.getTargetException();
+            int index = -1;
+            for (int i = 0; i < targetException.getStackTrace().length; i++) {
+                final StackTraceElement element = targetException.getStackTrace()[i];
+                if (element.getClassName().contains("org.hibernate.HibernateException")) {
+                    index = i;
+                    break;
+                }
+            }
+            if (index > -1) {
+                targetException.setStackTrace(Arrays.copyOfRange(targetException.getStackTrace(), index, targetException.getStackTrace().length));
+            }
+            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.installFailedTitle, Messages.installFailedMessage, targetException)
                     .open();
             return false;
         } catch (final InterruptedException e) {
-            BonitaStudioLog.error(e);
             return false;
         }
         return true;
