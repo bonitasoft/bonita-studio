@@ -1271,10 +1271,6 @@ public class BPMNToProc extends ToProcProcessor {
         return activityNumber;
     }
 
-    /**
-     * @param flowNode
-     * @throws ProcBuilderException
-     */
     private void handleMultiInstantiation(final TFlowNode flowNode) throws ProcBuilderException {
         final TLoopCharacteristics loopCharacteristics = ((TActivity) flowNode).getLoopCharacteristics();
         if (loopCharacteristics instanceof TMultiInstanceLoopCharacteristics) {
@@ -1291,8 +1287,7 @@ public class BPMNToProc extends ToProcProcessor {
             }
 
         } else if (loopCharacteristics instanceof TStandardLoopCharacteristics) {
-            final TFormalExpression expression = (TFormalExpression) ((TStandardLoopCharacteristics) loopCharacteristics)
-                    .getLoopCondition();
+            final TExpression expression = ((TStandardLoopCharacteristics) loopCharacteristics).getLoopCondition();
             builder.addLoopCondition(getBonitaExpressionFromBPMNExpression(expression),
                     String.valueOf(((TStandardLoopCharacteristics) loopCharacteristics).getLoopMaximum()),
                     ((TStandardLoopCharacteristics) loopCharacteristics).isTestBefore() ? TestTimeType.BEFORE : TestTimeType.AFTER);
