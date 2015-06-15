@@ -20,6 +20,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,6 +35,8 @@ import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -69,6 +72,8 @@ public class TabbedPropertySynchronizerListenerTest {
     private EditPartResolver editPartResolver;
     @Mock
     private IGraphicalEditPart editPart;
+    @Mock
+    private Display display;
 
     @Before
     public void setUp() throws Exception {
@@ -79,8 +84,15 @@ public class TabbedPropertySynchronizerListenerTest {
         when(viewPart.getAdapter(TabbedPropertySheetPage.class)).thenReturn(page);
         when(editorPart.getDiagramEditPart()).thenReturn(new DiagramEditPart(NotationFactory.eINSTANCE.createDiagram()));
         when(editorPart.getDiagramGraphicalViewer()).thenReturn(viewer);
+        doReturn(aControlWithDisplay(display)).when(viewer).getControl();
         when(editPartResolver.findEditPart(any(DiagramEditPart.class), notNull(EObject.class))).thenReturn(editPart);
         doReturn(new IEditorReference[] { processEditorReference }).when(activePage).getEditorReferences();
+    }
+
+    private Control aControlWithDisplay(final Display display) {
+        final Control control = mock(Control.class);
+        doReturn(display).when(control).getDisplay();
+        return control;
     }
 
     @Test
@@ -103,6 +115,7 @@ public class TabbedPropertySynchronizerListenerTest {
 
         verify(viewer).select(editPart);
         verify(viewer).reveal(editPart);
+        verify(display).asyncExec(notNull(RefreshPropertyViewsSelection.class));
     }
 
     @Test
