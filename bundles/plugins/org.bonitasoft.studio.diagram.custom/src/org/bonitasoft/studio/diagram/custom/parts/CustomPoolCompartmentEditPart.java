@@ -117,12 +117,6 @@ public class CustomPoolCompartmentEditPart extends PoolPoolCompartmentEditPart {
     }
 
     @Override
-    public void setSelected(final int value) {
-        super.setSelected(value);
-        //	getParent().setSelected(value) ;
-    }
-
-    @Override
     protected void refreshVisuals() {
         super.refreshVisuals();
         figure.setToolTip(null);
