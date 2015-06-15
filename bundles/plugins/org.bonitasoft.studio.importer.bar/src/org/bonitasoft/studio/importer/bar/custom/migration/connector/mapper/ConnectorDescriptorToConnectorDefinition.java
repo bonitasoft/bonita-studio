@@ -635,7 +635,7 @@ public class ConnectorDescriptorToConnectorDefinition {
     }
 
     private boolean isSupportedIconExtension(final String iconName) {
-        if (iconName.matches(".*\\.jpg|.*\\.jpeg|.*\\.gif|.*\\.png|.*\\.bmp")) {
+        if (iconName.toLowerCase().matches(".*\\.jpg|.*\\.jpeg|.*\\.gif|.*\\.png|.*\\.bmp")) {
             return Boolean.TRUE;
         } else {
             Display.getDefault().syncExec(
