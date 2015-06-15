@@ -55,11 +55,13 @@ public class JavaSetterOperatorConstraint extends AbstractLiveValidationMarkerCo
         final EObject eObj = ctx.getTarget();
         checkArgument(eObj instanceof Operator);
         final Operator operator = (Operator) eObj;
-        if (Objects.equals(operator.getType(), ExpressionConstants.JAVA_METHOD_OPERATOR)) {
-            try {
-                return validateMethodExists(ctx, operator, leftOperandType(operator));
-            } catch (final JavaModelException e) {
-                return ctx.createFailureStatus(e.getMessage());
+        if (operator.eContainer() instanceof Operation && ValidableOperation.shouldValidateOperation((Operation) operator.eContainer())) {
+            if (Objects.equals(operator.getType(), ExpressionConstants.JAVA_METHOD_OPERATOR)) {
+                try {
+                    return validateMethodExists(ctx, operator, leftOperandType(operator));
+                } catch (final JavaModelException e) {
+                    return ctx.createFailureStatus(e.getMessage());
+                }
             }
         }
         return ctx.createSuccessStatus();
