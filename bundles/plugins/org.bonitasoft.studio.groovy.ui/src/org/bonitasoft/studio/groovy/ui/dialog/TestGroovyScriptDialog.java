@@ -38,6 +38,7 @@ import org.bonitasoft.studio.groovy.ui.dialog.control.DateTimeControl;
 import org.bonitasoft.studio.groovy.ui.viewer.TestGroovyScriptUtil;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.StringToNumberConverter;
 import org.eclipse.core.internal.databinding.validation.StringToDoubleValidator;
@@ -180,44 +181,47 @@ public class TestGroovyScriptDialog extends Dialog {
             } else {
                 final Text varValueText = new Text(group, SWT.BORDER);
                 varValueText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
-                final ScriptVariable v = getScriptVariable(var.getKey());
-                final UpdateValueStrategyFactory strategyFactory = updateValueStrategy().withValidator(mandatoryValidator(var.getKey()));
-                final MultiValidatorFactory multiValidator = multiValidator();
-                multiValidator.addValidator(mandatoryValidator(var.getKey()));
-                if (v != null) {
-                    if (Long.class.getName().equals(v.getType())) {
-                        final StringToNumberConverter converter = StringToNumberConverter.toLong(true);
-                        strategyFactory.withConverter(converter);
-                        multiValidator.addValidator(new StringToLongValidator(converter));
-                    }
-                    if (Integer.class.getName().equals(v.getType())) {
-                        final StringToNumberConverter converter = StringToNumberConverter.toInteger(true);
-                        strategyFactory.withConverter(converter);
-                        multiValidator.addValidator(new StringToIntegerValidator(converter));
-                    }
-                    if (Float.class.getName().equals(v.getType())) {
-                        final StringToNumberConverter converter = StringToNumberConverter.toFloat(true);
-                        strategyFactory.withConverter(converter);
-                        multiValidator.addValidator(new StringToFloatValidator(converter));
-                    }
-                    if (Double.class.getName().equals(v.getType())) {
-                        final StringToNumberConverter converter = StringToNumberConverter.toDouble(true);
-                        strategyFactory.withConverter(converter);
-                        multiValidator.addValidator(new StringToDoubleValidator(converter));
-                    }
-                }
-                strategyFactory.withValidator(multiValidator);
+                final ScriptVariable scriptVaraible = getScriptVariable(var.getKey());
                 ControlDecorationSupport.create(
                         dbc.bindValue(SWTObservables.observeText(varValueText, SWT.Modify), PojoObservables.observeValue(propertyValue, "value"),
-                                strategyFactory.create(), null),
-                        SWT.LEFT);
-                if (v != null && v.getDefaultValue() != null) {
-                    varValueText.setText(v.getDefaultValue());
+                                variableInputStrategy(var.getKey(), scriptVaraible), null), SWT.LEFT);
+                if (scriptVaraible != null && scriptVaraible.getDefaultValue() != null) {
+                    varValueText.setText(scriptVaraible.getDefaultValue());
                 }
             }
             propertyValues.add(propertyValue);
         }
 
+    }
+
+    protected UpdateValueStrategy variableInputStrategy(final String inputName, final ScriptVariable variable) {
+        final UpdateValueStrategyFactory strategyFactory = updateValueStrategy();
+        final MultiValidatorFactory multiValidator = multiValidator();
+        multiValidator.addValidator(mandatoryValidator(inputName));
+        if (variable != null) {
+            if (Long.class.getName().equals(variable.getType())) {
+                final StringToNumberConverter converter = StringToNumberConverter.toLong(true);
+                strategyFactory.withConverter(converter);
+                multiValidator.addValidator(new StringToLongValidator(converter));
+            }
+            if (Integer.class.getName().equals(variable.getType())) {
+                final StringToNumberConverter converter = StringToNumberConverter.toInteger(true);
+                strategyFactory.withConverter(converter);
+                multiValidator.addValidator(new StringToIntegerValidator(converter));
+            }
+            if (Float.class.getName().equals(variable.getType())) {
+                final StringToNumberConverter converter = StringToNumberConverter.toFloat(true);
+                strategyFactory.withConverter(converter);
+                multiValidator.addValidator(new StringToFloatValidator(converter));
+            }
+            if (Double.class.getName().equals(variable.getType())) {
+                final StringToNumberConverter converter = StringToNumberConverter.toDouble(true);
+                strategyFactory.withConverter(converter);
+                multiValidator.addValidator(new StringToDoubleValidator(converter));
+            }
+        }
+        strategyFactory.withValidator(multiValidator);
+        return strategyFactory.create();
     }
 
     private ScriptVariable getScriptVariable(final String name) {
