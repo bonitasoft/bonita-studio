@@ -70,6 +70,10 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 public class NewDiagramFactory {
 
+    /**
+     * 
+     */
+    private static final String POOL_DEFAULT_WIDTH = "poolDefaultWidth";
     private static final String BASE_VERSION = "1.0"; //$NON-NLS-1$
     private DiagramFileStore fileStore;
     private final IRepository repository;
@@ -334,7 +338,7 @@ public class NewDiagramFactory {
 
     public void setDefaultPoolWidth(final int defaultWidth) {
         final IPreferenceStore store = (IPreferenceStore) ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT.getPreferenceStore();
-        store.setDefault("poolDefaultWidth", defaultWidth);
+        store.setDefault(POOL_DEFAULT_WIDTH, defaultWidth);
     }
 
 }
