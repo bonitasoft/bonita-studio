@@ -124,13 +124,17 @@ public class WidgetMigration extends ReportCustomMigration {
         if (!connectors.isEmpty()) {
             final Instance instance = connectors.get(0);
             initialValueConnectors.put(widget.getUuid(), instance.copy());
-            if (connectors.size() > 1) {
-                for (int i = 1; i < connectors.size(); i++) {
-                    final Instance connectorInstance = connectors.get(i);
-                    addReportChange((String) connectorInstance.get("name"), connectorInstance.getType().getEClass().getName(), connectorInstance.getUuid(),
-                            Messages.widgetDataInputMigrationDescription, Messages.connectorProperty, IStatus.ERROR);
-                    model.delete(connectorInstance);
-                }
+            removeExtraConnectors(model, connectors, Messages.widgetDataInputMigrationDescription);
+        }
+    }
+
+    private void removeExtraConnectors(final Model model, final List<Instance> connectors, final String reportErrorMessage) {
+        if (connectors.size() > 1) {
+            for (int i = 1; i < connectors.size(); i++) {
+                final Instance connectorInstance = connectors.get(i);
+                addReportChange((String) connectorInstance.get("name"), connectorInstance.getType().getEClass().getName(), connectorInstance.getUuid(),
+                        reportErrorMessage, Messages.connectorProperty, IStatus.ERROR);
+                model.delete(connectorInstance);
             }
         }
     }
@@ -140,14 +144,7 @@ public class WidgetMigration extends ReportCustomMigration {
         if (!connectors.isEmpty()) {
             final Instance instance = connectors.get(0);
             afterEventConnector.put(widget.getUuid(), instance.copy());
-            if (connectors.size() > 1) {
-                for (int i = 1; i < connectors.size(); i++) {
-                    final Instance connectorInstance = connectors.get(i);
-                    addReportChange((String) connectorInstance.get("name"), connectorInstance.getType().getEClass().getName(), connectorInstance.getUuid(),
-                            Messages.widgetContigencyConnectorMigrationDescription, Messages.connectorProperty, IStatus.ERROR);
-                    model.delete(connectorInstance);
-                }
-            }
+            removeExtraConnectors(model, connectors, Messages.widgetContigencyConnectorMigrationDescription);
         }
     }
 
