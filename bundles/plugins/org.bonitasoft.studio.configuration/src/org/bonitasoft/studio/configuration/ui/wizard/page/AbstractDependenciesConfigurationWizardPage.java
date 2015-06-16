@@ -149,7 +149,6 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
     }
 
     protected Control createRawClasspathControl(final TabFolder parent) {
-
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(10, 10, 10, 10).create());
@@ -242,7 +241,6 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
     }
 
     protected Control createTreeClasspathControl(final TabFolder parent) {
-
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 10, 10, 10).equalWidth(false).create());

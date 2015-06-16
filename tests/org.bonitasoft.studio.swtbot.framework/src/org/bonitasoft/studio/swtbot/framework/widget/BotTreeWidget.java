@@ -5,16 +5,17 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.swtbot.framework.widget;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractInputRow;
@@ -25,10 +26,8 @@ import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class BotTreeWidget extends BotWidget {
 
@@ -61,6 +60,14 @@ public class BotTreeWidget extends BotWidget {
         return this;
     }
 
+    public List<String> items() throws Exception {
+        final List<String> items = new ArrayList<String>();
+        for (final SWTBotTreeItem item : getSWTBotWidget().getAllItems()) {
+            items.add(item.getText());
+        }
+        return items;
+    }
+
     public ICondition emptyCondition() {
         return new DefaultCondition() {
 
@@ -83,8 +90,7 @@ public class BotTreeWidget extends BotWidget {
     public BotContractInputRow selectActiveRow(final SWTGefBot bot) {
         final SWTBotTree treeWithId = bot.treeWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE);
         final TableCollection selection = treeWithId.selection();
-        final SWTBotTreeItem treeItem = treeWithId.getTreeItem(selection.get(0, 0));
-        System.out.println(treeItem);
+        treeWithId.getTreeItem(selection.get(0, 0));
         return new BotContractInputRow(bot, selection.rowCount());
     }
 

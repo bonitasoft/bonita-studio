@@ -20,7 +20,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.swtbot.swt.finder;bundle-version="2.0.5",
  org.eclipse.gmf.runtime.diagram.ui;bundle-version="1.5.0",
  org.bonitasoft.studio.test.swtbot.util;bundle-version="1.0.0",
- org.bonitasoft.studio.diagram
+ org.bonitasoft.studio.diagram,
+ org.bonitasoft.studio.swtbot.framework,
+ assertj-core;bundle-version="1.5.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.connector
