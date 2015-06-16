@@ -37,14 +37,13 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
-
 public class NewDiagramCommandHandler extends AbstractHandler {
-
 
     @Override
     public DiagramFileStore execute(final ExecutionEvent event) throws ExecutionException {
         final NewDiagramFactory diagramFactory = new NewDiagramFactory(RepositoryManager.getInstance().getCurrentRepository(),
                 BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
+        diagramFactory.setDefaultPoolWidth(getDefaultWidth());
         final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {
             progressService.run(true, false, new IRunnableWithProgress() {
@@ -76,6 +75,14 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 
         return diagramFileStore;
     }
+
+    private int getDefaultWidth() {
+        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell() != null) {
+            return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getClientArea().width - 240;
+        }
+        return 1000;
+    }
+
     /*
      * (non-Javadoc)
      * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
