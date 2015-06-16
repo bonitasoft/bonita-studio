@@ -51,7 +51,8 @@ public class TestProcessDependencies extends SWTBotGefTestCase {
                 "CustomConnectorWithoutDependencies",
                 getClass(), false);
 
-        assertThat(new BotApplicationWorkbenchWindow(bot).configure().selectProcessDependencies().selectTreeView().items()).containsOnly(Messages.others);
+        assertThat(new BotApplicationWorkbenchWindow(bot).configure().selectProcessDependencies().selectTreeView().items()).contains(Messages.others)
+                .doesNotContain(Messages.connector);
     }
 
 }
