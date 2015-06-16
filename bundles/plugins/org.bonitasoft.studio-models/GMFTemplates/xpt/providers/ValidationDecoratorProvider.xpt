@@ -256,14 +256,14 @@ public class «validationDecoratorProviderClassName»
 				imageName = org.eclipse.ui.ISharedImages.IMG_OBJS_ERROR_TSK;
 				break;
 			case org.eclipse.core.resources.IMarker.SEVERITY_WARNING:
-				imageName = org.eclipse.ui.ISharedImages.IMG_OBJS_ERROR_TSK;
+				imageName = org.eclipse.ui.ISharedImages.IMG_OBJS_WARN_TSK;
 				break;
 			«ELSE-»
 			case org.eclipse.core.runtime.IStatus.ERROR:
 				imageName = org.eclipse.ui.ISharedImages.IMG_OBJS_ERROR_TSK;
 				break;
 			case org.eclipse.core.runtime.IStatus.WARNING:
-				imageName = org.eclipse.ui.ISharedImages.IMG_OBJS_ERROR_TSK;
+				imageName = org.eclipse.ui.ISharedImages.IMG_OBJS_WARN_TSK;
 				break;
 			«ENDIF-»
 			default:

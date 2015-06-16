@@ -62,7 +62,7 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
     private boolean statusContainsError() {
         if (status != null) {
             for (final IStatus s : status.getChildren()) {
-                if (s.getSeverity() == IStatus.WARNING || s.getSeverity() == IStatus.ERROR) {
+                if (s.getSeverity() == IStatus.ERROR) {
                     return true;
                 }
             }
