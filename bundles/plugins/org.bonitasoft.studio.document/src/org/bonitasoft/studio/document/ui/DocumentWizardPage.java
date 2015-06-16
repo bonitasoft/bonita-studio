@@ -609,12 +609,21 @@ public class DocumentWizardPage extends WizardPage {
     protected void updateSingleMultipleStack(final boolean isMultiple) {
         if (isMultiple) {
             singleMultiplestack.topControl = multipleComposite;
-            updateMimeTypeEnabled(false);
         } else {
             singleMultiplestack.topControl = singleComposite;
-            updateMimeTypeEnabled(!document.getDocumentType().equals(DocumentType.NONE));
         }
+        updateMimeTypeEnabled(isMimetypeEditable(isMultiple, document));
         multipleComposite.getParent().layout();
+    }
+
+    protected boolean isMimetypeEditable(final boolean isMultiple, final Document document) {
+        if (isMultiple) {
+            return false;
+        } else {
+            final DocumentType documentType = document.getDocumentType();
+            return !(DocumentType.NONE.equals(documentType)
+            || DocumentType.CONTRACT.equals(documentType));
+        }
     }
 
     private void updateMimeTypeEnabled(final boolean isEnabled) {
