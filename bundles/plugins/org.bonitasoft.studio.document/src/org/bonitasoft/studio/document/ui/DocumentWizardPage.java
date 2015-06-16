@@ -311,7 +311,7 @@ public class DocumentWizardPage extends WizardPage {
 
         final Button radioButtonNone = createRadioButtonNone(radioContainer);
         final Button radioButtonContract = createRadioButtonContract(radioContainer);
-        final Button radioButtonScript = createRadioButtonNone(radioContainer);
+        final Button radioButtonScript = createRadioButtonInternal(radioContainer);
         radioButtonScript.setText(Messages.initialValueButtonScript);
 
         final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(ProcessPackage.DOCUMENT_TYPE);
