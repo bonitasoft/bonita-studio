@@ -61,7 +61,7 @@ public class TestGroovyScriptDialogTest {
 
         final UpdateValueStrategy strategy = dialog.variableInputStrategy("input", new ScriptVariable("input", Double.class.getName()));
 
-        assertThat(strategy.convert("5,6987")).isEqualTo(5.6987d);
+        assertThat(strategy.convert(String.format("%f", 5.6987d))).isEqualTo(5.6987d);
         StatusAssert.assertThat(strategy.validateAfterGet("")).isNotOK();
         StatusAssert.assertThat(strategy.validateAfterGet("Not a double parsable")).isNotOK();
     }
@@ -72,7 +72,7 @@ public class TestGroovyScriptDialogTest {
 
         final UpdateValueStrategy strategy = dialog.variableInputStrategy("input", new ScriptVariable("input", Float.class.getName()));
 
-        assertThat(strategy.convert("5,6987")).isEqualTo(5.6987f);
+        assertThat(strategy.convert(String.format("%f", 5.6987f))).isEqualTo(5.6987f);
         StatusAssert.assertThat(strategy.validateAfterGet("")).isNotOK();
         StatusAssert.assertThat(strategy.validateAfterGet("Not a float parsable")).isNotOK();
     }
