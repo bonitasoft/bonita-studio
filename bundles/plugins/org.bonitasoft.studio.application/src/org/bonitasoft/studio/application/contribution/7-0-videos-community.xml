@@ -5,35 +5,33 @@
     <author>Bonitasoft</author>
     <category>Videos</category>
     <title>Bonitasoft community videos</title>
-    <!-- TODO replace with link to new web site videos list -->
-    <link></link>
     <description>Videos from Bonitasoft</description>
     <item>
        <author>Antoine Mottier</author>
        <category>Videos</category>
-       <title>Todo video community 1</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/todo_video_1</link>
+       <title>Bonita BPM 7 Overview</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/videos</link>
        <description></description>
     </item>
     <item>
        <author>Antoine Mottier</author>
        <category>Videos</category>
-       <title>Todo video community 2</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/todo_video_2</link>
+       <title>Process Modeling with Bonita BPM</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/videos</link>
        <description></description>
     </item>
     <item>
        <author>Antoine Mottier</author>
        <category>Videos</category>
-       <title>Todo video community 3</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/todo_video_3</link>
+       <title>Manage business data efficiently</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/videos</link>
        <description></description>
     </item>
     <item>
        <author>Antoine Mottier</author>
        <category>Videos</category>
-       <title>Todo video community 4</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/todo_video_4</link>
+       <title>Keep your processes agile</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/videos</link>
        <description></description>
     </item>
    </channel>
