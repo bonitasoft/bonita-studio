@@ -58,7 +58,6 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
@@ -150,7 +149,8 @@ public class DiagramTests extends SWTBotGefTestCase {
                 assertThat(pool.getElements()).hasSize(2);
             }
         });
-        SWTBotTestUtil.getKeybord().pressShortcut(Keystrokes.MOD1.getModifierKeys(), 'z');
+
+        SWTBotTestUtil.pressUndo();
         bot.waitUntil(new AssertionCondition() {
 
             @Override
@@ -158,7 +158,7 @@ public class DiagramTests extends SWTBotGefTestCase {
                 assertThat(pool.getElements()).hasSize(1);
             }
         });
-        SWTBotTestUtil.getKeybord().pressShortcut(Keystrokes.MOD1.getModifierKeys(), 'y');
+        SWTBotTestUtil.pressRedo();
         bot.waitUntil(new AssertionCondition() {
 
             @Override
