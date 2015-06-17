@@ -354,7 +354,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                 final Operation action = getOperation();
                 final OperatorSelectionDialog dialog = new OperatorSelectionDialog(Display.getDefault().getActiveShell(), action);
                 if (dialog.open() == Dialog.OK) {
-                    final Operator newOperator = updateModelOperator(action, dialog);
+                    final Operator newOperator = updateModelOperator(action, dialog.getOperator());
                     getActionExpression().validate();
                     getActionExpression().getControl().setVisible(!newOperator.getType().equals(ExpressionConstants.DELETION_OPERATOR));
                     operatorLabel.update();
@@ -362,25 +362,31 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                 }
             }
 
-            private Operator updateModelOperator(final Operation action, final OperatorSelectionDialog dialog) {
-                final Operator newOperator = dialog.getOperator();
-                if (getEditingDomain() == null) {
-                    action.setOperator(newOperator);
-                } else {
-                    final CompoundCommand cc = new CompoundCommand("Update Operator");
-                    final Operator operator = action.getOperator();
-                    cc.append(SetCommand.create(getEditingDomain(), operator, ExpressionPackage.Literals.OPERATOR__EXPRESSION,
-                            newOperator.getExpression()));
-                    cc.append(SetCommand.create(getEditingDomain(), operator, ExpressionPackage.Literals.OPERATOR__TYPE, newOperator.getType()));
-                    cc.append(SetCommand.create(getEditingDomain(), operator, ExpressionPackage.Literals.OPERATOR__INPUT_TYPES, newOperator.getInputTypes()));
-                    getEditingDomain().getCommandStack().execute(cc);
-                }
-                getActionExpression().setDefaultReturnType(defaultReturnTypeResolver.guessRightOperandReturnType());
-                return newOperator;
-            }
         });
 
         return operatorLabel;
+    }
+
+    protected Operator updateModelOperator(final Operation action, final Operator newOperator) {
+        if (getEditingDomain() == null) {
+            final Operator operator = action.getOperator();
+            operator.setType(newOperator.getType());
+            operator.setExpression(newOperator.getExpression());
+            operator.getInputTypes().clear();
+            operator.getInputTypes().addAll(newOperator.getInputTypes());
+        } else {
+            final CompoundCommand cc = new CompoundCommand("Update Operator");
+            final Operator operator = action.getOperator();
+            cc.append(SetCommand.create(getEditingDomain(), operator, ExpressionPackage.Literals.OPERATOR__EXPRESSION,
+                    newOperator.getExpression()));
+            cc.append(SetCommand.create(getEditingDomain(), operator, ExpressionPackage.Literals.OPERATOR__TYPE, newOperator.getType()));
+            cc.append(SetCommand.create(getEditingDomain(), operator, ExpressionPackage.Literals.OPERATOR__INPUT_TYPES, newOperator.getInputTypes()));
+            getEditingDomain().getCommandStack().execute(cc);
+        }
+        if (actionExpression != null && defaultReturnTypeResolver != null) {
+            actionExpression.setDefaultReturnType(defaultReturnTypeResolver.guessRightOperandReturnType());
+        }
+        return newOperator;
     }
 
     public void setEditingDomain(final EditingDomain editingDomain) {
