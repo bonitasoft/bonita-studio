@@ -163,7 +163,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class ProcBuilder implements IProcBuilder {
 
-    private final TransactionalEditingDomain editingDomain;
+    private TransactionalEditingDomain editingDomain;
     private final IProgressMonitor monitor;
     private final Map<String, Resource> diagramResources;
     private MainProcessEditPart diagramPart;
@@ -196,7 +196,6 @@ public class ProcBuilder implements IProcBuilder {
 
     public ProcBuilder(final IProgressMonitor progressMonitor) {
         monitor = progressMonitor;
-        editingDomain = CustomDiagramEditingDomainFactory.getInstance().createEditingDomain();
         diagramResources = new HashMap<String, Resource>();
         commandStack = new CompoundCommand();
         dataByName = new HashMap<String, Data>();
@@ -216,7 +215,7 @@ public class ProcBuilder implements IProcBuilder {
 
     @Override
     public void createDiagram(final String id, final String name, final String version, final File targetFile) throws ProcBuilderException {
-
+        editingDomain = createEditingDomain();
         final Resource diagramResource = editingDomain.getResourceSet().createResource(URI.createFileURI(targetFile.getAbsolutePath()));
         diagramResources.put(id, diagramResource);
         final AbstractTransactionalCommand command = new AbstractTransactionalCommand(editingDomain, "Create Diagram Task", Collections.EMPTY_LIST) {
@@ -271,6 +270,10 @@ public class ProcBuilder implements IProcBuilder {
 
         setCharset(WorkspaceSynchronizer.getFile(diagramResource));
 
+    }
+
+    public TransactionalEditingDomain createEditingDomain() {
+        return CustomDiagramEditingDomainFactory.getInstance().createEditingDomain();
     }
 
     @Override
