@@ -47,7 +47,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateProvider;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -98,13 +97,6 @@ public class SelectGeneratedWidgetsWizardPageTest {
         input.add(businessData);
         selectGeneratedWidgetsWizardPage = spy(new SelectGeneratedWidgetsWizardPage(pageFlow, "",
                 input, store));
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
     }
 
     /**
@@ -304,5 +296,29 @@ public class SelectGeneratedWidgetsWizardPageTest {
         final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(checkboxTreeViewer);
 
         assertThat(checkStateProvider.isGrayed(mapping1)).isFalse();
+    }
+
+    @Test
+    public void should_element_in_tree_be_checked_if_generated() throws Exception {
+        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(checkboxTreeViewer);
+
+        final SimpleField modelElement = new SimpleField();
+        modelElement.setType(FieldType.BOOLEAN);
+        final WidgetMapping mapping = new WidgetMapping(modelElement);
+        mapping.setGenerated(true);
+
+        assertThat(checkStateProvider.isChecked(mapping)).isTrue();
+    }
+
+    @Test
+    public void should_element_in_tree_be_unchecked_if_not_generated() throws Exception {
+        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(checkboxTreeViewer);
+
+        final SimpleField modelElement = new SimpleField();
+        modelElement.setType(FieldType.BOOLEAN);
+        final WidgetMapping mapping = new WidgetMapping(modelElement);
+        mapping.setGenerated(false);
+
+        assertThat(checkStateProvider.isChecked(mapping)).isFalse();
     }
 }

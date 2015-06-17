@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
@@ -83,17 +84,11 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 
-import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.field.Field;
-import org.bonitasoft.engine.bdm.model.field.SimpleField;
-
 /**
- *
  * This Wizard page is the second page of the wizard which allow to select
  * multiples variables to generate a default Form
  *
  * @author Baptiste Mesta
- *
  */
 public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implements ICheckStateListener {
 
@@ -128,7 +123,6 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         this.inputElements = inputElements;
         this.store = store;
     }
-
 
     @Override
     public void createControl(final Composite parent) {
@@ -245,7 +239,6 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         }
         businessDataItem.setControl(businessTreeContainerComposite);
     }
-
 
     protected Collection<? extends EObject> filterProcessData(
             final List<EObject> inputElements) {
@@ -366,7 +359,7 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 
             @Override
             public boolean isChecked(final Object element) {
-                return false;
+                return ((WidgetMapping) element).isGenerated();
             }
 
             @Override
@@ -398,7 +391,6 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         // SELECT/DESELECT ALL CHILDREN
         final CheckboxTreeViewer checkboxTreeViewer = (CheckboxTreeViewer) event.getSource();
         checkboxTreeViewer.setSubtreeChecked(mapping, event.getChecked());
-
 
         // DESELECT PARENT IF NO CHILD SELECTED
         if (!event.getChecked() && mapping.getParent() != null) {
@@ -588,7 +580,6 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         return result;
     }
 
-
     public boolean isInitialValueGenerated() {
         return initialValueGenerated;
     }
@@ -596,7 +587,5 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
     public void setInitialValueGenerated(final boolean isInitialValueGenerated) {
         initialValueGenerated = isInitialValueGenerated;
     }
-
-
 
 }
