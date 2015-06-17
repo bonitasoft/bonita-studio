@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -84,12 +84,6 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 
-/**
- * This Wizard page is the second page of the wizard which allow to select
- * multiples variables to generate a default Form
- *
- * @author Baptiste Mesta
- */
 public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implements ICheckStateListener {
 
     private static final int MAX_DEPTH = 2;
