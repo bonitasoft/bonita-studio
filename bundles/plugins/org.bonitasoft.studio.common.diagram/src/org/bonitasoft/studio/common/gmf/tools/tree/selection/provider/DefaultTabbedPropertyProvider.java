@@ -14,21 +14,32 @@
  */
 package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider;
 
+import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.IEditorReference;
 
 public class DefaultTabbedPropertyProvider implements ITabbedPropertySelectionProvider {
 
     private final String viewId;
-    private final String tabId;
+    private String tabId;
+    private GeneralTabResolver resolver;
 
     private DefaultTabbedPropertyProvider(final String viewId, final String tabId) {
         this.viewId = viewId;
         this.tabId = tabId;
     }
 
+    private DefaultTabbedPropertyProvider(final String viewId, final GeneralTabResolver resolver) {
+        this.viewId = viewId;
+        this.resolver = resolver;
+    }
+
     @Override
     public String tabId(final EObject element) {
+        if (resolver != null) {
+            resolver.tabId(element);
+        }
         return tabId;
     }
 
@@ -50,9 +61,13 @@ public class DefaultTabbedPropertyProvider implements ITabbedPropertySelectionPr
         return viewId;
     }
 
+    public static ITabbedPropertySelectionProvider defaultProvider(final String viewId, final String tabId) {
+        return new DefaultTabbedPropertyProvider(viewId, tabId);
+    }
+
     public static ITabbedPropertySelectionProvider defaultProvider(final IEditorReference activeEditor) {
         return isProcessDiagramEditor(activeEditor)
-                ? new DefaultTabbedPropertyProvider("org.bonitasoft.studio.views.properties.process.general", "tab.general") :
+                ? new DefaultTabbedPropertyProvider("org.bonitasoft.studio.views.properties.process.general", new GeneralTabResolver()) :
                 new DefaultTabbedPropertyProvider("org.bonitasoft.studio.views.properties.form.general", "Form.GeneralTab");
     }
 
@@ -64,6 +79,20 @@ public class DefaultTabbedPropertyProvider implements ITabbedPropertySelectionPr
     public static boolean isFormDiagramEditor(final IEditorReference activeEditor) {
         return "org.bonitasoft.studio.diagram.form.custom.ex.part.FormDiagramEditorEx".equals(activeEditor.getId()) ||
                 "org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorID".equals(activeEditor.getId());
+    }
+
+    private static class GeneralTabResolver {
+
+        public String tabId(final EObject element) {
+            if (element instanceof Pool) {
+                return "tab.pool";
+            }
+            if (element instanceof Lane) {
+                return "tab.lane";
+            }
+            return "tab.general";
+        }
+
     }
 
 }
