@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.editingdomain.transaction.AlwaysValidTransaction;
 import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.InternalTransaction;
@@ -34,6 +35,47 @@ public class CustomDiagramEditingDomainFactory extends DiagramEditingDomainFacto
 
     public static WorkspaceEditingDomainFactory getInstance() {
         return instance;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory#createEditingDomain(org.eclipse.emf.ecore.resource.ResourceSet,
+     * org.eclipse.core.commands.operations.IOperationHistory)
+     */
+    @Override
+    public TransactionalEditingDomain createEditingDomain(final ResourceSet rset, final IOperationHistory history) {
+        final WorkspaceCommandStackImpl stack = new CustomWorkspaceCommandStack(history);
+
+        final TransactionalEditingDomain result = new DiagramEditingDomain(
+                new ComposedAdapterFactory(
+                        ComposedAdapterFactory.Descriptor.Registry.INSTANCE),
+                stack,
+                rset) {
+
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl#startTransaction(boolean, java.util.Map)
+             */
+            @Override
+            public InternalTransaction startTransaction(final boolean readOnly, final Map<?, ?> options) throws InterruptedException {
+                final InternalTransaction result = new AlwaysValidTransaction(this, readOnly, options);
+                result.start();
+                return result;
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl#getUndoRedoOptions()
+             */
+            @Override
+            public Map<Object, Object> getUndoRedoOptions() {
+                return undoRedoOptions;
+            }
+        };
+
+        mapResourceSet(result);
+        configure(result);
+        return result;
     }
 
     /*

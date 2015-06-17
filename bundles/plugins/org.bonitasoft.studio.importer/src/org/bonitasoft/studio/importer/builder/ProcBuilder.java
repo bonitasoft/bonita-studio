@@ -33,6 +33,7 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
@@ -137,7 +138,6 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest.ViewAndElementDescriptor;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.IHintedType;
@@ -190,19 +190,13 @@ public class ProcBuilder implements IProcBuilder {
     private final Map<Element, String> elementToReplaceName;
     private View currentView;
 
-
     public ProcBuilder() {
         this(new NullProgressMonitor());
     }
 
-
-
-
-
-
     public ProcBuilder(final IProgressMonitor progressMonitor) {
         monitor = progressMonitor;
-        editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
+        editingDomain = CustomDiagramEditingDomainFactory.getInstance().createEditingDomain();
         diagramResources = new HashMap<String, Resource>();
         commandStack = new CompoundCommand();
         dataByName = new HashMap<String, Data>();
@@ -230,7 +224,7 @@ public class ProcBuilder implements IProcBuilder {
             @Override
             protected CommandResult doExecuteWithResult(
                     final IProgressMonitor monitor, final IAdaptable info)
-                            throws ExecutionException {
+                    throws ExecutionException {
                 final MainProcess diagramModel = ProcessFactory.eINSTANCE.createMainProcess();
                 diagram = ViewService.createDiagram(diagramModel, MainProcessEditPart.MODEL_ID, ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
                 diagramResource.getContents().add(diagramModel);
@@ -395,7 +389,7 @@ public class ProcBuilder implements IProcBuilder {
     @Override
     public void addData(final String id, final String name, final String defaultValueContent, final String defaultValueReturnType,
             final String defaultValueInterpreter, final boolean isMultiple, final boolean isTransient, final DataType datatype, final String expressionType)
-                    throws ProcBuilderException {
+            throws ProcBuilderException {
         final Data data = ProcessFactory.eINSTANCE.createData();
         data.setName(name != null ? name : id);
         createAndAddData(name, defaultValueContent, defaultValueReturnType, defaultValueInterpreter, isMultiple, isTransient, data, datatype, expressionType);
@@ -433,7 +427,7 @@ public class ProcBuilder implements IProcBuilder {
             final Data data,
             final DataType dataType,
             final String expressionType)
-                    throws ProcBuilderException {
+            throws ProcBuilderException {
         data.setDataType(toProcDataType(currentContainer, dataType));
         data.setMultiple(isMultiple);
         data.setTransient(isTransient);
@@ -513,7 +507,7 @@ public class ProcBuilder implements IProcBuilder {
 
         final CreateConnectionViewAndElementRequest request = new CreateConnectionViewAndElementRequest(ProcessElementTypes.SequenceFlow_4001,
                 ((IHintedType) ProcessElementTypes.SequenceFlow_4001).getSemanticHint(), diagramPart
-                .getDiagramPreferencesHint());
+                        .getDiagramPreferencesHint());
         final Command createSequenceFlowCommand = CreateConnectionViewAndElementRequest.getCreateCommand(request, sourceNode, targetNode);
         diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(createSequenceFlowCommand);
 
@@ -964,9 +958,9 @@ public class ProcBuilder implements IProcBuilder {
                 final Node node = (Node) ((IGraphicalEditPart) targetEp).getNotationView();
                 if (loc != null) {
                     commandStack
-                    .append(SetCommand.create(editingDomain, node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_X(), loc.getX() + 60));
+                            .append(SetCommand.create(editingDomain, node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_X(), loc.getX() + 60));
                     commandStack
-                    .append(SetCommand.create(editingDomain, node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_Y(), loc.getY() - 50));
+                            .append(SetCommand.create(editingDomain, node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_Y(), loc.getY() - 50));
                 }
             }
         }
@@ -1302,7 +1296,7 @@ public class ProcBuilder implements IProcBuilder {
         if (currentAssignable instanceof Assignable) {
             actorName = NamingUtils.convertToId(actorName);
             commandStack
-            .append(SetCommand.create(editingDomain, currentAssignable, ProcessPackage.eINSTANCE.getAssignable_Actor(), participants.get(actorName)));
+                    .append(SetCommand.create(editingDomain, currentAssignable, ProcessPackage.eINSTANCE.getAssignable_Actor(), participants.get(actorName)));
             execute();
         } else {
             throw new ProcBuilderException("Invalid parent for group");
@@ -1333,11 +1327,11 @@ public class ProcBuilder implements IProcBuilder {
                 diagramPart.refresh();
                 final IGraphicalEditPart parentEditPart = GMFTools.findEditPart(diagramPart, createdElement);
                 diagramPart
-                .getDiagramEditDomain()
-                .getDiagramCommandStack()
-                .execute(
-                        new ICommandProxy(new SetBoundsCommand(editingDomain, "Set position", new EObjectAdapter(parentEditPart.getNotationView()),
-                                location)));
+                        .getDiagramEditDomain()
+                        .getDiagramCommandStack()
+                        .execute(
+                                new ICommandProxy(new SetBoundsCommand(editingDomain, "Set position", new EObjectAdapter(parentEditPart.getNotationView()),
+                                        location)));
             }
         } else {
             if (currentContainer instanceof SubProcessEvent
@@ -1487,7 +1481,7 @@ public class ProcBuilder implements IProcBuilder {
         if (currentStep instanceof CallActivity) {
             final InputMapping inputMapping = ProcessFactory.eINSTANCE.createInputMapping();
 
-            if(dataByName.get(sourceDataId) != null){
+            if (dataByName.get(sourceDataId) != null) {
                 inputMapping.setProcessSource(ExpressionHelper.createVariableExpression(dataByName.get(NamingUtils.convertToId(sourceDataId))));
 
             }
@@ -1734,7 +1728,6 @@ public class ProcBuilder implements IProcBuilder {
         }
     }
 
-
     public void addTargetAnchor(final Point targetAnchor) throws ProcBuilderException {
         if (!(currentElement instanceof Connection)) {
             throw new ProcBuilderException("Impossible to add a source anchor on " + currentElement != null ? ((Element) currentElement).getName() : "null");
@@ -1809,7 +1802,7 @@ public class ProcBuilder implements IProcBuilder {
             throw new ProcBuilderException("Impossible to set font style property. There is no view set");
         }
         if (!currentView.getChildren().isEmpty()) {
-            final Node labelNode = (Node)currentView.getChildren().get(0);
+            final Node labelNode = (Node) currentView.getChildren().get(0);
             setLabelPosition(location, labelNode);
         }
     }
@@ -1819,9 +1812,9 @@ public class ProcBuilder implements IProcBuilder {
      * @param labelPart
      */
     protected void setLabelPosition(final Point location, final Node labelNode) {
-        final Location labelLocation = (Location)labelNode.getLayoutConstraint();
-        commandStack.append(SetCommand.create(editingDomain,labelLocation,NotationPackage.Literals.LOCATION__X,location.x()));
-        commandStack.append(SetCommand.create(editingDomain,labelLocation,NotationPackage.Literals.LOCATION__Y,location.y()));
+        final Location labelLocation = (Location) labelNode.getLayoutConstraint();
+        commandStack.append(SetCommand.create(editingDomain, labelLocation, NotationPackage.Literals.LOCATION__X, location.x()));
+        commandStack.append(SetCommand.create(editingDomain, labelLocation, NotationPackage.Literals.LOCATION__Y, location.y()));
         execute();
     }
 
@@ -1838,6 +1831,5 @@ public class ProcBuilder implements IProcBuilder {
     public View getCurrentView() {
         return currentView;
     }
-
 
 }
