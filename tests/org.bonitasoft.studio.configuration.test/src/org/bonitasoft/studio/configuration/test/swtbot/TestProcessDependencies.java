@@ -46,13 +46,13 @@ public class TestProcessDependencies extends SWTBotGefTestCase {
     }
 
     @Test
-    public void should_not_have_connector_dependencies() throws Exception {
+    public void should_have_connector_dependencies() throws Exception {
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "CustomConnectorWithoutDependencies-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA,
                 "CustomConnectorWithoutDependencies",
                 getClass(), false);
 
-        assertThat(new BotApplicationWorkbenchWindow(bot).configure().selectProcessDependencies().selectTreeView().items()).contains(Messages.others)
-                .doesNotContain(Messages.connector);
+        assertThat(new BotApplicationWorkbenchWindow(bot).configure().selectProcessDependencies().selectTreeView().items()).contains(Messages.others,
+                Messages.connector);
     }
 
 }
