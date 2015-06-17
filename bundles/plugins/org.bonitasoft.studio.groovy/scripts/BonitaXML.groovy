@@ -20,7 +20,12 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 
 public class BonitaXML {
-	
+    
+    /**
+     *@param documentOrXML, a String representing the XML or the org.w3C.dom.Document representing the XML
+     *@param xpath, the xpath request to apply on the documentOrXML parameter
+     *@return the result of the evaluation of the xpath request on the provided XML or the content of the provided document
+     **/
 	public static Object evaluateXPathOnVariable(Object documentOrXML, String xpath) {
 		Document doc = null;
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
