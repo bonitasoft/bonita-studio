@@ -21,7 +21,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.net.URL;
 import java.util.Enumeration;
 
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.connectors.util.DriverConstants;
 import org.junit.Test;
 
@@ -41,6 +43,14 @@ public class DriverAssociationContributionIT {
             assertThat(driverEntries).as("Missing driver " + driver).isNotNull();
             assertThat(driverEntries.hasMoreElements()).as("Missing driver " + driver).isTrue();
         }
+    }
+
+    @Test
+    public void testAssociationCreated() {
+        final DatabaseConnectorPropertiesRepositoryStore repo = RepositoryManager.getInstance().getRepositoryStore(
+                DatabaseConnectorPropertiesRepositoryStore.class);
+        assertThat(repo.getChild(DriverConstants.POSTGRES_DEFINITION_ID + ".properties")).isNotNull();
+        assertThat(repo.getChild(DriverConstants.ORACLE_11G_DEFINITION_ID + ".properties")).isNotNull();
     }
 
 }
