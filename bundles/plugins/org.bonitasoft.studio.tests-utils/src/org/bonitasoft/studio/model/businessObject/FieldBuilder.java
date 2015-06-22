@@ -73,13 +73,13 @@ public abstract class FieldBuilder {
         return new RelationFieldBuilder();
     }
 
-    public static Field anAggregationField(final String name, final BusinessObject reference) {
+    public static RelationField anAggregationField(final String name, final BusinessObject reference) {
         final RelationField relationField = aRelationField(name, reference);
         relationField.setType(Type.AGGREGATION);
         return relationField;
     }
 
-    public static Field aCompositionField(final String name, final BusinessObject reference) {
+    public static RelationField aCompositionField(final String name, final BusinessObject reference) {
         final RelationField relationField = aRelationField(name, reference);
         relationField.setType(Type.COMPOSITION);
         return relationField;
@@ -153,6 +153,15 @@ public abstract class FieldBuilder {
         public FieldBuilder withLength(final int length) {
             ((SimpleField) field).setLength(length);
             return this;
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see org.bonitasoft.studio.model.businessObject.FieldBuilder#build()
+         */
+        @Override
+        public SimpleField build() {
+            return (SimpleField) super.build();
         }
     }
 

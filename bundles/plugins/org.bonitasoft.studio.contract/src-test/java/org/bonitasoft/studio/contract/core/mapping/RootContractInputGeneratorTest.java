@@ -16,10 +16,13 @@ package org.bonitasoft.studio.contract.core.mapping;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 
 import java.util.Collections;
 
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
@@ -35,18 +38,47 @@ public class RootContractInputGeneratorTest {
         final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
                 Collections.<FieldToContractInputMapping> emptyList());
 
-        ContractInputAssert.assertThat(rootContractInputGenerator.toRootContractInput()).hasName("rootInputName").hasType(ContractInputType.COMPLEX);
+        rootContractInputGenerator.build(aBusinessData().build());
+
+        ContractInputAssert.assertThat(rootContractInputGenerator.getRootContractInput()).hasName("rootInputName")
+                .hasType(ContractInputType.COMPLEX);
     }
 
     @Test
     public void should_create_a_complex_contract_input_with_generated_child_input_from_mapping() throws Exception {
-        final SimpleFieldToContractInputMapping notGeneratedMapping = new SimpleFieldToContractInputMapping((SimpleField) SimpleFieldBuilder.aStringField(
+        final SimpleFieldToContractInputMapping notGeneratedMapping = new SimpleFieldToContractInputMapping(SimpleFieldBuilder.aStringField(
                 "input2").build());
         notGeneratedMapping.setGenerated(false);
         final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
-                newArrayList(notGeneratedMapping, new SimpleFieldToContractInputMapping((SimpleField) SimpleFieldBuilder
+                newArrayList(notGeneratedMapping, new SimpleFieldToContractInputMapping(SimpleFieldBuilder
                         .aStringField("input1").build())));
 
-        assertThat(rootContractInputGenerator.toRootContractInput().getInputs()).hasSize(1);
+        rootContractInputGenerator.build(aBusinessData().build());
+
+        assertThat(rootContractInputGenerator.getRootContractInput().getInputs()).hasSize(1);
+    }
+
+    @Test
+    public void should_create_operation_for_given_business_data_and_generated_contract_input() throws Exception {
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(SimpleFieldBuilder.aStringField(
+                "firstName").build());
+
+        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName", newArrayList(mapping));
+        rootContractInputGenerator.build(aBusinessData().withName("employee").build());
+
+        assertThat(rootContractInputGenerator.getMappingOperations()).extracting("leftOperand.name", "operator.type",
+                "operator.expression", "rightOperand.name").containsOnly(
+                tuple("employee", ExpressionConstants.JAVA_METHOD_OPERATOR, "setFirstName", "rootInputName.firstName"));
+    }
+
+    @Test
+    public void should_not_create_operation_for_multiple_contract_input() throws Exception {
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping((SimpleField) SimpleFieldBuilder.aStringField(
+                "firstNames").multiple().build());
+
+        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName", newArrayList(mapping));
+        rootContractInputGenerator.build(aBusinessData().withName("employee").build());
+
+        assertThat(rootContractInputGenerator.getMappingOperations()).isEmpty();
     }
 }

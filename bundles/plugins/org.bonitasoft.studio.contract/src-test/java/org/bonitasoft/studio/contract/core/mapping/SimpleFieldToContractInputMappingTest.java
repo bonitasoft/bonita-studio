@@ -52,7 +52,7 @@ public class SimpleFieldToContractInputMappingTest {
     public void should_create_contract_input_from_a_string_simple_field() throws Exception {
         final SimpleFieldToContractInputMapping fieldToContractInputMapping = new SimpleFieldToContractInputMapping(aSimpleField("firstName", FieldType.STRING));
 
-        final ContractInput input = fieldToContractInputMapping.toContractInput();
+        final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
         ContractInputAssert.assertThat(input).hasName("firstName").hasType(ContractInputType.TEXT).hasNoInputs();
     }
@@ -61,7 +61,7 @@ public class SimpleFieldToContractInputMappingTest {
     public void should_create_contract_input_from_a_long_simple_field() throws Exception {
         final SimpleFieldToContractInputMapping fieldToContractInputMapping = new SimpleFieldToContractInputMapping(aSimpleField("timeStamp", FieldType.LONG));
 
-        final ContractInput input = fieldToContractInputMapping.toContractInput();
+        final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
         ContractInputAssert.assertThat(input).hasName("timeStamp").hasType(ContractInputType.TEXT).hasNoInputs();
     }
@@ -70,7 +70,7 @@ public class SimpleFieldToContractInputMappingTest {
     public void should_create_contract_input_from_a_boolean_simple_field() throws Exception {
         final SimpleFieldToContractInputMapping fieldToContractInputMapping = new SimpleFieldToContractInputMapping(aSimpleField("isValid", FieldType.BOOLEAN));
 
-        final ContractInput input = fieldToContractInputMapping.toContractInput();
+        final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
         ContractInputAssert.assertThat(input).hasName("isValid").hasType(ContractInputType.BOOLEAN).hasNoInputs();
     }
@@ -79,7 +79,7 @@ public class SimpleFieldToContractInputMappingTest {
     public void should_create_contract_input_from_a_double_simple_field() throws Exception {
         final SimpleFieldToContractInputMapping fieldToContractInputMapping = new SimpleFieldToContractInputMapping(aSimpleField("rate", FieldType.DOUBLE));
 
-        final ContractInput input = fieldToContractInputMapping.toContractInput();
+        final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
         ContractInputAssert.assertThat(input).hasName("rate").hasType(ContractInputType.DECIMAL).hasNoInputs();
     }
@@ -88,7 +88,7 @@ public class SimpleFieldToContractInputMappingTest {
     public void should_create_contract_input_from_a_date_simple_field() throws Exception {
         final SimpleFieldToContractInputMapping fieldToContractInputMapping = new SimpleFieldToContractInputMapping(aSimpleField("date", FieldType.DATE));
 
-        final ContractInput input = fieldToContractInputMapping.toContractInput();
+        final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
         ContractInputAssert.assertThat(input).hasName("date").hasType(ContractInputType.DATE).hasNoInputs();
     }
@@ -97,7 +97,7 @@ public class SimpleFieldToContractInputMappingTest {
     public void should_create_contract_input_from_a_float_simple_field() throws Exception {
         final SimpleFieldToContractInputMapping fieldToContractInputMapping = new SimpleFieldToContractInputMapping(aSimpleField("amount", FieldType.FLOAT));
 
-        final ContractInput input = fieldToContractInputMapping.toContractInput();
+        final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
         ContractInputAssert.assertThat(input).hasName("amount").hasType(ContractInputType.DECIMAL).hasNoInputs();
     }
@@ -106,7 +106,7 @@ public class SimpleFieldToContractInputMappingTest {
     public void should_create_contract_input_from_a_text_simple_field() throws Exception {
         final SimpleFieldToContractInputMapping fieldToContractInputMapping = new SimpleFieldToContractInputMapping(aSimpleField("description", FieldType.TEXT));
 
-        final ContractInput input = fieldToContractInputMapping.toContractInput();
+        final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
         ContractInputAssert.assertThat(input).hasName("description").hasType(ContractInputType.TEXT).hasNoInputs();
     }
@@ -115,7 +115,7 @@ public class SimpleFieldToContractInputMappingTest {
     public void should_create_contract_input_from_an_integer_simple_field() throws Exception {
         final SimpleFieldToContractInputMapping fieldToContractInputMapping = new SimpleFieldToContractInputMapping(aSimpleField("age", FieldType.INTEGER));
 
-        final ContractInput input = fieldToContractInputMapping.toContractInput();
+        final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
         ContractInputAssert.assertThat(input).hasName("age").hasType(ContractInputType.INTEGER).hasNoInputs();
     }
@@ -127,7 +127,7 @@ public class SimpleFieldToContractInputMappingTest {
 
         final SimpleFieldToContractInputMapping fieldToContractInputMapping = new SimpleFieldToContractInputMapping(multipleField);
 
-        final ContractInput input = fieldToContractInputMapping.toContractInput();
+        final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
         ContractInputAssert.assertThat(input).hasName("messages").hasType(ContractInputType.TEXT).hasNoInputs().isMultiple();
     }

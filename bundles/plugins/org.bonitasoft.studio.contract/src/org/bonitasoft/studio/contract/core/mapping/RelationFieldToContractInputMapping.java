@@ -41,12 +41,12 @@ public class RelationFieldToContractInputMapping extends FieldToContractInputMap
      * @see org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping#toContractInput()
      */
     @Override
-    public ContractInput toContractInput() {
-        final ContractInput input = super.toContractInput();
+    public ContractInput toContractInput(final ContractInput parentInput) {
+        final ContractInput input = super.toContractInput(parentInput);
         if (shouldAddChildInput()) {
             for (final FieldToContractInputMapping child : getChildren()) {
                 if (child.isGenerated()) {
-                    input.getInputs().add(child.toContractInput());
+                    child.toContractInput(input);
                 }
             }
         }
