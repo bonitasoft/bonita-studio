@@ -514,4 +514,12 @@
          version="1.7.0.v201011041433"
          unpack="false"/>
 
+   <plugin
+         id="org.bonitasoft.studio.connectors.database.drivers.prop"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
 </feature>
