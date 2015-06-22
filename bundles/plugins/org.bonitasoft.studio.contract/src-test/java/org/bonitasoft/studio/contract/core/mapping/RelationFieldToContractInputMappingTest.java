@@ -16,13 +16,17 @@ package org.bonitasoft.studio.contract.core.mapping;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
+import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
+import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
+import org.bonitasoft.engine.bdm.BDMQueryUtil;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.contract.core.mapping.operation.MappingOperationScriptBuilder;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
@@ -38,7 +42,7 @@ public class RelationFieldToContractInputMappingTest {
                 Type.COMPOSITION,
                 aBusinessObject("Address", aSimpleField("number", FieldType.INTEGER), aSimpleField("street", FieldType.STRING))));
 
-        final ContractInput input = fieldToContractInputMapping.toContractInput();
+        final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
         ContractInputAssert.assertThat(input).hasName("address").hasType(ContractInputType.COMPLEX);
     }
@@ -51,7 +55,7 @@ public class RelationFieldToContractInputMappingTest {
         fieldToContractInputMapping.addChild(new SimpleFieldToContractInputMapping((SimpleField) compositionField.getReference().getFields().get(0)));
         fieldToContractInputMapping.addChild(new SimpleFieldToContractInputMapping((SimpleField) compositionField.getReference().getFields().get(1)));
 
-        final ContractInput input = fieldToContractInputMapping.toContractInput();
+        final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
         assertThat(input.getInputs()).extracting("name", "type", "inputs").contains(
                 tuple("number", ContractInputType.INTEGER, Lists.newArrayList()),
@@ -64,9 +68,27 @@ public class RelationFieldToContractInputMappingTest {
                 Type.AGGREGATION,
                 aBusinessObject("Country", aSimpleField("code", FieldType.INTEGER), aSimpleField("name", FieldType.STRING))));
 
-        final ContractInput input = fieldToContractInputMapping.toContractInput();
+        final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
         ContractInputAssert.assertThat(input).hasName("country").hasType(ContractInputType.TEXT).hasNoInputs();
+    }
+
+    @Test
+    public void should_create_script_initializing_an_address() throws Exception {
+        final BusinessObject addressBo = aBusinessObject("Address", aSimpleField("street", FieldType.TEXT));
+        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(aRelationField("address",
+                Type.COMPOSITION,
+                addressBo));
+        fieldToContractInputMapping.addChild(new SimpleFieldToContractInputMapping((SimpleField) BDMQueryUtil.getField("street", addressBo)));
+        fieldToContractInputMapping.toContractInput(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)
+                .build());
+
+        final MappingOperationScriptBuilder scriptBuilder = fieldToContractInputMapping.getScriptBuilder(aBusinessData().withName("myEmployee").build());
+
+        assertThat(scriptBuilder.toScript()).isEqualTo(
+                "def addressVar = myEmployee.address == null ? new Address() : myEmployee.address" + System.lineSeparator()
+                        + "addressVar.street = employee.address.street" + System.lineSeparator()
+                        + "return addressVar");
     }
 
     private SimpleField aSimpleField(final String name, final FieldType type) {
