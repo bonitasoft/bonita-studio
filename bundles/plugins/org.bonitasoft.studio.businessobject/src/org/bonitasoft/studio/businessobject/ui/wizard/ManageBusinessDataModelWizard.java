@@ -14,7 +14,10 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
@@ -150,14 +153,31 @@ public class ManageBusinessDataModelWizard extends Wizard {
                 }
             });
         } catch (final InvocationTargetException e) {
-            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.installFailedTitle, Messages.installFailedMessage, e.getTargetException())
+            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.installFailedTitle, Messages.installFailedMessage,
+                    handleTargetExceptionStacktrace(e))
                     .open();
             return false;
         } catch (final InterruptedException e) {
-            BonitaStudioLog.error(e);
             return false;
         }
         return true;
+    }
+
+    private Throwable handleTargetExceptionStacktrace(final InvocationTargetException e) {
+        final Throwable targetException = e.getTargetException();
+        int index = -1;
+        for (int i = 0; i < targetException.getStackTrace().length; i++) {
+            final StackTraceElement element = targetException.getStackTrace()[i];
+            final String className = element.getClassName();
+            if (!isNullOrEmpty(className) && className.contains("org.hibernate.HibernateException")) {
+                index = i;
+                break;
+            }
+        }
+        if (index > -1) {
+            targetException.setStackTrace(Arrays.copyOfRange(targetException.getStackTrace(), index, targetException.getStackTrace().length));
+        }
+        return targetException;
     }
 
     protected IPreferenceStore getPreferenceStore() {

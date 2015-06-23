@@ -1071,6 +1071,42 @@ public class ProcBuilder implements IProcBuilder {
         execute();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.importer.builder.IProcBuilder#addCompletionConditionExpression(org.bonitasoft.studio.model.expression.Expression)
+     */
+    @Override
+    public void addCompletionConditionExpression(final Expression completionCondition) throws ProcBuilderException {
+        if (!(currentStep instanceof MultiInstantiable)) {
+            throw new ProcBuilderException("Impossible to add a completion condition on Current element :" + currentStep != null
+                    ? ((Element) currentStep).getName() : "null");
+        }
+        if (completionCondition != null && completionCondition.hasContent() && !completionCondition.hasName()) {
+            completionCondition.setName("completionCondition");
+        }
+        commandStack.append(SetCommand
+                .create(editingDomain, currentStep, ProcessPackage.Literals.MULTI_INSTANTIABLE__COMPLETION_CONDITION, completionCondition));
+        execute();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.importer.builder.IProcBuilder#addCardinalityExpression(org.bonitasoft.studio.model.expression.Expression)
+     */
+    @Override
+    public void addCardinalityExpression(final Expression cardinalityExpression) throws ProcBuilderException {
+        if (!(currentStep instanceof MultiInstantiable)) {
+            throw new ProcBuilderException("Impossible to add a cardinality expression on Current element :" + currentStep != null
+                    ? ((Element) currentStep).getName() : "null");
+        }
+        if (cardinalityExpression != null && cardinalityExpression.hasContent() && !cardinalityExpression.hasName()) {
+            cardinalityExpression.setName("cardinalityExpression");
+        }
+        commandStack.append(SetCommand
+                .create(editingDomain, currentStep, ProcessPackage.Literals.MULTI_INSTANTIABLE__CARDINALITY_EXPRESSION, cardinalityExpression));
+        execute();
+    }
+
     @Override
     @Deprecated
     public void addConnectorParameter(final String parameterKey, final String valueContent) throws ProcBuilderException {
@@ -1695,24 +1731,23 @@ public class ProcBuilder implements IProcBuilder {
     }
 
     @Override
-    public void addLoopCondition(final String loopCondition, final String maxLoopExpression, final TestTimeType testTime) throws ProcBuilderException {
+    public void addLoopCondition(final Expression loopConditionExpression, final String maxLoopExpression, final TestTimeType testTime)
+            throws ProcBuilderException {
         if (!(currentStep instanceof Activity)) {
             throw new ProcBuilderException("Impossible to set duration property on " + currentStep != null ? ((Element) currentStep).getName() : "null");
         }
         commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_Type(),
                 MultiInstanceType.STANDARD));
+        if (loopConditionExpression != null && loopConditionExpression.hasContent() && !loopConditionExpression.hasName()) {
+            loopConditionExpression.setName("loopCondition");
+        }
         commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_LoopCondition(),
-                createExpression(loopCondition, Boolean.class.getName(), ExpressionConstants.GROOVY, ExpressionConstants.SCRIPT_TYPE)));
+                loopConditionExpression));
         commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_LoopMaximum(),
                 createExpression(maxLoopExpression, Integer.class.getName(), ExpressionConstants.GROOVY, ExpressionConstants.SCRIPT_TYPE)));
         if (testTime != null) {
-            if (testTime == TestTimeType.BEFORE) {
-                commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_TestBefore(),
-                        true));
-            } else {
-                commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_TestBefore(),
-                        false));
-            }
+            commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_TestBefore(),
+                    testTime == TestTimeType.BEFORE ? true : false));
         }
     }
 

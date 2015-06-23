@@ -58,7 +58,7 @@ public class TestAddValidatorToProcessAndRun extends SWTBotGefTestCase {
         SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Validators");
         bot.button("Add...").click();
-        bot.comboBoxWithLabel("Validator type *").setSelection("Regular expression");
+        bot.comboBoxWithLabel("Validator type *").setSelection("Groovy expression");
         bot.textWithLabel("Error message *").setText("error");
         bot.sleep(1000);
         runProcess();

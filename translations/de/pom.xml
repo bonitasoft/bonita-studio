@@ -25,6 +25,7 @@
         <module>org.bonitasoft.studio.connectors.model.edit.nl_de</module>
         <module>org.bonitasoft.studio.connectors.model.nl_de</module>
         <module>org.bonitasoft.studio.connectors.nl_de</module>
+        <module>org.bonitasoft.studio.contract.nl_de</module>
         <module>org.bonitasoft.studio.data.nl_de</module>
         <module>org.bonitasoft.studio.debug.nl_de</module>
         <module>org.bonitasoft.studio.decision.core.nl_de</module>

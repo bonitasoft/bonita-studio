@@ -14,11 +14,14 @@
  */
 package org.bonitasoft.studio.importer.bpmn;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -26,11 +29,15 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.importer.builder.IProcBuilder;
+import org.bonitasoft.studio.importer.builder.IProcBuilder.TestTimeType;
 import org.bonitasoft.studio.importer.builder.ProcBuilder;
 import org.bonitasoft.studio.importer.builder.ProcBuilderException;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
@@ -45,11 +52,14 @@ import org.omg.spec.bpmn.di.DiFactory;
 import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.ModelFactory;
 import org.omg.spec.bpmn.model.TComplexGateway;
+import org.omg.spec.bpmn.model.TDefinitions;
 import org.omg.spec.bpmn.model.TEvent;
 import org.omg.spec.bpmn.model.TExclusiveGateway;
 import org.omg.spec.bpmn.model.TInclusiveGateway;
+import org.omg.spec.bpmn.model.TMultiInstanceLoopCharacteristics;
 import org.omg.spec.bpmn.model.TProcess;
 import org.omg.spec.bpmn.model.TSequenceFlow;
+import org.omg.spec.bpmn.model.TStandardLoopCharacteristics;
 import org.omg.spec.bpmn.model.TUserTask;
 import org.omg.spec.dd.dc.Bounds;
 import org.omg.spec.dd.dc.DcFactory;
@@ -95,6 +105,7 @@ public class BPMNToProcTest {
         edge.setBPMNLabel(label);
         final String id = "bpmnEdge";
         doReturn(edge).when(bpmnToProc).getBPMNEdgeFor(id);
+        final ProcBuilder builder = spy(new ProcBuilder());
 
         bpmnToProc.setBuilder(builder);
         doNothing().when(builder).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
@@ -436,6 +447,74 @@ public class BPMNToProcTest {
         process.getFlowElement().add(complexGateway);
         bpmnToProc.setBpmnProcess(processes);
         assertTrue(bpmnToProc.isSequenceFlowDefault(sequenceFlow, sequenceFlowId));
+    }
+
+    @Test
+    public void should_handle_LoopCharacteristics_on_activities_for_ParallelMultiInstance() throws Exception {
+        final TProcess process = ModelFactory.eINSTANCE.createTProcess();
+        process.setId("processId");
+        final TUserTask userTask = ModelFactory.eINSTANCE.createTUserTask();
+        final String userTaskId = "userTaskId";
+        userTask.setId(userTaskId);
+        final TMultiInstanceLoopCharacteristics loopCharacteristics = ModelFactory.eINSTANCE.createTMultiInstanceLoopCharacteristics();
+        loopCharacteristics.setCompletionCondition(ModelFactory.eINSTANCE.createTExpression());
+        userTask.setLoopCharacteristics(loopCharacteristics);
+        process.getFlowElement().add(userTask);
+        bpmnToProc.setBpmnProcess(newArrayList(process));
+        final IProcBuilder builder = mock(IProcBuilder.class);
+        bpmnToProc.setBuilder(builder);
+        final TDefinitions definitions = ModelFactory.eINSTANCE.createTDefinitions();
+        definitions.getRootElement().add(process);
+        bpmnToProc.importFromBPMN(definitions);
+
+        verify(builder).addMultiInstantiation(false);
+        verify(builder).addCompletionConditionExpression(notNull(Expression.class));
+    }
+
+    @Test
+    public void should_handle_LoopCharacteristics_on_activities_for_SequentialMultiInstance() throws Exception {
+        final TProcess process = ModelFactory.eINSTANCE.createTProcess();
+        process.setId("processId");
+        final TUserTask userTask = ModelFactory.eINSTANCE.createTUserTask();
+        final String userTaskId = "userTaskId";
+        userTask.setId(userTaskId);
+        final TMultiInstanceLoopCharacteristics loopCharacteristics = ModelFactory.eINSTANCE.createTMultiInstanceLoopCharacteristics();
+        loopCharacteristics.setLoopCardinality(ModelFactory.eINSTANCE.createTExpression());
+        loopCharacteristics.setIsSequential(true);
+        userTask.setLoopCharacteristics(loopCharacteristics);
+        process.getFlowElement().add(userTask);
+        bpmnToProc.setBpmnProcess(newArrayList(process));
+        final IProcBuilder builder = mock(IProcBuilder.class);
+        bpmnToProc.setBuilder(builder);
+        final TDefinitions definitions = ModelFactory.eINSTANCE.createTDefinitions();
+        definitions.getRootElement().add(process);
+        bpmnToProc.importFromBPMN(definitions);
+
+        verify(builder).addMultiInstantiation(true);
+        verify(builder).addCardinalityExpression(notNull(Expression.class));
+    }
+
+    @Test
+    public void should_handle_LoopCharacteristics_on_activities_for_StandardLoop() throws Exception {
+        final TProcess process = ModelFactory.eINSTANCE.createTProcess();
+        process.setId("processId");
+        final TUserTask userTask = ModelFactory.eINSTANCE.createTUserTask();
+        final String userTaskId = "userTaskId";
+        userTask.setId(userTaskId);
+        final TStandardLoopCharacteristics loopCharacteristics = ModelFactory.eINSTANCE.createTStandardLoopCharacteristics();
+        loopCharacteristics.setLoopCondition(ModelFactory.eINSTANCE.createTExpression());
+        loopCharacteristics.setLoopMaximum(BigInteger.TEN);
+        loopCharacteristics.setTestBefore(false);
+        userTask.setLoopCharacteristics(loopCharacteristics);
+        process.getFlowElement().add(userTask);
+        bpmnToProc.setBpmnProcess(newArrayList(process));
+        final IProcBuilder builder = mock(IProcBuilder.class);
+        bpmnToProc.setBuilder(builder);
+        final TDefinitions definitions = ModelFactory.eINSTANCE.createTDefinitions();
+        definitions.getRootElement().add(process);
+        bpmnToProc.importFromBPMN(definitions);
+
+        verify(builder).addLoopCondition(notNull(Expression.class), eq("10"), eq(TestTimeType.AFTER));
     }
 
 }

@@ -86,10 +86,6 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
 
                         builder.addConnectorImplementation(new BarResource(NamingUtils.toConnectorImplementationFilename(implId, implVersion, true), content));
 
-                        if (isUserImplementation) { //Generate jar from source file
-                            addImplementationJar(builder, implementation);
-                        }
-
                         //Add jar dependencies
                         for (final FragmentContainer fc : configuration.getProcessDependencies()) {
                             if (fc.getId().equals(FragmentTypes.CONNECTOR)) {
@@ -98,11 +94,17 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
                                         for (final Fragment fragment : connector.getFragments()) {
                                             final String jarName = fragment.getValue();
                                             if (jarName.endsWith(".jar") && fragment.isExported()) {
-                                                final IRepositoryFileStore jarFileStore = libStore.getChild(jarName);
-                                                if (jarFileStore != null) {
-                                                    final File jarFile = jarFileStore.getResource().getLocation().toFile();
-                                                    resources.add(new BarResource(jarFile.getName(), Files.toByteArray(jarFile)));
+                                                if (isUserImplementation
+                                                        && NamingUtils.toConnectorImplementationJarName(implementation).equals(fragment.getValue())) { //Generate jar from source file
+                                                    addImplementationJar(builder, implementation);
+                                                } else {
+                                                    final IRepositoryFileStore jarFileStore = libStore.getChild(jarName);
+                                                    if (jarFileStore != null) {
+                                                        final File jarFile = jarFileStore.getResource().getLocation().toFile();
+                                                        resources.add(new BarResource(jarFile.getName(), Files.toByteArray(jarFile)));
+                                                    }
                                                 }
+
                                             }
                                         }
                                     }
@@ -122,8 +124,7 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
 
     private void addImplementationJar(final BusinessArchiveBuilder builder, final ConnectorImplementation impl) {
         final ConnectorSourceRepositoryStore sourceStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
-        final String connectorJarName = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)
-                + ".jar";
+        final String connectorJarName = NamingUtils.toConnectorImplementationJarName(impl);
         final String qualifiedClassName = impl.getImplementationClassname();
         String packageName = "";
         if (qualifiedClassName.indexOf(".") != -1) {

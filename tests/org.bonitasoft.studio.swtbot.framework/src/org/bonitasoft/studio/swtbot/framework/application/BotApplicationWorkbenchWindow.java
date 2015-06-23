@@ -8,11 +8,17 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.application;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.swtbot.framework.application.menu.AbstractBotMenu;
 import org.bonitasoft.studio.swtbot.framework.application.menu.BotEditMenu;
 import org.bonitasoft.studio.swtbot.framework.application.menu.BotOrganizationMenu;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
+import org.bonitasoft.studio.swtbot.framework.diagram.configuration.BotConfigureDialog;
+import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
@@ -33,7 +39,6 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     }
 
     public BotProcessDiagramPerspective createNewDiagram() {
-
         final long timebeforeCreatenewDiagram = System.currentTimeMillis();
         final int nbEditorsBefore = bot.editors().size();
         bot.waitUntil(Conditions.waitForWidget(WithId.withId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL)), 40000);
@@ -81,7 +86,7 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
             public String getFailureMessage() {
                 return "The save took too much time";
             }
-        },40000);
+        }, 40000);
         return this;
     }
 
@@ -119,4 +124,17 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         return new BotOrganizationMenu(bot);
     }
 
+    public BotConfigureDialog configure() {
+        if (SWTBotTestUtil.testingBosSp()) {
+            bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarDropDownButton("Configure")));
+            bot.toolbarDropDownButton("Configure").click();
+        } else {
+            bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButton("Configure")));
+            bot.toolbarButton("Configure").click();
+        }
+        final DiagramEditor editor = (DiagramEditor) bot.activeEditor().getReference().getEditor(true);
+        final IGraphicalEditPart ep = (IGraphicalEditPart) editor.getDiagramGraphicalViewer().getSelectedEditParts().get(0);
+        final Pool selectedProcess = ModelHelper.getFirstContainerOfType(ep.resolveSemanticElement(), Pool.class);
+        return new BotConfigureDialog(bot, selectedProcess.getName() + " (" + selectedProcess.getVersion() + ")");
+    }
 }

@@ -41,6 +41,7 @@ import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
@@ -122,6 +123,14 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
         if (!port.isValid()) {
             return false;
         }
+
+        if (newPort != -1) {
+            final String informationMessage = NLS.bind(Messages.updatePortWarningMessage, org.bonitasoft.studio.common.Messages.uiDesignerModuleName);
+            if (!MessageDialog.openConfirm(getShell(), Messages.updatePortWarningTitle, informationMessage)) {
+                return false;
+            }
+        }
+
         final boolean ok = super.performOk();
         if (newPort != -1) {
             updatePortConfiguration(newPort);

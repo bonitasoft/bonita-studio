@@ -108,6 +108,7 @@ public class DocumentWizardPage extends WizardPage {
     private Composite multipleStackedComposite;
 
     private StackLayout multipleStack;
+    private Composite multiNoneCompo;
 
     public DocumentWizardPage(final EObject context, final Document document) {
         super(DocumentWizardPage.class.getName());
@@ -305,16 +306,17 @@ public class DocumentWizardPage extends WizardPage {
         multipleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
 
         final Composite radioContainer = new Composite(multipleComposite, SWT.NONE);
-        radioContainer.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
+        radioContainer.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(0, 0).create());
         radioContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
+        final Button radioButtonNone = createRadioButtonNone(radioContainer);
         final Button radioButtonContract = createRadioButtonContract(radioContainer);
-        final Button radioButtonScript = createRadioButtonNone(radioContainer);
+        final Button radioButtonScript = createRadioButtonInternal(radioContainer);
         radioButtonScript.setText(Messages.initialValueButtonScript);
 
         final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(ProcessPackage.DOCUMENT_TYPE);
         final ISWTObservableValue scriptObserveSelection = SWTObservables.observeSelection(radioButtonScript);
-        documentTypeObservableValue.addOption(DocumentType.NONE, scriptObserveSelection);
+        documentTypeObservableValue.addOption(DocumentType.NONE, SWTObservables.observeSelection(radioButtonNone));
         documentTypeObservableValue.addOption(DocumentType.INTERNAL, scriptObserveSelection);
         documentTypeObservableValue.addOption(DocumentType.EXTERNAL, scriptObserveSelection);
         documentTypeObservableValue.addOption(DocumentType.CONTRACT, SWTObservables.observeSelection(radioButtonContract));
@@ -333,6 +335,9 @@ public class DocumentWizardPage extends WizardPage {
         multipleStackedComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         multipleStack = new StackLayout();
         multipleStackedComposite.setLayout(multipleStack);
+
+        multiNoneCompo = new Composite(multipleStackedComposite, SWT.NONE);
+        multiNoneCompo.setLayoutData(GridDataFactory.swtDefaults().grab(false, false).create());
 
         multipleContractComposite = new MultipleFileContractInputSelectionComposite(multipleStackedComposite);
         multipleContractComposite.bindControl(document, context, emfDataBindingContext);
@@ -582,7 +587,7 @@ public class DocumentWizardPage extends WizardPage {
     protected void updateStack(final DocumentType docType) {
         if (docType.equals(DocumentType.NONE)) {
             stack.topControl = noneCompo;
-            multipleStack.topControl = scriptComposite;
+            multipleStack.topControl = multiNoneCompo;
         } else if (docType.equals(DocumentType.EXTERNAL)) {
             stack.topControl = externalCompo;
             multipleStack.topControl = scriptComposite;
@@ -609,12 +614,21 @@ public class DocumentWizardPage extends WizardPage {
     protected void updateSingleMultipleStack(final boolean isMultiple) {
         if (isMultiple) {
             singleMultiplestack.topControl = multipleComposite;
-            updateMimeTypeEnabled(false);
         } else {
             singleMultiplestack.topControl = singleComposite;
-            updateMimeTypeEnabled(!document.getDocumentType().equals(DocumentType.NONE));
         }
+        updateMimeTypeEnabled(isMimetypeEditable(isMultiple, document));
         multipleComposite.getParent().layout();
+    }
+
+    protected boolean isMimetypeEditable(final boolean isMultiple, final Document document) {
+        if (isMultiple) {
+            return false;
+        } else {
+            final DocumentType documentType = document.getDocumentType();
+            return !(DocumentType.NONE.equals(documentType)
+            || DocumentType.CONTRACT.equals(documentType));
+        }
     }
 
     private void updateMimeTypeEnabled(final boolean isEnabled) {

@@ -186,6 +186,33 @@
             id="org.bonitasoft.studio.profiles.looknfeel.tab"
             name="Look&apos;n&apos;Feel tab">
       </activity>
+      <activity
+            id="org.bonitasoft.studio.profiles.execution.view"
+            name="Execution View">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.execution.view"
+            isEqualityPattern="true"
+            pattern="org.bonitasoft.studio.application/org.bonitasoft.studio.views.properties.process.execution">
+      </activityPatternBinding>
+      <activity
+            id="org.bonitasoft.studio.profiles.data.view"
+            name="Data View">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.data.view"
+            isEqualityPattern="true"
+            pattern="org.bonitasoft.studio.application/org.bonitasoft.studio.views.properties.process.data">
+      </activityPatternBinding>
+      <activity
+            id="org.bonitasoft.studio.profiles.uidesigner.menu"
+            name="UI Designer Menu">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.uidesigner.menu"
+            isEqualityPattern="false"
+            pattern="org.bonitasoft.studio.designer/org.bonitasoft.studio.pagedesigner.*">
+      </activityPatternBinding>
    </extension>
    <extension
          name="Activities Binding"
@@ -241,6 +268,18 @@
       <categoryActivityBinding
             activityId="org.bonitasoft.studio.profiles.looknfeel.tab"
             categoryId="org.bonitasoft.studio.profiles.looknfeels">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.execution.view"
+            categoryId="org.bonitasoft.studio.profiles.execution">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.data.view"
+            categoryId="org.bonitasoft.studio.profiles.datamanagement">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.uidesigner.menu"
+            categoryId="org.bonitasoft.studio.profiles.formsmodeling">
       </categoryActivityBinding>
    </extension>
      <extension
