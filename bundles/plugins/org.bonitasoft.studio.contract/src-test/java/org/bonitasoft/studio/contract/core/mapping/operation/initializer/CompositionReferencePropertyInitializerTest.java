@@ -20,6 +20,7 @@ import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aCompositi
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aSimpleField;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
+import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -35,7 +36,7 @@ public class CompositionReferencePropertyInitializerTest {
 
     @Test
     public void should_initialize_object_poperty_in_a_indented_closure() throws Exception {
-        final SimpleField streetField = aSimpleField().withName("street").notNullable().build();
+        final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.TEXT).notNullable().build();
         final CompositionReferencePropertyInitializer propertyInitializer = new CompositionReferencePropertyInitializer(aCompositionField("address",
                 aBO("org.test.Address").withField(streetField).build()), "employee.address");
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(streetField,

@@ -19,6 +19,8 @@ import static org.assertj.core.api.Assertions.tuple;
 import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
+import java.util.List;
+
 import org.bonitasoft.engine.bdm.BDMQueryUtil;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
@@ -89,6 +91,28 @@ public class RelationFieldToContractInputMappingTest {
                 "def addressVar = myEmployee.address == null ? new Address() : myEmployee.address" + System.lineSeparator()
                         + "addressVar.street = employee.address.street" + System.lineSeparator()
                         + "return addressVar");
+    }
+
+    @Test
+    public void should_return_field_type() throws Exception {
+        final BusinessObject addressBo = aBusinessObject("Address", aSimpleField("street", FieldType.TEXT));
+        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(aRelationField("address",
+                Type.COMPOSITION,
+                addressBo));
+
+        assertThat(fieldToContractInputMapping.getFieldType()).isEqualTo("Address");
+    }
+
+    @Test
+    public void should_return_field_type_for_multiple_fields() throws Exception {
+        final BusinessObject addressBo = aBusinessObject("Address", aSimpleField("street", FieldType.TEXT));
+        final RelationField aRelationField = aRelationField("address",
+                Type.COMPOSITION,
+                addressBo);
+        aRelationField.setCollection(true);
+        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(aRelationField);
+
+        assertThat(fieldToContractInputMapping.getFieldType()).isEqualTo(List.class.getName());
     }
 
     private SimpleField aSimpleField(final String name, final FieldType type) {

@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.contract.core.mapping;
 
+import java.util.List;
+
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -28,6 +30,15 @@ public class SimpleFieldToContractInputMapping extends FieldToContractInputMappi
     public SimpleFieldToContractInputMapping(final SimpleField field) {
         super(field);
         simpleField = field;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping#getFieldType()
+     */
+    @Override
+    public String getFieldType() {
+        return simpleField.isCollection() ? List.class.getName() : simpleField.getType().getClazz().getName();
     }
 
     @Override
