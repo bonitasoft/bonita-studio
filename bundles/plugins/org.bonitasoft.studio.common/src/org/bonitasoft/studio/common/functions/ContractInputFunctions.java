@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.eclipse.emf.ecore.EObject;
 
 import com.google.common.base.Function;
@@ -36,6 +37,27 @@ public class ContractInputFunctions {
                 while (current instanceof ContractInput) {
                     ancestors.add(((ContractInput) current).getName());
                     current = current.eContainer();
+                }
+                return reverse(ancestors);
+            }
+
+        };
+    }
+
+    public static Function<ContractInput, List<String>> toAncestorNameListUntilMultipleComplex() {
+        return new Function<ContractInput, List<String>>() {
+
+            @Override
+            public List<String> apply(final ContractInput input) {
+                final List<String> ancestors = new ArrayList<String>();
+                EObject current = input;
+                while (current instanceof ContractInput
+                        && !(((ContractInput) current).isMultiple() && ((ContractInput) current).getType() == ContractInputType.COMPLEX)) {
+                    ancestors.add(((ContractInput) current).getName());
+                    current = current.eContainer();
+                }
+                if (ancestors.isEmpty()) {
+                    ancestors.add(input.getName());
                 }
                 return reverse(ancestors);
             }

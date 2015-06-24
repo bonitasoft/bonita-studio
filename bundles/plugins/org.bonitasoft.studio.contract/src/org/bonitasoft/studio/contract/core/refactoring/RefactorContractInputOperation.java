@@ -17,6 +17,7 @@ package org.bonitasoft.studio.contract.core.refactoring;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Sets.newHashSet;
 import static org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createContractInputExpression;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAllElementOfTypeIn;
 import static org.bonitasoft.studio.common.predicate.ExpressionPredicates.withExpressionType;
@@ -43,7 +44,6 @@ import org.eclipse.emf.ecore.EObject;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Sets;
 
 public class RefactorContractInputOperation extends AbstractRefactorOperation<ContractInput, ContractInput, ContractInputRefactorPair> {
 
@@ -78,11 +78,10 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
     }
 
     private Collection<? extends ScriptContainer<?>> constraintExpressionsReferencing(final Contract contract, final ContractInput contractInput) {
-        return Sets
-                .newHashSet(transform(
-                        filter(contract.getConstraints(),
-                                constraintReferencing(contractInput)),
-                        toConstraintExpressionContainer()));
+        return newHashSet(transform(
+                filter(contract.getConstraints(),
+                        constraintReferencing(contractInput)),
+                toConstraintExpressionContainer()));
     }
 
     private Function<ContractConstraint, ScriptContainer<?>> toConstraintExpressionContainer() {
@@ -100,7 +99,7 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
 
             @Override
             public boolean apply(final ContractConstraint constraint) {
-                return constraint.getInputNames().contains(contractInput.getName()) && constraint.getInputNames().size() > 1;
+                return constraint.getInputNames().contains(contractInput.getName());
             }
         };
     }

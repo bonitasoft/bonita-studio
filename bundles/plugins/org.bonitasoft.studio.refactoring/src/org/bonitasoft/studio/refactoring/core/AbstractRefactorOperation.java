@@ -176,7 +176,7 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
     }
 
     private Collection<? extends ScriptContainer<?>> allGroovyScriptWithReferencedElement(final EObject container, final Z referencedElement) {
-        return Sets.newHashSet(transform(
+        return newHashSet(transform(
                 filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class),
                         and(withExpressionType(ExpressionConstants.SCRIPT_TYPE), withReferencedElement(referencedElement))),
                 toGroovyExpressionScriptContainer(dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));

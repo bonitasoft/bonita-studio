@@ -35,10 +35,10 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.refactoring.core.emf.EMFEditWithRefactorObservables;
 import org.bonitasoft.studio.refactoring.core.emf.IRefactorOperationFactory;
-import org.bonitasoft.studio.refactoring.core.emf.ObservableValueWithRefactor;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -65,11 +65,14 @@ public class InputNameObservableEditingSupport extends CustomTextEMFObservableVa
     @Override
     protected IObservableValue doCreateElementObservable(final Object element, final ViewerCell cell) {
         checkArgument(element instanceof ContractInput);
-        final ObservableValueWithRefactor observableValue = EMFEditWithRefactorObservables.observeValueWithRefactor(
-                TransactionUtil.getEditingDomain(element), (EObject) element,
-                ProcessPackage.Literals.CONTRACT_INPUT__NAME,
-                contractInputRefactorOperationFactory,
-                progressService);
+        final IObservableValue observableValue = ((ContractInput) element).eContainer() instanceof Contract ? EMFEditWithRefactorObservables
+                .observeValueWithRefactor(
+                        TransactionUtil.getEditingDomain(element),
+                        (EObject) element,
+                        ProcessPackage.Literals.CONTRACT_INPUT__NAME,
+                        contractInputRefactorOperationFactory,
+                        progressService) : EMFEditObservables.observeValue(TransactionUtil.getEditingDomain(element), (EObject) element,
+                ProcessPackage.Literals.CONTRACT_INPUT__NAME);
         observableValue.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
         return observableValue;
     }
