@@ -19,8 +19,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.field.Field;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.MappingOperationScriptBuilder;
@@ -66,14 +64,7 @@ public abstract class FieldToContractInputMapping {
         return new PropertySetter(field).getSetterName();
     }
 
-    public String getFieldType() {
-        if (field instanceof SimpleField) {
-            return ((SimpleField) field).getType().getClazz().getName();
-        } else if (field instanceof RelationField) {
-            return ((RelationField) field).getReference().getQualifiedName();
-        }
-        throw new IllegalStateException("Not implemented yet");
-    }
+    public abstract String getFieldType();
 
     public void setParent(final FieldToContractInputMapping parentField) {
         parent = parentField;

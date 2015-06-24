@@ -16,6 +16,8 @@ package org.bonitasoft.studio.contract.core.mapping;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -130,6 +132,24 @@ public class SimpleFieldToContractInputMappingTest {
         final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
         ContractInputAssert.assertThat(input).hasName("messages").hasType(ContractInputType.TEXT).hasNoInputs().isMultiple();
+    }
+
+    @Test
+    public void should_return_field_type() throws Exception {
+        final SimpleField messageField = aSimpleField("message", FieldType.STRING);
+
+        final SimpleFieldToContractInputMapping fieldToContractInputMapping = new SimpleFieldToContractInputMapping(messageField);
+
+        assertThat(fieldToContractInputMapping.getFieldType()).isEqualTo(String.class.getName());
+    }
+
+    @Test
+    public void should_return_field_type_for_multiple_fields() throws Exception {
+        final SimpleField messageField = aSimpleField("message", FieldType.STRING);
+        messageField.setCollection(true);
+        final SimpleFieldToContractInputMapping fieldToContractInputMapping = new SimpleFieldToContractInputMapping(messageField);
+
+        assertThat(fieldToContractInputMapping.getFieldType()).isEqualTo(List.class.getName());
     }
 
     private SimpleField aSimpleField(final String name, final FieldType type) {

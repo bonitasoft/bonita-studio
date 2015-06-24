@@ -43,9 +43,7 @@ public class RootContractInputGenerator {
         for (final FieldToContractInputMapping mapping : children) {
             if (mapping.isGenerated()) {
                 final ContractInput input = mapping.toContractInput(contractInput);
-                if (!input.isMultiple()) {
-                    mappingOperations.add(mapping.toOperation(data, input));
-                }
+                mappingOperations.add(mapping.toOperation(data, input));
             }
         }
     }

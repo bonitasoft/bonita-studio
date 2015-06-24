@@ -38,6 +38,17 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
 
     @Override
     public String getInitialValue() {
-        return Joiner.on(".").join(toAncestorNameList().apply(contractInput));
+        final StringBuilder scriptBuilder = new StringBuilder(Joiner.on(".").join(toAncestorNameList().apply(contractInput)));
+        switch (field.getType()) {
+            case FLOAT:
+                scriptBuilder.append(contractInput.isMultiple() ? ".collect{ it.toFloat() }" : ".toFloat()");
+                break;
+            case LONG:
+                scriptBuilder.append(contractInput.isMultiple() ? ".collect{ it.toLong() }" : ".toLong()");
+                break;
+            default:
+                break;
+        }
+        return scriptBuilder.toString();
     }
 }

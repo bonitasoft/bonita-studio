@@ -17,6 +17,8 @@ package org.bonitasoft.studio.contract.core.mapping;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 
+import java.util.List;
+
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -78,5 +80,14 @@ public class RelationFieldToContractInputMapping extends FieldToContractInputMap
             default:
                 throw new IllegalStateException(String.format("Failed to convert field type %s to contract input type", relationType));
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping#getFieldType()
+     */
+    @Override
+    public String getFieldType() {
+        return relationField.isCollection() ? List.class.getName() : relationField.getReference().getQualifiedName();
     }
 }

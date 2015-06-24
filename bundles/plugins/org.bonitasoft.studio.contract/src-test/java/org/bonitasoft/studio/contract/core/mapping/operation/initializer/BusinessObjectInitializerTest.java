@@ -20,6 +20,7 @@ import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aCompositi
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aSimpleField;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
+import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -43,7 +44,7 @@ public class BusinessObjectInitializerTest {
 
     @Test
     public void should_initialize_new_object_poperty() throws Exception {
-        final SimpleField streetField = aSimpleField().withName("street").notNullable().build();
+        final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.STRING).notNullable().build();
         final BusinessObjectInitializer propertyInitializer = new BusinessObjectInitializer(aCompositionField("address",
                 aBO("org.test.Address").withField(streetField).build()), "myAddress");
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(streetField,

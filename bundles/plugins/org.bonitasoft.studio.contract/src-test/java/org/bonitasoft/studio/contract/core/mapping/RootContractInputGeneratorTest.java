@@ -21,7 +21,6 @@ import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBui
 
 import java.util.Collections;
 
-import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -71,14 +70,4 @@ public class RootContractInputGeneratorTest {
                 tuple("employee", ExpressionConstants.JAVA_METHOD_OPERATOR, "setFirstName", "rootInputName.firstName"));
     }
 
-    @Test
-    public void should_not_create_operation_for_multiple_contract_input() throws Exception {
-        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping((SimpleField) SimpleFieldBuilder.aStringField(
-                "firstNames").multiple().build());
-
-        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName", newArrayList(mapping));
-        rootContractInputGenerator.build(aBusinessData().withName("employee").build());
-
-        assertThat(rootContractInputGenerator.getMappingOperations()).isEmpty();
-    }
 }
