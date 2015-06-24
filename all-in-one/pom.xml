@@ -198,7 +198,7 @@
                 <jre.winx86.x64.url>jre1.7.0_55-windows-x64</jre.winx86.x64.url>
                 <jre.linuxx86.url>jre1.7.0_55-linux</jre.linuxx86.url>
                 <jre.linuxx86.x64.url>jre1.7.0_55-linux-x64</jre.linuxx86.x64.url>
-                <jre.osx.url>jre1.7.0_55-osx</jre.osx.url>
+                <jre.osx.url>jre-8u45-macosx-x64</jre.osx.url>
             </properties>
             <build>
                 <plugins>
@@ -229,20 +229,6 @@
                                         <argument>build</argument>
                                         <argument>${basedir}/installer/installer_project_linux_x86_64.xml</argument>
                                         <argument>linux-x64</argument>
-                                    </arguments>
-                                </configuration>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>macosx-x86</id>
-                                <phase>install</phase>
-                                <configuration>
-                                    <arguments>
-                                        <argument>build</argument>
-                                        <argument>${basedir}/installer/installer_project_macosx_x86.xml</argument>
-                                        <argument>osx</argument>
                                     </arguments>
                                 </configuration>
                                 <goals>
@@ -329,24 +315,6 @@
                                         <property file="installer/installer.properties" />
                                         <property name="installer.name" value="${product.short.name}-${product.version}-x86_64.run" />
                                         <property name="updated.project.file" value="${basedir}/installer/installer_project_linux_x86_64.xml" />
-                                        <ant antfile="createInstallerProject.xml" />
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>macosx x86 installer file</id>
-                                <phase>prepare-package</phase>
-                                <configuration>
-                                    <target>
-                                        <property name="studio.dir" value="${project.build.directory}/products/${productId}/macosx/cocoa/x86" />
-                                        <property name="bitrock.install" value="${project.build.directory}/installers" />
-                                        <property name="os_arch" value="32" />
-                                        <property file="installer/installer.properties" />
-                                        <property name="installer.name" value="${product.short.name}-${product.version}-x86" />
-                                        <property name="updated.project.file" value="${basedir}/installer/installer_project_macosx_x86.xml" />
                                         <ant antfile="createInstallerProject.xml" />
                                     </target>
                                 </configuration>
@@ -517,33 +485,6 @@
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>jre-osx-x86</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <tasks>
-                                        <taskdef name="if" classname="${if.task}" classpathref="maven.runtime.classpath" />
-                                        <available property="jre.present" file="${user.home}/${jre.osx.url}" />
-                                        <if>
-                                            <not>
-                                                <isset property="jre.present" />
-                                            </not>
-                                            <then>
-                                                <get src="${jre.url}/${jre.osx.url}.zip" dest="${user.home}" />
-                                                <unzip src="${user.home}/${jre.osx.url}.zip" dest="${user.home}" />
-
-                                                <delete file="${user.home}/${jre.osx.url}.zip" />
-                                            </then>
-                                        </if>
-                                        <copy todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86/jre/Contents/Home/jre">
-                                            <fileset dir="${user.home}/${jre.osx.url}/jre" />
-                                        </copy>
-                                    </tasks>
-                                </configuration>
-                            </execution>
-                            <execution>
                                 <id>jre-osx-x86-x64</id>
                                 <phase>package</phase>
                                 <goals>
@@ -551,22 +492,7 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <taskdef name="if" classname="${if.task}" classpathref="maven.runtime.classpath" />
-                                        <available property="jre.present" file="${user.home}/${jre.osx.url}" />
-                                        <if>
-                                            <not>
-                                                <isset property="jre.present" />
-                                            </not>
-                                            <then>
-                                                <get src="${jre.url}/${jre.osx.url}.zip" dest="${user.home}" />
-                                                <unzip src="${user.home}/${jre.osx.url}.zip" dest="${user.home}" />
-
-                                                <delete file="${user.home}/${jre.osx.url}.zip" />
-                                            </then>
-                                        </if>
-                                        <copy todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/jre/Contents/Home/jre">
-                                            <fileset dir="${user.home}/${jre.osx.url}/jre" />
-                                        </copy>
+                                       <get src="${jre.url}/${jre.osx.url}.gz" dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${jre.osx.url}.gz" />
                                     </tasks>
                                 </configuration>
                             </execution>
