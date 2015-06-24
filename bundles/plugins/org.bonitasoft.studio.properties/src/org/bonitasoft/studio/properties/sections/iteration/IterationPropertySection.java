@@ -21,12 +21,12 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.data.provider.DataExpressionProvider;
 import org.bonitasoft.studio.data.ui.property.section.DataLabelProvider;
 import org.bonitasoft.studio.expression.editor.constant.ExpressionReturnTypeContentProvider;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
@@ -653,11 +653,11 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
                         .getInnerObservableValue();
                 if (expression != null && returnType != null) {
                     final MultiInstantiable parentFlowElement = (MultiInstantiable) ModelHelper.getParentFlowElement(expression);
-                    final Data oldItem = DataExpressionProvider.dataFromIteratorExpression(parentFlowElement, expression,
+                    final Data oldItem = ExpressionHelper.dataFromIteratorExpression(parentFlowElement, expression,
                             mainProcess(parentFlowElement));
                     final Expression expressionCopy = EcoreUtil.copy(expression);
                     expressionCopy.setReturnType(returnType);
-                    final Data newItem = DataExpressionProvider.dataFromIteratorExpression(parentFlowElement, expressionCopy,
+                    final Data newItem = ExpressionHelper.dataFromIteratorExpression(parentFlowElement, expressionCopy,
                             mainProcess(parentFlowElement));
                     innerObservableValue.setRefactoringCommand(getRefactorCommand(oldItem, newItem, parentFlowElement));
                 } else {

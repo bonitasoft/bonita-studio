@@ -16,8 +16,8 @@ package org.bonitasoft.studio.properties.sections.iteration.control;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.data.provider.DataExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
@@ -43,7 +43,7 @@ public class IteratorRefactorOperationFactory implements IRefactorOperationFacto
         checkArgument(item instanceof Expression);
         checkArgument(newValue instanceof String);
         final MultiInstantiable parentFlowElement = ModelHelper.getFirstContainerOfType(item, MultiInstantiable.class);
-        final Data oldData = DataExpressionProvider.dataFromIteratorExpression(
+        final Data oldData = ExpressionHelper.dataFromIteratorExpression(
                 parentFlowElement, (Expression) item, mainProcess(parentFlowElement));
         final RefactorDataOperation refactorOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
         refactorOperation.setEditingDomain(domain);
