@@ -482,6 +482,8 @@ public class FormsExporter {
                 final String ds = data.getDatasourceId();
                 if (DatasourceConstants.PAGEFLOW_DATASOURCE.equals(ds)) {
                     type = ExpressionConstants.FORM_FIELD_TYPE;
+                } else if (data.isTransient()) {
+                    type = ExpressionConstants.TRANSIENT_VARIABLE_TYPE;
                 }
             }
             return type;

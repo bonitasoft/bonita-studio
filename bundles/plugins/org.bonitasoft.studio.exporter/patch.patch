@@ -1,0 +1,13 @@
+diff --git a/bundles/plugins/org.bonitasoft.studio.exporter/src/org/bonitasoft/studio/exporter/form/FormsExporter.java b/bundles/plugins/org.bonitasoft.studio.exporter/src/org/bonitasoft/studio/exporter/form/FormsExporter.java
+index 4db5ca5..0472714 100644
+--- a/bundles/plugins/org.bonitasoft.studio.exporter/src/org/bonitasoft/studio/exporter/form/FormsExporter.java
++++ b/bundles/plugins/org.bonitasoft.studio.exporter/src/org/bonitasoft/studio/exporter/form/FormsExporter.java
+@@ -482,6 +482,8 @@
+                 final String ds = data.getDatasourceId();
+                 if (DatasourceConstants.PAGEFLOW_DATASOURCE.equals(ds)) {
+                     type = ExpressionConstants.FORM_FIELD_TYPE;
++                } else if (data.isTransient()) {
++                    type = ExpressionConstants.TRANSIENT_VARIABLE_TYPE;
+                 }
+             }
+             return type;
