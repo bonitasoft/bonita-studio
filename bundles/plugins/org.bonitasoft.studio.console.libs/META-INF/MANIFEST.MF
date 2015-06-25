@@ -13,7 +13,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Console embedded in Studio
 Bundle-SymbolicName: org.bonitasoft.studio.console.libs;singleton:=true
 Bundle-Vendor: BonitaSoft S.A.
-Bundle-Version: 7.0.0.qualifier
+Bundle-Version: 7.0.1.qualifier
 Created-By: Apache Maven Bundle Plugin
 Eclipse-BundleShape: dir
 Embed-Dependency: *;scope=compile|runtime
@@ -21,7 +21,7 @@ Embed-Directory: lib
 Embed-StripVersion: true
 Embed-Transitive: true
 Embedded-Artifacts: lib/bonita-client.jar;g="org.bonitasoft.engine";a="b
- onita-client";v="7.0.0-SNAPSHOT",lib/httpclient.jar;g="org.apache.httpc
+ onita-client";v="7.0.1-SNAPSHOT",lib/httpclient.jar;g="org.apache.httpc
  omponents";a="httpclient";v="4.2.5",lib/httpcore.jar;g="org.apache.http
  components";a="httpcore";v="4.2.4",lib/commons-logging.jar;g="commons-l
  ogging";a="commons-logging";v="1.1.1",lib/xstream.jar;g="com.thoughtwor
@@ -35,15 +35,15 @@ Embedded-Artifacts: lib/bonita-client.jar;g="org.bonitasoft.engine";a="b
  n-annotations.jar;g="com.fasterxml.jackson.core";a="jackson-annotations
  ";v="2.2.3",lib/jackson-core.jar;g="com.fasterxml.jackson.core";a="jack
  son-core";v="2.2.3",lib/bonita-common.jar;g="org.bonitasoft.engine";a="
- bonita-common";v="7.0.0-SNAPSHOT",lib/bonita-server.jar;g="org.bonitaso
- ft.engine";a="bonita-server";v="7.0.0-SNAPSHOT",lib/theme-builder.jar;g
+ bonita-common";v="7.0.1-SNAPSHOT",lib/bonita-server.jar;g="org.bonitaso
+ ft.engine";a="bonita-server";v="7.0.1-SNAPSHOT",lib/theme-builder.jar;g
  ="org.bonitasoft.web";a="theme-builder";v="6.1.0",lib/forms-server.jar;
- g="org.bonitasoft.forms";a="forms-server";v="7.0.0-SNAPSHOT",lib/forms-
- model.jar;g="org.bonitasoft.forms";a="forms-model";v="7.0.0-SNAPSHOT",l
- ib/forms-rpc.jar;g="org.bonitasoft.forms";a="forms-rpc";v="7.0.0-SNAPSH
+ g="org.bonitasoft.forms";a="forms-server";v="7.0.1-SNAPSHOT",lib/forms-
+ model.jar;g="org.bonitasoft.forms";a="forms-model";v="7.0.1-SNAPSHOT",l
+ ib/forms-rpc.jar;g="org.bonitasoft.forms";a="forms-rpc";v="7.0.1-SNAPSH
  OT",lib/console-server.jar;g="org.bonitasoft.console";a="console-server
- ";v="7.0.0-SNAPSHOT";c="classes",lib/console-common.jar;g="org.bonitaso
- ft.console";a="console-common";v="7.0.0-SNAPSHOT"
+ ";v="7.0.1-SNAPSHOT";c="classes",lib/console-common.jar;g="org.bonitaso
+ ft.console";a="console-common";v="7.0.1-SNAPSHOT"
 Export-Package: org.bonitasoft.console.common.server.preferences.constants;version="0.0.0",
  org.bonitasoft.console.common.server.preferences.properties;version="0.0.0",
  org.bonitasoft.console.common.server.sso;version="0.0.0",

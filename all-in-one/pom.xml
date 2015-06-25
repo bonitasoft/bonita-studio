@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>studio</artifactId>
-        <version>7.0.0-SNAPSHOT</version>
+        <version>7.0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.bonitasoft.studio</groupId>
@@ -49,7 +49,7 @@
                             <yLocation>128</yLocation>
                             <fontSize>22</fontSize>
                             <color>#0B4361</color>
-                            <versionLabel>7.0.0</versionLabel>
+                            <versionLabel>7.0.1</versionLabel>
                         </configuration>
                         <goals>
                             <goal>create-image</goal>

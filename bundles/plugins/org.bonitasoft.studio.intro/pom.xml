@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.bonitasoft.studio.bundles</groupId>
         <artifactId>plugins</artifactId>
-        <version>7.0.0-SNAPSHOT</version>
+        <version>7.0.1-SNAPSHOT</version>
     </parent>
     <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
     <artifactId>org.bonitasoft.studio.intro</artifactId>
@@ -28,7 +28,7 @@
                             <fontSize>35</fontSize>
                             <color>55738c</color>
                             <bold>false</bold>
-                            <versionLabel>7.0.0</versionLabel>
+                            <versionLabel>7.0.1</versionLabel>
                         </configuration>
                         <goals>
                             <goal>create-image</goal>
