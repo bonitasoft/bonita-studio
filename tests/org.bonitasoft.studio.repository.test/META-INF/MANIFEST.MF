@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tests for repository plugin
 Bundle-SymbolicName: org.bonitasoft.studio.repository.test
-Bundle-Version: 7.0.1.qualifier
+Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.bonitasoft.studio.engine,
@@ -34,7 +34,7 @@ Require-Bundle: org.bonitasoft.studio.engine,
  org.eclipse.swtbot.eclipse.gef.finder;bundle-version="2.0.5",
  org.bonitasoft.studio.exporter;bundle-version="1.0.0",
  org.bonitasoft.studio.document,
- org.bonitasoft.studio.importer.bos;bundle-version="7.0.1"
+ org.bonitasoft.studio.importer.bos;bundle-version="7.1.0"
 Export-Package: org.bonitasoft.studio.repository.test,org.bonitasoft.s
  tudio.repository.test.swtbot
 Import-Package: org.bonitasoft.engine.bpm.bar

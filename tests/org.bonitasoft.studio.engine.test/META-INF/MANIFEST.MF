@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita OSGii bundle Test
 Bundle-SymbolicName: org.bonitasoft.studio.engine.test
-Bundle-Version: 7.0.1.qualifier
+Bundle-Version: 7.1.0.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.junit,
  org.eclipse.equinox.common,
@@ -26,8 +26,8 @@ Require-Bundle: org.junit,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide;bundle-version="1.2.1",
  org.bonitasoft.studio.util.tests;bundle-version="6.0.0",
  assertj-core;bundle-version="1.5.0",
- org.bonitasoft.studio.importer.bos;bundle-version="7.0.1",
- org.bonitasoft.studio.swtbot.framework;bundle-version="7.0.1"
+ org.bonitasoft.studio.importer.bos;bundle-version="7.1.0",
+ org.bonitasoft.studio.swtbot.framework;bundle-version="7.1.0"
 Eclipse-RegisterBuddy: org.bonitasoft.studio.engine
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
