@@ -19,13 +19,18 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
+import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
+import org.bonitasoft.studio.contract.core.mapping.operation.MappingOperationScriptBuilder;
+import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
+import org.bonitasoft.studio.contract.core.mapping.operation.PropertySetter;
+import org.bonitasoft.studio.expression.editor.filter.ExpressionReturnTypeFilter;
+import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 
-/**
- * @author aurelie
- */
 public abstract class FieldToContractInputMapping {
 
     private final Field field;
@@ -35,6 +40,11 @@ public abstract class FieldToContractInputMapping {
     private FieldToContractInputMapping parent;
 
     private boolean generated = true;
+
+    private final FieldToContractInputMappingOperationBuilder operationBuilder = new FieldToContractInputMappingOperationBuilder(
+            new ExpressionReturnTypeFilter());
+
+    private ContractInput contractInput;
 
     public FieldToContractInputMapping(final Field field) {
         this.field = field;
@@ -50,6 +60,12 @@ public abstract class FieldToContractInputMapping {
         return field;
     }
 
+    public String getSetterName() {
+        return new PropertySetter(field).getSetterName();
+    }
+
+    public abstract String getFieldType();
+
     public void setParent(final FieldToContractInputMapping parentField) {
         parent = parentField;
     }
@@ -62,12 +78,30 @@ public abstract class FieldToContractInputMapping {
         return parent;
     }
 
-    public ContractInput toContractInput() {
-        final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
+    public ContractInput toContractInput(final ContractInput parentInput) {
+        contractInput = ProcessFactory.eINSTANCE.createContractInput();
         contractInput.setName(field.getName());
         contractInput.setType(toContractInputType());
         contractInput.setMultiple(field != null && field.isCollection());
+        if (parentInput != null) {
+            parentInput.getInputs().add(contractInput);
+        }
         return contractInput;
+    }
+
+    public ContractInput getContractInput() {
+        if (contractInput == null) {
+            contractInput = toContractInput(null);
+        }
+        return contractInput;
+    }
+
+    public Operation toOperation(final BusinessObjectData data, final ContractInput input) throws OperationCreationException {
+        return operationBuilder.toOperation(data, this);
+    }
+
+    public MappingOperationScriptBuilder getScriptBuilder(final BusinessObjectData data) throws BusinessObjectInstantiationException {
+        return new MappingOperationScriptBuilder(data, this, field);
     }
 
     protected abstract ContractInputType toContractInputType();

@@ -17,32 +17,42 @@ package org.bonitasoft.studio.contract.core.mapping;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
+import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 
-/**
- * @author aurelie
- */
 public class RootContractInputGenerator {
 
     private final String rootContractInputName;
     private List<? extends FieldToContractInputMapping> children = new ArrayList<FieldToContractInputMapping>();
+    private final List<Operation> mappingOperations = new ArrayList<Operation>();
+    private ContractInput contractInput;
 
     public RootContractInputGenerator(final String rootContractInputName, final List<? extends FieldToContractInputMapping> children) {
         this.rootContractInputName = rootContractInputName;
         this.children = children;
     }
 
-    public ContractInput toRootContractInput() {
-        final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
+    public void build(final BusinessObjectData data) throws OperationCreationException {
+        contractInput = ProcessFactory.eINSTANCE.createContractInput();
         contractInput.setName(rootContractInputName);
         contractInput.setType(ContractInputType.COMPLEX);
         for (final FieldToContractInputMapping mapping : children) {
             if (mapping.isGenerated()) {
-                contractInput.getInputs().add(mapping.toContractInput());
+                final ContractInput input = mapping.toContractInput(contractInput);
+                mappingOperations.add(mapping.toOperation(data, input));
             }
         }
+    }
+
+    public ContractInput getRootContractInput() {
         return contractInput;
+    }
+
+    public List<Operation> getMappingOperations() {
+        return mappingOperations;
     }
 }

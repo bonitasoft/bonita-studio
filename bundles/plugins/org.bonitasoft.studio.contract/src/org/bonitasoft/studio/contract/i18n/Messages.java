@@ -88,5 +88,7 @@ public class Messages extends NLS {
     public static String reminderForStepMessage;
     public static String reminderForProcessMessage;
     public static String contractInputDescriptionTooltip;
+    public static String errorTitle;
+    public static String contractFromDataCreationErrorMessage;
 
 }
