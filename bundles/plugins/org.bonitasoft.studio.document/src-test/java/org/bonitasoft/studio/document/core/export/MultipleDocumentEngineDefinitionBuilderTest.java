@@ -59,6 +59,7 @@ public class MultipleDocumentEngineDefinitionBuilderTest {
         document.setMultiple(true);
         final Expression initialExpression = ExpressionHelper.createEmptyListGroovyScriptExpression();
         document.setInitialMultipleContent(initialExpression);
+        document.setDocumentType(DocumentType.INTERNAL);
         process.getDocuments().add(document);
 
         final MultipleDocumentEngineDefinitionBuilder builder = new MultipleDocumentEngineDefinitionBuilder(document, processBuilder, scriptFactory);
@@ -103,6 +104,18 @@ public class MultipleDocumentEngineDefinitionBuilderTest {
         builder.build();
 
         verify(docDefinitionListBuilder).addInitialValue(notNull(org.bonitasoft.engine.expression.Expression.class));
+    }
+
+    @Test
+    public void should_add_initial_content_for_NONE_type_if_contract_input_is_not_null() throws Exception {
+        when(processBuilder.addDocumentListDefinition(anyString())).thenReturn(docDefinitionListBuilder);
+        when(scriptFactory.createMultipleDocumentInitialContentScriptExpression(any(ContractInput.class))).thenReturn(
+                aGroovyScriptExpression().withContent("script content").build());
+        final MultipleDocumentEngineDefinitionBuilder builder = new MultipleDocumentEngineDefinitionBuilder(aDocument().multiple()
+                .withDocumentType(DocumentType.NONE).build(), processBuilder, scriptFactory);
+        builder.build();
+
+        verify(docDefinitionListBuilder, never()).addInitialValue(notNull(org.bonitasoft.engine.expression.Expression.class));
     }
 
     private Document createBasicDocument() {

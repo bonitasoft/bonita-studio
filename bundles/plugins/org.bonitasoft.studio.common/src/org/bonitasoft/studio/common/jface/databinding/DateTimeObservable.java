@@ -5,90 +5,86 @@ import java.util.Date;
 
 import org.eclipse.core.databinding.observable.Diffs;
 import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.DateTime;
 
 public class DateTimeObservable extends AbstractObservableValue {
 
-	private final DateTime dateTime;
+    private final DateTime dateTime;
 
-	protected Date oldValue;
+    protected Date oldValue;
 
-	SelectionListener listener = new SelectionListener() {
+    SelectionListener listener = new SelectionAdapter() {
 
-		public void widgetDefaultSelected(SelectionEvent e) {
-			// TODO Auto-generated method stub
+        @Override
+        public void widgetSelected(final SelectionEvent e) {
 
-		}
+            final Date newValue = dateTimeToDate();
 
-		public void widgetSelected(SelectionEvent e) {
+            if (!newValue.equals(oldValue)) {
+                fireValueChange(Diffs.createValueDiff(oldValue, newValue));
+                oldValue = newValue;
+            }
+        }
 
-			Date newValue = dateTimeToDate();
+    };
 
-			if (!newValue.equals(DateTimeObservable.this.oldValue)) {
-				fireValueChange(Diffs.createValueDiff(DateTimeObservable.this.oldValue, newValue));
-				DateTimeObservable.this.oldValue = newValue;
+    public DateTimeObservable(final DateTime dateTime) {
+        this.dateTime = dateTime;
+        this.dateTime.addSelectionListener(listener);
+    }
 
-			}
-		}
+    @Override
+    protected Object doGetValue() {
+        return dateTimeToDate();
+    }
 
-	};
+    @Override
+    protected void doSetValue(final Object value) {
+        if (value instanceof Date) {
+            final Date date = (Date) value;
+            dateToDateTime(date);
+        }
+    }
 
-	public DateTimeObservable(final DateTime dateTime) {
-		this.dateTime = dateTime;
-		this.dateTime.addSelectionListener(listener);
-	}
+    private void dateToDateTime(final Date date) {
+        if (!dateTime.isDisposed()) {
+            final Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            dateTime.setYear(cal.get(Calendar.YEAR));
+            dateTime.setMonth(cal.get(Calendar.MONTH));
+            dateTime.setDay(cal.get(Calendar.DAY_OF_MONTH));
+            dateTime.setHours(cal.get(Calendar.HOUR_OF_DAY));
+            dateTime.setMinutes(cal.get(Calendar.MINUTE));
+            dateTime.setSeconds(cal.get(Calendar.SECOND));
+        }
+    }
 
-	@Override
-	protected Object doGetValue() {
-		return dateTimeToDate();
-	}
+    private Date dateTimeToDate() {
+        Date result = null;
+        if (!dateTime.isDisposed()) {
+            final Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.YEAR, dateTime.getYear());
+            cal.set(Calendar.MONTH, dateTime.getMonth());
+            cal.set(Calendar.DAY_OF_MONTH, dateTime.getDay());
+            cal.set(Calendar.HOUR_OF_DAY, dateTime.getHours());
+            cal.set(Calendar.MINUTE, dateTime.getMinutes());
+            cal.set(Calendar.SECOND, dateTime.getSeconds());
+            result = cal.getTime();
+        }
+        return result;
+    }
 
-	@Override
-	protected void doSetValue(final Object value) {
-		if (value instanceof Date) {
-			Date date = (Date) value;
-			dateToDateTime(date);
-		}
-	}
+    @Override
+    public synchronized void dispose() {
+        dateTime.removeSelectionListener(listener);
+        super.dispose();
+    }
 
-
-	private void dateToDateTime(final Date date) {
-		if (!this.dateTime.isDisposed()) {
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(date);
-			this.dateTime.setYear(cal.get(Calendar.YEAR));
-			this.dateTime.setMonth(cal.get(Calendar.MONTH));
-			this.dateTime.setDay(cal.get(Calendar.DAY_OF_MONTH));
-			this.dateTime.setHours(cal.get(Calendar.HOUR_OF_DAY));
-			this.dateTime.setMinutes(cal.get(Calendar.MINUTE));
-			this.dateTime.setSeconds(cal.get(Calendar.SECOND));
-		}
-	}
-
-	private Date dateTimeToDate() {
-		Date result = null;
-		if (!this.dateTime.isDisposed()) {
-			Calendar cal = Calendar.getInstance();
-			cal.set(Calendar.YEAR, this.dateTime.getYear());
-			cal.set(Calendar.MONTH, this.dateTime.getMonth());
-			cal.set(Calendar.DAY_OF_MONTH, this.dateTime.getDay());
-			cal.set(Calendar.HOUR_OF_DAY, this.dateTime.getHours());
-			cal.set(Calendar.MINUTE, this.dateTime.getMinutes());
-			cal.set(Calendar.SECOND, this.dateTime.getSeconds());
-			result = cal.getTime();
-		}
-		return result;
-	}
-
-	@Override
-	public synchronized void dispose() {
-		this.dateTime.removeSelectionListener(this.listener);
-		super.dispose();
-	}
-
-	public Object getValueType() {
-		return Date.class;
-	}
+    @Override
+    public Object getValueType() {
+        return Date.class;
+    }
 }

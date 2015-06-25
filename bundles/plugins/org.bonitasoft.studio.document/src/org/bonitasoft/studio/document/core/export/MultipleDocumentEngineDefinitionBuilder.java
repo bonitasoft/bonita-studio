@@ -50,8 +50,12 @@ public class MultipleDocumentEngineDefinitionBuilder implements IDefinitionBuild
             case CONTRACT:
                 addContractInputInitialContent(documentListBuilder);
                 break;
-            default:
+            case EXTERNAL:
+            case INTERNAL:
                 addScriptInitialContent(documentListBuilder);
+                break;
+            case NONE:
+            default:
                 break;
         }
     }

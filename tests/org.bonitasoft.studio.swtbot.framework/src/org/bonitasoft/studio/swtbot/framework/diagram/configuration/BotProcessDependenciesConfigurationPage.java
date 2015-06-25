@@ -12,26 +12,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process;
+package org.bonitasoft.studio.swtbot.framework.diagram.configuration;
 
-import org.bonitasoft.studio.model.process.Lane;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.ui.IEditorReference;
+import org.bonitasoft.studio.configuration.i18n.Messages;
+import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
-public class LaneTabbedPropertyProvider extends ProcessGeneralTabbedPropertySelectionProvider {
+public class BotProcessDependenciesConfigurationPage extends BotBase {
 
-    @Override
-    public String tabId(final EObject mapping) {
-        return "tab.lane";
+    public BotProcessDependenciesConfigurationPage(final SWTGefBot bot) {
+        super(bot);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.gmf.tools.tree.selection.ITabbedPropertySelectionProvider#appliesTo(org.eclipse.emf.ecore.EObject)
-     */
-    @Override
-    public boolean appliesTo(final EObject element, IEditorReference activeEditor) {
-        return element instanceof Lane;
+    public BotProcessDependenciesTreeView selectTreeView() {
+        bot.tabItem(Messages.hiearachical).activate();
+        return new BotProcessDependenciesTreeView(bot);
     }
-
 }

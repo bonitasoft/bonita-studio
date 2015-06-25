@@ -59,6 +59,7 @@ public class OpenUIDesignerHandlerTest {
         when(preferenceStore.get(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE, "en")).thenReturn("en");
         doReturn(preferenceStore).when(openPageDesignerHandler).getPreferenceStore();
         doReturn(openBrowserOperation).when(openPageDesignerHandler).createOpenBrowserOperation(any(URL.class));
+        doReturn(true).when(openPageDesignerHandler).waitUntilTomcatIsReady(any(URL.class));
     }
 
     /**

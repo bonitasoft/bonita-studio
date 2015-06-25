@@ -29,6 +29,8 @@ import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -270,6 +272,29 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
     protected void addContext(final Object contextBuilder, final Task task) {
         final Pool pool = ModelHelper.getParentPool(task);
         addContext(contextBuilder, pool);
+        final org.bonitasoft.studio.model.expression.Expression iteratorExpression = task.getIteratorExpression();
+        addIteratorToContext(contextBuilder, task, iteratorExpression);
+    }
+
+    /**
+     * @param contextBuilder
+     * @param task
+     * @param iteratorExpression
+     */
+    protected void addIteratorToContext(final Object contextBuilder, final Task task, final org.bonitasoft.studio.model.expression.Expression iteratorExpression) {
+        if (ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(iteratorExpression.getType())
+                && iteratorExpression.getName() != null
+                && !iteratorExpression.getName().isEmpty()
+                && task instanceof DataAware) {
+            final String referenceName = iteratorExpression.getName() + SUFFIX_CONTEXT;
+            final Data data = ExpressionHelper.dataFromIteratorExpression(task, iteratorExpression,
+                    ModelHelper.getMainProcess(task));
+            if (data instanceof BusinessObjectData) {
+                final Expression expression = EngineExpressionUtil.createExpression(
+                        ExpressionHelper.createVariableExpression(data));
+                addContextEntry(contextBuilder, referenceName, expression);
+            }
+        }
     }
 
     protected void addContext(final Object contextBuilder, final Pool pool) {

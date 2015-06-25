@@ -392,7 +392,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                 if (!(validationStatus instanceof UnmodifiableObservableValue)) {
                     final IStatus status = (IStatus) validationStatus.getValue();
                     if (status != null) {
-                        if (status.isOK()) {
+                        if (status.getSeverity() == IStatus.OK) {
                             validationStatus.setValue(ValidationStatus.ok());
                         } else if (status.getSeverity() == IStatus.WARNING) {
                             validationStatus.setValue(ValidationStatus.warning(status.getMessage()));

@@ -83,6 +83,10 @@ public class BotAddDocumentDialog extends BotWizardDialog {
         bot.radio(Messages.initialValueButtonInternal).click();
     }
 
+    public void chooseScriptInitialContent() {
+        bot.radio(Messages.initialValueButtonScript).click();
+    }
+
     /**
      * Set File.
      *

@@ -16,6 +16,10 @@ package org.bonitasoft.studio.common.emf.tools;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.expression.assertions.ExpressionAssert.assertThat;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.studio.model.process.builders.MainProcessBuilder.aMainProcess;
+import static org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder.aStringDataType;
+import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 
 import java.util.Collection;
 import java.util.List;
@@ -47,6 +51,7 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.SearchIndex;
+import org.bonitasoft.studio.model.process.StringType;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
@@ -460,6 +465,27 @@ public class ExpressionHelperTest {
                 .hasName("outputName")
                 .hasContent("outputName");
         assertThat(createDefaultConnectorOutputOperation.getLeftOperand()).isNotNull();
+    }
+
+    @Test
+    public void should_create_a_data_with_name_from_an_iterator_expression() throws Exception {
+        final Data data = ExpressionHelper.dataFromIteratorExpression(aTask().build(), anExpression()
+                .withExpressionType(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE).withName("iterator").build(),
+                aMainProcess().build());
+
+        assertThat(data.getName()).isEqualTo("iterator");
+    }
+
+    @Test
+    public void should_create_a_data_with_datatype_from_an_iterator_expression() throws Exception {
+        final StringType stringDataType = aStringDataType().build();
+
+        final Data data = ExpressionHelper.dataFromIteratorExpression(aTask().build(),
+                anExpression()
+                        .withExpressionType(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE).withReturnType(String.class.getName()).build(),
+                aMainProcess().havingDatatypes(stringDataType).build());
+
+        assertThat(data.getDataType()).isEqualTo(stringDataType);
     }
 
 }

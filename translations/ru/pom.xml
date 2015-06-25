@@ -23,6 +23,7 @@
 	<module>org.bonitasoft.studio.connectors.nl_ru</module>
 	<module>org.bonitasoft.studio.connectors.model.nl_ru</module>
 	<module>org.bonitasoft.studio.connectors.model.edit.nl_ru</module>
+    <module>org.bonitasoft.studio.contract.nl_ru</module>
 	<module>org.bonitasoft.studio.data.nl_ru</module>
 	<module>org.bonitasoft.studio.debug.nl_ru</module>
 	<module>org.bonitasoft.studio.decision.core.nl_ru</module>

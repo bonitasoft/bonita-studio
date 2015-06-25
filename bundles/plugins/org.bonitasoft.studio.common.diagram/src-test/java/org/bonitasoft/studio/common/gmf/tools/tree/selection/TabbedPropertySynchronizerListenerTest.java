@@ -20,6 +20,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,8 +35,11 @@ import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.junit.Before;
@@ -69,23 +73,34 @@ public class TabbedPropertySynchronizerListenerTest {
     private EditPartResolver editPartResolver;
     @Mock
     private IGraphicalEditPart editPart;
+    @Mock
+    private Display display;
 
     @Before
     public void setUp() throws Exception {
         when(processEditorReference.getId()).thenReturn("org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorID");
         when(processEditorReference.getPart(false)).thenReturn(editorPart);
         when(activePage.getActiveEditor()).thenReturn(editorPart);
+        when(activePage.getViewReferences()).thenReturn(new IViewReference[] {});
         when(activePage.showView(anyString())).thenReturn(viewPart);
         when(viewPart.getAdapter(TabbedPropertySheetPage.class)).thenReturn(page);
         when(editorPart.getDiagramEditPart()).thenReturn(new DiagramEditPart(NotationFactory.eINSTANCE.createDiagram()));
         when(editorPart.getDiagramGraphicalViewer()).thenReturn(viewer);
+        doReturn(aControlWithDisplay(display)).when(viewer).getControl();
         when(editPartResolver.findEditPart(any(DiagramEditPart.class), notNull(EObject.class))).thenReturn(editPart);
         doReturn(new IEditorReference[] { processEditorReference }).when(activePage).getEditorReferences();
     }
 
+    private Control aControlWithDisplay(final Display display) {
+        final Control control = mock(Control.class);
+        doReturn(display).when(control).getDisplay();
+        return control;
+    }
+
     @Test
     public void should_show_provided_viewId_when_handling_selection_change_event() throws Exception {
-        when(registry.findSelectionProvider(notNull(EObject.class), eq(processEditorReference))).thenReturn(selectionProvider);
+        when(registry.findSelectionProvider(notNull(EObject.class), eq(processEditorReference), any(ITabbedPropertySelectionProvider.class))).thenReturn(
+                selectionProvider);
         when(selectionProvider.viewId()).thenReturn("aViewId");
         final TabbedPropertySynchronizerListener listener = newFixture();
 
@@ -96,25 +111,27 @@ public class TabbedPropertySynchronizerListenerTest {
 
     @Test
     public void should_update_diagram_selection_when_handling_selection_change_event() throws Exception {
-        when(registry.findSelectionProvider(notNull(EObject.class), eq(processEditorReference))).thenReturn(selectionProvider);
+        when(registry.findSelectionProvider(notNull(EObject.class), eq(processEditorReference), any(ITabbedPropertySelectionProvider.class))).thenReturn(
+                selectionProvider);
         final TabbedPropertySynchronizerListener listener = newFixture();
 
         listener.selectionChanged(new SelectionChangedEvent(source, new StructuredSelection(aTask().build())));
 
         verify(viewer).select(editPart);
         verify(viewer).reveal(editPart);
+        verify(display).asyncExec(notNull(RefreshPropertyViewsSelection.class));
     }
 
     @Test
     public void should_update_selectedTab_when_handling_selection_change_event() throws Exception {
-        when(registry.findSelectionProvider(notNull(EObject.class), eq(processEditorReference))).thenReturn(selectionProvider);
+        when(registry.findSelectionProvider(notNull(EObject.class), eq(processEditorReference), any(ITabbedPropertySelectionProvider.class))).thenReturn(
+                selectionProvider);
         final Task task = aTask().build();
         when(selectionProvider.tabId(task)).thenReturn("aTabId");
         final TabbedPropertySynchronizerListener listener = newFixture();
 
         listener.selectionChanged(new SelectionChangedEvent(source, new StructuredSelection(task)));
 
-        verify(page).selectionChanged(editorPart, new StructuredSelection(editPart));
         verify(page).setSelectedTab("aTabId");
     }
 
