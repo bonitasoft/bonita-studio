@@ -39,6 +39,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IWidgetContribtution;
@@ -47,7 +48,6 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
-import org.bonitasoft.studio.data.provider.DataExpressionProvider;
 import org.bonitasoft.studio.data.ui.dialog.EnumDataTypeDialog;
 import org.bonitasoft.studio.data.ui.wizard.provider.BooleanExpressionNatureProvider;
 import org.bonitasoft.studio.data.ui.wizard.provider.NowDateExpressionNatureProvider;
@@ -604,7 +604,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
             @Override
             public Data apply(final MultiInstantiable input) {
-                return DataExpressionProvider.dataFromIteratorExpression(input, input.getIteratorExpression(), ModelHelper.getMainProcess(container));
+                return ExpressionHelper.dataFromIteratorExpression(input, input.getIteratorExpression(), ModelHelper.getMainProcess(container));
             }
         };
     }
