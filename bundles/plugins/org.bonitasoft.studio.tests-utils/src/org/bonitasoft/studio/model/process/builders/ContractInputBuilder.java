@@ -72,8 +72,14 @@ public class ContractInputBuilder implements Buildable<ContractInput> {
         return this;
     }
 
+    public ContractInputBuilder in(final Buildable<ContractInput> input) {
+        input.build().getInputs().add(contractInput);
+        return this;
+    }
+
     @Override
     public ContractInput build() {
         return contractInput;
     }
+
 }

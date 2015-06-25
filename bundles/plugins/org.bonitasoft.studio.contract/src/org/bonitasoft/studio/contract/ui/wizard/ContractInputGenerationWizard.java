@@ -22,16 +22,21 @@ import java.util.List;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.RootContractInputGenerator;
+import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.OperationContainer;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.wizard.Wizard;
@@ -46,6 +51,7 @@ public class ContractInputGenerationWizard extends Wizard {
     private final ContractContainer contractContainer;
     private CreateContractInputFromBusinessObjectWizardPage contractInputFromBusinessObjectWizardPage;
     private List<Data> availableBusinessData;
+    private WritableValue selectedDataObservable;
 
     public ContractInputGenerationWizard(final ContractContainer contractContainer, final EditingDomain editingDomain,
             final BusinessObjectModelRepositoryStore businessObjectStore) {
@@ -58,7 +64,7 @@ public class ContractInputGenerationWizard extends Wizard {
 
     @Override
     public void addPages() {
-        final WritableValue selectedDataObservable = new WritableValue();
+        selectedDataObservable = new WritableValue();
         availableBusinessData = availableBusinessData();
         if (!availableBusinessData.isEmpty()) {
             selectedDataObservable.setValue(availableBusinessData.get(0));
@@ -93,12 +99,25 @@ public class ContractInputGenerationWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
-        editingDomain.getCommandStack()
-                .execute(
-                        AddCommand.create(editingDomain, contractContainer.getContract(), ProcessPackage.Literals.CONTRACT__INPUTS,
-                                new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
-                                        contractInputFromBusinessObjectWizardPage.getMappings()).toRootContractInput()));
+        final RootContractInputGenerator contractInputGenerator = new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
+                contractInputFromBusinessObjectWizardPage.getMappings());
+        try {
+            contractInputGenerator.build((BusinessObjectData) selectedDataObservable.getValue());
+        } catch (final OperationCreationException e) {
+            BonitaStudioLog.error("Failed to create Operations from contract", e);
+            new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e).open();
+            return false;
+        }
+
+        final CompoundCommand cc = new CompoundCommand();
+        cc.append(AddCommand.create(editingDomain, contractContainer.getContract(), ProcessPackage.Literals.CONTRACT__INPUTS,
+                contractInputGenerator.getRootContractInput()));
+        if (contractContainer instanceof OperationContainer) {
+            cc.appendIfCanExecute(AddCommand.create(editingDomain, contractContainer, ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS,
+                    contractInputGenerator.getMappingOperations()));
+
+        }
+        editingDomain.getCommandStack().execute(cc);
         return true;
     }
-
 }

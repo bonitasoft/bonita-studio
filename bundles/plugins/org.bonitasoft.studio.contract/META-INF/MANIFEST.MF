@@ -49,13 +49,15 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.9.0",
  org.eclipse.e4.core.contexts,
  org.bonitasoft.studio.refactoring,
  org.bonitasoft.studio.businessobject,
- org.eclipse.core.databinding.beans
+ org.eclipse.core.databinding.beans,
+ org.eclipse.emf.codegen.ecore
 Bundle-Activator: org.bonitasoft.studio.contract.ContractPlugin
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.contract.core,
  org.bonitasoft.studio.contract.core.validation,
  org.bonitasoft.studio.contract.i18n;x-friends:="org.bonitasoft.studio.swtbot.framework,org.bonitasoft.studio.tests"
-Import-Package: org.bonitasoft.engine.bdm.model,
+Import-Package: org.bonitasoft.engine.bdm,
+ org.bonitasoft.engine.bdm.model,
  org.bonitasoft.engine.bdm.model.field,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.contract,
