@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.common.repository;bundle-version="1.0.0",
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
  org.bonitasoft.studio.importer;bundle-version="1.0.0",
- org.bonitasoft.studio.importer.bos;bundle-version="7.0.0"
+ org.bonitasoft.studio.importer.bos;bundle-version="7.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: BonitaSoft S.A.
 Export-Package: org.bonitasoft.studio.simulation.tests

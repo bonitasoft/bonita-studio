@@ -50,9 +50,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit;bundle-version="4.11.0";resolution:=optional,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
  assertj-core;bundle-version="1.5.0";resolution:=optional,
- org.bonitasoft.studio.businessobject;bundle-version="7.0.0",
+ org.bonitasoft.studio.businessobject;bundle-version="7.0.1",
  org.eclipse.core.databinding.beans,
- org.bonitasoft.studio.tests-utils;bundle-version="7.0.0";resolution:=optional
+ org.bonitasoft.studio.tests-utils;bundle-version="7.0.1";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bdm.dao,

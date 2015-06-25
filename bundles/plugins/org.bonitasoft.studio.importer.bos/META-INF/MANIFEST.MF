@@ -23,7 +23,7 @@ Require-Bundle: org.eclipse.ui,
  org.mockito;resolution:=optional,
  assertj-core;bundle-version="1.5.0";resolution:=optional,
  org.eclipse.core.databinding;bundle-version="1.4.2",
- org.bonitasoft.studio.validation.common;bundle-version="7.0.0",
+ org.bonitasoft.studio.validation.common;bundle-version="7.0.1",
  org.eclipse.gmf.runtime.diagram.ui;bundle-version="1.8.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
