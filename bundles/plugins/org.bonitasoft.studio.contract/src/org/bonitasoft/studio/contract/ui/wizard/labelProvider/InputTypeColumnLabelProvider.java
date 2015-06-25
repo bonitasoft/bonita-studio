@@ -30,7 +30,7 @@ public class InputTypeColumnLabelProvider extends ColumnLabelProvider {
     public String getText(final Object element) {
         if (element instanceof FieldToContractInputMapping) {
             final FieldToContractInputMapping mapping = (FieldToContractInputMapping) element;
-            return mapping.toContractInput().getType().name();
+            return mapping.toContractInput(null).getType().name();
         }
 
         return super.getText(element);
