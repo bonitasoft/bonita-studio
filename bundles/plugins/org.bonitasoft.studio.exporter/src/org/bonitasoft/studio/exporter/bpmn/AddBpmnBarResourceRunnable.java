@@ -60,13 +60,15 @@ public class AddBpmnBarResourceRunnable implements RunnableWithResult<List<BarRe
 
     @Override
     public void run() {
-        final Diagram diagramFor = ModelHelper.getDiagramFor(ModelHelper.getMainProcess(process), (EditingDomain) null);
-        if (diagramFor != null) {
-            final MainProcessEditPart mped = findOrCreateMainProcessEditPart(diagramFor);
-            if (mped != null) {
-                createBPMNFileAndAddContents(mped);
-                for (final BarResource barResource : res) {
-                    builder.addExternalResource(barResource);
+        if (process.eResource() != null) {
+            final Diagram diagramFor = ModelHelper.getDiagramFor(ModelHelper.getMainProcess(process), (EditingDomain) null);
+            if (diagramFor != null) {
+                final MainProcessEditPart mped = findOrCreateMainProcessEditPart(diagramFor);
+                if (mped != null) {
+                    createBPMNFileAndAddContents(mped);
+                    for (final BarResource barResource : res) {
+                        builder.addExternalResource(barResource);
+                    }
                 }
             }
         }
