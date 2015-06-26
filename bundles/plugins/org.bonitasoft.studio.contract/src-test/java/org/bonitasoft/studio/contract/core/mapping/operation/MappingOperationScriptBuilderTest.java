@@ -82,8 +82,7 @@ public class MappingOperationScriptBuilderTest {
                 + "addressVar.street = address.street" + System.lineSeparator()
                 + "addressVar.country = {" + System.lineSeparator()
                 + SWT.TAB + "def countryVar = addressVar.country == null ? new Country() : addressVar.country" + System.lineSeparator()
-                + SWT.TAB + "return countryVar" + System.lineSeparator()
-                + "}()" + System.lineSeparator()
+                + SWT.TAB + "return countryVar}()" + System.lineSeparator()
                 + "return addressVar");
     }
 

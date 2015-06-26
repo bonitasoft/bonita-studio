@@ -14,18 +14,25 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
+import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameListUntilMultipleComplex;
+import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withComplexMultipleInHierarchy;
+
+import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.model.process.ContractInput;
 
-public class CompositionReferencePropertyInitializer extends BusinessObjectInitializer implements IPropertyInitializer {
+import com.google.common.base.Joiner;
 
-    private final ContractInput contractInput;
+public class MultipleCompositionReferencePropertyInitializer extends BusinessObjectListInitializer implements IPropertyInitializer {
 
-    public CompositionReferencePropertyInitializer(final RelationField field, final ContractInput contractInput, final String refName) {
-        super(field, refName);
-        this.contractInput = contractInput;
+    private final BusinessObject parentBusinessObject;
+
+    public MultipleCompositionReferencePropertyInitializer(final BusinessObject parentBusinessObject, final RelationField field,
+            final ContractInput contractInput,
+            final String refName) {
+        super(field, contractInput, refName);
+        this.parentBusinessObject = parentBusinessObject;
     }
 
     @Override
@@ -40,13 +47,15 @@ public class CompositionReferencePropertyInitializer extends BusinessObjectIniti
     }
 
     @Override
-    protected boolean checkExistence() {
-        return !hasAMultipleParent();
+    protected boolean shouldAppendExistingObjects() {
+        return parentBusinessObject == null;
     }
 
-    private boolean hasAMultipleParent() {
-        final ContractInput parentInput = ModelHelper.getFirstContainerOfType(contractInput.eContainer(), ContractInput.class);
-        return parentInput != null && parentInput.isMultiple();
+    @Override
+    protected String inputListToIterate() {
+        return parentBusinessObject != null && withComplexMultipleInHierarchy().apply(contractInput) ? iteratorName(parentBusinessObject)
+                + "."
+                + Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput)) : super.inputListToIterate();
     }
 
 }

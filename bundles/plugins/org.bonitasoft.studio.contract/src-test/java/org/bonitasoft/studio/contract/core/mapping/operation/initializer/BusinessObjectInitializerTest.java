@@ -43,12 +43,12 @@ public class BusinessObjectInitializerTest {
     }
 
     @Test
-    public void should_initialize_new_object_poperty() throws Exception {
+    public void should_initialize_new_object_property_for_simple_composed_reference() throws Exception {
         final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.STRING).notNullable().build();
         final BusinessObjectInitializer propertyInitializer = new BusinessObjectInitializer(aCompositionField("address",
                 aBO("org.test.Address").withField(streetField).build()), "myAddress");
-        propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(streetField,
-                aContractInput().withName("street")
+        propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(null,
+                streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX)
                                 .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX))).build()));
         assertThat(propertyInitializer.getInitialValue()).isEqualTo("def addressVar = myAddress == null ? new org.test.Address() : myAddress"
