@@ -290,8 +290,8 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
             final Data data = ExpressionHelper.dataFromIteratorExpression(task, iteratorExpression,
                     ModelHelper.getMainProcess(task));
             if (data instanceof BusinessObjectData) {
-                final Expression expression = EngineExpressionUtil.createExpression(
-                        ExpressionHelper.createVariableExpression(data));
+                final Expression expression = EngineExpressionUtil.createBusinessObjectDataReferenceExpression(
+                        (BusinessObjectData) data);
                 addContextEntry(contextBuilder, referenceName, expression);
             }
         }

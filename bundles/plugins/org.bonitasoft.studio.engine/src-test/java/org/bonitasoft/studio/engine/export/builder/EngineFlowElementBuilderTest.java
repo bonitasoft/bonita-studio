@@ -210,6 +210,7 @@ public class EngineFlowElementBuilderTest {
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
         verify(taskBuilder).addContextEntry(eq("pData_ref"), argument.capture());
         assertThat(argument.getValue().getName()).isEqualTo("pData");
+        assertThat(argument.getValue().getExpressionType()).isEqualTo(ExpressionType.TYPE_BUSINESS_DATA_REFERENCE.name());
     }
 
     @Test
