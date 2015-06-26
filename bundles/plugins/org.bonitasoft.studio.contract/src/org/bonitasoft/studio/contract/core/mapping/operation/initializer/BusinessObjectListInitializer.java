@@ -54,7 +54,7 @@ public class BusinessObjectListInitializer extends BusinessObjectInitializer imp
     }
 
     protected boolean shouldAppendExistingObjects() {
-        return true;
+        return contractInput.eContainer() != null;
     }
 
     private void returnListVar(final StringBuilder scriptBuilder, final BusinessObject businessObject) {

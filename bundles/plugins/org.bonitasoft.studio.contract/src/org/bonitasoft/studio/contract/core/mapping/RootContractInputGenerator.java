@@ -17,6 +17,9 @@ package org.bonitasoft.studio.contract.core.mapping;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.engine.bdm.model.field.RelationField;
+import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -30,22 +33,44 @@ public class RootContractInputGenerator {
     private List<? extends FieldToContractInputMapping> children = new ArrayList<FieldToContractInputMapping>();
     private final List<Operation> mappingOperations = new ArrayList<Operation>();
     private ContractInput contractInput;
+    private final BusinessObjectModelRepositoryStore businessObjectStore;
 
-    public RootContractInputGenerator(final String rootContractInputName, final List<? extends FieldToContractInputMapping> children) {
+    public RootContractInputGenerator(final String rootContractInputName, final List<? extends FieldToContractInputMapping> children,
+            final BusinessObjectModelRepositoryStore businessObjectStore) {
         this.rootContractInputName = rootContractInputName;
         this.children = children;
+        this.businessObjectStore = businessObjectStore;
     }
 
     public void build(final BusinessObjectData data) throws OperationCreationException {
         contractInput = ProcessFactory.eINSTANCE.createContractInput();
         contractInput.setName(rootContractInputName);
         contractInput.setType(ContractInputType.COMPLEX);
+        contractInput.setMultiple(data.isMultiple());
         for (final FieldToContractInputMapping mapping : children) {
             if (mapping.isGenerated()) {
                 final ContractInput input = mapping.toContractInput(contractInput);
-                mappingOperations.add(mapping.toOperation(data, input));
+                if (!contractInput.isMultiple()) {
+                    mappingOperations.add(mapping.toOperation(data, input));
+                }
             }
         }
+        if (contractInput.isMultiple()) {
+            mappingOperations.add(createParentMapping(data, rootContractInputName).toOperation(data, contractInput));
+        }
+    }
+
+    private RelationFieldToContractInputMapping createParentMapping(final BusinessObjectData data, final String inputName) {
+        final RelationField relationField = new RelationField();
+        relationField.setCollection(true);
+        relationField.setName(inputName);
+        relationField.setType(Type.COMPOSITION);
+        relationField.setReference(businessObjectStore.getBusinessObjectByQualifiedName(data.getClassName()));
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(relationField);
+        for (final FieldToContractInputMapping child : children) {
+            mapping.addChild(child);
+        }
+        return mapping;
     }
 
     public ContractInput getRootContractInput() {

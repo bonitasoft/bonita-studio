@@ -53,9 +53,15 @@ public class MultipleCompositionReferencePropertyInitializer extends BusinessObj
 
     @Override
     protected String inputListToIterate() {
-        return parentBusinessObject != null && withComplexMultipleInHierarchy().apply(contractInput) ? iteratorName(parentBusinessObject)
-                + "."
-                + Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput)) : super.inputListToIterate();
+        return shouldUseParentIterator() ? buildListAccessorWithIteratorName() : super.inputListToIterate();
+    }
+
+    private String buildListAccessorWithIteratorName() {
+        return iteratorName(parentBusinessObject) + "." + Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput));
+    }
+
+    private boolean shouldUseParentIterator() {
+        return contractInput.eContainer() != null && parentBusinessObject != null && withComplexMultipleInHierarchy().apply(contractInput);
     }
 
 }
