@@ -34,7 +34,7 @@ Require-Bundle: org.bonitasoft.studio.engine,
  org.eclipse.swtbot.eclipse.gef.finder;bundle-version="2.0.5",
  org.bonitasoft.studio.exporter;bundle-version="1.0.0",
  org.bonitasoft.studio.document,
- org.bonitasoft.studio.importer.bos;bundle-version="7.0.0"
+ org.bonitasoft.studio.importer.bos;bundle-version="7.0.1"
 Export-Package: org.bonitasoft.studio.repository.test,org.bonitasoft.s
  tudio.repository.test.swtbot
 Import-Package: org.bonitasoft.engine.bpm.bar

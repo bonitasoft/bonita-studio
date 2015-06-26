@@ -28,7 +28,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.connectors.model.edit,
  org.bonitasoft.studio.document,
  assertj-core;bundle-version="1.5.0",
- org.bonitasoft.studio.tests-utils;bundle-version="7.0.0"
+ org.bonitasoft.studio.tests-utils;bundle-version="7.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.importer.bar.tests,org.bonitasof
