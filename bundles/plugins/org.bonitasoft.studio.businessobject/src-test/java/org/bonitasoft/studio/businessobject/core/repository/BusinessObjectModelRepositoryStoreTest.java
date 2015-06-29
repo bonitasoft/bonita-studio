@@ -15,10 +15,14 @@
 package org.bonitasoft.studio.businessobject.core.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.InputStream;
 import java.util.Collections;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -45,6 +49,9 @@ public class BusinessObjectModelRepositoryStoreTest {
     @Mock
     private BusinessObject bo;
 
+    @Mock
+    private InputStream inputStream;
+
     /**
      * @throws java.lang.Exception
      */
@@ -70,5 +77,27 @@ public class BusinessObjectModelRepositoryStoreTest {
         final IJavaProject javaProject = mock(IJavaProject.class);
 
         assertThat(storeUnderTest.allBusinessObjectDao(javaProject)).isEmpty();
+    }
+
+    @Test
+    public void import_should_deploy_when_not_in_headless() {
+        doReturn(businessObjectFileStore).when(storeUnderTest).superDoImportInputStream("test", inputStream);
+        doReturn(true).when(storeUnderTest).isDeployable();
+        doNothing().when(storeUnderTest).deploy(businessObjectFileStore);
+
+        storeUnderTest.doImportInputStream("test", inputStream);
+
+        verify(storeUnderTest).deploy(businessObjectFileStore);
+    }
+
+    @Test
+    public void import_should_not_deploy_when_in_headless() {
+        doReturn(businessObjectFileStore).when(storeUnderTest).superDoImportInputStream("test", inputStream);
+        doReturn(false).when(storeUnderTest).isDeployable();
+        doNothing().when(storeUnderTest).deploy(businessObjectFileStore);
+
+        storeUnderTest.doImportInputStream("test", inputStream);
+
+        verify(storeUnderTest, never()).deploy(businessObjectFileStore);
     }
 }

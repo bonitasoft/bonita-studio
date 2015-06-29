@@ -32,6 +32,7 @@ import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
@@ -135,7 +136,18 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
 
     @Override
     protected BusinessObjectModelFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
-        final BusinessObjectModelFileStore fileStore = super.doImportInputStream(fileName, inputStream);
+        final BusinessObjectModelFileStore fileStore = superDoImportInputStream(fileName, inputStream);
+        if (isDeployable()) {
+            deploy(fileStore);
+        }
+        return fileStore;
+    }
+
+    protected BusinessObjectModelFileStore superDoImportInputStream(final String fileName, final InputStream inputStream) {
+        return super.doImportInputStream(fileName, inputStream);
+    }
+
+    protected void deploy(final BusinessObjectModelFileStore fileStore) {
         try {
             new DeployBDMOperation(fileStore).run(Repository.NULL_PROGRESS_MONITOR);
         } catch (final InvocationTargetException e) {
@@ -143,7 +155,10 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
         } catch (final InterruptedException e) {
             BonitaStudioLog.error(e);
         }
-        return fileStore;
+    }
+
+    protected boolean isDeployable() {
+        return !PlatformUtil.isHeadless();
     }
 
     public List<IType> allBusinessObjectDao(final IJavaProject javaProject) {
