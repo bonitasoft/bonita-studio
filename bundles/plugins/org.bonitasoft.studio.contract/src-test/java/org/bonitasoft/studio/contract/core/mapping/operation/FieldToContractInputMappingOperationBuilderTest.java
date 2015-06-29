@@ -29,6 +29,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+import java.util.Collection;
+
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
@@ -173,6 +175,21 @@ public class FieldToContractInputMappingOperationBuilderTest {
         thrown.expect(OperationCreationException.class);
         inputToOperation.toOperation(aBusinessData().withName("myEmployee").build(),
                 mapping);
+    }
+
+    @Test
+    public void should_create_an_operation_for_a_multiple_business_data_with_addAll_method() throws Exception {
+        final FieldToContractInputMappingOperationBuilder inputToOperation = createFixture();
+
+        final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
+        final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
+        final Operation operation = inputToOperation.toOperation(aBusinessData().multiple().withName("employees").build(),
+                mapping);
+
+        OperatorAssert.assertThat(operation.getOperator())
+                .hasType(ExpressionConstants.JAVA_METHOD_OPERATOR)
+                .hasInputTypes(Collection.class.getName())
+                .hasExpression("addAll");
     }
 
     private FieldToContractInputMappingOperationBuilder createFixture() {

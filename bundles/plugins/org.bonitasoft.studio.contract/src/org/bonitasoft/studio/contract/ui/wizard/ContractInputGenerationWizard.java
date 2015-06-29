@@ -52,6 +52,7 @@ public class ContractInputGenerationWizard extends Wizard {
     private CreateContractInputFromBusinessObjectWizardPage contractInputFromBusinessObjectWizardPage;
     private List<Data> availableBusinessData;
     private WritableValue selectedDataObservable;
+    private final FieldToContractInputMappingFactory fieldToContractInputMappingFactory;
 
     public ContractInputGenerationWizard(final ContractContainer contractContainer, final EditingDomain editingDomain,
             final BusinessObjectModelRepositoryStore businessObjectStore) {
@@ -60,6 +61,7 @@ public class ContractInputGenerationWizard extends Wizard {
         this.contractContainer = contractContainer;
         this.editingDomain = editingDomain;
         this.businessObjectStore = businessObjectStore;
+        fieldToContractInputMappingFactory = new FieldToContractInputMappingFactory(businessObjectStore);
     }
 
     @Override
@@ -71,7 +73,7 @@ public class ContractInputGenerationWizard extends Wizard {
         }
         addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable, businessObjectStore));
         contractInputFromBusinessObjectWizardPage = new CreateContractInputFromBusinessObjectWizardPage(contractContainer.getContract(),
-                selectedDataObservable, new FieldToContractInputMappingFactory(businessObjectStore));
+                selectedDataObservable, fieldToContractInputMappingFactory);
         contractInputFromBusinessObjectWizardPage.setTitle();
         addPage(contractInputFromBusinessObjectWizardPage);
     }
@@ -99,8 +101,9 @@ public class ContractInputGenerationWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
+        final BusinessObjectData data = (BusinessObjectData) selectedDataObservable.getValue();
         final RootContractInputGenerator contractInputGenerator = new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
-                contractInputFromBusinessObjectWizardPage.getMappings());
+                contractInputFromBusinessObjectWizardPage.getMappings(), businessObjectStore);
         try {
             contractInputGenerator.build((BusinessObjectData) selectedDataObservable.getValue());
         } catch (final OperationCreationException e) {

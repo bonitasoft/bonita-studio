@@ -17,10 +17,16 @@ package org.bonitasoft.studio.contract.core.mapping;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
+import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.aBO;
 import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -35,7 +41,7 @@ public class RootContractInputGeneratorTest {
     @Test
     public void should_create_a_complex_contract_input_with_root_input_name() throws Exception {
         final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
-                Collections.<FieldToContractInputMapping> emptyList());
+                Collections.<FieldToContractInputMapping> emptyList(), mock(BusinessObjectModelRepositoryStore.class));
 
         rootContractInputGenerator.build(aBusinessData().build());
 
@@ -50,7 +56,7 @@ public class RootContractInputGeneratorTest {
         notGeneratedMapping.setGenerated(false);
         final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
                 newArrayList(notGeneratedMapping, new SimpleFieldToContractInputMapping(SimpleFieldBuilder
-                        .aStringField("input1").build())));
+                        .aStringField("input1").build())), mock(BusinessObjectModelRepositoryStore.class));
 
         rootContractInputGenerator.build(aBusinessData().build());
 
@@ -62,7 +68,8 @@ public class RootContractInputGeneratorTest {
         final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(SimpleFieldBuilder.aStringField(
                 "firstName").build());
 
-        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName", newArrayList(mapping));
+        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName", newArrayList(mapping),
+                mock(BusinessObjectModelRepositoryStore.class));
         rootContractInputGenerator.build(aBusinessData().withName("employee").build());
 
         assertThat(rootContractInputGenerator.getMappingOperations()).extracting("leftOperand.name", "operator.type",
@@ -70,4 +77,20 @@ public class RootContractInputGeneratorTest {
                 tuple("employee", ExpressionConstants.JAVA_METHOD_OPERATOR, "setFirstName", "rootInputName.firstName"));
     }
 
+    @Test
+    public void should_create_operation_for_given_multiple_business_data_and_generated_contract_input() throws Exception {
+        final SimpleField firstNameField = SimpleFieldBuilder.aStringField("firstName").build();
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(firstNameField);
+
+        final BusinessObjectModelRepositoryStore businessObjectStore = mock(BusinessObjectModelRepositoryStore.class);
+        final BusinessObject bo = aBO("org.test.Employee").withField(firstNameField).build();
+        when(businessObjectStore.getBusinessObjectByQualifiedName("org.test.Employee")).thenReturn(bo);
+        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("employeesInput", newArrayList(mapping),
+                businessObjectStore);
+        rootContractInputGenerator.build(aBusinessData().withName("employees").withClassname("org.test.Employee").multiple().build());
+
+        assertThat(rootContractInputGenerator.getMappingOperations()).extracting("leftOperand.name", "operator.type",
+                "operator.expression", "rightOperand.name").containsOnly(
+                tuple("employees", ExpressionConstants.JAVA_METHOD_OPERATOR, "addAll", "employeesInput"));
+    }
 }

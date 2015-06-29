@@ -16,6 +16,7 @@ package org.bonitasoft.studio.contract.core.mapping.operation;
 
 import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameList;
 
+import java.util.Collection;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -42,7 +43,7 @@ public class FieldToContractInputMappingOperationBuilder {
     public Operation toOperation(final BusinessObjectData data, final FieldToContractInputMapping mapping) throws OperationCreationException {
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
         operation.setLeftOperand(ExpressionHelper.createVariableExpression(data));
-        operation.setOperator(operator(mapping));
+        operation.setOperator(operator(mapping, data));
         try {
             operation.setRightOperand(rightOperand(mapping, data));
         } catch (final BusinessObjectInstantiationException e) {
@@ -65,7 +66,7 @@ public class FieldToContractInputMappingOperationBuilder {
             throws BusinessObjectInstantiationException {
         final ContractInput contractInput = mapping.getContractInput();
         final ContractInput rootContractInput = rootContractInput(contractInput);
-        if (Objects.equals(rootContractInput, mapping.getContractInput())) {
+        if (Objects.equals(rootContractInput, mapping.getContractInput()) && !rootContractInput.isMultiple()) {
             return ExpressionHelper.createContractInputExpression(mapping.getContractInput());
         } else {
             final MappingOperationScriptBuilder mappingOperationScriptBuilder = mapping.getScriptBuilder(data);
@@ -95,11 +96,11 @@ public class FieldToContractInputMappingOperationBuilder {
         return current;
     }
 
-    private Operator operator(final FieldToContractInputMapping mapping) {
+    private Operator operator(final FieldToContractInputMapping mapping, final BusinessObjectData data) {
         final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
         operator.setType(ExpressionConstants.JAVA_METHOD_OPERATOR);
-        operator.getInputTypes().add(mapping.getFieldType());
-        operator.setExpression(mapping.getSetterName());
+        operator.getInputTypes().add(data.isMultiple() ? Collection.class.getName() : mapping.getFieldType());
+        operator.setExpression(data.isMultiple() ? "addAll" : mapping.getSetterName());
         return operator;
     }
 

@@ -54,4 +54,28 @@ public class BusinessObjectListInitializerTest {
                 + "return addressList");
     }
 
+    @Test
+    public void should_not_add_existing_object_to_list_input_is_a_root_input() throws Exception {
+        final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.STRING).notNullable().build();
+        final BusinessObject businessObject = aBO("org.test.Address").withField(streetField).build();
+        final RelationField addressField = aCompositionField("address",
+                businessObject);
+        addressField.setCollection(true);
+        final BusinessObjectListInitializer propertyInitializer = new BusinessObjectListInitializer(addressField, aContractInput().withName("addresses")
+                .multiple().build(), "myAddress");
+        propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,
+                streetField, aContractInput().withName("street")
+                        .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX).multiple()
+                                .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX))).build()));
+        assertThat(propertyInitializer.getInitialValue()).isEqualTo("def addressList = []" + System.lineSeparator()
+                + "addresses.each{" + System.lineSeparator()
+                + "addressList.add({ currentAddressInput ->" + System.lineSeparator()
+                + "def addressVar = new org.test.Address()" + System.lineSeparator()
+                + "addressVar.street = currentAddressInput.street" + System.lineSeparator()
+                + "return addressVar" + System.lineSeparator()
+                + "}(it))" + System.lineSeparator()
+                + "}" + System.lineSeparator()
+                + "return addressList");
+    }
+
 }
