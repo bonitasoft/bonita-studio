@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation;
 
+import java.util.Objects;
+
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
@@ -23,6 +25,7 @@ import org.bonitasoft.studio.contract.core.mapping.operation.initializer.Abstrac
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IPropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.NewBusinessObjectInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory.BusinessObjectInitializerFactory;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory.InitializerFactory;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory.PropertyInitializerFactory;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory.RelationPropertyInitializerFactory;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -83,6 +86,10 @@ public class MappingOperationScriptBuilder {
             return scriptInitializer;
         }
         throw new UnsupportedOperationException(field.getClass().getName() + " type is not supported");
+    }
+
+    private InitializerFactory findInitializerFactory(final Field field, final Field rootField) {
+        return Objects.equals(field, rootField) ? businessObjectInitializerFactory : propertyInitializerFactory;
     }
 
     public boolean needsDataDependency() {
