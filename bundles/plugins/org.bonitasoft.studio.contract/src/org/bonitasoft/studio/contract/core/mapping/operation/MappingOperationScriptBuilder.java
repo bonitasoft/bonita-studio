@@ -14,15 +14,20 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation;
 
+import java.util.Objects;
+
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
-import org.bonitasoft.studio.contract.core.mapping.operation.initializer.BusinessObjectInitializer;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.AbstractBusinessObjectInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IPropertyInitializer;
-import org.bonitasoft.studio.contract.core.mapping.operation.initializer.PropertyInitializerFactory;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.NewBusinessObjectInitializer;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory.BusinessObjectInitializerFactory;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory.InitializerFactory;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory.PropertyInitializerFactory;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory.RelationPropertyInitializerFactory;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.codehaus.groovy.eclipse.refactoring.formatter.DefaultGroovyFormatter;
 import org.codehaus.groovy.eclipse.refactoring.formatter.IFormatterPreferences;
@@ -33,7 +38,8 @@ import org.eclipse.text.edits.MalformedTreeException;
 public class MappingOperationScriptBuilder {
 
     private static final IFormatterPreferences DEFAULT_FORMATTER_PREFS = new DefaultFormatterPreferences();
-    private final PropertyInitializerFactory propertyInitializerFactory = new PropertyInitializerFactory();
+    private final BusinessObjectInitializerFactory businessObjectInitializerFactory = new BusinessObjectInitializerFactory();
+    private final PropertyInitializerFactory propertyInitializerFactory = new PropertyInitializerFactory(new RelationPropertyInitializerFactory());
     private static final int FORMAT_LEVEL = 0;
     private boolean needsDataDependency = false;
     private final BusinessObjectData data;
@@ -66,21 +72,24 @@ public class MappingOperationScriptBuilder {
     private IPropertyInitializer buildPropertyInitializerTree(final FieldToContractInputMapping mapping, final Field rootField, final BusinessObjectData data) {
         final Field field = mapping.getField();
         if (field instanceof SimpleField) {
-            return propertyInitializerFactory.newPropertyInitializer(mapping, data, rootField);
+            return propertyInitializerFactory.newPropertyInitializer(mapping, data);
         }
         if (field instanceof RelationField) {
-            final RelationField relationField = (RelationField) field;
-            if (relationField.getType() == Type.COMPOSITION) {
-                final BusinessObjectInitializer scriptInitializer = (BusinessObjectInitializer) propertyInitializerFactory.newPropertyInitializer(mapping,
-                        data, rootField);
-                for (final FieldToContractInputMapping child : mapping.getChildren()) {
-                    scriptInitializer.addPropertyInitializer(buildPropertyInitializerTree(child, rootField, data));
-                }
-                needsDataDependency = true;
-                return scriptInitializer;
+            final AbstractBusinessObjectInitializer scriptInitializer = (AbstractBusinessObjectInitializer) findInitializerFactory(field, rootField)
+                    .newPropertyInitializer(
+                            mapping,
+                            data);
+            for (final FieldToContractInputMapping child : mapping.getChildren()) {
+                scriptInitializer.addPropertyInitializer(buildPropertyInitializerTree(child, rootField, data));
             }
+            needsDataDependency = scriptInitializer instanceof NewBusinessObjectInitializer;
+            return scriptInitializer;
         }
         throw new UnsupportedOperationException(field.getClass().getName() + " type is not supported");
+    }
+
+    private InitializerFactory findInitializerFactory(final Field field, final Field rootField) {
+        return Objects.equals(field, rootField) ? businessObjectInitializerFactory : propertyInitializerFactory;
     }
 
     public boolean needsDataDependency() {

@@ -14,18 +14,16 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.model.process.ContractInput;
 
-public class CompositionReferencePropertyInitializer extends NewBusinessObjectInitializer implements IPropertyInitializer {
+public class AggregationReferencePropertyInitializer extends BusinessObjectQueryInitializer implements IPropertyInitializer {
 
-    private final ContractInput contractInput;
-
-    public CompositionReferencePropertyInitializer(final RelationField field, final ContractInput contractInput, final String refName) {
-        super(field, refName);
-        this.contractInput = contractInput;
+    public AggregationReferencePropertyInitializer(final BusinessObject multipleParentBo, final RelationField field, final ContractInput contractInput,
+            final String refName) {
+        super(multipleParentBo, field, contractInput, refName);
     }
 
     @Override
@@ -37,16 +35,6 @@ public class CompositionReferencePropertyInitializer extends NewBusinessObjectIn
         scriptBuilder.append(initialValue);
         scriptBuilder.append("}()");
         return scriptBuilder.toString();
-    }
-
-    @Override
-    protected boolean checkExistence() {
-        return !hasAMultipleParent();
-    }
-
-    private boolean hasAMultipleParent() {
-        final ContractInput parentInput = ModelHelper.getFirstContainerOfType(contractInput.eContainer(), ContractInput.class);
-        return parentInput != null && parentInput.isMultiple();
     }
 
 }

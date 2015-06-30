@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.common.predicate;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -78,5 +80,15 @@ public class ExpressionPredicates {
             }
         }
         return false;
+    }
+
+    public static Predicate<Expression> withName(final String name) {
+        return new Predicate<Expression>() {
+
+            @Override
+            public boolean apply(final Expression input) {
+                return Objects.equals(name, input.getName());
+            }
+        };
     }
 }

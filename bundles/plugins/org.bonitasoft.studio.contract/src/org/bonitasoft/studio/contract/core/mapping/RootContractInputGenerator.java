@@ -20,6 +20,8 @@ import java.util.List;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -33,13 +35,15 @@ public class RootContractInputGenerator {
     private List<? extends FieldToContractInputMapping> children = new ArrayList<FieldToContractInputMapping>();
     private final List<Operation> mappingOperations = new ArrayList<Operation>();
     private ContractInput contractInput;
-    private final BusinessObjectModelRepositoryStore businessObjectStore;
+    private final RepositoryAccessor repositoryAccessor;
+    private final FieldToContractInputMappingOperationBuilder operationBuilder;
 
     public RootContractInputGenerator(final String rootContractInputName, final List<? extends FieldToContractInputMapping> children,
-            final BusinessObjectModelRepositoryStore businessObjectStore) {
+            final RepositoryAccessor repositoryAccessor, final FieldToContractInputMappingOperationBuilder operationBuilder) {
         this.rootContractInputName = rootContractInputName;
         this.children = children;
-        this.businessObjectStore = businessObjectStore;
+        this.repositoryAccessor = repositoryAccessor;
+        this.operationBuilder = operationBuilder;
     }
 
     public void build(final BusinessObjectData data) throws OperationCreationException {
@@ -49,14 +53,14 @@ public class RootContractInputGenerator {
         contractInput.setMultiple(data.isMultiple());
         for (final FieldToContractInputMapping mapping : children) {
             if (mapping.isGenerated()) {
-                final ContractInput input = mapping.toContractInput(contractInput);
+                mapping.toContractInput(contractInput);
                 if (!contractInput.isMultiple()) {
-                    mappingOperations.add(mapping.toOperation(data, input));
+                    mappingOperations.add(operationBuilder.toOperation(data, mapping));
                 }
             }
         }
         if (contractInput.isMultiple()) {
-            mappingOperations.add(createParentMapping(data, rootContractInputName).toOperation(data, contractInput));
+            mappingOperations.add(operationBuilder.toOperation(data, createParentMapping(data, rootContractInputName)));
         }
     }
 
@@ -65,7 +69,8 @@ public class RootContractInputGenerator {
         relationField.setCollection(true);
         relationField.setName(inputName);
         relationField.setType(Type.COMPOSITION);
-        relationField.setReference(businessObjectStore.getBusinessObjectByQualifiedName(data.getClassName()));
+        relationField.setReference(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class).getBusinessObjectByQualifiedName(
+                data.getClassName()));
         final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(relationField);
         for (final FieldToContractInputMapping child : children) {
             mapping.addChild(child);

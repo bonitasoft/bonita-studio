@@ -14,10 +14,13 @@
  */
 package org.bonitasoft.studio.expression.editor.filter;
 
+import javax.inject.Inject;
+
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
+import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -25,7 +28,15 @@ import org.eclipse.jdt.core.JavaModelException;
 /**
  * @author Romain Bioteau
  */
+@Creatable
 public class ExpressionReturnTypeFilter {
+
+    private final RepositoryAccessor repositoryAccessor;
+
+    @Inject
+    public ExpressionReturnTypeFilter(final RepositoryAccessor repositoryAccessor) {
+        this.repositoryAccessor = repositoryAccessor;
+    }
 
     /**
      * @param currentReturnType
@@ -62,7 +73,7 @@ public class ExpressionReturnTypeFilter {
     }
 
     protected IJavaContainer javaContainer() {
-        return RepositoryManager.getInstance().getCurrentRepository();
+        return repositoryAccessor.getCurrentRepository();
     }
 
 }

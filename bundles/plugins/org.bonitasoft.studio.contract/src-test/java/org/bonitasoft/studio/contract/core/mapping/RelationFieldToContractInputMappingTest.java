@@ -65,14 +65,19 @@ public class RelationFieldToContractInputMappingTest {
     }
 
     @Test
-    public void should_create_contract_input_from_a_aggregation_relation_field() throws Exception {
-        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(aRelationField("country",
-                Type.AGGREGATION,
-                aBusinessObject("Country", aSimpleField("code", FieldType.INTEGER), aSimpleField("name", FieldType.STRING))));
+    public void should_not_add_contract_input_for_not_generated_child_mapping() throws Exception {
+        final RelationField compositionField = aRelationField("address", Type.AGGREGATION,
+                aBusinessObject("Address", aSimpleField("number", FieldType.INTEGER), aSimpleField("street", FieldType.STRING)));
+        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(compositionField);
+        final SimpleFieldToContractInputMapping child = new SimpleFieldToContractInputMapping((SimpleField) compositionField.getReference().getFields().get(0));
+        child.setGenerated(false);
+        fieldToContractInputMapping.addChild(child);
+        fieldToContractInputMapping.addChild(new SimpleFieldToContractInputMapping((SimpleField) compositionField.getReference().getFields().get(1)));
 
         final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
-        ContractInputAssert.assertThat(input).hasName("country").hasType(ContractInputType.TEXT).hasNoInputs();
+        assertThat(input.getInputs()).extracting("name", "type", "inputs").contains(
+                tuple("street", ContractInputType.TEXT, Lists.newArrayList()));
     }
 
     @Test

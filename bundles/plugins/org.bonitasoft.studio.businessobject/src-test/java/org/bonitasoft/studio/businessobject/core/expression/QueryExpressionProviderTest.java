@@ -31,7 +31,6 @@ import org.bonitasoft.studio.businessobject.ui.expression.QueryExpressionEditor;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -62,13 +61,6 @@ public class QueryExpressionProviderTest {
         doReturn(bom).when(queryExpressionProvider).getBusinessObjectModel();
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public void should_buildQueryExpressionModel_return_QueryExpressionModel_from_bom() throws Exception {
         final QueryExpressionModel model = queryExpressionProvider.buildQueryExpressionModel();
@@ -76,7 +68,8 @@ public class QueryExpressionProviderTest {
         assertThat(model.getBusinessObjects()).hasSize(1);
         final BusinessObjectExpressionQuery businessObjectExpressionQuery = model.getBusinessObjects().get(0);
         assertThat(businessObjectExpressionQuery.getQualifiedName()).isEqualTo("org.bonita.Employee");
-        assertThat(businessObjectExpressionQuery.getQueryExpressions()).hasSize(4);
+        assertThat(businessObjectExpressionQuery.getQueryExpressions()).extracting("name").containsOnly("Employee.find", "Employee.findByEmployeeId",
+                "Employee.findByPersistenceId");
         for (final Expression exp : businessObjectExpressionQuery.getQueryExpressions()) {
             ExpressionAssert.assertThat(exp).hasType(queryExpressionProvider.getExpressionType());
             assertThat(exp.getName()).isNotEmpty();
