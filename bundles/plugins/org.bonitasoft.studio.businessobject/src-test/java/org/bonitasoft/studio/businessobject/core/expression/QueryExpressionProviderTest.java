@@ -76,7 +76,7 @@ public class QueryExpressionProviderTest {
         assertThat(model.getBusinessObjects()).hasSize(1);
         final BusinessObjectExpressionQuery businessObjectExpressionQuery = model.getBusinessObjects().get(0);
         assertThat(businessObjectExpressionQuery.getQualifiedName()).isEqualTo("org.bonita.Employee");
-        assertThat(businessObjectExpressionQuery.getQueryExpressions()).hasSize(3);
+        assertThat(businessObjectExpressionQuery.getQueryExpressions()).hasSize(4);
         for (final Expression exp : businessObjectExpressionQuery.getQueryExpressions()) {
             ExpressionAssert.assertThat(exp).hasType(queryExpressionProvider.getExpressionType());
             assertThat(exp.getName()).isNotEmpty();
