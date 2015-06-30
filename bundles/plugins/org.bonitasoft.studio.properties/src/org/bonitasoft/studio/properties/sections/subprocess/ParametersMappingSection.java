@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.jface.EMFFeatureLabelProvider;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.EObjectSelectionProviderSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.widgets.MagicComposite;
@@ -35,6 +36,10 @@ import org.bonitasoft.studio.model.process.OutputMapping;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.IListChangeListener;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.list.ListChangeEvent;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
@@ -94,15 +99,15 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
     public void refresh() {
         super.refresh();
 
-        /*Dispose and then redraw*/
-        for(final Control c: parent.getChildren()){
+        /* Dispose and then redraw */
+        for (final Control c : parent.getChildren()) {
             c.dispose();
         }
         doCreateControls(parent);
-        /*Fill with existing in/out mappings*/
+        /* Fill with existing in/out mappings */
         updateInputMappings();
         updateOutputMappings();
-        /*layout with potential add of in/out mappings*/
+        /* layout with potential add of in/out mappings */
         parent.layout();
         parent.getParent().layout();
 
@@ -138,12 +143,13 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         parent.setLayout(gridLayout);
         parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         final Composite buttonComposite = widgetFactory.createComposite(parent);
-        GridDataFactory.fillDefaults().span(3,1).applyTo(buttonComposite);
+        GridDataFactory.fillDefaults().span(3, 1).applyTo(buttonComposite);
         GridLayoutFactory.swtDefaults().numColumns(2).applyTo(buttonComposite);
         final Button automapButton = widgetFactory.createButton(buttonComposite, Messages.autoMap, SWT.FLAT);
         final Label label = widgetFactory.createLabel(buttonComposite, Messages.autoMap_description);
         label.setFont(BonitaStudioFontRegistry.getCommentsFont());
         automapButton.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 final CallActivityMapper mapper = callAcitivtyHelper.findAutomapingCandidatesForContractInputsAndDataWithCalledProcess(getCallActivity());
@@ -161,8 +167,6 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         GridDataFactory.swtDefaults().hint(2, SWT.DEFAULT).align(SWT.LEFT, SWT.FILL).applyTo(line);
         addOutputMappingControl(parent);
     }
-
-
 
     /**
      * @param parent
@@ -188,9 +192,10 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         addLineButton.setText("+");
         addLineButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_ADD_OUTPUT);
         addLineButton.addListener(SWT.Selection, new Listener() {
+
             @Override
             public void handleEvent(final Event event) {
-                createOutputMapping(null,null);
+                createOutputMapping(null, null);
                 refreshScrolledComposite(parent);
             }
         });
@@ -201,16 +206,16 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
      * @param parent
      */
     private void refreshScrolledComposite(final Composite parent) {
-        parent.getParent().getParent().layout(true ,true);
+        parent.getParent().getParent().layout(true, true);
         getTabbedPropertySheetPage().resizeScrolledComposite();
     }
 
     protected void createOutputMapping(final Data target, final String source) {
         final OutputMapping outputMapping = ProcessFactory.eINSTANCE.createOutputMapping();
-        if(target != null){
+        if (target != null) {
             outputMapping.setProcessTarget(target);
         }
-        if(source != null){
+        if (source != null) {
             outputMapping.setSubprocessSource(source);
         }
         getEditingDomain().getCommandStack().execute(new AddCommand(getEditingDomain(), getCallActivity().getOutputMappings(), outputMapping));
@@ -230,6 +235,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         final Button deleteButton = new Button(outputMappingControl, SWT.FLAT);
         deleteButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_DELETE));
         deleteButton.addListener(SWT.Selection, new Listener() {
+
             @Override
             public void handleEvent(final Event event) {
                 final RemoveCommand command = new RemoveCommand(getEditingDomain(), getCallActivity().getOutputMappings(), mapping);
@@ -249,7 +255,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         });
     }
 
-	private CCombo createSubprocessSourceCombo(final Composite outputMappingControl, final OutputMapping mapping) {
+    private CCombo createSubprocessSourceCombo(final Composite outputMappingControl, final OutputMapping mapping) {
         final CCombo subprocessSourceCombo = widgetFactory.createCCombo(outputMappingControl, SWT.BORDER);
         for (final String subprocessData : callAcitivtyHelper.getCallActivityData(getCallActivity())) {
             subprocessSourceCombo.add(subprocessData);
@@ -257,12 +263,13 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         final GridData layoutData = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
         subprocessSourceCombo.setLayoutData(layoutData);
         subprocessSourceCombo.addListener(SWT.Modify, new Listener() {
+
             @Override
             public void handleEvent(final Event event) {
                 getEditingDomain().getCommandStack()
-                .execute(
-                        new SetCommand(getEditingDomain(), mapping, ProcessPackage.Literals.OUTPUT_MAPPING__SUBPROCESS_SOURCE, subprocessSourceCombo
-                                .getText()));
+                        .execute(
+                                new SetCommand(getEditingDomain(), mapping, ProcessPackage.Literals.OUTPUT_MAPPING__SUBPROCESS_SOURCE, subprocessSourceCombo
+                                        .getText()));
             }
         });
         if (mapping.getSubprocessSource() != null) {
@@ -274,6 +281,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
     private ComboViewer createProcessTargetCombo(final Composite outputMappingControl, final OutputMapping mapping) {
         final ComboViewer processTargetCombo = new ComboViewer(widgetFactory.createCCombo(outputMappingControl, SWT.READ_ONLY | SWT.BORDER));
         processTargetCombo.setContentProvider(new IStructuredContentProvider() {
+
             @Override
             public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
             }
@@ -289,6 +297,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         });
         processTargetCombo.setLabelProvider(new EMFFeatureLabelProvider(ProcessPackage.Literals.ELEMENT__NAME));
         processTargetCombo.addPostSelectionChangedListener(new ISelectionChangedListener() {
+
             @Override
             public void selectionChanged(final SelectionChangedEvent event) {
                 getEditingDomain().getCommandStack().execute(
@@ -327,6 +336,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         addLineButton.setText("+");
         addLineButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_ADD_INPUT);
         addLineButton.addListener(SWT.Selection, new Listener() {
+
             @Override
             public void handleEvent(final Event event) {
                 createInputMapping(null, InputMappingAssignationType.CONTRACT_INPUT, null);
@@ -338,10 +348,10 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
 
     protected void createInputMapping(final Data source, final InputMappingAssignationType assignationType, final String target) {
         final InputMapping mapping = ProcessFactory.eINSTANCE.createInputMapping();
-        if(source != null){
+        if (source != null) {
             mapping.setProcessSource(ExpressionHelper.createVariableExpression(source));
         }
-        if(target != null){
+        if (target != null) {
             mapping.setSubprocessTarget(target);
         }
         mapping.setAssignationType(assignationType);
@@ -480,6 +490,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
                 .getExpressionProvider(ExpressionConstants.VARIABLE_TYPE)));
         srcCombo.setLabelProvider(new EMFFeatureLabelProvider(ExpressionPackage.Literals.EXPRESSION__NAME));
         srcCombo.addPostSelectionChangedListener(new ISelectionChangedListener() {
+
             @Override
             public void selectionChanged(final SelectionChangedEvent event) {
                 getEditingDomain().getCommandStack().execute(
@@ -487,7 +498,17 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
                                 .getSelection()).getFirstElement()));
             }
         });
-        srcCombo.setInput(getCallActivity());
+        final IObservableList observeDetailList = CustomEMFEditObservables.observeDetailList(Realm.getDefault(), getEObjectObservable(),
+                ProcessPackage.Literals.DATA_AWARE__DATA);
+        observeDetailList.addListChangeListener(new IListChangeListener() {
+
+            @Override
+            public void handleListChange(final ListChangeEvent event) {
+                srcCombo.setInput(observeDetailList);
+            }
+        });
+        srcCombo.setInput(observeDetailList);
+
         srcCombo.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         if (mapping.getProcessSource() != null) {
             srcCombo.setSelection(new StructuredSelection(mapping.getProcessSource()));
@@ -495,8 +516,6 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
         srcCombo.getCCombo().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_SOURCEDATA);
         return srcCombo;
     }
-
-
 
     protected CallActivity getCallActivity() {
         return (CallActivity) getEObject();
