@@ -28,6 +28,7 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.engine.bpm.process.DesignProcessDefinition;
 import org.bonitasoft.studio.common.ModelVersion;
+import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -58,7 +59,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.image.ImageFileFormat;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -260,7 +260,7 @@ public class BarExporter {
                     return;//DON'T ADD IMAGE, DON'T THROW EXCEPTION FOR TESTS PURPUSES
                 }
                 final ResourceSet resourceSet = new ResourceSetImpl();
-                final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.getInstance().createEditingDomain(resourceSet);
+                final TransactionalEditingDomain editingDomain = CustomDiagramEditingDomainFactory.getInstance().createEditingDomain(resourceSet);
                 final Resource resource = resourceSet.createResource(diagram.eResource().getURI());
                 try {
                     resource.load(resourceSet.getLoadOptions());

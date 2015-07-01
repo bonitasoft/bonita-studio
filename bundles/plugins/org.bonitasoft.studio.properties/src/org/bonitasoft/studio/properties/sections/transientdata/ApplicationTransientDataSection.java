@@ -44,7 +44,7 @@ public class ApplicationTransientDataSection extends AbstractDataSection {
 	 * @see org.bonitasoft.studio.properties.sections.data.DataSection#createLabel(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
-	protected void createLabel(final Composite dataComposite) {
+	protected void createViewerHeaderLabel(final Composite dataComposite) {
 		final Label label = getWidgetFactory().createLabel(dataComposite, Messages.pageFlowTransientData);
 		label.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).create());
 	}

@@ -9875,5 +9875,8 @@
           oldDataValue="switch(getType()){&#xD;&#xA;case TEXT:return java.lang.String.class.getName();&#xD;&#xA;case BOOLEAN:return java.lang.Boolean.class.getName();&#xD;&#xA;case DATE: return java.util.Date.class.getName();&#xD;&#xA;case INTEGER: return java.lang.Integer.class.getName();&#xD;&#xA;case DECIMAL: return java.lang.Double.class.getName();&#xD;&#xA;case FILE:return &quot;org.bonitasoft.engine.bpm.contract.FileInputValue&quot;;&#xD;&#xA;case COMPLEX:return java.util.Map.class.getName();&#xD;&#xA;default: reutrn java.lang.String.class.getName();&#xD;&#xA;}"/>
     </changes>
   </releases>
+  <releases date="2015-06-11T10:33:11.824+0200" label="7.0.1-001">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.ShapeFillColorCustomMigration"/>
+  </releases>
   <releases/>
 </history:History>

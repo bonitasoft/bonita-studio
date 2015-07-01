@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2010-2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.exporter.bpmn.transfo;
 
@@ -238,10 +235,8 @@ import org.omg.spec.dd.dc.DcPackage;
 import org.omg.spec.dd.dc.Font;
 import org.omg.spec.dd.di.Shape;
 
-
 /**
  * @author Mickael Istria
- *
  */
 public class BonitaToBPMN implements IBonitaTransformer {
 
@@ -261,6 +256,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
     private BPMNDiagram bpmnDiagram;
     private XMLNamespaceResolver xmlNamespaceResolver;
     private final FormalExpressionTransformerFactory formalExpressionTransformerFactory;
+
     public BonitaToBPMN() {
         errors = new ArrayList<String>();
         errors.add(Messages.formsNotExported);
@@ -272,14 +268,16 @@ public class BonitaToBPMN implements IBonitaTransformer {
      * @param destFile
      * @return if the operation has been successful
      */
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.exporter.extension.IBonitaTransformer#transform(org.bonitasoft.studio.exporter.extension.IBonitaModelExporter, java.io.File, org.eclipse.core.runtime.IProgressMonitor)
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.exporter.extension.IBonitaTransformer#transform(org.bonitasoft.studio.exporter.extension.IBonitaModelExporter, java.io.File,
+     * org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    public boolean transform(final IBonitaModelExporter modelExporter, final File destFile,final IProgressMonitor monitor) {
+    public boolean transform(final IBonitaModelExporter modelExporter, final File destFile, final IProgressMonitor monitor) {
 
-        final MainProcessEditPart part = modelExporter.getMainProcessEditPart() ;
-        final MainProcess mainProcess = modelExporter.getDiagram() ;
+        final MainProcessEditPart part = modelExporter.getMainProcessEditPart();
+        final MainProcess mainProcess = modelExporter.getDiagram();
 
         initializeDocumentRoot();
 
@@ -294,13 +292,13 @@ public class BonitaToBPMN implements IBonitaTransformer {
         bpmnDiagram.setBPMNPlane(bpmnPlane);
         final QName rootQNameIDValue = QName.valueOf(collaboration.getId());
         bpmnPlane.setBpmnElement(rootQNameIDValue);
-        bpmnPlane.setId("plane_"+collaboration.getId());
+        bpmnPlane.setId("plane_" + collaboration.getId());
         definitions.getBPMNDiagram().add(bpmnDiagram);
-        definitions.setTargetNamespace("http://bonitasoft.com/"+rootQNameIDValue);
+        definitions.setTargetNamespace("http://bonitasoft.com/" + rootQNameIDValue);
         definitions.setExporter("BonitaSoft");
         definitions.setExporterVersion(ProductVersion.CURRENT_VERSION);
 
-        /*Handle Bonita connector*/
+        /* Handle Bonita connector */
         destBpmnFile = destFile;
 
         configureNamespaces();
@@ -309,15 +307,13 @@ public class BonitaToBPMN implements IBonitaTransformer {
         dataScope = new DataScope(new ItemDefinitionTransformer(definitions, xmlNamespaceResolver));
         for (final Object childPart : part.getChildren()) {
             if (childPart instanceof PoolEditPart) {
-                processPool((PoolEditPart)childPart, definitions, collaboration);
+                processPool((PoolEditPart) childPart, definitions, collaboration);
             }
         }
 
         populateWithMessageFlow(mainProcess);
 
         populateWithSignals(definitions);
-
-
 
         root.setDefinitions(definitions);
         final ResourceSet resourceSet = new ResourceSetImpl();
@@ -328,8 +324,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
         final Resource resource = resourceSet.createResource(URI.createFileURI(destFile.getAbsolutePath()), "org.omg.schema.spec.bpmn.content-type");
         resource.getContents().add(root);
         try {
-            final Map<Object,Object> saveOptions = new HashMap<Object,Object>();
-            saveOptions.put( XMLResource.OPTION_ELEMENT_HANDLER, new ElementHandlerImpl( false ));
+            final Map<Object, Object> saveOptions = new HashMap<Object, Object>();
+            saveOptions.put(XMLResource.OPTION_ELEMENT_HANDLER, new ElementHandlerImpl(false));
             saveOptions.put(XMLResource.OPTION_ENCODING, "UTF-8");
             resource.save(saveOptions);
         } catch (final Exception ex) {
@@ -369,18 +365,18 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
         addConnectorDefInXsdIfNotYetIncluded(connectorDefFile);
 
-        /*Handle input*/
+        /* Handle input */
         final TMessage tMessageInputBonitaConnector = createConnectorDefInput(connectorDefId);
-        /*handle output*/
+        /* handle output */
         final TMessage tMessageOutputBonitaConnector = createConnectorDefOutput(connectorDefId);
-        /*Create interface with it operation*/
+        /* Create interface with it operation */
         final TInterface tInterfaceBonitaConnector = ModelFactory.eINSTANCE.createTInterface();
-        tInterfaceBonitaConnector.setName(connectorDefId+"_Bonita_Connector_Interface");
-        tInterfaceBonitaConnector.setId(connectorDefId+"_Bonita_Connector_Interface");
+        tInterfaceBonitaConnector.setName(connectorDefId + "_Bonita_Connector_Interface");
+        tInterfaceBonitaConnector.setId(connectorDefId + "_Bonita_Connector_Interface");
         //tInterfaceBonitaConnector.setImplementationRef(QName.valueOf("BonitaConnector"));
         final TOperation tOperationConnector = ModelFactory.eINSTANCE.createTOperation();
-        tOperationConnector.setId("Exec"+connectorDefId);
-        tOperationConnector.setName("Exec"+connectorDefId);
+        tOperationConnector.setId("Exec" + connectorDefId);
+        tOperationConnector.setName("Exec" + connectorDefId);
         tOperationConnector.setInMessageRef(QName.valueOf(tMessageInputBonitaConnector.getId()));
         tOperationConnector.setOutMessageRef(QName.valueOf(tMessageOutputBonitaConnector.getId()));
         tInterfaceBonitaConnector.getOperation().add(tOperationConnector);
@@ -389,51 +385,53 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
     protected TMessage createConnectorDefOutput(final String connectorDefId) {
         final TItemDefinition tItemDefinitionBonitaConnectorOutput = ModelFactory.eINSTANCE.createTItemDefinition();
-        tItemDefinitionBonitaConnectorOutput.setStructureRef(QName.valueOf(XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION+":"+connectorDefId+"OutputType"));
+        tItemDefinitionBonitaConnectorOutput.setStructureRef(QName.valueOf(XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION + ":" + connectorDefId
+                + "OutputType"));
         final String itemDefConnectorOutput = generateConnectorOutputItemDef(connectorDefId);
         tItemDefinitionBonitaConnectorOutput.setId(itemDefConnectorOutput);
         definitions.getRootElement().add(tItemDefinitionBonitaConnectorOutput);
-        final TMessage tMessageOutputBonitaConnector =  ModelFactory.eINSTANCE.createTMessage();
+        final TMessage tMessageOutputBonitaConnector = ModelFactory.eINSTANCE.createTMessage();
         tMessageOutputBonitaConnector.setItemRef(QName.valueOf(itemDefConnectorOutput));
-        tMessageOutputBonitaConnector.setId(connectorDefId+"ConnectorMessageOutput");
+        tMessageOutputBonitaConnector.setId(connectorDefId + "ConnectorMessageOutput");
         definitions.getRootElement().add(tMessageOutputBonitaConnector);
         return tMessageOutputBonitaConnector;
     }
 
     protected TMessage createConnectorDefInput(final String connectorDefId) {
         final TItemDefinition tItemDefinitionBonitaConnectorInput = ModelFactory.eINSTANCE.createTItemDefinition();
-        tItemDefinitionBonitaConnectorInput.setStructureRef(QName.valueOf(XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION+":"+connectorDefId+"InputType"));
+        tItemDefinitionBonitaConnectorInput.setStructureRef(QName.valueOf(XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION + ":" + connectorDefId
+                + "InputType"));
         final String itemDefConnectorInput = generateConnectorInputItemDef(connectorDefId);
         tItemDefinitionBonitaConnectorInput.setId(itemDefConnectorInput);
         definitions.getRootElement().add(tItemDefinitionBonitaConnectorInput);
-        final TMessage tMessageInputBonitaConnector =  ModelFactory.eINSTANCE.createTMessage();
+        final TMessage tMessageInputBonitaConnector = ModelFactory.eINSTANCE.createTMessage();
         tMessageInputBonitaConnector.setItemRef(QName.valueOf(itemDefConnectorInput));
-        tMessageInputBonitaConnector.setId(connectorDefId+"ConnectorMessageInput");
+        tMessageInputBonitaConnector.setId(connectorDefId + "ConnectorMessageInput");
         definitions.getRootElement().add(tMessageInputBonitaConnector);
         return tMessageInputBonitaConnector;
     }
 
     protected File createXSDForConnectorDef(final String connectorDefId) {
-        final File connectorDefFolder = new File(destBpmnFile.getParentFile().getAbsolutePath()+File.separator+"connectorDefs");
-        /*Export the xsd*/
-        if(!connectorDefFolder.exists()){
+        final File connectorDefFolder = new File(destBpmnFile.getParentFile().getAbsolutePath() + File.separator + "connectorDefs");
+        /* Export the xsd */
+        if (!connectorDefFolder.exists()) {
             connectorDefFolder.mkdirs();
         }
         File connectorDefFile = null;
         try {
             final ConnectorDefRepositoryStore cdrs = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-            for(final IRepositoryFileStore rfs : cdrs.getChildren()){
-                final ConnectorDefFileStore cdfs = (ConnectorDefFileStore)rfs;
+            for (final IRepositoryFileStore rfs : cdrs.getChildren()) {
+                final ConnectorDefFileStore cdfs = (ConnectorDefFileStore) rfs;
                 final ConnectorDefinition cd = cdfs.getContent();
-                if(cd.getId().equals(connectorDefId)){
+                if (cd.getId().equals(connectorDefId)) {
                     connectorDefFile = new File(((ConnectorDefFileStore) rfs).getEMFResource().getURI().toFileString());
                     break;
                 }
             }
-            if(connectorDefFile != null){
-                generateXSDForConnector(connectorDefFile/*child.getResource().getFullPath().toFile()*/);
+            if (connectorDefFile != null) {
+                generateXSDForConnector(connectorDefFile/* child.getResource().getFullPath().toFile() */);
             } else {
-                errors.add("The connector with id "+ connectorDefId + " was not found.");
+                errors.add("The connector with id " + connectorDefId + " was not found.");
             }
         } catch (final URISyntaxException e) {
             BonitaStudioLog.error(e);
@@ -446,16 +444,16 @@ public class BonitaToBPMN implements IBonitaTransformer {
     }
 
     protected void addConnectorDefInXsdIfNotYetIncluded(final File connectorDefFile) {
-        if(connectorDefFile != null){
-            boolean alreadyImported =false;
-            final String locationImport = "connectorDefs/"+connectorDefFile.getName()+"connectors.xsd";
-            for(final TImport imported : definitions.getImport()){
-                if(imported.getLocation().equals(locationImport)){
+        if (connectorDefFile != null) {
+            boolean alreadyImported = false;
+            final String locationImport = "connectorDefs/" + connectorDefFile.getName() + "connectors.xsd";
+            for (final TImport imported : definitions.getImport()) {
+                if (imported.getLocation().equals(locationImport)) {
                     alreadyImported = true;
                     break;
                 }
             }
-            if(!alreadyImported){
+            if (!alreadyImported) {
                 final TImport tImportBonitaConnector = ModelFactory.eINSTANCE.createTImport();
                 tImportBonitaConnector.setImportType("http://www.w3.org/2001/XMLSchema");
                 tImportBonitaConnector.setLocation(locationImport);
@@ -466,18 +464,17 @@ public class BonitaToBPMN implements IBonitaTransformer {
     }
 
     protected String generateConnectorInputItemDef(final String connectorDefId) {
-        return connectorDefId+"ConnectorInput";
+        return connectorDefId + "ConnectorInput";
     }
 
     protected String generateConnectorOutputItemDef(final String connectorDefId) {
-        return connectorDefId+"ConnectorOutput";
+        return connectorDefId + "ConnectorOutput";
     }
-
 
     private static Templates xslTemplate = null;
 
     private void generateXSDForConnector(final File connectorToTransform) throws URISyntaxException, IOException, TransformerException {
-        if(xslTemplate == null){
+        if (xslTemplate == null) {
             final TransformerFactory transFact = TransformerFactory.newInstance();
             final URL xsltUrl = ConnectorPlugin.getDefault().getBundle().getEntry("transfo/genConnectorsXSD.xsl");
             final File xsltFileoriginal = new File(FileLocator.toFileURL(xsltUrl).getFile());
@@ -493,12 +490,11 @@ public class BonitaToBPMN implements IBonitaTransformer {
                 "xmlns:definition=\"http://www.bonitasoft.org/ns/connector/definition/6.0\"",
                 "xmlns=\"http://www.bonitasoft.org/ns/connector/definition/6.0\" xmlns:definition=\"http://www.bonitasoft.org/ns/connector/definition/6.0\"");
 
-
         final Source xmlSource = new StreamSource(connectorToTransformWC);
 
-        final String generatedXsdName = connectorToTransform.getName()+"connectors.xsd";
+        final String generatedXsdName = connectorToTransform.getName() + "connectors.xsd";
         final File connectorsDefFolder = new File(destBpmnFile.getParentFile().getAbsolutePath() + File.separator + "connectorDefs");
-        if(!connectorsDefFolder.exists()){
+        if (!connectorsDefFolder.exists()) {
             connectorsDefFolder.mkdirs();
         }
         final OutputStream stream = new FileOutputStream(new File(connectorsDefFolder.getAbsolutePath() + File.separator + generatedXsdName));
@@ -516,7 +512,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
      * @param collaboration
      */
     private void processPool(final PoolEditPart childPart, final TDefinitions definitions, final TCollaboration collaboration) {
-        final Pool pool = (Pool)childPart.resolveSemanticElement();
+        final Pool pool = (Pool) childPart.resolveSemanticElement();
         // create semantic process
         final TProcess bpmnProcess = ModelFactory.eINSTANCE.createTProcess();
         setCommonAttributes(pool, bpmnProcess);
@@ -558,9 +554,9 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
     private void populateWithMessage(final Pool pool, final TProcess bpmnProcess) {
         //messageMap.clear();
-        final List<ThrowMessageEvent> thowMessageEvents = ModelHelper.getAllItemsOfType(pool, ProcessPackage.eINSTANCE.getThrowMessageEvent()) ;
+        final List<ThrowMessageEvent> thowMessageEvents = ModelHelper.getAllItemsOfType(pool, ProcessPackage.eINSTANCE.getThrowMessageEvent());
         for (final ThrowMessageEvent throwMessageEvent : thowMessageEvents) {
-            for(final Message message : throwMessageEvent.getEvents()){
+            for (final Message message : throwMessageEvent.getEvents()) {
                 final TMessage tMessage = ModelFactory.eINSTANCE.createTMessage();
                 tMessage.setId(EcoreUtil.getID(message));
                 //				tMessage.setItemRef(value)
@@ -578,20 +574,20 @@ public class BonitaToBPMN implements IBonitaTransformer {
         for (final EObject item : pool.getData()) {
             final Data bonitaData = (Data) item;
 
-            /*Create the itemDefinition*/
+            /* Create the itemDefinition */
             final TItemDefinition dataItemDefinition = dataScope.get(bonitaData);
             final QName dataItemDefinitionIdAsQname = QName.valueOf(dataItemDefinition.getId());
 
-            /*Add the dataObject using the reference*/
+            /* Add the dataObject using the reference */
             createDataObject(bpmnProcess, bonitaData, dataItemDefinitionIdAsQname);
 
-            /*Define required data on the process, facultative?*/
+            /* Define required data on the process, facultative? */
             final TDataInput tDataInput = fillIOSpecification(bpmnProcess, dataItemDefinitionIdAsQname);
 
             //TODO: handle default values of datas...
-            /*Add default value as inputdata on the process*/
+            /* Add default value as inputdata on the process */
             final Expression defaultValue = bonitaData.getDefaultValue();
-            if(defaultValue != null){
+            if (defaultValue != null) {
                 final TDataInputAssociation tDataInputAssociation = createDataInputAssociation(tDataInput, defaultValue);
                 //TODO: and now I put the inputassociation where??? I can't put it on processes :'(
                 tDataInputAssociation.getAnyAttribute();
@@ -599,17 +595,17 @@ public class BonitaToBPMN implements IBonitaTransformer {
         }
 
         TInputOutputSpecification ioSpecification = bpmnProcess.getIoSpecification();
-        if(ioSpecification == null){
+        if (ioSpecification == null) {
             ioSpecification = ModelFactory.eINSTANCE.createTInputOutputSpecification();
             ioSpecification.setId(EcoreUtil.generateUUID());
             bpmnProcess.setIoSpecification(ioSpecification);
         }
-        if(ioSpecification.getInputSet().isEmpty()){
+        if (ioSpecification.getInputSet().isEmpty()) {
             final TInputSet createTInputSet = ModelFactory.eINSTANCE.createTInputSet();
             createTInputSet.setId(EcoreUtil.generateUUID());
             ioSpecification.getInputSet().add(createTInputSet);
         }
-        if(ioSpecification.getOutputSet().isEmpty()){
+        if (ioSpecification.getOutputSet().isEmpty()) {
             final TOutputSet createTOutputSet = ModelFactory.eINSTANCE.createTOutputSet();
             createTOutputSet.setId(EcoreUtil.generateUUID());
             ioSpecification.getOutputSet().add(createTOutputSet);
@@ -625,7 +621,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
         final TFormalExpression toExpression = ModelFactory.eINSTANCE.createTFormalExpression();
         toExpression.setId(EcoreUtil.generateUUID());
-        FeatureMapUtil.addText(toExpression.getMixed(), /*"getDataInput('"+*/tDataInput.getId()/*+"')"*/);
+        FeatureMapUtil.addText(toExpression.getMixed(), /* "getDataInput('"+ */tDataInput.getId()/* +"')" */);
         tAssignment.setTo(toExpression);
 
         final TFormalExpression fromExpression = createBPMNFormalExpressionFromBonitaExpression(defaultValue);
@@ -637,23 +633,24 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
     /**
      * Scope of data defined by this?
+     *
      * @param callableElement
      * @param dataItemDefinitionIdAsQname
      * @return
      */
     protected TDataInput fillIOSpecification(final TCallableElement callableElement, final QName dataItemDefinitionIdAsQname) {
         TInputOutputSpecification tInputOutputAssociation = callableElement.getIoSpecification();
-        if(tInputOutputAssociation == null){
+        if (tInputOutputAssociation == null) {
             tInputOutputAssociation = ModelFactory.eINSTANCE.createTInputOutputSpecification();
             tInputOutputAssociation.setId(EcoreUtil.generateUUID());
             callableElement.setIoSpecification(tInputOutputAssociation);
         }
 
-        return fillIOSpecificationWithNewDataInput(dataItemDefinitionIdAsQname,	tInputOutputAssociation);
+        return fillIOSpecificationWithNewDataInput(dataItemDefinitionIdAsQname, tInputOutputAssociation);
     }
 
-    protected TDataInput fillIOSpecificationWithNewDataInput(final QName dataItemDefinitionIdAsQname,	final TInputOutputSpecification tInputOutputAssociation) {
-        final TDataInput tDataInput =  ModelFactory.eINSTANCE.createTDataInput();
+    protected TDataInput fillIOSpecificationWithNewDataInput(final QName dataItemDefinitionIdAsQname, final TInputOutputSpecification tInputOutputAssociation) {
+        final TDataInput tDataInput = ModelFactory.eINSTANCE.createTDataInput();
         tDataInput.setItemSubjectRef(dataItemDefinitionIdAsQname);
         tDataInput.setId(EcoreUtil.generateUUID());
 
@@ -668,7 +665,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
     }
 
     protected TDataOutput fillIOSpecificationWithNewDataOutput(final QName dataItemDefinitionIdAsQname, final TInputOutputSpecification tInputOutputAssociation) {
-        final TDataOutput tDataOutput =  ModelFactory.eINSTANCE.createTDataOutput();
+        final TDataOutput tDataOutput = ModelFactory.eINSTANCE.createTDataOutput();
         tDataOutput.setItemSubjectRef(dataItemDefinitionIdAsQname);
         tDataOutput.setId(EcoreUtil.generateUUID());
 
@@ -684,19 +681,18 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
     protected TDataInput fillIOSpecificationWithNewDataInput(final TActivity tActivity, final QName dataItemDefinitionIdAsQname) {
         TInputOutputSpecification tInputOutputAssociation = tActivity.getIoSpecification();
-        if(tInputOutputAssociation == null){
+        if (tInputOutputAssociation == null) {
             tInputOutputAssociation = ModelFactory.eINSTANCE.createTInputOutputSpecification();
             tInputOutputAssociation.setId(EcoreUtil.generateUUID());
             tActivity.setIoSpecification(tInputOutputAssociation);
         }
 
-        return fillIOSpecificationWithNewDataInput(dataItemDefinitionIdAsQname,	tInputOutputAssociation);
+        return fillIOSpecificationWithNewDataInput(dataItemDefinitionIdAsQname, tInputOutputAssociation);
     }
-
 
     private TDataOutput fillIOSpecificationWithNewDataOutput(final TServiceTask serviceTask, final QName dataItemDefinitionIdAsQname) {
         TInputOutputSpecification tInputOutputAssociation = serviceTask.getIoSpecification();
-        if(tInputOutputAssociation == null){
+        if (tInputOutputAssociation == null) {
             tInputOutputAssociation = ModelFactory.eINSTANCE.createTInputOutputSpecification();
             tInputOutputAssociation.setId(EcoreUtil.generateUUID());
             serviceTask.setIoSpecification(tInputOutputAssociation);
@@ -705,12 +701,12 @@ public class BonitaToBPMN implements IBonitaTransformer {
         return fillIOSpecificationWithNewDataOutput(dataItemDefinitionIdAsQname, tInputOutputAssociation);
     }
 
-    protected void createDataObject(final TProcess bpmnProcess, final Data bonitaData,final QName dataItemDefinitionIdAsQname) {
+    protected void createDataObject(final TProcess bpmnProcess, final Data bonitaData, final QName dataItemDefinitionIdAsQname) {
         final TDataObject bpmnData = ModelFactory.eINSTANCE.createTDataObject();
         bpmnData.setItemSubjectRef(dataItemDefinitionIdAsQname);
         setCommonAttributes(bonitaData, bpmnData);
         bpmnData.setName(bonitaData.getName());
-        bpmnData.setId("DataObject"+EcoreUtil.generateUUID()+bpmnData.getId());//avoid to have duplicate id for dataobject and itemDefinition
+        bpmnData.setId("DataObject" + EcoreUtil.generateUUID() + bpmnData.getId());//avoid to have duplicate id for dataobject and itemDefinition
         bpmnProcess.getFlowElement().add(bpmnData);
         bpmnData.setIsCollection(bonitaData.isMultiple());
     }
@@ -722,7 +718,6 @@ public class BonitaToBPMN implements IBonitaTransformer {
         definitions.getRootElement().add(dataItemDefinition);
         return dataItemDefinition;
     }
-
 
     protected TExpression createBPMNExpressionFromString(final String value) {
         final TExpression fromExpression = ModelFactory.eINSTANCE.createTExpression();
@@ -736,20 +731,19 @@ public class BonitaToBPMN implements IBonitaTransformer {
     }
 
     protected QName getStructureRef(final Data data) {
-        if(data.getDataType() instanceof XMLType){
+        if (data.getDataType() instanceof XMLType) {
             final String xmlnsDataType = xmlNamespaceResolver.resolveNamespacePrefix((XMLData) data);
-            return QName.valueOf(xmlnsDataType+":"+((XMLData)data).getType());
+            return QName.valueOf(xmlnsDataType + ":" + ((XMLData) data).getType());
         } else {
             final String technicalTypeFor = org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data);
-            return QName.valueOf(JAVA_XMLNS+":"+technicalTypeFor);
+            return QName.valueOf(JAVA_XMLNS + ":" + technicalTypeFor);
         }
     }
-
 
     protected void populateWithSequenceFlow(final PoolEditPart poolEditPart, final TProcess bpmnProcess) {
         final Pool pool = (Pool) poolEditPart.resolveSemanticElement();
         for (final EObject item : ModelHelper.getAllItemsOfType(pool, ProcessPackage.Literals.SEQUENCE_FLOW)) {
-            final SequenceFlow bonitaFlow = (SequenceFlow)item;
+            final SequenceFlow bonitaFlow = (SequenceFlow) item;
             final TSequenceFlow bpmnFlow = ModelFactory.eINSTANCE.createTSequenceFlow();
             setCommonAttributes(bonitaFlow, bpmnFlow);
             if (bonitaFlow.getCondition() != null
@@ -758,15 +752,15 @@ public class BonitaToBPMN implements IBonitaTransformer {
                 bpmnFlow.setConditionExpression(expression);
             }
             final TFlowElement source = mapping.get(bonitaFlow.getSource());
-            if(source != null){
+            if (source != null) {
                 bpmnFlow.setSourceRef(source.getId());
                 final TFlowElement target = mapping.get(bonitaFlow.getTarget());
-                if(target != null){
+                if (target != null) {
                     bpmnFlow.setTargetRef(target.getId());
                     bpmnProcess.getFlowElement().add(bpmnFlow);
 
                     // graphic
-                    final ConnectionNodeEditPart editPart = (ConnectionNodeEditPart)GMFTools.findEditPart(poolEditPart, bonitaFlow);
+                    final ConnectionNodeEditPart editPart = (ConnectionNodeEditPart) GMFTools.findEditPart(poolEditPart, bonitaFlow);
                     final BPMNEdge edge = DiFactory.eINSTANCE.createBPMNEdge();
                     edge.setBpmnElement(QName.valueOf(bpmnFlow.getId()));
                     final SequenceFlowNameEditPart labelPart = getSequenceFlowNameEditPart(editPart);
@@ -784,11 +778,11 @@ public class BonitaToBPMN implements IBonitaTransformer {
                     bpmnPlane.getDiagramElement().add(edge);
                     if (bonitaFlow.isIsDefault()) {
                         if (bonitaFlow instanceof SequenceFlow) {
-                            if(source instanceof TInclusiveGateway){
+                            if (source instanceof TInclusiveGateway) {
                                 ((TInclusiveGateway) source).setDefault(bpmnFlow.getId());
-                            } else if(source instanceof TExclusiveGateway){
+                            } else if (source instanceof TExclusiveGateway) {
                                 ((TExclusiveGateway) source).setDefault(bpmnFlow.getId());
-                            } else if(source instanceof TComplexGateway){
+                            } else if (source instanceof TComplexGateway) {
                                 ((TComplexGateway) source).setDefault(bpmnFlow.getId());
                             } else if (source instanceof TActivity) {
                                 ((TActivity) source).setDefault(bpmnFlow.getId());
@@ -804,17 +798,17 @@ public class BonitaToBPMN implements IBonitaTransformer {
         }
     }
 
-    private SequenceFlowNameEditPart getSequenceFlowNameEditPart(final ConnectionNodeEditPart editPart){
+    private SequenceFlowNameEditPart getSequenceFlowNameEditPart(final ConnectionNodeEditPart editPart) {
         final List<Object> children = editPart.getChildren();
-        for (final Object child:children){
-            if (child instanceof SequenceFlowNameEditPart){
+        for (final Object child : children) {
+            if (child instanceof SequenceFlowNameEditPart) {
                 return (SequenceFlowNameEditPart) child;
             }
         }
         return null;
     }
 
-    protected void setSequenceFLowLabel(final SequenceFlowNameEditPart labelPart,final BPMNEdge edge){
+    protected void setSequenceFLowLabel(final SequenceFlowNameEditPart labelPart, final BPMNEdge edge) {
         if (labelPart != null) {
             final BPMNLabel label = DiFactory.eINSTANCE.createBPMNLabel();
             final IFigure bonitaElementFigure = labelPart.getFigure();
@@ -848,10 +842,11 @@ public class BonitaToBPMN implements IBonitaTransformer {
         return bounds;
     }
 
-    protected void setEventLabelBounds(final CustomEventLabelEditPart labelPart,final BPMNLabel label){
+    protected void setEventLabelBounds(final CustomEventLabelEditPart labelPart, final BPMNLabel label) {
         final IFigure bonitaElementFigure = labelPart.getFigure();
         setLabelBounds(label, bonitaElementFigure);
     }
+
     /**
      * @param bpmnProcess
      * @param bpmnProcessDiagram
@@ -861,13 +856,13 @@ public class BonitaToBPMN implements IBonitaTransformer {
         if (poolOrLanePart instanceof PoolEditPart) {
             for (final Object subPart : poolOrLanePart.getChildren()) {
                 if (subPart instanceof ShapeCompartmentEditPart) {
-                    poolOrLanePart = (ShapeCompartmentEditPart)subPart;
+                    poolOrLanePart = (ShapeCompartmentEditPart) subPart;
                 }
             }
         } else if (poolOrLanePart instanceof LaneEditPart) {
             for (final Object subPart : poolOrLanePart.getChildren()) {
                 if (subPart instanceof ShapeCompartmentEditPart) {
-                    poolOrLanePart = (ShapeCompartmentEditPart)subPart;
+                    poolOrLanePart = (ShapeCompartmentEditPart) subPart;
                 }
             }
         }
@@ -883,16 +878,16 @@ public class BonitaToBPMN implements IBonitaTransformer {
         TLaneSet laneSet = null;
         for (final Object child : poolOrLane.getChildren()) {
             if (child instanceof LaneEditPart) {
-                if(laneSet == null){
+                if (laneSet == null) {
                     //init the laneset (we are using only one laneset per pool
                     laneSet = ModelFactory.eINSTANCE.createTLaneSet();
-                    laneSet.setId(bpmnProcess.getName()+"_laneSet");
+                    laneSet.setId(bpmnProcess.getName() + "_laneSet");
                     bpmnProcess.getLaneSet().add(laneSet);
                 }
 
                 // semantic
-                final LaneEditPart bonitaLanePart = (LaneEditPart)child;
-                final Lane bonitaLane = (Lane)bonitaLanePart.resolveSemanticElement();
+                final LaneEditPart bonitaLanePart = (LaneEditPart) child;
+                final Lane bonitaLane = (Lane) bonitaLanePart.resolveSemanticElement();
                 final TLane bpmnLane = ModelFactory.eINSTANCE.createTLane();
                 bpmnLane.setName(bonitaLane.getName());
                 bpmnLane.setId(bonitaLane.getName());
@@ -921,18 +916,17 @@ public class BonitaToBPMN implements IBonitaTransformer {
         }
     }
 
-
     protected void populateWithElements(final IGraphicalEditPart part, final TSubProcess bpmnSubProcess, final TLane bpmnParentLane) {
         for (final Object child : part.getChildren()) {
-            if(child instanceof CompartmentEditPart){
+            if (child instanceof CompartmentEditPart) {
                 populateWithElements((IGraphicalEditPart) child, bpmnSubProcess, bpmnParentLane);
             } else if (!(child instanceof LaneEditPart)
                     && !(child instanceof SubProcessEventEditPart)
                     && !(child instanceof SubProcessEvent2EditPart)
                     && !(child instanceof ITextAwareEditPart)
                     && !(child instanceof CompartmentEditPart)) {
-                final ShapeNodeEditPart bonitaElementPart = (ShapeNodeEditPart)child;
-                if(bonitaElementPart.resolveSemanticElement() instanceof FlowElement){
+                final ShapeNodeEditPart bonitaElementPart = (ShapeNodeEditPart) child;
+                if (bonitaElementPart.resolveSemanticElement() instanceof FlowElement) {
                     final FlowElement bonitaElement = (FlowElement) bonitaElementPart.resolveSemanticElement();
                     // semantic
                     final TFlowElement bpmnElement = createTFlowElement(bonitaElement);
@@ -944,9 +938,9 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
                     createGraphicForFlowElement(bonitaElementPart, bpmnElement);
                 }
-            } else if(child instanceof SubProcessEventEditPart
-                    || child instanceof SubProcessEvent2EditPart){
-                final ShapeNodeEditPart bonitaElementPart = (ShapeNodeEditPart)child;
+            } else if (child instanceof SubProcessEventEditPart
+                    || child instanceof SubProcessEvent2EditPart) {
+                final ShapeNodeEditPart bonitaElementPart = (ShapeNodeEditPart) child;
                 final SubProcessEvent subProcEvent = (SubProcessEvent) bonitaElementPart.resolveSemanticElement();
                 // semantic
                 final TSubProcess bpmnSubProcess2 = (TSubProcess) createTFlowElement(subProcEvent);
@@ -957,7 +951,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
                 mapping.put(subProcEvent, bpmnSubProcess2);
 
                 // graphic
-                final boolean isExpanded = ((ShapeCompartmentEditPart)((SubProcessEvent2EditPart)child).getChildren().get(0)).getCompartmentFigure().isExpanded();
+                final boolean isExpanded = ((ShapeCompartmentEditPart) ((SubProcessEvent2EditPart) child).getChildren().get(0)).getCompartmentFigure()
+                        .isExpanded();
                 final BPMNShape elementShape = createBPMNShape(bonitaElementPart);
                 elementShape.setIsExpanded(isExpanded);
                 elementShape.setBpmnElement(QName.valueOf(bpmnSubProcess.getId()));
@@ -985,12 +980,12 @@ public class BonitaToBPMN implements IBonitaTransformer {
         final Map<Data, TItemDefinition> localDataMap = new HashMap<Data, TItemDefinition>();
         for (final Object child : part.getChildren()) {
             localDataMap.clear();
-            if (! (child instanceof LaneEditPart)
+            if (!(child instanceof LaneEditPart)
                     && !(child instanceof SubProcessEventEditPart)
                     && !(child instanceof SubProcessEvent2EditPart)) {
-                final ShapeNodeEditPart bonitaElementPart = (ShapeNodeEditPart)child;
+                final ShapeNodeEditPart bonitaElementPart = (ShapeNodeEditPart) child;
                 final EObject resolvedSemanticElement = bonitaElementPart.resolveSemanticElement();
-                if(resolvedSemanticElement instanceof FlowElement){
+                if (resolvedSemanticElement instanceof FlowElement) {
                     final FlowElement bonitaElement = (FlowElement) resolvedSemanticElement;
                     // semantic
                     final TFlowElement bpmnElement = createTFlowElement(bonitaElement);
@@ -1007,9 +1002,9 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
                     createBoundaries(bpmnProcess, bonitaElementPart, bonitaElement, bpmnElement);
                 }
-            } else if(child instanceof SubProcessEventEditPart
-                    || child instanceof SubProcessEvent2EditPart){
-                final ShapeNodeEditPart bonitaElementPart = (ShapeNodeEditPart)child;
+            } else if (child instanceof SubProcessEventEditPart
+                    || child instanceof SubProcessEvent2EditPart) {
+                final ShapeNodeEditPart bonitaElementPart = (ShapeNodeEditPart) child;
                 final SubProcessEvent subProcEvent = (SubProcessEvent) bonitaElementPart.resolveSemanticElement();
                 // semantic
                 final TSubProcess bpmnSubProcess = (TSubProcess) createTFlowElement(subProcEvent);
@@ -1021,8 +1016,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
                 // graphic
                 boolean isExpanded = true;
-                for(final Object editpart : ((SubProcessEvent2EditPart)child).getChildren()){
-                    if(editpart instanceof ShapeCompartmentEditPart){
+                for (final Object editpart : ((SubProcessEvent2EditPart) child).getChildren()) {
+                    if (editpart instanceof ShapeCompartmentEditPart) {
                         isExpanded = ((ShapeCompartmentEditPart) editpart).getCompartmentFigure().isExpanded();
                         break;
                     }
@@ -1067,13 +1062,13 @@ public class BonitaToBPMN implements IBonitaTransformer {
     protected BPMNShape createBPMNShape(final ShapeNodeEditPart bonitaElementPart) {
         final BPMNShape elementShape = DiFactory.eINSTANCE.createBPMNShape();
         final Font font = createFont(bonitaElementPart);
-        if(font != null){
+        if (font != null) {
             final BPMNLabel label = DiFactory.eINSTANCE.createBPMNLabel();
             final BPMNLabelStyle labelStyle = getLabelStyle(font);
             label.setId(EcoreUtil.generateUUID());
             label.setLabelStyle(QName.valueOf(labelStyle.getId()));
             final CustomEventLabelEditPart labelPart = getLabelEditPart(bonitaElementPart);
-            if (labelPart!=null){
+            if (labelPart != null) {
                 setEventLabelBounds(labelPart, label);
                 elementShape.setBPMNLabel(label);
             }
@@ -1085,15 +1080,13 @@ public class BonitaToBPMN implements IBonitaTransformer {
         return elementShape;
     }
 
-
-
-    private CustomEventLabelEditPart getLabelEditPart(final ShapeNodeEditPart bonitaElementPart){
+    private CustomEventLabelEditPart getLabelEditPart(final ShapeNodeEditPart bonitaElementPart) {
         final List<?> children = bonitaElementPart.getChildren();
-       for (final Object child:children){
-           if (child instanceof CustomEventLabelEditPart){
-               return (CustomEventLabelEditPart) child;
-           }
-       }
+        for (final Object child : children) {
+            if (child instanceof CustomEventLabelEditPart) {
+                return (CustomEventLabelEditPart) child;
+            }
+        }
         return null;
     }
 
@@ -1101,34 +1094,35 @@ public class BonitaToBPMN implements IBonitaTransformer {
         final Map<String, String> colorsMap = new HashMap<String, String>();
         final View shape = bonitaElementPart.getNotationView();
         final FontStyle fontStyle = (FontStyle) shape.getStyle(NotationPackage.Literals.FONT_STYLE);
-        if(fontStyle != null){
-            colorsMap.put("fontColor",String.valueOf(fontStyle.getFontColor()));
+        if (fontStyle != null) {
+            colorsMap.put("fontColor", String.valueOf(fontStyle.getFontColor()));
         }
         final FillStyle fillStyle = (FillStyle) shape.getStyle(NotationPackage.Literals.FILL_STYLE);
-        if(fillStyle != null){
-            colorsMap.put("fillColor",String.valueOf(fillStyle.getFillColor()));
+        if (fillStyle != null) {
+            colorsMap.put("fillColor", String.valueOf(fillStyle.getFillColor()));
         }
         final LineStyle lineStyle = (LineStyle) shape.getStyle(NotationPackage.Literals.LINE_STYLE);
-        if(lineStyle != null){
-            colorsMap.put("lineColor",String.valueOf(lineStyle.getLineColor()));
+        if (lineStyle != null) {
+            colorsMap.put("lineColor", String.valueOf(lineStyle.getLineColor()));
         }
         return colorsMap;
     }
 
     protected BPMNLabelStyle getLabelStyle(final Font font) {
         final Comparator<Font> fontComparator = new Comparator<Font>() {
+
             @Override
             public int compare(final Font font1, final Font font2) {
-                for(final EStructuralFeature f : DcPackage.Literals.FONT.getEStructuralFeatures()){
-                    if(!font1.eGet(f).equals(font2.eGet(f))){
+                for (final EStructuralFeature f : DcPackage.Literals.FONT.getEStructuralFeatures()) {
+                    if (!font1.eGet(f).equals(font2.eGet(f))) {
                         return 1;
                     }
                 }
                 return 0;
             }
         };
-        for(final BPMNLabelStyle style : bpmnDiagram.getBPMNLabelStyle()){
-            if(fontComparator.compare(style.getFont(),font) == 0){
+        for (final BPMNLabelStyle style : bpmnDiagram.getBPMNLabelStyle()) {
+            if (fontComparator.compare(style.getFont(), font) == 0) {
                 return style;
             }
         }
@@ -1142,7 +1136,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
     protected Font createFont(final ShapeNodeEditPart bonitaElementPart) {
         final View shape = bonitaElementPart.getNotationView();
         final FontStyle fontStyle = (FontStyle) shape.getStyle(NotationPackage.Literals.FONT_STYLE);
-        if(fontStyle != null){
+        if (fontStyle != null) {
             final Font font = DcFactory.eINSTANCE.createFont();
             font.setIsBold(fontStyle.isBold());
             font.setIsItalic(fontStyle.isItalic());
@@ -1160,28 +1154,28 @@ public class BonitaToBPMN implements IBonitaTransformer {
             final EObject resolvedSemanticElement, final TFlowElement bpmnElement) {
         if (resolvedSemanticElement instanceof DataAware
                 && bpmnElement instanceof TActivity) {
-            for(final Data bonitaData : ((DataAware) resolvedSemanticElement).getData()){
-                /*Create the itemDefinition*/
+            for (final Data bonitaData : ((DataAware) resolvedSemanticElement).getData()) {
+                /* Create the itemDefinition */
                 final TItemDefinition dataItemDefinition = createDataItemDefinition(bonitaData);
                 localDataMap.put(bonitaData, dataItemDefinition);
                 final QName dataItemDefinitionIdAsQname = QName.valueOf(dataItemDefinition.getId());
-                if(!bonitaData.isTransient()){
-                    /*Add the dataObject using the reference*/
+                if (!bonitaData.isTransient()) {
+                    /* Add the dataObject using the reference */
                     createDataObject(bpmnProcess, bonitaData, dataItemDefinitionIdAsQname);
                 } else {
-                    /*it is a BPMN Property*/
+                    /* it is a BPMN Property */
                     final TProperty tProperty = ModelFactory.eINSTANCE.createTProperty();
                     tProperty.setId(EcoreUtil.generateUUID());
                     tProperty.setName(bonitaData.getName());
                     tProperty.setItemSubjectRef(dataItemDefinitionIdAsQname);
-                    ((TActivity)bpmnElement).getProperty().add(tProperty);
+                    ((TActivity) bpmnElement).getProperty().add(tProperty);
                 }
-                /*Define required data on the process, facultative?*/
+                /* Define required data on the process, facultative? */
                 final TDataInput tDataInput = fillIOSpecificationWithNewDataInput((TActivity) bpmnElement, dataItemDefinitionIdAsQname);
 
-                if(bonitaData.getDefaultValue() != null
-                        && bonitaData.getDefaultValue().getName() != null){
-                    final List<TDataInputAssociation> dataInputAssociation = ((TActivity)bpmnElement).getDataInputAssociation();
+                if (bonitaData.getDefaultValue() != null
+                        && bonitaData.getDefaultValue().getName() != null) {
+                    final List<TDataInputAssociation> dataInputAssociation = ((TActivity) bpmnElement).getDataInputAssociation();
                     dataInputAssociation.add(createDataInputAssociation(tDataInput, bonitaData.getDefaultValue()));
                 }
             }
@@ -1191,42 +1185,42 @@ public class BonitaToBPMN implements IBonitaTransformer {
     protected void createBoundaries(final TProcess bpmnProcess,
             final ShapeNodeEditPart bonitaElementPart, final FlowElement bonitaElement,
             final TFlowElement bpmnElement) {
-        if(bonitaElement instanceof Activity){
-            for(final BoundaryEvent boundaryEvent  : ((Activity) bonitaElement).getBoundaryIntermediateEvents()){
+        if (bonitaElement instanceof Activity) {
+            for (final BoundaryEvent boundaryEvent : ((Activity) bonitaElement).getBoundaryIntermediateEvents()) {
                 final TBoundaryEvent bpmnBoundary = ModelFactory.eINSTANCE.createTBoundaryEvent();
                 setCommonAttributes(boundaryEvent, bpmnBoundary);
-                if(boundaryEvent instanceof IntermediateErrorCatchEvent){
+                if (boundaryEvent instanceof IntermediateErrorCatchEvent) {
                     final TErrorEventDefinition errorventDef = ModelFactory.eINSTANCE.createTErrorEventDefinition();
-                    errorventDef.setId("eventdef-"+boundaryEvent.getName() + EcoreUtil.generateUUID());
+                    errorventDef.setId("eventdef-" + boundaryEvent.getName() + EcoreUtil.generateUUID());
                     final String errorCode = ((IntermediateErrorCatchEvent) boundaryEvent).getErrorCode();
-                    if(errorCode != null && errorCode.length() != 0){
+                    if (errorCode != null && errorCode.length() != 0) {
                         errorventDef.setErrorRef(QName.valueOf(errorCode));
                     }
                     bpmnBoundary.getEventDefinition().add(errorventDef);
-                } else if(boundaryEvent instanceof BoundarySignalEvent){
+                } else if (boundaryEvent instanceof BoundarySignalEvent) {
                     final TSignalEventDefinition eventDef = ModelFactory.eINSTANCE.createTSignalEventDefinition();
-                    eventDef.setId("eventdef-"+boundaryEvent.getName() + EcoreUtil.generateUUID());
+                    eventDef.setId("eventdef-" + boundaryEvent.getName() + EcoreUtil.generateUUID());
                     final TSignal tSignal = getOrCreateTSignal((SignalEvent) boundaryEvent);
-                    if(tSignal != null){
+                    if (tSignal != null) {
                         eventDef.setSignalRef(QName.valueOf(tSignal.getId()));
                     }
                     bpmnBoundary.getEventDefinition().add(eventDef);
-                } else if(boundaryEvent instanceof BoundaryMessageEvent){
+                } else if (boundaryEvent instanceof BoundaryMessageEvent) {
                     final TMessageEventDefinition eventDef = ModelFactory.eINSTANCE.createTMessageEventDefinition();
-                    eventDef.setId("eventdef-"+boundaryEvent.getName() + EcoreUtil.generateUUID());
+                    eventDef.setId("eventdef-" + boundaryEvent.getName() + EcoreUtil.generateUUID());
                     final String eventCaught = ((BoundaryMessageEvent) boundaryEvent).getEvent();
-                    if(eventCaught != null && eventCaught.length() != 0){
+                    if (eventCaught != null && eventCaught.length() != 0) {
                         eventDef.setMessageRef(QName.valueOf(eventCaught));
                     }
                     bpmnBoundary.getEventDefinition().add(eventDef);
-                } else if(boundaryEvent instanceof BoundaryTimerEvent){
+                } else if (boundaryEvent instanceof BoundaryTimerEvent) {
                     final TTimerEventDefinition eventDef = createTimerEventDef((AbstractTimerEvent) boundaryEvent);
                     bpmnBoundary.getEventDefinition().add(eventDef);
                 }
 
-                if(boundaryEvent instanceof NonInterruptingBoundaryTimerEvent){
+                if (boundaryEvent instanceof NonInterruptingBoundaryTimerEvent) {
                     bpmnBoundary.setCancelActivity(false);
-                }else{
+                } else {
                     bpmnBoundary.setCancelActivity(true);
                 }
 
@@ -1255,9 +1249,9 @@ public class BonitaToBPMN implements IBonitaTransformer {
     protected TSignal getOrCreateTSignal(final SignalEvent signalEvent) {
         final String signalCode = signalEvent.getSignalCode();
         TSignal tSignal = null;
-        if(signalCode != null){
+        if (signalCode != null) {
             tSignal = signalCodeTSignal.get(signalCode);
-            if(tSignal == null){
+            if (tSignal == null) {
                 tSignal = ModelFactory.eINSTANCE.createTSignal();
                 tSignal.setId(EcoreUtil.generateUUID());
                 tSignal.setName(signalCode);
@@ -1278,7 +1272,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
      */
     protected void setCommonAttributes(final Element bonitaElement, final TBaseElement bpmnElement) {
         final String name = bonitaElement.getName();
-        /*We must assure that each element have an id*/
+        /* We must assure that each element have an id */
         //		if(name != null && name.length() != 0){
         //			bpmnElement.setId(name);
         //		} else {
@@ -1288,11 +1282,11 @@ public class BonitaToBPMN implements IBonitaTransformer {
             ((TFlowElement) bpmnElement).setName(bonitaElement.getName());
         } else if (bpmnElement instanceof TProcess) {
             ((TProcess) bpmnElement).setName(bonitaElement.getName());
-        } else if(bpmnElement instanceof TParticipant){
+        } else if (bpmnElement instanceof TParticipant) {
             ((TParticipant) bpmnElement).setName(bonitaElement.getName());
         }
         final String documentation = bonitaElement.getDocumentation();
-        if (documentation != null && ! documentation.isEmpty()) {
+        if (documentation != null && !documentation.isEmpty()) {
             final TDocumentation doc = ModelFactory.eINSTANCE.createTDocumentation();
             FeatureMapUtil.addText(doc.getMixed(), documentation);
             bpmnElement.getDocumentation().add(doc);
@@ -1300,7 +1294,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
     }
 
     public void setCommonDiagramAttributes(final ShapeNodeEditPart part, final Shape bpmnNode) {
-        final Element semantic = (Element)part.resolveSemanticElement();
+        final Element semantic = (Element) part.resolveSemanticElement();
         final Bounds bounds = DcFactory.eINSTANCE.createBounds();
         final Point absoluteLocation = part.getLocation().getCopy();
         FiguresHelper.translateToAbsolute(part.getFigure(), absoluteLocation);
@@ -1314,30 +1308,28 @@ public class BonitaToBPMN implements IBonitaTransformer {
         bpmnNode.setBounds(bounds);
     }
 
-
-
     /**
      * @param child
      * @return
      */
     private TFlowElement createTFlowElement(final Element child) {
         TFlowElement res = null;
-        if(child instanceof Activity){
-            res = createActivity((Activity)child);
+        if (child instanceof Activity) {
+            res = createActivity((Activity) child);
             final Activity activity = (Activity) child;
-            if(child instanceof ServiceTask
-                    && !activity.getConnectors().isEmpty()){
+            if (child instanceof ServiceTask
+                    && !activity.getConnectors().isEmpty()) {
                 final TServiceTask serviceTask = (TServiceTask) res;
                 handleConnectorOnServiceTask(activity, serviceTask);
-            } else if(child instanceof CallActivity){
-                /*Do the mapping*/
+            } else if (child instanceof CallActivity) {
+                /* Do the mapping */
                 final CallActivity callActivity = (CallActivity) child;
-                final TCallActivity ca = (TCallActivity)res;
+                final TCallActivity ca = (TCallActivity) res;
                 dataMappingWithCallActivity(callActivity, ca);
             }
-        } else if(child instanceof Gateway){
-            res = createGateway((Gateway)child);
-        } else if(child instanceof SubProcessEvent){
+        } else if (child instanceof Gateway) {
+            res = createGateway((Gateway) child);
+        } else if (child instanceof SubProcessEvent) {
             final TSubProcess eventSubProc = ModelFactory.eINSTANCE.createTSubProcess();
             eventSubProc.setTriggeredByEvent(true);
             //((SubProcessEvent) child).getElements()
@@ -1350,15 +1342,15 @@ public class BonitaToBPMN implements IBonitaTransformer {
             final TStartEvent bpmnStart = ModelFactory.eINSTANCE.createTStartEvent();
             final TTimerEventDefinition eventDef = ModelFactory.eINSTANCE.createTTimerEventDefinition();
             final Expression conditionExpression = ((StartTimerEvent) child).getCondition();
-            if(conditionExpression != null){
+            if (conditionExpression != null) {
                 final String condition = conditionExpression.getContent();//FIXME
                 final TExpression expression = ModelFactory.eINSTANCE.createTExpression();
                 expression.setId(ModelHelper.getEObjectID(expression));
-                if(condition != null){
-                    if(DateUtil.isDuration(condition)){
+                if (condition != null) {
+                    if (DateUtil.isDuration(condition)) {
                         eventDef.setTimeDuration(expression);
                         FeatureMapUtil.addText(eventDef.getTimeDuration().getMixed(), condition);
-                    } else if(DateUtil.isDate(condition)){
+                    } else if (DateUtil.isDate(condition)) {
                         eventDef.setTimeDate(expression);
                         FeatureMapUtil.addText(eventDef.getTimeDate().getMixed(), condition);
                     } else {
@@ -1367,19 +1359,19 @@ public class BonitaToBPMN implements IBonitaTransformer {
                     }
                 }
             }
-            eventDef.setId("event-def"+child.getName());
+            eventDef.setId("event-def" + child.getName());
             bpmnStart.getEventDefinition().add(eventDef);
             errors.add(Messages.bind(Messages.timerDefinitionNotExported, child.getName()));
             res = bpmnStart;
         } else if (child instanceof StartErrorEvent) {
-            final StartErrorEvent bonitaSart = (StartErrorEvent)child;
+            final StartErrorEvent bonitaSart = (StartErrorEvent) child;
             final TStartEvent bpmnStart = ModelFactory.eINSTANCE.createTStartEvent();
             final TErrorEventDefinition eventDef = ModelFactory.eINSTANCE.createTErrorEventDefinition();
             bpmnStart.getEventDefinition().add(eventDef);
             final String errorCode = bonitaSart.getErrorCode();
             final String eventDefId = errorCode != null ? errorCode + EcoreUtil.generateUUID() : EcoreUtil.generateUUID();
             eventDef.setId(eventDefId);
-            if(errorCode != null){
+            if (errorCode != null) {
                 eventDef.setErrorRef(QName.valueOf(errorCode));
             }
             res = bpmnStart;
@@ -1387,10 +1379,11 @@ public class BonitaToBPMN implements IBonitaTransformer {
             final TStartEvent bpmnStart = ModelFactory.eINSTANCE.createTStartEvent();
             final TMessageEventDefinition eventDef = ModelFactory.eINSTANCE.createTMessageEventDefinition();
             bpmnStart.getEventDefinition().add(eventDef);
-            final String eventId = ((StartMessageEvent)child).getEvent() != null ?((StartMessageEvent)child).getEvent() + EcoreUtil.generateUUID() :EcoreUtil.generateUUID();
-            eventDef.setId("event-def"+eventId);
+            final String eventId = ((StartMessageEvent) child).getEvent() != null ? ((StartMessageEvent) child).getEvent() + EcoreUtil.generateUUID()
+                    : EcoreUtil.generateUUID();
+            eventDef.setId("event-def" + eventId);
             final EList<Operation> messageContent = ((StartMessageEvent) child).getMessageContent();
-            if(messageContent.size() > 0){
+            if (messageContent.size() > 0) {
                 //            	createOperation
                 //            	eventDef.setOperationRef(value)
                 //            	bpmnStart.
@@ -1400,11 +1393,11 @@ public class BonitaToBPMN implements IBonitaTransformer {
             final TStartEvent bpmnStart = ModelFactory.eINSTANCE.createTStartEvent();
             final TSignal tSignal = getOrCreateTSignal((SignalEvent) child);
             final TSignalEventDefinition eventDef = ModelFactory.eINSTANCE.createTSignalEventDefinition();
-            if(tSignal != null){
+            if (tSignal != null) {
                 eventDef.setSignalRef(QName.valueOf(tSignal.getId()));
             }
             bpmnStart.getEventDefinition().add(eventDef);
-            eventDef.setId(((StartSignalEvent)child).getName());
+            eventDef.setId(((StartSignalEvent) child).getName());
             res = bpmnStart;
         } else if (child instanceof StartEvent) {
             final TStartEvent bpmnStart = ModelFactory.eINSTANCE.createTStartEvent();
@@ -1413,34 +1406,34 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
         // End events
         else if (child instanceof EndErrorEvent) {
-            final EndErrorEvent bonitaEnd = (EndErrorEvent)child;
+            final EndErrorEvent bonitaEnd = (EndErrorEvent) child;
             final TEndEvent bpmnEnd = ModelFactory.eINSTANCE.createTEndEvent();
             final TErrorEventDefinition eventDef = ModelFactory.eINSTANCE.createTErrorEventDefinition();
             bpmnEnd.getEventDefinition().add(eventDef);
             final String errorCode = bonitaEnd.getErrorCode();
             final String eventDefId = errorCode != null ? errorCode + EcoreUtil.generateUUID() : EcoreUtil.generateUUID();
             eventDef.setId(eventDefId);
-            if(errorCode != null){
+            if (errorCode != null) {
                 eventDef.setErrorRef(QName.valueOf(errorCode));
             }
             res = bpmnEnd;
         } else if (child instanceof EndMessageEvent) {
             final TEndEvent bpmnEnd = ModelFactory.eINSTANCE.createTEndEvent();
-            for(final Message eventObject :((EndMessageEvent)child).getEvents()){
+            for (final Message eventObject : ((EndMessageEvent) child).getEvents()) {
                 final TMessageEventDefinition eventDef = ModelFactory.eINSTANCE.createTMessageEventDefinition();
                 //eventDef.setMessageRef(eventObject.get);
                 //eventDef.setOperationRef(value);
-                final String name = eventObject.getName()!=null?eventObject.getName():EcoreUtil.generateUUID();
-                eventDef.setId("event-def"+name);
+                final String name = eventObject.getName() != null ? eventObject.getName() : EcoreUtil.generateUUID();
+                eventDef.setId("event-def" + name);
                 bpmnEnd.getEventDefinition().add(eventDef);
             }
             res = bpmnEnd;
         } else if (child instanceof EndSignalEvent) {
             final TEndEvent bpmnEnd = ModelFactory.eINSTANCE.createTEndEvent();
-            createThrowSignalEventDefinition((EndSignalEvent)child, bpmnEnd);
+            createThrowSignalEventDefinition((EndSignalEvent) child, bpmnEnd);
 
             res = bpmnEnd;
-        } else if(child instanceof EndTerminatedEvent){
+        } else if (child instanceof EndTerminatedEvent) {
             final TEndEvent bpmnEnd = ModelFactory.eINSTANCE.createTEndEvent();
             final TTerminateEventDefinition eventDef = ModelFactory.eINSTANCE.createTTerminateEventDefinition();
             bpmnEnd.getEventDefinition().add(eventDef);
@@ -1453,15 +1446,15 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
         // Events
         else if (child instanceof IntermediateCatchMessageEvent) {
-            final IntermediateCatchMessageEvent bonitaEvent = (IntermediateCatchMessageEvent)child;
+            final IntermediateCatchMessageEvent bonitaEvent = (IntermediateCatchMessageEvent) child;
             final TIntermediateCatchEvent bpmnEvent = ModelFactory.eINSTANCE.createTIntermediateCatchEvent();
             final String event = bonitaEvent.getEvent();
-            if(event != null){
+            if (event != null) {
                 bpmnEvent.getEventDefinitionRef().add(QName.valueOf(event));
             }
             res = bpmnEvent;
         } else if (child instanceof IntermediateThrowMessageEvent) {
-            final IntermediateThrowMessageEvent bonitaEvent = (IntermediateThrowMessageEvent)child;
+            final IntermediateThrowMessageEvent bonitaEvent = (IntermediateThrowMessageEvent) child;
             final TIntermediateThrowEvent bpmnEvent = ModelFactory.eINSTANCE.createTIntermediateThrowEvent();
             for (final Message bonitaEventDef : bonitaEvent.getEvents()) {
                 final TMessageEventDefinition eventDef = ModelFactory.eINSTANCE.createTMessageEventDefinition();
@@ -1470,28 +1463,28 @@ public class BonitaToBPMN implements IBonitaTransformer {
                 //                TMessage tMessage = createMessage(bonitaEventDef);
                 //                eventDef.setMessageRef(QName.valueOf(tMessage.getId()));
                 final String eventDefId = eventDef.getId();
-                if(eventDefId != null){
+                if (eventDefId != null) {
                     bpmnEvent.getEventDefinitionRef().add(QName.valueOf(eventDefId));
                 }
                 bpmnEvent.getEventDefinition().add(eventDef);
             }
             res = bpmnEvent;
         } else if (child instanceof IntermediateCatchSignalEvent) {
-            final IntermediateCatchSignalEvent bonitaEvent = (IntermediateCatchSignalEvent)child;
+            final IntermediateCatchSignalEvent bonitaEvent = (IntermediateCatchSignalEvent) child;
             final TIntermediateCatchEvent bpmnEvent = ModelFactory.eINSTANCE.createTIntermediateCatchEvent();
             final TSignal tSignal = getOrCreateTSignal(bonitaEvent);
-            if(tSignal != null){
+            if (tSignal != null) {
                 bpmnEvent.getEventDefinitionRef().add(QName.valueOf(tSignal.getId()));
             }
             res = bpmnEvent;
         } else if (child instanceof IntermediateThrowSignalEvent) {
-            final IntermediateThrowSignalEvent bonitaEvent = (IntermediateThrowSignalEvent)child;
+            final IntermediateThrowSignalEvent bonitaEvent = (IntermediateThrowSignalEvent) child;
             final TIntermediateThrowEvent bpmnEvent = ModelFactory.eINSTANCE.createTIntermediateThrowEvent();
-            /*TSignalEventDefinition eventDef = */createThrowSignalEventDefinition(bonitaEvent, bpmnEvent);
+            /* TSignalEventDefinition eventDef = */createThrowSignalEventDefinition(bonitaEvent, bpmnEvent);
             //bpmnEvent.getEventDefinition().add(eventDef);
             res = bpmnEvent;
         } else if (child instanceof CatchLinkEvent) {
-            final CatchLinkEvent bonitaEvent = (CatchLinkEvent)child;
+            final CatchLinkEvent bonitaEvent = (CatchLinkEvent) child;
             final TIntermediateCatchEvent bpmnEvent = ModelFactory.eINSTANCE.createTIntermediateCatchEvent();
             createTLinkEventDefinition(bonitaEvent, bpmnEvent);
             //			final EList<ThrowLinkEvent> fromLinkEvent = bonitaEvent.getFrom();
@@ -1500,11 +1493,11 @@ public class BonitaToBPMN implements IBonitaTransformer {
             //			}
             res = bpmnEvent;
         } else if (child instanceof ThrowLinkEvent) {
-            final ThrowLinkEvent bonitaEvent = (ThrowLinkEvent)child;
+            final ThrowLinkEvent bonitaEvent = (ThrowLinkEvent) child;
             final TIntermediateThrowEvent bpmnEvent = ModelFactory.eINSTANCE.createTIntermediateThrowEvent();
             final TLinkEventDefinition eventDef = ModelFactory.eINSTANCE.createTLinkEventDefinition();
             final CatchLinkEvent to = bonitaEvent.getTo();
-            if(to != null){
+            if (to != null) {
                 final String targetName = to.getName();
                 eventDef.setId(EcoreUtil.generateUUID());
                 eventDef.setName(to.getName() != null ? to.getName() : targetName);
@@ -1515,7 +1508,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
             bpmnEvent.getEventDefinition().add(eventDef);
             res = bpmnEvent;
         } else if (child instanceof IntermediateCatchTimerEvent) {
-            final IntermediateCatchTimerEvent bonitaEvent = (IntermediateCatchTimerEvent)child;
+            final IntermediateCatchTimerEvent bonitaEvent = (IntermediateCatchTimerEvent) child;
             final TIntermediateCatchEvent bpmnEvent = ModelFactory.eINSTANCE.createTIntermediateCatchEvent();
             final TTimerEventDefinition eventDef = createTimerEventDef(bonitaEvent);
             bpmnEvent.getEventDefinition().add(eventDef);
@@ -1539,7 +1532,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
         for (final InputMapping im : callActivity.getInputMappings()) {
             final TAssignment inputAssignment = ModelFactory.eINSTANCE.createTAssignment();
             final Expression processSource = im.getProcessSource();
-            if(processSource != null){
+            if (processSource != null) {
                 inputAssignment.setFrom(createBPMNExpressionFromString(processSource.getName()));
                 final String dataTo = getDataReferenceValue(callActivity, im.getSubprocessTarget());
                 inputAssignment.setTo(createBPMNExpressionFromString(dataTo));//FIXME: I think we need to search the real targeted data to find the correct id
@@ -1554,7 +1547,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
             final String dataFrom = getDataReferenceValue(callActivity, om.getSubprocessSource());
             outputAssignment.setFrom(createBPMNExpressionFromString(dataFrom));//FIXME: I think we need to search the real targeted data to find the correct id
             final Data processTarget = om.getProcessTarget();
-            if(processTarget != null){
+            if (processTarget != null) {
                 final TItemDefinition dataTo = dataScope.get(processTarget);
                 outputAssignment.setTo(createBPMNExpressionFromString(dataTo != null ? dataTo.getId() : processTarget.getName()));
                 doa.getAssignment().add(outputAssignment);
@@ -1564,18 +1557,21 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
     protected void handleConnectorOnServiceTask(final Activity activity, final TServiceTask serviceTask) {
         final EList<Connector> connectors = activity.getConnectors();
-        if(!connectors.isEmpty()){
+        if (!connectors.isEmpty()) {
             final Connector connector = connectors.get(0);
             handleBonitaConnectorDefinition(connector.getDefinitionId());
-            /*Service task should be used with a connector,
+            /*
+             * Service task should be used with a connector,
              * this connector will be the bpmn2 operation used
-             * /!\BEGIN TO HANDLE A SINGLE OPERATION */
+             * /!\BEGIN TO HANDLE A SINGLE OPERATION
+             */
             serviceTask.setImplementation("BonitaConnector");
-            serviceTask.setOperationRef(QName.valueOf("Exec"+connector.getDefinitionId()));
+            serviceTask.setOperationRef(QName.valueOf("Exec" + connector.getDefinitionId()));
 
-            final TDataInput dataInput = fillIOSpecificationWithNewDataInput(serviceTask, QName.valueOf(generateConnectorInputItemDef(connector.getDefinitionId())));
-            final TDataOutput dataOutput = fillIOSpecificationWithNewDataOutput(serviceTask, QName.valueOf(generateConnectorOutputItemDef(connector.getDefinitionId())));
-
+            final TDataInput dataInput = fillIOSpecificationWithNewDataInput(serviceTask,
+                    QName.valueOf(generateConnectorInputItemDef(connector.getDefinitionId())));
+            final TDataOutput dataOutput = fillIOSpecificationWithNewDataOutput(serviceTask,
+                    QName.valueOf(generateConnectorOutputItemDef(connector.getDefinitionId())));
 
             final TDataInputAssociation tDataInputAssociation = ModelFactory.eINSTANCE.createTDataInputAssociation();
 
@@ -1583,29 +1579,30 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
             for (final ConnectorParameter cp : connector.getConfiguration().getParameters()) {
                 final TAssignment inputAssignment = ModelFactory.eINSTANCE.createTAssignment();
-                if(cp.getExpression() instanceof Expression
-                        && ((Expression)cp.getExpression()).getContent() != null){
-                    inputAssignment.setFrom(createBPMNFormalExpressionFromBonitaExpression((Expression)cp.getExpression()));
-                    inputAssignment.setTo(createBPMNExpressionFromString("getDataInput('"+dataInput.getId()+"')/"+XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION+":"+cp.getKey()));
+                if (cp.getExpression() instanceof Expression
+                        && ((Expression) cp.getExpression()).getContent() != null) {
+                    inputAssignment.setFrom(createBPMNFormalExpressionFromBonitaExpression((Expression) cp.getExpression()));
+                    inputAssignment.setTo(createBPMNExpressionFromString("getDataInput('" + dataInput.getId() + "')/"
+                            + XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION + ":" + cp.getKey()));
                     inputAssignments.add(inputAssignment);
                 }
             }
-            if(!tDataInputAssociation.getAssignment().isEmpty()){
+            if (!tDataInputAssociation.getAssignment().isEmpty()) {
                 serviceTask.getDataInputAssociation().add(tDataInputAssociation);
                 tDataInputAssociation.setTargetRef(dataInput.getId());
                 //tDataInputAssociation.getSourceRef().add(da);
             }
 
-
             final TDataOutputAssociation tDataOutputAssociation = ModelFactory.eINSTANCE.createTDataOutputAssociation();
 
             final EList<TAssignment> outputAssignments = tDataOutputAssociation.getAssignment();
-            for(final Operation opm : connector.getOutputs()){
+            for (final Operation opm : connector.getOutputs()) {
                 if (opm.getRightOperand().hasName() &&
                         opm.getRightOperand().hasContent()) {
                     final TAssignment outputAssignment = ModelFactory.eINSTANCE.createTAssignment();
-                    if(ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(opm.getRightOperand().getType())){
-                        outputAssignment.setFrom(createBPMNExpressionFromString("getDataOutput('"+dataInput.getId()+"')/"+XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION+":"+opm.getRightOperand().getName()));
+                    if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(opm.getRightOperand().getType())) {
+                        outputAssignment.setFrom(createBPMNExpressionFromString("getDataOutput('" + dataInput.getId() + "')/"
+                                + XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION + ":" + opm.getRightOperand().getName()));
                     } else {
                         outputAssignment.setFrom(createBPMNFormalExpressionFromBonitaExpression(opm.getRightOperand()));
                     }
@@ -1615,7 +1612,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
                     outputAssignments.add(outputAssignment);
                 }
             }
-            if(!tDataOutputAssociation.getAssignment().isEmpty()){
+            if (!tDataOutputAssociation.getAssignment().isEmpty()) {
                 serviceTask.getDataOutputAssociation().add(tDataOutputAssociation);
                 tDataOutputAssociation.setTargetRef(dataOutput.getId());
             }
@@ -1626,20 +1623,20 @@ public class BonitaToBPMN implements IBonitaTransformer {
         String result = bonitaReferenceString;
         final DiagramRepositoryStore drs = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         final Expression calledActivityName = callActivity.getCalledActivityName();
-        if(calledActivityName != null
+        if (calledActivityName != null
                 && calledActivityName.getType().equals(ExpressionConstants.CONSTANT_TYPE)
-                &&  calledActivityName.getContent() != null){
-            String version= null ;
+                && calledActivityName.getContent() != null) {
+            String version = null;
             final Expression calledActivityVersion = callActivity.getCalledActivityVersion();
-            if(calledActivityVersion != null
+            if (calledActivityVersion != null
                     && calledActivityVersion.getType().equals(ExpressionConstants.CONSTANT_TYPE)
-                    &&  calledActivityVersion.getContent() != null){
+                    && calledActivityVersion.getContent() != null) {
                 version = calledActivityVersion.getContent();
             }
-            final AbstractProcess calledProcess = drs.findProcess(calledActivityName.getContent(),version );
-            if(calledProcess != null){
-                for(final Data calledProcessData : calledProcess.getData()){
-                    if(calledProcessData.getName().equals(bonitaReferenceString)){
+            final AbstractProcess calledProcess = drs.findProcess(calledActivityName.getContent(), version);
+            if (calledProcess != null) {
+                for (final Data calledProcessData : calledProcess.getData()) {
+                    if (calledProcessData.getName().equals(bonitaReferenceString)) {
                         result = ModelHelper.getEObjectID(calledProcessData);//it will be the id of the targeted date
                         break;
                     }
@@ -1655,7 +1652,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
         eventDef.setId(EcoreUtil.generateUUID());
         final EList<ThrowLinkEvent> fromLinkEvent = bonitaEvent.getFrom();
         final EList<QName> sourceLink = eventDef.getSource();
-        for(final ThrowLinkEvent from : fromLinkEvent){
+        for (final ThrowLinkEvent from : fromLinkEvent) {
             sourceLink.add(QName.valueOf(ModelHelper.getEObjectID(from)));
         }
         bpmnEvent.getEventDefinition().add(eventDef);
@@ -1666,7 +1663,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
         final TSignalEventDefinition eventDef = ModelFactory.eINSTANCE.createTSignalEventDefinition();
         eventDef.setId(EcoreUtil.generateUUID());
         final TSignal tSignal = getOrCreateTSignal(bonitaEvent);
-        if(tSignal != null){
+        if (tSignal != null) {
             eventDef.setSignalRef(QName.valueOf(tSignal.getId()));
         }
         bpmnEvent.getEventDefinition().add(eventDef);
@@ -1676,21 +1673,21 @@ public class BonitaToBPMN implements IBonitaTransformer {
     protected TTimerEventDefinition createTimerEventDef(final AbstractTimerEvent bonitaEvent) {
         final TTimerEventDefinition eventDef = ModelFactory.eINSTANCE.createTTimerEventDefinition();
         final Expression conditionExpression = bonitaEvent.getCondition();
-        if(conditionExpression != null){
+        if (conditionExpression != null) {
             final String condition = conditionExpression.getContent();//FIXME
-            if(condition != null){
+            if (condition != null) {
                 final TExpression expression = ModelFactory.eINSTANCE.createTExpression();
                 FeatureMapUtil.addText(expression.getMixed(), condition);
-                if(DateUtil.isDuration(condition)){
+                if (DateUtil.isDuration(condition)) {
                     eventDef.setTimeDuration(expression);
-                } else if(DateUtil.isDate(condition)){
+                } else if (DateUtil.isDate(condition)) {
                     eventDef.setTimeDate(expression);
                 } else {
                     eventDef.setTimeCycle(expression);
                 }
             }
         }
-        eventDef.setId("eventdef-"+bonitaEvent.getName());
+        eventDef.setId("eventdef-" + bonitaEvent.getName());
         return eventDef;
     }
 
@@ -1709,8 +1706,6 @@ public class BonitaToBPMN implements IBonitaTransformer {
         return res;
     }
 
-
-
     protected TFlowElement createActivity(final FlowElement child) {
         // Tasks
         TFlowElement res = null;
@@ -1719,19 +1714,19 @@ public class BonitaToBPMN implements IBonitaTransformer {
             //TSubProcess bpmnSubprocess = ModelFactory.eINSTANCE.createTSubProcess();
             final TCallActivity tCallActivity = ModelFactory.eINSTANCE.createTCallActivity();
             //TODO: construct calledElement ID
-            final CallActivity cActivity = (CallActivity) child ;
+            final CallActivity cActivity = (CallActivity) child;
             final Expression calledActivityName = cActivity.getCalledActivityName();
-            if(calledActivityName != null
+            if (calledActivityName != null
                     && ExpressionConstants.CONSTANT_TYPE.equals(calledActivityName.getType())
-                    && calledActivityName.getContent() != null){
+                    && calledActivityName.getContent() != null) {
                 final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
                 final Expression calledVersion = cActivity.getCalledActivityVersion();
-                String version = null ;
-                if(calledVersion != null && calledVersion.getContent() != null && !calledVersion.getContent().isEmpty()){
+                String version = null;
+                if (calledVersion != null && calledVersion.getContent() != null && !calledVersion.getContent().isEmpty()) {
                     version = calledVersion.getContent();
                 }
                 final AbstractProcess calledProcess = ModelHelper.findProcess(calledActivityName.getContent(), version, diagramStore.getAllProcesses());
-                if(calledProcess != null){
+                if (calledProcess != null) {
                     tCallActivity.setCalledElement(QName.valueOf(ModelHelper.getEObjectID(calledProcess)));
                 }
             }
@@ -1745,10 +1740,10 @@ public class BonitaToBPMN implements IBonitaTransformer {
             final TScriptTask scriptTask = ModelFactory.eINSTANCE.createTScriptTask();
             res = scriptTask;
         } else if (child instanceof Task) {
-            final Task bonitaTask = (Task)child;
+            final Task bonitaTask = (Task) child;
             final TUserTask bpmnTask = ModelFactory.eINSTANCE.createTUserTask();
             final Actor actor = bonitaTask.getActor();
-            if(actor != null){
+            if (actor != null) {
                 final EList<TResourceRole> resourceRoles = bpmnTask.getResourceRole();
                 final TPerformer role = ModelFactory.eINSTANCE.createTPerformer();
                 role.setResourceRef(QName.valueOf(ModelHelper.getEObjectID(actor)));
@@ -1806,6 +1801,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
             }
         }
         if (loopCharacteristics != null) {
+            loopCharacteristics.setId(EcoreUtil.generateUUID());
             res.setLoopCharacteristics(loopCharacteristics);
         }
     }
@@ -1818,8 +1814,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
     }
 
     @Override
-    public String getErrorMessage(){
-        return createErrorMessage(getErrors()) ;
+    public String getErrorMessage() {
+        return createErrorMessage(getErrors());
     }
 
     /**
@@ -1831,7 +1827,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
         builder.append(Messages.exportLimitations_message);
         builder.append(SWT.CR);
         for (final String error : errors) {
-            builder.append(SWT.CR+" * ");
+            builder.append(SWT.CR + " * ");
             builder.append(error);
         }
         return builder.toString();

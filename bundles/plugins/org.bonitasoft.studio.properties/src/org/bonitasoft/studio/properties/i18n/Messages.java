@@ -17,6 +17,7 @@ package org.bonitasoft.studio.properties.i18n;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
+
     private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
 
     // GeneralSection
@@ -451,6 +452,7 @@ public class Messages extends NLS {
     public static String targetParameterForInput;
     public static String sectionDescriptionOverviewForm;
     public static String sectionDescriptionEntryForm;
+    public static String sectionDescriptionProcessEntryForm;
 
     static {
         // initialize resource bundle

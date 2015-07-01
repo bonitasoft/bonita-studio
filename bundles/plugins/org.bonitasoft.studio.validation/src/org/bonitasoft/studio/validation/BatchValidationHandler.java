@@ -213,7 +213,7 @@ public class BatchValidationHandler extends AbstractHandler {
     private boolean statusContainsError(final IStatus validationStatus) {
         if (validationStatus != null) {
             for (final IStatus s : validationStatus.getChildren()) {
-                if (s.getSeverity() == IStatus.WARNING || s.getSeverity() == IStatus.ERROR) {
+                if (s.getSeverity() == IStatus.ERROR) {
                     return true;
                 }
             }

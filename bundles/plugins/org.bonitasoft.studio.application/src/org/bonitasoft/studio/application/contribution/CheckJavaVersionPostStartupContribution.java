@@ -50,10 +50,17 @@ public class CheckJavaVersionPostStartupContribution implements IPostStartupCont
             }
         }
         if (standins.isEmpty()) {
-            if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.jreNotFoundTitle, Messages.jreNotFoundMessage)) {
-                final BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(Display.getDefault().getActiveShell());
-                dialog.open();
-            }
+        	Display.getDefault().syncExec(new Runnable() {
+				
+				@Override
+				public void run() {
+					 if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.jreNotFoundTitle, Messages.jreNotFoundMessage)) {
+			                final BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(Display.getDefault().getActiveShell());
+			                dialog.open();
+			            }
+				}
+			});
+           
         }
     }
 }

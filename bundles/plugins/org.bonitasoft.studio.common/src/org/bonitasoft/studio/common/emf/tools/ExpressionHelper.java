@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.common.emf.tools;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.find;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -31,10 +34,17 @@ import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.GroupIterator;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.BusinessObjectType;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.EnumType;
+import org.bonitasoft.studio.model.process.JavaObjectData;
+import org.bonitasoft.studio.model.process.JavaType;
+import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.eclipse.core.runtime.Assert;
@@ -405,6 +415,34 @@ public class ExpressionHelper {
         final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression();
         operation.setLeftOperand(leftOperand);
         return operation;
+    }
+
+    public static Data dataFromIteratorExpression(final MultiInstantiable parentFlowElement, final Expression iteratorExpression, final MainProcess mainProcess) {
+        final String returnType = iteratorExpression.getReturnType();
+        Data d = null;
+        if (returnType != null) {
+            final DataType dt = getDataTypeFrom(returnType, mainProcess, parentFlowElement);
+            if (dt instanceof BusinessObjectType) {
+                d = ProcessFactory.eINSTANCE.createBusinessObjectData();
+                ((JavaObjectData) d).setClassName(returnType);
+            } else if (dt instanceof JavaType) {
+                d = ProcessFactory.eINSTANCE.createJavaObjectData();
+                ((JavaObjectData) d).setClassName(returnType);
+            } else {
+                d = ProcessFactory.eINSTANCE.createData();
+            }
+            d.setName(iteratorExpression.getName());
+            d.setDataType(dt);
+        }
+        return d;
+    }
+
+    private static DataType getDataTypeFrom(final String returnType, final MainProcess mainProcess, final MultiInstantiable parentFlowElement) {
+        if (parentFlowElement.getCollectionDataToMultiInstantiate() instanceof BusinessObjectData) {
+            return find(mainProcess.getDatatypes(), instanceOf(BusinessObjectType.class), null);
+        } else {
+            return ModelHelper.getDataTypeByClassName(mainProcess, returnType);
+        }
     }
 
 }

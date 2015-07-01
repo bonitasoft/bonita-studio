@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.FormMappingType;
+import org.bonitasoft.studio.model.process.builders.MainProcessBuilder;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.emf.validation.IValidationContext;
 import org.junit.Test;
@@ -37,6 +38,20 @@ public class InternalFormMappingConstraintTest {
         internalFormMappingConstraint.performBatchValidation(validationContext);
 
         verify(validationContext).createFailureStatus(Messages.emptyFormMappingWarning);
+    }
+
+    @Test
+    public void should_fail_if_form_mapping_is_INTERNAL_and_has_no_target_form_and_on_diagram() throws Exception {
+        final InternalFormMappingConstraint internalFormMappingConstraint = new InternalFormMappingConstraint();
+
+        final FormMapping formMapping = aFormMapping().withType(FormMappingType.INTERNAL).havingTargetForm(anExpression())
+                .build();
+        MainProcessBuilder.aMainProcess().havingFormMapping(formMapping);
+
+        final IValidationContext validationContext = aValidationContext(formMapping);
+        internalFormMappingConstraint.performBatchValidation(validationContext);
+
+        verify(validationContext).createFailureStatus(Messages.formMappingAtDiagramLevel_ModelInconsistency);
     }
 
     @Test

@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInpu
 import org.bonitasoft.studio.common.palette.DefaultElementNameProvider;
 import org.bonitasoft.studio.common.palette.FormPaletteLabelProvider;
 import org.bonitasoft.studio.common.palette.ProcessPaletteLabelProvider;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -417,6 +418,10 @@ public class NamingUtils {
             return new FormPaletteLabelProvider().getFormPaletteText(elementTypes.get(0).getEClass());
         }
         return null;
+    }
+
+    public static String toConnectorImplementationJarName(final ConnectorImplementation implementation) {
+        return toConnectorImplementationFilename(implementation.getImplementationId(), implementation.getImplementationVersion(), false) + ".jar";
     }
 
 }

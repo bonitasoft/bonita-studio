@@ -11,8 +11,9 @@
        <pubDate>2015-06-08</pubDate>
        <author>Laura Balp</author>
        <category>News</category>
-       <title>Bonita BPM 6.5.3 now available!</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/bonita-bpm-653-now-available</link>
+       <!-- TODO update link -->
+       <title>Bonita BPM 7.0.1 now available!</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/</link>
        <description></description>
     </item>
     <item>

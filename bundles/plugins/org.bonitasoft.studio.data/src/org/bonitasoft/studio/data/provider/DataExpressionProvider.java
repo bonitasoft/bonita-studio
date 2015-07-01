@@ -15,9 +15,6 @@
 
 package org.bonitasoft.studio.data.provider;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.collect.Iterables.find;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,19 +33,13 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.BusinessObjectType;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.JavaObjectData;
-import org.bonitasoft.studio.model.process.JavaType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -115,7 +106,8 @@ public class DataExpressionProvider implements IExpressionProvider {
                 if (iteratorExpression != null
                         && iteratorExpression.getName() != null
                         && !iteratorExpression.getName().isEmpty()) {
-                    final Data d = dataFromIteratorExpression((MultiInstantiable) parentFlowElement, iteratorExpression, mainProcess(parentFlowElement));
+                    final Data d = ExpressionHelper.dataFromIteratorExpression((MultiInstantiable) parentFlowElement, iteratorExpression,
+                            mainProcess(parentFlowElement));
                     result.add(createExpression(d));
                 }
             }
@@ -133,34 +125,6 @@ public class DataExpressionProvider implements IExpressionProvider {
         final Pool pool = ModelHelper.getParentPool(parentFlowElement);
         final DiagramRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         return ModelHelper.getMainProcess(repositoryStore.findProcess(pool.getName(), pool.getVersion()));
-    }
-
-    public static Data dataFromIteratorExpression(final MultiInstantiable parentFlowElement, final Expression iteratorExpression, final MainProcess mainProcess) {
-        final String returnType = iteratorExpression.getReturnType();
-        Data d = null;
-        if (returnType != null) {
-            final DataType dt = getDataTypeFrom(returnType, mainProcess, parentFlowElement);
-            if (dt instanceof BusinessObjectType) {
-                d = ProcessFactory.eINSTANCE.createBusinessObjectData();
-                ((JavaObjectData) d).setClassName(returnType);
-            } else if (dt instanceof JavaType) {
-                d = ProcessFactory.eINSTANCE.createJavaObjectData();
-                ((JavaObjectData) d).setClassName(returnType);
-            } else {
-                d = ProcessFactory.eINSTANCE.createData();
-            }
-            d.setName(iteratorExpression.getName());
-            d.setDataType(dt);
-        }
-        return d;
-    }
-
-    private static DataType getDataTypeFrom(final String returnType, final MainProcess mainProcess, final MultiInstantiable parentFlowElement) {
-        if (parentFlowElement.getCollectionDataToMultiInstantiate() instanceof BusinessObjectData) {
-            return find(mainProcess.getDatatypes(), instanceOf(BusinessObjectType.class), null);
-        } else {
-            return ModelHelper.getDataTypeByClassName(mainProcess, returnType);
-        }
     }
 
     protected List<Data> getDataInForm(final Form form, final EObject formContainer) {

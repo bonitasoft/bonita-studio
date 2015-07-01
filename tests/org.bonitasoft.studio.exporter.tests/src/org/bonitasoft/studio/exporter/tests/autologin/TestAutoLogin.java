@@ -54,8 +54,7 @@ public class TestAutoLogin {
         if (pool == null) {
             final NewDiagramCommandHandler newDiagram = new NewDiagramCommandHandler();
             final DiagramFileStore diagramFileStore = newDiagram.execute(null);
-            final AbstractProcess p = (AbstractProcess) diagramFileStore.getContent().getElements().get(0);
-            pool = EcoreUtil.copy(p);
+            pool = (AbstractProcess) EcoreUtil.copy(diagramFileStore.getContent()).getElements().get(0);
             final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
 
             conf.setName(CONF_NAME);

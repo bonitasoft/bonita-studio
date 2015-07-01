@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.FormMappingType;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
@@ -51,7 +52,11 @@ public class InternalFormMappingConstraint extends AbstractLiveValidationMarkerC
     private IStatus doValidateInternalMapping(final IValidationContext ctx, final FormMapping formMapping) {
         final Expression targetForm = formMapping.getTargetForm();
         if (!targetForm.hasContent()) {
-            return ctx.createFailureStatus(Messages.emptyFormMappingWarning);
+            if (formMapping.eContainer() instanceof MainProcess) {
+                return ctx.createFailureStatus(Messages.formMappingAtDiagramLevel_ModelInconsistency);
+            } else {
+                return ctx.createFailureStatus(Messages.emptyFormMappingWarning);
+            }
         }
         return ctx.createSuccessStatus();
     }

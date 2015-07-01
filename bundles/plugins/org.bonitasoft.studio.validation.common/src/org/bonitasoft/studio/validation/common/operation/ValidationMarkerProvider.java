@@ -23,11 +23,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.Triple;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
-import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
+import org.bonitasoft.studio.model.process.diagram.form.part.ProcessDiagramEditorUtil;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
@@ -46,6 +48,8 @@ import org.eclipse.gmf.runtime.notation.View;
  * @author Romain Bioteau
  */
 public class ValidationMarkerProvider {
+
+    private static final String CONSTRAINT_ID = "constraintId";
 
     public Diagnostic runEMFValidator(final View target) {
         if (target.isSetElement() && target.getElement() != null) {
@@ -125,22 +129,32 @@ public class ValidationMarkerProvider {
         }
     }
 
-    private static void addProcessMarker(final String constaintId, final EditPartViewer viewer, final IFile
+    private static void addProcessMarker(final String constraintId, final EditPartViewer viewer, final IFile
             target, final String elementId, final String location, final String message, final int statusSeverity) {
         if (target == null) {
             return;
         }
-        ProcessMarkerNavigationProvider.addMarker(constaintId,
-                target, elementId, location, message, statusSeverity);
+        final IMarker marker = org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.addMarker(target, elementId, location,
+                message, statusSeverity);
+        addConstraintId(constraintId, marker);
     }
 
-    private static void addFormMarker(final String constaintId, final EditPartViewer viewer, final IFile
+    private static void addConstraintId(final String constraintId, final IMarker marker) {
+        try {
+            marker.setAttribute(CONSTRAINT_ID, constraintId);
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
+
+    private static void addFormMarker(final String constraintId, final EditPartViewer viewer, final IFile
             target, final String elementId, final String location, final String message, final int statusSeverity) {
         if (target == null) {
             return;
         }
-        org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.addMarker(constaintId,
+        final IMarker marker = org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.addMarker(
                 target, elementId, location, message, statusSeverity);
+        addConstraintId(constraintId, marker);
     }
 
     private static int diagnosticToStatusSeverity(final int diagnosticSeverity) {
@@ -201,7 +215,7 @@ public class ValidationMarkerProvider {
                 if (resolvedSemanticElement instanceof Form || resolvedSemanticElement instanceof MainProcess) {
                     final IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
                     if (target != null) {
-                        ProcessMarkerNavigationProvider.deleteMarkers(target);
+                        org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.deleteMarkers(target);
                         org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.deleteMarkers(target);
                         break;
                     }
