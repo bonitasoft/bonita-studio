@@ -488,8 +488,8 @@ public class DataWizardIT extends SWTBotGefTestCase {
     @Test
     public void testCreateDataWithExistingId() {
         //Add the data myData on pool
-        final String dataName = "myData";
-        final String dataName1 = "myData1";
+        final String dataName = "myData_ToTestCreateDataWithExistingId";
+        final String dataName1 = "myData_ToTestCreateDataWithExistingId1";
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = diagramPerspective.getDiagramPropertiesPart();
