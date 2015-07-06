@@ -24,11 +24,10 @@ import java.util.Set;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -47,33 +46,25 @@ import org.eclipse.jdt.launching.environments.IExecutionEnvironment;
 /**
  * @author Romain Bioteau
  */
-public class BonitaBPMProjectClasspath {
+public class ProjectClasspathFactory {
 
-    private final IProject project;
-    private final IRepository repository;
-
-    public BonitaBPMProjectClasspath(final IProject project, final IRepository repository) {
-        this.project = project;
-        this.repository = repository;
-    }
-
-    public void create(final IProgressMonitor monitor) throws CoreException {
-        if (!classpathExists()) {
+    public void create(final Repository repository, final IProgressMonitor monitor) throws CoreException {
+        if (!classpathExists(repository)) {
             monitor.subTask(Messages.initializingProjectClasspath);
-            final IJavaProject javaProject = asJavaProject();
-            final Set<IClasspathEntry> entries = addClasspathEntries();
+            final IJavaProject javaProject = asJavaProject(repository);
+            final Set<IClasspathEntry> entries = addClasspathEntries(repository);
             BonitaStudioLog.debug("Updating build path...", CommonRepositoryPlugin.PLUGIN_ID);
             javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), true, monitor);
         }
     }
 
-    public void refresh(final IProgressMonitor monitor) throws CoreException {
+    public void refresh(final Repository repository, final IProgressMonitor monitor) throws CoreException {
         javaModel().refreshExternalArchives(null, monitor);
-        flushBuildPath(monitor);
+        flushBuildPath(repository, monitor);
     }
 
-    protected void flushBuildPath(final IProgressMonitor monitor) throws CoreException, JavaModelException {
-        final IJavaProject javaProject = asJavaProject();
+    protected void flushBuildPath(final Repository repository, final IProgressMonitor monitor) throws CoreException, JavaModelException {
+        final IJavaProject javaProject = asJavaProject(repository);
         BuildPathsBlock.flush(Arrays.asList(CPListElement.createFromExisting(javaProject)), javaProject.getOutputLocation(), javaProject, null, monitor);
     }
 
@@ -82,7 +73,7 @@ public class BonitaBPMProjectClasspath {
     }
 
     @SuppressWarnings("rawtypes")
-    protected Set<IClasspathEntry> addClasspathEntries() {
+    protected Set<IClasspathEntry> addClasspathEntries(final Repository repository) {
         final Set<IClasspathEntry> entries = newHashSet(
                 newContainerEntry(new Path("repositoryDependencies"), true),
                 newContainerEntry(newJREContainerPath(javaRuntimeEnvironment()), false),
@@ -111,23 +102,23 @@ public class BonitaBPMProjectClasspath {
         return JavaCore.newSourceEntry(path);
     }
 
-    protected IJavaProject asJavaProject() throws CoreException {
-        return (IJavaProject) project.getNature(JavaCore.NATURE_ID);
+    protected IJavaProject asJavaProject(final Repository repository) throws CoreException {
+        return (IJavaProject) repository.getProject().getNature(JavaCore.NATURE_ID);
     }
 
-    public boolean classpathExists() {
-        return project.findMember(".classpath") != null;
+    public boolean classpathExists(final Repository repository) {
+        return repository.getProject().findMember(".classpath") != null;
     }
 
-    public void delete(final IProgressMonitor monitor) throws CoreException {
-        final IFile classpathFile = project.getFile(".classpath");
+    public void delete(final Repository repository, final IProgressMonitor monitor) throws CoreException {
+        final IFile classpathFile = repository.getProject().getFile(".classpath");
         if (classpathFile.exists()) {
             classpathFile.delete(true, false, monitor);
         }
     }
 
-    public IClasspathEntry[] getEntries() throws CoreException {
-        return asJavaProject().getRawClasspath();
+    public IClasspathEntry[] getEntries(final Repository repository) throws CoreException {
+        return asJavaProject(repository).getRawClasspath();
     }
 
 }

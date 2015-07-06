@@ -30,7 +30,7 @@ import org.osgi.framework.Bundle;
  */
 public class ExtensionContextInjectionFactory {
 
-    private static final IEclipseContext HEADLESS_CONTEXT = EclipseContextFactory.create("headlessContext");
+    private static IEclipseContext HEADLESS_CONTEXT;
 
     public <T> T make(final IConfigurationElement element, final String classNameAttribute, final Class<T> extension) throws ClassNotFoundException {
         return make(element, classNameAttribute, extension, workbenchContext());
@@ -49,6 +49,13 @@ public class ExtensionContextInjectionFactory {
                 return context;
             }
             throw new IllegalStateException("No workbench available");
+        }
+        return headlessContext();
+    }
+
+    private static synchronized IEclipseContext headlessContext() {
+        if (HEADLESS_CONTEXT == null) {
+            HEADLESS_CONTEXT = EclipseContextFactory.create("headlessContext");
         }
         return HEADLESS_CONTEXT;
     }
