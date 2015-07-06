@@ -15,16 +15,12 @@
 package org.bonitasoft.studio.common.repository.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-
-import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -73,9 +69,7 @@ public class CreateBonitaBPMProjectOperationTest {
     public void setUp() throws Exception {
         createBonitaBPMProjectOperation = spy(new CreateBonitaBPMProjectOperation(workspace, "my project"));
         doReturn(root).when(workspace).getRoot();
-        doNothing().when(createBonitaBPMProjectOperation).createProjectManifest(monitor);
         doReturn(javaProject).when(createBonitaBPMProjectOperation).asJavaProject();
-        doReturn("org.bonitasoft.studio.console.libs").when(createBonitaBPMProjectOperation).engineBundleSymbolicName();
     }
 
     @Test
@@ -95,23 +89,6 @@ public class CreateBonitaBPMProjectOperationTest {
         verify(javaProject).setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
         verify(javaProject).setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
         verify(javaProject).setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
-        verify(createBonitaBPMProjectOperation).createProjectManifest(monitor);
     }
 
-    @Test
-    public void should_manifest_headers_contains_valid_values() throws Exception {
-        //When
-        final Map<String, String> manifestHeaders = createBonitaBPMProjectOperation.createManifestHeaders();
-
-        //Then
-        assertThat(manifestHeaders).contains(
-                entry("Manifest-Version", "1.0"),
-                entry("Bundle-ManifestVersion", "2"),
-                entry("Bundle-Name", "my project"),
-                entry("Bundle-SymbolicName", "myProject"),
-                entry("Bundle-Version", "1.0.0.qualifier"),
-                entry("Bundle-Vendor", "BonitaSoft S.A."),
-                entry("Require-Bundle", "javax.persistence;bundle-version=\"2.0.3\"," + System.lineSeparator() + " org.bonitasoft.studio.console.libs"),
-                entry("Bundle-RequiredExecutionEnvironment", "JavaSE-1.7"));
-    }
 }

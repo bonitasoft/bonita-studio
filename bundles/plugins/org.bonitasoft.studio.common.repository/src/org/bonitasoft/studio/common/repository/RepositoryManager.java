@@ -38,7 +38,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 public class RepositoryManager {
 
-    private static final String REPOSITORY_FACTORY_IMPLEMENTATION_ID = "org.bonitasodt.studio.repositoryImplementation";
+    private static final String REPOSITORY_FACTORY_IMPLEMENTATION_ID = "org.bonitasodt.studio.repositoryFactory";
     private static final String PRIORITY = "priority";
     private static final String CLASS = "class";
 
@@ -46,13 +46,13 @@ public class RepositoryManager {
 
     private Repository repository;
     private final IPreferenceStore preferenceStore;
-    private final IConfigurationElement repositoryImplementationElement;
+    private final IConfigurationElement repositoryFactoryElement;
 
     private RepositoryManager() {
         final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
                 REPOSITORY_FACTORY_IMPLEMENTATION_ID);
         final List<IConfigurationElement> sortedElems = sortByPriority(elements);
-        repositoryImplementationElement = sortedElems.get(0); //Higher element
+        repositoryFactoryElement = sortedElems.get(0); //Higher element
         preferenceStore = CommonRepositoryPlugin.getDefault().getPreferenceStore();
         final String currentRepository = preferenceStore.getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
         repository = createRepository(currentRepository, false);
@@ -90,9 +90,8 @@ public class RepositoryManager {
 
     public Repository createRepository(final String name, final boolean migrationEnabled) {
         try {
-            final Repository repository = (Repository) repositoryImplementationElement.createExecutableExtension(CLASS);
-            repository.createRepository(name, migrationEnabled);
-            return repository;
+            final IRepositoryFactory repositoryFactory = (IRepositoryFactory) repositoryFactoryElement.createExecutableExtension(CLASS);
+            return repositoryFactory.newRepository(name, migrationEnabled);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
