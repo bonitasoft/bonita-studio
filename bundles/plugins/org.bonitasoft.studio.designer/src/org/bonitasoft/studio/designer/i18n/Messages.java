@@ -60,6 +60,7 @@ public class Messages extends NLS {
     public static String hideEmptyContractDialogToggleMessage;
 
     public static String newFormTooltipForTask;
+    public static String waitingForTomcatServer;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

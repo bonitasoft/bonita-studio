@@ -25,7 +25,6 @@ import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.Butto
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.FormActionTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.FormConnectorTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.FormDataTabbedPropertyProvider;
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.FormGeneralTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.ValidatorTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.ActorTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.ApplicationFormTabbedPropertyProvider;
@@ -36,13 +35,11 @@ import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.Da
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.DocumentTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.FormMappingTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.KPITabbedPropertyProvider;
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.LaneTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.OperationTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.PageflowConnectorTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.PageflowDataTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.PageflowTransitionTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.ParameterTabbedPropertyProvider;
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.PoolTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.SearchIndexTabbedPropertyProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.IEditorReference;
@@ -65,27 +62,26 @@ public class TabbedPropertySelectionProviderRegistry {
         registry.add(new FormActionTabbedPropertyProvider());
         registry.add(new FormConnectorTabbedPropertyProvider());
         registry.add(new FormDataTabbedPropertyProvider());
-        registry.add(new FormGeneralTabbedPropertyProvider());
+        // registry.add(new FormGeneralTabbedPropertyProvider());
         registry.add(new FormMappingTabbedPropertyProvider());
         registry.add(new ApplicationFormTabbedPropertyProvider());
         registry.add(new KPITabbedPropertyProvider());
-        registry.add(new LaneTabbedPropertyProvider());
         registry.add(new OperationTabbedPropertyProvider());
         registry.add(new PageflowDataTabbedPropertyProvider());
         registry.add(new PageflowConnectorTabbedPropertyProvider());
         registry.add(new PageflowTransitionTabbedPropertyProvider());
         registry.add(new ParameterTabbedPropertyProvider());
-        registry.add(new PoolTabbedPropertyProvider());
         registry.add(new SearchIndexTabbedPropertyProvider());
         registry.add(new ValidatorTabbedPropertyProvider());
     }
 
-    public ITabbedPropertySelectionProvider findSelectionProvider(final EObject element, final IEditorReference activeEditor) {
+    public ITabbedPropertySelectionProvider findSelectionProvider(final EObject element, final IEditorReference activeEditor,
+            final ITabbedPropertySelectionProvider defaultProvider) {
         final Optional<ITabbedPropertySelectionProvider> provider = tryFind(registry, appliesTo(element, activeEditor));
         if (provider.isPresent()) {
             return provider.get();
         }
-        return defaultProvider(activeEditor);
+        return defaultProvider != null ? defaultProvider : defaultProvider(activeEditor);
     }
 
     private Predicate<ITabbedPropertySelectionProvider> appliesTo(final EObject element, final IEditorReference activeEditor) {

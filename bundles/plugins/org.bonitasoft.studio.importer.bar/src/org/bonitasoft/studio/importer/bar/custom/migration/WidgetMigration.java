@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +38,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
@@ -73,6 +76,10 @@ public class WidgetMigration extends ReportCustomMigration {
             throws MigrationException {
         for (final Instance widget : model.getAllInstances("form.Widget")) {
             final Instance widgetContainer = widget.getContainer();
+            final String uuid = widget.getUuid();
+            if (uuid == null) {
+                widget.setUuid(EcoreUtil.generateUUID());
+            }
             if (widgetContainer != null && !widgetContainer.instanceOf("expression.Expression")) {
                 final Instance action = widget.get("script");
                 if (action != null) {
@@ -106,25 +113,38 @@ public class WidgetMigration extends ReportCustomMigration {
                 storeDisplayAfterEventDependsOnConditionScripts(widget);
                 storeHelpMessages(widget);
                 storeInjectWidgetScripts(widget);
-                storeInputConnectors(widget);
-                storeAfterEventConnectors(widget);
+                storeInputConnectors(model, widget);
+                storeAfterEventConnectors(model, widget);
             }
         }
     }
 
-    private void storeInputConnectors(final Instance widget) {
+    private void storeInputConnectors(final Model model, final Instance widget) {
         final List<Instance> connectors = widget.get("inputConnectors");
         if (!connectors.isEmpty()) {
             final Instance instance = connectors.get(0);
             initialValueConnectors.put(widget.getUuid(), instance.copy());
+            removeExtraConnectors(model, connectors, Messages.widgetDataInputMigrationDescription);
         }
     }
 
-    private void storeAfterEventConnectors(final Instance widget) {
+    private void removeExtraConnectors(final Model model, final List<Instance> connectors, final String reportErrorMessage) {
+        if (connectors.size() > 1) {
+            for (int i = 1; i < connectors.size(); i++) {
+                final Instance connectorInstance = connectors.get(i);
+                addReportChange((String) connectorInstance.get("name"), connectorInstance.getType().getEClass().getName(), connectorInstance.getUuid(),
+                        reportErrorMessage, Messages.connectorProperty, IStatus.ERROR);
+                model.delete(connectorInstance);
+            }
+        }
+    }
+
+    private void storeAfterEventConnectors(final Model model, final Instance widget) {
         final List<Instance> connectors = widget.get("afterEventConnectors");
         if (!connectors.isEmpty()) {
             final Instance instance = connectors.get(0);
             afterEventConnector.put(widget.getUuid(), instance.copy());
+            removeExtraConnectors(model, connectors, Messages.widgetContigencyConnectorMigrationDescription);
         }
     }
 
@@ -528,7 +548,11 @@ public class WidgetMigration extends ReportCustomMigration {
         if (widgetActions.containsKey(widget.getUuid())) {
             final Pair<String, String> actionScripts = widgetActions.get(widget.getUuid());
             final StringToExpressionConverter converter = getConverter(model, getScope(widget));
-            final Instance action = converter.parseOperation(String.class.getName(), false, actionScripts.getFirst(), actionScripts.getSecond());
+            String rightOperand = actionScripts.getFirst();
+            if (isNullOrEmpty(rightOperand) && !isNullOrEmpty(actionScripts.getSecond())) {
+                rightOperand = "${field_" + widget.get("name") + "}";
+            }
+            final Instance action = converter.parseOperation(String.class.getName(), false, rightOperand, actionScripts.getSecond());
             final Instance actionExp = action.get("rightOperand");
             if (actionExp != null) {
                 if (ExpressionConstants.FORM_FIELD_TYPE.equals(actionExp.get("type"))) {
@@ -548,5 +572,4 @@ public class WidgetMigration extends ReportCustomMigration {
             }
         }
     }
-
 }

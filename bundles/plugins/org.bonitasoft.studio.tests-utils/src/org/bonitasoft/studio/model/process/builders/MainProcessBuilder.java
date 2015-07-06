@@ -19,6 +19,7 @@ import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
+import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 
@@ -56,6 +57,11 @@ public class MainProcessBuilder extends ElementBuilder<MainProcess, MainProcessB
             }
         }
         return getThis();
+    }
+
+    public MainProcessBuilder havingFormMapping(final FormMapping formMapping) {
+        getBuiltInstance().setFormMapping(formMapping);
+        return this;
     }
 
     public MainProcessBuilder havingDatatypes(final DataType... dataTypes) {

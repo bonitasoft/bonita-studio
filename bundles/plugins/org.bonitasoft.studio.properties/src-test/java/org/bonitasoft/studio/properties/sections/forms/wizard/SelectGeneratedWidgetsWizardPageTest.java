@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -47,16 +47,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateProvider;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-/**
- * @author Romain Bioteau
- */
 @RunWith(MockitoJUnitRunner.class)
 public class SelectGeneratedWidgetsWizardPageTest {
 
@@ -98,13 +94,6 @@ public class SelectGeneratedWidgetsWizardPageTest {
         input.add(businessData);
         selectGeneratedWidgetsWizardPage = spy(new SelectGeneratedWidgetsWizardPage(pageFlow, "",
                 input, store));
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
     }
 
     /**
@@ -304,5 +293,29 @@ public class SelectGeneratedWidgetsWizardPageTest {
         final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(checkboxTreeViewer);
 
         assertThat(checkStateProvider.isGrayed(mapping1)).isFalse();
+    }
+
+    @Test
+    public void should_element_in_tree_be_checked_if_generated() throws Exception {
+        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(checkboxTreeViewer);
+
+        final SimpleField modelElement = new SimpleField();
+        modelElement.setType(FieldType.BOOLEAN);
+        final WidgetMapping mapping = new WidgetMapping(modelElement);
+        mapping.setGenerated(true);
+
+        assertThat(checkStateProvider.isChecked(mapping)).isTrue();
+    }
+
+    @Test
+    public void should_element_in_tree_be_unchecked_if_not_generated() throws Exception {
+        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(checkboxTreeViewer);
+
+        final SimpleField modelElement = new SimpleField();
+        modelElement.setType(FieldType.BOOLEAN);
+        final WidgetMapping mapping = new WidgetMapping(modelElement);
+        mapping.setGenerated(false);
+
+        assertThat(checkStateProvider.isChecked(mapping)).isFalse();
     }
 }

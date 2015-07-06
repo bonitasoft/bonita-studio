@@ -94,6 +94,7 @@ public class TestDocument extends SWTBotGefTestCase {
 
         //Edit
         botAddDocumentDialog = botDocumentsPropertySection.editDocument("doc11");
+        botAddDocumentDialog.chooseScriptInitialContent();
         botAddDocumentDialog.setName("doc11Edited");
         botAddDocumentDialog.setInitialContents("anEmptyScript", "[]");
         botAddDocumentDialog.ok();

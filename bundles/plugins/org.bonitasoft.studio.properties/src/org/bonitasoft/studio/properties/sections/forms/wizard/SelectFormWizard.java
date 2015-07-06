@@ -26,10 +26,10 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.data.provider.DataExpressionProvider;
 import org.bonitasoft.studio.diagram.form.custom.commands.CreateFormCommand;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.form.Form;
@@ -112,7 +112,7 @@ public class SelectFormWizard extends Wizard {
 
     private void addMultiInstanceIterator(final Element container, final List<EObject> elements) {
         if (isDataMultiInstantiated((MultiInstantiable) container)) {
-            final Data dataFromIteratorExpression = DataExpressionProvider.dataFromIteratorExpression((MultiInstantiable) container,
+            final Data dataFromIteratorExpression = ExpressionHelper.dataFromIteratorExpression((MultiInstantiable) container,
                     ((MultiInstantiable) container).getIteratorExpression(), ModelHelper.getMainProcess(container));
             final EClass eClassData = dataFromIteratorExpression.getDataType().eClass();
             if (!aJavaObjectData(eClassData)

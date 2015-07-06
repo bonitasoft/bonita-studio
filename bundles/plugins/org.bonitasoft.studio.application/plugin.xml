@@ -743,7 +743,7 @@
    </extension>
 
    <extension
-         point="org.eclipse.ui.propertiesView">rces>
+         point="org.eclipse.ui.propertiesView">
       <excludeSources
             id="org.bonitasoft.studio.views.properties.application">
       </excludeSources>
@@ -755,12 +755,6 @@
       </excludeSources>
       <excludeSources
             id="org.bonitasoft.studio.views.overview">
-      </excludeSources>
-      <excludeSources
-            id="org.eclipse.birt.report.designer.ui.attributes.AttributeView">
-      </excludeSources>
-      <excludeSources
-            id="org.eclipse.birt.report.designer.ui.lib.explorer.view">
       </excludeSources>
    </extension>
    <extension
