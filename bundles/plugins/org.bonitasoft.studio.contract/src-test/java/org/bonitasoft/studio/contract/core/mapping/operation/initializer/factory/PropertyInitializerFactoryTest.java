@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
+package org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingBuilder.aRelationMapping;
@@ -21,27 +21,37 @@ import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.a
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aCompositionField;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aStringField;
 import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
+import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingBuilder;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IPropertyInitializer;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.SimpleFieldPropertyInitializer;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class PropertyInitializerFactoryTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    @Mock
+    private RelationPropertyInitializerFactory relationFactory;
 
     @Test
     public void should_create_a_SimpleFieldPropertyInitializer() throws Exception {
         final PropertyInitializerFactory factory = newFactory();
 
         final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(aSimpleMapping(aStringField("name").build()).build(), aBusinessData()
-                .withName("employee").build(), null);
+                .withName("employee").build());
 
         assertThat(propertyInitializer).isInstanceOf(SimpleFieldPropertyInitializer.class);
     }
@@ -56,71 +66,25 @@ public class PropertyInitializerFactoryTest {
                 .aRelationMapping(employee)
                 .addChild(aSimpleMapping(aStringField("name").build())).build();
         final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mapping.getChildren().get(0), aBusinessData()
-                .withName("employee").build(), null);
+                .withName("employee").build());
 
         assertThat(propertyInitializer).isInstanceOf(SimpleFieldPropertyInitializer.class);
         assertThat(((SimpleFieldPropertyInitializer) propertyInitializer).getParentBusinessObject()).isNotNull();
     }
 
     @Test
-    public void should_create_a_BusinessObjectInitializer() throws Exception {
+    public void should_delegate_new_initializer_to_relation_factory() throws Exception {
         final PropertyInitializerFactory factory = newFactory();
 
-        final RelationField aCompositionField = aCompositionField("employee", aBO("Employee").build());
-        final FieldToContractInputMapping mapping = aRelationMapping(aCompositionField)
-                .addChild(aSimpleMapping(aStringField("name").build())).build();
-        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mapping, aBusinessData()
-                .withName("employee").build(), aCompositionField);
+        final RelationField employee = aCompositionField("employee", aBO("Employee").build());
+        employee.setCollection(true);
+        final FieldToContractInputMapping mapping = aRelationMapping(employee)
+                .addChild(aRelationMapping(employee)).build();
+        final BusinessObjectData businessObjectData = aBusinessData()
+                .withName("employee").build();
+        factory.newPropertyInitializer(mapping.getChildren().get(0), businessObjectData);
 
-        assertThat(propertyInitializer).isInstanceOf(BusinessObjectInitializer.class);
-    }
-
-    @Test
-    public void should_create_a_CompositionReferencePropertyInitializer() throws Exception {
-        final PropertyInitializerFactory factory = newFactory();
-
-        final RelationField employeeField = aCompositionField("employee", aBO("Employee").build());
-        final RelationField addressField = aCompositionField("address", aBO("Address").build());
-        final FieldToContractInputMapping mapping =
-                aRelationMapping(employeeField)
-                        .addChild(aRelationMapping(addressField))
-                        .addChild(aSimpleMapping(aStringField("street").build())).build();
-        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mapping.getChildren().get(0), aBusinessData()
-                .withName("employee").build(), employeeField);
-
-        assertThat(propertyInitializer).isInstanceOf(CompositionReferencePropertyInitializer.class);
-    }
-
-    @Test
-    public void should_create_a_BusinessObjectListInitializer() throws Exception {
-        final PropertyInitializerFactory factory = newFactory();
-
-        final RelationField aCompositionField = aCompositionField("employee", aBO("Employee").build());
-        aCompositionField.setCollection(true);
-        final FieldToContractInputMapping mapping = FieldToContractInputMappingBuilder
-                .aRelationMapping(aCompositionField)
-                .addChild(aSimpleMapping(aStringField("name").build())).build();
-        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mapping, aBusinessData()
-                .withName("employee").build(), aCompositionField);
-
-        assertThat(propertyInitializer).isInstanceOf(BusinessObjectListInitializer.class);
-    }
-
-    @Test
-    public void should_create_a_MultipleCompositionReferencePropertyInitializer() throws Exception {
-        final PropertyInitializerFactory factory = newFactory();
-
-        final RelationField employeeField = aCompositionField("employee", aBO("Employee").build());
-        final RelationField addressField = aCompositionField("addresses", aBO("Address").build());
-        addressField.setCollection(true);
-        final FieldToContractInputMapping mapping =
-                aRelationMapping(employeeField)
-                        .addChild(aRelationMapping(addressField))
-                        .addChild(aSimpleMapping(aStringField("street").build())).build();
-        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mapping.getChildren().get(0), aBusinessData()
-                .withName("employee").build(), employeeField);
-
-        assertThat(propertyInitializer).isInstanceOf(MultipleCompositionReferencePropertyInitializer.class);
+        verify(relationFactory).newPropertyInitializer(mapping.getChildren().get(0), businessObjectData);
     }
 
     @Test
@@ -129,11 +93,11 @@ public class PropertyInitializerFactoryTest {
 
         thrown.expect(UnsupportedOperationException.class);
         factory.newPropertyInitializer(new FakeMapping(new Field() {
-        }), aBusinessData().build(), null);
+        }), aBusinessData().build());
     }
 
     private PropertyInitializerFactory newFactory() {
-        return new PropertyInitializerFactory();
+        return new PropertyInitializerFactory(relationFactory);
     }
 
     class FakeMapping extends FieldToContractInputMapping {

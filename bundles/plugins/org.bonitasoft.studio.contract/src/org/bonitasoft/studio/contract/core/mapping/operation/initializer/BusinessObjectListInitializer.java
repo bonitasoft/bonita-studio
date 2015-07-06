@@ -24,7 +24,7 @@ import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
 
-public class BusinessObjectListInitializer extends BusinessObjectInitializer implements IPropertyInitializer {
+public class BusinessObjectListInitializer extends NewBusinessObjectInitializer implements IPropertyInitializer {
 
     protected final ContractInput contractInput;
 
@@ -86,7 +86,6 @@ public class BusinessObjectListInitializer extends BusinessObjectInitializer imp
         //Set new business object instance properties
         for (final IPropertyInitializer propertyInitializer : propertyInitializers) {
             initializeProperty(scriptBuilder, propertyInitializer, businessObject);
-            scriptBuilder.append(System.lineSeparator());
         }
 
         returnVar(scriptBuilder, businessObject);

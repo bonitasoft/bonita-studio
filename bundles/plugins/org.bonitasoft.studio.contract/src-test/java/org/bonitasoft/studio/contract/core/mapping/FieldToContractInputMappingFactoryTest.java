@@ -16,7 +16,6 @@ package org.bonitasoft.studio.contract.core.mapping;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.aBO;
-import static org.mockito.Mockito.doReturn;
 
 import java.util.List;
 
@@ -40,43 +39,39 @@ public class FieldToContractInputMappingFactoryTest {
 
     @Test
     public void should_create_fieldMappingToContractInputMapping_from_simple_business_object() {
-        doReturn(aBO("Employee")
+        final BusinessObject businessObject = aBO("Employee")
                 .withField(SimpleFieldBuilder.aStringField("firstName").build())
-                .withField(SimpleFieldBuilder.aBooleanField("isValid")).build()).when(businessObjectStore)
-                .getBusinessObjectByQualifiedName("Employee");
-        final FieldToContractInputMappingFactory factory = new FieldToContractInputMappingFactory(businessObjectStore);
+                .withField(SimpleFieldBuilder.aBooleanField("isValid")).build();
+        final FieldToContractInputMappingFactory factory = new FieldToContractInputMappingFactory();
 
-        final List<FieldToContractInputMapping> mappings = factory.createMappingForBusinessObjectType("Employee");
+        final List<FieldToContractInputMapping> mappings = factory.createMappingForBusinessObjectType(businessObject);
 
         assertThat(mappings).extracting("field.name").containsOnly("firstName", "isValid");
     }
 
     @Test
     public void should_create_fieldMappingToContractInputMapping_from_complex_business_object_with_aggregation_field() {
-        doReturn(aBO("Employee")
-                .withField(RelationFieldBuilder.anAggregationField("manager", aBO("Manager").build())).build()).when(businessObjectStore)
-                .getBusinessObjectByQualifiedName("Employee");
+        final BusinessObject businessObject = aBO("Employee")
+                .withField(RelationFieldBuilder.anAggregationField("manager", aBO("Manager").build())).build();
 
-        final FieldToContractInputMappingFactory factory = new FieldToContractInputMappingFactory(businessObjectStore);
+        final FieldToContractInputMappingFactory factory = new FieldToContractInputMappingFactory();
 
-        final List<FieldToContractInputMapping> mappings = factory.createMappingForBusinessObjectType("Employee");
+        final List<FieldToContractInputMapping> mappings = factory.createMappingForBusinessObjectType(businessObject);
         assertThat(mappings).extracting("field.name").containsOnly("manager");
     }
 
     @Test
     public void should_create_fieldMappingToContractInputMapping_from_complex_business_object_with_composition_field() {
-        doReturn(
-                aBO("Employee")
-                        .withField(
-                                RelationFieldBuilder.aCompositionField(
-                                        "manager",
-                                        aBO("Manager").withField(SimpleFieldBuilder.aStringField("firstName").build())
-                                                .withField(SimpleFieldBuilder.aBooleanField("isValid")).build())).build()).when(businessObjectStore)
-                .getBusinessObjectByQualifiedName("Employee");
+        final BusinessObject businessObject = aBO("Employee")
+                .withField(
+                        RelationFieldBuilder.aCompositionField(
+                                "manager",
+                                aBO("Manager").withField(SimpleFieldBuilder.aStringField("firstName").build())
+                                        .withField(SimpleFieldBuilder.aBooleanField("isValid")).build())).build();
 
-        final FieldToContractInputMappingFactory factory = new FieldToContractInputMappingFactory(businessObjectStore);
+        final FieldToContractInputMappingFactory factory = new FieldToContractInputMappingFactory();
 
-        final List<FieldToContractInputMapping> mappings = factory.createMappingForBusinessObjectType("Employee");
+        final List<FieldToContractInputMapping> mappings = factory.createMappingForBusinessObjectType(businessObject);
         assertThat(mappings).extracting("field.name").containsOnly("manager");
         assertThat(mappings.get(0).getChildren()).extracting("field.name").containsOnly("firstName", "isValid");
         mappings.get(0).getChildren().get(0).setGenerated(false);
@@ -85,15 +80,28 @@ public class FieldToContractInputMappingFactoryTest {
 
     @Test
     public void should_create_fieldMappingToContractInputMappingTree_withADepth_of_five_when_business_model_is_recursive() {
-        final BusinessObject bo = aBO("Employee").build();
-        bo.addField(RelationFieldBuilder.aCompositionField("employee", bo));
-        doReturn(bo).when(businessObjectStore)
-                .getBusinessObjectByQualifiedName("Employee");
-        final FieldToContractInputMappingFactory factory = new FieldToContractInputMappingFactory(businessObjectStore);
-        final List<FieldToContractInputMapping> mappings = factory.createMappingForBusinessObjectType("Employee");
+        final BusinessObject businessObject = aBO("Employee").build();
+        businessObject.addField(RelationFieldBuilder.aCompositionField("employee", businessObject));
+
+        final FieldToContractInputMappingFactory factory = new FieldToContractInputMappingFactory();
+
+        final List<FieldToContractInputMapping> mappings = factory.createMappingForBusinessObjectType(businessObject);
         assertThat(
                 mappings.get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren()
                         .isEmpty()).isTrue();
+    }
+
+    @Test
+    public void should_create_a_persistenceId_mapping_for_aggregated_field() {
+        final BusinessObject businessObject = aBO("Employee").build();
+        businessObject.addField(RelationFieldBuilder.anAggregationField("employee", businessObject));
+        final FieldToContractInputMappingFactory factory = new FieldToContractInputMappingFactory();
+
+        final List<FieldToContractInputMapping> mappings = factory.createMappingForBusinessObjectType(businessObject);
+
+        assertThat(mappings).hasSize(1);
+        assertThat(mappings.get(0)).isInstanceOf(RelationFieldToContractInputMapping.class);
+        assertThat(((RelationFieldToContractInputMapping) mappings.get(0)).getChildren()).extracting("field.name").contains("persistenceId");
     }
 
 }

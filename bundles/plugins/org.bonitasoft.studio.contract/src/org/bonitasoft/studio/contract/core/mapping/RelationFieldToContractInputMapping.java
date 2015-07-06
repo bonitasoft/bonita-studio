@@ -14,21 +14,12 @@
  */
 package org.bonitasoft.studio.contract.core.mapping;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.instanceOf;
-
 import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 
-import com.google.common.base.Predicate;
-
-/**
- * @author aurelie
- */
 public class RelationFieldToContractInputMapping extends FieldToContractInputMapping {
 
     private final RelationField relationField;
@@ -45,41 +36,17 @@ public class RelationFieldToContractInputMapping extends FieldToContractInputMap
     @Override
     public ContractInput toContractInput(final ContractInput parentInput) {
         final ContractInput input = super.toContractInput(parentInput);
-        if (shouldAddChildInput()) {
-            for (final FieldToContractInputMapping child : getChildren()) {
-                if (child.isGenerated()) {
-                    child.toContractInput(input);
-                }
+        for (final FieldToContractInputMapping child : getChildren()) {
+            if (child.isGenerated()) {
+                child.toContractInput(input);
             }
         }
         return input;
     }
 
-    private boolean shouldAddChildInput() {
-        return and(instanceOf(RelationField.class), withType(Type.COMPOSITION)).apply(relationField);
-    }
-
-    private Predicate<RelationField> withType(final Type relationType) {
-        return new Predicate<RelationField>() {
-
-            @Override
-            public boolean apply(final RelationField input) {
-                return input.getType() == relationType;
-            }
-        };
-    }
-
     @Override
     protected ContractInputType toContractInputType() {
-        final Type relationType = relationField.getType();
-        switch (relationType) {
-            case COMPOSITION:
-                return ContractInputType.COMPLEX;
-            case AGGREGATION:
-                return ContractInputType.TEXT;
-            default:
-                throw new IllegalStateException(String.format("Failed to convert field type %s to contract input type", relationType));
-        }
+        return ContractInputType.COMPLEX;
     }
 
     /*

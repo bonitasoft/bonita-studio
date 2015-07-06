@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.groovy.ui.job;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -50,7 +51,7 @@ public class ComputeScriptDependenciesJob extends Job {
 
     private final Map<String, List<EObject>> cache;
 
-    private List<ScriptVariable> nodes;
+    private List<ScriptVariable> nodes = new ArrayList<ScriptVariable>();
 
     private EObject context;
 
@@ -67,12 +68,19 @@ public class ComputeScriptDependenciesJob extends Job {
         if (groovyCompilationUnit == null || !groovyCompilationUnit.exists()) {
             return Status.CANCEL_STATUS;
         }
-        String expression = "";
         try {
-            expression = groovyCompilationUnit.getSource();
+            findDependencies();
         } catch (final JavaModelException e) {
             return new Status(Status.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
         }
+        return Status.OK_STATUS;
+    }
+
+    public List<EObject> findDependencies() throws JavaModelException {
+        if (groovyCompilationUnit == null) {
+            return Collections.<EObject> emptyList();
+        }
+        final String expression = groovyCompilationUnit.getSource();
         if (cache.get(expression) == null) {
             final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
             final ContentAssistContext assistContext = finder.findContentAssistContext(groovyCompilationUnit);
@@ -98,9 +106,8 @@ public class ComputeScriptDependenciesJob extends Job {
                 addDependenciesForFoundVariables(referencedVariable, deps);
                 cache.put(expression, deps);
             }
-
         }
-        return Status.OK_STATUS;
+        return cache.containsKey(expression) ? cache.get(expression) : Collections.<EObject> emptyList();
     }
 
     protected void addDependenciesForFoundVariables(
@@ -148,7 +155,7 @@ public class ComputeScriptDependenciesJob extends Job {
     }
 
     public List<EObject> getDependencies(final String expression) {
-        return cache.get(expression);
+        return cache.containsKey(expression) ? cache.get(expression) : Collections.<EObject> emptyList();
     }
 
     public List<ScriptVariable> getNodes() {

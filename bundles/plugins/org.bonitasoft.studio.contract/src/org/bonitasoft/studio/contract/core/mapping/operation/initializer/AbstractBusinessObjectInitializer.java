@@ -32,13 +32,13 @@ import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInsta
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
-public class BusinessObjectInitializer implements IPropertyInitializer {
+public abstract class AbstractBusinessObjectInitializer implements IPropertyInitializer {
 
     protected final RelationField field;
     protected final List<IPropertyInitializer> propertyInitializers = new ArrayList<IPropertyInitializer>();
     protected final String refName;
 
-    public BusinessObjectInitializer(final RelationField field, final String refName) {
+    public AbstractBusinessObjectInitializer(final RelationField field, final String refName) {
         this.field = field;
         this.refName = refName;
     }
@@ -66,16 +66,13 @@ public class BusinessObjectInitializer implements IPropertyInitializer {
 
         for (final IPropertyInitializer propertyInitializer : propertyInitializers) {
             initializeProperty(scriptBuilder, propertyInitializer, businessObject);
-            scriptBuilder.append(System.lineSeparator());
         }
 
         returnVar(scriptBuilder, businessObject);
         return scriptBuilder.toString();
     }
 
-    protected boolean checkExistence() {
-        return true;
-    }
+    protected abstract boolean checkExistence();
 
     protected void checkNotNullableFields(final BusinessObject businessObject) throws BusinessObjectInstantiationException {
         final Set<String> uninitializedNonNullableFields = notNullableFieldNotInitialized(propertyInitializers, businessObject);
@@ -91,6 +88,7 @@ public class BusinessObjectInitializer implements IPropertyInitializer {
         scriptBuilder.append(propertyInitializer.getPropertyName());
         scriptBuilder.append(" = ");
         scriptBuilder.append(propertyInitializer.getInitialValue());
+        scriptBuilder.append(System.lineSeparator());
     }
 
     private Set<String> notNullableFieldNotInitialized(final List<IPropertyInitializer> propertyInitializers, final BusinessObject bo) {
@@ -150,23 +148,6 @@ public class BusinessObjectInitializer implements IPropertyInitializer {
         return Character.toLowerCase(value.charAt(0)) + value.substring(1, value.length());
     }
 
-    protected void constructor(final StringBuilder scriptBuilder, final BusinessObject bo, final boolean checkEsistence) {
-        if (checkEsistence) {
-            scriptBuilder.append(refName);
-            scriptBuilder.append(" == null ? ");
-            newBusinessObject(scriptBuilder, bo);
-            scriptBuilder.append(" : ");
-            scriptBuilder.append(refName);
-        } else {
-            newBusinessObject(scriptBuilder, bo);
-        }
-    }
-
-    private void newBusinessObject(final StringBuilder scriptBuilder, final BusinessObject bo) {
-        scriptBuilder.append("new");
-        scriptBuilder.append(" ");
-        scriptBuilder.append(bo.getQualifiedName());
-        scriptBuilder.append("()");
-    }
+    protected abstract void constructor(final StringBuilder scriptBuilder, final BusinessObject bo, final boolean checkEsistence);
 
 }

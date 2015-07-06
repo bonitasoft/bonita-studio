@@ -35,7 +35,9 @@ import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
+import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.filter.ExpressionReturnTypeFilter;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
@@ -59,6 +61,10 @@ public class FieldToContractInputMappingOperationBuilderTest {
     public ExpectedException thrown = ExpectedException.none();
     @Mock
     private ExpressionReturnTypeFilter expressionReturnTypeFilter;
+    @Mock
+    private RepositoryAccessor repositoryAccessor;
+    @Mock
+    private ExpressionEditorService expressionEditorService;
 
     @Before
     public void setUp() throws Exception {
@@ -193,7 +199,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
     }
 
     private FieldToContractInputMappingOperationBuilder createFixture() {
-        return new FieldToContractInputMappingOperationBuilder(expressionReturnTypeFilter);
+        return new FieldToContractInputMappingOperationBuilder(expressionReturnTypeFilter, repositoryAccessor, expressionEditorService);
     }
 
 }
