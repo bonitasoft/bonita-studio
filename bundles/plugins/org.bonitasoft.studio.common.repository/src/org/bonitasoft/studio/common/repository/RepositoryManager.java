@@ -45,17 +45,19 @@ public class RepositoryManager {
     private static RepositoryManager INSTANCE;
 
     private Repository repository;
-    private final IPreferenceStore preferenceStore;
-    private final IConfigurationElement repositoryImplementationElement;
+    private IPreferenceStore preferenceStore;
+    private IConfigurationElement repositoryImplementationElement;
 
     private RepositoryManager() {
         final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
                 REPOSITORY_FACTORY_IMPLEMENTATION_ID);
         final List<IConfigurationElement> sortedElems = sortByPriority(elements);
-        repositoryImplementationElement = sortedElems.get(0); //Higher element
-        preferenceStore = CommonRepositoryPlugin.getDefault().getPreferenceStore();
-        final String currentRepository = preferenceStore.getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
-        repository = createRepository(currentRepository, false);
+        if (!sortedElems.isEmpty()) {
+            repositoryImplementationElement = sortedElems.get(0); //Higher element
+            preferenceStore = CommonRepositoryPlugin.getDefault().getPreferenceStore();
+            final String currentRepository = preferenceStore.getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
+            repository = createRepository(currentRepository, false);
+        }
     }
 
     private List<IConfigurationElement> sortByPriority(final IConfigurationElement[] elements) {

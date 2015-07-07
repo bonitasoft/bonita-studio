@@ -19,10 +19,9 @@ import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
-import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 
 /**
  * @author aurelie
@@ -31,18 +30,8 @@ public class FieldToContractInputMappingFactory {
 
     private static final int MAX_DEPTH = 5;
 
-    private final BusinessObjectModelRepositoryStore businessObjectStore;
-
-    public FieldToContractInputMappingFactory(final BusinessObjectModelRepositoryStore businessObjectStore) {
-        this.businessObjectStore = businessObjectStore;
-    }
-
-    public List<FieldToContractInputMapping> createMappingForBusinessObjectType(final String className) {
+    public List<FieldToContractInputMapping> createMappingForBusinessObjectType(final BusinessObject businessObject) {
         final List<FieldToContractInputMapping> mappings = new ArrayList<FieldToContractInputMapping>();
-        final BusinessObject businessObject = businessObjectStore.getBusinessObjectByQualifiedName(className);
-        if (businessObject == null) {
-            throw new IllegalArgumentException("Cannot find a BusinessObject with qualified name: " + className);
-        }
         for (final Field field : businessObject.getFields()) {
             mappings.add(createFieldToContractInputMapping(field, MAX_DEPTH));
         }
@@ -60,14 +49,24 @@ public class FieldToContractInputMappingFactory {
 
     private FieldToContractInputMapping createRelationFieldToContractInputMapping(final RelationField field, int depth) {
         final RelationFieldToContractInputMapping relationFieldMapping = new RelationFieldToContractInputMapping(field);
-        if (Type.COMPOSITION.equals(((RelationField) relationFieldMapping.getField()).getType()) && depth > 0) {
+        if (depth > 0) {
             depth--;
+            if (RelationField.Type.AGGREGATION.equals(((RelationField) relationFieldMapping.getField()).getType())) {
+                addPersistenceIdMapping(relationFieldMapping);
+            }
             for (final Field child : field.getReference().getFields()) {
                 relationFieldMapping.addChild(createFieldToContractInputMapping(child, depth));
             }
 
         }
         return relationFieldMapping;
+    }
+
+    private void addPersistenceIdMapping(final RelationFieldToContractInputMapping relationFieldMapping) {
+        final SimpleField persistenceId = new SimpleField();
+        persistenceId.setName(Field.PERSISTENCE_ID);
+        persistenceId.setType(FieldType.LONG);
+        relationFieldMapping.addChild(new SimpleFieldToContractInputMapping(persistenceId));
     }
 
 }

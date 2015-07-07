@@ -69,4 +69,21 @@ public class ContractInputPredicates {
             }
         };
     }
+
+    public static Predicate<ContractInput> withComplexMultipleInHierarchy() {
+        return new Predicate<ContractInput>() {
+
+            @Override
+            public boolean apply(final ContractInput input) {
+                ContractInput current = input;
+                while (current.eContainer() instanceof ContractInput) {
+                    if (current.isMultiple() && current.getType() == ContractInputType.COMPLEX) {
+                        return true;
+                    }
+                    current = (ContractInput) current.eContainer();
+                }
+                return current.isMultiple();
+            }
+        };
+    }
 }
