@@ -90,19 +90,23 @@ public class TabbedPropertySynchronizerListener implements ISelectionChangedList
                     return;
                 }
                 if (part != null) {
-                    final TabbedPropertySheetPage page = (TabbedPropertySheetPage) part.getAdapter(TabbedPropertySheetPage.class);
-                    if (page != null) {
-                        page.setSelectedTab(selectionProvider.tabId(element));
-                        if (selectionProvider instanceof ITabbedSectionPropertyProvider) {
-                            final PropertySectionWithTabs sectionWithTabs = findSectionWithTabs(page);
-                            if (sectionWithTabs != null) {
-                                sectionWithTabs.setSelectedTab(((ITabbedSectionPropertyProvider) selectionProvider).tabIndex());
-                            }
-                        }
-                    }
+                    updateSelectedTabInPage(element, selectionProvider, part);
                 }
             } catch (final EditPartNotFoundException e) {
                 BonitaStudioLog.debug("No edit part found for semantic element: " + element, Activator.PLUGIN_ID);
+            }
+        }
+    }
+
+    private void updateSelectedTabInPage(final EObject element, final ITabbedPropertySelectionProvider selectionProvider, final IViewPart part) {
+        final TabbedPropertySheetPage page = (TabbedPropertySheetPage) part.getAdapter(TabbedPropertySheetPage.class);
+        if (page != null) {
+            page.setSelectedTab(selectionProvider.tabId(element));
+            if (selectionProvider instanceof ITabbedSectionPropertyProvider) {
+                final PropertySectionWithTabs sectionWithTabs = findSectionWithTabs(page);
+                if (sectionWithTabs != null) {
+                    sectionWithTabs.setSelectedTab(((ITabbedSectionPropertyProvider) selectionProvider).tabIndex());
+                }
             }
         }
     }
