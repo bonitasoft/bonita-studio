@@ -24,7 +24,6 @@ import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.model.process.ContractInputType;
-import org.eclipse.swt.SWT;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -35,24 +34,22 @@ public class CompositionReferencePropertyInitializerTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void should_initialize_object_poperty_in_a_indented_closure() throws Exception {
+    public void should_initialize_object_poperty_in_a_closure() throws Exception {
         final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.TEXT).notNullable().build();
         final CompositionReferencePropertyInitializer propertyInitializer = new CompositionReferencePropertyInitializer(aCompositionField("address",
-                aBO("org.test.Address").withField(streetField).build()), "employee.address");
-        propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(streetField,
-                aContractInput().withName("street")
+                aBO("org.test.Address").withField(streetField).build()), aContractInput().build(), "employee.address");
+        propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(null,
+                streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX)
                                 .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX))).build()));
         assertThat(propertyInitializer.getInitialValue()).isEqualTo(
                 "{"
                         + System.lineSeparator()
-                        + SWT.TAB + "def addressVar = employee.address == null ? new org.test.Address() : employee.address"
+                        + "def addressVar = employee.address == null ? new org.test.Address() : employee.address"
                         + System.lineSeparator()
-                        + SWT.TAB + "addressVar.street = employee.address.street"
+                        + "addressVar.street = employee.address.street"
                         + System.lineSeparator()
-                        + SWT.TAB + "return addressVar"
-                        + System.lineSeparator()
-                        + "}()"
+                        + "return addressVar}()"
                 );
     }
 
@@ -60,6 +57,7 @@ public class CompositionReferencePropertyInitializerTest {
     public void should_throw_an_BusinessObjectInstantiationException_when_creating_an_inconsistent_business_object() throws Exception {
         final CompositionReferencePropertyInitializer propertyInitializer = new CompositionReferencePropertyInitializer(
                 aCompositionField("address", aBO("org.test.Address").withField(aSimpleField().withName("street").notNullable().build()).build()),
+                aContractInput().build(),
                 "employee.address");
 
         thrown.expect(BusinessObjectInstantiationException.class);

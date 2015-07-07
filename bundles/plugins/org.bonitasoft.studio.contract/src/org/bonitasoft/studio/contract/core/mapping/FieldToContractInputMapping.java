@@ -20,12 +20,8 @@ import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.MappingOperationScriptBuilder;
-import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.contract.core.mapping.operation.PropertySetter;
-import org.bonitasoft.studio.expression.editor.filter.ExpressionReturnTypeFilter;
-import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -40,9 +36,6 @@ public abstract class FieldToContractInputMapping {
     private FieldToContractInputMapping parent;
 
     private boolean generated = true;
-
-    private final FieldToContractInputMappingOperationBuilder operationBuilder = new FieldToContractInputMappingOperationBuilder(
-            new ExpressionReturnTypeFilter());
 
     private ContractInput contractInput;
 
@@ -94,10 +87,6 @@ public abstract class FieldToContractInputMapping {
             contractInput = toContractInput(null);
         }
         return contractInput;
-    }
-
-    public Operation toOperation(final BusinessObjectData data, final ContractInput input) throws OperationCreationException {
-        return operationBuilder.toOperation(data, this);
     }
 
     public MappingOperationScriptBuilder getScriptBuilder(final BusinessObjectData data) throws BusinessObjectInstantiationException {

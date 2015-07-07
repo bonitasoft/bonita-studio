@@ -14,9 +14,12 @@
  */
 package org.bonitasoft.studio.common.predicate;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Element;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -61,6 +64,9 @@ public class ExpressionPredicates {
     private static boolean isElementIsReferencedInScript(final Expression expr, final EObject element) {
         if (!expr.getReferencedElements().isEmpty()) {
             for (final EObject o : expr.getReferencedElements()) {
+                if (element instanceof ContractInput && o instanceof ContractInput) {
+                    return java.util.Objects.equals(((ContractInput) o).getName(), ((ContractInput) element).getName());
+                }
                 if (EcoreUtil.equals(element, o)) {
                     return true;
                 }
@@ -74,5 +80,15 @@ public class ExpressionPredicates {
             }
         }
         return false;
+    }
+
+    public static Predicate<Expression> withName(final String name) {
+        return new Predicate<Expression>() {
+
+            @Override
+            public boolean apply(final Expression input) {
+                return Objects.equals(name, input.getName());
+            }
+        };
     }
 }

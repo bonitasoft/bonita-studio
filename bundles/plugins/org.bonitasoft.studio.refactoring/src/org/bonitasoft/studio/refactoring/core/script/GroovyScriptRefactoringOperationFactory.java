@@ -16,6 +16,9 @@ package org.bonitasoft.studio.refactoring.core.script;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.groovy.GroovyCompilationUnitFactory;
+
 public class GroovyScriptRefactoringOperationFactory implements IScriptRefactoringOperationFactory {
 
     /*
@@ -24,7 +27,13 @@ public class GroovyScriptRefactoringOperationFactory implements IScriptRefactori
      */
     @Override
     public IScriptRefactoringOperation createScriptOperationFactory(final String script, final List<ReferenceDiff> referenceDiffs) {
-        return new GroovyScriptRefactoringOperation(script, referenceDiffs);
+        return new GroovyScriptRefactoringOperation(script, referenceDiffs, new GroovyCompilationUnitFactory(repositoryAccessor()));
+    }
+
+    private RepositoryAccessor repositoryAccessor() {
+        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        return repositoryAccessor;
     }
 
 }

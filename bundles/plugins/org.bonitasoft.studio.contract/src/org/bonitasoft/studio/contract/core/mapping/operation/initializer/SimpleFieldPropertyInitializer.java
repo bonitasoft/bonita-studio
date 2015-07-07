@@ -14,9 +14,13 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
-import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameList;
+import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameListUntilMultipleComplex;
+import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withComplexMultipleInHierarchy;
 
+import org.bonitasoft.engine.bdm.BDMQueryUtil;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.common.functions.ContractInputFunctions;
 import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
@@ -25,10 +29,16 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
 
     private final SimpleField field;
     private final ContractInput contractInput;
+    private final BusinessObject parentBusinessObject;
 
-    public SimpleFieldPropertyInitializer(final SimpleField field, final ContractInput contractInput) {
+    public SimpleFieldPropertyInitializer(final BusinessObject parentBusinessObject, final SimpleField field, final ContractInput contractInput) {
+        this.parentBusinessObject = parentBusinessObject;
         this.field = field;
         this.contractInput = contractInput;
+    }
+
+    public BusinessObject getParentBusinessObject() {
+        return parentBusinessObject;
     }
 
     @Override
@@ -38,7 +48,14 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
 
     @Override
     public String getInitialValue() {
-        final StringBuilder scriptBuilder = new StringBuilder(Joiner.on(".").join(toAncestorNameList().apply(contractInput)));
+        final StringBuilder scriptBuilder = withComplexMultipleInHierarchy().apply(contractInput) ?
+                new StringBuilder(prefixIterator(Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput)))) :
+                new StringBuilder(Joiner.on(".").join(ContractInputFunctions.toAncestorNameList().apply(contractInput)));
+        castInputValue(scriptBuilder);
+        return scriptBuilder.toString();
+    }
+
+    private void castInputValue(final StringBuilder scriptBuilder) {
         switch (field.getType()) {
             case FLOAT:
                 scriptBuilder.append(contractInput.isMultiple() ? ".collect{ it.toFloat() }" : ".toFloat()");
@@ -49,6 +66,13 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
             default:
                 break;
         }
-        return scriptBuilder.toString();
+    }
+
+    private String prefixIterator(final String content) {
+        return iteratorName() + "." + content;
+    }
+
+    private String iteratorName() {
+        return "current" + BDMQueryUtil.getSimpleBusinessObjectName(parentBusinessObject.getQualifiedName()) + "Input";
     }
 }

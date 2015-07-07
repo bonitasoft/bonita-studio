@@ -28,14 +28,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class BusinessObjectInitializerTest {
+public class NewBusinessObjectInitializerTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void should_create_groovy_script_as_initial_value() throws Exception {
-        final BusinessObjectInitializer propertyInitializer = new BusinessObjectInitializer(aCompositionField(
+        final NewBusinessObjectInitializer propertyInitializer = new NewBusinessObjectInitializer(aCompositionField(
                 "address", aBO("org.test.Address").build()), "myAddress");
 
         assertThat(propertyInitializer.getInitialValue()).isEqualTo(
@@ -43,12 +43,12 @@ public class BusinessObjectInitializerTest {
     }
 
     @Test
-    public void should_initialize_new_object_poperty() throws Exception {
+    public void should_initialize_new_object_property_for_simple_composed_reference() throws Exception {
         final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.STRING).notNullable().build();
-        final BusinessObjectInitializer propertyInitializer = new BusinessObjectInitializer(aCompositionField("address",
+        final NewBusinessObjectInitializer propertyInitializer = new NewBusinessObjectInitializer(aCompositionField("address",
                 aBO("org.test.Address").withField(streetField).build()), "myAddress");
-        propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(streetField,
-                aContractInput().withName("street")
+        propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(null,
+                streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX)
                                 .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX))).build()));
         assertThat(propertyInitializer.getInitialValue()).isEqualTo("def addressVar = myAddress == null ? new org.test.Address() : myAddress"
@@ -60,7 +60,7 @@ public class BusinessObjectInitializerTest {
 
     @Test
     public void should_throw_an_BusinessObjectInstantiationException_when_creating_an_inconsistent_business_object() throws Exception {
-        final BusinessObjectInitializer propertyInitializer = new BusinessObjectInitializer(
+        final NewBusinessObjectInitializer propertyInitializer = new NewBusinessObjectInitializer(
                 aCompositionField("address", aBO("org.test.Address").withField(aSimpleField().withName("street").notNullable().build()).build()), "myAddress");
 
         thrown.expect(BusinessObjectInstantiationException.class);

@@ -32,13 +32,13 @@ import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInsta
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
-public class BusinessObjectInitializer implements IPropertyInitializer {
+public abstract class AbstractBusinessObjectInitializer implements IPropertyInitializer {
 
-    private final RelationField field;
-    private final List<IPropertyInitializer> propertyInitializers = new ArrayList<IPropertyInitializer>();
-    private final String refName;
+    protected final RelationField field;
+    protected final List<IPropertyInitializer> propertyInitializers = new ArrayList<IPropertyInitializer>();
+    protected final String refName;
 
-    public BusinessObjectInitializer(final RelationField field, final String refName) {
+    public AbstractBusinessObjectInitializer(final RelationField field, final String refName) {
         this.field = field;
         this.refName = refName;
     }
@@ -55,34 +55,40 @@ public class BusinessObjectInitializer implements IPropertyInitializer {
     @Override
     public String getInitialValue() throws BusinessObjectInstantiationException {
         final BusinessObject businessObject = field.getReference();
-        final Set<String> uninitializedNonNullableFields = notNullableFieldNotInitialized(propertyInitializers, businessObject);
-        if (!uninitializedNonNullableFields.isEmpty()) {
-            throw new BusinessObjectInstantiationException(toArray(uninitializedNonNullableFields, String.class));
-        }
+        checkNotNullableFields(businessObject);
 
         final StringBuilder scriptBuilder = new StringBuilder();
         delcareVariable(scriptBuilder, varName(businessObject));
         scriptBuilder.append(" = ");
-        constructor(scriptBuilder, businessObject);
+        constructor(scriptBuilder, businessObject, checkExistence());
 
         scriptBuilder.append(System.lineSeparator());
 
         for (final IPropertyInitializer propertyInitializer : propertyInitializers) {
             initializeProperty(scriptBuilder, propertyInitializer, businessObject);
-            scriptBuilder.append(System.lineSeparator());
         }
 
         returnVar(scriptBuilder, businessObject);
         return scriptBuilder.toString();
     }
 
-    private void initializeProperty(final StringBuilder scriptBuilder, final IPropertyInitializer propertyInitializer, final BusinessObject businessObject)
+    protected abstract boolean checkExistence();
+
+    protected void checkNotNullableFields(final BusinessObject businessObject) throws BusinessObjectInstantiationException {
+        final Set<String> uninitializedNonNullableFields = notNullableFieldNotInitialized(propertyInitializers, businessObject);
+        if (!uninitializedNonNullableFields.isEmpty()) {
+            throw new BusinessObjectInstantiationException(toArray(uninitializedNonNullableFields, String.class));
+        }
+    }
+
+    protected void initializeProperty(final StringBuilder scriptBuilder, final IPropertyInitializer propertyInitializer, final BusinessObject businessObject)
             throws BusinessObjectInstantiationException {
         scriptBuilder.append(varName(businessObject));
         scriptBuilder.append(".");
         scriptBuilder.append(propertyInitializer.getPropertyName());
         scriptBuilder.append(" = ");
         scriptBuilder.append(propertyInitializer.getInitialValue());
+        scriptBuilder.append(System.lineSeparator());
     }
 
     private Set<String> notNullableFieldNotInitialized(final List<IPropertyInitializer> propertyInitializers, final BusinessObject bo) {
@@ -122,35 +128,26 @@ public class BusinessObjectInitializer implements IPropertyInitializer {
         };
     }
 
-    private void returnVar(final StringBuilder scriptBuilder, final BusinessObject bo) {
+    protected void returnVar(final StringBuilder scriptBuilder, final BusinessObject bo) {
         scriptBuilder.append("return");
         scriptBuilder.append(" ");
         scriptBuilder.append(varName(bo));
     }
 
-    private void delcareVariable(final StringBuilder scriptBuilder, final String varName) {
+    protected void delcareVariable(final StringBuilder scriptBuilder, final String varName) {
         scriptBuilder.append("def");
         scriptBuilder.append(" ");
         scriptBuilder.append(varName);
     }
 
-    private String varName(final BusinessObject bo) {
+    protected String varName(final BusinessObject bo) {
         return uncapitalizeFirst(BDMQueryUtil.getSimpleBusinessObjectName(bo.getQualifiedName())) + "Var";
     }
 
-    private String uncapitalizeFirst(final String value) {
+    protected String uncapitalizeFirst(final String value) {
         return Character.toLowerCase(value.charAt(0)) + value.substring(1, value.length());
     }
 
-    private void constructor(final StringBuilder scriptBuilder, final BusinessObject bo) {
-        scriptBuilder.append(refName);
-        scriptBuilder.append(" == null ? ");
-        scriptBuilder.append("new");
-        scriptBuilder.append(" ");
-        scriptBuilder.append(bo.getQualifiedName());
-        scriptBuilder.append("()");
-        scriptBuilder.append(" : ");
-        scriptBuilder.append(refName);
-    }
+    protected abstract void constructor(final StringBuilder scriptBuilder, final BusinessObject bo, final boolean checkEsistence);
 
 }

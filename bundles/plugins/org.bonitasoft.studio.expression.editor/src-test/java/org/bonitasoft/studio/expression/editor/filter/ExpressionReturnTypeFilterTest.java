@@ -16,17 +16,16 @@ package org.bonitasoft.studio.expression.editor.filter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
-import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
@@ -46,18 +45,21 @@ public class ExpressionReturnTypeFilterTest {
     private IJavaProject javaProject;
 
     @Mock
-    private IJavaContainer javaContainer;
+    private Repository javaContainer;
 
     @Mock
     private JDTTypeHierarchyManager typeHierarchyManager;
 
+    @Mock
+    private RepositoryAccessor repositoryAccessor;
+
     @Before
     public void setUp() throws Exception {
-        filter = spy(new ExpressionReturnTypeFilter());
-        doReturn(javaContainer).when(filter).javaContainer();
+        filter = new ExpressionReturnTypeFilter(repositoryAccessor);
         when(javaContainer.getJavaProject()).thenReturn(javaProject);
         when(javaContainer.getJdtTypeHierarchyManager()).thenReturn(typeHierarchyManager);
         when(javaProject.findType(anyString())).thenReturn(null);
+        when(repositoryAccessor.getCurrentRepository()).thenReturn(javaContainer);
     }
 
     @Test
