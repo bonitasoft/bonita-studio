@@ -1392,4 +1392,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             filteredEditor.add(type);
         }
     }
+
+    public EObject getContext() {
+        return context;
+    }
 }
