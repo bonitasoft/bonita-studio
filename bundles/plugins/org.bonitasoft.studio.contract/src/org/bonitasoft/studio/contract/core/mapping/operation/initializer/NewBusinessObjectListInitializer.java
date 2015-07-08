@@ -24,11 +24,11 @@ import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
 
-public class BusinessObjectListInitializer extends NewBusinessObjectInitializer implements IPropertyInitializer {
+public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInitializer implements IPropertyInitializer {
 
-    protected final ContractInput contractInput;
+    protected ContractInput contractInput;
 
-    public BusinessObjectListInitializer(final RelationField field, final ContractInput contractInput, final String refName) {
+    public NewBusinessObjectListInitializer(final RelationField field, final ContractInput contractInput, final String refName) {
         super(field, refName);
         this.contractInput = contractInput;
     }
@@ -41,8 +41,7 @@ public class BusinessObjectListInitializer extends NewBusinessObjectInitializer 
         final StringBuilder scriptBuilder = new StringBuilder();
         delcareVariable(scriptBuilder, listVarName(businessObject));
         scriptBuilder.append(" = ");
-        scriptBuilder.append("[]");
-        scriptBuilder.append(System.lineSeparator());
+        listConstructor(scriptBuilder, businessObject);
 
         if (shouldAppendExistingObjects()) {
             appendExistingBusinessObjects(scriptBuilder, businessObject);
@@ -51,6 +50,11 @@ public class BusinessObjectListInitializer extends NewBusinessObjectInitializer 
         forEach(scriptBuilder, businessObject);
         returnListVar(scriptBuilder, businessObject);
         return scriptBuilder.toString();
+    }
+
+    private void listConstructor(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
+        scriptBuilder.append("[]");
+        scriptBuilder.append(System.lineSeparator());
     }
 
     protected boolean shouldAppendExistingObjects() {
@@ -78,9 +82,8 @@ public class BusinessObjectListInitializer extends NewBusinessObjectInitializer 
 
         //Instantiate the new business object
         delcareVariable(scriptBuilder, varName(businessObject));
-        scriptBuilder.append(" = new ");
-        scriptBuilder.append(businessObject.getQualifiedName());
-        scriptBuilder.append("()");
+        scriptBuilder.append(" = ");
+        constructor(scriptBuilder, businessObject, false);
         scriptBuilder.append(System.lineSeparator());
 
         //Set new business object instance properties
@@ -115,6 +118,18 @@ public class BusinessObjectListInitializer extends NewBusinessObjectInitializer 
 
     private String listVarName(final BusinessObject bo) {
         return uncapitalizeFirst(BDMQueryUtil.getSimpleBusinessObjectName(bo.getQualifiedName())) + "List";
+    }
+
+    @Override
+    protected boolean checkExistence() {
+        return false;
+    }
+
+    @Override
+    protected void constructor(final StringBuilder scriptBuilder, final BusinessObject businessObject, final boolean checkEsistence) {
+        scriptBuilder.append("new ");
+        scriptBuilder.append(businessObject.getQualifiedName());
+        scriptBuilder.append("()");
     }
 
 }

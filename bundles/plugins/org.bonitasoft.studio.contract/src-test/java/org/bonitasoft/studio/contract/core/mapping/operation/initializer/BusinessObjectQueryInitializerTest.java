@@ -21,15 +21,20 @@ import static org.bonitasoft.studio.model.businessObject.FieldBuilder.anAggregat
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
 import org.bonitasoft.studio.model.process.ContractInputType;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class BusinessObjectQueryInitializerTest {
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void should_generate_a_script_using_query_to_retrieve_a_business_object_in_initial_value() throws Exception {
         final BusinessObjectQueryInitializer initializer = new BusinessObjectQueryInitializer(null, anAggregationField("country", aBO("org.test.Country")
                 .build()),
-                aContractInput().withName("pId").in(aContractInput().withName("countryInput").withType(ContractInputType.COMPLEX)).build(),
+                aContractInput().withName("countryInput").withType(ContractInputType.COMPLEX).havingInput(aContractInput().withName("persistenceId")).build(),
                 "myCountry");
 
         initializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(null, aStringField("persistenceId").build(),
@@ -40,8 +45,19 @@ public class BusinessObjectQueryInitializerTest {
         final String initialValue = initializer.getInitialValue();
 
         assertThat(initialValue).isEqualTo(
-                "def countryVar = countryDAO.findByPersistenceId(countryInput.pId.toLong())" + System.lineSeparator()
+                "def countryVar = countryDAO.findByPersistenceId(countryInput.persistenceId.toLong())" + System.lineSeparator()
                         + "countryVar.name = countryInput.name" + System.lineSeparator()
                         + "return countryVar");
+    }
+
+    @Test
+    public void should_throw_an_IllegalStateException_if_persistenceId_is_not_found() throws Exception {
+        expectedException.expect(IllegalStateException.class);
+
+        new BusinessObjectQueryInitializer(null, null,
+                aContractInput()
+                        .withName("notPersistenceId")
+                        .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()).build(),
+                "myData.employees");
     }
 }

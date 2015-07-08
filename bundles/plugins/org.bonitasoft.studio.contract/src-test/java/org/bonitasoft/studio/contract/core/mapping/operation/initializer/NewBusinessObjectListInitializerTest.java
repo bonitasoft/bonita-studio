@@ -27,7 +27,7 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Test;
 
-public class BusinessObjectListInitializerTest {
+public class NewBusinessObjectListInitializerTest {
 
     @Test
     public void should_initialize_new_object_property_for_multiple_composed_reference() throws Exception {
@@ -36,7 +36,7 @@ public class BusinessObjectListInitializerTest {
         final RelationField addressField = aCompositionField("address",
                 businessObject);
         addressField.setCollection(true);
-        final BusinessObjectListInitializer propertyInitializer = new BusinessObjectListInitializer(addressField, aContractInput().withName("address")
+        final NewBusinessObjectListInitializer propertyInitializer = new NewBusinessObjectListInitializer(addressField, aContractInput().withName("address")
                 .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build(), "myAddress");
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,
                 streetField, aContractInput().withName("street")
@@ -61,7 +61,7 @@ public class BusinessObjectListInitializerTest {
         final RelationField addressField = aCompositionField("address",
                 businessObject);
         addressField.setCollection(true);
-        final BusinessObjectListInitializer propertyInitializer = new BusinessObjectListInitializer(addressField, aContractInput().withName("addresses")
+        final NewBusinessObjectListInitializer propertyInitializer = new NewBusinessObjectListInitializer(addressField, aContractInput().withName("addresses")
                 .multiple().build(), "myAddress");
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,
                 streetField, aContractInput().withName("street")

@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
 import static com.google.common.collect.Iterables.tryFind;
+import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameList;
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withContractInputName;
 
 import java.util.Objects;
@@ -28,28 +29,25 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.model.process.ContractInput;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 
-public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitializer implements IPropertyInitializer {
+public class MultipleBusinessObjectQueryInitializer extends NewBusinessObjectListInitializer implements IPropertyInitializer {
 
     private final ContractInput persistenceIdInput;
-    private final BusinessObject multipleParentBusinessObject;
+    private final BusinessObject businessObject;
 
-    public BusinessObjectQueryInitializer(final BusinessObject multipleParentBusinessObject, final RelationField field,
+    public MultipleBusinessObjectQueryInitializer(final BusinessObject businessObject,
+            final RelationField field,
             final ContractInput contractInput, final String refName) {
-        super(field, refName);
+        super(field, contractInput, refName);
         persistenceIdInput = persistenceIdInput(contractInput);
-        this.multipleParentBusinessObject = multipleParentBusinessObject;
+        this.businessObject = businessObject;
     }
 
     @Override
-    protected void checkNotNullableFields(final BusinessObject businessObject) throws BusinessObjectInstantiationException {
-        //DO NOT CHECK AS INSTANCE ALREADY EXISTS
-    }
-
-    @Override
-    protected void constructor(final StringBuilder scriptBuilder, final BusinessObject bo, final boolean checkEsistence) {
-        daoQuery(scriptBuilder, bo);
+    protected void constructor(final StringBuilder scriptBuilder, final BusinessObject businessObject, final boolean checkEsistence) {
+        daoQuery(scriptBuilder, businessObject);
     }
 
     @Override
@@ -64,11 +62,16 @@ public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitia
         return propertyInitializer instanceof SimpleFieldPropertyInitializer && Objects.equals(propertyInitializer.getPropertyName(), Field.PERSISTENCE_ID);
     }
 
+    @Override
+    protected String inputListToIterate() {
+        return Joiner.on(".").join(toAncestorNameList().apply((ContractInput) persistenceIdInput.eContainer()));
+    }
+
     protected void daoQuery(final StringBuilder scriptBuilder, final BusinessObject bo) {
         final SimpleField peristenceIdField = new SimpleField();
         peristenceIdField.setType(FieldType.LONG);
         peristenceIdField.setName(Field.PERSISTENCE_ID);
-        final SimpleFieldPropertyInitializer persistenceIdInitializer = new SimpleFieldPropertyInitializer(multipleParentBusinessObject,
+        final SimpleFieldPropertyInitializer persistenceIdInitializer = new SimpleFieldPropertyInitializer(businessObject,
                 peristenceIdField, persistenceIdInput);
         scriptBuilder.append(daoName(bo));
         scriptBuilder.append(".findByPersistenceId(");
@@ -78,11 +81,6 @@ public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitia
 
     private String daoName(final BusinessObject bo) {
         return uncapitalizeFirst(BDMQueryUtil.getSimpleBusinessObjectName(bo.getQualifiedName())) + "DAO";
-    }
-
-    @Override
-    protected boolean checkExistence() {
-        return false;
     }
 
     protected ContractInput persistenceIdInput(final ContractInput contractInput) {
