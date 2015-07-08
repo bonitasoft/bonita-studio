@@ -31,7 +31,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.databinding.edit;bundle-version="1.2.0",
  org.eclipse.emf.edapt.history;bundle-version="0.3.0",
  org.bonitasoft.studio.diagram.custom,
- org.bonitasoft.studio.diagram
+ org.bonitasoft.studio.diagram,
+ org.junit;bundle-version="4.11.0";resolution:=optional,
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
+ org.mockito;bundle-version="1.10.19";resolution:=optional,
+ org.bonitasoft.studio.tests-utils;bundle-version="7.0.2";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.validators.descriptor.validator,
