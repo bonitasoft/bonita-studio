@@ -28,6 +28,7 @@
     </slideShowImageList>
 	<requestedExecutionLevel>asInvoker</requestedExecutionLevel>
 	<singleInstanceCheck>1</singleInstanceCheck>
+    <overrideGtkButtonText>1</overrideGtkButtonText>
 	<allowedLanguages>en es fr de it pt_BR ja ru</allowedLanguages>
 	<customLanguageFileList>
         <language>
@@ -491,7 +492,7 @@ ${msg(retrieve.workspace.message.warning)}
                     <value>true</value>
                 </option>
             </optionList>
-            <postShowPageActionList>
+			<postShowPageActionList>
 				<setInstallerVariable>
 					<name>java_executable</name>
 					<value>${installdir}/jre/bin/java.exe</value>
@@ -605,7 +606,7 @@ ${msg(workspace.location.explanation.end)}</explanation>
                     <actionList>
 		               <runProgram>
 							<program>${java_executable}</program>
-							<programArguments>"-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.workspaceRecovery -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace" -noSplash</programArguments>
+							<programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.workspaceRecovery -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace" -noSplash</programArguments>
 							<progressText>${msg(workspace.recovery.progressMessage)}</progressText>
 							<ruleList>
 								<platformTest>

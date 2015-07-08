@@ -41,10 +41,14 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
+import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Button;
@@ -128,6 +132,40 @@ public class DiagramTests extends SWTBotGefTestCase {
         final Activity newModelElement = (Activity) graphicalEditPart.resolveSemanticElement();
         Assert.assertEquals("Step1", newModelElement.getName());
         Assert.assertNotSame(beforeClass, newModelElement.getClass());
+    }
+
+    @Test
+    public void should_undo_redo_after_lane_creation() throws Exception {
+        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        final BotGefProcessDiagramEditor activeProcessDiagramEditor = botApplicationWorkbenchWindow.createNewDiagram().activeProcessDiagramEditor();
+        final EObject mainProcess = activeProcessDiagramEditor.selectDiagram().getSelectedSemanticElement();
+        final List<Pool> allPools = ModelHelper.getAllElementOfTypeIn(mainProcess, Pool.class);
+        final Pool pool = allPools.get(0);
+        activeProcessDiagramEditor.addLaneOnPool(pool.getName());
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                assertThat(pool.getElements()).hasSize(2);
+            }
+        });
+
+        SWTBotTestUtil.pressUndo();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                assertThat(pool.getElements()).hasSize(1);
+            }
+        });
+        SWTBotTestUtil.pressRedo();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                assertThat(pool.getElements()).hasSize(2);
+            }
+        });
     }
 
     /**

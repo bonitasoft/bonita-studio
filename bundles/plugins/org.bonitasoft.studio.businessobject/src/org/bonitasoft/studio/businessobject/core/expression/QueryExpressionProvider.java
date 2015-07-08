@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.businessobject.core.expression;
 
+import static org.bonitasoft.studio.common.predicate.ExpressionPredicates.withName;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +44,8 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
+
+import com.google.common.collect.Iterables;
 
 /**
  * @author Romain Bioteau
@@ -81,7 +85,10 @@ public class QueryExpressionProvider implements IExpressionProvider {
             result.add(createExpression(bo, q));
         }
         for (final Query q : bo.getQueries()) {
-            result.add(createExpression(bo, q));
+            final Expression queryExpression = createExpression(bo, q);
+            if (Iterables.find(result, withName(queryExpression.getName()), null) == null) {
+                result.add(queryExpression);
+            }
         }
         return result;
     }

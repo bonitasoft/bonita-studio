@@ -17,6 +17,7 @@ package org.bonitasoft.studio.scripting.provider;
 import org.bonitasoft.studio.common.jface.databinding.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.expression.editor.constant.ExpressionReturnTypeContentProvider;
 import org.bonitasoft.studio.expression.editor.filter.ExpressionReturnTypeFilter;
@@ -269,7 +270,13 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 
     private boolean shouldChangeReturnType(final String inputExpressionReturnType, final String defaultReturnType) {
         return Object.class.getName().equals(inputExpressionReturnType)
-                || !new ExpressionReturnTypeFilter().compatibleReturnTypes(inputExpressionReturnType, defaultReturnType);
+                || !new ExpressionReturnTypeFilter(repositoryAccessor()).compatibleReturnTypes(inputExpressionReturnType, defaultReturnType);
+    }
+
+    private RepositoryAccessor repositoryAccessor() {
+        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        return repositoryAccessor;
     }
 
     @Override

@@ -81,13 +81,13 @@ import org.eclipse.ui.views.properties.tabbed.ITabDescriptor;
  * @author Romain Bioteau
  */
 public abstract class AbstractDependenciesConfigurationWizardPage extends WizardPage implements IProcessConfigurationWizardPage, ICheckStateListener,
-ICheckStateProvider {
+        ICheckStateProvider {
 
     /**
      * Label provider for the ListViewer.
      */
     class TabbedPropertySheetPageLabelProvider
-    extends LabelProvider {
+            extends LabelProvider {
 
         @Override
         public String getText(final Object element) {
@@ -149,7 +149,6 @@ ICheckStateProvider {
     }
 
     protected Control createRawClasspathControl(final TabFolder parent) {
-
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(10, 10, 10, 10).create());
@@ -242,7 +241,6 @@ ICheckStateProvider {
     }
 
     protected Control createTreeClasspathControl(final TabFolder parent) {
-
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 10, 10, 10).equalWidth(false).create());
@@ -315,6 +313,7 @@ ICheckStateProvider {
         treeViewer.setLabelProvider(new DecoratingLabelProvider(new DependenciesTreeLabelProvider(), missingDependenciesDecorator));
         treeViewer.setCheckStateProvider(this);
         treeViewer.addCheckStateListener(this);
+        treeViewer.addFilter(hideEmptyCategories());
         treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
@@ -324,6 +323,27 @@ ICheckStateProvider {
         });
 
         return mainComposite;
+    }
+
+    private ViewerFilter hideEmptyCategories() {
+        return new ViewerFilter() {
+
+            @Override
+            public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+                if (element instanceof FragmentContainer
+                        && ((FragmentContainer) element).getParent() == null
+                        && !FragmentTypes.OTHER.equals(((FragmentContainer) element).getId())
+                        && ((FragmentContainer) element).getFragments().isEmpty()) {
+                    for (final FragmentContainer c : ((FragmentContainer) element).getChildren()) {
+                        if (!c.getChildren().isEmpty() || !c.getFragments().isEmpty()) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                return true;
+            }
+        };
     }
 
     protected DependencyRepositoryStore getDependencyRepositoryStore() {

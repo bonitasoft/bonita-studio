@@ -22,7 +22,11 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
@@ -58,6 +62,8 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -77,19 +83,16 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     private List<FieldToContractInputMapping> mappings;
     private String rootName;
     private final Contract contract;
+    private final BusinessObjectModelRepositoryStore businessObjectStore;
 
-    /**
-     * @param selectedDataObservable
-     * @param businessObjectStore
-     * @param pageName
-     */
     protected CreateContractInputFromBusinessObjectWizardPage(final Contract contract, final WritableValue selectedDataObservable,
-            final FieldToContractInputMappingFactory fieldToContractInputMappingFactory) {
+            final FieldToContractInputMappingFactory fieldToContractInputMappingFactory, final BusinessObjectModelRepositoryStore businessObjectStore) {
         super(CreateContractInputFromBusinessObjectWizardPage.class.getName());
         setDescription(Messages.selectFieldToGenerateDescription);
         this.selectedDataObservable = selectedDataObservable;
         this.fieldToContractInputMappingFactory = fieldToContractInputMappingFactory;
         this.contract = contract;
+        this.businessObjectStore = businessObjectStore;
     }
 
     public void setTitle() {
@@ -123,9 +126,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         setControl(composite);
     }
 
-    /**
-     * @param composite
-     */
     private void createReminderText(final Composite composite) {
         final Label reminder = new Label(composite, SWT.WRAP);
         reminder.setLayoutData(GridDataFactory.fillDefaults().hint(500, SWT.DEFAULT).create());
@@ -137,10 +137,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
     }
 
-    /**
-     * @param dbc
-     * @param composite
-     */
     private void createRootNameControl(final EMFDataBindingContext dbc, final Composite composite) {
         final Composite rootNameComposite = new Composite(composite, SWT.NONE);
         rootNameComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 10).create());
@@ -161,9 +157,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                 null);
     }
 
-    /**
-     * @return
-     */
     private IConverter dataNameToRootContractInputName() {
         return new Converter(String.class, String.class) {
 
@@ -195,6 +188,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
         treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
         treeViewer.getTree().setHeaderVisible(true);
+        treeViewer.addFilter(hidePersistenceIdMapping());
         final FieldToContractInputMappingViewerCheckStateManager manager = new FieldToContractInputMappingViewerCheckStateManager();
         treeViewer.addCheckStateListener(manager);
         treeViewer.setCheckStateProvider(manager);
@@ -235,6 +229,16 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
     }
 
+    private ViewerFilter hidePersistenceIdMapping() {
+        return new ViewerFilter() {
+
+            @Override
+            public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+                return !Objects.equals(Field.PERSISTENCE_ID, ((FieldToContractInputMapping) element).getField().getName());
+            }
+        };
+    }
+
     private IConverter selectedDataToFieldMappings() {
         return new Converter(BusinessObjectData.class, List.class) {
 
@@ -243,10 +247,15 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                 if (selectedData == null) {
                     return Collections.emptyList();
                 }
-                mappings = fieldToContractInputMappingFactory.createMappingForBusinessObjectType(((BusinessObjectData) selectedData).getClassName());
+                mappings = fieldToContractInputMappingFactory.createMappingForBusinessObjectType(toBusinessObject((BusinessObjectData) selectedData));
                 return mappings;
             }
+
         };
+    }
+
+    private BusinessObject toBusinessObject(final BusinessObjectData selectedData) {
+        return businessObjectStore.getBusinessObjectByQualifiedName(selectedData.getClassName());
     }
 
     public List<FieldToContractInputMapping> getMappings() {

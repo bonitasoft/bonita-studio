@@ -114,37 +114,9 @@
            </command>
            <visibleWhen
                  checkEnabled="true">
-              <and>
-                 <not>
-                    <with
-                          variable="org.eclipse.core.runtime.Platform">
-                       <test
-                             property="org.eclipse.core.runtime.product"
-                             value="org.talend.mdm.product">
-                       </test>
-                    </with>
-                 </not>
-                 <with
-                       variable="org.eclipse.core.runtime.Platform">
-                    <or>
-                       <test
-                             property="org.eclipse.core.runtime.product"
-                             value="org.bonitasoft.studioEx.product">
-                       </test>
-                       <test
-                             property="org.eclipse.core.runtime.product"
-                             value="org.bonitasoft.talendBPM.product">
-                       </test>
-                       <test
-                             property="org.eclipse.core.runtime.product"
-                             value="org.bonitasoft.studio.product">
-                       </test>
-                    </or>
-                 </with>
-                 <reference
-                       definitionId="isBonitaPerspectiveActive">
-                 </reference>
-              </and>
+              <reference
+                    definitionId="isBonitaPerspectiveActive">
+              </reference>
            </visibleWhen>
         </menu>
      </menuContribution>

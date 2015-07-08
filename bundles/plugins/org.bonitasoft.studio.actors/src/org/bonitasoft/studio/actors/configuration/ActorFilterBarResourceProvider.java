@@ -23,7 +23,6 @@ import static com.google.common.io.Files.toByteArray;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,10 +85,7 @@ public class ActorFilterBarResourceProvider implements BARResourcesProvider {
             builder.addUserFilters(new BarResource(connectorImplementationFilename, implementationFileStore.toByteArray()));
 
             final ConnectorImplementation connectorImplementation = implementationFileStore.getContent();
-            if (implementationFileStore.canBeShared()) { //Generate jar from source file
-                addImplementationJar(builder, connectorImplementation);
-            }
-            addProcessDependencies(configuration, resources, connectorImplementation);
+            addProcessDependencies(builder, configuration, resources, connectorImplementation, implementationFileStore.canBeShared());
         }
 
         for (final BarResource barResource : resources) {
@@ -117,8 +113,9 @@ public class ActorFilterBarResourceProvider implements BARResourcesProvider {
         };
     }
 
-    private void addProcessDependencies(final Configuration configuration, final List<BarResource> resources, final ConnectorImplementation implementation)
-            throws FileNotFoundException, IOException {
+    private void addProcessDependencies(final BusinessArchiveBuilder builder, final Configuration configuration, final List<BarResource> resources,
+            final ConnectorImplementation implementation, final boolean customImpl)
+            throws Exception {
         final DependencyRepositoryStore dependencyStore = repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class);
         final Optional<FragmentContainer> actorFilterContainer = tryFind(configuration.getProcessDependencies(), containerWithId(FragmentTypes.ACTOR_FILTER));
         if (actorFilterContainer.isPresent()) {
@@ -129,6 +126,9 @@ public class ActorFilterBarResourceProvider implements BARResourcesProvider {
                             false)));
             if (implementationContainer.isPresent()) {
                 for (final Fragment fragment : filter(implementationContainer.get().getFragments(), exportedJarFragment())) {
+                    if (customImpl && NamingUtils.toConnectorImplementationJarName(implementation).equals(fragment.getValue())) { //Generate jar from source file
+                        addImplementationJar(builder, implementation);
+                    }
                     final IRepositoryFileStore jarFile = dependencyStore.getChild(fragment.getValue());
                     if (jarFile != null) {
                         resources.add(new BarResource(jarFile.getName(), jarFile.toByteArray()));
@@ -160,8 +160,7 @@ public class ActorFilterBarResourceProvider implements BARResourcesProvider {
 
     private void addImplementationJar(final BusinessArchiveBuilder builder, final ConnectorImplementation impl) throws Exception {
         final ActorFilterSourceRepositoryStore sourceStore = repositoryAccessor.getRepositoryStore(ActorFilterSourceRepositoryStore.class);
-        final String connectorJarName = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)
-                + ".jar";
+        final String connectorJarName = NamingUtils.toConnectorImplementationJarName(impl);
         final String qualifiedClassName = impl.getImplementationClassname();
         String packageName = "";
         if (qualifiedClassName.indexOf(".") != -1) {

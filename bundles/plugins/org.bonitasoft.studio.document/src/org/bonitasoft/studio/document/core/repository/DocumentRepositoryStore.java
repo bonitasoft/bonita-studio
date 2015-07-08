@@ -18,6 +18,9 @@ import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -64,4 +67,8 @@ public class DocumentRepositoryStore extends AbstractRepositoryStore<DocumentFil
         return Pics.getImage(PicsConstants.attachmentData);
     }
 
+    @Override
+    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
+        //DO NOTHING
+    }
 }

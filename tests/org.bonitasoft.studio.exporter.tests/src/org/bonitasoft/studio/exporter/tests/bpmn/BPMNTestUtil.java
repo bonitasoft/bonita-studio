@@ -9,6 +9,7 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
+import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN;
@@ -29,14 +30,12 @@ import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.omg.spec.bpmn.di.util.DiResourceFactoryImpl;
 import org.omg.spec.bpmn.model.DocumentRoot;
 
 /**
  * @author Aurelien Pupier
- *
  */
 public class BPMNTestUtil {
 
@@ -61,7 +60,7 @@ public class BPMNTestUtil {
 
         /* open the process editor */
         final DiagramEditor processEditor = (DiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, diag.getName()));
-        return (MainProcessEditPart)processEditor.getDiagramEditPart();
+        return (MainProcessEditPart) processEditor.getDiagramEditPart();
     }
 
     public static org.eclipse.emf.common.util.URI toEMFURI(final File file) throws MalformedURLException {
@@ -69,25 +68,25 @@ public class BPMNTestUtil {
         return res;
     }
 
-    public static  MainProcess importBPMNFile(final DocumentRoot model2)
+    public static MainProcess importBPMNFile(final DocumentRoot model2)
             throws MalformedURLException {
         final File reImportedFile = BPMNTestUtil.importBPMNFile(new File(model2.eResource().getURI().toFileString()).toURI().toURL());
         final ResourceSet resourceSet = new ResourceSetImpl();
-        GMFEditingDomainFactory.getInstance().createEditingDomain(resourceSet);
+        CustomDiagramEditingDomainFactory.getInstance().createEditingDomain(resourceSet);
         final Resource resource = resourceSet.getResource(BPMNTestUtil.toEMFURI(reImportedFile), true);
-        final MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
+        final MainProcess mainProcess = (MainProcess) resource.getContents().get(0);
         return mainProcess;
     }
 
     public static DocumentRoot exportToBpmn(final DiagramFileStore newDiagramFileStore) throws IOException {
         final Diagram diagramFor = ModelHelper.getDiagramFor(newDiagramFileStore.getContent());
-        final ResourceSet rSet = diagramFor.eResource().getResourceSet() ;
-        GMFEditingDomainFactory.getInstance().createEditingDomain(rSet) ;
+        final ResourceSet rSet = diagramFor.eResource().getResourceSet();
+        CustomDiagramEditingDomainFactory.getInstance().createEditingDomain(rSet);
         DiagramEditPart dep;
-        try{
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,  newDiagramFileStore.getOpenedEditor().getSite().getShell());
-        } catch(final Exception ex){
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,  newDiagramFileStore.getOpenedEditor().getSite().getShell());
+        try {
+            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, newDiagramFileStore.getOpenedEditor().getSite().getShell());
+        } catch (final Exception ex) {
+            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, newDiagramFileStore.getOpenedEditor().getSite().getShell());
         }
         final MainProcessEditPart mped = (MainProcessEditPart) dep;
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);

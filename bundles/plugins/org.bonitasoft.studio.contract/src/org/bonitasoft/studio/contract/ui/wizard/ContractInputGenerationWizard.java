@@ -24,8 +24,10 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.RootContractInputGenerator;
+import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -46,20 +48,24 @@ import org.eclipse.jface.wizard.Wizard;
  */
 public class ContractInputGenerationWizard extends Wizard {
 
-    private final BusinessObjectModelRepositoryStore businessObjectStore;
     private final EditingDomain editingDomain;
     private final ContractContainer contractContainer;
     private CreateContractInputFromBusinessObjectWizardPage contractInputFromBusinessObjectWizardPage;
     private List<Data> availableBusinessData;
     private WritableValue selectedDataObservable;
+    private final FieldToContractInputMappingFactory fieldToContractInputMappingFactory;
+    private final RepositoryAccessor repositoryAccessor;
+    private final FieldToContractInputMappingOperationBuilder operationBuilder;
 
     public ContractInputGenerationWizard(final ContractContainer contractContainer, final EditingDomain editingDomain,
-            final BusinessObjectModelRepositoryStore businessObjectStore) {
+            final RepositoryAccessor repositoryAccessor, final FieldToContractInputMappingOperationBuilder operationBuilder) {
         setWindowTitle(Messages.contractInputGenerationTitle);
         setDefaultPageImageDescriptor(Pics.getWizban());
         this.contractContainer = contractContainer;
         this.editingDomain = editingDomain;
-        this.businessObjectStore = businessObjectStore;
+        this.repositoryAccessor = repositoryAccessor;
+        fieldToContractInputMappingFactory = new FieldToContractInputMappingFactory();
+        this.operationBuilder = operationBuilder;
     }
 
     @Override
@@ -69,9 +75,10 @@ public class ContractInputGenerationWizard extends Wizard {
         if (!availableBusinessData.isEmpty()) {
             selectedDataObservable.setValue(availableBusinessData.get(0));
         }
-        addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable, businessObjectStore));
+        addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable,
+                repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)));
         contractInputFromBusinessObjectWizardPage = new CreateContractInputFromBusinessObjectWizardPage(contractContainer.getContract(),
-                selectedDataObservable, new FieldToContractInputMappingFactory(businessObjectStore));
+                selectedDataObservable, fieldToContractInputMappingFactory, repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
         contractInputFromBusinessObjectWizardPage.setTitle();
         addPage(contractInputFromBusinessObjectWizardPage);
     }
@@ -99,10 +106,11 @@ public class ContractInputGenerationWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
+        final BusinessObjectData data = (BusinessObjectData) selectedDataObservable.getValue();
         final RootContractInputGenerator contractInputGenerator = new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
-                contractInputFromBusinessObjectWizardPage.getMappings());
+                contractInputFromBusinessObjectWizardPage.getMappings(), repositoryAccessor, operationBuilder);
         try {
-            contractInputGenerator.build((BusinessObjectData) selectedDataObservable.getValue());
+            contractInputGenerator.build(data);
         } catch (final OperationCreationException e) {
             BonitaStudioLog.error("Failed to create Operations from contract", e);
             new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e).open();

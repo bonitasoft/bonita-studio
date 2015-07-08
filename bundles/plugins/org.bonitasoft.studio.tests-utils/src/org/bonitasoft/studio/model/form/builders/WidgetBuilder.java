@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.model.form.builders;
 
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
+import org.bonitasoft.studio.model.expression.builders.OperationBuilder;
 import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.builders.ElementBuilder;
@@ -34,6 +35,11 @@ public abstract class WidgetBuilder<T extends Widget, B extends WidgetBuilder<T,
         return getThis();
     }
 
+    public B readOnly() {
+        getBuiltInstance().setReadOnly(true);
+        return getThis();
+    }
+
     public B hideDisplayLabel() {
         getBuiltInstance().setShowDisplayLabel(false);
         return getThis();
@@ -41,6 +47,11 @@ public abstract class WidgetBuilder<T extends Widget, B extends WidgetBuilder<T,
 
     public B havingInputExpression(final ExpressionBuilder inputExpression) {
         getBuiltInstance().setInputExpression(inputExpression.build());
+        return getThis();
+    }
+
+    public B havingOutputOperation(final OperationBuilder operationBuilder) {
+        getBuiltInstance().setAction(operationBuilder.build());
         return getThis();
     }
 

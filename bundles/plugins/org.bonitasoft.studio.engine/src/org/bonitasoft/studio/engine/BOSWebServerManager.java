@@ -25,6 +25,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.Date;
 
@@ -86,6 +87,10 @@ import org.eclipse.wst.server.core.util.SocketUtil;
  */
 public class BOSWebServerManager {
 
+    /**
+     *
+     */
+    private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
     private static final String BONITA_TOMCAT_SERVER_ID = "bonita-tomcat-server-id";
     private static final String BONITA_TOMCAT_RUNTIME_ID = "bonita-tomcat-runtime-id";
     public static final String SERVER_CONFIGURATION_PROJECT = "server_configuration";
@@ -224,13 +229,18 @@ public class BOSWebServerManager {
             if (runtime instanceof org.eclipse.wst.server.core.internal.Runtime && runtime.getLocation() != null
                     && !runtime.getLocation().toFile().getAbsolutePath().equals(tomcatInstanceLocation)) {
                 final IRuntimeWorkingCopy copy = runtime.createWorkingCopy();
-                final String oldLocaiton = copy.getLocation().toFile()
+                final String oldLocation = copy.getLocation().toFile()
                         .getAbsolutePath();
                 copy.setLocation(Path.fromOSString(tomcatInstanceLocation));
                 final File serverXmlFile = new File(tomcatInstanceLocation, "conf" + File.separatorChar + "server.xml");
-                // for Windows, we need to escape \
-                FileUtil.replaceStringInFile(serverXmlFile, oldLocaiton,
-                        tomcatInstanceLocation.replaceAll("\\\\", "\\\\\\\\"));
+                try {
+                    com.google.common.io.Files.write(
+                            com.google.common.io.Files.toString(serverXmlFile, UTF8_CHARSET).replace(oldLocation, tomcatInstanceLocation),
+                            serverXmlFile,
+                            UTF8_CHARSET);
+                } catch (final IOException e1) {
+                    BonitaStudioLog.error(e1, EnginePlugin.PLUGIN_ID);
+                }
                 try {
                     copy.save(true, Repository.NULL_PROGRESS_MONITOR);
                 } catch (final CoreException e) {

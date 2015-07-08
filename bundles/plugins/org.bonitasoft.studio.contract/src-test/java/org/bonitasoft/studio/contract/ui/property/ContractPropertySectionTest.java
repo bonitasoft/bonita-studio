@@ -25,6 +25,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.designer.ui.contribution.CreateAndEditFormContributionItem;
 import org.bonitasoft.studio.model.process.Contract;
@@ -87,13 +89,19 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
     @Mock
     private ISharedImages sharedImages;
 
+    @Mock
+    private RepositoryAccessor repositoryAccessor;
+
+    @Mock
+    private FieldToContractInputMappingOperationBuilder operationBuilder;
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         parent = createDisplayAndRealm();
-        section = spy(new ContractPropertySection(sharedImages,eclipseContext, selectionProvider, progressService));
+        section = spy(new ContractPropertySection(sharedImages, eclipseContext, selectionProvider, repositoryAccessor, operationBuilder, progressService));
         when(tabbedPropertySheetPage.getWidgetFactory()).thenReturn(new TabbedPropertySheetWidgetFactory());
         doReturn(contributionItem).when(section).newContributionItem(CreateAndEditFormContributionItem.class);
         doReturn(createImage()).when(sharedImages).getImage(anyString());

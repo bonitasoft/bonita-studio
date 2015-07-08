@@ -31,6 +31,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
@@ -42,6 +43,8 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
+
+import com.google.common.base.Preconditions;
 
 /**
  * @author Romain Bioteau
@@ -70,6 +73,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
      */
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        Preconditions.checkState(!PlatformUtil.isHeadless());
         login(monitor);
         synchronized (deployLock) {
             doDeployBDM(monitor);

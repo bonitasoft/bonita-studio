@@ -15,15 +15,17 @@
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
 import org.bonitasoft.engine.bdm.model.field.RelationField;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-import org.eclipse.swt.SWT;
+import org.bonitasoft.studio.model.process.ContractInput;
 
-import com.google.common.base.Splitter;
+public class CompositionReferencePropertyInitializer extends NewBusinessObjectInitializer implements IPropertyInitializer {
 
-public class CompositionReferencePropertyInitializer extends BusinessObjectInitializer implements IPropertyInitializer {
+    private final ContractInput contractInput;
 
-    public CompositionReferencePropertyInitializer(final RelationField field, final String refName) {
+    public CompositionReferencePropertyInitializer(final RelationField field, final ContractInput contractInput, final String refName) {
         super(field, refName);
+        this.contractInput = contractInput;
     }
 
     @Override
@@ -32,20 +34,19 @@ public class CompositionReferencePropertyInitializer extends BusinessObjectIniti
         final StringBuilder scriptBuilder = new StringBuilder();
         scriptBuilder.append("{");
         scriptBuilder.append(System.lineSeparator());
-        scriptBuilder.append(indent(initialValue));
+        scriptBuilder.append(initialValue);
         scriptBuilder.append("}()");
         return scriptBuilder.toString();
     }
 
-    private String indent(final String initialValue) {
-        final StringBuilder scriptBuilder = new StringBuilder();
-        final Iterable<String> lines = Splitter.on(System.lineSeparator()).split(initialValue);
-        for (final String line : lines) {
-            scriptBuilder.append(SWT.TAB);
-            scriptBuilder.append(line);
-            scriptBuilder.append(System.lineSeparator());
-        }
-        return scriptBuilder.toString();
+    @Override
+    protected boolean checkExistence() {
+        return !hasAMultipleParent();
+    }
+
+    private boolean hasAMultipleParent() {
+        final ContractInput parentInput = ModelHelper.getFirstContainerOfType(contractInput.eContainer(), ContractInput.class);
+        return parentInput != null && parentInput.isMultiple();
     }
 
 }

@@ -16,10 +16,10 @@ package org.bonitasoft.studio.contract.ui.property;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraintController;
 import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraintsTableViewer;
@@ -89,14 +89,23 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private final ISharedImages sharedImages;
 
+    private final RepositoryAccessor repositoryAccessor;
+
+    private final FieldToContractInputMappingOperationBuilder fieldToContractInputMappingOperationBuilder;
+
     @Inject
-    public ContractPropertySection(final ISharedImages sharedImages, final IEclipseContext eclipseContext,
+    public ContractPropertySection(final ISharedImages sharedImages,
+            final IEclipseContext eclipseContext,
             final ContractContainerAdaptableSelectionProvider selectionProvider,
+            final RepositoryAccessor repositoryAccessor,
+            final FieldToContractInputMappingOperationBuilder fieldToContractInputMappingOperationBuilder,
             final IProgressService progressService) {
         this.eclipseContext = eclipseContext;
+        this.repositoryAccessor = repositoryAccessor;
         this.selectionProvider = selectionProvider;
         this.progressService = progressService;
         this.sharedImages = sharedImages;
+        this.fieldToContractInputMappingOperationBuilder = fieldToContractInputMappingOperationBuilder;
     }
 
     @Override
@@ -235,7 +244,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final AddInputContractFromDataWizardDialog dialog = new AddInputContractFromDataWizardDialog(Display.getCurrent().getActiveShell(),
                 new ContractInputGenerationWizard(
                         (ContractContainer) selectionProvider.getAdapter(EObject.class),
-                        getEditingDomain(), RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class)), this, true);
+                        getEditingDomain(), repositoryAccessor, fieldToContractInputMappingOperationBuilder), this, true);
         dialog.open();
     }
 

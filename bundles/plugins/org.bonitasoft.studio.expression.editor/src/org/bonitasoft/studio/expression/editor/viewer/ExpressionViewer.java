@@ -37,6 +37,7 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
@@ -392,7 +393,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                 if (!(validationStatus instanceof UnmodifiableObservableValue)) {
                     final IStatus status = (IStatus) validationStatus.getValue();
                     if (status != null) {
-                        if (status.isOK()) {
+                        if (status.getSeverity() == IStatus.OK) {
                             validationStatus.setValue(ValidationStatus.ok());
                         } else if (status.getSeverity() == IStatus.WARNING) {
                             validationStatus.setValue(ValidationStatus.warning(status.getMessage()));
@@ -727,7 +728,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     protected boolean compatibleReturnTypes(final Expression currentExpression, final Expression targetExpression) {
         final String currentReturnType = currentExpression.getReturnType();
         final String targetReturnType = targetExpression.getReturnType();
-        return new ExpressionReturnTypeFilter().compatibleReturnTypes(
+        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        return new ExpressionReturnTypeFilter(repositoryAccessor).compatibleReturnTypes(
                 currentReturnType, targetReturnType);
     }
 

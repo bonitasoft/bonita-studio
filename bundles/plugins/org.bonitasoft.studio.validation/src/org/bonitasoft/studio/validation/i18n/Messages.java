@@ -119,7 +119,7 @@ public class Messages extends NLS {
     public static String leftOperandMissing;
 
     public static String errorTooltip;
-
+    public static String warningTooltip;
     public static String infoTooltip;
 
     public static String invalidInclusiveMergeConstraints;
@@ -230,6 +230,7 @@ public class Messages extends NLS {
     public static String nameUnicityConstraintParameter;
     public static String nameUnicityConstraintContractInput;
     public static String nameUnicityConstraintVariable;
+    public static String formMappingAtDiagramLevel_ModelInconsistency;
 
     static {
         // initialize resource bundle

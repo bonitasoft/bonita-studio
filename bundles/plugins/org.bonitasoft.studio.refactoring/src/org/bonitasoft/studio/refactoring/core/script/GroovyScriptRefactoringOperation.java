@@ -19,13 +19,13 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.groovy.GroovyCompilationUnitFactory;
 import org.bonitasoft.studio.refactoring.core.ProcessVariableRenamer;
 import org.codehaus.groovy.eclipse.codeassist.requestor.CompletionNodeFinder;
 import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -39,10 +39,13 @@ public class GroovyScriptRefactoringOperation implements IScriptRefactoringOpera
 
     private String script;
     private final List<ReferenceDiff> diffs;
+    private final GroovyCompilationUnitFactory groovyCompilationUnitFactory;
 
-    public GroovyScriptRefactoringOperation(final String script, final List<ReferenceDiff> diffs) {
+    public GroovyScriptRefactoringOperation(final String script, final List<ReferenceDiff> diffs,
+            final GroovyCompilationUnitFactory groovyCompilationUnitFactory) {
         this.script = script;
         this.diffs = diffs;
+        this.groovyCompilationUnitFactory = groovyCompilationUnitFactory;
     }
 
     @Override
@@ -50,10 +53,7 @@ public class GroovyScriptRefactoringOperation implements IScriptRefactoringOpera
         GroovyCompilationUnit compilationUnit = null;
         org.codehaus.groovy.ast.ASTNode astNode = null;
         try {
-            final IPackageFragment packageFragment = javaProject()
-                    .findPackageFragmentRoot(javaProject().getPath().append("src-providedGroovy"))
-                    .getPackageFragment("");//default package
-            compilationUnit = (GroovyCompilationUnit) packageFragment.createCompilationUnit(newScriptName(), script, true, monitor);
+            compilationUnit = (GroovyCompilationUnit) groovyCompilationUnitFactory.newCompilationUnit(script, monitor);
             final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
             final ContentAssistContext assistContext = finder.findContentAssistContext(compilationUnit);
             if (assistContext != null) {

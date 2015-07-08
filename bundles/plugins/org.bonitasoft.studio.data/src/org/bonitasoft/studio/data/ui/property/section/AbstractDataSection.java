@@ -37,10 +37,7 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -60,7 +57,6 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -81,7 +77,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
@@ -153,7 +148,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
     }
 
     protected void createDataComposite(final Composite parent) {
-        createLabel(parent);
+        createViewerHeaderLabel(parent);
 
         final Composite buttonsComposite = getWidgetFactory().createPlainComposite(parent, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
@@ -183,16 +178,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     }
 
-    protected void createLabel(final Composite parent) {
-        getWidgetFactory().createLabel(parent, "", SWT.NONE);
-        final Label label = getWidgetFactory().createLabel(parent, Messages.processData, SWT.NONE);
-        label.setLayoutData(GridDataFactory.swtDefaults().grab(false, false).span(1, 1).create());
-
-        final ControlDecoration controlDecoration = new ControlDecoration(label, SWT.RIGHT);
-        controlDecoration.setShowOnlyOnFocus(false);
-        controlDecoration.setDescriptionText(Messages.processDataHint);
-        controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
-    }
+    protected abstract void createViewerHeaderLabel(final Composite parent);
 
     public TableViewer getDataTableViewer() {
         return dataTableViewer;
@@ -426,10 +412,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     @Override
     public String getSectionDescription() {
-        if (getEObject() instanceof Pool) {
-            return Messages.dataSectionWithBusinessData;
-        }
-        return Messages.dataSectionDescription;
+        return Messages.localVariableDecsription;
     }
 
     @Override

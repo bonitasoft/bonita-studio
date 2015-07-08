@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>bundles</artifactId>
-        <version>7.0.0-SNAPSHOT</version>
+        <version>7.1.0-SNAPSHOT</version>
 	</parent>
 	<name>Bonita BPM Studio Community Plugins</name>
 	<groupId>org.bonitasoft.studio.bundles</groupId>
@@ -34,6 +34,7 @@
 		<module>org.bonitasoft.studio.configuration</module>
 		<module>org.bonitasoft.studio.connectors</module>
 		<module>org.bonitasoft.studio.connectors.database.drivers</module>
+        <module>org.bonitasoft.studio.connectors.database.drivers.prop</module>
 		<module>org.bonitasoft.studio.connectors.model</module>
 		<module>org.bonitasoft.studio.condition</module>
 		<module>org.bonitasoft.studio.condition.ui</module>

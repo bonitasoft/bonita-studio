@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
+import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
@@ -42,7 +43,6 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorReference;
@@ -60,13 +60,15 @@ public class AddBpmnBarResourceRunnable implements RunnableWithResult<List<BarRe
 
     @Override
     public void run() {
-        final Diagram diagramFor = ModelHelper.getDiagramFor(ModelHelper.getMainProcess(process), (EditingDomain) null);
-        if (diagramFor != null) {
-            final MainProcessEditPart mped = findOrCreateMainProcessEditPart(diagramFor);
-            if (mped != null) {
-                createBPMNFileAndAddContents(mped);
-                for (final BarResource barResource : res) {
-                    builder.addExternalResource(barResource);
+        if (process.eResource() != null) {
+            final Diagram diagramFor = ModelHelper.getDiagramFor(ModelHelper.getMainProcess(process), (EditingDomain) null);
+            if (diagramFor != null) {
+                final MainProcessEditPart mped = findOrCreateMainProcessEditPart(diagramFor);
+                if (mped != null) {
+                    createBPMNFileAndAddContents(mped);
+                    for (final BarResource barResource : res) {
+                        builder.addExternalResource(barResource);
+                    }
                 }
             }
         }
@@ -107,7 +109,7 @@ public class AddBpmnBarResourceRunnable implements RunnableWithResult<List<BarRe
     protected MainProcessEditPart createMainEditPart(Diagram diagramFor, final Resource eResourceuseless) {
         final ResourceSet rSet = new ResourceSetImpl();
 
-        final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.getInstance().createEditingDomain(rSet);
+        final TransactionalEditingDomain editingDomain = CustomDiagramEditingDomainFactory.getInstance().createEditingDomain(rSet);
         final Resource resource = rSet.createResource(diagramFor.eResource().getURI());
         try {
             resource.load(rSet.getLoadOptions());

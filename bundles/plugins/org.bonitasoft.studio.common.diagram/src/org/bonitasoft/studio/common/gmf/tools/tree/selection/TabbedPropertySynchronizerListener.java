@@ -20,7 +20,10 @@ import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.util.List;
+
 import org.bonitasoft.studio.common.Activator;
+import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.DefaultTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.ITabbedPropertySelectionProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.ITabbedSectionPropertyProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -37,9 +40,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.views.properties.tabbed.ISectionDescriptor;
 import org.eclipse.ui.views.properties.tabbed.TabContents;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
@@ -72,27 +77,20 @@ public class TabbedPropertySynchronizerListener implements ISelectionChangedList
         final IEditorReference activeEditorReference = activeEditorReference(activePage);
         final IWorkbenchPart editorPart = activeEditorReference.getPart(false);
         if (editorPart instanceof DiagramEditor) {
-            final ITabbedPropertySelectionProvider selectionProvider = registry.findSelectionProvider(element, activeEditorReference);
-            IViewPart part;
-            try {
-                part = activePage.showView(selectionProvider.viewId());
-            } catch (final PartInitException e1) {
-                return;
-            }
-            final TabbedPropertySheetPage page = (TabbedPropertySheetPage) part.getAdapter(TabbedPropertySheetPage.class);
             final DiagramEditor diagramEditor = (DiagramEditor) editorPart;
             try {
                 final IGraphicalEditPart editPart = editPartResolver.findEditPart(diagramEditor.getDiagramEditPart(), element);
+                final ITabbedPropertySelectionProvider defaultProvider = findDefaultProvider(editorPart, editPart);
                 updateDiagramSelection(diagramEditor, editPart);
-                if (page != null) {
-                    page.selectionChanged(editorPart, new StructuredSelection(editPart));
-                    page.setSelectedTab(selectionProvider.tabId(element));
-                    if (selectionProvider instanceof ITabbedSectionPropertyProvider) {
-                        final PropertySectionWithTabs sectionWithTabs = findSectionWithTabs(page);
-                        if (sectionWithTabs != null) {
-                            sectionWithTabs.setSelectedTab(((ITabbedSectionPropertyProvider) selectionProvider).tabIndex());
-                        }
-                    }
+                final ITabbedPropertySelectionProvider selectionProvider = registry.findSelectionProvider(element, activeEditorReference, defaultProvider);
+                IViewPart part = null;
+                try {
+                    part = activePage.showView(selectionProvider.viewId());
+                } catch (final PartInitException e1) {
+                    return;
+                }
+                if (part != null) {
+                    updateSelectedTabInPage(element, selectionProvider, part);
                 }
             } catch (final EditPartNotFoundException e) {
                 BonitaStudioLog.debug("No edit part found for semantic element: " + element, Activator.PLUGIN_ID);
@@ -100,10 +98,76 @@ public class TabbedPropertySynchronizerListener implements ISelectionChangedList
         }
     }
 
+    private void updateSelectedTabInPage(final EObject element, final ITabbedPropertySelectionProvider selectionProvider, final IViewPart part) {
+        final TabbedPropertySheetPage page = (TabbedPropertySheetPage) part.getAdapter(TabbedPropertySheetPage.class);
+        if (page != null) {
+            page.setSelectedTab(selectionProvider.tabId(element));
+            if (selectionProvider instanceof ITabbedSectionPropertyProvider) {
+                final PropertySectionWithTabs sectionWithTabs = findSectionWithTabs(page);
+                if (sectionWithTabs != null) {
+                    sectionWithTabs.setSelectedTab(((ITabbedSectionPropertyProvider) selectionProvider).tabIndex());
+                }
+            }
+        }
+    }
+
+    private ITabbedPropertySelectionProvider findDefaultProvider(final IWorkbenchPart editorPart,
+            final IGraphicalEditPart editPart) {
+        final String selectedViewId = activePropertyView(activePage);
+        String selectedTabId = null;
+        ITabbedPropertySelectionProvider defaultProvider = null;
+        if (selectedViewId != null) {
+            selectedTabId = activePropertyTabId(activePage, selectedViewId);
+            final TabbedPropertySheetPage propertySheetPage = activePropertyTab(activePage, selectedViewId);
+            if (propertySheetPage != null && propertySheetPage.getSelectedTab() != null) {
+                final List<ISectionDescriptor> sectionDescriptors = propertySheetPage.getSelectedTab().getSectionDescriptors();
+                for (final ISectionDescriptor descriptor : sectionDescriptors) {
+                    if (descriptor.appliesTo(editorPart, new StructuredSelection(editPart))) {
+                        defaultProvider = DefaultTabbedPropertyProvider.defaultProvider(selectedViewId, selectedTabId);
+                        break;
+                    }
+                }
+            }
+        }
+        return defaultProvider;
+    }
+
+    private String activePropertyView(final IWorkbenchPage activePage) {
+        for (final IViewReference ref : activePage.getViewReferences()) {
+            final IWorkbenchPart part = ref.getPart(false);
+            if (part != null && activePage.isPartVisible(part)) {
+                final TabbedPropertySheetPage sheetPage = (TabbedPropertySheetPage) part.getAdapter(TabbedPropertySheetPage.class);
+                if (sheetPage != null) {
+                    return ref.getId();
+                }
+            }
+        }
+        return null;
+    }
+
+    private String activePropertyTabId(final IWorkbenchPage activePage, final String viewId) {
+        final IViewPart view = activePage.findView(viewId);
+        final TabbedPropertySheetPage propertySheetPage = (TabbedPropertySheetPage) view.getAdapter(TabbedPropertySheetPage.class);
+        if (propertySheetPage != null && propertySheetPage.getSelectedTab() != null) {
+            return propertySheetPage.getSelectedTab().getId();
+        }
+        return null;
+    }
+
+    private TabbedPropertySheetPage activePropertyTab(final IWorkbenchPage activePage, final String viewId) {
+        final IViewPart view = activePage.findView(viewId);
+        final TabbedPropertySheetPage propertySheetPage = (TabbedPropertySheetPage) view.getAdapter(TabbedPropertySheetPage.class);
+        if (propertySheetPage != null) {
+            return propertySheetPage;
+        }
+        return null;
+    }
+
     private void updateDiagramSelection(final DiagramEditor diagramEditor, final IGraphicalEditPart editPart) {
         final IDiagramGraphicalViewer diagramGraphicalViewer = diagramEditor.getDiagramGraphicalViewer();
         diagramGraphicalViewer.select(editPart);
         diagramGraphicalViewer.reveal(editPart);
+        diagramGraphicalViewer.getControl().getDisplay().asyncExec(new RefreshPropertyViewsSelection(diagramEditor, new StructuredSelection(editPart)));
     }
 
     private IEditorReference activeEditorReference(final IWorkbenchPage activePage) {

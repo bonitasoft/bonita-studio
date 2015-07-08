@@ -86,47 +86,50 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
         final Expression expression = (Expression) ctx.getTarget();
         if (!ModelHelper.isAnExpressionCopy(expression) && expression.eContainer() instanceof Operation) {
             final Operation op = (Operation) expression.eContainer();
-            if (op.eContainingFeature().equals(FormPackage.Literals.WIDGET__ACTION)) {
-                final Widget parentWidget = ModelHelper.getParentWidget(op);
-                if (parentWidget instanceof FormButton
-                        || parentWidget instanceof Info) {
+            if (ValidableOperation.shouldValidateOperation(op)) {
+                if (op.eContainingFeature().equals(FormPackage.Literals.WIDGET__ACTION)) {
+                    final Widget parentWidget = ModelHelper.getParentWidget(op);
+                    if (parentWidget instanceof FormButton
+                            || parentWidget instanceof Info) {
+                        return ctx.createSuccessStatus();
+                    }
+                }
+                if (op.eContainingFeature().equals(ProcessPackage.Literals.CONNECTOR__OUTPUTS)) {
                     return ctx.createSuccessStatus();
                 }
-            }
-            if (op.eContainingFeature().equals(ProcessPackage.Literals.CONNECTOR__OUTPUTS)) {
-                return ctx.createSuccessStatus();
-            }
-            if (op.eContainer() instanceof FileWidget) {
-                final FileWidget fileWidget = (FileWidget) op.eContainer();
-                if (fileWidget.isDownloadOnly()) {
-                    return ctx.createSuccessStatus();
+                if (op.eContainer() instanceof FileWidget) {
+                    final FileWidget fileWidget = (FileWidget) op.eContainer();
+                    if (fileWidget.isDownloadOnly()) {
+                        return ctx.createSuccessStatus();
+                    }
                 }
-            }
-            if (op.getLeftOperand() == null
-                    || op.getLeftOperand().getContent() == null
-                    || op.getLeftOperand().getContent().isEmpty()) {
-                if (op.getRightOperand() != null
-                        && op.getRightOperand().getContent() != null
-                        && !op.getRightOperand().getContent().isEmpty()) {
-                    final Element el = ModelHelper.getParentElement(op);
+                if (op.getLeftOperand() == null
+                        || op.getLeftOperand().getContent() == null
+                        || op.getLeftOperand().getContent().isEmpty()) {
+                    if (op.getRightOperand() != null
+                            && op.getRightOperand().getContent() != null
+                            && !op.getRightOperand().getContent().isEmpty()) {
+                        final Element el = ModelHelper.getParentElement(op);
+                        String activityName = null;
+                        if (el != null) {
+                            activityName = el.getName();
+                        }
+                        return ctx.createFailureStatus(Messages.bind(Messages.leftOperandMissing, activityName));
+                    }
+                }
+                final IStatus status = validator.validate(op.getRightOperand());
+                if (!status.isOK()) {
+                    final FlowElement el = ModelHelper.getParentFlowElement(op);
                     String activityName = null;
                     if (el != null) {
                         activityName = el.getName();
                     }
-                    return ctx.createFailureStatus(Messages.bind(Messages.leftOperandMissing, activityName));
-                }
-            }
-            final IStatus status = validator.validate(op.getRightOperand());
-            if (!status.isOK()) {
-                final FlowElement el = ModelHelper.getParentFlowElement(op);
-                String activityName = null;
-                if (el != null) {
-                    activityName = el.getName();
-                }
-                if (activityName == null) {
-                    return ctx.createFailureStatus(new Object[] { status.getMessage() });
-                } else {
-                    return ctx.createFailureStatus(new Object[] { Messages.bind(Messages.incompatilbeOperationReturnType, status.getMessage(), activityName) });
+                    if (activityName == null) {
+                        return ctx.createFailureStatus(new Object[] { status.getMessage() });
+                    } else {
+                        return ctx
+                                .createFailureStatus(new Object[] { Messages.bind(Messages.incompatilbeOperationReturnType, status.getMessage(), activityName) });
+                    }
                 }
             }
         }

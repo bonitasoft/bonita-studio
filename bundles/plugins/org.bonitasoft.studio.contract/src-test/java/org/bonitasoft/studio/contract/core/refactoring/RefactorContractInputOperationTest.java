@@ -56,7 +56,7 @@ public class RefactorContractInputOperationTest {
     private IScriptRefactoringOperationFactory scriptRefactorOperationFactory;
 
     @Test
-    public void should_update_contract_constraint_input_reference_in_contract_input_expressions() throws Exception {
+    public void should_update_contract_input_reference_in_contract_input_expressions() throws Exception {
         final Task aTaskWithContractAndOperations = aTaskWithContractAndOperations();
         final Expression contractInputExpression = aTaskWithContractAndOperations.getOperations().get(0).getRightOperand();
         final RefactorContractInputOperation refactorOperation = new RefactorContractInputOperation(aTaskWithContractAndOperations,
@@ -71,22 +71,6 @@ public class RefactorContractInputOperationTest {
         refactorOperation.run(monitor);
 
         assertThat(contractInputExpression).hasName("lastName").hasContent("lastName");
-    }
-
-    @Test
-    public void should_not_add_a_script_expression_for_constraint_referencing_only_updated_input() throws Exception {
-        final ContractContainer aTaskWithContract = aTaskWithContract();
-        final RefactorContractInputOperation refactorOperation = new RefactorContractInputOperation(aTaskWithContract,
-                scriptRefactorOperationFactory,
-                RefactoringOperationType.UPDATE);
-
-        final ContractInput contractInput = aTaskWithContract.getContract().getInputs()
-                .get(0);
-        final Set<ScriptContainer<?>> allScriptWithReferencedElement = refactorOperation.allScriptWithReferencedElement(new ContractInputRefactorPair(
-                EcoreUtil.copy(contractInput),
-                contractInput));
-
-        assertThat(allScriptWithReferencedElement).isEmpty();
     }
 
     @Test
