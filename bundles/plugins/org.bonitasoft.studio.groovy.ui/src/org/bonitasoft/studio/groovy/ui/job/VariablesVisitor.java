@@ -50,6 +50,7 @@ public class VariablesVisitor extends CodeVisitorSupport {
         if (inVariableScope(expression)) {
             variableExpressions.add(expression.getName());
         }
+        super.visitVariableExpression(expression);
     }
 
     private boolean inVariableScope(final VariableExpression expression) {
@@ -79,6 +80,7 @@ public class VariablesVisitor extends CodeVisitorSupport {
     @Override
     public void visitDeclarationExpression(final DeclarationExpression expression) {
         declaredExpressions.put(expression.getLeftExpression().getText(), new Position(expression.getStart()));
+        super.visitDeclarationExpression(expression);
     }
 
     public Set<String> getVariableExpressions() {
