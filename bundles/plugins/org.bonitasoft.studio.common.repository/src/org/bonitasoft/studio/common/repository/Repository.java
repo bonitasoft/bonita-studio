@@ -38,9 +38,9 @@ import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
 import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaBPMProjectOperation;
+import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
 import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
@@ -402,10 +402,9 @@ public class Repository implements IRepository, IJavaContainer {
     @Override
     public void delete(final IProgressMonitor monitor) {
         BonitaStudioLog.debug("Deleting repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
-        build(NULL_PROGRESS_MONITOR);
         try {
-            if (!project.isOpen()) {
-                project.open(NULL_PROGRESS_MONITOR);
+            if (project.isOpen()) {
+                build(NULL_PROGRESS_MONITOR);
             }
             project.delete(true, true, NULL_PROGRESS_MONITOR);
             if (CommonRepositoryPlugin.getCurrentRepository().equals(getName())) {
