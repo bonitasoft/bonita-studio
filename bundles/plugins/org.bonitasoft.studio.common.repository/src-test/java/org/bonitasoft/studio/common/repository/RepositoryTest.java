@@ -14,6 +14,11 @@
  */
 package org.bonitasoft.studio.common.repository;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
@@ -48,8 +53,7 @@ public class RepositoryTest {
 
     @Test
     public void should_open_trigger_project_manifest_factory() throws Exception {
-        final Repository repository = new Repository(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager, projectManifestFactory,
-                bonitaBPMProjectClasspath, true);
+        final Repository repository = newRepository();
 
         repository.open(monitor);
 
@@ -58,12 +62,36 @@ public class RepositoryTest {
 
     @Test
     public void should_open_trigger_project_classpath_factory() throws Exception {
-        final Repository repository = new Repository(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager, projectManifestFactory,
-                bonitaBPMProjectClasspath, true);
+        final Repository repository = newRepository();
 
         repository.open(monitor);
 
         verify(bonitaBPMProjectClasspath).create(repository, monitor);
+    }
+
+    @Test
+    public void should_not_refresh_project_when_deleting_a_closed_repository() throws Exception {
+        final Repository repository = newRepository();
+
+        repository.delete(monitor);
+
+        verify(project, never()).refreshLocal(anyInt(), any(IProgressMonitor.class));
+    }
+
+    @Test
+    public void should_refresh_project_when_deleting_an_open_repository() throws Exception {
+        final Repository repository = spy(newRepository());
+        doReturn(true).when(repository).isBuildEnable();
+        doReturn(true).when(project).isOpen();
+
+        repository.delete(monitor);
+
+        verify(project).refreshLocal(anyInt(), any(IProgressMonitor.class));
+    }
+
+    private Repository newRepository() {
+        return new Repository(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager, projectManifestFactory,
+                bonitaBPMProjectClasspath, true);
     }
 
 }
