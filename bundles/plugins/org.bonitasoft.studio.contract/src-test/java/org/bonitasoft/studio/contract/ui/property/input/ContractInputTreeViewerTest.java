@@ -27,7 +27,7 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
@@ -40,8 +40,8 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.IProgressService;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -51,7 +51,10 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ContractInputTreeViewerTest extends AbstractSWTTestCase {
+public class ContractInputTreeViewerTest {
+
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
 
     private ContractInputTreeViewer inputTreeViewer;
     private Composite parent;
@@ -68,9 +71,9 @@ public class ContractInputTreeViewerTest extends AbstractSWTTestCase {
      */
     @Before
     public void setUp() throws Exception {
-        parent = createDisplayAndRealm();
+        parent = realm.createComposite();
         FileActionDialog.setDisablePopup(true);
-        inputTreeViewer = new ContractInputTreeViewer(parent, new FormToolkit(display), progressService, sharedImages);
+        inputTreeViewer = new ContractInputTreeViewer(parent, new FormToolkit(parent.getDisplay()), progressService, sharedImages);
         final ContractInputController inputController = spy(new ContractInputController(new FakeProgressService()));
         doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(inputController).editingDomain(any(Contract.class));
         inputTreeViewer.initialize(inputController, messageManager, new EMFDataBindingContext());
@@ -83,14 +86,6 @@ public class ContractInputTreeViewerTest extends AbstractSWTTestCase {
         aTask().build().setContract(contract);
         contractObservableValue.setValue(contract);
         inputTreeViewer.setInput(contractObservableValue);
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
     }
 
     @Test

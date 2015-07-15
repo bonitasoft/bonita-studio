@@ -25,7 +25,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -36,6 +36,7 @@ import org.eclipse.equinox.app.IApplication;
 import org.eclipse.swt.widgets.Display;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -44,19 +45,21 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class BonitaStudioApplicationTest extends AbstractSWTTestCase {
+public class BonitaStudioApplicationTest {
 
     private BonitaStudioApplication application;
+
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        createDisplayAndRealm();
-        application = spy(new BonitaStudioApplication(display));
+        application = spy(new BonitaStudioApplication(realm.getShell().getDisplay()));
         doNothing().when(application).initWorkspaceLocation();
-        doNothing().when(application).openErrorDialog(eq(display), anyString());
+        doNothing().when(application).openErrorDialog(eq(realm.getShell().getDisplay()), anyString());
         doReturn(false).when(application).isWorkbenchRunning();
         doReturn(IApplication.EXIT_OK).when(application).createAndRunWorkbench(any(Display.class));
     }
@@ -67,7 +70,6 @@ public class BonitaStudioApplicationTest extends AbstractSWTTestCase {
     @After
     public void tearDown() throws Exception {
         Job.getJobManager().removeJobChangeListener(application);
-        dispose();
     }
 
     @Test
@@ -76,7 +78,7 @@ public class BonitaStudioApplicationTest extends AbstractSWTTestCase {
 
         final Object result = application.start(null);
 
-        verify(application).createAndRunWorkbench(display);
+        verify(application).createAndRunWorkbench(realm.getShell().getDisplay());
         assertThat(result).isEqualTo(IApplication.EXIT_OK);
     }
 
@@ -86,8 +88,8 @@ public class BonitaStudioApplicationTest extends AbstractSWTTestCase {
 
         application.start(null);
 
-        verify(application).openErrorDialog(display, "1.9");
-        verify(application, never()).createAndRunWorkbench(display);
+        verify(application).openErrorDialog(realm.getShell().getDisplay(), "1.9");
+        verify(application, never()).createAndRunWorkbench(realm.getShell().getDisplay());
     }
 
     @Test

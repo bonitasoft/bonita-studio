@@ -19,12 +19,11 @@ import static org.mockito.Mockito.doCallRealMethod;
 import java.lang.reflect.InvocationTargetException;
 
 import org.assertj.core.api.Assertions;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -32,7 +31,10 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BonitaErrorDialogTest extends AbstractSWTTestCase {
+public class BonitaErrorDialogTest {
+
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
 
     @Mock
     private BonitaErrorDialog bed;
@@ -41,13 +43,7 @@ public class BonitaErrorDialogTest extends AbstractSWTTestCase {
 
     @Before
     public void init() throws Exception {
-        final Composite composite = createDisplayAndRealm();
-        list = new List(composite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        dispose();
+        list = new List(realm.createComposite(), SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
     }
 
     @Test

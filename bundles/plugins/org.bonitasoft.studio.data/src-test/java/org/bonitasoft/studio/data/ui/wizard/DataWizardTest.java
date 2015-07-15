@@ -29,7 +29,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.refactoring.core.RefactorDataOperation;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -37,8 +37,8 @@ import org.eclipse.emf.transaction.impl.TransactionalCommandStackImpl;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Display;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -48,7 +48,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class DataWizardTest extends AbstractSWTTestCase {
+public class DataWizardTest {
 
     private DataWizard wizard;
 
@@ -63,13 +63,14 @@ public class DataWizardTest extends AbstractSWTTestCase {
     @Mock
     private IWizardContainer wizardContainer;
 
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        createDisplayAndRealm();
-
         when(refactorOperation.canExecute()).thenReturn(true);
         editingDomain = new TransactionalEditingDomainImpl(new ProcessAdapterFactory(), new TransactionalCommandStackImpl());
         final Data data = ProcessFactory.eINSTANCE.createData();
@@ -80,14 +81,6 @@ public class DataWizardTest extends AbstractSWTTestCase {
         doReturn(wizardContainer).when(wizard).getContainer();
         doReturn(true).when(wizard).isEdited(workingCopy);
         doNothing().when(wizard).refreshXtextReferences();
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
     }
 
     @Test
