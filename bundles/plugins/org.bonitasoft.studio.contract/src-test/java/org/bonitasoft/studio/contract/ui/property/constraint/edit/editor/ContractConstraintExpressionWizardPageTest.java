@@ -79,6 +79,7 @@ public class ContractConstraintExpressionWizardPageTest {
         final ContractInput name = ProcessFactory.eINSTANCE.createContractInput();
         name.setName("name");
         c.getInputs().add(name);
+        composite = realm.createComposite();
         final SourceViewer sourceViewer = new SourceViewer(composite, null, SWT.NONE);
         sourceViewer.setDocument(new Document());
         when(groovyViewer.getSourceViewer()).thenReturn(sourceViewer);
