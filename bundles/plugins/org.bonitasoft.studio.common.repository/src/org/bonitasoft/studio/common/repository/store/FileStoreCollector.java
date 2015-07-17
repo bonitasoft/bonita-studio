@@ -49,9 +49,10 @@ public class FileStoreCollector implements IResourceVisitor {
             return true;
         }
         if (fileExtensions.isEmpty()) {
-            if (!resource.isHidden() && !resource.getName().startsWith(".")) {
-                return collectedResources.add(resource);
+            if (resource.isHidden() || resource.getName().startsWith(".")) {
+                return false;//skip resource
             }
+            return collectedResources.add(resource);
         } else if (fileExtensions.contains(resource.getFileExtension())) {
             return collectedResources.add(resource);
         }
