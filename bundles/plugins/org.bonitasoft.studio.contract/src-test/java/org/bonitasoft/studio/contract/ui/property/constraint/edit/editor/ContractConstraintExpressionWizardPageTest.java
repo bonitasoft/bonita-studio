@@ -25,7 +25,7 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.DocumentEvent;
@@ -34,8 +34,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -46,7 +46,7 @@ import org.osgi.framework.BundleContext;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ContractConstraintExpressionWizardPageTest extends AbstractSWTTestCase {
+public class ContractConstraintExpressionWizardPageTest {
 
     private Composite composite;
     private ContractConstraintExpressionWizardPage wizardPage;
@@ -64,12 +64,14 @@ public class ContractConstraintExpressionWizardPageTest extends AbstractSWTTestC
     @Mock
     private WebBrowserFactory browserFactory;
 
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        composite = createDisplayAndRealm();
         constraint = ProcessFactory.eINSTANCE.createContractConstraint();
         constraint.setExpression("");
         final Contract c = ProcessFactory.eINSTANCE.createContract();
@@ -99,14 +101,6 @@ public class ContractConstraintExpressionWizardPageTest extends AbstractSWTTestC
         assertThat(wizardContainer.getShell()).isNotNull();
         wizard.setContainer(wizardContainer);
         wizardPage.setWizard(wizard);
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
     }
 
     @Test

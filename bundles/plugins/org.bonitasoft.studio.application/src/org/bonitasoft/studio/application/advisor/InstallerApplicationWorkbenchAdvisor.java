@@ -62,8 +62,7 @@ public abstract class InstallerApplicationWorkbenchAdvisor extends BonitaStudioW
                 }
             };
             ResourcesPlugin.getWorkspace().run(workspaceOperation, monitor);
-
-            BOSWebServerManager.getInstance().copyTomcatBundleInWorkspace(monitor);
+            BOSWebServerManager.getInstance().copyTomcatBundleInWorkspace(true, monitor);
             BonitaHomeUtil.initBonitaHome();
 
         } catch (final Exception e) {

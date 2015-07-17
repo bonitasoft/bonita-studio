@@ -32,7 +32,6 @@ import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 /**
@@ -65,8 +64,8 @@ public class TestExportProcessBar extends TestCase {
         ebo.addProcessToDeploy(proc);
         ebo.setTargetFolder(targetFolder.getAbsolutePath());
         ebo.setConfigurationId("Local");
-        final IStatus exportStatus = ebo.run(new NullProgressMonitor());
-        assertTrue("Export in bar has failed.", exportStatus.isOK());
+        ebo.run(new NullProgressMonitor());
+        assertTrue("Export in bar has failed.", ebo.getStatus().isOK());
 
         final File generatedBarFile = ebo.getGeneratedBars().get(0);
 
@@ -112,8 +111,8 @@ public class TestExportProcessBar extends TestCase {
         ebo.addProcessToDeploy(proc);
         ebo.setTargetFolder(targetFolder.getAbsolutePath());
         ebo.setConfigurationId("Local");
-        final IStatus exportStatus = ebo.run(new NullProgressMonitor());
-        assertTrue("Export in bar has failed.", exportStatus.isOK());
+        ebo.run(new NullProgressMonitor());
+        assertTrue("Export in bar has failed.", ebo.getStatus().isOK());
 
         final File generatedBarFile = ebo.getGeneratedBars().get(0);
 

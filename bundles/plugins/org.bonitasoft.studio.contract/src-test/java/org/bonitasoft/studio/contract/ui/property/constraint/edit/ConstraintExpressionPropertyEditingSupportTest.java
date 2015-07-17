@@ -23,7 +23,7 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -31,8 +31,8 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.IMessageManager;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -42,7 +42,10 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ConstraintExpressionPropertyEditingSupportTest extends AbstractSWTTestCase {
+public class ConstraintExpressionPropertyEditingSupportTest {
+
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
 
     @Mock
     private ColumnViewer viewer;
@@ -67,17 +70,9 @@ public class ConstraintExpressionPropertyEditingSupportTest extends AbstractSWTT
      */
     @Before
     public void setUp() throws Exception {
-        container = createDisplayAndRealm();
+        container = realm.createComposite();
         propertySourceProvider = new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory());
         propertyEditingSupport = new ConstraintExpressionPropertyEditingSupport(viewer, propertySourceProvider);
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
     }
 
     @Test

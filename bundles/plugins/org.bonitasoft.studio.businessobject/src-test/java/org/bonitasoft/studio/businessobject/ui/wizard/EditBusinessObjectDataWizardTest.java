@@ -26,7 +26,7 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -34,8 +34,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.wizard.IWizardContainer;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -45,7 +45,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class EditBusinessObjectDataWizardTest extends AbstractSWTTestCase {
+public class EditBusinessObjectDataWizardTest {
 
     private EditBusinessObjectDataWizard wizardUnderTest;
 
@@ -59,12 +59,14 @@ public class EditBusinessObjectDataWizardTest extends AbstractSWTTestCase {
     @Mock
     private IWizardContainer wizardContainer;
 
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        createDisplayAndRealm();
         final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
         final MainProcess diagram = ProcessFactory.eINSTANCE.createMainProcess();
         container = ProcessFactory.eINSTANCE.createPool();
@@ -95,14 +97,6 @@ public class EditBusinessObjectDataWizardTest extends AbstractSWTTestCase {
         editingDomain = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(rSet);
         wizardUnderTest = new EditBusinessObjectDataWizard(data, store, editingDomain);
         wizardUnderTest.setContainer(wizardContainer);
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
     }
 
     @Test

@@ -20,33 +20,27 @@ import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.builders.BooleanDataTypeBuilder;
 import org.bonitasoft.studio.model.process.builders.DataBuilder;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
-import org.junit.After;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
  * @author Romain Bioteau
  */
-public class ReadOnlyCheckboxLabelProviderTest extends AbstractSWTTestCase {
+public class ReadOnlyCheckboxLabelProviderTest {
 
     private ReadOnlyCheckboxLabelProvider readOnlyCheckboxLabelProvider;
+
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        createDisplayAndRealm();
         readOnlyCheckboxLabelProvider = new ReadOnlyCheckboxLabelProvider();
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
     }
 
     @Test
