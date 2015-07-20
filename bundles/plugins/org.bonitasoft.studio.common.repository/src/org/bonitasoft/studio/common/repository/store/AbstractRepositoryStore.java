@@ -321,11 +321,12 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
                             iFile.refreshLocal(IResource.DEPTH_ONE, monitor);
                         }
                     } catch (final IOException e) {
-                        throw new MigrationException("Cannot migrate resource " + r.getName() + " (not a valid file)", new Exception());
+                        throw new MigrationException("Cannot migrate resource " + r.getName() + " (not a valid file)", e);
                     }
 
                 } else {
-                    throw new MigrationException("Cannot migrate resource " + r.getName() + " (not a file)", new Exception());
+                    throw new MigrationException("Cannot migrate resource " + r.getName() + " (not a file)", new IOException("Not an existing file :"
+                            + r.getLocation()));
                 }
             }
         }
