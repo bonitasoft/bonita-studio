@@ -492,7 +492,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         final TableViewerColumn mandatoryColumnViewer = new TableViewerColumn(featuresTableViewer, SWT.CENTER);
         final TableColumn column = mandatoryColumnViewer.getColumn();
         column.setText(Messages.mandatory);
-        mandatoryColumnViewer.setLabelProvider(new MandatoryCheckboxLabelProvider());
+        mandatoryColumnViewer.setLabelProvider(new MandatoryCheckboxLabelProvider(mandatoryColumnViewer.getViewer()));
         mandatoryColumnViewer.setEditingSupport(new MandatoryEditingSupport(mandatoryColumnViewer.getViewer()));
     }
 
@@ -500,7 +500,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         final TableViewerColumn multipleColumnViewer = new TableViewerColumn(featuresTableViewer, SWT.CENTER);
         final TableColumn column = multipleColumnViewer.getColumn();
         column.setText(Messages.multiple);
-        multipleColumnViewer.setLabelProvider(new MultipleCheckboxLabelProvider());
+        multipleColumnViewer.setLabelProvider(new MultipleCheckboxLabelProvider(multipleColumnViewer.getViewer()));
         multipleColumnViewer.setEditingSupport(new MultipleEditingSupport(multipleColumnViewer.getViewer()));
     }
 

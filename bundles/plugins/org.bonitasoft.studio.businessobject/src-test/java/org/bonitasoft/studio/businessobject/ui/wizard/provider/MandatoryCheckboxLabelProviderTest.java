@@ -15,12 +15,16 @@
 package org.bonitasoft.studio.businessobject.ui.wizard.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * @author Romain Bioteau
@@ -37,7 +41,13 @@ public class MandatoryCheckboxLabelProviderTest {
      */
     @Before
     public void setUp() throws Exception {
-        labelProviderUnderTest = new MandatoryCheckboxLabelProvider();
+        labelProviderUnderTest = new MandatoryCheckboxLabelProvider(viewerInShell());
+    }
+
+    private ColumnViewer viewerInShell() {
+        final ColumnViewer viewer = mock(ColumnViewer.class, Mockito.RETURNS_DEEP_STUBS);
+        when(viewer.getControl().getShell()).thenReturn(realm.getShell());
+        return viewer;
     }
 
     @Test

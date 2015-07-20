@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1436969511742
+Bnd-LastModified: 1437374603527
 Build-Jdk: 1.7.0_40
 Built-By: Romain
 Bundle-ClassPath: .,lib/bonita-client.jar,lib/httpclient.jar,lib/httpcor

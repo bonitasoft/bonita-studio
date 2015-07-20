@@ -285,13 +285,13 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         final TreeViewerColumn mandatoryTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.CENTER);
         mandatoryTreeViewerColumn.getColumn().setText(Messages.mandatory);
         mandatoryTreeViewerColumn.getColumn().setWidth(90);
-        mandatoryTreeViewerColumn.setLabelProvider(new MandatoryCheckboxLabelProvider());
+        mandatoryTreeViewerColumn.setLabelProvider(new MandatoryCheckboxLabelProvider(mandatoryTreeViewerColumn.getViewer()));
         mandatoryTreeViewerColumn.setEditingSupport(createMandatoryEditingSupport(treeViewer));
 
         final TreeViewerColumn readOnlyTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.CENTER);
         readOnlyTreeViewerColumn.getColumn().setText(Messages.readOnly);
         readOnlyTreeViewerColumn.getColumn().setWidth(90);
-        readOnlyTreeViewerColumn.setLabelProvider(new ReadOnlyCheckboxLabelProvider());
+        readOnlyTreeViewerColumn.setLabelProvider(new ReadOnlyCheckboxLabelProvider(readOnlyTreeViewerColumn.getViewer()));
         readOnlyTreeViewerColumn.setEditingSupport(createReadOnlyEditingSupport(treeViewer));
 
         final WritableValue dataAndDocumentList = new WritableValue();

@@ -22,12 +22,14 @@ import org.eclipse.core.databinding.observable.map.MapChangeEvent;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 
 public abstract class CustomCheckBoxColumnLabelProvider extends AbstractCheckboxLabelProvider implements IMapChangeListener {
 
-    public CustomCheckBoxColumnLabelProvider(final EStructuralFeature feature,
+    public CustomCheckBoxColumnLabelProvider(final ColumnViewer viewer, final EStructuralFeature feature,
             final IObservableSet knowElements) {
+        super(viewer);
         if (knowElements != null && feature != null) {
             EMFObservables.observeMap(knowElements, feature).addMapChangeListener(this);
         }

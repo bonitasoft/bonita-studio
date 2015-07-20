@@ -15,15 +15,19 @@
 package org.bonitasoft.studio.properties.sections.forms.wizard.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.builders.BooleanDataTypeBuilder;
 import org.bonitasoft.studio.model.process.builders.DataBuilder;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * @author Romain Bioteau
@@ -40,7 +44,13 @@ public class ReadOnlyCheckboxLabelProviderTest {
      */
     @Before
     public void setUp() throws Exception {
-        readOnlyCheckboxLabelProvider = new ReadOnlyCheckboxLabelProvider();
+        readOnlyCheckboxLabelProvider = new ReadOnlyCheckboxLabelProvider(viewerInShell());
+    }
+
+    private ColumnViewer viewerInShell() {
+        final ColumnViewer viewer = mock(ColumnViewer.class, Mockito.RETURNS_DEEP_STUBS);
+        when(viewer.getControl().getShell()).thenReturn(realm.getShell());
+        return viewer;
     }
 
     @Test
