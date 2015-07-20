@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2011-2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.decision.ui;
 
@@ -72,7 +69,6 @@ import org.eclipse.swt.widgets.Listener;
 
 /**
  * @author Mickael Istria
- *
  */
 public class DecisionTableWizardPage extends WizardPage {
 
@@ -114,7 +110,8 @@ public class DecisionTableWizardPage extends WizardPage {
 
     private DecisionTableGridPaintListener zebraGridPaintListener;
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -137,7 +134,7 @@ public class DecisionTableWizardPage extends WizardPage {
         gridGrouplayoutData.minimumHeight = 150;
         gridGroup.setLayoutData(gridGrouplayoutData);
         gridParentScrollable = new ScrolledComposite(gridGroup, SWT.H_SCROLL | SWT.V_SCROLL);
-        gridParentScrollable.setLayout(new GridLayout(1,false));
+        gridParentScrollable.setLayout(new GridLayout(1, false));
         gridParentScrollable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         gridPlaceHolder = new Composite(gridParentScrollable, SWT.BORDER);
         zebraGridPaintListener = new DecisionTableGridPaintListener();
@@ -162,6 +159,7 @@ public class DecisionTableWizardPage extends WizardPage {
         updateLineButton = new Button(buttonComposite, SWT.PUSH);
         updateLineButton.setText(Messages.updateLine);
         updateLineButton.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 final int i = decisionTable.getLines().indexOf(toEditLine);
@@ -179,7 +177,6 @@ public class DecisionTableWizardPage extends WizardPage {
         setControl(res);
     }
 
-
     /**
      *
      */
@@ -192,7 +189,7 @@ public class DecisionTableWizardPage extends WizardPage {
             gridPlaceHolder.pack();
             gridPlaceHolder.layout(true);
             final Point size = gridPlaceHolder.getSize();
-            size.x = size.x - 15 ;
+            size.x = size.x - 15;
             gridParentScrollable.setExpandHorizontal(true);
             gridParentScrollable.setExpandVertical(false);
             gridParentScrollable.setMinSize(size);
@@ -208,7 +205,7 @@ public class DecisionTableWizardPage extends WizardPage {
             linePlaceHolder.pack();
             linePlaceHolder.layout(true);
             final Point size = linePlaceHolder.getSize();
-            size.x = size.x - 15 ;
+            size.x = size.x - 15;
             lineParentScrollable.setExpandHorizontal(false);
             lineParentScrollable.setExpandVertical(false);
             lineParentScrollable.setMinSize(size);
@@ -249,6 +246,7 @@ public class DecisionTableWizardPage extends WizardPage {
             final Composite cross = createImageButton(placeHolder, Pics.getImage(PicsConstants.remove));
             cross.setLayoutData(iconButtonGridData);
             cross.addMouseListener(new MouseAdapter() {
+
                 @Override
                 public void mouseDown(final MouseEvent e) {
                     lineWorkingCopy.getConditions().remove(index);
@@ -261,6 +259,7 @@ public class DecisionTableWizardPage extends WizardPage {
                 final Composite upComposite = createImageButton(placeHolder, Pics.getImage(PicsConstants.arrowUp));
                 upComposite.setLayoutData(iconButtonGridData);
                 upComposite.addMouseListener(new MouseAdapter() {
+
                     @Override
                     public void mouseDown(final MouseEvent e) {
                         lineWorkingCopy.getConditions().remove(index);
@@ -276,6 +275,7 @@ public class DecisionTableWizardPage extends WizardPage {
                 final Composite downComposite = createImageButton(placeHolder, Pics.getImage(PicsConstants.arrowDown));
                 downComposite.setLayoutData(iconButtonGridData);
                 downComposite.addMouseListener(new MouseAdapter() {
+
                     @Override
                     public void mouseDown(final MouseEvent e) {
                         lineWorkingCopy.getConditions().remove(index);
@@ -290,7 +290,7 @@ public class DecisionTableWizardPage extends WizardPage {
             final ExpressionViewer op1widget = new ExpressionViewer(placeHolder, SWT.BORDER);
             op1widget.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(500, SWT.DEFAULT).grab(true, false).span(2, 1).create());
             op1widget.addExpressionValidator(new ComparisonExpressionValidator());
-            op1widget.addExpressionValidationListener(new IExpressionValidationListener(){
+            op1widget.addExpressionValidationListener(new IExpressionValidationListener() {
 
                 @Override
                 public void validationStatusChanged(final IStatus newStatus) {
@@ -299,7 +299,7 @@ public class DecisionTableWizardPage extends WizardPage {
 
             });
             op1widget.setContext(container);
-            op1widget.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONDITION_TYPE}));
+            op1widget.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONDITION_TYPE));
             op1widget.setContext(container);
             op1widget.setInput(lineWorkingCopy);
             op1widget.setSelection(new StructuredSelection(cond));
@@ -325,6 +325,7 @@ public class DecisionTableWizardPage extends WizardPage {
         final Link addConditionLink = new Link(linePlaceHolder, SWT.NONE);
         addConditionLink.setText("<A>" + Messages.addCondition + "</A>");
         addConditionLink.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
@@ -332,19 +333,17 @@ public class DecisionTableWizardPage extends WizardPage {
                 exp.setReturnTypeFixed(true);
                 exp.setType(ExpressionConstants.CONDITION_TYPE);
 
-
                 lineWorkingCopy.getConditions().add(exp);
                 updateLineButton.setEnabled(false);
                 refresh(false, true);
             }
         });
 
-        updateButtons(operands) ;
+        updateButtons(operands);
 
         return placeHolder;
 
     }
-
 
     /**
      * @param operands
@@ -354,9 +353,9 @@ public class DecisionTableWizardPage extends WizardPage {
     protected void updateButtons(final List<ExpressionViewer> operands) {
         boolean oneIsEmpty = false;
         for (final ExpressionViewer operand : operands) {
-            oneIsEmpty = oneIsEmpty || operand.getSelection() == null || operand.getMessage(IStatus.ERROR)!=null;
-            oneIsEmpty = oneIsEmpty || ((Expression)((StructuredSelection)operand.getSelection()).getFirstElement()).getContent() == null;
-            oneIsEmpty = oneIsEmpty || ((Expression)((StructuredSelection)operand.getSelection()).getFirstElement()).getContent().isEmpty();
+            oneIsEmpty = oneIsEmpty || operand.getSelection() == null || operand.getMessage(IStatus.ERROR) != null;
+            oneIsEmpty = oneIsEmpty || ((Expression) ((StructuredSelection) operand.getSelection()).getFirstElement()).getContent() == null;
+            oneIsEmpty = oneIsEmpty || ((Expression) ((StructuredSelection) operand.getSelection()).getFirstElement()).getContent().isEmpty();
         }
         updateLineButton.setEnabled(!oneIsEmpty && toEditLine != null);
     }
@@ -373,8 +372,8 @@ public class DecisionTableWizardPage extends WizardPage {
         }
         //	gridParentScrollable.getParent().getParent().getParent().pack(true);
         //	gridParentScrollable.getParent().getParent().getParent().layout(true);
-        gridParentScrollable.getShell().pack(true) ;
-        gridParentScrollable.getShell().layout(true) ;
+        gridParentScrollable.getShell().pack(true);
+        gridParentScrollable.getShell().layout(true);
         getContainer().updateButtons();
     }
 
@@ -410,14 +409,13 @@ public class DecisionTableWizardPage extends WizardPage {
                 conditionsLabel.setLayoutData(new GridData(SWT.CENTER, SWT.NONE, false, false, 2 * nbMaxConditions - 1, 1));
             }
 
-            new Composite(gridPlaceholder, SWT.NONE).setLayoutData(new GridData(0,0)) ;
+            new Composite(gridPlaceholder, SWT.NONE).setLayoutData(new GridData(0, 0));
 
             final Label decisionLabel = new Label(gridPlaceholder, SWT.NONE);
             decisionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).grab(false, false).span(1, 1).create());
             decisionLabel.setText(Messages.decision);
             decisionLabel.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, decisionLabel));
         }
-
 
         final GridData iconButtonLayoutData = new GridData(SWT.RIGHT, SWT.CENTER, false, false);
         iconButtonLayoutData.heightHint = DELETE_SIZE;
@@ -435,23 +433,25 @@ public class DecisionTableWizardPage extends WizardPage {
                 editLineComposite.setLayoutData(iconButtonLayoutData);
                 editLineComposite.setToolTipText(Messages.editRow);
                 editLineComposite.addMouseListener(new MouseAdapter() {
+
                     @Override
                     public void mouseDown(final MouseEvent e) {
                         toEditLine = line;
                         lineWorkingCopy = EcoreUtil.copy(toEditLine);
                         updateLineButton.setEnabled(true);
-                        zebraGridPaintListener.setSelectedRow(index) ;
+                        zebraGridPaintListener.setSelectedRow(index);
                         refresh(true, true);
                     }
                 });
             } else {
-                new Composite(gridPlaceholder, SWT.NONE).setLayoutData(new GridData(0, 0)) ;
+                new Composite(gridPlaceholder, SWT.NONE).setLayoutData(new GridData(0, 0));
             }
 
             final Composite deleteLineComposite = createImageButton(gridPlaceholder, Pics.getImage(PicsConstants.remove));
             deleteLineComposite.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, deleteLineComposite));
             deleteLineComposite.setLayoutData(iconButtonLayoutData);
             deleteLineComposite.addMouseListener(new MouseAdapter() {
+
                 @Override
                 public void mouseDown(final MouseEvent e) {
                     if (MessageDialog.openConfirm(gridPlaceholder.getShell(), Messages.deleteLineTitle, Messages.deleteLineMessage)) {
@@ -465,11 +465,12 @@ public class DecisionTableWizardPage extends WizardPage {
                 lineUpComposite.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, lineUpComposite));
                 lineUpComposite.setLayoutData(iconButtonLayoutData);
                 lineUpComposite.addMouseListener(new MouseAdapter() {
+
                     @Override
                     public void mouseDown(final MouseEvent e) {
                         decisionTable.getLines().remove(index);
                         decisionTable.getLines().add(index - 1, line);
-                        zebraGridPaintListener.setSelectedRow(decisionTable.getLines().indexOf(line)) ;
+                        zebraGridPaintListener.setSelectedRow(decisionTable.getLines().indexOf(line));
                         refreshGrid();
                     }
                 });
@@ -482,11 +483,12 @@ public class DecisionTableWizardPage extends WizardPage {
                 lineDownComposite.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, lineDownComposite));
                 lineDownComposite.setLayoutData(iconButtonLayoutData);
                 lineDownComposite.addMouseListener(new MouseAdapter() {
+
                     @Override
                     public void mouseDown(final MouseEvent e) {
                         decisionTable.getLines().remove(index);
                         decisionTable.getLines().add(index + 1, line);
-                        zebraGridPaintListener.setSelectedRow(decisionTable.getLines().indexOf(line)) ;
+                        zebraGridPaintListener.setSelectedRow(decisionTable.getLines().indexOf(line));
                         refreshGrid();
                     }
                 });
@@ -494,7 +496,7 @@ public class DecisionTableWizardPage extends WizardPage {
                 new Composite(gridPlaceholder, SWT.NONE).setLayoutData(oneCellFillerLayoutData);
             }
 
-            if(!line.getConditions().isEmpty()){
+            if (!line.getConditions().isEmpty()) {
                 new Composite(gridPlaceholder, SWT.NONE).setLayoutData(new GridData(0, 20));
             }
 
@@ -531,18 +533,18 @@ public class DecisionTableWizardPage extends WizardPage {
                 filler.setLayoutData(gd);
             }
 
-            if(line.getConditions().isEmpty()){
+            if (line.getConditions().isEmpty()) {
                 final Label condLabel = new Label(gridPlaceholder, SWT.NONE);
                 condLabel.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, condLabel));
-                condLabel.setText(Messages.noConditionDefined) ;
-                condLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false,1,1)) ;
+                condLabel.setText(Messages.noConditionDefined);
+                condLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
             }
 
             final Composite arrow = createImageButton(gridPlaceHolder, Pics.getImage(PicsConstants.arrowRight));
             arrow.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, arrow));
             final GridData arrowlayoutData = new GridData(16, 16);
             arrowlayoutData.horizontalAlignment = SWT.RIGHT;
-            arrowlayoutData.grabExcessHorizontalSpace = true ;
+            arrowlayoutData.grabExcessHorizontalSpace = true;
             arrow.setLayoutData(arrowlayoutData);
 
             final ComboViewer lineValueCombo = new ComboViewer(gridPlaceholder, SWT.READ_ONLY);
@@ -554,9 +556,11 @@ public class DecisionTableWizardPage extends WizardPage {
             lineValueCombo.setInput(wizard.getPossibleLineActions());
             lineValueCombo.setSelection(new StructuredSelection(line.getAction()));
             lineValueCombo.addSelectionChangedListener(new ISelectionChangedListener() {
+
                 @Override
                 public void selectionChanged(final SelectionChangedEvent arg0) {
-                    final DecisionTableAction action = EcoreUtil.copy( (DecisionTableAction) ((IStructuredSelection)lineValueCombo.getSelection()).getFirstElement() );
+                    final DecisionTableAction action = EcoreUtil.copy((DecisionTableAction) ((IStructuredSelection) lineValueCombo.getSelection())
+                            .getFirstElement());
                     line.setAction(action);
                 }
             });
@@ -569,6 +573,7 @@ public class DecisionTableWizardPage extends WizardPage {
             addRowLink.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, addRowLink));
             addRowLink.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 5, 1)); // Edit, up, down, delete
             addRowLink.addSelectionListener(new SelectionAdapter() {
+
                 @Override
                 public void widgetSelected(final SelectionEvent e) {
                     final DecisionTableLine newRow = DecisionFactory.eINSTANCE.createDecisionTableLine();
@@ -577,7 +582,7 @@ public class DecisionTableWizardPage extends WizardPage {
                     toEditLine = newRow;
                     lineWorkingCopy = EcoreUtil.copy(newRow);
                     updateLineButton.setEnabled(true);
-                    zebraGridPaintListener.setSelectedRow(decisionTable.getLines().indexOf(newRow)) ;
+                    zebraGridPaintListener.setSelectedRow(decisionTable.getLines().indexOf(newRow));
                     refresh(true, true);
                 }
             });
@@ -616,15 +621,15 @@ public class DecisionTableWizardPage extends WizardPage {
                 defaultValueCombo.setSelection(new StructuredSelection(decisionTable.getDefaultAction()));
             }
             defaultValueCombo.addSelectionChangedListener(new ISelectionChangedListener() {
+
                 @Override
                 public void selectionChanged(final SelectionChangedEvent arg0) {
-                    final DecisionTableAction action = EcoreUtil.copy( (DecisionTableAction) ((IStructuredSelection)arg0.getSelection()).getFirstElement() );
+                    final DecisionTableAction action = EcoreUtil.copy((DecisionTableAction) ((IStructuredSelection) arg0.getSelection()).getFirstElement());
                     decisionTable.setDefaultAction(action);
                 }
             });
             defaultValueCombo.getControl().setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
         }
-
 
         return gridPlaceholder;
     }
@@ -635,15 +640,14 @@ public class DecisionTableWizardPage extends WizardPage {
     protected void deleteLine(final DecisionTableLine line) {
         if (line == toEditLine) {
             toEditLine = null;
-            zebraGridPaintListener.setSelectedRow(-1) ;
+            zebraGridPaintListener.setSelectedRow(-1);
             updateLineButton.setEnabled(false);
-            lineWorkingCopy = null ;
+            lineWorkingCopy = null;
             decisionTable.getLines().remove(line);
-        }else{
+        } else {
             decisionTable.getLines().remove(line);
-            zebraGridPaintListener.setSelectedRow(decisionTable.getLines().indexOf(toEditLine)) ;
+            zebraGridPaintListener.setSelectedRow(decisionTable.getLines().indexOf(toEditLine));
         }
-
 
         refresh(true, true);
     }
@@ -656,6 +660,7 @@ public class DecisionTableWizardPage extends WizardPage {
     public Canvas createImageButton(final Composite parent, final Image image) {
         final Canvas deleteButton = new Canvas(parent, SWT.TRANSPARENT);
         deleteButton.addPaintListener(new PaintListener() {
+
             @Override
             public void paintControl(final PaintEvent e) {
                 e.gc.drawImage(image, 0, 0, 16, 16, 0, 0, DELETE_SIZE, DELETE_SIZE);
@@ -683,8 +688,8 @@ public class DecisionTableWizardPage extends WizardPage {
 
     @Override
     public boolean isPageComplete() {
-        for(final DecisionTableLine line : decisionTable.getLines()){
-            if(line.getConditions().size() == 0){
+        for (final DecisionTableLine line : decisionTable.getLines()) {
+            if (line.getConditions().size() == 0) {
                 setErrorMessage(Messages.errorMessageNoConditionForLineInDecisionTable);
                 return false;
             }
