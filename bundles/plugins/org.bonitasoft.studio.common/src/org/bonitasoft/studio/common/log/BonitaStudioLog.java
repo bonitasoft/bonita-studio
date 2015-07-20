@@ -28,6 +28,8 @@ public class BonitaStudioLog {
         final Logger logger = getLogger(Activator.PLUGIN_ID);
         if (logger != null) {
             logger.info(message);
+        } else {
+            System.out.println(message);
         }
     }
 
@@ -112,6 +114,8 @@ public class BonitaStudioLog {
         final Logger logger = getLogger(bundleId);
         if (logger != null) {
             logger.warn(message);
+        } else {
+            System.out.println(message);
         }
     }
 
@@ -126,6 +130,8 @@ public class BonitaStudioLog {
         if (logger != null) {
             //debug log are not shown otherwise
             logger.info(message);
+        } else {
+            System.out.println(message);
         }
     }
 
@@ -133,6 +139,8 @@ public class BonitaStudioLog {
         final Logger logger = getLogger(bundleId);
         if (logger != null) {
             logger.info(message, throwable);
+        } else {
+            System.out.println(message);
         }
     }
 

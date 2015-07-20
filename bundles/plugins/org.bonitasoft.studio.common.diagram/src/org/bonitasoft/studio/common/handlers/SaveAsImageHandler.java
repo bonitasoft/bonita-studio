@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.handlers;
 
@@ -39,6 +36,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.render.actions.CopyToImageAction;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -46,59 +44,72 @@ import org.eclipse.ui.PlatformUI;
  */
 public class SaveAsImageHandler extends AbstractHandler {
 
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		//Remove Selection
-		DiagramEditor editor = (DiagramEditor) activePage.getActiveEditor() ;
-		editor.getDiagramGraphicalViewer().setSelection(new StructuredSelection()) ;
-	
-		CopyToImageAction act = new CopyToImageAction(activePage){
-			@Override
-			protected List createOperationSet() {
-				List<?> selection = getSelectedObjects();
-				if (selection.isEmpty()
-					|| !(selection.get(0) instanceof IGraphicalEditPart))
-					return Collections.EMPTY_LIST;
-				
-				Iterator<?> selectedEPs = selection.iterator();
-				List<EditPart> targetedEPs = new ArrayList<EditPart>();
-				while (selectedEPs.hasNext()) {
-					EditPart selectedEP = (EditPart) selectedEPs.next();
-					if(targetedEPs.isEmpty()){
-						EObject resolvedSemanticElement = ((IGraphicalEditPart) selectedEP).resolveSemanticElement();
-						if(resolvedSemanticElement instanceof Pool
-								|| resolvedSemanticElement instanceof MainProcess
-								|| resolvedSemanticElement instanceof Form){
-							/*We are on the top level element*/
-							targetedEPs.add(selectedEP);
-						} else {
-							Element toSaveAsImage;
-							if(resolvedSemanticElement instanceof Widget){// we are in a form diagram
-								toSaveAsImage = ModelHelper.getForm((Widget) resolvedSemanticElement);					
-							} else {//we are in a process diagram
-								toSaveAsImage = ModelHelper.getParentProcess(resolvedSemanticElement) ;
-							}
-							EditPart parent = selectedEP.getParent() ;
-							while(parent != null &&
-									(!(parent instanceof ShapeNodeEditPart) 
-											|| !((IGraphicalEditPart) parent).resolveSemanticElement().equals(toSaveAsImage))){
-								parent = parent.getParent() ;
-							}
-							if(parent == null){
-								targetedEPs.add(selectedEP);
-							} else {
-								targetedEPs.add(parent);
-							}				
-						}
-					}
-				}
-				return targetedEPs.isEmpty() ? Collections.EMPTY_LIST
-					: targetedEPs;
-			}
-		};
-		act.init();
-		act.run();
-		return null;
-	}
+    @Override
+    public Object execute(final ExecutionEvent event) throws ExecutionException {
+        final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        //Remove Selection
+        final DiagramEditor editor = (DiagramEditor) activePage.getActiveEditor();
+        editor.getDiagramGraphicalViewer().setSelection(new StructuredSelection());
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().setFocus();
+        final CopyToImageAction act = new CopyToImageAction(activePage) {
 
+            @Override
+            protected List createOperationSet() {
+                final List<?> selection = getSelectedObjects();
+                if (selection.isEmpty()
+                        || !(selection.get(0) instanceof IGraphicalEditPart)) {
+                    return Collections.EMPTY_LIST;
+                }
+
+                final Iterator<?> selectedEPs = selection.iterator();
+                final List<EditPart> targetedEPs = new ArrayList<EditPart>();
+                while (selectedEPs.hasNext()) {
+                    final EditPart selectedEP = (EditPart) selectedEPs.next();
+                    if (targetedEPs.isEmpty()) {
+                        final EObject resolvedSemanticElement = ((IGraphicalEditPart) selectedEP).resolveSemanticElement();
+                        if (resolvedSemanticElement instanceof Pool
+                                || resolvedSemanticElement instanceof MainProcess
+                                || resolvedSemanticElement instanceof Form) {
+                            /* We are on the top level element */
+                            targetedEPs.add(selectedEP);
+                        } else {
+                            Element toSaveAsImage;
+                            if (resolvedSemanticElement instanceof Widget) {// we are in a form diagram
+                                toSaveAsImage = ModelHelper.getForm((Widget) resolvedSemanticElement);
+                            } else {//we are in a process diagram
+                                toSaveAsImage = ModelHelper.getParentProcess(resolvedSemanticElement);
+                            }
+                            EditPart parent = selectedEP.getParent();
+                            while (parent != null &&
+                                    (!(parent instanceof ShapeNodeEditPart)
+                                    || !((IGraphicalEditPart) parent).resolveSemanticElement().equals(toSaveAsImage))) {
+                                parent = parent.getParent();
+                            }
+                            if (parent == null) {
+                                targetedEPs.add(selectedEP);
+                            } else {
+                                targetedEPs.add(parent);
+                            }
+                        }
+                    }
+                }
+                return targetedEPs.isEmpty() ? Collections.EMPTY_LIST
+                        : targetedEPs;
+            }
+
+            @Override
+            protected void setWorkbenchPart(final IWorkbenchPart workbenchPart) {
+                super.setWorkbenchPart(getWorkbenchPage().getActiveEditor());
+            }
+
+        };
+        act.init();
+        act.run();
+        return null;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() instanceof DiagramEditor;
+    }
 }
