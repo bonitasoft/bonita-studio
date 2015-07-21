@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.common.jface;
 
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -88,6 +89,9 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
     }
 
     private Image makeShot(final Shell shell, final boolean type, final boolean enabled) {
+        if (SWT.getPlatform().equals("gtk")) {
+            return gtkFallBack(type, enabled);
+        }
         final Shell s = new Shell(shell, SWT.NO_TRIM);
         final Button b = new Button(s, SWT.CHECK);
         b.setSelection(type);
@@ -103,6 +107,13 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
         gc.dispose();
         s.close();
         return image;
+    }
+
+    private Image gtkFallBack(final boolean selected, final boolean enabled) {
+        if (selected) {
+            return enabled ? Pics.getImage("/checkboxes/checkbox_selected.png") : Pics.getImage("/checkboxes/checkbox_disabled_selected.png");
+        }
+        return enabled ? Pics.getImage("/checkboxes/checkbox_unselected.png") : Pics.getImage("/checkboxes/checkbox_disabled_unselected.png");
     }
 
     @Override
