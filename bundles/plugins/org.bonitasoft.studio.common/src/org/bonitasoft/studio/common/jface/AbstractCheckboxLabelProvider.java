@@ -90,7 +90,10 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
     private Image makeShot(final Shell shell, final boolean type, final boolean enabled) {
         if (SWT.getPlatform().equals("gtk")) {
-            return gtkFallBack(type, enabled);
+            final Image image = gtkFallBack(type, enabled);
+            if (image != null) {
+                return image;
+            }
         }
         final Shell s = new Shell(shell, SWT.NO_TRIM);
         final Button b = new Button(s, SWT.CHECK);
