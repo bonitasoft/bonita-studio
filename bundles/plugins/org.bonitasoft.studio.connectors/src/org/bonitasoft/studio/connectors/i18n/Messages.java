@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connectors.i18n;
 
@@ -21,7 +18,6 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Mickael Istria
- *
  */
 public class Messages extends NLS {
 
@@ -90,7 +86,7 @@ public class Messages extends NLS {
     public static String exporting;
     public static String importConnectorArchive;
     public static String importingConnectorArchive;
-    public static String exportSuccessfulMsg ;
+    public static String exportSuccessfulMsg;
     public static String connectors;
     public static String connectorsConfigurationDescription;
     public static String definition;
@@ -110,68 +106,77 @@ public class Messages extends NLS {
     public static String importFailedTitle;
     public static String selectAValidConnectorImplWarning;
     public static String exportConnectorTitle;
-	public static String connectorSectionDescription;
-	public static String Edit;
-	public static String activate;
-	public static String automaticallyAddDriver;
-	public static String BonitaPreferenceDialog_DBConnectors;
-	public static String BonitaPreferencePage_DBConnectors_Description;
-	public static String databaseConnectorsProperties;
-	public static String databaseConnectorDriversWizardPageTitle;
-	public static String databaseConnectorDriversWizardPageDescription;
-	public static String selectConnectorConfigurationWizardPageTitle;
-	public static String resultTitleLabel;
-	public static String testConnectorPOJOWarning;
-	public static String exceptionFound;
-	public static String successMessage;
-	public static String connectorExpressionViewerLabel;
-	public static String connectorExpressionViewerMessage;
-	public static String connectorTypeValidationMessage;
-	public static String unserializableOutputWarning;
-	public static String selectConnectorConfigurationWizardPageDescription;
-	public static String connectorAdditionalDependencyTitle;
-	public static String connectorAdditionalDependencyMessage;
-	public static String selectConnectorDefinitionForImplDesc;
-	public static String outputOperationsDefinitionTitle;
-	public static String outputOperationsDefinitionDesc;
-	public static String selectConnectorOutputMode;
-	public static String graphicalMode;
-	public static String graphicalModeDescription;
-	public static String singleValue;
-	public static String oneRowNCol;
-	public static String nRowOneCol;
-	public static String nRowsNcolumns;
-	public static String oneRowHint;
-	public static String oneColHint;
-	public static String tableHint;
-	public static String scriptMode;
-	public static String scriptModeDescription;
-	public static String alwaysUseScriptingMode;
+    public static String connectorSectionDescription;
+    public static String Edit;
+    public static String activate;
+    public static String automaticallyAddDriver;
+    public static String BonitaPreferenceDialog_DBConnectors;
+    public static String BonitaPreferencePage_DBConnectors_Description;
+    public static String databaseConnectorsProperties;
+    public static String databaseConnectorDriversWizardPageTitle;
+    public static String databaseConnectorDriversWizardPageDescription;
+    public static String selectConnectorConfigurationWizardPageTitle;
+    public static String resultTitleLabel;
+    public static String testConnectorPOJOWarning;
+    public static String exceptionFound;
+    public static String successMessage;
+    public static String connectorExpressionViewerLabel;
+    public static String connectorExpressionViewerMessage;
+    public static String connectorTypeValidationMessage;
+    public static String unserializableOutputWarning;
+    public static String selectConnectorConfigurationWizardPageDescription;
+    public static String connectorAdditionalDependencyTitle;
+    public static String connectorAdditionalDependencyMessage;
+    public static String selectConnectorDefinitionForImplDesc;
+    public static String outputOperationsDefinitionTitle;
+    public static String outputOperationsDefinitionDesc;
+    public static String selectConnectorOutputMode;
+    public static String graphicalMode;
+    public static String graphicalModeDescription;
+    public static String singleValue;
+    public static String oneRowNCol;
+    public static String nRowOneCol;
+    public static String nRowsNcolumns;
+    public static String oneRowHint;
+    public static String oneColHint;
+    public static String tableHint;
+    public static String scriptMode;
+    public static String scriptModeDescription;
+    public static String alwaysUseScriptingMode;
 
-	public static String singleDatabaseOutputDescription;
-	public static String oneRowDatabaseOutputDescription;
-	public static String oneColDatabaseOutputDescription;
-	public static String nRowsNColsDatabaseOutputDescription;
+    public static String singleDatabaseOutputDescription;
+    public static String oneRowDatabaseOutputDescription;
+    public static String oneColDatabaseOutputDescription;
+    public static String nRowsNColsDatabaseOutputDescription;
 
-	public static String takeValueOf;
-	public static String nRowsOneColOutputHint;
-	public static String nRowsNColsOutputHint;
+    public static String takeValueOf;
+    public static String nRowsOneColOutputHint;
+    public static String nRowsNColsOutputHint;
 
-	public static String alwaysUseScriptingModeOutputPref;
-	public static String unsuportedExpressionTypeForTesting;
+    public static String alwaysUseScriptingModeOutputPref;
+    public static String unsuportedExpressionTypeForTesting;
 
-	public static String unresolvedPatternOrScriptExpression;
-	public static String unresolvedExpression;
-	public static String deleteConnectorDefinition;
-	public static String destFileNameLabel;
-	public static String notAZipFile;
-	public static String connectorOutput;
+    public static String unresolvedPatternOrScriptExpression;
+    public static String unresolvedExpression;
+    public static String deleteConnectorDefinition;
+    public static String destFileNameLabel;
+    public static String notAZipFile;
+    public static String connectorOutput;
 
-	public static String configurationChangedTitle;
-	public static String configurationChangedMsg;
+    public static String configurationChangedTitle;
+    public static String configurationChangedMsg;
 
     public static String noImplementationFoundErrorTitle;
     public static String noImplementationFoundErrorMessage;
+
+    public static String moveFailed;
+    public static String moveFailedMsg;
+
+    public static String invalidTargetLocationMessages;
+
+    public static String connectorInChoice;
+    public static String connectorOutChoice;
+    public static String connectorEventLabel;
 
     /**
      * @param event
