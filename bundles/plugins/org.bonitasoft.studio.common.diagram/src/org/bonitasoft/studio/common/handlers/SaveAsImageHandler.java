@@ -14,24 +14,12 @@
  */
 package org.bonitasoft.studio.common.handlers;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.render.actions.CopyToImageAction;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -50,51 +38,11 @@ public class SaveAsImageHandler extends AbstractHandler {
         //Remove Selection
         final DiagramEditor editor = (DiagramEditor) activePage.getActiveEditor();
         editor.getDiagramGraphicalViewer().setSelection(new StructuredSelection());
-        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().setFocus();
         final CopyToImageAction act = new CopyToImageAction(activePage) {
 
             @Override
             protected List createOperationSet() {
-                final List<?> selection = getSelectedObjects();
-                if (selection.isEmpty()
-                        || !(selection.get(0) instanceof IGraphicalEditPart)) {
-                    return Collections.EMPTY_LIST;
-                }
-
-                final Iterator<?> selectedEPs = selection.iterator();
-                final List<EditPart> targetedEPs = new ArrayList<EditPart>();
-                while (selectedEPs.hasNext()) {
-                    final EditPart selectedEP = (EditPart) selectedEPs.next();
-                    if (targetedEPs.isEmpty()) {
-                        final EObject resolvedSemanticElement = ((IGraphicalEditPart) selectedEP).resolveSemanticElement();
-                        if (resolvedSemanticElement instanceof Pool
-                                || resolvedSemanticElement instanceof MainProcess
-                                || resolvedSemanticElement instanceof Form) {
-                            /* We are on the top level element */
-                            targetedEPs.add(selectedEP);
-                        } else {
-                            Element toSaveAsImage;
-                            if (resolvedSemanticElement instanceof Widget) {// we are in a form diagram
-                                toSaveAsImage = ModelHelper.getForm((Widget) resolvedSemanticElement);
-                            } else {//we are in a process diagram
-                                toSaveAsImage = ModelHelper.getParentProcess(resolvedSemanticElement);
-                            }
-                            EditPart parent = selectedEP.getParent();
-                            while (parent != null &&
-                                    (!(parent instanceof ShapeNodeEditPart)
-                                    || !((IGraphicalEditPart) parent).resolveSemanticElement().equals(toSaveAsImage))) {
-                                parent = parent.getParent();
-                            }
-                            if (parent == null) {
-                                targetedEPs.add(selectedEP);
-                            } else {
-                                targetedEPs.add(parent);
-                            }
-                        }
-                    }
-                }
-                return targetedEPs.isEmpty() ? Collections.EMPTY_LIST
-                        : targetedEPs;
+                return Collections.singletonList(((DiagramEditor) getWorkbenchPart()).getDiagramEditPart());
             }
 
             @Override
