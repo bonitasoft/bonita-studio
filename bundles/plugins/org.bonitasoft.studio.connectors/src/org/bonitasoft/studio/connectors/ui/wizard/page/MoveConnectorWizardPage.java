@@ -89,28 +89,26 @@ public class MoveConnectorWizardPage extends WizardPage implements IWizardPage {
         final EMFDataBindingContext dbc = new EMFDataBindingContext();
 
         final Composite mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
-        final Label eventLabel = new Label(mainComposite, SWT.NONE);
-        eventLabel.setText(Messages.connectorEventLabel);
+        createActionControl(dbc, mainComposite);
+        createProcessTreeControl(dbc, mainComposite);
+        final Label seprator = new Label(mainComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
+        seprator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        createExecutionEventControl(dbc, mainComposite);
 
-        final Composite radioGroup = new Composite(mainComposite, SWT.NONE);
-        radioGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        radioGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).extendedMargins(20, 0, 0, 5).create());
+        WizardPageSupport.create(this, dbc);
+        setControl(mainComposite);
+    }
 
-        final Button inRadio = createRadioButton(radioGroup, Messages.connectorInChoice);
-        final Button outRadio = createRadioButton(radioGroup, Messages.connectorOutChoice);
+    private void createProcessTreeControl(final EMFDataBindingContext dbc, final Composite parent) {
+        final Label label = new Label(parent, SWT.NONE);
+        label.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).create());
+        label.setText(Messages.chooseTargetStepOrProcess);
 
-        final SelectObservableValue eventObservable = new SelectObservableValue(String.class);
-        eventObservable.addOption(ConnectorEvent.ON_ENTER.name(), SWTObservables.observeSelection(inRadio));
-        eventObservable.addOption(ConnectorEvent.ON_FINISH.name(), SWTObservables.observeSelection(outRadio));
-
-        dbc.bindValue(eventObservable, connectorEventObservable);
-
-        new Label(mainComposite, SWT.NONE).setText(Messages.chooseTargetStepOrProcess);
-
-        final TreeViewer processTreeViewer = new FilteredTree(mainComposite, SWT.BORDER | SWT.SINGLE, new PatternFilter(), true).getViewer();
-        processTreeViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        final TreeViewer processTreeViewer = new FilteredTree(parent, SWT.BORDER | SWT.SINGLE, new PatternFilter(), true).getViewer();
+        processTreeViewer.getControl().getParent().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(SWT.DEFAULT, 300).create());
         processTreeViewer.setLabelProvider(new ElementLabelProvider(adapterFactory));
         processTreeViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
         processTreeViewer.addFilter(new ConnectableElementViewerFilter(sourceProcess));
@@ -118,17 +116,47 @@ public class MoveConnectorWizardPage extends WizardPage implements IWizardPage {
         processTreeViewer.expandAll();
         dbc.bindValue(ViewersObservables.observeSingleSelection(processTreeViewer), targetLocationObservable,
                 updateValueStrategy().withValidator(selectionValidator()).create(), null);
+    }
 
-        final Button copyButton = new Button(mainComposite, SWT.CHECK);
-        copyButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        copyButton.setText(Messages.copyConnectorCheckBoxLabel);
-        dbc.bindValue(SWTObservables.observeSelection(copyButton), PojoObservables.observeValue(this, "copy"));
-        WizardPageSupport.create(this, dbc);
-        setControl(mainComposite);
+    private void createActionControl(final EMFDataBindingContext dbc, final Composite parent) {
+        final Label actionLabel = new Label(parent, SWT.NONE);
+        actionLabel.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).create());
+        actionLabel.setText(Messages.selectMoveOrCopyAction);
+
+        final Composite actionRadioGroup = new Composite(parent, SWT.NONE);
+        actionRadioGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        actionRadioGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(20, 0, 0, 5).create());
+
+        final Button moveRadio = createRadioButton(actionRadioGroup, Messages.move);
+        final Button copyRadio = createRadioButton(actionRadioGroup, Messages.copy);
+
+        final SelectObservableValue actionObservable = new SelectObservableValue(Boolean.class);
+        actionObservable.addOption(Boolean.FALSE, SWTObservables.observeSelection(moveRadio));
+        actionObservable.addOption(Boolean.TRUE, SWTObservables.observeSelection(copyRadio));
+        dbc.bindValue(actionObservable, PojoObservables.observeValue(this, "copy"));
+    }
+
+    private void createExecutionEventControl(final EMFDataBindingContext dbc, final Composite parent) {
+        final Label eventLabel = new Label(parent, SWT.NONE);
+        eventLabel.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).create());
+        eventLabel.setText(Messages.connectorEventLabel);
+
+        final Composite eventRadioGroup = new Composite(parent, SWT.NONE);
+        eventRadioGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        eventRadioGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(20, 0, 0, 15).create());
+
+        final Button inRadio = createRadioButton(eventRadioGroup, Messages.bind(Messages.connectorInChoice, ConnectorEvent.ON_ENTER.name()));
+        final Button outRadio = createRadioButton(eventRadioGroup, Messages.bind(Messages.connectorOutChoice, ConnectorEvent.ON_FINISH.name()));
+
+        final SelectObservableValue eventObservable = new SelectObservableValue(String.class);
+        eventObservable.addOption(ConnectorEvent.ON_ENTER.name(), SWTObservables.observeSelection(inRadio));
+        eventObservable.addOption(ConnectorEvent.ON_FINISH.name(), SWTObservables.observeSelection(outRadio));
+        dbc.bindValue(eventObservable, connectorEventObservable);
     }
 
     private Button createRadioButton(final Composite radioGroup, final String label) {
         final Button radioButton = new Button(radioGroup, SWT.RADIO);
+        radioButton.setLayoutData(GridDataFactory.fillDefaults().create());
         radioButton.setText(label);
         return radioButton;
     }

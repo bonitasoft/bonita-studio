@@ -33,7 +33,6 @@ public class Messages extends NLS {
     public static String switchContainerConnectorMessage;
     public static String chooseConnectorToMove;
     public static String chooseTargetStepOrProcess;
-    public static String copyConnectorCheckBoxLabel;
     public static String warningLocalVariableinConnector;
     public static String removeData;
     public static String outputMapping;
@@ -51,6 +50,7 @@ public class Messages extends NLS {
     public static String selectOnlyOneElementTitle;
     public static String selectOnlyOneElementMessage;
     public static String update;
+    public static String copyMove;
     public static String move;
     public static String add;
     public static String deleteDialogConfirmMessage;
@@ -177,6 +177,9 @@ public class Messages extends NLS {
     public static String connectorInChoice;
     public static String connectorOutChoice;
     public static String connectorEventLabel;
+
+    public static String selectMoveOrCopyAction;
+    public static String copy;
 
     /**
      * @param event

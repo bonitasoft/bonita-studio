@@ -221,7 +221,7 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
 
     protected Button createMoveConnectorButton(final Composite buttonsComposite) {
         final Button moveButton = getWidgetFactory().createButton(
-                buttonsComposite, Messages.move, SWT.FLAT);
+                buttonsComposite, Messages.copyMove, SWT.FLAT);
         moveButton.setLayoutData(GridDataFactory.fillDefaults()
                 .minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         moveButton.addListener(SWT.Selection, new Listener() {
