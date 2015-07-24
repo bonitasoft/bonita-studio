@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.contract.ui.wizard.labelProvider;
 
+import org.bonitasoft.engine.bdm.BDMQueryUtil;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
@@ -33,11 +34,10 @@ public class FieldTypeColumnLabelProvider extends ColumnLabelProvider {
         } else {
             if (element instanceof RelationFieldToContractInputMapping) {
                 final RelationFieldToContractInputMapping mapping = (RelationFieldToContractInputMapping) element;
-                return ((RelationField) mapping.getField()).getReference().getQualifiedName();
+                return BDMQueryUtil.getSimpleBusinessObjectName(((RelationField) mapping.getField()).getReference().getQualifiedName());
             }
         }
 
         return super.getText(element);
     }
-
 }
