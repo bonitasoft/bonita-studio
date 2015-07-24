@@ -110,16 +110,13 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     @Override
     public String getSectionDescription() {
-        final Object selection = selectionProvider.getAdapter(EObject.class);
-        if (selection != null && selection instanceof Task) {
-            return Messages.stepContractSectionDescription;
-        }
-        return Messages.processContractSectionDescription;
+        return selectionProvider.getAdapter(EObject.class) instanceof Task ? Messages.stepContractSectionDescription
+                : Messages.processContractSectionDescription;
     }
 
     @Override
     public String getSectionTitle() {
-        return Messages.contractInputs;
+        return selectionProvider.getAdapter(EObject.class) instanceof Task ? Messages.taskInputs : Messages.processInstantiationInputs;
     }
 
     protected void init(final IObservableValue observeContractValue) {

@@ -66,9 +66,12 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
 import com.google.common.base.Function;
 
@@ -127,8 +130,9 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     }
 
     private void createReminderText(final Composite composite) {
-        final Label reminder = new Label(composite, SWT.WRAP);
-        reminder.setLayoutData(GridDataFactory.fillDefaults().hint(500, SWT.DEFAULT).create());
+        final CLabel reminder = new CLabel(composite, SWT.NONE);
+        reminder.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
+        reminder.setLayoutData(GridDataFactory.fillDefaults().hint(600, SWT.DEFAULT).create());
         if (contract.eContainer() instanceof Task) {
             reminder.setText(Messages.reminderForStepMessage);
         } else {
@@ -165,7 +169,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                 final String className = (String) EMFObservables.observeDetailValue(Realm.getDefault(), selectedDataObservable,
                         ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME).getValue();
                 if (className != null) {
-                    final String name = fromObject + NamingUtils.getSimpleName(className);
+                    final String name = fromObject + "Input";
                     return NamingUtils.generateNewName(newHashSet(transform(contract.getInputs(), toContactInputName())), name, 0);
                 }
                 return "";
