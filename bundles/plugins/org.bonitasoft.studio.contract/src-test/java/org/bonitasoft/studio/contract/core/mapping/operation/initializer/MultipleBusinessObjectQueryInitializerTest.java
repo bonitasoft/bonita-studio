@@ -57,7 +57,9 @@ public class MultipleBusinessObjectQueryInitializerTest {
         final String initialValue = initializer.getInitialValue();
 
         assertThat(initialValue).isEqualTo("def employeeList = []" + System.lineSeparator()
+                + "//For each item collected in multiple input" + System.lineSeparator()
                 + "employeeInput.each{" + System.lineSeparator()
+                + "//Add aggregated Employee instance" + System.lineSeparator()
                 + "employeeList.add({ currentEmployeeInput ->" + System.lineSeparator()
                 + "def employeeVar = employeeDAO.findByPersistenceId(currentEmployeeInput.persistenceId.toLong())" + System.lineSeparator()
                 + "employeeVar.name = currentEmployeeInput.name" + System.lineSeparator()

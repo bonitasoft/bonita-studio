@@ -67,6 +67,12 @@ public class MultipleBusinessObjectQueryInitializer extends NewBusinessObjectLis
         return Joiner.on(".").join(toAncestorNameList().apply((ContractInput) persistenceIdInput.eContainer()));
     }
 
+    @Override
+    protected void addCommentBeforeAddToList(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
+        addCommentLine(scriptBuilder,
+                String.format("Add aggregated %s instance", BDMQueryUtil.getSimpleBusinessObjectName(businessObject.getQualifiedName())));
+    }
+
     protected void daoQuery(final StringBuilder scriptBuilder, final BusinessObject bo) {
         final SimpleField peristenceIdField = new SimpleField();
         peristenceIdField.setType(FieldType.LONG);

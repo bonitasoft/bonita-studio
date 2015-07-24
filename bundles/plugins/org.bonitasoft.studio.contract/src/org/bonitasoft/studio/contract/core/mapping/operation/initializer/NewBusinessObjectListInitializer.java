@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
+import static com.google.common.collect.Iterables.getLast;
 import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameList;
 
 import org.bonitasoft.engine.bdm.BDMQueryUtil;
@@ -23,6 +24,7 @@ import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInsta
 import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 
 public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInitializer implements IPropertyInitializer {
 
@@ -68,10 +70,14 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
     }
 
     private void forEach(final StringBuilder scriptBuilder, final BusinessObject businessObject) throws BusinessObjectInstantiationException {
+        addCommentLine(scriptBuilder, "For each item collected in multiple input");
+
         //Iterate over the multiple input collection
         scriptBuilder.append(inputListToIterate());
         scriptBuilder.append(".each{");
         scriptBuilder.append(System.lineSeparator());
+
+        addCommentBeforeAddToList(scriptBuilder, businessObject);
 
         //Add new business object based on current element in collection
         scriptBuilder.append(listVarName(businessObject));
@@ -100,6 +106,11 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
         scriptBuilder.append(System.lineSeparator());
     }
 
+    protected void addCommentBeforeAddToList(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
+        addCommentLine(scriptBuilder,
+                String.format("Add a new composed %s instance", BDMQueryUtil.getSimpleBusinessObjectName(businessObject.getQualifiedName())));
+    }
+
     protected String inputListToIterate() {
         return Joiner.on(".").join(toAncestorNameList().apply(contractInput));
     }
@@ -109,6 +120,7 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
     }
 
     protected void appendExistingBusinessObjects(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
+        addCommentLine(scriptBuilder, String.format("Append existing %s", getLast(Splitter.on(".").split(refName))));
         scriptBuilder.append(listVarName(businessObject));
         scriptBuilder.append(".addAll(");
         scriptBuilder.append(refName);
