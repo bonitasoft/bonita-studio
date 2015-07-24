@@ -45,7 +45,8 @@ public class BusinessObjectQueryInitializerTest {
         final String initialValue = initializer.getInitialValue();
 
         assertThat(initialValue).isEqualTo(
-                "def countryVar = countryDAO.findByPersistenceId(countryInput.persistenceId.toLong())" + System.lineSeparator()
+                "//Retrieve aggregated Country using its DAO and persistenceId" + System.lineSeparator()
+                        + "def countryVar = countryDAO.findByPersistenceId(countryInput.persistenceId.toLong())" + System.lineSeparator()
                         + "countryVar.name = countryInput.name" + System.lineSeparator()
                         + "return countryVar");
     }

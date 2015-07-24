@@ -38,8 +38,11 @@ public class MultipleCompositionReferencePropertyInitializerTest {
 
         assertThat(initializer.getInitialValue()).isEqualTo("{" + System.lineSeparator()
                 + "def addressList = []" + System.lineSeparator()
+                + "//Append existing employee" + System.lineSeparator()
                 + "addressList.addAll(employee)" + System.lineSeparator()
+                + "//For each item collected in multiple input" + System.lineSeparator()
                 + "employeeInput.addresses.each{" + System.lineSeparator()
+                + "//Add a new composed Address instance" + System.lineSeparator()
                 + "addressList.add({ currentAddressInput ->" + System.lineSeparator()
                 + "def addressVar = new Address()" + System.lineSeparator()
                 + "return addressVar" + System.lineSeparator()
@@ -61,7 +64,9 @@ public class MultipleCompositionReferencePropertyInitializerTest {
 
         assertThat(initializer.getInitialValue()).isEqualTo("{" + System.lineSeparator()
                 + "def addressList = []" + System.lineSeparator()
+                + "//For each item collected in multiple input" + System.lineSeparator()
                 + "currentEmployeeInput.addresses.each{" + System.lineSeparator()
+                + "//Add a new composed Address instance" + System.lineSeparator()
                 + "addressList.add({ currentAddressInput ->" + System.lineSeparator()
                 + "def addressVar = new Address()" + System.lineSeparator()
                 + "return addressVar" + System.lineSeparator()

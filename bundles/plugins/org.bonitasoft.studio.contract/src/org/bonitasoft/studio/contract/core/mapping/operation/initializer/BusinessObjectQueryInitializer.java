@@ -48,6 +48,14 @@ public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitia
     }
 
     @Override
+    protected void addCommentBeforeConstructor(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
+        addCommentLine(
+                scriptBuilder,
+                String.format("Retrieve aggregated %s using its DAO and persistenceId",
+                        BDMQueryUtil.getSimpleBusinessObjectName(businessObject.getQualifiedName())));
+    }
+
+    @Override
     protected void constructor(final StringBuilder scriptBuilder, final BusinessObject bo, final boolean checkEsistence) {
         daoQuery(scriptBuilder, bo);
     }
