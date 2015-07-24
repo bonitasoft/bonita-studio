@@ -42,7 +42,8 @@ public class Messages extends NLS {
     public static String editConstraint;
     public static String inputSuffix;
     public static String duplicatedInputNames;
-    public static String contractInputs;
+    public static String taskInputs;
+    public static String processInstantiationInputs;
     public static String inputTabLabel;
     public static String constraintsTabLabel;
     public static String contractInputTypeLabel;
@@ -90,5 +91,8 @@ public class Messages extends NLS {
     public static String contractInputDescriptionTooltip;
     public static String errorTitle;
     public static String contractFromDataCreationErrorMessage;
+    public static String contractGenerationTitle;
+    public static String contractGenerationMsg;
+    public static String doNotShowMeAgain;
 
 }

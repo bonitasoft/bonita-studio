@@ -41,7 +41,6 @@ public class AddInputContractFromDataWizardDialog extends FinishAndAddCustomWiza
 
     @Override
     public void moveFinishButton() {
-        final Button cancelButton = getButton(IDialogConstants.CANCEL_ID);
         final Button finishButton = getButton(IDialogConstants.FINISH_ID);
         getFinishAndNewButton().moveAbove(finishButton);
         finishButton.setText(IDialogConstants.FINISH_LABEL);
