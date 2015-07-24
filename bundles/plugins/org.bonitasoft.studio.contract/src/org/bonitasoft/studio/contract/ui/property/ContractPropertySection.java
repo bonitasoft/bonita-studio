@@ -35,6 +35,7 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -241,7 +242,12 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final AddInputContractFromDataWizardDialog dialog = new AddInputContractFromDataWizardDialog(Display.getCurrent().getActiveShell(),
                 new ContractInputGenerationWizard(
                         (ContractContainer) selectionProvider.getAdapter(EObject.class),
-                        getEditingDomain(), repositoryAccessor, fieldToContractInputMappingOperationBuilder), this, true);
+                        getEditingDomain(),
+                        repositoryAccessor,
+                        fieldToContractInputMappingOperationBuilder,
+                        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore(),
+                        sharedImages),
+                this, true);
         dialog.open();
     }
 

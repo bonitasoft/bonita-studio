@@ -91,5 +91,8 @@ public class Messages extends NLS {
     public static String contractInputDescriptionTooltip;
     public static String errorTitle;
     public static String contractFromDataCreationErrorMessage;
+    public static String contractGenerationTitle;
+    public static String contractGenerationMsg;
+    public static String doNotShowMeAgain;
 
 }
