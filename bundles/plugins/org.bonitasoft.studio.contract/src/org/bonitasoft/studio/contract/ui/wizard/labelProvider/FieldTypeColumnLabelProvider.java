@@ -15,10 +15,10 @@
 package org.bonitasoft.studio.contract.ui.wizard.labelProvider;
 
 import org.bonitasoft.engine.bdm.BDMQueryUtil;
+import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
-import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
-import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
+import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 
 /**
@@ -28,16 +28,26 @@ public class FieldTypeColumnLabelProvider extends ColumnLabelProvider {
 
     @Override
     public String getText(final Object element) {
-        if (element instanceof SimpleFieldToContractInputMapping) {
-            final SimpleFieldToContractInputMapping mapping = (SimpleFieldToContractInputMapping) element;
-            return ((SimpleField) mapping.getField()).getType().name();
-        } else {
-            if (element instanceof RelationFieldToContractInputMapping) {
-                final RelationFieldToContractInputMapping mapping = (RelationFieldToContractInputMapping) element;
-                return BDMQueryUtil.getSimpleBusinessObjectName(((RelationField) mapping.getField()).getReference().getQualifiedName());
-            }
+        if (element instanceof FieldToContractInputMapping) {
+            final Field field = ((FieldToContractInputMapping) element).getField();
+            return typeLabel(field);
         }
-
         return super.getText(element);
+    }
+
+    private String typeLabel(final Field field) {
+        final StringBuilder sb = new StringBuilder();
+        if (field.isCollection()) {
+            sb.append("List<");
+        }
+        if (field instanceof SimpleField) {
+            sb.append(((SimpleField) field).getType().name());
+        } else if (field instanceof RelationField) {
+            sb.append(BDMQueryUtil.getSimpleBusinessObjectName(((RelationField) field).getReference().getQualifiedName()));
+        }
+        if (field.isCollection()) {
+            sb.append(">");
+        }
+        return sb.toString();
     }
 }
