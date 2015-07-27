@@ -1,17 +1,14 @@
 /**
  * Copyright (C) 2011-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -35,7 +32,6 @@ import org.eclipse.core.runtime.Platform;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class UpdateRSSContribution implements IPreStartupContribution {
 
@@ -138,12 +134,30 @@ public class UpdateRSSContribution implements IPreStartupContribution {
      */
     @Override
     public void execute() {
-        new UpdateRSSThread("7-0-community", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=163&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=0", getClass()).start();
-        new UpdateRSSThread("7-0-blogs", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=152&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=0", getClass()).start();
-        new UpdateRSSThread("7-0-documentation", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=158&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=0", getClass()).start();
-        new UpdateRSSThread("7-0-examples-community", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=159&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=0", getClass()).start();
-        new UpdateRSSThread("7-0-training", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=153&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=0", getClass()).start();
-        new UpdateRSSThread("7-0-videos-community", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=154&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=0", getClass()).start();
+        new UpdateRSSThread(
+                "7-0-community",
+                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=163&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=2",
+                getClass()).start();
+        new UpdateRSSThread(
+                "7-0-blogs",
+                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=152&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=2",
+                getClass()).start();
+        new UpdateRSSThread(
+                "7-0-documentation",
+                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=158&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=2",
+                getClass()).start();
+        new UpdateRSSThread(
+                "7-0-examples-community",
+                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=159&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=2",
+                getClass()).start();
+        new UpdateRSSThread(
+                "7-0-training",
+                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=153&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=2",
+                getClass()).start();
+        new UpdateRSSThread(
+                "7-0-videos-community",
+                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=154&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=2",
+                getClass()).start();
     }
 
     /*

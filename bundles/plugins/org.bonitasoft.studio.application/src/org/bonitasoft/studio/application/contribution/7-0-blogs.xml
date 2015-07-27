@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" ?>
+﻿﻿<?xml version="1.0" ?>
 <rss version="2.0">
   <channel>
     <pubDate>2015-06-08</pubDate>
@@ -7,46 +7,55 @@
     <title>Bonitasoft latest blog posts</title>
     <link>http://www.bonitasoft.com/blog</link>
     <description>Latest posts from the Bonitasoft blog</description>
+
     <item>
-       <pubDate>2015-06-08</pubDate>
+       <pubDate>2015-07-08</pubDate>
+       <author>Miguel Valdés Faura</author>
+       <category>News</category>
+       <title>We’re a different kind of BPM company</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/were-different-kind-bpm-company</link>
+       <description></description>
+    </item>	
+    <item>
+       <pubDate>2015-07-02</pubDate>
        <author>Laura Balp</author>
        <category>News</category>
-       <!-- TODO update link -->
        <title>Bonita BPM 7.0.1 now available!</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/bonita-bpm-701-here</link>
        <description></description>
     </item>
     <item>
-       <pubDate>2015-06-01</pubDate>
-       <author>Mickey Farrance</author>
+       <pubDate>2015-06-22</pubDate>
+       <author>Miguel Valdés Faura</author>
        <category>News</category>
-       <title>BPM-CON</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/gartners-bpm-leaders-due-diligence-day</link>
+       <title>Time to Set Developers Free</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/time-set-developers-free</link>
        <description></description>
     </item>
     <item>
-       <pubDate>2015-06-01</pubDate>
-       <author>Mickey Farrance</author>
-       <category>News</category>
-       <title>Bonita BPM 7 - UI designer</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/bonita-bpm-7-first-peek-ui-designer-bpmnext</link>
-       <description></description>
-    </item>
-    <item>
-       <pubDate>2015-05-07</pubDate>
+       <pubDate>2015-06-18</pubDate>
        <author>Laura Balp</author>
        <category>News</category>
-       <title>Bonita BPM 6.5.2 now available!</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/bonita-bpm-652-now-available</link>
+       <title>Bonita BPM 7.0.0 now available!</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/bonita-bpm-70-here</link>
        <description></description>
     </item>
     <item>
-       <pubDate>2015-03-26</pubDate>
-       <author>Mickey Farrance </author>
+       <pubDate>2015-06-16</pubDate>
+       <author>Miguel Valdés Faura</author>
        <category>News</category>
-       <title>bpmNEXT 2015 - Defining the Next...</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/bpmnext-2015-defining-next-generation-process-innovation</link>
+       <title>The benefits of creating "Living Applications"</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/benefits-creating-living-applications</link>
        <description></description>
     </item>
+    <item>
+       <pubDate>2015-06-01</pubDate>
+       <author>Miguel Valdés Faura</author>
+       <category>News</category>
+       <title>A new wave of customization</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/new-wave-customization</link>
+       <description></description>
+    </item>
+
    </channel>
 </rss>
