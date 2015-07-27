@@ -61,6 +61,10 @@ public class Messages extends NLS {
 
     public static String newFormTooltipForTask;
     public static String waitingForTomcatServer;
+    public static String noForm;
+    public static String noFormMessageOnTask;
+    public static String noFormMessageOnProcess;
+    public static String urlNotDefined;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

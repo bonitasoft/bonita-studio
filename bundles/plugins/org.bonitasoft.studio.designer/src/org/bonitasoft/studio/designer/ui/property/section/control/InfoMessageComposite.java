@@ -26,12 +26,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
-
-public class LegacyComposite extends Composite {
+public class InfoMessageComposite extends Composite {
 
     private final Label info;
 
-    public LegacyComposite(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory) {
+    public InfoMessageComposite(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory) {
         super(parent, SWT.NONE);
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 0, 10, 0).create());
         info = widgetFactory.createLabel(this, "", SWT.WRAP);
@@ -39,13 +38,13 @@ public class LegacyComposite extends Composite {
         widgetFactory.adapt(this);
     }
 
-    public void doBindControl(final DataBindingContext context, final IObservableValue formMappingObservable) {
-        doBindInfo(context, formMappingObservable);
+    public void doBindControl(final DataBindingContext context, final IObservableValue formMappingObservable, final FormMappingType type) {
+        doBindInfo(context, formMappingObservable, type);
     }
 
-    protected void doBindInfo(final DataBindingContext context, final IObservableValue formMappingObservable) {
+    protected void doBindInfo(final DataBindingContext context, final IObservableValue formMappingObservable, final FormMappingType type) {
         final UpdateValueStrategy infoStrategy = new UpdateValueStrategy();
-        infoStrategy.setConverter(new InfoMessageConverter(FormMappingType.LEGACY));
+        infoStrategy.setConverter(new InfoMessageConverter(type));
         context.bindValue(SWTObservables.observeText(info), formMappingObservable, null, infoStrategy);
     }
 }

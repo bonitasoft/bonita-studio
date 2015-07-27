@@ -9911,5 +9911,18 @@
   <releases date="2015-06-11T10:33:11.824+0200" label="7.0.1-001">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.ShapeFillColorCustomMigration"/>
   </releases>
+  <releases date="2015-07-27T11:43:27.494+0200" label="7.1.0-001">
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Create" target="process.ecore#//FormMappingType"
+          referenceName="eLiterals" element="process.ecore#//FormMappingType/NONE">
+        <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/NONE"
+            featureName="literal" dataValue="NONE"/>
+        <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/NONE"
+            featureName="name" dataValue="NONE"/>
+        <changes xsi:type="history:Set" element="process.ecore#//FormMappingType/NONE"
+            featureName="value" dataValue="3" oldDataValue="0"/>
+      </changes>
+    </changes>
+  </releases>
   <releases/>
 </history:History>

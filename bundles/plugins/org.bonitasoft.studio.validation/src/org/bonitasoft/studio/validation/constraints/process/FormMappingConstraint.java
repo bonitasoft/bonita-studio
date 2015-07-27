@@ -18,7 +18,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Predicates.not;
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -58,14 +57,10 @@ public class FormMappingConstraint extends AbstractLiveValidationMarkerConstrain
         final EObject eObj = ctx.getTarget();
         checkArgument(eObj instanceof FormMapping);
         final FormMapping formMapping = (FormMapping) eObj;
-        switch (formMapping.getType()) {
-            case INTERNAL:
-                return doValidateInternalMapping(ctx, formMapping);
-            case URL:
-                return doValidateURLMapping(ctx, formMapping);
-            default:
-                return ctx.createSuccessStatus();
+        if (formMapping.getType() == FormMappingType.INTERNAL) {
+            return doValidateInternalMapping(ctx, formMapping);
         }
+        return ctx.createSuccessStatus();
     }
 
     private IStatus doValidateInternalMapping(final IValidationContext ctx, final FormMapping formMapping) {
@@ -130,11 +125,6 @@ public class FormMappingConstraint extends AbstractLiveValidationMarkerConstrain
                 return Objects.equals(formMapping.getTargetForm().getContent(), input.getTargetForm().getContent());
             }
         };
-    }
-
-    private IStatus doValidateURLMapping(final IValidationContext ctx, final FormMapping formMapping) {
-        return isNullOrEmpty(formMapping.getUrl()) ? ctx.createFailureStatus(Messages.bind(Messages.invalidURLFormMapping, mappingKind(formMapping))) : ctx
-                .createSuccessStatus();
     }
 
     private String mappingKind(final EObject eObj) {

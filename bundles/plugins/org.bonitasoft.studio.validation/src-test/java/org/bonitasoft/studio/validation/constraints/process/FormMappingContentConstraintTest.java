@@ -27,11 +27,11 @@ import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.emf.validation.IValidationContext;
 import org.junit.Test;
 
-public class InternalFormMappingConstraintTest {
+public class FormMappingContentConstraintTest {
 
     @Test
     public void should_fail_if_form_mapping_is_INTERNAL_and_has_no_target_form() throws Exception {
-        final InternalFormMappingConstraint internalFormMappingConstraint = new InternalFormMappingConstraint();
+        final FormMappingContentConstraint internalFormMappingConstraint = new FormMappingContentConstraint();
 
         final IValidationContext validationContext = aValidationContext(aFormMapping().withType(FormMappingType.INTERNAL).havingTargetForm(anExpression())
                 .build());
@@ -42,7 +42,7 @@ public class InternalFormMappingConstraintTest {
 
     @Test
     public void should_fail_if_form_mapping_is_INTERNAL_and_has_no_target_form_and_on_diagram() throws Exception {
-        final InternalFormMappingConstraint internalFormMappingConstraint = new InternalFormMappingConstraint();
+        final FormMappingContentConstraint internalFormMappingConstraint = new FormMappingContentConstraint();
 
         final FormMapping formMapping = aFormMapping().withType(FormMappingType.INTERNAL).havingTargetForm(anExpression())
                 .build();
@@ -56,7 +56,7 @@ public class InternalFormMappingConstraintTest {
 
     @Test
     public void should_not_fail_if_form_mapping_is_INTERNAL_and_has_target_form() throws Exception {
-        final InternalFormMappingConstraint internalFormMappingConstraint = new InternalFormMappingConstraint();
+        final FormMappingContentConstraint internalFormMappingConstraint = new FormMappingContentConstraint();
 
         final IValidationContext validationContext = aValidationContext(aFormMapping().withType(FormMappingType.INTERNAL)
                 .havingTargetForm(anExpression().withContent("a_form_id"))
@@ -68,7 +68,7 @@ public class InternalFormMappingConstraintTest {
 
     @Test
     public void should_not_fail_if_form_mapping_is_not_INTERNAL() throws Exception {
-        final InternalFormMappingConstraint internalFormMappingConstraint = new InternalFormMappingConstraint();
+        final FormMappingContentConstraint internalFormMappingConstraint = new FormMappingContentConstraint();
 
         final IValidationContext validationContext = aValidationContext(aFormMapping().withType(FormMappingType.LEGACY)
                 .havingTargetForm(anExpression().withContent("a_form_id"))
@@ -76,6 +76,16 @@ public class InternalFormMappingConstraintTest {
         internalFormMappingConstraint.performBatchValidation(validationContext);
 
         verify(validationContext).createSuccessStatus();
+    }
+
+    @Test
+    public void should_return_an_error_status_if_not_url_set_for_URL_type() throws Exception {
+        final FormMappingContentConstraint constraint = new FormMappingContentConstraint();
+
+        final IValidationContext validationContext = aValidationContext(aFormMapping().withType(FormMappingType.URL).build());
+        constraint.performBatchValidation(validationContext);
+
+        verify(validationContext).createFailureStatus(Messages.invalidURLFormMapping);
     }
 
     private IValidationContext aValidationContext(final FormMapping formMapping) {
