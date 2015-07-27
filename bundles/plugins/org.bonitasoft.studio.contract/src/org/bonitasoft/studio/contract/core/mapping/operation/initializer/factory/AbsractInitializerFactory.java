@@ -14,34 +14,26 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory;
 
-import static com.google.common.collect.Iterables.tryFind;
-import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withContractInputName;
-
 import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
+import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.ContractInput;
-
-import com.google.common.base.Optional;
 
 public abstract class AbsractInitializerFactory implements InitializerFactory {
 
-    protected ContractInput persistenceIdInput(final ContractInput contractInput) {
-        if (withContractInputName(Field.PERSISTENCE_ID).apply(contractInput)) {
-            return contractInput;
-        }
-        final Optional<ContractInput> persistenceIdInput = tryFind(contractInput.getInputs(), withContractInputName(Field.PERSISTENCE_ID));
-        if (persistenceIdInput.isPresent()) {
-            return persistenceIdInput.get();
-        }
-        throw new IllegalStateException(String.format("persistenceId input not found in %s", contractInput.getName()));
-    }
-
     protected BusinessObject firstMultipleParentBusinessObject(final FieldToContractInputMapping mapping) {
         FieldToContractInputMapping parentMapping = mapping.getParent();
-        while (parentMapping != null && !parentMapping.getField().isCollection()) {
+        while (parentMapping != null && !(parentMapping.getField().isCollection() && parentMapping instanceof RelationFieldToContractInputMapping)) {
+            parentMapping = parentMapping.getParent();
+        }
+
+        return parentMapping != null ? ((RelationField) parentMapping.getField()).getReference() : null;
+    }
+
+    protected BusinessObject businessObject(final FieldToContractInputMapping mapping) {
+        FieldToContractInputMapping parentMapping = mapping;
+        while (parentMapping != null && !(parentMapping.getField().isCollection() && parentMapping instanceof RelationFieldToContractInputMapping)) {
             parentMapping = parentMapping.getParent();
         }
 

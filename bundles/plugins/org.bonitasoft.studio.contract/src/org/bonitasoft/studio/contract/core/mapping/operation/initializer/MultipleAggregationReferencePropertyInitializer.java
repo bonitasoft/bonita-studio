@@ -24,15 +24,15 @@ import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
 
-public class MultipleCompositionReferencePropertyInitializer extends NewBusinessObjectListInitializer implements IPropertyInitializer {
+public class MultipleAggregationReferencePropertyInitializer extends MultipleBusinessObjectQueryInitializer implements IPropertyInitializer {
 
-    private final BusinessObject parentBusinessObject;
+    private final BusinessObject multipleParentBusinessObject;
 
-    public MultipleCompositionReferencePropertyInitializer(final BusinessObject parentBusinessObject, final RelationField field,
-            final ContractInput contractInput,
-            final String refName) {
-        super(field, contractInput, refName);
-        this.parentBusinessObject = parentBusinessObject;
+    public MultipleAggregationReferencePropertyInitializer(final BusinessObject multipleParentBusinessObject, final BusinessObject businessObject,
+            final RelationField field,
+            final ContractInput contractInput, final String refName) {
+        super(businessObject, field, contractInput, refName);
+        this.multipleParentBusinessObject = multipleParentBusinessObject;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class MultipleCompositionReferencePropertyInitializer extends NewBusiness
 
     @Override
     protected boolean shouldAppendExistingObjects() {
-        return parentBusinessObject == null;
+        return multipleParentBusinessObject == null;
     }
 
     @Override
@@ -57,11 +57,11 @@ public class MultipleCompositionReferencePropertyInitializer extends NewBusiness
     }
 
     private String buildListAccessorWithIteratorName() {
-        return iteratorName(parentBusinessObject) + "." + Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput));
+        return iteratorName(multipleParentBusinessObject) + "." + Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput));
     }
 
     private boolean shouldUseParentIterator() {
-        return contractInput.eContainer() != null && parentBusinessObject != null && withComplexMultipleInHierarchy().apply(contractInput);
+        return contractInput.eContainer() != null && multipleParentBusinessObject != null && withComplexMultipleInHierarchy().apply(contractInput);
     }
 
 }
