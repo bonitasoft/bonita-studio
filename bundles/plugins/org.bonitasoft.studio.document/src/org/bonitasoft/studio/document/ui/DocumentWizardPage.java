@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.document.ui;
 
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+
 import java.util.Iterator;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -38,6 +40,8 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
@@ -249,7 +253,7 @@ public class DocumentWizardPage extends WizardPage {
         final Button radioButtonSingle = createRadioButtonSingle(radioContainer);
         final Button radioButtonMultiple = createRadioButtonMultiple(radioContainer);
 
-        final SelectObservableValue isMultipleObservableValue = new SelectObservableValue(ProcessPackage.DOCUMENT__MULTIPLE);
+        final SelectObservableValue isMultipleObservableValue = new SelectObservableValue(Boolean.class);
         isMultipleObservableValue.addOption(false, SWTObservables.observeSelection(radioButtonSingle));
         isMultipleObservableValue.addOption(true, SWTObservables.observeSelection(radioButtonMultiple));
 
@@ -314,15 +318,16 @@ public class DocumentWizardPage extends WizardPage {
         final Button radioButtonScript = createRadioButtonInternal(radioContainer);
         radioButtonScript.setText(Messages.initialValueButtonScript);
 
-        final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(ProcessPackage.DOCUMENT_TYPE);
+        final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(DocumentType.class);
         final ISWTObservableValue scriptObserveSelection = SWTObservables.observeSelection(radioButtonScript);
         documentTypeObservableValue.addOption(DocumentType.NONE, SWTObservables.observeSelection(radioButtonNone));
         documentTypeObservableValue.addOption(DocumentType.INTERNAL, scriptObserveSelection);
-        documentTypeObservableValue.addOption(DocumentType.EXTERNAL, scriptObserveSelection);
         documentTypeObservableValue.addOption(DocumentType.CONTRACT, SWTObservables.observeSelection(radioButtonContract));
 
         final IObservableValue documentTypeObservable = EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE);
-        emfDataBindingContext.bindValue(documentTypeObservableValue, documentTypeObservable);
+        emfDataBindingContext.bindValue(documentTypeObservableValue, documentTypeObservable, null,
+                updateValueStrategy().withConverter(internalOrExternalToTrue())
+                        .create());
         documentTypeObservable.addValueChangeListener(new IValueChangeListener() {
 
             @Override
@@ -342,6 +347,16 @@ public class DocumentWizardPage extends WizardPage {
         multipleContractComposite = new MultipleFileContractInputSelectionComposite(multipleStackedComposite);
         multipleContractComposite.bindControl(document, context, emfDataBindingContext);
         scriptComposite = createScriptComposite(multipleStackedComposite, emfDataBindingContext);
+    }
+
+    private IConverter internalOrExternalToTrue() {
+        return new Converter(DocumentType.class, DocumentType.class) {
+
+            @Override
+            public Object convert(final Object fromObject) {
+                return fromObject == DocumentType.INTERNAL || fromObject == DocumentType.EXTERNAL ? DocumentType.INTERNAL : fromObject;
+            }
+        };
     }
 
     private Composite createScriptComposite(final Composite parent, final EMFDataBindingContext emfDataBindingContext) {
@@ -484,7 +499,7 @@ public class DocumentWizardPage extends WizardPage {
         final Button radioButtonInternal = createRadioButtonInternal(compo);
         final Button radioButtonExternal = createRadioButtonExternal(compo);
 
-        final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(ProcessPackage.DOCUMENT_TYPE);
+        final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(DocumentType.class);
         documentTypeObservableValue.addOption(DocumentType.NONE, SWTObservables.observeSelection(radioButtonNone));
         documentTypeObservableValue.addOption(DocumentType.CONTRACT, SWTObservables.observeSelection(radioButtonContract));
         documentTypeObservableValue.addOption(DocumentType.EXTERNAL, SWTObservables.observeSelection(radioButtonExternal));
