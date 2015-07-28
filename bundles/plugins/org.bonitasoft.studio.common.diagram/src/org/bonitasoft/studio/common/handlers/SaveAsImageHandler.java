@@ -42,7 +42,10 @@ public class SaveAsImageHandler extends AbstractHandler {
 
             @Override
             protected List createOperationSet() {
-                return Collections.singletonList(((DiagramEditor) getWorkbenchPart()).getDiagramEditPart());
+                if (getWorkbenchPart() instanceof DiagramEditor) {
+                    return Collections.singletonList(((DiagramEditor) getWorkbenchPart()).getDiagramEditPart());
+                }
+                return Collections.emptyList();
             }
 
             @Override
