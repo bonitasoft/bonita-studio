@@ -167,7 +167,7 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
                     updateConnectorButton.setEnabled(false);
                 }
             }
-            if (!moveButton.isDisposed()) {
+            if (moveButton != null && !moveButton.isDisposed()) {
                 moveButton.setEnabled(!selection.isEmpty());
             }
         }
