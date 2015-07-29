@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.contract.ui.wizard;
 
 import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -41,13 +42,17 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.ISharedImages;
 
 /**
  * @author aurelie
  */
 public class ContractInputGenerationWizard extends Wizard {
 
+    static final String HIDE_GENERATION_SUCCESS_DIALOG = "SHOW_GENERATION_SUCCESS_DIALOG";
     private final EditingDomain editingDomain;
     private final ContractContainer contractContainer;
     private CreateContractInputFromBusinessObjectWizardPage contractInputFromBusinessObjectWizardPage;
@@ -56,9 +61,15 @@ public class ContractInputGenerationWizard extends Wizard {
     private final FieldToContractInputMappingFactory fieldToContractInputMappingFactory;
     private final RepositoryAccessor repositoryAccessor;
     private final FieldToContractInputMappingOperationBuilder operationBuilder;
+    private final IPreferenceStore preferenceStore;
+    private final ISharedImages sharedImagesService;
 
-    public ContractInputGenerationWizard(final ContractContainer contractContainer, final EditingDomain editingDomain,
-            final RepositoryAccessor repositoryAccessor, final FieldToContractInputMappingOperationBuilder operationBuilder) {
+    public ContractInputGenerationWizard(final ContractContainer contractContainer,
+            final EditingDomain editingDomain,
+            final RepositoryAccessor repositoryAccessor,
+            final FieldToContractInputMappingOperationBuilder operationBuilder,
+            final IPreferenceStore preferenceStore,
+            final ISharedImages sharedImagesService) {
         setWindowTitle(Messages.contractInputGenerationTitle);
         setDefaultPageImageDescriptor(Pics.getWizban());
         this.contractContainer = contractContainer;
@@ -66,6 +77,8 @@ public class ContractInputGenerationWizard extends Wizard {
         this.repositoryAccessor = repositoryAccessor;
         fieldToContractInputMappingFactory = new FieldToContractInputMappingFactory();
         this.operationBuilder = operationBuilder;
+        this.preferenceStore = preferenceStore;
+        this.sharedImagesService = sharedImagesService;
     }
 
     @Override
@@ -78,7 +91,8 @@ public class ContractInputGenerationWizard extends Wizard {
         addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable,
                 repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)));
         contractInputFromBusinessObjectWizardPage = new CreateContractInputFromBusinessObjectWizardPage(contractContainer.getContract(),
-                selectedDataObservable, fieldToContractInputMappingFactory, repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
+                selectedDataObservable, fieldToContractInputMappingFactory, repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class),
+                sharedImagesService);
         contractInputFromBusinessObjectWizardPage.setTitle();
         addPage(contractInputFromBusinessObjectWizardPage);
     }
@@ -126,6 +140,19 @@ public class ContractInputGenerationWizard extends Wizard {
 
         }
         editingDomain.getCommandStack().execute(cc);
+        openInfoDialog();
         return true;
+    }
+
+    protected void openInfoDialog() {
+        if (isNullOrEmpty(preferenceStore.getString(HIDE_GENERATION_SUCCESS_DIALOG))) {
+            MessageDialogWithToggle.openInformation(getShell(),
+                    Messages.contractGenerationTitle,
+                    Messages.contractGenerationMsg,
+                    Messages.doNotShowMeAgain,
+                    false,
+                    preferenceStore,
+                    HIDE_GENERATION_SUCCESS_DIALOG);
+        }
     }
 }

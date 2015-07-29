@@ -27,7 +27,7 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Test;
 
-public class BusinessObjectListInitializerTest {
+public class NewBusinessObjectListInitializerTest {
 
     @Test
     public void should_initialize_new_object_property_for_multiple_composed_reference() throws Exception {
@@ -36,15 +36,18 @@ public class BusinessObjectListInitializerTest {
         final RelationField addressField = aCompositionField("address",
                 businessObject);
         addressField.setCollection(true);
-        final BusinessObjectListInitializer propertyInitializer = new BusinessObjectListInitializer(addressField, aContractInput().withName("address")
-                .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build(), "myAddress");
+        final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(addressField, aContractInput().withName("address")
+                .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build(), "myAddresses");
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX).multiple()
                                 .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX))).build()));
         assertThat(propertyInitializer.getInitialValue()).isEqualTo("def addressList = []" + System.lineSeparator()
-                + "addressList.addAll(myAddress)" + System.lineSeparator()
+                + "//Append existing myAddresses" + System.lineSeparator()
+                + "addressList.addAll(myAddresses)" + System.lineSeparator()
+                + "//For each item collected in multiple input" + System.lineSeparator()
                 + "employee.address.each{" + System.lineSeparator()
+                + "//Add a new composed Address instance" + System.lineSeparator()
                 + "addressList.add({ currentAddressInput ->" + System.lineSeparator()
                 + "def addressVar = new org.test.Address()" + System.lineSeparator()
                 + "addressVar.street = currentAddressInput.street" + System.lineSeparator()
@@ -61,14 +64,16 @@ public class BusinessObjectListInitializerTest {
         final RelationField addressField = aCompositionField("address",
                 businessObject);
         addressField.setCollection(true);
-        final BusinessObjectListInitializer propertyInitializer = new BusinessObjectListInitializer(addressField, aContractInput().withName("addresses")
+        final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(addressField, aContractInput().withName("addresses")
                 .multiple().build(), "myAddress");
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX).multiple()
                                 .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX))).build()));
         assertThat(propertyInitializer.getInitialValue()).isEqualTo("def addressList = []" + System.lineSeparator()
+                + "//For each item collected in multiple input" + System.lineSeparator()
                 + "addresses.each{" + System.lineSeparator()
+                + "//Add a new composed Address instance" + System.lineSeparator()
                 + "addressList.add({ currentAddressInput ->" + System.lineSeparator()
                 + "def addressVar = new org.test.Address()" + System.lineSeparator()
                 + "addressVar.street = currentAddressInput.street" + System.lineSeparator()

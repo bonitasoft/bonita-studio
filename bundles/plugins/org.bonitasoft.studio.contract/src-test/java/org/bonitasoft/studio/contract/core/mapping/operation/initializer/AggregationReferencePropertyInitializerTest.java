@@ -32,6 +32,7 @@ public class AggregationReferencePropertyInitializerTest {
         final String initialValue = propertyInitializer.getInitialValue();
 
         assertThat(initialValue).isEqualTo("{" + System.lineSeparator()
+                + "//Retrieve aggregated country using its DAO and persistenceId" + System.lineSeparator()
                 + "def countryVar = countryDAO.findByPersistenceId(country.persistenceId.toLong())" + System.lineSeparator()
                 + "return countryVar}()");
     }

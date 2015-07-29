@@ -17,10 +17,11 @@ package org.bonitasoft.studio.contract.core.mapping.operation.initializer.factor
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
-import org.bonitasoft.studio.contract.core.mapping.operation.initializer.BusinessObjectListInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.BusinessObjectQueryInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IPropertyInitializer;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleBusinessObjectQueryInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.NewBusinessObjectInitializer;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.NewBusinessObjectListInitializer;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 
 public class BusinessObjectInitializerFactory extends AbsractInitializerFactory implements InitializerFactory {
@@ -36,9 +37,10 @@ public class BusinessObjectInitializerFactory extends AbsractInitializerFactory 
             final BusinessObjectData data,
             final RelationField relationField) {
         return relationField.isCollection() ?
-                new BusinessObjectListInitializer(relationField, mapping.getContractInput(), toRefName(mapping, data))
+                new MultipleBusinessObjectQueryInitializer(businessObject(mapping), relationField,
+                        mapping.getContractInput(), toRefName(mapping, data))
                 : new BusinessObjectQueryInitializer(firstMultipleParentBusinessObject(mapping), relationField,
-                        persistenceIdInput(mapping.getContractInput()),
+                        mapping.getContractInput(),
                         toRefName(mapping, data));
     }
 
@@ -46,7 +48,7 @@ public class BusinessObjectInitializerFactory extends AbsractInitializerFactory 
             final BusinessObjectData data,
             final RelationField relationField) {
         return relationField.isCollection() ?
-                new BusinessObjectListInitializer(relationField, mapping.getContractInput(), toRefName(mapping, data)) :
+                new NewBusinessObjectListInitializer(relationField, mapping.getContractInput(), toRefName(mapping, data)) :
                 new NewBusinessObjectInitializer(relationField, toRefName(mapping, data));
     }
 

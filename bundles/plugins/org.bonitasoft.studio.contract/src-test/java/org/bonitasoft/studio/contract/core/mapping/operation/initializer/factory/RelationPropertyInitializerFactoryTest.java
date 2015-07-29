@@ -32,6 +32,7 @@ import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFa
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.AggregationReferencePropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.CompositionReferencePropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IPropertyInitializer;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleAggregationReferencePropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleCompositionReferencePropertyInitializer;
 import org.junit.Test;
 
@@ -80,6 +81,20 @@ public class RelationPropertyInitializerFactoryTest {
                 .withName("employee").build());
 
         assertThat(propertyInitializer).isInstanceOf(AggregationReferencePropertyInitializer.class);
+    }
+
+    @Test
+    public void should_create_a_MultipleAggregationReferencePropertyInitializer() throws Exception {
+        final RelationPropertyInitializerFactory factory = newFactory();
+
+        final RelationField anAggregationField = anAggregationField("countries", aBO("Country").build());
+        anAggregationField.setCollection(true);
+        final BusinessObject businessObject = aBO("Employee").withField(anAggregationField).build();
+        final List<FieldToContractInputMapping> mappings = new FieldToContractInputMappingFactory().createMappingForBusinessObjectType(businessObject);
+        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mappings.get(0), aBusinessData()
+                .withName("employee").build());
+
+        assertThat(propertyInitializer).isInstanceOf(MultipleAggregationReferencePropertyInitializer.class);
     }
 
     private RelationPropertyInitializerFactory newFactory() {

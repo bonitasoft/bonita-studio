@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
-import org.bonitasoft.engine.bpm.contract.Type;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
 import org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder;
@@ -30,18 +29,37 @@ public class FieldTypeColumnLabelProviderTest {
 
     @Test
     public void should_return_simple_field_type_name() {
-        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping((SimpleField) SimpleFieldBuilder.aTextField("employee")
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(SimpleFieldBuilder.aTextField("employee")
                 .withName("employee").build());
         final FieldTypeColumnLabelProvider provider = new FieldTypeColumnLabelProvider();
-        assertThat(provider.getText(mapping)).isEqualTo(Type.TEXT.name());
+        assertThat(provider.getText(mapping)).isEqualTo("TEXT");
     }
 
     @Test
     public void should_return_complex_field_type_name() {
-        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping((RelationField) RelationFieldBuilder.aCompositionField(
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(RelationFieldBuilder.aCompositionField(
                 "employee",
                 BusinessObjectBuilder.aBO("com.company.Manager").build()));
         final FieldTypeColumnLabelProvider provider = new FieldTypeColumnLabelProvider();
-        assertThat(provider.getText(mapping)).isEqualTo("com.company.Manager");
+        assertThat(provider.getText(mapping)).isEqualTo("Manager");
+    }
+
+    @Test
+    public void should_return_complex_field_type_name_prepend_with_list_for_multiple_references() {
+        final RelationField relationField = RelationFieldBuilder.aCompositionField(
+                "employee",
+                BusinessObjectBuilder.aBO("com.company.Manager").build());
+        relationField.setCollection(true);
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(relationField);
+        final FieldTypeColumnLabelProvider provider = new FieldTypeColumnLabelProvider();
+        assertThat(provider.getText(mapping)).isEqualTo("List<Manager>");
+    }
+
+    @Test
+    public void should_return_simple_field_type_name_prepend_with_list_for_multiple_attributes() {
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping((SimpleField) SimpleFieldBuilder.aTextField("employee")
+                .withName("employee").multiple().build());
+        final FieldTypeColumnLabelProvider provider = new FieldTypeColumnLabelProvider();
+        assertThat(provider.getText(mapping)).isEqualTo("List<TEXT>");
     }
 }
