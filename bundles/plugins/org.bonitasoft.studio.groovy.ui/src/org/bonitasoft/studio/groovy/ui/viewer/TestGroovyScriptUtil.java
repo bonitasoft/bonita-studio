@@ -158,7 +158,7 @@ public class TestGroovyScriptUtil {
 
     private static void initializeVariableTypes(final GroovyCompilationUnit unit, final VariableScope scope, final Map<String, Serializable> variableMap,
             final List<ScriptVariable> nodes) {
-        final VariablesVisitor variablesVisitor = new VariablesVisitor();
+        final VariablesVisitor variablesVisitor = new VariablesVisitor(scope);
         unit.getModuleNode().getStatementBlock().visit(variablesVisitor);
         for (final String variable : variablesVisitor.getVariableExpressions()) {
             final ScriptVariable processVariable = getProcessVariable(variable, nodes);

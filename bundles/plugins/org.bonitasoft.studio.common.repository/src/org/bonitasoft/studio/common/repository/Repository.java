@@ -38,9 +38,10 @@ import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectClasspath;
 import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaBPMProjectOperation;
+import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
+import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.bonitasoft.studio.common.repository.model.IJavaContainer;
@@ -97,29 +98,36 @@ public class Repository implements IRepository, IJavaContainer {
 
     private static final String CLASS = "class";
 
-    private String name;
-
-    private IProject project;
+    private final IProject project;
 
     private SortedMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>> stores;
 
-    private JDTTypeHierarchyManager jdtTypeHierarchyManager;
+    private final JDTTypeHierarchyManager jdtTypeHierarchyManager;
 
     private boolean migrationEnabled = false;
 
-    private ExtensionContextInjectionFactory extensionContextInjectionFactory;;
+    private final ExtensionContextInjectionFactory extensionContextInjectionFactory;
 
-    public Repository() {
+    private final ProjectManifestFactory projectManifestFactory;
 
-    }
+    private final IWorkspace workspace;
 
-    @Override
-    public void createRepository(final String repositoryName, final boolean migrationEnabled) {
-        name = repositoryName;
-        project = ResourcesPlugin.getWorkspace().getRoot().getProject(repositoryName);
-        jdtTypeHierarchyManager = new JDTTypeHierarchyManager();
+    private final ProjectClasspathFactory bonitaBPMProjectClasspath;
+
+    public Repository(final IWorkspace workspace,
+            final IProject project,
+            final ExtensionContextInjectionFactory extensionContextInjectionFactory,
+            final JDTTypeHierarchyManager jdtTypeHierarchyManager,
+            final ProjectManifestFactory projectManifestFactory,
+            final ProjectClasspathFactory bonitaBPMProjectClasspath,
+            final boolean migrationEnabled) {
+        this.workspace = workspace;
+        this.project = project;
+        this.jdtTypeHierarchyManager = jdtTypeHierarchyManager;
         this.migrationEnabled = migrationEnabled;
-        extensionContextInjectionFactory = new ExtensionContextInjectionFactory();
+        this.extensionContextInjectionFactory = extensionContextInjectionFactory;
+        this.projectManifestFactory = projectManifestFactory;
+        this.bonitaBPMProjectClasspath = bonitaBPMProjectClasspath;
     }
 
     @Override
@@ -128,14 +136,12 @@ public class Repository implements IRepository, IJavaContainer {
         if (BonitaStudioLog.isLoggable(IStatus.OK)) {
             BonitaStudioLog.debug("Creating repository " + project.getName() + "...", CommonRepositoryPlugin.PLUGIN_ID);
         }
-        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         try {
             disableBuild();
             if (!project.exists()) {
-                workspace.run(newProjectWorkspaceOperation(name, workspace), monitor);
+                workspace.run(newProjectWorkspaceOperation(project.getName(), workspace), monitor);
             }
             open(monitor);
-            new BonitaBPMProjectClasspath(project, this).create(monitor);
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         } finally {
@@ -173,7 +179,7 @@ public class Repository implements IRepository, IJavaContainer {
      */
     @Override
     public String getName() {
-        return name;
+        return project.getName();
     }
 
     /*
@@ -219,8 +225,14 @@ public class Repository implements IRepository, IJavaContainer {
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
-        initRepositoryStores(monitor);
-        enableBuild();
+        try {
+            projectManifestFactory.createProjectManifest(project, monitor);
+            initRepositoryStores(monitor);
+            enableBuild();
+            bonitaBPMProjectClasspath.create(this, monitor);
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e);
+        }
         return this;
     }
 
@@ -322,10 +334,9 @@ public class Repository implements IRepository, IJavaContainer {
 
     @Override
     public void enableBuild() {
-        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         Job.getJobManager().wakeUp(ResourcesPlugin.FAMILY_AUTO_BUILD);
         final IWorkspaceDescription desc = workspace.getDescription();
-        if (!desc.isAutoBuilding()) {
+        if (desc != null && !desc.isAutoBuilding()) {
             final boolean enableAutobuild = PlatformUI.isWorkbenchRunning();
             desc.setAutoBuilding(enableAutobuild);
             try {
@@ -339,9 +350,8 @@ public class Repository implements IRepository, IJavaContainer {
 
     @Override
     public void disableBuild() {
-        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IWorkspaceDescription desc = workspace.getDescription();
-        if (desc.isAutoBuilding()) {
+        if (desc != null && desc.isAutoBuilding()) {
             desc.setAutoBuilding(false);
             try {
                 workspace.setDescription(desc);
@@ -362,7 +372,7 @@ public class Repository implements IRepository, IJavaContainer {
                 if (!getProject().isSynchronized(IResource.DEPTH_INFINITE)) {
                     getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
                 }
-                new BonitaBPMProjectClasspath(project, this).refresh(monitor);
+                new ProjectClasspathFactory().refresh(this, monitor);
                 project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
             } catch (final Exception ex) {
                 BonitaStudioLog.error(ex);
@@ -392,10 +402,9 @@ public class Repository implements IRepository, IJavaContainer {
     @Override
     public void delete(final IProgressMonitor monitor) {
         BonitaStudioLog.debug("Deleting repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
-        build(NULL_PROGRESS_MONITOR);
         try {
-            if (!project.isOpen()) {
-                project.open(NULL_PROGRESS_MONITOR);
+            if (project.isOpen()) {
+                build(NULL_PROGRESS_MONITOR);
             }
             project.delete(true, true, NULL_PROGRESS_MONITOR);
             if (CommonRepositoryPlugin.getCurrentRepository().equals(getName())) {
@@ -566,9 +575,9 @@ public class Repository implements IRepository, IJavaContainer {
     public ClassLoader createProjectClassloader(final IProgressMonitor monitor) {
         final List<URL> jars = new ArrayList<URL>();
         try {
-            final BonitaBPMProjectClasspath bonitaBPMProjectClasspath = new BonitaBPMProjectClasspath(project, this);
-            if (!bonitaBPMProjectClasspath.classpathExists()) {
-                bonitaBPMProjectClasspath.create(monitor);
+            final ProjectClasspathFactory bonitaBPMProjectClasspath = new ProjectClasspathFactory();
+            if (!bonitaBPMProjectClasspath.classpathExists(this)) {
+                bonitaBPMProjectClasspath.create(this, monitor);
             }
 
             // Synchronize with build jobs
@@ -675,7 +684,7 @@ public class Repository implements IRepository, IJavaContainer {
         for (final IRepositoryStore<?> store : getAllStores()) {
             store.migrate(monitor);
         }
-        ResourcesPlugin.getWorkspace().run(newProjectMigrationOperation(project), monitor);
+        workspace.run(newProjectMigrationOperation(project), monitor);
     }
 
     protected BonitaBPMProjectMigrationOperation newProjectMigrationOperation(final IProject project) {

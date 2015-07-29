@@ -24,7 +24,7 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -47,7 +47,10 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ContractConstraintsTableViewerTest extends AbstractSWTTestCase {
+public class ContractConstraintsTableViewerTest {
+
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
 
     private ContractConstraintsTableViewer viewer;
     private Composite parent;
@@ -61,9 +64,9 @@ public class ContractConstraintsTableViewerTest extends AbstractSWTTestCase {
      */
     @Before
     public void setUp() throws Exception {
-        parent = createDisplayAndRealm();
+        parent = realm.createComposite();
         FileActionDialog.setDisablePopup(true);
-        viewer = new ContractConstraintsTableViewer(parent, new FormToolkit(display));
+        viewer = new ContractConstraintsTableViewer(parent, new FormToolkit(parent.getDisplay()));
         final ContractConstraintController inputController = new ContractConstraintController(new WritableValue(aContract()
                 .build(), Contract.class));
         viewer.initialize(inputController, messageManager, new EMFDataBindingContext());
@@ -79,14 +82,6 @@ public class ContractConstraintsTableViewerTest extends AbstractSWTTestCase {
         contract.getConstraints().add(constraint);
         contract.getConstraints().add(constraint2);
         viewer.setInput(EMFObservables.observeList(Realm.getDefault(), contract, ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
     }
 
     @Test

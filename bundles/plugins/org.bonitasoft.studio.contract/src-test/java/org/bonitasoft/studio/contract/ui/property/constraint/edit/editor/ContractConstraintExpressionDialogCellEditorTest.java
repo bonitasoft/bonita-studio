@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,26 +24,24 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ContractConstraintExpressionDialogCellEditorTest extends AbstractSWTTestCase {
+public class ContractConstraintExpressionDialogCellEditorTest {
 
     private ContractConstraintExpressionDialogCellEditor cellEditor;
     private ContractConstraint constraint;
@@ -56,12 +52,15 @@ public class ContractConstraintExpressionDialogCellEditorTest extends AbstractSW
     @Mock
     private WizardDialog wizardDialog;
 
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        composite = createDisplayAndRealm();
+        composite = realm.createComposite();
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
         constraint = ProcessFactory.eINSTANCE.createContractConstraint();
         contract.getConstraints().add(constraint);
@@ -75,14 +74,6 @@ public class ContractConstraintExpressionDialogCellEditorTest extends AbstractSW
                 adapterFactoryContentProvider,
                 constraintEditorFactory);
 
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
     }
 
     @Test

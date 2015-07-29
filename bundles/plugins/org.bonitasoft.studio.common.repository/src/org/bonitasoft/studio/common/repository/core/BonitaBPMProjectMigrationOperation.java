@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -33,9 +33,9 @@ public class BonitaBPMProjectMigrationOperation implements IWorkspaceRunnable {
     private final IProject project;
     private final Set<String> builders = new HashSet<String>();
     private final Set<String> natures = new HashSet<String>();
-    private final IRepository repository;
+    private final Repository repository;
 
-    public BonitaBPMProjectMigrationOperation(final IProject project, final IRepository repository) {
+    public BonitaBPMProjectMigrationOperation(final IProject project, final Repository repository) {
         this.project = project;
         this.repository = repository;
     }
@@ -52,9 +52,9 @@ public class BonitaBPMProjectMigrationOperation implements IWorkspaceRunnable {
                 .havingNatures(natures)
                 .havingBuilders(builders).build(), monitor);
 
-        final BonitaBPMProjectClasspath bonitaBPMProjectClasspath = new BonitaBPMProjectClasspath(project, repository);
-        bonitaBPMProjectClasspath.delete(monitor);
-        bonitaBPMProjectClasspath.create(monitor);
+        final ProjectClasspathFactory bonitaBPMProjectClasspath = new ProjectClasspathFactory();
+        bonitaBPMProjectClasspath.delete(repository, monitor);
+        bonitaBPMProjectClasspath.create(repository, monitor);
     }
 
     public BonitaBPMProjectMigrationOperation addBuilder(final String builderId) {

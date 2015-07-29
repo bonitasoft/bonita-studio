@@ -34,7 +34,7 @@ import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowConditionExport
 import org.bonitasoft.studio.exporter.tests.form.TestFormsExporter;
 import org.bonitasoft.studio.importer.test.bos.TestBOSArchiveImport;
 import org.bonitasoft.studio.migration.tests.MigrationReportPDFExportTest;
-import org.bonitasoft.studio.migration.tests.document.DocumentTypeMigrationIT;
+import org.bonitasoft.studio.migration.tests.document.DocumentMigrationIT;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.test.TestLookAndFeel;
@@ -111,7 +111,7 @@ import org.junit.runners.Suite;
         TestRemoveWidgetReferencesOperation.class,
         TestWebserviceVersionForBPMNImport.class,
         TestTokenDispatcher.class,
-        DocumentTypeMigrationIT.class,
+        DocumentMigrationIT.class,
         GroovyConnectorIT.class,
         DeployBDROperationIT.class,
         TestProcessParameters.class,

@@ -18,7 +18,6 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Mickael Istria
- *
  */
 public class Messages extends NLS {
 
@@ -149,6 +148,8 @@ public class Messages extends NLS {
     public static String deletingProcessDefinition;
     public static String updatePortWarningMessage;
     public static String updatePortWarningTitle;
+
+    public static String buildingBar;
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$

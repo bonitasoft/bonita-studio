@@ -18,14 +18,15 @@ import org.bonitasoft.studio.common.jface.databinding.CustomCheckBoxColumnLabelP
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.jface.viewers.ColumnViewer;
 
 /**
  * @author Romain Bioteau
  */
 public class MultipleInputCheckboxLabelProvider extends CustomCheckBoxColumnLabelProvider {
 
-    public MultipleInputCheckboxLabelProvider(final IObservableSet knowElements) {
-        super(ProcessPackage.Literals.CONTRACT_INPUT__MULTIPLE, knowElements);
+    public MultipleInputCheckboxLabelProvider(final ColumnViewer viewer, final IObservableSet knowElements) {
+        super(viewer, ProcessPackage.Literals.CONTRACT_INPUT__MULTIPLE, knowElements);
     }
 
     @Override

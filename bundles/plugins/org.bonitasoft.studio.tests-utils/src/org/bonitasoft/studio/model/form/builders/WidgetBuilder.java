@@ -17,7 +17,11 @@ package org.bonitasoft.studio.model.form.builders;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.expression.builders.OperationBuilder;
 import org.bonitasoft.studio.model.form.Duplicable;
+import org.bonitasoft.studio.model.form.EventDependencyType;
+import org.bonitasoft.studio.model.form.FormFactory;
+import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.model.form.WidgetDependency;
 import org.bonitasoft.studio.model.process.builders.ElementBuilder;
 
 /**
@@ -72,6 +76,19 @@ public abstract class WidgetBuilder<T extends Widget, B extends WidgetBuilder<T,
         final T builtInstance = getBuiltInstance();
         if (builtInstance instanceof Duplicable) {
             ((Duplicable) builtInstance).setDuplicate(false);
+        }
+        return getThis();
+    }
+
+    public B havingContingengy(final Widget... widgets) {
+        final T builtInstance = getBuiltInstance();
+        for (final Widget widget : widgets) {
+            final WidgetDependency wd = FormFactory.eINSTANCE.createWidgetDependency();
+            wd.setWidget(widget);
+            // set default eventdependencytype
+            wd.getEventTypes().add((EventDependencyType) FormPackage.Literals.EVENT_DEPENDENCY_TYPE.getDefaultValue());
+
+            builtInstance.getDependOn().add(wd);
         }
         return getThis();
     }

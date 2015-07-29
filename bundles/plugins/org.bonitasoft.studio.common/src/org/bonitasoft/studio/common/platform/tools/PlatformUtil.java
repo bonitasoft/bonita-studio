@@ -500,7 +500,8 @@ public class PlatformUtil {
                         || arg.equals("org.bonitasoft.studio.application.WorkspaceRecovery")
                         || arg.equals("org.bonitasoft.studio.initializer")
                         || arg.equals("org.bonitasoft.studio.workspaceRecovery")
-                        || arg.equals("org.bonitasoft.studio.workspaceAPI")) {
+                        || arg.equals("org.bonitasoft.studio.workspaceAPI")
+                        || arg.equals("org.eclipse.platform.ide")) {
                     return true;
                 }
             }
@@ -568,7 +569,7 @@ public class PlatformUtil {
 
     public static IEditorReference getOpenEditor(final String editorName) {
         IEditorReference openEditor = null;
-        if (PlatformUI.isWorkbenchRunning()) {
+        if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
             final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
             if (activePage != null) {
                 final IEditorReference[] editors = activePage.getEditorReferences();

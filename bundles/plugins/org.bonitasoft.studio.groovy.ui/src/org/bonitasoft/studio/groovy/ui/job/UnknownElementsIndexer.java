@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.codehaus.groovy.ast.stmt.BlockStatement;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -38,12 +39,12 @@ public class UnknownElementsIndexer extends Job {
     private final Map<String, Position> overridenVariables = new HashMap<String, Position>();
     private final Set<String> unknownVaraibles = new HashSet<String>();
 
-    public UnknownElementsIndexer(final Set<String> variableScope, final GroovyCompilationUnit groovyCompilationUnit) {
+    public UnknownElementsIndexer(final Set<String> processVariableScope, final GroovyCompilationUnit groovyCompilationUnit) {
         super("Unknown elements indexer");
         setPriority(Job.BUILD);
         setSystem(true);
         setUser(false);
-        processVariables = variableScope;
+        processVariables = processVariableScope;
         this.groovyCompilationUnit = groovyCompilationUnit;
     }
 
@@ -57,8 +58,9 @@ public class UnknownElementsIndexer extends Job {
         overridenVariables.clear();
         unknownVaraibles.clear();
 
-        final VariablesVisitor variablesVisitor = new VariablesVisitor();
-        groovyCompilationUnit.getModuleNode().getStatementBlock().visit(variablesVisitor);
+        final BlockStatement statementBlock = groovyCompilationUnit.getModuleNode().getStatementBlock();
+        final VariablesVisitor variablesVisitor = new VariablesVisitor(statementBlock.getVariableScope());
+        statementBlock.visit(variablesVisitor);
         final Map<String, Position> declaredExpressions = variablesVisitor.getDeclaredExpressions();
         for (final String variable : variablesVisitor.getVariableExpressions()) {
             if (!processVariables.contains(variable) && !declaredExpressions.keySet().contains(variable)) {

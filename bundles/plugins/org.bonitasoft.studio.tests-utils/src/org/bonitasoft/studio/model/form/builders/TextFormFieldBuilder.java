@@ -31,4 +31,10 @@ public class TextFormFieldBuilder extends WidgetBuilder<TextFormField, TextFormF
         return FormFactory.eINSTANCE.createTextFormField();
     }
 
+    public TextFormFieldBuilder havingValidator(final ValidatorBuilder... validatorBuilders) {
+        for (final ValidatorBuilder validatorBuilder : validatorBuilders) {
+            getBuiltInstance().getValidators().add(validatorBuilder.build());
+        }
+        return this;
+    }
 }

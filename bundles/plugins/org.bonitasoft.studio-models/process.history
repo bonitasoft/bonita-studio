@@ -8658,6 +8658,35 @@
         </operation>
       </changes>
     </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
+          element="process.ecore#//Document/multiple">
+        <changes xsi:type="history:Set" element="process.ecore#//Document/multiple"
+            featureName="name" dataValue="multiple"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Document/multiple"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//Document"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>multiple</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
     <changes xsi:type="history:CompositeChange" description="Add possibility of initial content for Multiple Document">
       <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
           element="process.ecore#//Document/initialMultipleContent">
@@ -9755,15 +9784,6 @@
     </changes>
   </releases>
   <releases date="2015-05-06T15:27:41.594+0200" label="7.0.0-005">
-    <changes xsi:type="history:Create" target="process.ecore#//DocumentType" referenceName="eLiterals"
-        element="process.ecore#//DocumentType/CONTRACT">
-      <changes xsi:type="history:Set" element="process.ecore#//DocumentType/CONTRACT"
-          featureName="literal" dataValue="CONTRACT"/>
-      <changes xsi:type="history:Set" element="process.ecore#//DocumentType/CONTRACT"
-          featureName="value" dataValue="3" oldDataValue="0"/>
-      <changes xsi:type="history:Set" element="process.ecore#//DocumentType/CONTRACT"
-          featureName="name" dataValue="CONTRACT"/>
-    </changes>
     <changes xsi:type="history:OperationChange">
       <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
           element="process.ecore#//Document/contractInput">
@@ -9771,6 +9791,15 @@
             featureName="name" dataValue="contractInput"/>
         <changes xsi:type="history:Set" element="process.ecore#//Document/contractInput"
             featureName="eType" referenceValue="process.ecore#//ContractInput"/>
+      </changes>
+      <changes xsi:type="history:Create" target="process.ecore#//DocumentType" referenceName="eLiterals"
+          element="process.ecore#//DocumentType/CONTRACT">
+        <changes xsi:type="history:Set" element="process.ecore#//DocumentType/CONTRACT"
+            featureName="literal" dataValue="CONTRACT"/>
+        <changes xsi:type="history:Set" element="process.ecore#//DocumentType/CONTRACT"
+            featureName="value" dataValue="3" oldDataValue="0"/>
+        <changes xsi:type="history:Set" element="process.ecore#//DocumentType/CONTRACT"
+            featureName="name" dataValue="CONTRACT"/>
       </changes>
       <operation name="newReference">
         <parameters name="eClass">
@@ -9796,24 +9825,26 @@
     </changes>
   </releases>
   <releases date="2015-05-07T00:00:00.000+0200" label="7.0.0-006">
-    <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
-        element="process.ecore#//InputMappingAssignationType"/>
-    <changes xsi:type="history:Set" element="process.ecore#//InputMappingAssignationType"
-        featureName="name" dataValue="InputMappingAssignationType"/>
-    <changes xsi:type="history:Create" target="process.ecore#//InputMappingAssignationType"
-        referenceName="eLiterals" element="process.ecore#//InputMappingAssignationType/Data"/>
-    <changes xsi:type="history:Set" element="process.ecore#//InputMappingAssignationType/Data"
-        featureName="name" dataValue="Data"/>
-    <changes xsi:type="history:Create" target="process.ecore#//InputMappingAssignationType"
-        referenceName="eLiterals" element="process.ecore#//InputMappingAssignationType/ContractInput"/>
-    <changes xsi:type="history:Set" element="process.ecore#//InputMappingAssignationType/ContractInput"
-        featureName="name" dataValue="ContractInput"/>
-    <changes xsi:type="history:Set" element="process.ecore#//InputMappingAssignationType/ContractInput"
-        featureName="value" dataValue="1" oldDataValue="0"/>
-    <changes xsi:type="history:Set" element="process.ecore#//InputMappingAssignationType/ContractInput"
-        featureName="value" dataValue="0" oldDataValue="1"/>
-    <changes xsi:type="history:Set" element="process.ecore#//InputMappingAssignationType/Data"
-        featureName="value" dataValue="1" oldDataValue="0"/>
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+          element="process.ecore#//InputMappingAssignationType"/>
+      <changes xsi:type="history:Set" element="process.ecore#//InputMappingAssignationType"
+          featureName="name" dataValue="InputMappingAssignationType"/>
+      <changes xsi:type="history:Create" target="process.ecore#//InputMappingAssignationType"
+          referenceName="eLiterals" element="process.ecore#//InputMappingAssignationType/Data"/>
+      <changes xsi:type="history:Set" element="process.ecore#//InputMappingAssignationType/Data"
+          featureName="name" dataValue="Data"/>
+      <changes xsi:type="history:Create" target="process.ecore#//InputMappingAssignationType"
+          referenceName="eLiterals" element="process.ecore#//InputMappingAssignationType/ContractInput"/>
+      <changes xsi:type="history:Set" element="process.ecore#//InputMappingAssignationType/ContractInput"
+          featureName="name" dataValue="ContractInput"/>
+      <changes xsi:type="history:Set" element="process.ecore#//InputMappingAssignationType/ContractInput"
+          featureName="value" dataValue="1" oldDataValue="0"/>
+      <changes xsi:type="history:Set" element="process.ecore#//InputMappingAssignationType/ContractInput"
+          featureName="value" dataValue="0" oldDataValue="1"/>
+      <changes xsi:type="history:Set" element="process.ecore#//InputMappingAssignationType/Data"
+          featureName="value" dataValue="1" oldDataValue="0"/>
+    </changes>
     <changes xsi:type="history:OperationChange">
       <changes xsi:type="history:Create" target="process.ecore#//InputMapping" referenceName="eStructuralFeatures"
           element="process.ecore#//InputMapping/assignationType">
@@ -9846,8 +9877,10 @@
       </operation>
     </changes>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.callactivity.DefaultCallActivityDefaultMapping"/>
-    <changes xsi:type="history:Set" element="process.ecore#//InputMapping/assignationType"
-        featureName="defaultValueLiteral" dataValue="ContractInput" oldDataValue=""/>
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Set" element="process.ecore#//InputMapping/assignationType"
+          featureName="defaultValueLiteral" dataValue="ContractInput" oldDataValue=""/>
+    </changes>
   </releases>
   <releases date="2015-05-28T17:11:11.267+0200" label="7.0.0-007">
     <changes xsi:type="history:CompositeChange">

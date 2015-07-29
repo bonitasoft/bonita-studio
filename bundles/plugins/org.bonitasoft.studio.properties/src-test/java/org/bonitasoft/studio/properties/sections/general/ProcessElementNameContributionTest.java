@@ -24,7 +24,7 @@ import java.util.Arrays;
 
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.model.process.Task;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.runtime.IStatus;
@@ -36,13 +36,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProcessElementNameContributionTest extends AbstractSWTTestCase {
+public class ProcessElementNameContributionTest {
 
     @Mock
     private ProcessElementNameContribution nameGridPropertySectionContribution;
@@ -59,9 +60,11 @@ public class ProcessElementNameContributionTest extends AbstractSWTTestCase {
 
     private EMFDataBindingContext dbc;
 
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
+
     @Before
     public void setUp() throws Exception {
-        createDisplayAndRealm();
         dbc = new EMFDataBindingContext();
         nameGridPropertySectionContribution = new ProcessElementNameContribution(sheetPage, gridPropertySection);
     }
@@ -71,8 +74,6 @@ public class ProcessElementNameContributionTest extends AbstractSWTTestCase {
         if (dbc != null) {
             dbc.dispose();
         }
-
-        dispose();
     }
 
     @Test

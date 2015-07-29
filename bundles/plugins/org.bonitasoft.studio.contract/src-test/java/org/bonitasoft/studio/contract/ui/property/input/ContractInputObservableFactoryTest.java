@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,21 +18,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-
 
 /**
  * @author Romain Bioteau
- *
  */
-public class ContractInputObservableFactoryTest extends AbstractSWTTestCase {
+public class ContractInputObservableFactoryTest {
+
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
 
     private ContractInputObservableFactory contractInputObservableFactory;
 
@@ -43,16 +42,7 @@ public class ContractInputObservableFactoryTest extends AbstractSWTTestCase {
      */
     @Before
     public void setUp() throws Exception {
-        createDisplayAndRealm();
         contractInputObservableFactory = new ContractInputObservableFactory();
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
     }
 
     @Test

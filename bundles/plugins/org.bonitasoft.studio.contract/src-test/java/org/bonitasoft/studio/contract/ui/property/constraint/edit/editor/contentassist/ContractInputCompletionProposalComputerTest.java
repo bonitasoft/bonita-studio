@@ -30,7 +30,7 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.expr.BinaryExpression;
@@ -45,8 +45,8 @@ import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -57,7 +57,10 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ContractInputCompletionProposalComputerTest extends AbstractSWTTestCase {
+public class ContractInputCompletionProposalComputerTest {
+
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
 
     @Spy
     private ContractInputCompletionProposalComputer proposalComputer;
@@ -85,7 +88,6 @@ public class ContractInputCompletionProposalComputerTest extends AbstractSWTTest
      */
     @Before
     public void setUp() throws Exception {
-        createDisplayAndRealm();
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
         contract.getInputs().add(buildInput(null, "name", ContractInputType.TEXT, false));
         final ContractInput employeeInput = buildInput(null, "employee", ContractInputType.COMPLEX, false);
@@ -102,14 +104,6 @@ public class ContractInputCompletionProposalComputerTest extends AbstractSWTTest
         when(context.computeIdentifierPrefix()).thenReturn("");
         when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(new VariableExpression(""));
         when(context.getCompilationUnit()).thenReturn(groovyCompilationUnit);
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
     }
 
     @Test

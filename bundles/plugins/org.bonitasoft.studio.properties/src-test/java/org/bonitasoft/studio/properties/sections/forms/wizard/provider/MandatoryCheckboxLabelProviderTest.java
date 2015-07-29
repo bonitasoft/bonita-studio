@@ -15,37 +15,41 @@
 package org.bonitasoft.studio.properties.sections.forms.wizard.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
-import org.junit.After;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * @author Romain Bioteau
  */
-public class MandatoryCheckboxLabelProviderTest extends AbstractSWTTestCase {
+public class MandatoryCheckboxLabelProviderTest {
 
     private MandatoryCheckboxLabelProvider mandatoryCheckboxLabelProvider;
+
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        createDisplayAndRealm();
-        mandatoryCheckboxLabelProvider = new MandatoryCheckboxLabelProvider();
+        mandatoryCheckboxLabelProvider = new MandatoryCheckboxLabelProvider(viewerInShell());
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
+    private ColumnViewer viewerInShell() {
+        final ColumnViewer viewer = mock(ColumnViewer.class, Mockito.RETURNS_DEEP_STUBS);
+        when(viewer.getControl().getShell()).thenReturn(realm.getShell());
+        return viewer;
     }
 
     @Test
