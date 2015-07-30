@@ -62,7 +62,7 @@ public class MappingOperationScriptBuilderTest {
         final String script = scriptBuilder.toScript();
 
         assertThat(scriptBuilder.needsDataDependency()).isTrue();
-        assertThat(script).isEqualTo("def addressVar = employee.address == null ? new Address() : employee.address" + System.lineSeparator()
+        assertThat(script).isEqualTo("def addressVar = new Address()" + System.lineSeparator()
                 + "addressVar.street = address.street" + System.lineSeparator()
                 + "return addressVar");
     }
@@ -80,7 +80,7 @@ public class MappingOperationScriptBuilderTest {
 
         final String script = scriptBuilder.toScript();
 
-        assertThat(script).isEqualTo("def addressVar = employee.address == null ? new Address() : employee.address" + System.lineSeparator()
+        assertThat(script).isEqualTo("def addressVar = new Address()" + System.lineSeparator()
                 + "return addressVar");
     }
 
@@ -97,7 +97,7 @@ public class MappingOperationScriptBuilderTest {
 
         final String script = scriptBuilder.toScript();
 
-        assertThat(script).isEqualTo("def addressVar = employee.address == null ? new Address() : employee.address" + System.lineSeparator()
+        assertThat(script).isEqualTo("def addressVar = new Address()" + System.lineSeparator()
                 + "addressVar.street = address.street" + System.lineSeparator()
                 + "addressVar.country = {" + System.lineSeparator()
                 + SWT.TAB + "def countryVar = addressVar.country == null ? new Country() : addressVar.country" + System.lineSeparator()
