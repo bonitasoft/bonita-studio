@@ -14,20 +14,32 @@
  */
 package org.bonitasoft.studio.groovy.ui.job;
 
+import static com.google.common.collect.Iterators.find;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.codehaus.groovy.ast.CodeVisitorSupport;
+import org.codehaus.groovy.ast.Variable;
+import org.codehaus.groovy.ast.VariableScope;
 import org.codehaus.groovy.ast.expr.DeclarationExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.eclipse.jface.text.Position;
+
+import com.google.common.base.Predicate;
 
 public class VariablesVisitor extends CodeVisitorSupport {
 
     private final Set<String> variableExpressions = new HashSet<String>();
     private final Map<String, Position> declaredExpressions = new HashMap<String, Position>();
+    private final VariableScope variableScope;
+
+    public VariablesVisitor(final VariableScope variableScope) {
+        this.variableScope = variableScope;
+    }
 
     /*
      * (non-Javadoc)
@@ -35,8 +47,30 @@ public class VariablesVisitor extends CodeVisitorSupport {
      */
     @Override
     public void visitVariableExpression(final VariableExpression expression) {
-        variableExpressions.add(expression.getName());
+        if (inVariableScope(expression)) {
+            variableExpressions.add(expression.getName());
+        }
         super.visitVariableExpression(expression);
+    }
+
+    private boolean inVariableScope(final VariableExpression expression) {
+        final Variable matchInDeclaredVariables = find(variableScope
+                .getDeclaredVariablesIterator(),
+                variableWithName(expression.getName()), null);
+        final Variable matchInReferencedClassVariables = find(variableScope
+                .getReferencedClassVariablesIterator(),
+                variableWithName(expression.getName()), null);
+        return matchInDeclaredVariables != null || matchInReferencedClassVariables != null;
+    }
+
+    private Predicate<Variable> variableWithName(final String name) {
+        return new Predicate<Variable>() {
+
+            @Override
+            public boolean apply(final Variable input) {
+                return Objects.equals(name, input.getName());
+            }
+        };
     }
 
     /*
@@ -50,7 +84,6 @@ public class VariablesVisitor extends CodeVisitorSupport {
     }
 
     public Set<String> getVariableExpressions() {
-        variableExpressions.remove("this");
         return variableExpressions;
     }
 

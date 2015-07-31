@@ -138,7 +138,7 @@ public class BOSWebServerManager {
 
     }
 
-    public void copyTomcatBundleInWorkspace(final IProgressMonitor monitor) {
+    public void copyTomcatBundleInWorkspace(final boolean withEngine, final IProgressMonitor monitor) {
         File tomcatFolder = null;
         try {
             final File targetFolder = new File(tomcatInstanceLocation);
@@ -150,13 +150,15 @@ public class BOSWebServerManager {
                 PlatformUtil.copyResource(targetFolder, tomcatFolder, monitor);
                 BonitaStudioLog.debug("Tomcat bundle copied in workspace.",
                         EnginePlugin.PLUGIN_ID);
+                if (withEngine) {
+                    addBonitaWar(targetFolder, monitor);
+                }
                 addPageBuilderWar(targetFolder, monitor);
             }
+
         } catch (final IOException e) {
             BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-
         }
-
     }
 
     protected void addPageBuilderWar(final File targetFolder, final IProgressMonitor monitor) throws IOException {
@@ -168,15 +170,34 @@ public class BOSWebServerManager {
                 EnginePlugin.PLUGIN_ID);
     }
 
-    /**
-     * Start the Server.
-     *
-     * @param monitor
-     */
+    protected void addBonitaWar(final File targetFolder, final IProgressMonitor monitor) throws IOException {
+        final File webappDir = new File(targetFolder, "webapps");
+        final File targetBonitaWarFile = new File(webappDir, "bonita.war");
+        if (!targetBonitaWarFile.exists()) {
+            BonitaStudioLog.debug("Copying Bonita war in tomcat/webapps...", EnginePlugin.PLUGIN_ID);
+            final URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat/webapp");
+            final File bonitaWarFile = new File(FileLocator.toFileURL(url).getFile(), "bonita.war");
+            PlatformUtil.copyResource(webappDir, bonitaWarFile, monitor);
+            BonitaStudioLog.debug("Bonita war copied in tomcat/webapps.",
+                    EnginePlugin.PLUGIN_ID);
+        }
+    }
+
     public synchronized void startServer(final IProgressMonitor monitor) {
+        doStartServer(true, monitor);
+    }
+
+    public synchronized void startStandaloneUIDesigner(final IProgressMonitor monitor) {
+        doStartServer(false, monitor);
+    }
+
+    protected synchronized void doStartServer(final boolean withEngine, final IProgressMonitor monitor) {
         if (!serverIsStarted()) {
             BonitaHomeUtil.initBonitaHome();
-            copyTomcatBundleInWorkspace(monitor);
+            copyTomcatBundleInWorkspace(withEngine, monitor);
+            if (!withEngine) {
+                removePortalWebApp(monitor);
+            }
             monitor.subTask(Messages.startingWebServer);
             if (BonitaStudioLog.isLoggable(IStatus.OK)) {
                 BonitaStudioLog.debug("Starting tomcat...",
@@ -205,11 +226,24 @@ public class BOSWebServerManager {
                 createLaunchConfiguration(tomcat, monitor);
                 confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
                 tomcat.start("run", monitor);
-                waitServerRunning(monitor);
+                waitServerRunning(withEngine, monitor);
             } catch (final CoreException e) {
                 handleCoreExceptionWhileStartingTomcat(e);
             }
 
+        }
+    }
+
+    private void removePortalWebApp(final IProgressMonitor monitor) {
+        final File targetFolder = new File(tomcatInstanceLocation);
+        final File webappFolder = new File(targetFolder, "webapps");
+        final File bonitaWebappFolder = new File(webappFolder, "bonita");
+        if (bonitaWebappFolder.exists()) {
+            PlatformUtil.delete(bonitaWebappFolder, monitor);
+        }
+        final File bonitaWebappFile = new File(webappFolder, "bonita.war");
+        if (bonitaWebappFile.exists()) {
+            PlatformUtil.delete(bonitaWebappFile, monitor);
         }
     }
 
@@ -250,7 +284,7 @@ public class BOSWebServerManager {
         }
     }
 
-    private void waitServerRunning(final IProgressMonitor monitor) {
+    private void waitServerRunning(final boolean waitForEngine, final IProgressMonitor monitor) {
         int totalTime = 0;
         while (totalTime < MAX_SERVER_START_TIME && tomcat != null
                 && tomcat.getServerState() != IServer.STATE_STARTED) {
@@ -281,8 +315,9 @@ public class BOSWebServerManager {
                 return;
             }
         }
-
-        connectWithRetries();
+        if (waitForEngine) {
+            connectWithRetries();
+        }
     }
 
     private void connectWithRetries() {

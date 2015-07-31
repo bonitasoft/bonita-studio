@@ -454,11 +454,6 @@
       <handler
             class="org.bonitasoft.studio.common.handlers.SaveAsImageHandler"
             commandId="org.bonitasoft.studio.diagram.custom.saveasimage">
-         <activeWhen>
-            <reference
-                  definitionId="org.bonitasoft.studio.diagram.custom.definition.processWithASelection">
-            </reference>
-         </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.diagram.custom.commands.ZoomInCommandHandler"

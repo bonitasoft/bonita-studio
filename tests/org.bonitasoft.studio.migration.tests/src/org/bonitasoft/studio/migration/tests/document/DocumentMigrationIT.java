@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.migration.tests.document;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -30,12 +32,12 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.runtime.FileLocator;
 import org.junit.Test;
 
-public class DocumentTypeMigrationIT {
+public class DocumentMigrationIT {
 
     @Test
     public void testDocumentMigrationTypeFrom63() throws IOException, InvocationTargetException, InterruptedException {
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        final URL fileURL1 = FileLocator.toFileURL(DocumentTypeMigrationIT.class.getResource("DiagramToTestDocumentTypeMigration-1.0.bos")); //$NON-NLS-1$
+        final URL fileURL1 = FileLocator.toFileURL(DocumentMigrationIT.class.getResource("DiagramToTestDocumentTypeMigration-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
@@ -56,6 +58,21 @@ public class DocumentTypeMigrationIT {
                 Assertions.assertThat(document.getDefaultValueIdOfDocumentStore()).isNotEmpty();
             }
         }
+    }
+
+    @Test
+    public void should_migrate_multiple_document_attribute() throws IOException, InvocationTargetException, InterruptedException {
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final URL fileURL1 = FileLocator.toFileURL(DocumentMigrationIT.class.getResource("MultipleDocumentDiagram-1.0.bos")); //$NON-NLS-1$
+        op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
+        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.run(Repository.NULL_PROGRESS_MONITOR);
+
+        final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final MainProcess mainProcess = store.getChild("MultipleDocumentDiagram-1.0.proc").getContent();
+        final Pool pool = (Pool) mainProcess.getElements().get(0);
+        assertThat(pool.getDocuments()).hasSize(1);
+        assertThat(pool.getDocuments().get(0).isMultiple()).isTrue();
     }
 
 }

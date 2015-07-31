@@ -35,7 +35,7 @@ import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.ecore.EObject;
@@ -53,6 +53,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -62,7 +63,10 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ContractPropertySectionTest extends AbstractSWTTestCase {
+public class ContractPropertySectionTest {
+
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
 
     private ContractPropertySection section;
 
@@ -100,11 +104,11 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
      */
     @Before
     public void setUp() throws Exception {
-        parent = createDisplayAndRealm();
+        parent = realm.createComposite();
         section = spy(new ContractPropertySection(sharedImages, eclipseContext, selectionProvider, repositoryAccessor, operationBuilder, progressService));
         when(tabbedPropertySheetPage.getWidgetFactory()).thenReturn(new TabbedPropertySheetWidgetFactory());
         doReturn(contributionItem).when(section).newContributionItem(CreateAndEditFormContributionItem.class);
-        doReturn(createImage()).when(sharedImages).getImage(anyString());
+        doReturn(realm.createImage()).when(sharedImages).getImage(anyString());
     }
 
     /**
@@ -113,7 +117,6 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
     @After
     public void tearDown() throws Exception {
         section.dispose();
-        dispose();
     }
 
     @Test

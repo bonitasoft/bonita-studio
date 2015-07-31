@@ -31,8 +31,6 @@ import org.eclipse.swt.graphics.Image;
  */
 public interface IRepository extends IFileStoreChangeListener {
 
-    void createRepository(String repositoryName, boolean migrationEnabled);
-
     boolean exists();
 
     boolean isLoaded();

@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.advisor;
 
 import org.bonitasoft.studio.application.BonitaStudioWorkbenchAdvisor;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -32,6 +33,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 public abstract class InstallerApplicationWorkbenchAdvisor extends BonitaStudioWorkbenchAdvisor {
 
     protected static final String PRIORITY = "priority";
+
+    public InstallerApplicationWorkbenchAdvisor() {
+        FileActionDialog.setDisablePopup(true); //Do not aske to override existing files when importing a workspace
+    }
 
     @Override
     public boolean openWindows() {
@@ -57,8 +62,7 @@ public abstract class InstallerApplicationWorkbenchAdvisor extends BonitaStudioW
                 }
             };
             ResourcesPlugin.getWorkspace().run(workspaceOperation, monitor);
-
-            BOSWebServerManager.getInstance().copyTomcatBundleInWorkspace(monitor);
+            BOSWebServerManager.getInstance().copyTomcatBundleInWorkspace(true, monitor);
             BonitaHomeUtil.initBonitaHome();
 
         } catch (final Exception e) {

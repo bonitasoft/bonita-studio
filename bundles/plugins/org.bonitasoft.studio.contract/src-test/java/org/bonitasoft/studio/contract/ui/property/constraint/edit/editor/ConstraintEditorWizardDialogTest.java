@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.graphics.Image;
@@ -30,18 +28,20 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ConstraintEditorWizardDialogTest extends AbstractSWTTestCase {
+public class ConstraintEditorWizardDialogTest {
+
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
 
     @Mock
     private IWizard newWizard;
@@ -54,10 +54,10 @@ public class ConstraintEditorWizardDialogTest extends AbstractSWTTestCase {
      */
     @Before
     public void setUp() throws Exception {
-        composite = createDisplayAndRealm();
+        composite = realm.createComposite();
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
         dialog = spy(new ConstraintEditorWizardDialog(composite.getShell(), newWizard));
-        image = createImage();
+        image = realm.createImage();
         doReturn(image).when(dialog).getHelpImage();
     }
 
@@ -67,7 +67,6 @@ public class ConstraintEditorWizardDialogTest extends AbstractSWTTestCase {
     @After
     public void tearDown() throws Exception {
         image.dispose();
-        dispose();
     }
 
     @Test

@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -369,12 +370,11 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
 
         refresh();
         final File root = duplicateFrom.getRootFile();
-
+        final File normalizedRoot = Paths.get(root.toURI().normalize()).toFile();
         if (getChild(name) != null || getResource().getFolder(name).exists()) {
             return null;
         }
-
-        PlatformUtil.copyResourceDirectory(getResource().getLocation().append(name).toFile(), root, Repository.NULL_PROGRESS_MONITOR);
+        PlatformUtil.copyResourceDirectory(getResource().getLocation().append(name).toFile(), normalizedRoot, Repository.NULL_PROGRESS_MONITOR);
         refresh();
 
         final LookNFeelFileStore file = createRepositoryFileStore(name);

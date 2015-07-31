@@ -5,30 +5,26 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.jface;
 
-
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
@@ -37,30 +33,26 @@ import org.eclipse.swt.widgets.TreeItem;
 public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
 
     protected static final String CHECKED_KEY = "checkedKey";// NON-NLS-1
-
     protected static final String UNCHECK_KEY = "uncheckKey";// NON-NLS-1
-
     protected static final String DISABLED_CHECKED_KEY = "checkedKeyDisabled";// NON-NLS-1
-
     protected static final String DISABLED_UNCHECKED_KEY = "uncheckKeyDisabled";// NON-NLS-1
 
-
-    public AbstractCheckboxLabelProvider() {
+    public AbstractCheckboxLabelProvider(final ColumnViewer viewer) {
         if (JFaceResources.getImageRegistry().getDescriptor(UNCHECK_KEY) == null) {
             JFaceResources.getImageRegistry().put(UNCHECK_KEY,
-                    makeShot(false, true));
+                    makeShot(viewer.getControl().getShell(), false, true));
         }
         if (JFaceResources.getImageRegistry().getDescriptor(CHECKED_KEY) == null) {
             JFaceResources.getImageRegistry().put(CHECKED_KEY,
-                    makeShot(true, true));
+                    makeShot(viewer.getControl().getShell(), true, true));
         }
         if (JFaceResources.getImageRegistry().getDescriptor(DISABLED_CHECKED_KEY) == null) {
             JFaceResources.getImageRegistry().put(DISABLED_CHECKED_KEY,
-                    makeShot(true, false));
+                    makeShot(viewer.getControl().getShell(), true, false));
         }
         if (JFaceResources.getImageRegistry().getDescriptor(DISABLED_UNCHECKED_KEY) == null) {
             JFaceResources.getImageRegistry().put(DISABLED_UNCHECKED_KEY,
-                    makeShot(false, false));
+                    makeShot(viewer.getControl().getShell(), false, false));
         }
     }
 
@@ -96,63 +88,43 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
         return true;
     }
 
-
-    private Image makeShot(final boolean type, final boolean enabled) {
-        final Display display = Display.getDefault();
-        final Color greenScreen = new Color(display, 222, 223, 224);
-
-
-        final Shell shell = new Shell(SWT.NO_TRIM);
-        shell.setVisible(false);
-        shell.setLocation(42, 42);
-
-        // otherwise we have a default gray color
-        shell.setBackground(greenScreen);
-
-        final Button button = new Button(shell, SWT.CHECK);
-        button.setBackground(greenScreen);
-        button.setSelection(type);
-        if (!enabled) {
-            button.setEnabled(false);
+    private Image makeShot(final Shell shell, final boolean type, final boolean enabled) {
+        if (SWT.getPlatform().equals("gtk")) {
+            final Image image = gtkFallBack(type, enabled);
+            if (image != null) {
+                return image;
+            }
         }
-        // otherwise an image is located in a corner
-        button.setLocation(1, 1);
-        final Point bsize = button.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-
-        // otherwise an image is stretched by width
-        bsize.x = Math.max(bsize.x - 1, bsize.y - 1);
-        bsize.y = Math.max(bsize.x - 1, bsize.y - 1);
-        button.setSize(bsize);
-        shell.setSize(bsize);
-
-        shell.open();
-        final GC gc = new GC(shell);
-        final Image image = new Image(display, bsize.x, bsize.y);
+        final Shell s = new Shell(shell, SWT.NO_TRIM);
+        final Button b = new Button(s, SWT.CHECK);
+        b.setSelection(type);
+        final Point bsize = b.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+        b.setSize(bsize);
+        b.setLocation(0, 0);
+        s.setSize(bsize);
+        b.setEnabled(enabled);
+        s.open();
+        final GC gc = new GC(b);
+        final Image image = new Image(shell.getDisplay(), bsize.x, bsize.y);
         gc.copyArea(image, 0, 0);
         gc.dispose();
-        shell.close();
+        s.close();
+        return image;
+    }
 
-        final ImageData imageData = image.getImageData();
-        imageData.transparentPixel = imageData.palette.getPixel(greenScreen
-                .getRGB());
-
-        return new Image(display, imageData);
+    private Image gtkFallBack(final boolean selected, final boolean enabled) {
+        if (selected) {
+            return enabled ? Pics.getImage("/checkboxes/checkbox_selected.png") : Pics.getImage("/checkboxes/checkbox_disabled_selected.png");
+        }
+        return enabled ? Pics.getImage("/checkboxes/checkbox_unselected.png") : Pics.getImage("/checkboxes/checkbox_disabled_unselected.png");
     }
 
     @Override
     protected void paint(final Event event, final Object element) {
-
         final Image img = getImage(element);
-
         if (img != null) {
-            Rectangle bounds;
-
-            if (event.item instanceof TableItem) {
-                bounds = ((TableItem) event.item).getBounds(event.index);
-            } else {
-                bounds = ((TreeItem) event.item).getBounds(event.index);
-            }
-
+            final Rectangle bounds = event.item instanceof TableItem ? ((TableItem) event.item).getBounds(event.index) :
+                    ((TreeItem) event.item).getBounds(event.index);
             final Rectangle imgBounds = img.getBounds();
             bounds.width /= 2;
             bounds.width -= imgBounds.width / 2;
@@ -165,14 +137,10 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
             if (SWT.getPlatform().equals("carbon")) {
                 event.gc.drawImage(img, x + 2, y - 1);
             } else {
-                event.gc.drawImage(img, x, y - 1);
+                event.gc.drawImage(img, x, y);
             }
-
         }
-
     }
-
-
 
     @Override
     protected void measure(final Event event, final Object element) {

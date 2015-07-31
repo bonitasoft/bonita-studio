@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,25 +19,25 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
-
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class BusinessDataModelWizardPageTest extends AbstractSWTTestCase {
+public class BusinessDataModelWizardPageTest {
+
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
 
     @Mock
     private BusinessObjectModel businessObjectModel;
@@ -50,16 +48,7 @@ public class BusinessDataModelWizardPageTest extends AbstractSWTTestCase {
      */
     @Before
     public void setUp() throws Exception {
-        createDisplayAndRealm();
         wizardPage = spy(new BusinessDataModelWizardPage(businessObjectModel));
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
     }
 
     @Test
