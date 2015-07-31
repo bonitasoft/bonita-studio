@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -54,11 +54,9 @@ import org.eclipse.emf.ecore.EObject;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 
-/**
- * @author Romain Bioteau
- */
 public abstract class AbstractConnectorBarResourceProvider implements BARResourcesProvider {
 
+    private static final String JAR_EXT = ".jar";
     protected final RepositoryAccessor repositoryAccessor;
 
     @Inject
@@ -154,7 +152,7 @@ public abstract class AbstractConnectorBarResourceProvider implements BARResourc
 
             @Override
             public boolean apply(final Fragment input) {
-                return input.isExported() && input.getValue().endsWith(".jar");
+                return input.isExported() && input.getValue().endsWith(JAR_EXT);
             }
         };
     }
