@@ -174,11 +174,15 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
     }
 
     private boolean isInvalidQueryExpression(final Operation operation) {
-        if (!operation.getLeftOperand().getReferencedElements().isEmpty()) {
+        if (leftOperandHasReferencedElement(operation)) {
             final EObject data = operation.getLeftOperand().getReferencedElements().get(0);
             return !(data instanceof BusinessObjectData) && Objects.equals(operation.getRightOperand().getType(), ExpressionConstants.QUERY_TYPE);
         }
         return false;
+    }
+
+    private boolean leftOperandHasReferencedElement(final Operation operation) {
+        return !operation.getLeftOperand().getReferencedElements().isEmpty();
     }
 
     protected IStatus validateDeletionOperation(final Expression expression, final String expressionName, final Operation operation) {
