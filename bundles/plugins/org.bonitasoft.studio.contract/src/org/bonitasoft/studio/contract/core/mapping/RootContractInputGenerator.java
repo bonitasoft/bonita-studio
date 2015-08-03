@@ -37,6 +37,7 @@ public class RootContractInputGenerator {
     private ContractInput contractInput;
     private final RepositoryAccessor repositoryAccessor;
     private final FieldToContractInputMappingOperationBuilder operationBuilder;
+    private boolean allAttributesGenerated = true;
 
     public RootContractInputGenerator(final String rootContractInputName, final List<? extends FieldToContractInputMapping> children,
             final RepositoryAccessor repositoryAccessor, final FieldToContractInputMappingOperationBuilder operationBuilder) {
@@ -57,6 +58,8 @@ public class RootContractInputGenerator {
                 if (!contractInput.isMultiple()) {
                     mappingOperations.add(operationBuilder.toOperation(data, mapping));
                 }
+            } else {
+                allAttributesGenerated = false;
             }
         }
         if (contractInput.isMultiple()) {
@@ -85,4 +88,12 @@ public class RootContractInputGenerator {
     public List<Operation> getMappingOperations() {
         return mappingOperations;
     }
+
+    /**
+     * @return the allAttributesGenerated
+     */
+    public boolean isAllAttributesGenerated() {
+        return allAttributesGenerated;
+    }
+
 }
