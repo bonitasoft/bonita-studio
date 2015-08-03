@@ -168,7 +168,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         hint.setShowOnlyOnFocus(false);
         hint.setImage(imageProvider.getHintImage());
         hint.setDescriptionText(
-                "Business data can be initialized with existing Busines Objects using a query\nor by creating a new one using a Groovy Script and the provided dao variable (XXXDAO.newInstance()).");
+                Messages.defaultValueBusinessDataTooltip);
 
         defaultValueExpressionViewer.setInput(container);
         ctx.bindValue(ViewersObservables.observeSingleSelection(defaultValueExpressionViewer),

@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
+import static com.google.common.collect.Iterables.tryFind;
+import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withContractInputName;
+
 import java.util.Objects;
 
 import org.bonitasoft.engine.bdm.BDMQueryUtil;
@@ -25,21 +28,31 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.model.process.ContractInput;
 
+import com.google.common.base.Optional;
+
 public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitializer implements IPropertyInitializer {
 
     private final ContractInput persistenceIdInput;
     private final BusinessObject multipleParentBusinessObject;
 
     public BusinessObjectQueryInitializer(final BusinessObject multipleParentBusinessObject, final RelationField field,
-            final ContractInput persistenceIdInput, final String refName) {
+            final ContractInput contractInput, final String refName) {
         super(field, refName);
-        this.persistenceIdInput = persistenceIdInput;
+        persistenceIdInput = persistenceIdInput(contractInput);
         this.multipleParentBusinessObject = multipleParentBusinessObject;
     }
 
     @Override
     protected void checkNotNullableFields(final BusinessObject businessObject) throws BusinessObjectInstantiationException {
         //DO NOT CHECK AS INSTANCE ALREADY EXISTS
+    }
+
+    @Override
+    protected void addCommentBeforeConstructor(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
+        addCommentLine(
+                scriptBuilder,
+                String.format("Retrieve aggregated %s using its DAO and persistenceId",
+                        BDMQueryUtil.getSimpleBusinessObjectName(businessObject.getQualifiedName())));
     }
 
     @Override
@@ -80,4 +93,14 @@ public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitia
         return false;
     }
 
+    protected ContractInput persistenceIdInput(final ContractInput contractInput) {
+        if (withContractInputName(Field.PERSISTENCE_ID).apply(contractInput)) {
+            return contractInput;
+        }
+        final Optional<ContractInput> persistenceIdInput = tryFind(contractInput.getInputs(), withContractInputName(Field.PERSISTENCE_ID));
+        if (persistenceIdInput.isPresent()) {
+            return persistenceIdInput.get();
+        }
+        throw new IllegalStateException(String.format("persistenceId input not found in %s", contractInput.getName()));
+    }
 }

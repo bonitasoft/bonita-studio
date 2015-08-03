@@ -58,6 +58,7 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
         checkNotNullableFields(businessObject);
 
         final StringBuilder scriptBuilder = new StringBuilder();
+        addCommentBeforeConstructor(scriptBuilder, businessObject);
         delcareVariable(scriptBuilder, varName(businessObject));
         scriptBuilder.append(" = ");
         constructor(scriptBuilder, businessObject, checkExistence());
@@ -70,6 +71,10 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
 
         returnVar(scriptBuilder, businessObject);
         return scriptBuilder.toString();
+    }
+
+    protected void addCommentBeforeConstructor(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
+        // Can be subclasssed
     }
 
     protected abstract boolean checkExistence();
@@ -149,5 +154,11 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
     }
 
     protected abstract void constructor(final StringBuilder scriptBuilder, final BusinessObject bo, final boolean checkEsistence);
+
+    protected void addCommentLine(final StringBuilder scriptBuilder, final String comment) {
+        scriptBuilder.append("//");
+        scriptBuilder.append(comment);
+        scriptBuilder.append(System.lineSeparator());
+    }
 
 }

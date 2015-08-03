@@ -24,7 +24,7 @@ import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
 
-public class MultipleCompositionReferencePropertyInitializer extends BusinessObjectListInitializer implements IPropertyInitializer {
+public class MultipleCompositionReferencePropertyInitializer extends NewBusinessObjectListInitializer implements IPropertyInitializer {
 
     private final BusinessObject parentBusinessObject;
 

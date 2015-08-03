@@ -80,7 +80,9 @@ public class MappingOperationScriptBuilder {
                             mapping,
                             data);
             for (final FieldToContractInputMapping child : mapping.getChildren()) {
-                scriptInitializer.addPropertyInitializer(buildPropertyInitializerTree(child, rootField, data));
+                if (child.isGenerated()) {
+                    scriptInitializer.addPropertyInitializer(buildPropertyInitializerTree(child, rootField, data));
+                }
             }
             needsDataDependency = scriptInitializer instanceof NewBusinessObjectInitializer;
             return scriptInitializer;

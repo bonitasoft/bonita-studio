@@ -188,7 +188,7 @@ public class ContractInputTreeViewer extends TreeViewer {
 
     protected void createMultipleColumn() {
         final TreeViewerColumn multipleColumnViewer = createColumnViewer(Messages.multiple, SWT.CENTER);
-        multipleColumnViewer.setLabelProvider(new MultipleInputCheckboxLabelProvider(knownElements()));
+        multipleColumnViewer.setLabelProvider(new MultipleInputCheckboxLabelProvider(multipleColumnViewer.getViewer(), knownElements()));
         multipleColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, this,
                 ProcessPackage.Literals.CONTRACT_INPUT__MULTIPLE.getName()));
     }

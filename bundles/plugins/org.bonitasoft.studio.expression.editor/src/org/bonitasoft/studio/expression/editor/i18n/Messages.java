@@ -66,6 +66,7 @@ public class Messages extends NLS {
     public static String setDocumentOperator;
 
     public static String switchEditor;
+    public static String switchEditorCondition;
 
     public static String eraseExpressionTitle;
 

@@ -483,7 +483,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
         final TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.FILL);
         column.getColumn().setText(Messages.reviewed);
         column.getColumn().setAlignment(SWT.CENTER);
-        column.setLabelProvider(new ReviewStatusCheckboxLabelProvider());
+        column.setLabelProvider(new ReviewStatusCheckboxLabelProvider(column.getViewer()));
 
         column.setEditingSupport(new EditingSupport(tableViewer) {
 

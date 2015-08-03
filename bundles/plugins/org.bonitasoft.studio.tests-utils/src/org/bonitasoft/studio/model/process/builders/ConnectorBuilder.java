@@ -17,6 +17,7 @@ package org.bonitasoft.studio.model.process.builders;
 import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorConfigurationBuilder;
 import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 
@@ -53,6 +54,11 @@ public class ConnectorBuilder extends ElementBuilder<Connector, ConnectorBuilder
         for (final Buildable<Operation> output : outputOperation) {
             getBuiltInstance().getOutputs().add(output.build());
         }
+        return getThis();
+    }
+
+    public ConnectorBuilder in(final Buildable<? extends ConnectableElement> container) {
+        container.build().getConnectors().add(getBuiltInstance());
         return getThis();
     }
 

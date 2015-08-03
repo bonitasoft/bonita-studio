@@ -42,6 +42,20 @@ public class FormBuilder extends ElementBuilder<Form, FormBuilder> {
         return this;
     }
 
+    public FormBuilder havingWidget(final Widget... widgets) {
+        for (final Widget widget : widgets) {
+            getBuiltInstance().getWidgets().add(widget);
+        }
+        return this;
+    }
+
+    public FormBuilder havingValidator(final ValidatorBuilder... validatorBuilders) {
+        for (final ValidatorBuilder validatorBuilder : validatorBuilders) {
+            getBuiltInstance().getValidators().add(validatorBuilder.build());
+        }
+        return this;
+    }
+
     @Override
     protected Form newInstance() {
         return FormFactory.eINSTANCE.createForm();

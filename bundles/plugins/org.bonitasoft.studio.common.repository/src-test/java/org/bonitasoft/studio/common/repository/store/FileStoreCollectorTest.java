@@ -72,6 +72,34 @@ public class FileStoreCollectorTest {
     }
 
     @Test
+    public void should_skip_hidden_resources() throws Exception {
+        //Given
+        final FileStoreCollector fileStoreCollector = new FileStoreCollector(root, null);
+        when(hiddenResource.isHidden()).thenReturn(true);
+        when(dotStartingResource.getName()).thenReturn(".svn");
+
+        //When
+        final boolean visitHiddenResource = fileStoreCollector.visit(hiddenResource);
+        fileStoreCollector.visit(dotStartingResource);
+
+        //Then
+        assertThat(visitHiddenResource).isFalse();
+    }
+
+    @Test
+    public void should_skip_dot_starting_resources() throws Exception {
+        //Given
+        final FileStoreCollector fileStoreCollector = new FileStoreCollector(root, null);
+        when(dotStartingResource.getName()).thenReturn(".svn");
+
+        //When
+        final boolean visitHiddenResource = fileStoreCollector.visit(dotStartingResource);
+
+        //Then
+        assertThat(visitHiddenResource).isFalse();
+    }
+
+    @Test
     public void should_not_collect_unrelevant_extension() throws Exception {
         //Given
         final FileStoreCollector fileStoreCollector = new FileStoreCollector(root, "png");

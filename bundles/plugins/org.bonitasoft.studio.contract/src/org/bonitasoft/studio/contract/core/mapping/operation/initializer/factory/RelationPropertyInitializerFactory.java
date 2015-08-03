@@ -20,6 +20,7 @@ import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.AggregationReferencePropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.CompositionReferencePropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IPropertyInitializer;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleAggregationReferencePropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleCompositionReferencePropertyInitializer;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 
@@ -37,11 +38,13 @@ public class RelationPropertyInitializerFactory extends AbsractInitializerFactor
             final BusinessObjectData data,
             final RelationField relationField) {
         return relationField.isCollection() ?
-                new MultipleCompositionReferencePropertyInitializer(firstMultipleParentBusinessObject(mapping), relationField,
+                new MultipleAggregationReferencePropertyInitializer(firstMultipleParentBusinessObject(mapping),
+                        businessObject(mapping),
+                        relationField,
                         mapping.getContractInput(),
-                        toRefName(mapping.getParent(), data))
+                        toRefName(mapping, data))
                 : new AggregationReferencePropertyInitializer(firstMultipleParentBusinessObject(mapping), relationField,
-                        persistenceIdInput(mapping.getContractInput()), toRefName(mapping, data));
+                        mapping.getContractInput(), toRefName(mapping, data));
     }
 
     private IPropertyInitializer newComposedReferenceInitializer(final FieldToContractInputMapping mapping,

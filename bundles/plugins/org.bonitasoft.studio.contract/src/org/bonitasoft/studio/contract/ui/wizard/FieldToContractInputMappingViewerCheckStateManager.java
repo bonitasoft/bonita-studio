@@ -16,6 +16,9 @@ package org.bonitasoft.studio.contract.ui.wizard;
 
 import static com.google.common.collect.Iterables.any;
 
+import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.engine.bdm.model.field.RelationField;
+import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -63,15 +66,10 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
         deselectParentIfNoChildSelected(event, mapping, checkboxTreeViewer);
     }
 
-    /**
-     * @param event
-     * @param mapping
-     * @param checkboxTreeViewer
-     */
     private void deselectParentIfNoChildSelected(final CheckStateChangedEvent event, final FieldToContractInputMapping mapping,
             final CheckboxTreeViewer checkboxTreeViewer) {
         final FieldToContractInputMapping parentMapping = mapping.getParent();
-        if (!event.getChecked() && parentMapping != null) {
+        if (!event.getChecked() && parentMapping != null && !isAggregationField(parentMapping.getField())) {
             boolean deselect = true;
             for (final FieldToContractInputMapping m : parentMapping.getChildren()) {
                 if (checkboxTreeViewer.getChecked(m)) {
@@ -84,11 +82,10 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
         }
     }
 
-    /**
-     * @param event
-     * @param mapping
-     * @param checkboxTreeViewer
-     */
+    private boolean isAggregationField(final Field field) {
+        return field instanceof RelationField && ((RelationField) field).getType() == Type.AGGREGATION;
+    }
+
     private void selectParentIfChildIsSelected(final CheckStateChangedEvent event, final FieldToContractInputMapping mapping,
             final CheckboxTreeViewer checkboxTreeViewer) {
         if (event.getChecked()) {
@@ -98,17 +95,9 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
         }
     }
 
-    /**
-     * @return
-     */
     private Predicate<FieldToContractInputMapping> isGenerated() {
-
         return new Predicate<FieldToContractInputMapping>() {
 
-            /*
-             * (non-Javadoc)
-             * @see com.google.common.base.Predicate#apply(java.lang.Object)
-             */
             @Override
             public boolean apply(final FieldToContractInputMapping input) {
                 return input.isGenerated();

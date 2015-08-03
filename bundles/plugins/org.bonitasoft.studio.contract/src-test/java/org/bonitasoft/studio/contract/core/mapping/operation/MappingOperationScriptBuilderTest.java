@@ -68,6 +68,23 @@ public class MappingOperationScriptBuilderTest {
     }
 
     @Test
+    public void should_not_add_child_initializer_if_mappping_is_not_generated() throws Exception {
+        final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.TEXT).build();
+        final RelationField addressField = aCompositionField("address", aBO("Address").withField(streetField).build());
+        final RelationFieldToContractInputMapping relationFieldToContractInputMapping = new RelationFieldToContractInputMapping(addressField);
+        final SimpleFieldToContractInputMapping child = new SimpleFieldToContractInputMapping(streetField);
+        child.setGenerated(false);
+        relationFieldToContractInputMapping.addChild(child);
+        final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(aBusinessData().withName("employee").build(),
+                relationFieldToContractInputMapping, addressField);
+
+        final String script = scriptBuilder.toScript();
+
+        assertThat(script).isEqualTo("def addressVar = employee.address == null ? new Address() : employee.address" + System.lineSeparator()
+                + "return addressVar");
+    }
+
+    @Test
     public void should_generate_a_closure_for_deep_relation_mapping() throws Exception {
         final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.TEXT).build();
         final RelationField countryField = aCompositionField("country", aBO("Country").build());

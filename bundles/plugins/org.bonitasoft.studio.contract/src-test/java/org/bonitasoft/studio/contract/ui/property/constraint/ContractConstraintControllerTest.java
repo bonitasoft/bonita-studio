@@ -30,13 +30,13 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -46,7 +46,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ContractConstraintControllerTest extends AbstractSWTTestCase {
+public class ContractConstraintControllerTest {
 
     private ContractConstraintController controller;
 
@@ -55,24 +55,18 @@ public class ContractConstraintControllerTest extends AbstractSWTTestCase {
 
     private Contract contract;
 
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        createDisplayAndRealm();
         FileActionDialog.setDisablePopup(true);
         controller = spy(new ContractConstraintController(new WritableValue(aContract().build(), Contract.class)));
         contract = ProcessFactory.eINSTANCE.createContract();
         when(viewer.getInput()).thenReturn(EMFObservables.observeList(contract, ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
     }
 
     @Test

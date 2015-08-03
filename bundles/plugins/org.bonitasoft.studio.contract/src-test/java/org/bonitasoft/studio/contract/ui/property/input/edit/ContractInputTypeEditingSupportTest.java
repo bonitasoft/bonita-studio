@@ -27,7 +27,7 @@ import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
-import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -35,8 +35,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Composite;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -46,7 +46,10 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ContractInputTypeEditingSupportTest extends AbstractSWTTestCase {
+public class ContractInputTypeEditingSupportTest {
+
+    @Rule
+    public RealmWithDisplay realm = new RealmWithDisplay();
 
     @Mock
     private ColumnViewer viewer;
@@ -68,17 +71,9 @@ public class ContractInputTypeEditingSupportTest extends AbstractSWTTestCase {
      */
     @Before
     public void setUp() throws Exception {
-        parent = createDisplayAndRealm();
+        parent = realm.createComposite();
         contractInputTypeEditingSupport = new ContractInputTypeEditingSupport(viewer,
                 new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory()), contractInputController);
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        dispose();
     }
 
     @Test

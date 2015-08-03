@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -19,6 +19,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.Widget;
@@ -38,18 +39,25 @@ public class AvailableExpressionTypeFilterWitoutContingentWidgets extends Availa
 
     @Override
     public boolean select(final Viewer viewer, final Object context, final Object element) {
-        if (element instanceof Expression && ExpressionConstants.FORM_FIELD_TYPE.equals(((Expression) element).getType())
-                && !((Expression) element).getReferencedElements().isEmpty()) {
-            if (isContingentField(context, (Expression) element)) {
+        if (element instanceof Expression){
+            final Expression expression = (Expression)element;
+            Widget parentWidget = null;
+            if (context instanceof EObject) {
+                parentWidget = ModelHelper.getParentWidget((EObject) context);
+            } else if (viewer instanceof ExpressionViewer) {
+                parentWidget = ModelHelper.getParentWidget(((ExpressionViewer) viewer).getContext());
+            }
+            if(ExpressionConstants.FORM_FIELD_TYPE.equals(expression.getType())
+                    && !(expression.getReferencedElements().isEmpty())
+                    && isContingentField(parentWidget, expression)) {
                 return false;
             }
         }
         return super.select(viewer, context, element);
     }
 
-    private boolean isContingentField(final Object context, final Expression formFieldExpression) {
+    private boolean isContingentField(final Widget parentWidget, final Expression formFieldExpression) {
         final Widget widget = (Widget) formFieldExpression.getReferencedElements().get(0);
-        final Widget parentWidget = ModelHelper.getParentWidget((EObject) context);
         if (parentWidget == null) {
             return false;
         }
