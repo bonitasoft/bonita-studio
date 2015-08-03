@@ -44,6 +44,10 @@ public final class InfoMessageConverter extends Converter {
                     return getURLMessage(context, formMappingFeature);
                 case LEGACY:
                     return getLegacyMessage(context, formMappingFeature);
+                case NONE:
+                    return context instanceof Task ? Messages.noFormMessageOnTask : Messages.noFormMessageOnProcess;
+                default:
+                    break;
             }
         }
         return null;
@@ -69,4 +73,5 @@ public final class InfoMessageConverter extends Converter {
         }
         return context instanceof Task ? Messages.stepLegacyInfo : Messages.processLegacyInfo;
     }
+
 }

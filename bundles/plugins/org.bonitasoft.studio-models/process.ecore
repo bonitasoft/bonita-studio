@@ -303,6 +303,7 @@
     <eLiterals name="INTERNAL"/>
     <eLiterals name="URL" value="1"/>
     <eLiterals name="LEGACY" value="2"/>
+    <eLiterals name="NONE" value="3" literal="NONE"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Gateway" eSuperTypes="#//FlowElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="gatewayType" eType="#//GatewayType"/>
