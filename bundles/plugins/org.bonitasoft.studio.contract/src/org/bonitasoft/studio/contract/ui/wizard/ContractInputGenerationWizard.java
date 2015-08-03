@@ -42,6 +42,7 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.Wizard;
@@ -140,6 +141,7 @@ public class ContractInputGenerationWizard extends Wizard {
 
         }
         editingDomain.getCommandStack().execute(cc);
+        openWarningDialog(contractInputGenerator.isAllAttributesGenerated());
         openInfoDialog();
         return true;
     }
@@ -153,6 +155,12 @@ public class ContractInputGenerationWizard extends Wizard {
                     false,
                     preferenceStore,
                     HIDE_GENERATION_SUCCESS_DIALOG);
+        }
+    }
+
+    protected void openWarningDialog(final boolean allAttributesGenerated) {
+        if (!allAttributesGenerated) {
+            MessageDialog.openWarning(getShell(), Messages.notAllAttributesGeneratedTitle, Messages.notAllAttributesGeneratedMsg);
         }
     }
 }
