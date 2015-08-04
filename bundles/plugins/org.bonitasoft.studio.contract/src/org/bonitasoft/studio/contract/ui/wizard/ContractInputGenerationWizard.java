@@ -158,7 +158,7 @@ public class ContractInputGenerationWizard extends Wizard {
     }
 
     protected void openInfoDialog() {
-        if (contractContainer instanceof OperationContainer && isNullOrEmpty(preferenceStore.getString(HIDE_GENERATION_SUCCESS_DIALOG))) {
+        if (isNullOrEmpty(preferenceStore.getString(HIDE_GENERATION_SUCCESS_DIALOG))) {
             MessageDialogWithToggle.openInformation(getShell(),
                     Messages.contractGenerationTitle,
                     Messages.contractGenerationMsg,
