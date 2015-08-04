@@ -19,13 +19,16 @@ import org.bonitasoft.engine.bdm.model.field.RelationField;
 
 public class NewBusinessObjectInitializer extends AbstractBusinessObjectInitializer implements IPropertyInitializer {
 
-    public NewBusinessObjectInitializer(final RelationField field, final String refName) {
+    private final boolean checkExistsence;
+
+    public NewBusinessObjectInitializer(final RelationField field, final String refName, final boolean checkExistsence) {
         super(field, refName);
+        this.checkExistsence = checkExistsence;
     }
 
     @Override
     protected boolean checkExistence() {
-        return true;
+        return checkExistsence;
     }
 
     @Override

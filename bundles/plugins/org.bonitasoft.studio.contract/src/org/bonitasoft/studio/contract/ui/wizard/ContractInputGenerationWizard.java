@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.RootContractInputGenerator;
+import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.contract.i18n.Messages;
@@ -36,11 +37,13 @@ import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.OperationContainer;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -63,11 +66,13 @@ public class ContractInputGenerationWizard extends Wizard {
     private final FieldToContractInputMappingOperationBuilder operationBuilder;
     private final IPreferenceStore preferenceStore;
     private final ISharedImages sharedImagesService;
+    private final FieldToContractInputMappingExpressionBuilder expressionBuilder;
 
     public ContractInputGenerationWizard(final ContractContainer contractContainer,
             final EditingDomain editingDomain,
             final RepositoryAccessor repositoryAccessor,
             final FieldToContractInputMappingOperationBuilder operationBuilder,
+            final FieldToContractInputMappingExpressionBuilder expressionBuilder,
             final IPreferenceStore preferenceStore,
             final ISharedImages sharedImagesService) {
         setWindowTitle(Messages.contractInputGenerationTitle);
@@ -77,6 +82,7 @@ public class ContractInputGenerationWizard extends Wizard {
         this.repositoryAccessor = repositoryAccessor;
         fieldToContractInputMappingFactory = new FieldToContractInputMappingFactory();
         this.operationBuilder = operationBuilder;
+        this.expressionBuilder = expressionBuilder;
         this.preferenceStore = preferenceStore;
         this.sharedImagesService = sharedImagesService;
     }
@@ -122,7 +128,7 @@ public class ContractInputGenerationWizard extends Wizard {
     public boolean performFinish() {
         final BusinessObjectData data = (BusinessObjectData) selectedDataObservable.getValue();
         final RootContractInputGenerator contractInputGenerator = new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
-                contractInputFromBusinessObjectWizardPage.getMappings(), repositoryAccessor, operationBuilder);
+                contractInputFromBusinessObjectWizardPage.getMappings(), repositoryAccessor, operationBuilder, expressionBuilder);
         try {
             contractInputGenerator.build(data);
         } catch (final OperationCreationException e) {
@@ -130,22 +136,29 @@ public class ContractInputGenerationWizard extends Wizard {
             new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e).open();
             return false;
         }
+        editingDomain.getCommandStack().execute(createCommand(contractInputGenerator, data));
+        openInfoDialog();
+        return true;
+    }
 
+    protected CompoundCommand createCommand(final RootContractInputGenerator contractInputGenerator, final BusinessObjectData data) {
         final CompoundCommand cc = new CompoundCommand();
         cc.append(AddCommand.create(editingDomain, contractContainer.getContract(), ProcessPackage.Literals.CONTRACT__INPUTS,
                 contractInputGenerator.getRootContractInput()));
         if (contractContainer instanceof OperationContainer) {
             cc.appendIfCanExecute(AddCommand.create(editingDomain, contractContainer, ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS,
                     contractInputGenerator.getMappingOperations()));
+        }
+        if (contractContainer instanceof Pool) {
+            cc.appendIfCanExecute(SetCommand.create(editingDomain, data, ProcessPackage.Literals.DATA__DEFAULT_VALUE,
+                    contractInputGenerator.getInitialValueExpression()));
 
         }
-        editingDomain.getCommandStack().execute(cc);
-        openInfoDialog();
-        return true;
+        return cc;
     }
 
     protected void openInfoDialog() {
-        if (isNullOrEmpty(preferenceStore.getString(HIDE_GENERATION_SUCCESS_DIALOG))) {
+        if (contractContainer instanceof OperationContainer && isNullOrEmpty(preferenceStore.getString(HIDE_GENERATION_SUCCESS_DIALOG))) {
             MessageDialogWithToggle.openInformation(getShell(),
                     Messages.contractGenerationTitle,
                     Messages.contractGenerationMsg,

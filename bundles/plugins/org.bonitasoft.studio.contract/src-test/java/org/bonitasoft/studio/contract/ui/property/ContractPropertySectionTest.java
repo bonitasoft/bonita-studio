@@ -26,6 +26,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.designer.ui.contribution.CreateAndEditFormContributionItem;
@@ -99,13 +100,17 @@ public class ContractPropertySectionTest {
     @Mock
     private FieldToContractInputMappingOperationBuilder operationBuilder;
 
+    @Mock
+    private FieldToContractInputMappingExpressionBuilder expressionBuilder;
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         parent = realm.createComposite();
-        section = spy(new ContractPropertySection(sharedImages, eclipseContext, selectionProvider, repositoryAccessor, operationBuilder, progressService));
+        section = spy(new ContractPropertySection(sharedImages, eclipseContext, selectionProvider, repositoryAccessor, operationBuilder, expressionBuilder,
+                progressService));
         when(tabbedPropertySheetPage.getWidgetFactory()).thenReturn(new TabbedPropertySheetWidgetFactory());
         doReturn(contributionItem).when(section).newContributionItem(CreateAndEditFormContributionItem.class);
         doReturn(realm.createImage()).when(sharedImages).getImage(anyString());
