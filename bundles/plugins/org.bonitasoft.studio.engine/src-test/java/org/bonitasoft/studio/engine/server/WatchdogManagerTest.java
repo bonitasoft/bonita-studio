@@ -18,6 +18,8 @@ package org.bonitasoft.studio.engine.server;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.net.ServerSocket;
+
 import org.junit.Test;
 
 
@@ -26,11 +28,16 @@ public class WatchdogManagerTest {
     @Test
     public void testCheckBasicStartStop() throws InterruptedException {
         final WatchdogManager manager = WatchdogManager.getInstance();
+
         manager.startWatchdog();
-        assertThat(manager.getWatchdogServer()).isNotNull();
-        assertThat(manager.getWatchdogServer().isBound()).isTrue();
+        final ServerSocket watchdogServer = manager.getWatchdogServer();
+        assertThat(watchdogServer).isNotNull();
+        assertThat(watchdogServer.isBound()).isTrue();
+        assertThat(watchdogServer.isClosed()).isFalse();
+
         manager.stopWatchdog();
         assertThat(manager.getWatchdogServer()).isNull();
+        assertThat(watchdogServer.isClosed()).isTrue();
     }
 
 }
