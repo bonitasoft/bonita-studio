@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraintController;
@@ -94,12 +95,15 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private final FieldToContractInputMappingOperationBuilder fieldToContractInputMappingOperationBuilder;
 
+    private final FieldToContractInputMappingExpressionBuilder fieldToContractInputMappingExpressionBuilder;
+
     @Inject
     public ContractPropertySection(final ISharedImages sharedImages,
             final IEclipseContext eclipseContext,
             final ContractContainerAdaptableSelectionProvider selectionProvider,
             final RepositoryAccessor repositoryAccessor,
             final FieldToContractInputMappingOperationBuilder fieldToContractInputMappingOperationBuilder,
+            final FieldToContractInputMappingExpressionBuilder fieldToContractInputMappingExpressionBuilder,
             final IProgressService progressService) {
         this.eclipseContext = eclipseContext;
         this.repositoryAccessor = repositoryAccessor;
@@ -107,6 +111,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         this.progressService = progressService;
         this.sharedImages = sharedImages;
         this.fieldToContractInputMappingOperationBuilder = fieldToContractInputMappingOperationBuilder;
+        this.fieldToContractInputMappingExpressionBuilder = fieldToContractInputMappingExpressionBuilder;
     }
 
     @Override
@@ -245,6 +250,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
                         getEditingDomain(),
                         repositoryAccessor,
                         fieldToContractInputMappingOperationBuilder,
+                        fieldToContractInputMappingExpressionBuilder,
                         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore(),
                         sharedImages),
                 this, true);

@@ -141,6 +141,7 @@ public abstract class DataViewer extends Composite {
         this.dataContainerObservable = dataContainerObservable;
         final IObservableSet knownElements = ((ObservableListContentProvider) tableViewer.getContentProvider()).getKnownElements();
         final IObservableMap[] labelMaps = EMFObservables.observeMaps(knownElements, new EStructuralFeature[] { ProcessPackage.Literals.ELEMENT__NAME,
+                ProcessPackage.Literals.DATA__MULTIPLE,
                 ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME, ProcessPackage.Literals.DATA__DATA_TYPE });
         tableViewer.setLabelProvider(createLabelProvider(labelMaps));
         tableViewer.setInput(CustomEMFEditObservables.observeDetailList(Realm.getDefault(), dataContainerObservable,

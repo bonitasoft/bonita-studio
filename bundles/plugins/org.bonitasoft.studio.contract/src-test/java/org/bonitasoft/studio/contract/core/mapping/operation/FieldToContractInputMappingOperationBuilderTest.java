@@ -20,6 +20,7 @@ import static org.bonitasoft.studio.contract.core.mapping.operation.FieldToContr
 import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.aBO;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aCompositionField;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aSimpleField;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.mockito.Matchers.any;
@@ -27,6 +28,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
@@ -37,15 +39,14 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
+import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.filter.ExpressionReturnTypeFilter;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
 import org.bonitasoft.studio.model.expression.assertions.OperatorAssert;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
-import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -65,6 +66,8 @@ public class FieldToContractInputMappingOperationBuilderTest {
     private RepositoryAccessor repositoryAccessor;
     @Mock
     private ExpressionEditorService expressionEditorService;
+    @Mock
+    private FieldToContractInputMappingExpressionBuilder expressionBuilder;
 
     @Before
     public void setUp() throws Exception {
@@ -77,7 +80,9 @@ public class FieldToContractInputMappingOperationBuilderTest {
 
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
         final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
-        final Operation operation = inputToOperation.toOperation(aBusinessData().withName("myEmployee").build(),
+        final BusinessObjectData data = aBusinessData().withName("myEmployee").build();
+        when(expressionBuilder.toExpression(data, mapping)).thenReturn(anExpression().build());
+        final Operation operation = inputToOperation.toOperation(data,
                 mapping);
 
         OperatorAssert.assertThat(operation.getOperator())
@@ -90,11 +95,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
                 .hasType(ExpressionConstants.VARIABLE_TYPE);
         assertThat(operation.getLeftOperand().getReferencedElements()).hasSize(1);
 
-        ExpressionAssert.assertThat(operation.getRightOperand())
-                .hasName("lastName")
-                .hasContent("lastName")
-                .hasType(ExpressionConstants.CONTRACT_INPUT_TYPE);
-        assertThat(operation.getRightOperand().getReferencedElements()).hasSize(1);
+        verify(expressionBuilder).toExpression(data, mapping);
     }
 
     @Test
@@ -102,11 +103,14 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final FieldToContractInputMappingOperationBuilder inputToOperation = createFixture();
 
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
-        final FieldToContractInputMapping fieldToContractInputMapping = aSimpleMapping(lastNameField).build();
-        fieldToContractInputMapping.toContractInput(aContractInput().withType(ContractInputType.COMPLEX)
+        final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
+        mapping.toContractInput(aContractInput().withType(ContractInputType.COMPLEX)
                 .withName("employee").build());
-        final Operation operation = inputToOperation.toOperation(aBusinessData().withName("myEmployee").build(),
-                fieldToContractInputMapping);
+
+        final BusinessObjectData data = aBusinessData().withName("myEmployee").build();
+        when(expressionBuilder.toExpression(data, mapping)).thenReturn(anExpression().build());
+        final Operation operation = inputToOperation.toOperation(data,
+                mapping);
 
         OperatorAssert.assertThat(operation.getOperator())
                 .hasType(ExpressionConstants.JAVA_METHOD_OPERATOR)
@@ -117,14 +121,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
                 .hasName("myEmployee").hasContent("myEmployee")
                 .hasType(ExpressionConstants.VARIABLE_TYPE);
         assertThat(operation.getLeftOperand().getReferencedElements()).hasSize(1);
-
-        ExpressionAssert.assertThat(operation.getRightOperand())
-                .hasName("employee.lastName")
-                .hasContent("employee.lastName")
-                .hasReturnType(String.class.getName())
-                .hasType(ExpressionConstants.SCRIPT_TYPE);
-        assertThat(operation.getRightOperand().getReferencedElements()).hasSize(1);
-        ContractInputAssert.assertThat((ContractInput) operation.getRightOperand().getReferencedElements().get(0)).hasName("employee");
+        verify(expressionBuilder).toExpression(data, mapping);
     }
 
     @Test
@@ -134,25 +131,21 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final RelationField address = aCompositionField("address", aBO("Address").build());
         final FieldToContractInputMapping mapping = aRelationMapping(address).build();
         mapping.toContractInput(aContractInput().withName("employee").withType(ContractInputType.COMPLEX).build());
-        final Operation operation = inputToOperation.toOperation(aBusinessData().withName("myEmployee").build(),
+        final BusinessObjectData businessObjectData = aBusinessData().withName("myEmployee").build();
+        when(expressionBuilder.toExpression(businessObjectData, mapping)).thenReturn(anExpression().build());
+        final Operation operation = inputToOperation.toOperation(businessObjectData,
                 mapping);
 
         OperatorAssert.assertThat(operation.getOperator())
                 .hasType(ExpressionConstants.JAVA_METHOD_OPERATOR)
                 .hasInputTypes("Address")
                 .hasExpression("setAddress");
-
         ExpressionAssert.assertThat(operation.getLeftOperand())
                 .hasName("myEmployee").hasContent("myEmployee")
                 .hasType(ExpressionConstants.VARIABLE_TYPE);
         assertThat(operation.getLeftOperand().getReferencedElements()).hasSize(1);
 
-        ExpressionAssert.assertThat(operation.getRightOperand())
-                .hasName("employee.address")
-                .hasContent("def addressVar = myEmployee.address == null ? new Address() : myEmployee.address" + System.lineSeparator() + "return addressVar")
-                .hasReturnType("Address")
-                .hasType(ExpressionConstants.SCRIPT_TYPE);
-        assertThat(operation.getRightOperand().getReferencedElements()).hasSize(2);
+        verify(expressionBuilder).toExpression(businessObjectData, mapping);
     }
 
     @Test
@@ -160,7 +153,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final FieldToContractInputMappingOperationBuilder inputToOperation = createFixture();
         when(expressionReturnTypeFilter.compatibleReturnTypes(anyString(), anyString())).thenReturn(false);
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
-
+        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class))).thenReturn(anExpression().build());
         thrown.expect(OperationCreationException.class);
         inputToOperation.toOperation(aBusinessData().withName("myEmployee").build(),
                 aSimpleMapping(lastNameField).build());
@@ -177,7 +170,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final MappingOperationScriptBuilder fakeScriptBuilder = mock(MappingOperationScriptBuilder.class);
         when(fakeScriptBuilder.toScript()).thenThrow(BusinessObjectInstantiationException.class);
         doReturn(fakeScriptBuilder).when(mapping).getScriptBuilder(any(BusinessObjectData.class));
-
+        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class))).thenReturn(anExpression().build());
         thrown.expect(OperationCreationException.class);
         inputToOperation.toOperation(aBusinessData().withName("myEmployee").build(),
                 mapping);
@@ -189,6 +182,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
 
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
         final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
+        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class))).thenReturn(anExpression().build());
         final Operation operation = inputToOperation.toOperation(aBusinessData().multiple().withName("employees").build(),
                 mapping);
 
@@ -199,7 +193,8 @@ public class FieldToContractInputMappingOperationBuilderTest {
     }
 
     private FieldToContractInputMappingOperationBuilder createFixture() {
-        return new FieldToContractInputMappingOperationBuilder(expressionReturnTypeFilter, repositoryAccessor, expressionEditorService);
+        return new FieldToContractInputMappingOperationBuilder(expressionBuilder,
+                expressionReturnTypeFilter);
     }
 
 }
