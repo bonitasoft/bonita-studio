@@ -168,4 +168,11 @@ public class ContractInputGenerationWizard extends Wizard {
                     HIDE_GENERATION_SUCCESS_DIALOG);
         }
     }
+
+    /**
+     * @return
+     */
+    public CreateContractInputFromBusinessObjectWizardPage getContractInputFromBusinessObjectWizardPage() {
+        return contractInputFromBusinessObjectWizardPage;
+    }
 }
