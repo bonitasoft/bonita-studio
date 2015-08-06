@@ -158,7 +158,7 @@ public class ContractInputGenerationWizard extends Wizard {
     }
 
     protected void openInfoDialog() {
-        if (isNullOrEmpty(preferenceStore.getString(HIDE_GENERATION_SUCCESS_DIALOG))) {
+        if (contractContainer instanceof OperationContainer && isNullOrEmpty(preferenceStore.getString(HIDE_GENERATION_SUCCESS_DIALOG))) {
             MessageDialogWithToggle.openInformation(getShell(),
                     Messages.contractGenerationTitle,
                     Messages.contractGenerationMsg,
@@ -167,5 +167,12 @@ public class ContractInputGenerationWizard extends Wizard {
                     preferenceStore,
                     HIDE_GENERATION_SUCCESS_DIALOG);
         }
+    }
+
+    /**
+     * @return
+     */
+    public CreateContractInputFromBusinessObjectWizardPage getContractInputFromBusinessObjectWizardPage() {
+        return contractInputFromBusinessObjectWizardPage;
     }
 }
