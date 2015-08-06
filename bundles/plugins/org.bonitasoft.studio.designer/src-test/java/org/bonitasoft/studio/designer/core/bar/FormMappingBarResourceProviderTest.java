@@ -44,7 +44,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -72,11 +71,11 @@ public class FormMappingBarResourceProviderTest {
     @Mock
     private IEclipsePreferences preferenceStore;
 
-    @InjectMocks
     private FormMappingBarResourceProvider formMappingBarResourceProvider;
 
     @Before
     public void setUp() throws Exception {
+        formMappingBarResourceProvider = new FormMappingBarResourceProvider(customPageBarResourceFactory, preferenceStore);
         when(preferenceStore.getBoolean(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true)).thenReturn(false);
     }
 
@@ -120,9 +119,10 @@ public class FormMappingBarResourceProviderTest {
 
         //Then
         verify(builder).setFormMappings(formMappingModel);
-        assertThat(formMappingModel.getFormMappings()).hasSize(1);
+        assertThat(formMappingModel.getFormMappings()).hasSize(3);
         assertThat(formMappingModel.getFormMappings()).extracting("target", "form", "type", "taskname")
-                .contains(
+                .contains(tuple(FormMappingTarget.INTERNAL, null, FormMappingType.PROCESS_START, null),
+                        tuple(FormMappingTarget.URL, null, FormMappingType.PROCESS_OVERVIEW, null),
                         tuple(FormMappingTarget.INTERNAL, "custompage_Step1", FormMappingType.TASK, "Step1"));
     }
 
@@ -178,7 +178,8 @@ public class FormMappingBarResourceProviderTest {
                 .havingFormMapping(aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.LEGACY))
                 .havingElements(
                         aTask().withName("Step1").havingFormMapping(
-                                aFormMapping().havingTargetForm(anExpression().withName("StepForm").withContent("step-form-id"))))
+                                aFormMapping().havingTargetForm(anExpression().withName("StepForm").withContent("step-form-id"))),
+                        aTask().withName("Step2").havingFormMapping(aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.NONE)))
                 .build();
     }
 
@@ -189,16 +190,6 @@ public class FormMappingBarResourceProviderTest {
                 .havingFormMapping(
                         aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.INTERNAL)
                                 .havingTargetForm(anExpression().withContent("")))
-                .build();
-    }
-
-    private Pool aPoolWithUnknownFormMapping() {
-        return aPool()
-                .withName("Pool1")
-                .withVersion("1.0")
-                .havingFormMapping(
-                        aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.INTERNAL)
-                                .havingTargetForm(anExpression().withName("MyForm").withContent("an_unknown_id")))
                 .build();
     }
 
