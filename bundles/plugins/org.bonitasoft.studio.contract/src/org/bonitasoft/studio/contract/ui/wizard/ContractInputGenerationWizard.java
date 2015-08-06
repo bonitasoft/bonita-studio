@@ -176,4 +176,11 @@ public class ContractInputGenerationWizard extends Wizard {
             MessageDialog.openWarning(getShell(), Messages.notAllAttributesGeneratedTitle, Messages.notAllAttributesGeneratedMsg);
         }
     }
+    
+     /**
+     * @return
+     */
+    public CreateContractInputFromBusinessObjectWizardPage getContractInputFromBusinessObjectWizardPage() {
+        return contractInputFromBusinessObjectWizardPage;
+    }
 }
