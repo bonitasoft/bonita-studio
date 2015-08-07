@@ -156,6 +156,8 @@ public class Messages extends NLS {
 
     public static String messageOperationWithListDocumentInTask;
 
+    public static String cannotStoreBusinessObjectInProcessVariable;
+
     private Messages() {
         // Do not instantiate
     }

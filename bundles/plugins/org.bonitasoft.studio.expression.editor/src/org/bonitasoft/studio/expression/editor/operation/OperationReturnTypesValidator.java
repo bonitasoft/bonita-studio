@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.expression.editor.operation;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.bonitasoft.engine.bpm.contract.FileInputValue;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
@@ -98,6 +99,9 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
                             return status;
                         }
                     } else if (ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operatorType)) {
+                        if (isInvalidQueryExpression(operation)) {
+                            return ValidationStatus.error(Messages.cannotStoreBusinessObjectInProcessVariable);
+                        }
                         if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(dataExpression.getType())) {
                             return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator,
                                     typeLabelProvider.getText(dataExpression.getType()), operatorLabelProvider.getText(operation.getOperator())));
@@ -167,6 +171,18 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
             }
         }
         return ValidationStatus.ok();
+    }
+
+    private boolean isInvalidQueryExpression(final Operation operation) {
+        if (leftOperandHasReferencedElement(operation)) {
+            final EObject data = operation.getLeftOperand().getReferencedElements().get(0);
+            return !(data instanceof BusinessObjectData) && Objects.equals(operation.getRightOperand().getType(), ExpressionConstants.QUERY_TYPE);
+        }
+        return false;
+    }
+
+    private boolean leftOperandHasReferencedElement(final Operation operation) {
+        return !operation.getLeftOperand().getReferencedElements().isEmpty();
     }
 
     protected IStatus validateDeletionOperation(final Expression expression, final String expressionName, final Operation operation) {
@@ -344,6 +360,9 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
                             expressionName));
                 }
             }
+        }
+        if (isInvalidQueryExpression(operation)) {
+            return ValidationStatus.error(Messages.cannotStoreBusinessObjectInProcessVariable);
         }
         return ValidationStatus.ok();
     }

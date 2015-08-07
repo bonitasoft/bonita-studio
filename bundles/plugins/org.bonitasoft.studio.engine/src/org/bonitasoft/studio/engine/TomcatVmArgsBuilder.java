@@ -19,6 +19,7 @@ import java.io.File;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.WorkspaceResourceServerManager;
 import org.bonitasoft.studio.designer.core.WorkspaceSystemProperties;
+import org.bonitasoft.studio.engine.server.WatchdogManager;
 import org.eclipse.core.runtime.Platform;
 
 public class TomcatVmArgsBuilder {
@@ -65,7 +66,7 @@ public class TomcatVmArgsBuilder {
     }
 
     public void addWatchDogProperties(final StringBuilder args) {
-        addSystemProperty(args, WATCHDOG_PORT_PROPERTY, String.valueOf(BOSWebServerManager.WATCHDOG_PORT));
+        addSystemProperty(args, WATCHDOG_PORT_PROPERTY, String.valueOf(WatchdogManager.WATCHDOG_PORT));
         addSystemProperty(args, WATCHDOG_TIMER, System.getProperty(WATCHDOG_TIMER, "20000"));
     }
 
