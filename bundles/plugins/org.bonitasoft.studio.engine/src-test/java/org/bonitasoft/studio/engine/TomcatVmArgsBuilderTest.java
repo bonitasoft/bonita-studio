@@ -64,7 +64,7 @@ public class TomcatVmArgsBuilderTest {
     public void testLoggingPropertyCanBeOverriden() throws Exception {
         final String overridenValue = "-Djava.util.logging.config.file=test";
         System.setProperty("tomcat.extra.params", overridenValue);
-        assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains(overridenValue);
+        assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains(overridenValue).containsOnlyOnce("java.util.logging.config.file");
     }
 
     @Test
