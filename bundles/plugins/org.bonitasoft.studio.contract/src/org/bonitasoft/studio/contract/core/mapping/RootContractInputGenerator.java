@@ -67,7 +67,7 @@ public class RootContractInputGenerator {
                     mappingOperations.add(operationBuilder.toOperation(data, mapping));
                 }
             } else {
-            allAttributesGenerated = false;
+                allAttributesGenerated = false;
             }
         }
         if (contractInput.isMultiple()) {
@@ -105,7 +105,7 @@ public class RootContractInputGenerator {
     public Expression getInitialValueExpression() {
         return initialValueExpression;
     }
-    
+
     /**
      * @return the allAttributesGenerated
      */
