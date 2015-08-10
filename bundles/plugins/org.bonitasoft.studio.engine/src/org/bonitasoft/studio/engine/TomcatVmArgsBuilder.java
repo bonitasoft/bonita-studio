@@ -37,8 +37,9 @@ public class TomcatVmArgsBuilder {
     public String getVMArgs(final String tomcatInstanceLocation) {
         final StringBuilder args = new StringBuilder();
         addMemoryOptions(args);
-        if (System.getProperty("tomcat.extra.params") != null) {
-            args.append(" " + System.getProperty("tomcat.extra.params"));
+        final String tomcatExtraParams = System.getProperty("tomcat.extra.params");
+        if (tomcatExtraParams != null) {
+            args.append(" " + tomcatExtraParams);
         }
         addSystemProperty(args, "catalina.home", "\"" + tomcatInstanceLocation + "\"");
         addSystemProperty(args, "CATALINA_HOME", "\"" + tomcatInstanceLocation + "\"");
@@ -50,8 +51,10 @@ public class TomcatVmArgsBuilder {
         addSystemProperty(args, "bitronix.tm.configuration",
                 "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar + "bitronix-config.properties\"");
         addSystemProperty(args, "java.util.logging.manager", "org.apache.juli.ClassLoaderLogManager");
-        addSystemProperty(args, "java.util.logging.config.file",
-                "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar + "logging.properties\"");
+        if (tomcatExtraParams == null || !tomcatExtraParams.contains("-Djava.util.logging.config.file=")) {
+            addSystemProperty(args, "java.util.logging.config.file",
+                    "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar + "logging.properties\"");
+        }
         addSystemProperty(args, "file.encoding", "UTF-8");
         addWatchDogProperties(args);
         addSystemProperty(args, "eclipse.product", getProductApplicationId());
