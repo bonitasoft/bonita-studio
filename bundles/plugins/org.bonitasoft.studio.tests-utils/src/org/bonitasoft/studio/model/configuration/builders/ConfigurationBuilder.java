@@ -14,8 +14,11 @@
  */
 package org.bonitasoft.studio.model.configuration.builders;
 
+import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
+import org.bonitasoft.studio.model.configuration.DefinitionMapping;
+import org.bonitasoft.studio.model.configuration.FragmentContainer;
 
 /**
  * @author Romain Bioteau
@@ -64,6 +67,27 @@ public class ConfigurationBuilder {
 
     public ConfigurationBuilder withAnonymousPassword(final String anonymousPassword) {
         configuration.setAnonymousPassword(anonymousPassword);
+        return this;
+    }
+
+    public ConfigurationBuilder havingDefinitionMappings(final Buildable<? extends DefinitionMapping>... defMappings) {
+        for (final Buildable<? extends DefinitionMapping> def : defMappings) {
+            configuration.getDefinitionMappings().add(def.build());
+        }
+        return this;
+    }
+
+    public ConfigurationBuilder havingProcessDependencies(final Buildable<? extends FragmentContainer>... dependencies) {
+        for (final Buildable<? extends FragmentContainer> dep : dependencies) {
+            configuration.getProcessDependencies().add(dep.build());
+        }
+        return this;
+    }
+
+    public ConfigurationBuilder havingApplicationDependencies(final Buildable<? extends FragmentContainer>... dependencies) {
+        for (final Buildable<? extends FragmentContainer> dep : dependencies) {
+            configuration.getApplicationDependencies().add(dep.build());
+        }
         return this;
     }
 
