@@ -16,6 +16,7 @@ package org.bonitasoft.studio.engine;
 
 import java.io.File;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.WorkspaceResourceServerManager;
 import org.bonitasoft.studio.designer.core.WorkspaceSystemProperties;
@@ -61,7 +62,11 @@ public class TomcatVmArgsBuilder {
         addSystemProperty(args, BONITA_WEB_REGISTER, System.getProperty(BONITA_WEB_REGISTER, "1"));
 
         addUIDesignerOptions(args);
-        return args.toString();
+        final String res = args.toString();
+        if (System.getProperty("log.tomcat.vm.args") != null) {
+            BonitaStudioLog.info(res, EnginePlugin.PLUGIN_ID);
+        }
+        return res;
     }
 
     public String getProductApplicationId() {
