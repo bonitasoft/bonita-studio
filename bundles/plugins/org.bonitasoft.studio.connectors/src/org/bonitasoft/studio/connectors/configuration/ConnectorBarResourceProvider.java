@@ -14,8 +14,12 @@
  */
 package org.bonitasoft.studio.connectors.configuration;
 
+import static com.google.common.io.Files.toByteArray;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,10 +31,12 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
@@ -50,6 +56,12 @@ import com.google.common.io.Files;
  * @author Romain Bioteau
  */
 public class ConnectorBarResourceProvider implements BARResourcesProvider {
+
+    private final RepositoryAccessor repositoryAccessor;
+
+    public ConnectorBarResourceProvider(final RepositoryAccessor repositoryAccessor) {
+        this.repositoryAccessor = repositoryAccessor;
+    }
 
     @Override
     public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
@@ -87,30 +99,7 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
                         builder.addConnectorImplementation(new BarResource(NamingUtils.toConnectorImplementationFilename(implId, implVersion, true), content));
 
                         //Add jar dependencies
-                        for (final FragmentContainer fc : configuration.getProcessDependencies()) {
-                            if (fc.getId().equals(FragmentTypes.CONNECTOR)) {
-                                for (final FragmentContainer connector : fc.getChildren()) {
-                                    if (connector.getId().equals(NamingUtils.toConnectorImplementationFilename(implId, implVersion, false))) {
-                                        for (final Fragment fragment : connector.getFragments()) {
-                                            final String jarName = fragment.getValue();
-                                            if (jarName.endsWith(".jar") && fragment.isExported()) {
-                                                if (isUserImplementation
-                                                        && NamingUtils.toConnectorImplementationJarName(implementation).equals(fragment.getValue())) { //Generate jar from source file
-                                                    addImplementationJar(builder, implementation);
-                                                } else {
-                                                    final IRepositoryFileStore jarFileStore = libStore.getChild(jarName);
-                                                    if (jarFileStore != null) {
-                                                        final File jarFile = jarFileStore.getResource().getLocation().toFile();
-                                                        resources.add(new BarResource(jarFile.getName(), Files.toByteArray(jarFile)));
-                                                    }
-                                                }
-
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        addProcessDependencies(builder, configuration, resources, libStore, implId, implVersion, implementation, isUserImplementation);
                     } catch (final Exception e) {
                         BonitaStudioLog.error(e);
                     }
@@ -122,33 +111,91 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
         }
     }
 
-    private void addImplementationJar(final BusinessArchiveBuilder builder, final ConnectorImplementation impl) {
-        final ConnectorSourceRepositoryStore sourceStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
+    /**
+     * @param builder
+     * @param configuration
+     * @param resources
+     * @param libStore
+     * @param implId
+     * @param implVersion
+     * @param implementation
+     * @param isUserImplementation
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws InvocationTargetException
+     */
+    protected void addProcessDependencies(final BusinessArchiveBuilder builder, final Configuration configuration, final List<BarResource> resources,
+            final DependencyRepositoryStore libStore, final String implId, final String implVersion, final ConnectorImplementation implementation,
+            final boolean isUserImplementation) throws IOException, InvocationTargetException, InterruptedException {
+        for (final FragmentContainer fc : configuration.getProcessDependencies()) {
+            if (fc.getId().equals(FragmentTypes.CONNECTOR)) {
+                for (final FragmentContainer connector : fc.getChildren()) {
+                    if (connector.getId().equals(NamingUtils.toConnectorImplementationFilename(implId, implVersion, false))) {
+                        for (final Fragment fragment : connector.getFragments()) {
+                            final String jarName = fragment.getValue();
+                            if (jarName.endsWith(".jar") && fragment.isExported()) {
+                                if (isUserImplementation
+                                        && NamingUtils.toConnectorImplementationJarName(implementation).equals(fragment.getValue())) { //Generate jar from source file
+                                    if (!addImplementationJar(builder, implementation)) {
+                                        addResource(resources, libStore, jarName);
+                                    }
+                                } else {
+                                    addResource(resources, libStore, jarName);
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param resources
+     * @param libStore
+     * @param jarName
+     * @throws IOException
+     */
+    protected void addResource(final List<BarResource> resources, final DependencyRepositoryStore libStore, final String jarName) throws IOException {
+        final IRepositoryFileStore jarFileStore = libStore.getChild(jarName);
+        if (jarFileStore != null) {
+            final File jarFile = jarFileStore.getResource().getLocation().toFile();
+            resources.add(new BarResource(jarFile.getName(), Files.toByteArray(jarFile)));
+        }
+    }
+
+    private boolean addImplementationJar(final BusinessArchiveBuilder builder, final ConnectorImplementation impl) throws InvocationTargetException,
+            InterruptedException, IOException {
+        final SourceRepositoryStore<?> sourceStore = getSourceStore();
         final String connectorJarName = NamingUtils.toConnectorImplementationJarName(impl);
         final String qualifiedClassName = impl.getImplementationClassname();
         String packageName = "";
         if (qualifiedClassName.indexOf(".") != -1) {
             packageName = qualifiedClassName.substring(0, qualifiedClassName.lastIndexOf("."));
         }
-
         final PackageFileStore file = (PackageFileStore) sourceStore.getChild(packageName);
-        if (file != null) {
-            final File tmpFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), connectorJarName);
-            tmpFile.delete();
-
-            try {
-                file.exportAsJar(tmpFile.getAbsolutePath(), false);
-                final FileInputStream fis = new FileInputStream(tmpFile);
-                final byte[] content = new byte[fis.available()];
-                fis.read(content);
-                fis.close();
-                tmpFile.delete();
-                builder.addClasspathResource(new BarResource(connectorJarName, content));
-            } catch (final Exception e) {
-                BonitaStudioLog.error(e);
-            }
+        if (file == null) {
+            return false;
         }
+        final File tmpFile = exportJar(connectorJarName, file);
+        try {
+            builder.addClasspathResource(new BarResource(connectorJarName, toByteArray(tmpFile)));
+        } finally {
+            tmpFile.delete();
+        }
+        return true;
+    }
 
+    protected File exportJar(final String connectorJarName, final PackageFileStore file) throws InvocationTargetException, InterruptedException {
+        final File tmpFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), connectorJarName);
+        tmpFile.delete();
+        file.exportAsJar(tmpFile.getAbsolutePath(), false);
+        return tmpFile;
+    }
+
+    protected SourceRepositoryStore<?> getSourceStore() {
+        return repositoryAccessor.getRepositoryStore(ConnectorSourceRepositoryStore.class);
     }
 
 }
