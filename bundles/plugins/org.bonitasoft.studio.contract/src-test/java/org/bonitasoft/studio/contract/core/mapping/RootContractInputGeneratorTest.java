@@ -33,6 +33,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
+import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -90,6 +91,40 @@ public class RootContractInputGeneratorTest {
         rootContractInputGenerator.build(businessObjectData);
 
         verify(operationBuilder).toOperation(businessObjectData, mapping);
+    }
+
+    @Test
+    public void should_allAttributesGenerated_setToFalse_whenNotAllMappingAreGenerated() throws OperationCreationException {
+        final SimpleFieldToContractInputMapping notGeneratedMapping = new SimpleFieldToContractInputMapping(SimpleFieldBuilder.aStringField(
+                "input1").build());
+        notGeneratedMapping.setGenerated(false);
+        final FieldToContractInputMappingOperationBuilder operationBuilder = mock(FieldToContractInputMappingOperationBuilder.class);
+        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        final BusinessObjectModelRepositoryStore businessStore = mock(BusinessObjectModelRepositoryStore.class);
+        when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
+        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName", newArrayList(notGeneratedMapping),
+                repositoryAccessor, operationBuilder, mock(FieldToContractInputMappingExpressionBuilder.class));
+        final BusinessObjectData businessObjectData = aBusinessData().withName("employee").build();
+        rootContractInputGenerator.build(businessObjectData);
+        assertThat(rootContractInputGenerator.isAllAttributesGenerated()).isFalse();
+    }
+
+    @Test
+    public void should_allAttributesGenerated_setTotrue_whenAllMappingAreGenerated() throws OperationCreationException {
+        final SimpleFieldToContractInputMapping notGeneratedMapping = new SimpleFieldToContractInputMapping(SimpleFieldBuilder.aStringField(
+                "input2").build());
+        notGeneratedMapping.setGenerated(true);
+        final FieldToContractInputMappingOperationBuilder operationBuilder = mock(FieldToContractInputMappingOperationBuilder.class);
+        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        final BusinessObjectModelRepositoryStore businessStore = mock(BusinessObjectModelRepositoryStore.class);
+        when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
+        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName", newArrayList(notGeneratedMapping,
+                new SimpleFieldToContractInputMapping(SimpleFieldBuilder
+                        .aStringField("input1").build())),
+                repositoryAccessor, operationBuilder, mock(FieldToContractInputMappingExpressionBuilder.class));
+        final BusinessObjectData businessObjectData = aBusinessData().withName("employee").build();
+        rootContractInputGenerator.build(businessObjectData);
+        assertThat(rootContractInputGenerator.isAllAttributesGenerated()).isTrue();
     }
 
     @Test

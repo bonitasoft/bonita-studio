@@ -94,5 +94,7 @@ public class Messages extends NLS {
     public static String contractGenerationTitle;
     public static String contractGenerationMsg;
     public static String doNotShowMeAgain;
+    public static String notAllAttributesGeneratedTitle;
+    public static String notAllAttributesGeneratedMsg;
 
 }
