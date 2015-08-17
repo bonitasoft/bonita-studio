@@ -14,10 +14,13 @@
  */
 package org.bonitasoft.studio.connectors.configuration;
 
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.collect.Iterables.filter;
 import static com.google.common.io.Files.toByteArray;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -30,9 +33,7 @@ import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -46,11 +47,9 @@ import org.bonitasoft.studio.model.configuration.DefinitionMapping;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 
-import com.google.common.io.Files;
+import com.google.common.base.Predicate;
 
 /**
  * @author Romain Bioteau
@@ -65,50 +64,72 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
 
     @Override
     public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
-            final Set<EObject> excludedObjects) {
+            final Set<EObject> excludedObjects) throws IOException, InvocationTargetException, InterruptedException {
         if (configuration == null) {
             return;
         }
         final List<BarResource> resources = new ArrayList<BarResource>();
 
-        final DependencyRepositoryStore libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
-        final ConnectorImplRepositoryStore implStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
-        for (final DefinitionMapping association : configuration.getDefinitionMappings()) {
-            if (association.getType().equals(FragmentTypes.CONNECTOR)) {
-                final String implId = association.getImplementationId();
-                final String implVersion = association.getImplementationVersion();
-                if (implId != null && implVersion != null) {
-                    final ConnectorImplementation implementation = implStore.getImplementation(implId, implVersion);
-                    if (implementation == null) {
-                        throw new RuntimeException(implId + "(" + implVersion + ") not found in repository");
-                    }
-                    final String fileName = URI.decode(implementation.eResource().getURI().lastSegment());
-                    final EMFFileStore file = implStore.getChild(fileName);
-                    Assert.isNotNull(file);
-                    final boolean isUserImplementation = file.canBeShared();
-                    try {
-                        File implementationFile = file.getResource().getLocation().toFile();
-                        if (!implementationFile.exists()) {
-                            implementationFile = new File(URI.decode(file.getEMFResource().getURI().toFileString()));
-                        }
-                        final FileInputStream fis = new FileInputStream(implementationFile);
-                        final byte[] content = new byte[fis.available()];
-                        fis.read(content);
-                        fis.close();
-
-                        builder.addConnectorImplementation(new BarResource(NamingUtils.toConnectorImplementationFilename(implId, implVersion, true), content));
-
-                        //Add jar dependencies
-                        addProcessDependencies(builder, configuration, resources, libStore, implId, implVersion, implementation, isUserImplementation);
-                    } catch (final Exception e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
+        final DependencyRepositoryStore libStore = getDependencyRepositoryStore();
+        final ConnectorImplRepositoryStore implStore = getImplementationStore();
+        for (final DefinitionMapping association : filter(configuration.getDefinitionMappings(), and(actorFilterMappings(), withImplementation()))) {
+            final String connectorImplementationFilename = NamingUtils.toConnectorImplementationFilename(
+                    association.getImplementationId(),
+                    association.getImplementationVersion(), true);
+            final EMFFileStore implementationFileStore = implStore.getChild(connectorImplementationFilename);
+            if (implementationFileStore == null) {
+                throw new FileNotFoundException(String.format("%s (%s) not found in repository", association.getImplementationId(),
+                        association.getImplementationVersion()));
             }
+            addImplementation(builder, connectorImplementationFilename, implementationFileStore);
+
+            final ConnectorImplementation connectorImplementation = (ConnectorImplementation) implementationFileStore.getContent();
+            addProcessDependencies(builder, configuration, resources, libStore, association.getImplementationId(), association.getImplementationVersion(),
+                    connectorImplementation, implementationFileStore.canBeShared());
         }
+
         for (final BarResource barResource : resources) {
             builder.addClasspathResource(barResource);
         }
+    }
+
+    private Predicate<DefinitionMapping> withImplementation() {
+        return new Predicate<DefinitionMapping>() {
+
+            @Override
+            public boolean apply(final DefinitionMapping mapping) {
+                return !isNullOrEmpty(mapping.getImplementationId()) && !isNullOrEmpty(mapping.getDefinitionVersion());
+            }
+        };
+    }
+
+    private Predicate<DefinitionMapping> actorFilterMappings() {
+        return new Predicate<DefinitionMapping>() {
+
+            @Override
+            public boolean apply(final DefinitionMapping mapping) {
+                return getFragmentType().equals(mapping.getType());
+            }
+
+        };
+    }
+
+    protected String getFragmentType() {
+        return FragmentTypes.CONNECTOR;
+    }
+
+    /**
+     * @return
+     */
+    protected DependencyRepositoryStore getDependencyRepositoryStore() {
+        return repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class);
+    }
+
+    /**
+     * @return
+     */
+    protected ConnectorImplRepositoryStore getImplementationStore() {
+        return repositoryAccessor.getRepositoryStore(ConnectorImplRepositoryStore.class);
     }
 
     /**
@@ -160,8 +181,7 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
     protected void addResource(final List<BarResource> resources, final DependencyRepositoryStore libStore, final String jarName) throws IOException {
         final IRepositoryFileStore jarFileStore = libStore.getChild(jarName);
         if (jarFileStore != null) {
-            final File jarFile = jarFileStore.getResource().getLocation().toFile();
-            resources.add(new BarResource(jarFile.getName(), Files.toByteArray(jarFile)));
+            resources.add(new BarResource(jarFileStore.getName(), jarFileStore.toByteArray()));
         }
     }
 
@@ -196,6 +216,12 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
 
     protected SourceRepositoryStore<?> getSourceStore() {
         return repositoryAccessor.getRepositoryStore(ConnectorSourceRepositoryStore.class);
+    }
+
+    protected void addImplementation(final BusinessArchiveBuilder builder, final String connectorImplementationFilename,
+            final EMFFileStore implementationFileStore)
+            throws IOException {
+        builder.addConnectorImplementation(new BarResource(connectorImplementationFilename, implementationFileStore.toByteArray()));
     }
 
 }
