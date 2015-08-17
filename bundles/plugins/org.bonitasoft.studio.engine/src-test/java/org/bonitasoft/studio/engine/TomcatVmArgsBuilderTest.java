@@ -59,4 +59,24 @@ public class TomcatVmArgsBuilderTest {
         System.setProperty(TomcatVmArgsBuilder.BONITA_WEB_REGISTER, "0");
         assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Dbonita.web.register=0");
     }
+
+    @Test
+    public void testLoggingPropertyCanBeOverriden() throws Exception {
+        final String overridenValue = "-Djava.util.logging.config.file=test";
+        System.setProperty("tomcat.extra.params", overridenValue);
+        assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains(overridenValue).containsOnlyOnce("java.util.logging.config.file");
+    }
+
+    @Test
+    public void testLoggingPropertyDefaultValueWithTomcatArgs() throws Exception {
+        final String overridenValue = "plop";
+        System.setProperty("tomcat.extra.params", overridenValue);
+        assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Djava.util.logging.config.file=").contains("logging.properties");
+    }
+
+    @Test
+    public void testLoggingPropertyDefaultValueWithoutTomcatArgs() throws Exception {
+        System.clearProperty("tomcat.extra.params");
+        assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Djava.util.logging.config.file=").contains("logging.properties");
+    }
 }

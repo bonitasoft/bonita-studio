@@ -20,10 +20,6 @@ import static org.bonitasoft.studio.engine.server.ClientBonitaHomeBuildler.newCl
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
@@ -43,6 +39,7 @@ import org.bonitasoft.studio.designer.core.WorkspaceResourceServerManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.engine.server.PortConfigurator;
+import org.bonitasoft.studio.engine.server.WatchdogManager;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.resources.IFile;
@@ -77,7 +74,6 @@ import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
-import org.eclipse.wst.server.core.util.SocketUtil;
 
 /**
  * Provides all methods to manage Tomcat server in BonitaStudio.
@@ -87,9 +83,6 @@ import org.eclipse.wst.server.core.util.SocketUtil;
  */
 public class BOSWebServerManager {
 
-    /**
-     *
-     */
     private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
     private static final String BONITA_TOMCAT_SERVER_ID = "bonita-tomcat-server-id";
     private static final String BONITA_TOMCAT_RUNTIME_ID = "bonita-tomcat-runtime-id";
@@ -106,11 +99,9 @@ public class BOSWebServerManager {
             .getAbsolutePath();
     private static final String TOMCAT_LOG_FILE = "tomcat.log";
 
-    public static int WATCHDOG_PORT = 6969;
     private static final int MAX_SERVER_START_TIME = 300000;
     private static final int MAX_LOGGING_TRY = 50;
 
-    private ServerSocket watchdogServer;
     private static BOSWebServerManager INSTANCE;
     private IServer tomcat;
     private PortConfigurator portConfigurator;
@@ -138,7 +129,7 @@ public class BOSWebServerManager {
 
     }
 
-    public void copyTomcatBundleInWorkspace(final boolean withEngine, final IProgressMonitor monitor) {
+    public void copyTomcatBundleInWorkspace(final IProgressMonitor monitor) {
         File tomcatFolder = null;
         try {
             final File targetFolder = new File(tomcatInstanceLocation);
@@ -150,9 +141,7 @@ public class BOSWebServerManager {
                 PlatformUtil.copyResource(targetFolder, tomcatFolder, monitor);
                 BonitaStudioLog.debug("Tomcat bundle copied in workspace.",
                         EnginePlugin.PLUGIN_ID);
-                if (withEngine) {
-                    addBonitaWar(targetFolder, monitor);
-                }
+                addBonitaWar(targetFolder, monitor);
                 addPageBuilderWar(targetFolder, monitor);
             }
 
@@ -184,26 +173,15 @@ public class BOSWebServerManager {
     }
 
     public synchronized void startServer(final IProgressMonitor monitor) {
-        doStartServer(true, monitor);
-    }
-
-    public synchronized void startStandaloneUIDesigner(final IProgressMonitor monitor) {
-        doStartServer(false, monitor);
-    }
-
-    protected synchronized void doStartServer(final boolean withEngine, final IProgressMonitor monitor) {
         if (!serverIsStarted()) {
             BonitaHomeUtil.initBonitaHome();
-            copyTomcatBundleInWorkspace(withEngine, monitor);
-            if (!withEngine) {
-                removePortalWebApp(monitor);
-            }
+            copyTomcatBundleInWorkspace( monitor);
             monitor.subTask(Messages.startingWebServer);
             if (BonitaStudioLog.isLoggable(IStatus.OK)) {
                 BonitaStudioLog.debug("Starting tomcat...",
                         EnginePlugin.PLUGIN_ID);
             }
-            startWatchdog();
+            WatchdogManager.getInstance().startWatchdog();
             try {
                 WorkspaceResourceServerManager.getInstance().start(org.eclipse.jdt.launching.SocketUtil.findFreePort());
             } catch (final Exception e1) {
@@ -226,24 +204,11 @@ public class BOSWebServerManager {
                 createLaunchConfiguration(tomcat, monitor);
                 confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
                 tomcat.start("run", monitor);
-                waitServerRunning(withEngine, monitor);
+                waitServerRunning(monitor);
             } catch (final CoreException e) {
                 handleCoreExceptionWhileStartingTomcat(e);
             }
 
-        }
-    }
-
-    private void removePortalWebApp(final IProgressMonitor monitor) {
-        final File targetFolder = new File(tomcatInstanceLocation);
-        final File webappFolder = new File(targetFolder, "webapps");
-        final File bonitaWebappFolder = new File(webappFolder, "bonita");
-        if (bonitaWebappFolder.exists()) {
-            PlatformUtil.delete(bonitaWebappFolder, monitor);
-        }
-        final File bonitaWebappFile = new File(webappFolder, "bonita.war");
-        if (bonitaWebappFile.exists()) {
-            PlatformUtil.delete(bonitaWebappFile, monitor);
         }
     }
 
@@ -284,12 +249,16 @@ public class BOSWebServerManager {
         }
     }
 
-    private void waitServerRunning(final boolean waitForEngine, final IProgressMonitor monitor) {
+    private void waitServerRunning(final IProgressMonitor monitor) {
         int totalTime = 0;
         while (totalTime < MAX_SERVER_START_TIME && tomcat != null
                 && tomcat.getServerState() != IServer.STATE_STARTED) {
             try {
                 Thread.sleep(1000);
+                if (BonitaStudioLog.isLoggable(IStatus.OK)) {
+                    BonitaStudioLog.debug("Tomcat server state: " + tomcat.getServerState(),
+                            EnginePlugin.PLUGIN_ID);
+                }
                 totalTime = totalTime + 1000;
             } catch (final InterruptedException e) {
                 BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
@@ -315,9 +284,7 @@ public class BOSWebServerManager {
                 return;
             }
         }
-        if (waitForEngine) {
-            connectWithRetries();
-        }
+        connectWithRetries();
     }
 
     private void connectWithRetries() {
@@ -460,70 +427,6 @@ public class BOSWebServerManager {
         return confProject;
     }
 
-    protected void startWatchdog() {
-        if (watchdogServer == null) {
-            final Thread server = new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        if (SocketUtil.isPortInUse(WATCHDOG_PORT)) {
-                            final int oldPort = WATCHDOG_PORT;
-                            WATCHDOG_PORT = SocketUtil.findUnusedPort(PortConfigurator.MIN_PORT_NUMBER, PortConfigurator.MAX_PORT_NUMBER);
-                            BonitaStudioLog
-                                    .debug("Port "
-                                            + oldPort
-                                            + " is not availble for server watchdog, studio will use next available port : "
-                                            + WATCHDOG_PORT,
-                                            EnginePlugin.PLUGIN_ID);
-                        }
-                        watchdogServer = new ServerSocket(WATCHDOG_PORT, 0,
-                                InetAddress.getByName("localhost"));
-                        if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                            BonitaStudioLog.debug(
-                                    "Starting studio watchdog on "
-                                            + WATCHDOG_PORT,
-                                    EnginePlugin.PLUGIN_ID);
-                        }
-                        while (watchdogServer != null) {
-                            final Socket connection = watchdogServer.accept();
-                            connection.close();
-                        }
-                        if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                            BonitaStudioLog.debug("Studio watchdog shutdown",
-                                    EnginePlugin.PLUGIN_ID);
-                        }
-                    } catch (final SocketException e1) {
-
-                    } catch (final IOException e) {
-                        BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-                    }
-
-                }
-            });
-            server.setDaemon(true);
-            server.setName("BonitaBPM Studio server watchdog");
-            server.start();
-        }
-    }
-
-    protected void stopWatchdog() {
-        if (watchdogServer != null) {
-            try {
-                if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                    BonitaStudioLog.debug("Shuttingdown watchdog...", EnginePlugin.PLUGIN_ID);
-                }
-                watchdogServer.close();
-                watchdogServer = null;
-                if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                    BonitaStudioLog.debug("Watchdog shutdown ...", EnginePlugin.PLUGIN_ID);
-                }
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-            }
-        }
-    }
-
     private void waitServerStopped(final IProgressMonitor monitor) throws CoreException {
         while (tomcat != null
                 && tomcat.getServerState() != IServer.STATE_STOPPED || portConfigurator != null && portConfigurator.h2PortInUse(monitor)) {
@@ -550,7 +453,7 @@ public class BOSWebServerManager {
             if (BonitaStudioLog.isLoggable(IStatus.OK)) {
                 BonitaStudioLog.debug("Stopping tomcat server...", EnginePlugin.PLUGIN_ID);
             }
-            stopWatchdog();
+            WatchdogManager.getInstance().stopWatchdog();
             try {
                 WorkspaceResourceServerManager.getInstance().stop();
             } catch (final Exception e1) {
