@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
@@ -60,6 +61,9 @@ public class ContractInputGenerationWizardTest {
     @Mock
     private ISharedImages sharedImages;
 
+    @Mock
+    private FieldToContractInputMappingExpressionBuilder expressionBuilder;
+
     @Test
     public void should_first_wizard_page_be_selectBusinessDataWizardPage() {
         final BusinessObjectData data = aBusinessData().build();
@@ -67,7 +71,7 @@ public class ContractInputGenerationWizardTest {
         process.getData().add(data);
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
-                preferenceStore, sharedImages);
+                expressionBuilder, preferenceStore, sharedImages);
         wizard.addPages();
 
         assertThat(wizard.getPages()[0]).isInstanceOf(SelectBusinessDataWizardPage.class);
@@ -80,7 +84,7 @@ public class ContractInputGenerationWizardTest {
         process.getData().add(data);
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
-                preferenceStore, sharedImages);
+                expressionBuilder, preferenceStore, sharedImages);
         wizard.addPages();
 
         assertThat(wizard.getPages()[0]).isInstanceOf(SelectBusinessDataWizardPage.class);
@@ -97,6 +101,7 @@ public class ContractInputGenerationWizardTest {
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
         when(preferenceStore.getString(ContractInputGenerationWizard.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
+                expressionBuilder,
                 preferenceStore, sharedImages);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
@@ -113,7 +118,7 @@ public class ContractInputGenerationWizardTest {
     public void should_canFinish_return_false_when_no_data_is_defined() {
         final Pool process = aPool().havingContract(aContract()).build();
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
-                preferenceStore, sharedImages);
+                expressionBuilder, preferenceStore, sharedImages);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
@@ -132,7 +137,7 @@ public class ContractInputGenerationWizardTest {
                 .getBusinessObjectByQualifiedName("com.company.Employee");
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
-                preferenceStore, sharedImages);
+                expressionBuilder, preferenceStore, sharedImages);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());

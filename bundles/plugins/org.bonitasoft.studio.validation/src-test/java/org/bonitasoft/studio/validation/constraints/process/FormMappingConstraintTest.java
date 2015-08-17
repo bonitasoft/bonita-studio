@@ -126,18 +126,6 @@ public class FormMappingConstraintTest {
     }
 
     @Test
-    public void should_return_an_error_status_if_not_url_set_for_URL_type() throws Exception {
-        //Given
-        doReturn(aTask().withName("t1").havingFormMapping(aFormMapping().withType(FormMappingType.URL)).build().getFormMapping()).when(ctx).getTarget();
-
-        //When
-        final IStatus status = formMappingConstraint.performBatchValidation(ctx);
-
-        //Then
-        assertThat(status).isNotOK();
-    }
-
-    @Test
     public void should_return_an_error_status_if_a_form_mapping_has_a_targetForm_name_in_several_places_in_a_process_but_with_different_id() throws Exception {
         //Given
         final Pool pool = aPool()

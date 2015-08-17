@@ -15,10 +15,10 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.FormMapping;
-import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
@@ -29,9 +29,9 @@ import org.eclipse.emf.validation.IValidationContext;
 /**
  * @author Romain Bioteau
  */
-public class InternalFormMappingConstraint extends AbstractLiveValidationMarkerConstraint {
+public class FormMappingContentConstraint extends AbstractLiveValidationMarkerConstraint {
 
-    public static final String ID = "org.bonitasoft.studio.validation.constraints.internalFormMapping";
+    public static final String ID = "org.bonitasoft.studio.validation.constraints.formMappingContent";
 
     @Override
     protected String getConstraintId() {
@@ -43,10 +43,14 @@ public class InternalFormMappingConstraint extends AbstractLiveValidationMarkerC
         final EObject eObj = ctx.getTarget();
         checkArgument(eObj instanceof FormMapping);
         final FormMapping formMapping = (FormMapping) eObj;
-        if (FormMappingType.INTERNAL == formMapping.getType()) {
-            return doValidateInternalMapping(ctx, formMapping);
+        switch (formMapping.getType()) {
+            case INTERNAL:
+                return doValidateInternalMapping(ctx, formMapping);
+            case URL:
+                return doValidateURLMapping(ctx, formMapping);
+            default:
+                return ctx.createSuccessStatus();
         }
-        return ctx.createSuccessStatus();
     }
 
     private IStatus doValidateInternalMapping(final IValidationContext ctx, final FormMapping formMapping) {
@@ -60,4 +64,10 @@ public class InternalFormMappingConstraint extends AbstractLiveValidationMarkerC
         }
         return ctx.createSuccessStatus();
     }
+
+    private IStatus doValidateURLMapping(final IValidationContext ctx, final FormMapping formMapping) {
+        return isNullOrEmpty(formMapping.getUrl()) ? ctx.createFailureStatus(Messages.invalidURLFormMapping) : ctx
+                .createSuccessStatus();
+    }
+
 }

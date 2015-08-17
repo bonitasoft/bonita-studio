@@ -23,6 +23,7 @@ import org.bonitasoft.studio.contract.core.mapping.operation.initializer.Multipl
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.NewBusinessObjectInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.NewBusinessObjectListInitializer;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.ContractInput;
 
 public class BusinessObjectInitializerFactory extends AbsractInitializerFactory implements InitializerFactory {
 
@@ -49,7 +50,7 @@ public class BusinessObjectInitializerFactory extends AbsractInitializerFactory 
             final RelationField relationField) {
         return relationField.isCollection() ?
                 new NewBusinessObjectListInitializer(relationField, mapping.getContractInput(), toRefName(mapping, data)) :
-                new NewBusinessObjectInitializer(relationField, toRefName(mapping, data));
+                new NewBusinessObjectInitializer(relationField, toRefName(mapping, data), mapping.getContractInput().eContainer() instanceof ContractInput);
     }
 
 }

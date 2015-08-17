@@ -1047,12 +1047,12 @@
          </target>
       </constraint>
       <constraint
-            class="org.bonitasoft.studio.validation.constraints.process.InternalFormMappingConstraint"
-            id="org.bonitasoft.studio.validation.constraints.internalFormMapping"
+            class="org.bonitasoft.studio.validation.constraints.process.FormMappingContentConstraint"
+            id="org.bonitasoft.studio.validation.constraints.formMappingContent"
             lang="Java"
             mode="Batch"
-            name="Internal Form Mapping constraint"
-            severity="INFO"
+            name="Form Mapping content constraint"
+            severity="WARNING"
             statusCode="1">
          <message>
             {0}
