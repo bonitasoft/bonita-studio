@@ -14,13 +14,14 @@
  */
 package org.bonitasoft.studio.data.ui.wizard;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
-import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -30,33 +31,36 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class DataDefaultValueExpressionFilterTest {
 
     @Mock
-    private DataWizardPage wizardPage;
-
-    @Mock
-    IExpressionProvider contractExpressionProvider;
-
-
-    @Before
-    public void setUp() {
-        doReturn(ExpressionConstants.CONTRACT_INPUT_TYPE).when(contractExpressionProvider).getExpressionType();
-    }
+    private IExpressionProvider contractExpressionProvider;
 
     @Test
     public void testSelect_Contract_OnPool() throws Exception {
-        final DataDefaultValueExpressionFilter dataDefaultValueExpressionFilter = new DataDefaultValueExpressionFilter(wizardPage,
-                ProcessFactory.eINSTANCE.createPool(), false);
-        Assertions.assertThat(
-                dataDefaultValueExpressionFilter
-                        .select(null, null, contractExpressionProvider)).isTrue();
+        doReturn(ExpressionConstants.CONTRACT_INPUT_TYPE).when(contractExpressionProvider).getExpressionType();
+
+        final DataDefaultValueExpressionFilter dataDefaultValueExpressionFilter = new DataDefaultValueExpressionFilter(mock(DataWizardPage.class),
+                aPool().build(), false);
+
+        assertThat(dataDefaultValueExpressionFilter.select(null, null, contractExpressionProvider)).isTrue();
     }
 
     @Test
     public void testSelect_Contract_OnTask() throws Exception {
-        final DataDefaultValueExpressionFilter dataDefaultValueExpressionFilter = new DataDefaultValueExpressionFilter(wizardPage,
-                ProcessFactory.eINSTANCE.createTask(), false);
-        Assertions.assertThat(
-                dataDefaultValueExpressionFilter
-                        .select(null, null, contractExpressionProvider)).isFalse();
+        doReturn(ExpressionConstants.CONTRACT_INPUT_TYPE).when(contractExpressionProvider).getExpressionType();
+
+        final DataDefaultValueExpressionFilter dataDefaultValueExpressionFilter = new DataDefaultValueExpressionFilter(mock(DataWizardPage.class),
+                aTask().build(), false);
+
+        assertThat(dataDefaultValueExpressionFilter.select(null, null, contractExpressionProvider)).isFalse();
+    }
+
+    @Test
+    public void should_not_allow_query_expression_type() throws Exception {
+        doReturn(ExpressionConstants.QUERY_TYPE).when(contractExpressionProvider).getExpressionType();
+
+        final DataDefaultValueExpressionFilter dataDefaultValueExpressionFilter = new DataDefaultValueExpressionFilter(mock(DataWizardPage.class),
+                aTask().build(), false);
+
+        assertThat(dataDefaultValueExpressionFilter.select(null, null, contractExpressionProvider)).isFalse();
     }
 
 }
