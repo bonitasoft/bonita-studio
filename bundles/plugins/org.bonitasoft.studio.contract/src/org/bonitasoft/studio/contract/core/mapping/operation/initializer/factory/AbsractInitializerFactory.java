@@ -41,8 +41,18 @@ public abstract class AbsractInitializerFactory implements InitializerFactory {
     }
 
     protected String toRefName(final FieldToContractInputMapping mapping, final BusinessObjectData data) {
-        return mapping.getParent() != null ? mapping.getParent().getField().getName() + "Var" + "." + mapping.getField().getName() : data.getName() + "."
+        return mapping.getParent() != null ? toParentRefName(mapping.getParent()) + "." + mapping.getField().getName() : data.getName() + "."
                 + mapping.getField().getName();
+    }
+
+    protected String toParentRefName(final FieldToContractInputMapping mapping) {
+        String refName = mapping.getField().getName();
+        FieldToContractInputMapping parent = mapping.getParent();
+        while (parent != null) {
+            refName = parent.getField().getName() + "." + refName;
+            parent = parent.getParent();
+        }
+        return refName;
     }
 
 }
