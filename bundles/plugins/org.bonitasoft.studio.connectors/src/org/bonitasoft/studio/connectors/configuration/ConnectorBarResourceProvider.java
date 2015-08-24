@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.FragmentTypes;
@@ -56,8 +58,9 @@ import com.google.common.base.Predicate;
  */
 public class ConnectorBarResourceProvider implements BARResourcesProvider {
 
-    private final RepositoryAccessor repositoryAccessor;
+    protected final RepositoryAccessor repositoryAccessor;
 
+    @Inject
     public ConnectorBarResourceProvider(final RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
     }
@@ -76,7 +79,10 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
             final String connectorImplementationFilename = NamingUtils.toConnectorImplementationFilename(
                     association.getImplementationId(),
                     association.getImplementationVersion(), true);
-            final EMFFileStore implementationFileStore = implStore.getChild(connectorImplementationFilename);
+            final String implId = association.getImplementationId();
+            final String implVersion = association.getImplementationVersion();
+
+            final EMFFileStore implementationFileStore = (EMFFileStore) implStore.getImplementationFileStore(implId, implVersion);
             if (implementationFileStore == null) {
                 throw new FileNotFoundException(String.format("%s (%s) not found in repository", association.getImplementationId(),
                         association.getImplementationVersion()));

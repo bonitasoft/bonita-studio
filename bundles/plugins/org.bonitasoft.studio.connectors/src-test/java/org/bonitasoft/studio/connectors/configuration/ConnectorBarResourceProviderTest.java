@@ -99,7 +99,7 @@ public class ConnectorBarResourceProviderTest {
                 "org.test.MyConnector"));
         when(myConnectorImplFileStore.canBeShared()).thenReturn(true);
         when(connectorSourceStore.getChild("org.test")).thenReturn(connectorSourceFileStore);
-        when(connectorImplStore.getChild("myConnectorImpl-1.0.0.impl")).thenReturn(myConnectorImplFileStore);
+        when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0")).thenReturn(myConnectorImplFileStore);
         when(connectorImplStore.getImplementation("myConnectorImpl", "1.0.0")).thenReturn(
                 aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
                         "org.test.MyConnector"));
@@ -123,7 +123,7 @@ public class ConnectorBarResourceProviderTest {
         when(myConnectorImplFileStore.canBeShared()).thenReturn(true);
         when(libFileStore.getName()).thenReturn("myConnectorImpl-1.0.0.jar");
         when(depStore.getChild("myConnectorImpl-1.0.0.jar")).thenReturn(libFileStore);
-        when(connectorImplStore.getChild("myConnectorImpl-1.0.0.impl")).thenReturn(myConnectorImplFileStore);
+        when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0")).thenReturn(myConnectorImplFileStore);
 
         final BusinessArchiveBuilder builder = mock(BusinessArchiveBuilder.class);
         provider.addResourcesForConfiguration(builder, aPool().build(), connectorConfiguration("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0"),
