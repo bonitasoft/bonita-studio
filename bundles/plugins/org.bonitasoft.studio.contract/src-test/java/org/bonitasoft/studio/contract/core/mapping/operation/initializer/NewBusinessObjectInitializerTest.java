@@ -36,7 +36,7 @@ public class NewBusinessObjectInitializerTest {
     @Test
     public void should_create_groovy_script_as_initial_value() throws Exception {
         final NewBusinessObjectInitializer propertyInitializer = new NewBusinessObjectInitializer(aCompositionField(
-                "address", aBO("org.test.Address").build()), "myAddress");
+                "address", aBO("org.test.Address").build()), "myAddress", true);
 
         assertThat(propertyInitializer.getInitialValue()).isEqualTo(
                 "def addressVar = myAddress == null ? new org.test.Address() : myAddress" + System.lineSeparator() + "return addressVar");
@@ -46,7 +46,7 @@ public class NewBusinessObjectInitializerTest {
     public void should_initialize_new_object_property_for_simple_composed_reference() throws Exception {
         final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.STRING).notNullable().build();
         final NewBusinessObjectInitializer propertyInitializer = new NewBusinessObjectInitializer(aCompositionField("address",
-                aBO("org.test.Address").withField(streetField).build()), "myAddress");
+                aBO("org.test.Address").withField(streetField).build()), "myAddress", true);
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(null,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX)
@@ -61,7 +61,7 @@ public class NewBusinessObjectInitializerTest {
     @Test
     public void should_throw_an_BusinessObjectInstantiationException_when_creating_an_inconsistent_business_object() throws Exception {
         final NewBusinessObjectInitializer propertyInitializer = new NewBusinessObjectInitializer(
-                aCompositionField("address", aBO("org.test.Address").withField(aSimpleField().withName("street").notNullable().build()).build()), "myAddress");
+                aCompositionField("address", aBO("org.test.Address").withField(aSimpleField().withName("street").notNullable().build()).build()), "myAddress", true);
 
         thrown.expect(BusinessObjectInstantiationException.class);
         propertyInitializer.getInitialValue();

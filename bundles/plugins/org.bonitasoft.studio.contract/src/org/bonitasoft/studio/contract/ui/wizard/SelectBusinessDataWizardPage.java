@@ -81,6 +81,7 @@ public class SelectBusinessDataWizardPage extends WizardPage {
         businessDataTableViewer.setContentProvider(contentProvider);
         final IObservableSet knownElements = contentProvider.getKnownElements();
         final IObservableMap[] labelMaps = EMFObservables.observeMaps(knownElements, new EStructuralFeature[] { ProcessPackage.Literals.ELEMENT__NAME,
+                ProcessPackage.Literals.DATA__MULTIPLE,
                 ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME });
         businessDataTableViewer.setLabelProvider(new BusinessObjectDataStyledLabelProvider(businessObjectStore, labelMaps));
         businessDataTableViewer.setInput(new WritableList(availableBusinessData, ProcessPackage.Literals.BUSINESS_OBJECT_DATA));

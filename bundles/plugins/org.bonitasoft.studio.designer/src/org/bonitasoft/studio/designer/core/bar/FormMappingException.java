@@ -14,23 +14,18 @@
  */
 package org.bonitasoft.studio.designer.core.bar;
 
-import org.bonitasoft.studio.designer.i18n.Messages;
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FormMapping;
-import org.eclipse.osgi.util.NLS;
 
-public class InternalFormNotFoundException extends FormMappingException {
+public abstract class FormMappingException extends Exception {
 
-    public InternalFormNotFoundException(final FormMapping formMapping) {
-        super(formMapping);
+    private final FormMapping formMapping;
+
+    public FormMappingException(final FormMapping formMapping) {
+        this.formMapping = formMapping;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Throwable#getMessage()
-     */
-    @Override
-    public String getMessage() {
-        return NLS.bind(Messages.internalFormMappingUndefined, containerName());
+    protected String containerName() {
+        return ((Element) formMapping.eContainer()).getName();
     }
-
 }

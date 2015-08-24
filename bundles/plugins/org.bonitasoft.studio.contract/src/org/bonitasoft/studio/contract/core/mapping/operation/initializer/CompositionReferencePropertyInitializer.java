@@ -24,7 +24,7 @@ public class CompositionReferencePropertyInitializer extends NewBusinessObjectIn
     private final ContractInput contractInput;
 
     public CompositionReferencePropertyInitializer(final RelationField field, final ContractInput contractInput, final String refName) {
-        super(field, refName);
+        super(field, refName, true);
         this.contractInput = contractInput;
     }
 

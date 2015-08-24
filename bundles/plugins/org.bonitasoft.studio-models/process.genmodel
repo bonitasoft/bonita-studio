@@ -460,6 +460,7 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//FormMappingType/INTERNAL"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//FormMappingType/URL"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//FormMappingType/LEGACY"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//FormMappingType/NONE"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//GatewayType">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//GatewayType/XOR"/>

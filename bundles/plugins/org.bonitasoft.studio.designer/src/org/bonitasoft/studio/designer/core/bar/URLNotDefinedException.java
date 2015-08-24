@@ -18,9 +18,9 @@ import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.eclipse.osgi.util.NLS;
 
-public class InternalFormNotFoundException extends FormMappingException {
+public class URLNotDefinedException extends FormMappingException {
 
-    public InternalFormNotFoundException(final FormMapping formMapping) {
+    public URLNotDefinedException(final FormMapping formMapping) {
         super(formMapping);
     }
 
@@ -30,7 +30,7 @@ public class InternalFormNotFoundException extends FormMappingException {
      */
     @Override
     public String getMessage() {
-        return NLS.bind(Messages.internalFormMappingUndefined, containerName());
+        return NLS.bind(Messages.urlNotDefined, containerName());
     }
 
 }
