@@ -24,7 +24,7 @@
                     <xLocation>115</xLocation>
                     <yLocation>200</yLocation>
                     <color>#0B4361</color>
-                    <versionLabel>7.0.2</versionLabel>
+                    <versionLabel>${project.version}</versionLabel>
                 </configuration>
                 <executions>
                     <execution>
