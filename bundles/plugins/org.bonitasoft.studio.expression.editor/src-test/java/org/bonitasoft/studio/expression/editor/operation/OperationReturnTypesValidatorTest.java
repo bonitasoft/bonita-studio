@@ -15,13 +15,16 @@
 package org.bonitasoft.studio.expression.editor.operation;
 
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.studio.model.process.builders.JavaObjectDataBuilder.aJavaObjectData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
+import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
@@ -244,4 +247,31 @@ public class OperationReturnTypesValidatorTest {
 
     }
 
+    @Test
+    public void should_fail_when_assigning_a_business_object_in_a_process_data() throws Exception {
+        final Expression leftOperand = ExpressionHelper.createVariableExpression(aJavaObjectData().withName("employee").withClassname("org.test.Employee")
+                .build());
+        final Expression rightOperand = anExpression().withExpressionType(ExpressionConstants.QUERY_TYPE).withName("Employee.findById")
+                .withContent("SELECT AN EMPLOYEE").withReturnType("org.test.Employee").build();
+        final Operation operation = createOperation(leftOperand, rightOperand, ExpressionConstants.ASSIGNMENT_OPERATOR);
+
+        final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
+        final IStatus status = validator.validate(operation.getRightOperand());
+
+        StatusAssert.assertThat(status).isNotOK().hasMessage(Messages.cannotStoreBusinessObjectInProcessVariable);
+    }
+
+    @Test
+    public void should_fail_when_assigning_a_business_object_in_a_process_data_using_java_method_operator() throws Exception {
+        final Expression leftOperand = ExpressionHelper.createVariableExpression(aJavaObjectData().withName("employee").withClassname("org.test.Employee")
+                .build());
+        final Expression rightOperand = anExpression().withExpressionType(ExpressionConstants.QUERY_TYPE).withName("Employee.findById")
+                .withContent("SELECT AN EMPLOYEE").withReturnType("org.test.Employee").build();
+        final Operation operation = createOperation(leftOperand, rightOperand, ExpressionConstants.JAVA_METHOD_OPERATOR);
+
+        final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
+        final IStatus status = validator.validate(operation.getRightOperand());
+
+        StatusAssert.assertThat(status).isNotOK().hasMessage(Messages.cannotStoreBusinessObjectInProcessVariable);
+    }
 }
