@@ -100,7 +100,7 @@ public class MappingOperationScriptBuilderTest {
         assertThat(script).isEqualTo("def addressVar = new Address()" + System.lineSeparator()
                 + "addressVar.street = address.street" + System.lineSeparator()
                 + "addressVar.country = {" + System.lineSeparator()
-                + SWT.TAB + "def countryVar = addressVar.country == null ? new Country() : addressVar.country" + System.lineSeparator()
+                + SWT.TAB + "def countryVar = address.country == null ? new Country() : address.country" + System.lineSeparator()
                 + SWT.TAB + "return countryVar}()" + System.lineSeparator()
                 + "return addressVar");
     }
