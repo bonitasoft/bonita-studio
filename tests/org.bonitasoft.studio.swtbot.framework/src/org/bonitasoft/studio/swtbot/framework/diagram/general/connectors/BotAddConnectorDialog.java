@@ -17,6 +17,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 
@@ -46,6 +47,18 @@ public class BotAddConnectorDialog extends BotWizardDialog {
      */
     public void selectConnector(final String pConnectorId) {
         bot.tree().select("All");
+        bot.waitUntil(new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return "All".equals(bot.tree().selection().get(0).get(0));
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "Root element of the tree not selected.";
+            }
+        });
         bot.table().select(pConnectorId);
     }
 
