@@ -45,7 +45,7 @@ public class BotAddConnectorDialog extends BotWizardDialog {
      * @param pConnectorId
      */
     public void selectConnector(final String pConnectorId) {
-        bot.tree().select(0);
+        bot.tree().select("All");
         bot.table().select(pConnectorId);
     }
 
