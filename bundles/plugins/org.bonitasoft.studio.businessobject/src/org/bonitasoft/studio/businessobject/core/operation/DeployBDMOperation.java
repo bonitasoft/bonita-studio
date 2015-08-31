@@ -23,6 +23,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.bonitasoft.engine.api.TenantAdministrationAPI;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.engine.business.data.BusinessDataRepositoryDeploymentException;
 import org.bonitasoft.engine.exception.UpdateException;
 import org.bonitasoft.engine.session.APISession;
@@ -93,18 +94,20 @@ public class DeployBDMOperation implements IRunnableWithProgress {
         }
     }
 
+    private String progressMessage(BusinessObjectModel bom) {
+        return containsBusinessObjects(bom) ? Messages.deployingBusinessObjects : Messages.cleaningBusinessObjects;
+    }
+
     protected void doDeployBDM(IProgressMonitor monitor) throws InvocationTargetException {
         if (monitor == null) {
             monitor = Repository.NULL_PROGRESS_MONITOR;
         }
-        if (fileStore.getContent().getBusinessObjects().isEmpty()) {
-            return;
-        }
-        monitor.beginTask(Messages.deployingBusinessObjects, IProgressMonitor.UNKNOWN);
-        BonitaStudioLog.debug(Messages.deployingBusinessObjects, BusinessObjectPlugin.PLUGIN_ID);
 
+        final BusinessObjectModel bom = fileStore.getContent();
+        final String progressMessage = progressMessage(bom);
+        monitor.beginTask(progressMessage, IProgressMonitor.UNKNOWN);
+        BonitaStudioLog.debug(progressMessage, BusinessObjectPlugin.PLUGIN_ID);
         final BOSEngineManager engineManagerEx = getBOSEngineManagerEx();
-
         TenantAdministrationAPI tenantManagementAPI = null;
         try {
             tenantManagementAPI = engineManagerEx.getTenantAdministrationAPI(session);
@@ -120,12 +123,19 @@ public class DeployBDMOperation implements IRunnableWithProgress {
             } catch (final BusinessDataRepositoryDeploymentException bdrde) {
                 // ignore exception
             }
-            tenantManagementAPI.installBusinessDataModel(fileStore.toByteArray());
+            if (containsBusinessObjects(bom)) {
+                tenantManagementAPI.installBusinessDataModel(fileStore.toByteArray());
+            }
+
             tenantManagementAPI.resume();
 
-            final byte[] zipContent = tenantManagementAPI.getClientBDMZip();
-            final byte[] jarContent = retrieveModelJarContent(zipContent);
-            updateDependency(jarContent);
+            if (containsBusinessObjects(bom)) {
+                final byte[] zipContent = tenantManagementAPI.getClientBDMZip();
+                final byte[] jarContent = retrieveModelJarContent(zipContent);
+                updateDependency(jarContent);
+            } else {
+                removeDependency();
+            }
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
             try {
@@ -148,6 +158,19 @@ public class DeployBDMOperation implements IRunnableWithProgress {
                 session = null;
             }
         }
+    }
+
+    protected void removeDependency() {
+        final DependencyRepositoryStore dependencyRepositoryStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DependencyRepositoryStore.class);
+        final DependencyFileStore bdmFileStore = dependencyRepositoryStore.getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+        if (bdmFileStore != null) {
+            bdmFileStore.delete();
+        }
+    }
+
+    private boolean containsBusinessObjects(final BusinessObjectModel bom) {
+        return bom != null && !bom.getBusinessObjects().isEmpty();
     }
 
     protected boolean dropDBOnInstall() {
