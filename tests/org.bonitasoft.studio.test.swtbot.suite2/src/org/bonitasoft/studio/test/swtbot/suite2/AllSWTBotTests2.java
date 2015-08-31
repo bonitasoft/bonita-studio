@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.test.swtbot.TestProcessDependencies;
+import org.bonitasoft.studio.connectors.test.swtbot.ConnectorEditedInAsingleCommandIT;
 import org.bonitasoft.studio.diagram.test.NewRunTest;
 import org.bonitasoft.studio.diagram.test.SharedEditingDomainTests;
 import org.bonitasoft.studio.diagram.test.TestBoundariesCreation;
@@ -72,57 +73,58 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaTestSuite.class)
 @Suite.SuiteClasses({
-        TestBonitaGroovyEditorDialog.class,
-        CopyPasteTests.class,
-        DeleteCommandTest.class,
-        TestBug1640.class,
-        NewRunTest.class,
-        DeleteWidgetWithContextMenuIT.class,
-        DataWizardIT.class,
-        SWTBOTTestConditions.class,
-        TestConvertToMessage.class,
-        ExtractAsSubprocessTest.class,
-        BPMNExportTests.class,
-        BPMNSequenceFlowDefaultFlowExportImportTest.class,
-        SharedEditingDomainTests.class,
-        TestBoundariesCreation.class,
-        TestResources.class,
-        OpenNameAndVersionForDiagramDialogTest.class,
-        TestDuplicate.class,
-        TestCreateValidatorWizard.class,
-        TestLifeCycleWidget.class,
-        TestConnectorExpression.class,
-        MultiInstantiationIT.class,
-        BPMNConnectorExportImportTest.class,
-        BPMNGatewayExportImportTest.class,
-        BPMNEventSubProcessExportImportTest.class,
-        BarExporterTest.class,
-        TestRunWithDocument.class,
-        TestDocument.class,
-        DuplicateCommandTest.class,
-        TestExportBosArchive.class,
-        TestSave.class,
-        TestMoveBetweenLane.class,
-        MigrationReporTest.class,
-        TestTimer.class,
-        TestProcessDependencies.class,
-        ContractIT.class,
-        RefactorWidgetIT.class,
-        TestFormValidatorIT.class,
-        TestOrganizationPassword.class,
-        BarImportReportIT.class,
-        CallActivityMappingIT.class,
-        CreateDeployExportBusinessObjectIT.class
+    TestBonitaGroovyEditorDialog.class,
+    CopyPasteTests.class,
+    DeleteCommandTest.class,
+    TestBug1640.class,
+    NewRunTest.class,
+    DeleteWidgetWithContextMenuIT.class,
+    DataWizardIT.class,
+    SWTBOTTestConditions.class,
+    TestConvertToMessage.class,
+    ExtractAsSubprocessTest.class,
+    BPMNExportTests.class,
+    BPMNSequenceFlowDefaultFlowExportImportTest.class,
+    SharedEditingDomainTests.class,
+    TestBoundariesCreation.class,
+    TestResources.class,
+    OpenNameAndVersionForDiagramDialogTest.class,
+    TestDuplicate.class,
+    TestCreateValidatorWizard.class,
+    TestLifeCycleWidget.class,
+    TestConnectorExpression.class,
+    MultiInstantiationIT.class,
+    BPMNConnectorExportImportTest.class,
+    BPMNGatewayExportImportTest.class,
+    BPMNEventSubProcessExportImportTest.class,
+    BarExporterTest.class,
+    TestRunWithDocument.class,
+    TestDocument.class,
+    DuplicateCommandTest.class,
+    TestExportBosArchive.class,
+    TestSave.class,
+    TestMoveBetweenLane.class,
+    MigrationReporTest.class,
+    TestTimer.class,
+    ConnectorEditedInAsingleCommandIT.class,
+    TestProcessDependencies.class,
+    ContractIT.class,
+    RefactorWidgetIT.class,
+    TestFormValidatorIT.class,
+    TestOrganizationPassword.class,
+    BarImportReportIT.class,
+    CallActivityMappingIT.class,
+    CreateDeployExportBusinessObjectIT.class
 })
 public class AllSWTBotTests2 {
 
     @BeforeClass
     public static void setUp() {
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
+        .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
         WebBrowserUIPlugin.getInstance().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
+        .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         FileActionDialog.setDisablePopup(true);
     }
 
