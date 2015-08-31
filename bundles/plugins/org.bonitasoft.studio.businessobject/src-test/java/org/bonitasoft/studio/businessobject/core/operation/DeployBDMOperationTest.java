@@ -19,6 +19,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -83,6 +84,7 @@ public class DeployBDMOperationTest {
         when(manager.getTenantAdministrationAPI((APISession) anyObject())).thenReturn(tenantAdminAPI);
         doReturn(manager).when(operationUnderTest).getBOSEngineManagerEx();
         doNothing().when(operationUnderTest).updateDependency(any(byte[].class));
+        doNothing().when(operationUnderTest).removeDependency();
         parentFolder = new File("test");
         parentFolder.mkdirs();
         doReturn(parentFolder).when(operationUnderTest).getTargetFolder();
@@ -129,6 +131,22 @@ public class DeployBDMOperationTest {
         inOrder.verify(tenantAdminAPI).installBusinessDataModel(any(byte[].class));
         inOrder.verify(tenantAdminAPI).resume();
         verify(tenantAdminAPI).getClientBDMZip();
+    }
+
+    @Test
+    public void should_uninstall_bdm_from_tenant_when_bdm_is_empty() throws Exception {
+        final BusinessObjectModel emptyBom = new BusinessObjectModel();
+        doReturn(emptyBom).when(bdmFileStore).getContent();
+        doReturn(parentFolder).when(operationUnderTest).getTargetFolder();
+        operationUnderTest.run(Repository.NULL_PROGRESS_MONITOR);
+        verify(manager).loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        verify(bdmFileStore).getContent();
+        final InOrder inOrder = inOrder(tenantAdminAPI);
+        inOrder.verify(tenantAdminAPI).pause();
+        inOrder.verify(tenantAdminAPI).uninstallBusinessDataModel();
+        inOrder.verify(tenantAdminAPI).resume();
+        verify(operationUnderTest).removeDependency();
+        verify(tenantAdminAPI, never()).installBusinessDataModel(any(byte[].class));
     }
 
 }
