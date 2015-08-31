@@ -30,8 +30,8 @@ public class BotExecutionDiagramPropertiesView extends BotBase {
         super(bot);
     }
 
-    public BotConnectorsPropertySection selectConnectorsTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Connectors");
+    public BotConnectorsPropertySection selectConnectorsInTab() {
+        BotQAUtil.selectTabbedPropertyView(bot, "Connectors in");
         return new BotConnectorsPropertySection(bot);
     }
 
