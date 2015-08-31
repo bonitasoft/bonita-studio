@@ -49,6 +49,11 @@ public class BotAddConnectorDialog extends BotWizardDialog {
         bot.table().select(pConnectorId);
     }
 
+    public void selectConnectorInCategory(String categoryName, final String pConnectorId) {
+        bot.tree().getTreeItem("All").select(categoryName);
+        bot.table().select(pConnectorId);
+    }
+
     /**
      * Search for connector.
      *
@@ -202,4 +207,6 @@ public class BotAddConnectorDialog extends BotWizardDialog {
     public void setCommandSeparator(final String commandSep) {
         bot.textWithLabel("Command separator").setText(commandSep);
     }
+
+
 }
