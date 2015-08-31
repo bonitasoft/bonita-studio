@@ -107,30 +107,33 @@ public class ManageBusinessDataModelWizard extends Wizard {
         return false;
     }
 
+
     private boolean validateAndSaveBDM() {
         try {
             getContainer().run(true, false, new IRunnableWithProgress() {
 
                 @Override
                 public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    monitor.beginTask(Messages.validatingBDM, IProgressMonitor.UNKNOWN);
                     if (businessObjectModel.getBusinessObjects().isEmpty()) {
-                        throw new InvocationTargetException(new Exception(Messages.atLeastOneBusinessObjectShouldExists));
+                        fStore.delete();
+                    } else {
+                        monitor.beginTask(Messages.validatingBDM, IProgressMonitor.UNKNOWN);
+                        for (final BusinessObject bo : businessObjectModel.getBusinessObjects()) {
+                            if (bo.getFields().isEmpty()) {
+                                throw new InvocationTargetException(new Exception(Messages.bind(Messages.atLeastOneAttributeShouldExists,
+                                        NamingUtils.getSimpleName(bo.getQualifiedName()))));
+                            }
+                            for (final Index index : bo.getIndexes()) {
+                                validateIndex(index, bo);
+                            }
+                            for (final UniqueConstraint uc : bo.getUniqueConstraints()) {
+                                validateUniqueConstraint(uc, bo);
+                            }
+                        }
+                        monitor.setTaskName(Messages.saving);
+                        fStore.save(businessObjectModel);
+                        monitor.done();
                     }
-                    for (final BusinessObject bo : businessObjectModel.getBusinessObjects()) {
-                        if (bo.getFields().isEmpty()) {
-                            throw new InvocationTargetException(new Exception(Messages.bind(Messages.atLeastOneAttributeShouldExists,
-                                    NamingUtils.getSimpleName(bo.getQualifiedName()))));
-                        }
-                        for (final Index index : bo.getIndexes()) {
-                            validateIndex(index, bo);
-                        }
-                        for (final UniqueConstraint uc : bo.getUniqueConstraints()) {
-                            validateUniqueConstraint(uc, bo);
-                        }
-                    }
-                    monitor.beginTask(Messages.saving, IProgressMonitor.UNKNOWN);
-                    fStore.save(businessObjectModel);
                 }
             });
         } catch (final InvocationTargetException e) {
@@ -155,7 +158,7 @@ public class ManageBusinessDataModelWizard extends Wizard {
         } catch (final InvocationTargetException e) {
             new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.installFailedTitle, Messages.installFailedMessage,
                     handleTargetExceptionStacktrace(e))
-                    .open();
+            .open();
             return false;
         } catch (final InterruptedException e) {
             return false;
