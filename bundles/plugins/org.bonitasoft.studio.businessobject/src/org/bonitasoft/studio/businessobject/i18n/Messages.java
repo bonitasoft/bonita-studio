@@ -314,6 +314,7 @@ public class Messages extends NLS {
     public static String addBusinessObjectDataWindowTitle;
     public static String editBusinessObjectDataWindowTitle;
     public static String defaultValueBusinessDataTooltip;
+    public static String cleaningBusinessObjects;
 
     private Messages() {
     }
