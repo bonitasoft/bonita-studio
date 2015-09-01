@@ -31,7 +31,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
@@ -90,9 +89,9 @@ public class WebFormBOSArchiveFileStoreProviderTest {
 
         webFormArtifactsFileStoreProvider = spy(new WebFormBOSArchiveFileStoreProvider(repositoryAccessor, null));
         doReturn(newHashSet("resources/widgets/customTestWidget/customTestWidget.json")).when(webFormArtifactsFileStoreProvider)
-                .findFormRelatedEntries(processFormFileStore);
+        .findFormRelatedEntries(processFormFileStore);
         doReturn(newHashSet("resources/fragments/fragmentDep/fragmentDep.json")).when(webFormArtifactsFileStoreProvider)
-                .findFormRelatedEntries(taskFormFileStore);
+        .findFormRelatedEntries(taskFormFileStore);
 
     }
 
@@ -104,6 +103,14 @@ public class WebFormBOSArchiveFileStoreProviderTest {
         assertThat(fileStores).contains(processFormFileStore, taskFormFileStore, customWidgetFileStore, fragmentFileStore);
     }
 
+    @Test
+    public void should_not_contains_fileStore_if_file_does_not_exists() throws Exception {
+        final Set<IRepositoryFileStore> fileStores = webFormArtifactsFileStoreProvider.getFileStoreForConfiguration(aProcessWithInvalidFormMappings(),
+                aConfiguration().build());
+
+        assertThat(fileStores).isEmpty();
+    }
+
     private AbstractProcess aProcessWithFormMappings() {
         return aPool().withName("Pool1").withVersion("1.0")
                 .havingOverviewFormMapping(aFormMapping().withType(FormMappingType.URL).withURL("http://www.bonitasoft.com"))
@@ -111,6 +118,12 @@ public class WebFormBOSArchiveFileStoreProviderTest {
                 .havingElements(
                         aTask().withName("Step1").havingFormMapping(
                                 aFormMapping().havingTargetForm(anExpression().withName("StepForm").withContent("step-form-id"))))
+                .build();
+    }
+
+    private AbstractProcess aProcessWithInvalidFormMappings() {
+        return aPool().withName("Pool1").withVersion("1.0")
+                .havingFormMapping(aFormMapping().havingTargetForm(anExpression().withName("processForm").withContent("invalid-process-form-id")))
                 .build();
     }
 }
