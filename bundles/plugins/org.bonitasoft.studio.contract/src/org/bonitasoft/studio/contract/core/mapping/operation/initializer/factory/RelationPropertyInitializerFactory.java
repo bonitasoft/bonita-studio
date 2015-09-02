@@ -27,34 +27,33 @@ import org.bonitasoft.studio.model.process.BusinessObjectData;
 public class RelationPropertyInitializerFactory extends AbsractInitializerFactory implements InitializerFactory {
 
     @Override
-    public IPropertyInitializer newPropertyInitializer(final FieldToContractInputMapping mapping, final BusinessObjectData data, final boolean isOnPool) {
+    public IPropertyInitializer newPropertyInitializer(final FieldToContractInputMapping mapping, final BusinessObjectData data) {
         final RelationField relationField = (RelationField) mapping.getField();
-        return relationField.getType() == Type.AGGREGATION ? newAggregatedReferenceInitializer(mapping, data, relationField, isOnPool)
-                : newComposedReferenceInitializer(
+        return relationField.getType() == Type.AGGREGATION ? newAggregatedReferenceInitializer(mapping, data, relationField) : newComposedReferenceInitializer(
                 mapping,
-                        data, relationField, isOnPool);
+                data, relationField);
     }
 
     private IPropertyInitializer newAggregatedReferenceInitializer(final FieldToContractInputMapping mapping,
             final BusinessObjectData data,
-            final RelationField relationField, final boolean isOnPool) {
+            final RelationField relationField) {
         return relationField.isCollection() ?
                 new MultipleAggregationReferencePropertyInitializer(firstMultipleParentBusinessObject(mapping),
                         businessObject(mapping),
                         relationField,
                         mapping.getContractInput(),
-                        toRefName(mapping, data), isOnPool)
+                        toRefName(mapping, data))
                 : new AggregationReferencePropertyInitializer(firstMultipleParentBusinessObject(mapping), relationField,
                         mapping.getContractInput(), toRefName(mapping, data));
     }
 
     private IPropertyInitializer newComposedReferenceInitializer(final FieldToContractInputMapping mapping,
             final BusinessObjectData data,
-            final RelationField relationField, final boolean isOnPool) {
+            final RelationField relationField) {
         return relationField.isCollection() ?
                 new MultipleCompositionReferencePropertyInitializer(firstMultipleParentBusinessObject(mapping), relationField,
                         mapping.getContractInput(),
-                        toRefName(mapping.getParent(), data), isOnPool)
+                        toRefName(mapping.getParent(), data))
                 : new CompositionReferencePropertyInitializer(relationField, mapping.getContractInput(),
                         toRefName(mapping, data));
     }

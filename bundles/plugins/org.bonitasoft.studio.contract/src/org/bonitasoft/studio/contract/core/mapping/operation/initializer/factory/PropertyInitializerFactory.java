@@ -31,12 +31,12 @@ public class PropertyInitializerFactory extends AbsractInitializerFactory implem
     }
 
     @Override
-    public IPropertyInitializer newPropertyInitializer(final FieldToContractInputMapping mapping, final BusinessObjectData data, final boolean isOnPool) {
+    public IPropertyInitializer newPropertyInitializer(final FieldToContractInputMapping mapping, final BusinessObjectData data) {
         final Field field = mapping.getField();
         if (field instanceof SimpleField) {
             return new SimpleFieldPropertyInitializer(firstMultipleParentBusinessObject(mapping), (SimpleField) field, mapping.getContractInput());
         } else if (field instanceof RelationField) {
-            return relationPropertyInitializerFactory.newPropertyInitializer(mapping, data, isOnPool);
+            return relationPropertyInitializerFactory.newPropertyInitializer(mapping, data);
         }
         throw new UnsupportedOperationException(field.getClass().getName() + " is not supported");
     }
