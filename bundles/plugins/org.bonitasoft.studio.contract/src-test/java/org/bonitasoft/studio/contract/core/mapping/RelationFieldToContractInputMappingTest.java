@@ -92,7 +92,7 @@ public class RelationFieldToContractInputMappingTest {
 
         final MappingOperationScriptBuilder scriptBuilder = fieldToContractInputMapping.getScriptBuilder(aBusinessData().withName("myEmployee").build());
 
-        assertThat(scriptBuilder.toScript()).isEqualTo(
+        assertThat(scriptBuilder.toScript(false)).isEqualTo(
                 "def addressVar = myEmployee.address == null ? new Address() : myEmployee.address" + System.lineSeparator()
                         + "addressVar.street = employee.address.street" + System.lineSeparator()
                         + "return addressVar");
