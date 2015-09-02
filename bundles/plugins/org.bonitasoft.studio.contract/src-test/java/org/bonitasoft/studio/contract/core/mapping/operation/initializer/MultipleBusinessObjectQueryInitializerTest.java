@@ -50,7 +50,7 @@ public class MultipleBusinessObjectQueryInitializerTest {
                 aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()
                         .havingInput(aContractInput()
                                 .withName("persistenceId")).build(),
-                "myData.employees", false);
+                "myData.employees");
         initializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(employeeBo, nameField, aContractInput().withName("name")
                 .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()).build()));
 
@@ -77,6 +77,6 @@ public class MultipleBusinessObjectQueryInitializerTest {
                 aContractInput()
                         .withName("notPersistenceId")
                         .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()).build(),
-                "myData.employees", false);
+                "myData.employees");
     }
 }

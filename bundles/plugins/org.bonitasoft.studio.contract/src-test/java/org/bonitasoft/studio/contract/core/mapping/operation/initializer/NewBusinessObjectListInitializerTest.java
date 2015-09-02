@@ -37,7 +37,7 @@ public class NewBusinessObjectListInitializerTest {
                 businessObject);
         addressField.setCollection(true);
         final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(addressField, aContractInput().withName("address")
-                .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build(), "myAddresses", false);
+                .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build(), "myAddresses");
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX).multiple()
@@ -58,32 +58,6 @@ public class NewBusinessObjectListInitializerTest {
     }
 
     @Test
-    public void should_initialize_new_object_property_for_multiple_composed_reference_withoutExistingOnPool() throws Exception {
-        final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.STRING).notNullable().build();
-        final BusinessObject businessObject = aBO("org.test.Address").withField(streetField).build();
-        final RelationField addressField = aCompositionField("address",
-                businessObject);
-        addressField.setCollection(true);
-        final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(addressField, aContractInput().withName("address")
-                .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build(), "myAddresses", true);
-        propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,
-                streetField, aContractInput().withName("street")
-                        .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX).multiple()
-                                .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX))).build()));
-        assertThat(propertyInitializer.getInitialValue()).isEqualTo("def addressList = []" + System.lineSeparator()
-                + "//For each item collected in multiple input" + System.lineSeparator()
-                + "employee.address.each{" + System.lineSeparator()
-                + "//Add a new composed Address instance" + System.lineSeparator()
-                + "addressList.add({ currentAddressInput ->" + System.lineSeparator()
-                + "def addressVar = new org.test.Address()" + System.lineSeparator()
-                + "addressVar.street = currentAddressInput.street" + System.lineSeparator()
-                + "return addressVar" + System.lineSeparator()
-                + "}(it))" + System.lineSeparator()
-                + "}" + System.lineSeparator()
-                + "return addressList");
-    }
-
-    @Test
     public void should_not_add_existing_object_to_list_input_is_a_root_input() throws Exception {
         final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.STRING).notNullable().build();
         final BusinessObject businessObject = aBO("org.test.Address").withField(streetField).build();
@@ -91,7 +65,7 @@ public class NewBusinessObjectListInitializerTest {
                 businessObject);
         addressField.setCollection(true);
         final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(addressField, aContractInput().withName("addresses")
-                .multiple().build(), "myAddress", false);
+                .multiple().build(), "myAddress");
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX).multiple()
