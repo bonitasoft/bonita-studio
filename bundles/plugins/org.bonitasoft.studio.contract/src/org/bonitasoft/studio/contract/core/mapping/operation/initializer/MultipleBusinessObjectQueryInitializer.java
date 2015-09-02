@@ -39,8 +39,8 @@ public class MultipleBusinessObjectQueryInitializer extends NewBusinessObjectLis
 
     public MultipleBusinessObjectQueryInitializer(final BusinessObject businessObject,
             final RelationField field,
-            final ContractInput contractInput, final String refName) {
-        super(field, contractInput, refName);
+            final ContractInput contractInput, final String refName, final boolean isOnPool) {
+        super(field, contractInput, refName, isOnPool);
         persistenceIdInput = persistenceIdInput(contractInput);
         this.businessObject = businessObject;
     }

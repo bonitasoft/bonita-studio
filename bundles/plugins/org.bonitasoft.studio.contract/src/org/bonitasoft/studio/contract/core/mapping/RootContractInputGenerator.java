@@ -56,6 +56,10 @@ public class RootContractInputGenerator {
     }
 
     public void build(final BusinessObjectData data) throws OperationCreationException {
+        build(data, false);
+    }
+
+    public void build(final BusinessObjectData data, final boolean isOnPool) throws OperationCreationException {
         contractInput = ProcessFactory.eINSTANCE.createContractInput();
         contractInput.setName(rootContractInputName);
         contractInput.setType(ContractInputType.COMPLEX);
@@ -74,7 +78,7 @@ public class RootContractInputGenerator {
             mappingOperations.add(operationBuilder.toOperation(data, createParentMapping(data, rootContractInputName)));
         }
         try {
-            initialValueExpression = expressionBuilder.toExpression(data, createParentMapping(data, rootContractInputName));
+            initialValueExpression = expressionBuilder.toExpression(data, createParentMapping(data, rootContractInputName), isOnPool);
         } catch (JavaModelException | BusinessObjectInstantiationException e) {
             throw new OperationCreationException("Failed to create initial value expression", e);
         }
