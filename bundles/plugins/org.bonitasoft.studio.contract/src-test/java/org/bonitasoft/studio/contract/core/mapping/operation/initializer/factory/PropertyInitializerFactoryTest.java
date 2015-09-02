@@ -51,7 +51,7 @@ public class PropertyInitializerFactoryTest {
         final PropertyInitializerFactory factory = newFactory();
 
         final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(aSimpleMapping(aStringField("name").build()).build(), aBusinessData()
-                .withName("employee").build());
+                .withName("employee").build(), false);
 
         assertThat(propertyInitializer).isInstanceOf(SimpleFieldPropertyInitializer.class);
     }
@@ -66,7 +66,7 @@ public class PropertyInitializerFactoryTest {
                 .aRelationMapping(employee)
                 .addChild(aSimpleMapping(aStringField("name").build())).build();
         final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mapping.getChildren().get(0), aBusinessData()
-                .withName("employee").build());
+                .withName("employee").build(), false);
 
         assertThat(propertyInitializer).isInstanceOf(SimpleFieldPropertyInitializer.class);
         assertThat(((SimpleFieldPropertyInitializer) propertyInitializer).getParentBusinessObject()).isNotNull();
@@ -82,9 +82,9 @@ public class PropertyInitializerFactoryTest {
                 .addChild(aRelationMapping(employee)).build();
         final BusinessObjectData businessObjectData = aBusinessData()
                 .withName("employee").build();
-        factory.newPropertyInitializer(mapping.getChildren().get(0), businessObjectData);
+        factory.newPropertyInitializer(mapping.getChildren().get(0), businessObjectData, false);
 
-        verify(relationFactory).newPropertyInitializer(mapping.getChildren().get(0), businessObjectData);
+        verify(relationFactory).newPropertyInitializer(mapping.getChildren().get(0), businessObjectData, false);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class PropertyInitializerFactoryTest {
 
         thrown.expect(UnsupportedOperationException.class);
         factory.newPropertyInitializer(new FakeMapping(new Field() {
-        }), aBusinessData().build());
+        }), aBusinessData().build(), false);
     }
 
     private PropertyInitializerFactory newFactory() {
