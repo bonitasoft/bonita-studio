@@ -261,7 +261,7 @@ public class StringToExpressionConverter {
                     content, returnType, expressionType, fixedReturnType);
             if (ExpressionConstants.VARIABLE_TYPE.equals(expressionType)
                     || ExpressionConstants.SIMULATION_VARIABLE_TYPE
-                            .equals(expressionType)) {
+                    .equals(expressionType)) {
                 resolveDataDependencies(exp);
             } else if (ExpressionConstants.FORM_FIELD_TYPE
                     .equals(expressionType)) {
@@ -298,7 +298,7 @@ public class StringToExpressionConverter {
                             .get("referencedElements");
                     if (!dependancyAlreadyExists(instList, dependencyInstance)) {
                         expression
-                                .add("referencedElements", dependencyInstance);
+                        .add("referencedElements", dependencyInstance);
                     }
                 }
             }
@@ -462,9 +462,9 @@ public class StringToExpressionConverter {
     private Instance createFormFieldDependencyInstance(
             final Instance widgetInstance) {
         final Instance widget = widgetInstance.copy();
-        final List<Instance> widgetDependencies = widget.get("dependOn");
-        for (final Instance w : widgetDependencies) {
-            model.delete(w);
+        //clean nested content
+        for (final Instance content : widget.getContents()) {
+            model.delete(content);
         }
         widget.set("dependOn", Collections.emptyList());
         return widget;
@@ -478,7 +478,7 @@ public class StringToExpressionConverter {
             if (defaultValue != null
                     && defaultValue instanceof Instance
                     && ((Instance) defaultValue)
-                            .instanceOf("expression.Expression")) {
+                    .instanceOf("expression.Expression")) {
                 model.delete((Instance) defaultValue);
                 copy.set("defaultValue", null);
             }
