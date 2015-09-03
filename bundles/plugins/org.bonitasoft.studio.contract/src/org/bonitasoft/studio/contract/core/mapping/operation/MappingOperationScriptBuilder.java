@@ -54,7 +54,15 @@ public class MappingOperationScriptBuilder {
         this.field = field;
     }
 
-    public String toScript(final boolean isOnPool) throws BusinessObjectInstantiationException {
+    public String toInstanciationScript() throws BusinessObjectInstantiationException {
+        return toScript(true);
+    }
+
+    public String toScript() throws BusinessObjectInstantiationException {
+        return toScript(false);
+    }
+
+    private String toScript(final boolean isOnPool) throws BusinessObjectInstantiationException {
         mapping.getContractInput();
         return format(buildPropertyInitializerTree(mapping, field, data, isOnPool).getInitialValue());
     }
