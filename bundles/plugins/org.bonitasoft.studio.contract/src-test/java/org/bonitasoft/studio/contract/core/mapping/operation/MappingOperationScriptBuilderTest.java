@@ -44,7 +44,7 @@ public class MappingOperationScriptBuilderTest {
         final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(aBusinessData().withName("employee").build(),
                 new SimpleFieldToContractInputMapping(firstNameField), firstNameField);
 
-        final String script = scriptBuilder.toScript(false);
+        final String script = scriptBuilder.toScript();
 
         assertThat(scriptBuilder.needsDataDependency()).isFalse();
         assertThat(script).isEqualTo("firstName");
@@ -59,7 +59,7 @@ public class MappingOperationScriptBuilderTest {
         final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(aBusinessData().withName("employee").build(),
                 relationFieldToContractInputMapping, addressField);
 
-        final String script = scriptBuilder.toScript(false);
+        final String script = scriptBuilder.toScript();
 
         assertThat(scriptBuilder.needsDataDependency()).isTrue();
         assertThat(script).isEqualTo("def addressVar = new Address()" + System.lineSeparator()
@@ -78,7 +78,7 @@ public class MappingOperationScriptBuilderTest {
         final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(aBusinessData().withName("employee").build(),
                 relationFieldToContractInputMapping, addressField);
 
-        final String script = scriptBuilder.toScript(false);
+        final String script = scriptBuilder.toScript();
 
         assertThat(script).isEqualTo("def addressVar = new Address()" + System.lineSeparator()
                 + "return addressVar");
@@ -95,7 +95,7 @@ public class MappingOperationScriptBuilderTest {
         final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(aBusinessData().withName("employee").build(),
                 relationFieldToContractInputMapping, addressField);
 
-        final String script = scriptBuilder.toScript(false);
+        final String script = scriptBuilder.toScript();
 
         assertThat(script).isEqualTo("def addressVar = new Address()" + System.lineSeparator()
                 + "addressVar.street = address.street" + System.lineSeparator()
@@ -126,6 +126,6 @@ public class MappingOperationScriptBuilderTest {
                 mapping, field);
 
         thrown.expect(UnsupportedOperationException.class);
-        scriptBuilder.toScript(false);
+        scriptBuilder.toScript();
     }
 }
