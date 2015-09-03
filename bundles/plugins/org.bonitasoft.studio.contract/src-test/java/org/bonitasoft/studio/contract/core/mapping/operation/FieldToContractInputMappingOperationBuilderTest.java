@@ -170,7 +170,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final FieldToContractInputMapping mapping = spy(aRelationMapping(address).build());
         mapping.toContractInput(aContractInput().withName("employee").withType(ContractInputType.COMPLEX).build());
         final MappingOperationScriptBuilder fakeScriptBuilder = mock(MappingOperationScriptBuilder.class);
-        when(fakeScriptBuilder.toScript()).thenThrow(BusinessObjectInstantiationException.class);
+        when(fakeScriptBuilder.toScript(false)).thenThrow(BusinessObjectInstantiationException.class);
         doReturn(fakeScriptBuilder).when(mapping).getScriptBuilder(any(BusinessObjectData.class));
         when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class), anyBoolean())).thenReturn(
                 anExpression().build());
