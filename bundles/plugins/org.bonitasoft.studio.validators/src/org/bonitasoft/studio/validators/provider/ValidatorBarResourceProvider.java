@@ -48,7 +48,7 @@ public class ValidatorBarResourceProvider implements BARResourcesProvider {
 
     @Override
     public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
-            final Set<EObject> exludedObject) {
+            final Set<EObject> exludedObject) throws FileNotFoundException {
         if (configuration == null) {
             return;
         }
@@ -59,7 +59,7 @@ public class ValidatorBarResourceProvider implements BARResourcesProvider {
         }
     }
 
-    protected List<BarResource> findAndCreateBarResourceForValidator(final Configuration configuration) {
+    protected List<BarResource> findAndCreateBarResourceForValidator(final Configuration configuration) throws FileNotFoundException {
         final List<BarResource> resources = new ArrayList<BarResource>();
         final ValidatorDescriptorRepositoryStore validatorDescStore = getRepositoryAccessor().getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
         final ValidatorSourceRepositorySotre validatorSourceStore = getRepositoryAccessor().getRepositoryStore(ValidatorSourceRepositorySotre.class);
@@ -87,10 +87,10 @@ public class ValidatorBarResourceProvider implements BARResourcesProvider {
     }
 
     protected SourceFileStore findSourceFileStoreForValidator(final ValidatorSourceRepositorySotre validatorSourceStore, final String validatorId,
-            final ValidatorDescriptor descriptor) {
+            final ValidatorDescriptor descriptor) throws FileNotFoundException {
         final AbstractFileStore child = validatorSourceStore.getChild(descriptor.getClassName());
         if (child == null) {
-            throw new RuntimeException("Validator class " + descriptor.getClassName() + " not found for validator definition " + validatorId + "!");
+            throw new FileNotFoundException("Validator class " + descriptor.getClassName() + " not found for validator definition " + validatorId + "!");
         }
         if (!(child instanceof SourceFileStore)) {
             throw new RuntimeException("Invalid validator definition " + validatorId + "!");

@@ -95,6 +95,8 @@ public class ValidatorBarResourceProviderTest {
         } catch (final RuntimeException e) {
             Assertions.assertThat(e.getMessage()).isEqualTo("Invalid validator definition " + validatorId + "!");
             return;
+        } catch (final FileNotFoundException e) {
+            e.printStackTrace();
         }
         fail("A clean RuntimeException should have been thrown.");
     }
@@ -114,6 +116,8 @@ public class ValidatorBarResourceProviderTest {
         try {
             provider.addResourcesForConfiguration(builder, (AbstractProcess) null, configuration, Collections.<EObject> emptySet());
         } catch (final RuntimeException e) {
+            e.printStackTrace();
+        } catch (final FileNotFoundException e) {
             Assertions.assertThat(e.getMessage()).isEqualTo(
                     "Validator class " + className + " not found for validator definition " + validatorId + "!");
             return;
