@@ -62,7 +62,7 @@ public class FieldToContractInputMappingExpressionBuilder {
         final MappingOperationScriptBuilder mappingOperationScriptBuilder = mapping.getScriptBuilder(data);
         final String script = getScriptText(isOnPool, mappingOperationScriptBuilder);
         final Expression scriptExpression = ExpressionHelper.createGroovyScriptExpression(script, mapping.getFieldType());
-        addScriptDependencies(mappingOperationScriptBuilder, mapping.getContractInput(), data, scriptExpression);
+        addScriptDependencies(mappingOperationScriptBuilder, mapping.getContractInput(), data, scriptExpression, isOnPool);
         scriptExpression.setName(Joiner.on(".").join(toAncestorNameList().apply(contractInput)));
         return scriptExpression;
     }
@@ -77,10 +77,10 @@ public class FieldToContractInputMappingExpressionBuilder {
     }
 
     private void addScriptDependencies(final MappingOperationScriptBuilder scriptBuilder, final ContractInput contractInput, final BusinessObjectData data,
-            final Expression groovyScriptExpression) throws JavaModelException {
+            final Expression groovyScriptExpression, final boolean isOnPool) throws JavaModelException {
         groovyScriptExpression.getReferencedElements().add(
                 ExpressionHelper.createDependencyFromEObject(rootContractInput(contractInput)));
-        if (scriptBuilder.needsDataDependency()) {
+        if (scriptBuilder.needsDataDependency() && !isOnPool) {
             groovyScriptExpression.getReferencedElements().add(
                     ExpressionHelper.createDependencyFromEObject(data));
         }
