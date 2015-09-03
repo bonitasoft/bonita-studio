@@ -56,11 +56,11 @@ public class FieldToContractInputMappingExpressionBuilder {
         this.expressionEditorService = expressionEditorService;
     }
 
-    public Expression toExpression(final BusinessObjectData data, final FieldToContractInputMapping mapping)
+    public Expression toExpression(final BusinessObjectData data, final FieldToContractInputMapping mapping, final boolean isOnPool)
             throws BusinessObjectInstantiationException, JavaModelException {
         final ContractInput contractInput = mapping.getContractInput();
         final MappingOperationScriptBuilder mappingOperationScriptBuilder = mapping.getScriptBuilder(data);
-        final Expression scriptExpression = ExpressionHelper.createGroovyScriptExpression(mappingOperationScriptBuilder.toScript(),
+        final Expression scriptExpression = ExpressionHelper.createGroovyScriptExpression(mappingOperationScriptBuilder.toScript(isOnPool),
                 mapping.getFieldType());
         addScriptDependencies(mappingOperationScriptBuilder, mapping.getContractInput(), data, scriptExpression);
         scriptExpression.setName(Joiner.on(".").join(toAncestorNameList().apply(contractInput)));

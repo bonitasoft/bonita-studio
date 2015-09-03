@@ -28,18 +28,19 @@ import org.bonitasoft.studio.model.process.ContractInput;
 public class BusinessObjectInitializerFactory extends AbsractInitializerFactory implements InitializerFactory {
 
     @Override
-    public IPropertyInitializer newPropertyInitializer(final FieldToContractInputMapping mapping, final BusinessObjectData data) {
+    public IPropertyInitializer newPropertyInitializer(final FieldToContractInputMapping mapping, final BusinessObjectData data, final boolean isOnPool) {
         final RelationField relationField = (RelationField) mapping.getField();
-        return relationField.getType() == Type.AGGREGATION ? newAggregatedObjectInitializer(mapping, data, relationField) : newComposedObjectInitializer(
-                mapping, data, relationField);
+        return relationField.getType() == Type.AGGREGATION ? newAggregatedObjectInitializer(mapping, data, relationField, isOnPool)
+                : newComposedObjectInitializer(
+                        mapping, data, relationField, isOnPool);
     }
 
     private IPropertyInitializer newAggregatedObjectInitializer(final FieldToContractInputMapping mapping,
             final BusinessObjectData data,
-            final RelationField relationField) {
+            final RelationField relationField, final boolean isOnPool) {
         return relationField.isCollection() ?
                 new MultipleBusinessObjectQueryInitializer(businessObject(mapping), relationField,
-                        mapping.getContractInput(), toRefName(mapping, data))
+                        mapping.getContractInput(), toRefName(mapping, data), isOnPool)
                 : new BusinessObjectQueryInitializer(firstMultipleParentBusinessObject(mapping), relationField,
                         mapping.getContractInput(),
                         toRefName(mapping, data));
@@ -47,9 +48,9 @@ public class BusinessObjectInitializerFactory extends AbsractInitializerFactory 
 
     private IPropertyInitializer newComposedObjectInitializer(final FieldToContractInputMapping mapping,
             final BusinessObjectData data,
-            final RelationField relationField) {
+            final RelationField relationField, final boolean isOnPool) {
         return relationField.isCollection() ?
-                new NewBusinessObjectListInitializer(relationField, mapping.getContractInput(), toRefName(mapping, data)) :
+                new NewBusinessObjectListInitializer(relationField, mapping.getContractInput(), toRefName(mapping, data), isOnPool) :
                 new NewBusinessObjectInitializer(relationField, toRefName(mapping, data), mapping.getContractInput().eContainer() instanceof ContractInput);
     }
 

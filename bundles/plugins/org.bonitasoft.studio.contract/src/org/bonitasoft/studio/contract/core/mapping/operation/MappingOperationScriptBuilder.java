@@ -54,9 +54,9 @@ public class MappingOperationScriptBuilder {
         this.field = field;
     }
 
-    public String toScript() throws BusinessObjectInstantiationException {
+    public String toScript(final boolean isOnPool) throws BusinessObjectInstantiationException {
         mapping.getContractInput();
-        return format(buildPropertyInitializerTree(mapping, field, data).getInitialValue());
+        return format(buildPropertyInitializerTree(mapping, field, data, isOnPool).getInitialValue());
     }
 
     private String format(final String initialValue) {
@@ -69,19 +69,20 @@ public class MappingOperationScriptBuilder {
         return document.get();
     }
 
-    private IPropertyInitializer buildPropertyInitializerTree(final FieldToContractInputMapping mapping, final Field rootField, final BusinessObjectData data) {
+    private IPropertyInitializer buildPropertyInitializerTree(final FieldToContractInputMapping mapping, final Field rootField, final BusinessObjectData data,
+            final boolean isOnPool) {
         final Field field = mapping.getField();
         if (field instanceof SimpleField) {
-            return propertyInitializerFactory.newPropertyInitializer(mapping, data);
+            return propertyInitializerFactory.newPropertyInitializer(mapping, data, isOnPool);
         }
         if (field instanceof RelationField) {
             final AbstractBusinessObjectInitializer scriptInitializer = (AbstractBusinessObjectInitializer) findInitializerFactory(field, rootField)
                     .newPropertyInitializer(
                             mapping,
-                            data);
+                            data, isOnPool);
             for (final FieldToContractInputMapping child : mapping.getChildren()) {
                 if (child.isGenerated()) {
-                    scriptInitializer.addPropertyInitializer(buildPropertyInitializerTree(child, rootField, data));
+                    scriptInitializer.addPropertyInitializer(buildPropertyInitializerTree(child, rootField, data, isOnPool));
                 }
             }
             needsDataDependency = scriptInitializer instanceof NewBusinessObjectInitializer;
