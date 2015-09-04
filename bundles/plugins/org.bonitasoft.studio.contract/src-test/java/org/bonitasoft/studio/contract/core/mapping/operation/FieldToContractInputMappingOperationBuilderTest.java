@@ -24,6 +24,7 @@ import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.
 import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -81,7 +82,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
         final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
         final BusinessObjectData data = aBusinessData().withName("myEmployee").build();
-        when(expressionBuilder.toExpression(data, mapping)).thenReturn(anExpression().build());
+        when(expressionBuilder.toExpression(data, mapping, false)).thenReturn(anExpression().build());
         final Operation operation = inputToOperation.toOperation(data,
                 mapping);
 
@@ -95,7 +96,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
                 .hasType(ExpressionConstants.VARIABLE_TYPE);
         assertThat(operation.getLeftOperand().getReferencedElements()).hasSize(1);
 
-        verify(expressionBuilder).toExpression(data, mapping);
+        verify(expressionBuilder).toExpression(data, mapping, false);
     }
 
     @Test
@@ -108,7 +109,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
                 .withName("employee").build());
 
         final BusinessObjectData data = aBusinessData().withName("myEmployee").build();
-        when(expressionBuilder.toExpression(data, mapping)).thenReturn(anExpression().build());
+        when(expressionBuilder.toExpression(data, mapping, false)).thenReturn(anExpression().build());
         final Operation operation = inputToOperation.toOperation(data,
                 mapping);
 
@@ -121,7 +122,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
                 .hasName("myEmployee").hasContent("myEmployee")
                 .hasType(ExpressionConstants.VARIABLE_TYPE);
         assertThat(operation.getLeftOperand().getReferencedElements()).hasSize(1);
-        verify(expressionBuilder).toExpression(data, mapping);
+        verify(expressionBuilder).toExpression(data, mapping, false);
     }
 
     @Test
@@ -132,7 +133,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final FieldToContractInputMapping mapping = aRelationMapping(address).build();
         mapping.toContractInput(aContractInput().withName("employee").withType(ContractInputType.COMPLEX).build());
         final BusinessObjectData businessObjectData = aBusinessData().withName("myEmployee").build();
-        when(expressionBuilder.toExpression(businessObjectData, mapping)).thenReturn(anExpression().build());
+        when(expressionBuilder.toExpression(businessObjectData, mapping, false)).thenReturn(anExpression().build());
         final Operation operation = inputToOperation.toOperation(businessObjectData,
                 mapping);
 
@@ -145,7 +146,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
                 .hasType(ExpressionConstants.VARIABLE_TYPE);
         assertThat(operation.getLeftOperand().getReferencedElements()).hasSize(1);
 
-        verify(expressionBuilder).toExpression(businessObjectData, mapping);
+        verify(expressionBuilder).toExpression(businessObjectData, mapping, false);
     }
 
     @Test
@@ -153,7 +154,8 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final FieldToContractInputMappingOperationBuilder inputToOperation = createFixture();
         when(expressionReturnTypeFilter.compatibleReturnTypes(anyString(), anyString())).thenReturn(false);
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
-        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class))).thenReturn(anExpression().build());
+        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class), anyBoolean())).thenReturn(
+                anExpression().build());
         thrown.expect(OperationCreationException.class);
         inputToOperation.toOperation(aBusinessData().withName("myEmployee").build(),
                 aSimpleMapping(lastNameField).build());
@@ -170,7 +172,8 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final MappingOperationScriptBuilder fakeScriptBuilder = mock(MappingOperationScriptBuilder.class);
         when(fakeScriptBuilder.toScript()).thenThrow(BusinessObjectInstantiationException.class);
         doReturn(fakeScriptBuilder).when(mapping).getScriptBuilder(any(BusinessObjectData.class));
-        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class))).thenReturn(anExpression().build());
+        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class), anyBoolean())).thenReturn(
+                anExpression().build());
         thrown.expect(OperationCreationException.class);
         inputToOperation.toOperation(aBusinessData().withName("myEmployee").build(),
                 mapping);
@@ -182,7 +185,8 @@ public class FieldToContractInputMappingOperationBuilderTest {
 
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
         final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
-        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class))).thenReturn(anExpression().build());
+        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class), anyBoolean())).thenReturn(
+                anExpression().build());
         final Operation operation = inputToOperation.toOperation(aBusinessData().multiple().withName("employees").build(),
                 mapping);
 

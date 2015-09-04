@@ -131,7 +131,11 @@ public class ContractInputGenerationWizard extends Wizard {
         final RootContractInputGenerator contractInputGenerator = new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
                 contractInputFromBusinessObjectWizardPage.getMappings(), repositoryAccessor, operationBuilder, expressionBuilder);
         try {
-            contractInputGenerator.build(data);
+            if (contractContainer instanceof Pool) {
+                contractInputGenerator.buildForInstanciation(data);
+            } else {
+                contractInputGenerator.build(data);
+            }
         } catch (final OperationCreationException e) {
             BonitaStudioLog.error("Failed to create Operations from contract", e);
             new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e).open();
@@ -176,7 +180,7 @@ public class ContractInputGenerationWizard extends Wizard {
             MessageDialog.openWarning(getShell(), Messages.notAllAttributesGeneratedTitle, Messages.notAllAttributesGeneratedMsg);
         }
     }
-    
+
      /**
      * @return
      */

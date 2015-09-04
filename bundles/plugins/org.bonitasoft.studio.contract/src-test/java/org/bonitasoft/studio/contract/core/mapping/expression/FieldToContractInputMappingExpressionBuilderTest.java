@@ -59,7 +59,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         mapping.toContractInput(aContractInput().withName("employee").withType(ContractInputType.COMPLEX).build());
         final BusinessObjectData businessObjectData = aBusinessData().withName("myEmployee").build();
         final Expression expression = expressionBuilder.toExpression(businessObjectData,
-                mapping);
+                mapping, false);
 
         ExpressionAssert.assertThat(expression)
                 .hasName("employee.address")
@@ -77,7 +77,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
         final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
         final Expression expression = expressionBuilder.toExpression(aBusinessData().withName("myEmployee").build(),
-                mapping);
+                mapping, false);
 
         ExpressionAssert.assertThat(expression)
                 .hasName("lastName")
@@ -98,7 +98,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         final BusinessObjectData data = aBusinessData().withName("myEmployee").build();
         final Expression expression = expressionBuilder.toExpression(data,
-                mapping);
+                mapping, false);
 
         ExpressionAssert.assertThat(expression)
                 .hasName("employee.lastName")

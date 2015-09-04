@@ -34,12 +34,35 @@ public class MultipleCompositionReferencePropertyInitializerTest {
                 aContractInput().withName("addresses").multiple()
                         .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX))
                         .build(),
-                "employee");
+                "employee", false);
 
         assertThat(initializer.getInitialValue()).isEqualTo("{" + System.lineSeparator()
                 + "def addressList = []" + System.lineSeparator()
                 + "//Append existing employee" + System.lineSeparator()
                 + "addressList.addAll(employee)" + System.lineSeparator()
+                + "//For each item collected in multiple input" + System.lineSeparator()
+                + "employeeInput.addresses.each{" + System.lineSeparator()
+                + "//Add a new composed Address instance" + System.lineSeparator()
+                + "addressList.add({ currentAddressInput ->" + System.lineSeparator()
+                + "def addressVar = new Address()" + System.lineSeparator()
+                + "return addressVar" + System.lineSeparator()
+                + "}(it))" + System.lineSeparator()
+                + "}" + System.lineSeparator()
+                + "return addressList}()");
+    }
+
+    @Test
+    public void should_build_a_closure_for_multiple_field_in_a_single_businessObject_without_existingValueOnPool() throws Exception {
+        final RelationField field = aCompositionField("addresses", aBO("Address").build());
+        field.setCollection(true);
+        final MultipleCompositionReferencePropertyInitializer initializer = new MultipleCompositionReferencePropertyInitializer(null, field,
+                aContractInput().withName("addresses").multiple()
+                        .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX))
+                        .build(),
+                "employee", true);
+
+        assertThat(initializer.getInitialValue()).isEqualTo("{" + System.lineSeparator()
+                + "def addressList = []" + System.lineSeparator()
                 + "//For each item collected in multiple input" + System.lineSeparator()
                 + "employeeInput.addresses.each{" + System.lineSeparator()
                 + "//Add a new composed Address instance" + System.lineSeparator()
@@ -60,7 +83,7 @@ public class MultipleCompositionReferencePropertyInitializerTest {
                 aContractInput().withName("addresses").multiple()
                         .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple())
                         .build(),
-                "employee");
+                "employee", false);
 
         assertThat(initializer.getInitialValue()).isEqualTo("{" + System.lineSeparator()
                 + "def addressList = []" + System.lineSeparator()
