@@ -41,6 +41,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider;
+import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.bar.BarResourceCreationException;
 import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentFileStore;
@@ -177,7 +178,12 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
 
             @Override
             public WebPageFileStore apply(final FormMapping mapping) {
-                return fileStoreFromFormUUID(mapping.getTargetForm().getContent());
+                final String formUUID = mapping.getTargetForm().getContent();
+                final WebPageFileStore store = fileStoreFromFormUUID(formUUID);
+                if(store == null){
+                    BonitaStudioLog.warning(String.format("Page with id %s doesn't exist.", formUUID), UIDesignerPlugin.PLUGIN_ID);
+                }
+                return store;
             }
 
         };
