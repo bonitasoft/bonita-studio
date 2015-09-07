@@ -272,17 +272,17 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
     protected void addContext(final Object contextBuilder, final Task task) {
         final Pool pool = ModelHelper.getParentPool(task);
         addContext(contextBuilder, pool);
-        final org.bonitasoft.studio.model.expression.Expression iteratorExpression = task.getIteratorExpression();
-        addIteratorToContext(contextBuilder, task, iteratorExpression);
+        addIteratorToContext(contextBuilder, task);
     }
 
     /**
      * @param contextBuilder
      * @param task
-     * @param iteratorExpression
      */
-    protected void addIteratorToContext(final Object contextBuilder, final Task task, final org.bonitasoft.studio.model.expression.Expression iteratorExpression) {
-        if (ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(iteratorExpression.getType())
+    protected void addIteratorToContext(final Object contextBuilder, final Task task) {
+        final org.bonitasoft.studio.model.expression.Expression iteratorExpression = task.getIteratorExpression();
+        if (iteratorExpression != null &&
+                ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(iteratorExpression.getType())
                 && iteratorExpression.getName() != null
                 && !iteratorExpression.getName().isEmpty()
                 && task instanceof DataAware) {
