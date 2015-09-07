@@ -62,7 +62,7 @@ public class RootContractInputGenerator {
     public void build(final BusinessObjectData data) throws OperationCreationException {
         build(data, false);
     }
-
+    
     private void build(final BusinessObjectData data, final boolean isOnPool) throws OperationCreationException {
         contractInput = ProcessFactory.eINSTANCE.createContractInput();
         contractInput.setName(rootContractInputName);
