@@ -49,15 +49,14 @@ public class FieldToContractInputMappingFactory {
 
     private FieldToContractInputMapping createRelationFieldToContractInputMapping(final RelationField field, int depth) {
         final RelationFieldToContractInputMapping relationFieldMapping = new RelationFieldToContractInputMapping(field);
+        if (RelationField.Type.AGGREGATION.equals(((RelationField) relationFieldMapping.getField()).getType())) {
+            addPersistenceIdMapping(relationFieldMapping);
+        }
         if (depth > 0) {
             depth--;
-            if (RelationField.Type.AGGREGATION.equals(((RelationField) relationFieldMapping.getField()).getType())) {
-                addPersistenceIdMapping(relationFieldMapping);
-            }
             for (final Field child : field.getReference().getFields()) {
                 relationFieldMapping.addChild(createFieldToContractInputMapping(child, depth));
             }
-
         }
         return relationFieldMapping;
     }
