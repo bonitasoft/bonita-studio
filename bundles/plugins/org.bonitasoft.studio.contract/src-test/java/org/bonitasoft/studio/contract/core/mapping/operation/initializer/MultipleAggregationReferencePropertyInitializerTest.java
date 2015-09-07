@@ -44,7 +44,7 @@ public class MultipleAggregationReferencePropertyInitializerTest {
 
         final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(null, employeeBo,
                 employeesField, aContractInput().withName("persistenceId")
-                        .in(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()).build(), "emp");
+                        .in(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()).build(), "emp", false);
 
         final String initialValue = initializer.getInitialValue();
 
@@ -52,6 +52,37 @@ public class MultipleAggregationReferencePropertyInitializerTest {
                 + "def employeeList = []" + System.lineSeparator()
                 + "//Append existing emp" + System.lineSeparator()
                 + "employeeList.addAll(emp)" + System.lineSeparator()
+                + "//For each item collected in multiple input" + System.lineSeparator()
+                + "employees.each{" + System.lineSeparator()
+                + "//Add aggregated Employee instance" + System.lineSeparator()
+                + "employeeList.add({ currentEmployeeInput ->" + System.lineSeparator()
+                + "def employeeVar = employeeDAO.findByPersistenceId(currentEmployeeInput.persistenceId.toLong())" + System.lineSeparator()
+                + "return employeeVar" + System.lineSeparator()
+                + "}(it))" + System.lineSeparator()
+                + "}" + System.lineSeparator()
+                + "return employeeList}()");
+    }
+
+    @Test
+    public void should_embbed_aggregation_list_in_a_closure_WithoutExistingOnAPool() throws Exception {
+        final BusinessObject employeeBo = aBO("Employee").build();
+        final SimpleField pIdField = new SimpleField();
+        pIdField.setName(Field.PERSISTENCE_ID);
+        pIdField.setType(FieldType.LONG);
+        employeeBo.addField(pIdField);
+        final SimpleField nameField = aStringField("name").build();
+        employeeBo.addField(nameField);
+        final RelationField employeesField = anAggregationField("employees", employeeBo);
+        employeesField.setCollection(true);
+
+        final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(null, employeeBo,
+                employeesField, aContractInput().withName("persistenceId")
+                        .in(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()).build(), "emp", true);
+
+        final String initialValue = initializer.getInitialValue();
+
+        assertThat(initialValue).isEqualTo("{" + System.lineSeparator()
+                + "def employeeList = []" + System.lineSeparator()
                 + "//For each item collected in multiple input" + System.lineSeparator()
                 + "employees.each{" + System.lineSeparator()
                 + "//Add aggregated Employee instance" + System.lineSeparator()
@@ -81,7 +112,7 @@ public class MultipleAggregationReferencePropertyInitializerTest {
                 employeesField,
                 aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()
                         .havingInput(aContractInput().withName("persistenceId"))
-                        .in(aContractInput().withName("direcotries").withType(ContractInputType.COMPLEX).multiple()).build(), "emp");
+                        .in(aContractInput().withName("direcotries").withType(ContractInputType.COMPLEX).multiple()).build(), "emp", false);
 
         final String initialValue = initializer.getInitialValue();
 

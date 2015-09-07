@@ -30,8 +30,8 @@ public class MultipleAggregationReferencePropertyInitializer extends MultipleBus
 
     public MultipleAggregationReferencePropertyInitializer(final BusinessObject multipleParentBusinessObject, final BusinessObject businessObject,
             final RelationField field,
-            final ContractInput contractInput, final String refName) {
-        super(businessObject, field, contractInput, refName);
+            final ContractInput contractInput, final String refName, final boolean isOnPool) {
+        super(businessObject, field, contractInput, refName, isOnPool);
         this.multipleParentBusinessObject = multipleParentBusinessObject;
     }
 
@@ -48,7 +48,7 @@ public class MultipleAggregationReferencePropertyInitializer extends MultipleBus
 
     @Override
     protected boolean shouldAppendExistingObjects() {
-        return multipleParentBusinessObject == null;
+        return multipleParentBusinessObject == null && !isOnPool;
     }
 
     @Override

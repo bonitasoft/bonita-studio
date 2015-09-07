@@ -30,8 +30,8 @@ public class MultipleCompositionReferencePropertyInitializer extends NewBusiness
 
     public MultipleCompositionReferencePropertyInitializer(final BusinessObject parentBusinessObject, final RelationField field,
             final ContractInput contractInput,
-            final String refName) {
-        super(field, contractInput, refName);
+            final String refName, final boolean isOnPool) {
+        super(field, contractInput, refName, isOnPool);
         this.parentBusinessObject = parentBusinessObject;
     }
 
@@ -48,7 +48,7 @@ public class MultipleCompositionReferencePropertyInitializer extends NewBusiness
 
     @Override
     protected boolean shouldAppendExistingObjects() {
-        return parentBusinessObject == null;
+        return parentBusinessObject == null && !isOnPool;
     }
 
     @Override

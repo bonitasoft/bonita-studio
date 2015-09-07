@@ -20,5 +20,5 @@ import org.bonitasoft.studio.model.process.BusinessObjectData;
 
 public interface InitializerFactory {
 
-    IPropertyInitializer newPropertyInitializer(final FieldToContractInputMapping mapping, final BusinessObjectData data);
+    IPropertyInitializer newPropertyInitializer(final FieldToContractInputMapping mapping, final BusinessObjectData data, final boolean isOnPool);
 }

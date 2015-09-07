@@ -29,10 +29,12 @@ import com.google.common.base.Splitter;
 public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInitializer implements IPropertyInitializer {
 
     protected ContractInput contractInput;
+    protected final boolean isOnPool;
 
-    public NewBusinessObjectListInitializer(final RelationField field, final ContractInput contractInput, final String refName) {
+    public NewBusinessObjectListInitializer(final RelationField field, final ContractInput contractInput, final String refName, final boolean isOnPool) {
         super(field, refName);
         this.contractInput = contractInput;
+        this.isOnPool = isOnPool;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
     }
 
     protected boolean shouldAppendExistingObjects() {
-        return contractInput.eContainer() != null;
+        return contractInput.eContainer() != null && !isOnPool;
     }
 
     private void returnListVar(final StringBuilder scriptBuilder, final BusinessObject businessObject) {

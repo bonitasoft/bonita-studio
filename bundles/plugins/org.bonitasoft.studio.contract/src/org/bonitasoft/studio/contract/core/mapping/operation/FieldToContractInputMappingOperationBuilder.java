@@ -43,12 +43,13 @@ public class FieldToContractInputMappingOperationBuilder {
         this.expressionBuilder = expressionBuilder;
     }
 
-    public Operation toOperation(final BusinessObjectData data, final FieldToContractInputMapping mapping) throws OperationCreationException {
+    public Operation toOperation(final BusinessObjectData data, final FieldToContractInputMapping mapping)
+            throws OperationCreationException {
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
         operation.setLeftOperand(ExpressionHelper.createVariableExpression(data));
         operation.setOperator(operator(mapping, data));
         try {
-            operation.setRightOperand(expressionBuilder.toExpression(data, mapping));
+            operation.setRightOperand(expressionBuilder.toExpression(data, mapping, false));
         } catch (final BusinessObjectInstantiationException | JavaModelException e) {
             throw new OperationCreationException("Failed to create right operand expression", e);
         }
