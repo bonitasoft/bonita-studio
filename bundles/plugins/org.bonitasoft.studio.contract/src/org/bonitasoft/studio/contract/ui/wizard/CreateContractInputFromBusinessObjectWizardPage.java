@@ -89,7 +89,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     private String rootName;
     private final Contract contract;
     private final BusinessObjectModelRepositoryStore businessObjectStore;
-    private EMFDataBindingContext dbc;
     private final GenerationOptions generationOptions;
     private SelectObservableValue actionObservable;
 
@@ -127,7 +126,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
      */
     @Override
     public void createControl(final Composite parent) {
-        dbc = new EMFDataBindingContext();
+        final EMFDataBindingContext dbc = new EMFDataBindingContext();
         WizardPageSupport.create(this, dbc);
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
