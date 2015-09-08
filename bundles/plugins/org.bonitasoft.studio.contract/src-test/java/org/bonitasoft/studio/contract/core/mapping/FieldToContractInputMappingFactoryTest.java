@@ -61,6 +61,17 @@ public class FieldToContractInputMappingFactoryTest {
     }
 
     @Test
+    public void should_create_fieldMappingToContractInputMapping_from_complex_business_object_recursive_with_aggregation_field() {
+        final BusinessObject businessObject = aBO("Employee")
+                .withField(RelationFieldBuilder.anAggregationField("manager", aBO("Employee").build())).build();
+
+        final FieldToContractInputMappingFactory factory = new FieldToContractInputMappingFactory();
+
+        final List<FieldToContractInputMapping> mappings = factory.createMappingForBusinessObjectType(businessObject);
+        assertThat(mappings).extracting("field.name").containsOnly("manager");
+    }
+
+    @Test
     public void should_create_fieldMappingToContractInputMapping_from_complex_business_object_with_composition_field() {
         final BusinessObject businessObject = aBO("Employee")
                 .withField(
@@ -92,6 +103,18 @@ public class FieldToContractInputMappingFactoryTest {
     }
 
     @Test
+    public void should_create_fieldMappingToContractInputMappingTree_withADepth_of_five_when_business_model_is_recursive_with_agregation() {
+        final BusinessObject businessObject = aBO("Employee").build();
+        businessObject.addField(RelationFieldBuilder.anAggregationField("employee", businessObject));
+
+        final FieldToContractInputMappingFactory factory = new FieldToContractInputMappingFactory();
+
+        final List<FieldToContractInputMapping> mappings = factory.createMappingForBusinessObjectType(businessObject);
+        final FieldToContractInputMapping lastMappingChild = mappings.get(0).getChildren().get(1).getChildren().get(1).getChildren().get(1).getChildren().get(1).getChildren().get(1);
+        assertThat(lastMappingChild.getChildren().size()).isEqualTo(1);
+    }
+
+    @Test
     public void should_create_a_persistenceId_mapping_for_aggregated_field() {
         final BusinessObject businessObject = aBO("Employee").build();
         businessObject.addField(RelationFieldBuilder.anAggregationField("employee", businessObject));
@@ -103,5 +126,6 @@ public class FieldToContractInputMappingFactoryTest {
         assertThat(mappings.get(0)).isInstanceOf(RelationFieldToContractInputMapping.class);
         assertThat(((RelationFieldToContractInputMapping) mappings.get(0)).getChildren()).extracting("field.name").contains("persistenceId");
     }
+
 
 }
