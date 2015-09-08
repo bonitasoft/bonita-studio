@@ -100,7 +100,7 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
                 try {
                     result.addAll(getRelatedFileStore(fStore));
                 } catch (final BarResourceCreationException | IOException e) {
-                    BonitaStudioLog.error("Failed to retrieve related Form resoruces", e);
+                    BonitaStudioLog.error("Failed to retrieve related form resources", e);
                 }
             }
         }
