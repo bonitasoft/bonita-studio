@@ -72,7 +72,7 @@ public class ContractInputGenerationWizardTest {
     private FieldToContractInputMappingExpressionBuilder expressionBuilder;
 
     @Mock
-    private ContractInputGenerationInfoDialogFactory dialog;
+    private ContractInputGenerationInfoDialogFactory dialogFactory;
 
     @Test
     public void should_first_wizard_page_be_selectBusinessDataWizardPage() {
@@ -81,7 +81,7 @@ public class ContractInputGenerationWizardTest {
         process.getData().add(data);
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
-                expressionBuilder, preferenceStore, sharedImages, dialog);
+                expressionBuilder, preferenceStore, sharedImages, dialogFactory);
         wizard.addPages();
 
         assertThat(wizard.getPages()[0]).isInstanceOf(SelectBusinessDataWizardPage.class);
@@ -94,7 +94,7 @@ public class ContractInputGenerationWizardTest {
         process.getData().add(data);
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
-                expressionBuilder, preferenceStore, sharedImages, dialog);
+                expressionBuilder, preferenceStore, sharedImages, dialogFactory);
         wizard.addPages();
 
         assertThat(wizard.getPages()[0]).isInstanceOf(SelectBusinessDataWizardPage.class);
@@ -114,7 +114,7 @@ public class ContractInputGenerationWizardTest {
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages, dialog);
+                preferenceStore, sharedImages, dialogFactory);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
@@ -139,7 +139,7 @@ public class ContractInputGenerationWizardTest {
         when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages, dialog);
+                preferenceStore, sharedImages, dialogFactory);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
@@ -166,7 +166,7 @@ public class ContractInputGenerationWizardTest {
                 aGroovyScriptExpression().build());
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages, dialog);
+                preferenceStore, sharedImages, dialogFactory);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
@@ -193,7 +193,7 @@ public class ContractInputGenerationWizardTest {
         when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages, dialog);
+                preferenceStore, sharedImages, dialogFactory);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
@@ -222,7 +222,7 @@ public class ContractInputGenerationWizardTest {
                 anOperation().build());
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages, dialog);
+                preferenceStore, sharedImages, dialogFactory);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
@@ -238,7 +238,7 @@ public class ContractInputGenerationWizardTest {
     public void should_canFinish_return_false_when_no_data_is_defined() {
         final Pool process = aPool().havingContract(aContract()).build();
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
-                expressionBuilder, preferenceStore, sharedImages, dialog);
+                expressionBuilder, preferenceStore, sharedImages, dialogFactory);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
@@ -257,7 +257,7 @@ public class ContractInputGenerationWizardTest {
                 .getBusinessObjectByQualifiedName("com.company.Employee");
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
-                expressionBuilder, preferenceStore, sharedImages, dialog);
+                expressionBuilder, preferenceStore, sharedImages, dialogFactory);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
