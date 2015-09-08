@@ -72,7 +72,7 @@ public class ContractInputGenerationWizardTest {
     private FieldToContractInputMappingExpressionBuilder expressionBuilder;
 
     @Mock
-    private ContractInputGenerationInfoDialog dialog;
+    private ContractInputGenerationInfoDialogFactory dialog;
 
     @Test
     public void should_first_wizard_page_be_selectBusinessDataWizardPage() {
@@ -110,7 +110,7 @@ public class ContractInputGenerationWizardTest {
         when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
                 BusinessObjectBuilder.aBO("org.company.Employee").withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationInfoDialog.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
+        when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
@@ -136,7 +136,7 @@ public class ContractInputGenerationWizardTest {
         when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
                 BusinessObjectBuilder.aBO("org.company.Employee").withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationInfoDialog.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
+        when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
                 preferenceStore, sharedImages, dialog);
@@ -161,7 +161,7 @@ public class ContractInputGenerationWizardTest {
         when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
                 BusinessObjectBuilder.aBO("org.company.Employee").withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationInfoDialog.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
+        when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
         when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class), anyBoolean())).thenReturn(
                 aGroovyScriptExpression().build());
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
@@ -190,7 +190,7 @@ public class ContractInputGenerationWizardTest {
         when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
                 BusinessObjectBuilder.aBO("org.company.Employee").withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationInfoDialog.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
+        when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
                 preferenceStore, sharedImages, dialog);
@@ -217,7 +217,7 @@ public class ContractInputGenerationWizardTest {
         when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
                 BusinessObjectBuilder.aBO("org.company.Employee").withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationInfoDialog.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
+        when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
         when(operationBuilder.toOperation(any(BusinessObjectData.class), any(FieldToContractInputMapping.class))).thenReturn(
                 anOperation().build());
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(), repositoryAccessor, operationBuilder,

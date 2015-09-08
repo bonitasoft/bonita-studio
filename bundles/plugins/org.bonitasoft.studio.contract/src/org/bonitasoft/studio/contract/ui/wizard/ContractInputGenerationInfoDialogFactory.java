@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * @author aurelie
  */
-public class ContractInputGenerationInfoDialog {
+public class ContractInputGenerationInfoDialogFactory {
 
     public static final int NOT_OPENED = -2;
     public static final String HIDE_GENERATION_SUCCESS_DIALOG = "SHOW_GENERATION_SUCCESS_DIALOG";

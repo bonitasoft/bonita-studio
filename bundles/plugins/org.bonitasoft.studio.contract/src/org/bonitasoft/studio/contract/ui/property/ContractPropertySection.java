@@ -27,7 +27,7 @@ import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraints
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputController;
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputTreeViewer;
 import org.bonitasoft.studio.contract.ui.wizard.AddInputContractFromDataWizardDialog;
-import org.bonitasoft.studio.contract.ui.wizard.ContractInputGenerationInfoDialog;
+import org.bonitasoft.studio.contract.ui.wizard.ContractInputGenerationInfoDialogFactory;
 import org.bonitasoft.studio.contract.ui.wizard.ContractInputGenerationWizard;
 import org.bonitasoft.studio.designer.ui.contribution.CreateAndEditFormContributionItem;
 import org.bonitasoft.studio.model.process.Contract;
@@ -253,7 +253,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
                         fieldToContractInputMappingOperationBuilder,
                         fieldToContractInputMappingExpressionBuilder,
                         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore(),
-                        sharedImages, new ContractInputGenerationInfoDialog()),
+                        sharedImages, new ContractInputGenerationInfoDialogFactory()),
                 this, true);
         dialog.open();
     }
