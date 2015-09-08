@@ -41,6 +41,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider;
+import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.bar.BarResourceCreationException;
 import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentFileStore;
@@ -74,33 +75,40 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
     private final CustomPageBarResourceFactory customPageBarResourceFactory;
 
     @Inject
-    public WebFormBOSArchiveFileStoreProvider(final RepositoryAccessor repositoryAccessor, final CustomPageBarResourceFactory customPageBarResourceFactory) {
+    public WebFormBOSArchiveFileStoreProvider(final RepositoryAccessor repositoryAccessor,
+            final CustomPageBarResourceFactory customPageBarResourceFactory) {
         this.repositoryAccessor = repositoryAccessor;
         this.customPageBarResourceFactory = customPageBarResourceFactory;
     }
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider#getFileStoreForConfiguration(org.bonitasoft.studio.model.process.
-     * AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
+     * @see org.bonitasoft.studio.common.repository.provider.
+     * IBOSArchiveFileStoreProvider#getFileStoreForConfiguration(org.bonitasoft.
+     * studio.model.process. AbstractProcess,
+     * org.bonitasoft.studio.model.configuration.Configuration)
      */
     @Override
-    public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process, final Configuration configuration) {
+    public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process,
+            final Configuration configuration) {
         final Set<IRepositoryFileStore> result = new HashSet<IRepositoryFileStore>();
         final List<FormMapping> allFormMappings = getAllItemsOfType(process, ProcessPackage.Literals.FORM_MAPPING);
         for (final WebPageFileStore fStore : transform(filter(allFormMappings, withInternalType()),
                 formMappingToFileStore())) {
-            result.add(fStore);
-            try {
-                result.addAll(getRelatedFileStore(fStore));
-            } catch (final BarResourceCreationException | IOException e) {
-                BonitaStudioLog.error("Failed to retrieve related Form resoruces", e);
+            if (fStore != null) {
+                result.add(fStore);
+                try {
+                    result.addAll(getRelatedFileStore(fStore));
+                } catch (final BarResourceCreationException | IOException e) {
+                    BonitaStudioLog.error("Failed to retrieve related form resources", e);
+                }
             }
         }
         return result;
     }
 
-    protected Set<String> findFormRelatedEntries(final WebPageFileStore fStore) throws BarResourceCreationException, IOException {
+    protected Set<String> findFormRelatedEntries(final WebPageFileStore fStore)
+            throws BarResourceCreationException, IOException {
         final BarResource barResource = customPageBarResourceFactory.newBarResource(fStore.getName(), fStore.getId());
         final byte[] zipContent = barResource.getContent();
         final Set<String> zipEntries = zipEntries(zipContent);
@@ -121,8 +129,8 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
     }
 
     private Set<WebWidgetFileStore> relatedWidgets(final Set<String> zipEntries) {
-        return newHashSet(filter(transform(filter(zipEntries, containsPattern(WIDGET_ENTRY_REGEXP)), toWidgetFileStore(compile(WIDGET_ENTRY_REGEXP))),
-                customWidgetOnly()));
+        return newHashSet(filter(transform(filter(zipEntries, containsPattern(WIDGET_ENTRY_REGEXP)),
+                toWidgetFileStore(compile(WIDGET_ENTRY_REGEXP))), customWidgetOnly()));
     }
 
     private Predicate<WebWidgetFileStore> customWidgetOnly() {
@@ -148,7 +156,8 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
     }
 
     private Set<WebFragmentFileStore> relatedFragments(final Set<String> zipEntries) {
-        return newHashSet(transform(filter(zipEntries, containsPattern(FRAGMENT_ENTRY_REGEXP)), toFragmentFileStore(compile(FRAGMENT_ENTRY_REGEXP))));
+        return newHashSet(transform(filter(zipEntries, containsPattern(FRAGMENT_ENTRY_REGEXP)),
+                toFragmentFileStore(compile(FRAGMENT_ENTRY_REGEXP))));
     }
 
     private Function<String, WebFragmentFileStore> toFragmentFileStore(final Pattern fragmentPattern) {
@@ -158,8 +167,8 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
             public WebFragmentFileStore apply(final String matchingEntry) {
                 final Matcher matcher = fragmentPattern.matcher(matchingEntry);
                 checkState(matcher.matches() == true);
-                return repositoryAccessor.getRepositoryStore(WebFragmentRepositoryStore.class).getChild(
-                        matcher.group(1));
+                return repositoryAccessor.getRepositoryStore(WebFragmentRepositoryStore.class)
+                        .getChild(matcher.group(1));
             }
         };
     }
@@ -169,7 +178,12 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
 
             @Override
             public WebPageFileStore apply(final FormMapping mapping) {
-                return fileStoreFromFormUUID(mapping.getTargetForm().getContent());
+                final String formUUID = mapping.getTargetForm().getContent();
+                final WebPageFileStore store = fileStoreFromFormUUID(formUUID);
+                if(store == null){
+                    BonitaStudioLog.warning(String.format("Page with id %s doesn't exist.", formUUID), UIDesignerPlugin.PLUGIN_ID);
+                }
+                return store;
             }
 
         };
@@ -190,7 +204,8 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
         };
     }
 
-    public Set<IRepositoryFileStore> getRelatedFileStore(final WebPageFileStore webPageFileStore) throws BarResourceCreationException, IOException {
+    public Set<IRepositoryFileStore> getRelatedFileStore(final WebPageFileStore webPageFileStore)
+            throws BarResourceCreationException, IOException {
         final Set<String> zipEntries = findFormRelatedEntries(webPageFileStore);
         final Set<IRepositoryFileStore> result = new HashSet<IRepositoryFileStore>();
         result.addAll(relatedFragments(zipEntries));
