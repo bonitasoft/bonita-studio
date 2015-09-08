@@ -71,6 +71,9 @@ public class ContractInputGenerationWizardTest {
     @Mock
     private FieldToContractInputMappingExpressionBuilder expressionBuilder;
 
+    @Mock
+    private ContractInputGenerationInfoDialog dialog;
+
     @Test
     public void should_first_wizard_page_be_selectBusinessDataWizardPage() {
         final BusinessObjectData data = aBusinessData().build();
@@ -78,7 +81,7 @@ public class ContractInputGenerationWizardTest {
         process.getData().add(data);
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
-                expressionBuilder, preferenceStore, sharedImages);
+                expressionBuilder, preferenceStore, sharedImages, dialog);
         wizard.addPages();
 
         assertThat(wizard.getPages()[0]).isInstanceOf(SelectBusinessDataWizardPage.class);
@@ -91,7 +94,7 @@ public class ContractInputGenerationWizardTest {
         process.getData().add(data);
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
-                expressionBuilder, preferenceStore, sharedImages);
+                expressionBuilder, preferenceStore, sharedImages, dialog);
         wizard.addPages();
 
         assertThat(wizard.getPages()[0]).isInstanceOf(SelectBusinessDataWizardPage.class);
@@ -107,11 +110,11 @@ public class ContractInputGenerationWizardTest {
         when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
                 BusinessObjectBuilder.aBO("org.company.Employee").withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationWizard.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
+        when(preferenceStore.getString(ContractInputGenerationInfoDialog.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages);
+                preferenceStore, sharedImages, dialog);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
@@ -133,10 +136,10 @@ public class ContractInputGenerationWizardTest {
         when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
                 BusinessObjectBuilder.aBO("org.company.Employee").withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationWizard.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
+        when(preferenceStore.getString(ContractInputGenerationInfoDialog.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages);
+                preferenceStore, sharedImages, dialog);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
@@ -158,12 +161,12 @@ public class ContractInputGenerationWizardTest {
         when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
                 BusinessObjectBuilder.aBO("org.company.Employee").withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationWizard.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
+        when(preferenceStore.getString(ContractInputGenerationInfoDialog.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
         when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class), anyBoolean())).thenReturn(
                 aGroovyScriptExpression().build());
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages);
+                preferenceStore, sharedImages, dialog);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
@@ -187,10 +190,10 @@ public class ContractInputGenerationWizardTest {
         when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
                 BusinessObjectBuilder.aBO("org.company.Employee").withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationWizard.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
+        when(preferenceStore.getString(ContractInputGenerationInfoDialog.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages);
+                preferenceStore, sharedImages, dialog);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
@@ -214,12 +217,12 @@ public class ContractInputGenerationWizardTest {
         when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
                 BusinessObjectBuilder.aBO("org.company.Employee").withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationWizard.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
+        when(preferenceStore.getString(ContractInputGenerationInfoDialog.HIDE_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
         when(operationBuilder.toOperation(any(BusinessObjectData.class), any(FieldToContractInputMapping.class))).thenReturn(
                 anOperation().build());
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages);
+                preferenceStore, sharedImages, dialog);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
@@ -235,7 +238,7 @@ public class ContractInputGenerationWizardTest {
     public void should_canFinish_return_false_when_no_data_is_defined() {
         final Pool process = aPool().havingContract(aContract()).build();
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
-                expressionBuilder, preferenceStore, sharedImages);
+                expressionBuilder, preferenceStore, sharedImages, dialog);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
@@ -254,7 +257,7 @@ public class ContractInputGenerationWizardTest {
                 .getBusinessObjectByQualifiedName("com.company.Employee");
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
-                expressionBuilder, preferenceStore, sharedImages);
+                expressionBuilder, preferenceStore, sharedImages, dialog);
         wizard.addPages();
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
