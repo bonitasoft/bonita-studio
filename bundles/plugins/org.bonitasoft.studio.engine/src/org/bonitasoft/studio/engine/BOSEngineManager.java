@@ -41,8 +41,11 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.extension.IEngineAction;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
+import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -319,6 +322,20 @@ public class BOSEngineManager {
             throws BonitaHomeNotSetException,
             ServerAPIException, UnknownAPITypeException {
         return TenantAPIAccessor.getTenantAdministrationAPI(session);
+    }
+
+    public APISession createSession(final AbstractProcess process, final String configurationId, final IProgressMonitor monitor) throws Exception {
+        final Configuration configuration = BarExporter.getInstance().getConfiguration(process, configurationId);
+        APISession session;
+        try {
+            session = BOSEngineManager.getInstance().loginTenant(configuration.getUsername(), configuration.getPassword(), monitor);
+        } catch (final Exception e1) {
+            throw new Exception(Messages.bind(Messages.loginFailed, new String[] { configuration.getUsername(), process.getName(), process.getVersion() }), e1);
+        }
+        if (session == null) {
+            throw new Exception(Messages.bind(Messages.loginFailed, new String[] { configuration.getUsername(), process.getName(), process.getVersion() }));
+        }
+        return session;
     }
 
 }
