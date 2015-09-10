@@ -56,22 +56,31 @@ public class FieldToContractInputMappingExpressionBuilder {
         this.expressionEditorService = expressionEditorService;
     }
 
-    public Expression toExpression(final BusinessObjectData data, final FieldToContractInputMapping mapping)
+    public Expression toExpression(final BusinessObjectData data, final FieldToContractInputMapping mapping, final boolean isOnPool)
             throws BusinessObjectInstantiationException, JavaModelException {
         final ContractInput contractInput = mapping.getContractInput();
         final MappingOperationScriptBuilder mappingOperationScriptBuilder = mapping.getScriptBuilder(data);
-        final Expression scriptExpression = ExpressionHelper.createGroovyScriptExpression(mappingOperationScriptBuilder.toScript(),
-                mapping.getFieldType());
-        addScriptDependencies(mappingOperationScriptBuilder, mapping.getContractInput(), data, scriptExpression);
+        final String script = getScriptText(isOnPool, mappingOperationScriptBuilder);
+        final Expression scriptExpression = ExpressionHelper.createGroovyScriptExpression(script, mapping.getFieldType());
+        addScriptDependencies(mappingOperationScriptBuilder, mapping.getContractInput(), data, scriptExpression, isOnPool);
         scriptExpression.setName(Joiner.on(".").join(toAncestorNameList().apply(contractInput)));
         return scriptExpression;
     }
 
+    protected String getScriptText(final boolean isOnPool, final MappingOperationScriptBuilder mappingOperationScriptBuilder)
+            throws BusinessObjectInstantiationException {
+        if (isOnPool) {
+            return mappingOperationScriptBuilder.toInstanciationScript();
+        } else {
+            return mappingOperationScriptBuilder.toScript();
+        }
+    }
+
     private void addScriptDependencies(final MappingOperationScriptBuilder scriptBuilder, final ContractInput contractInput, final BusinessObjectData data,
-            final Expression groovyScriptExpression) throws JavaModelException {
+            final Expression groovyScriptExpression, final boolean isOnPool) throws JavaModelException {
         groovyScriptExpression.getReferencedElements().add(
                 ExpressionHelper.createDependencyFromEObject(rootContractInput(contractInput)));
-        if (scriptBuilder.needsDataDependency()) {
+        if (scriptBuilder.needsDataDependency() && !isOnPool) {
             groovyScriptExpression.getReferencedElements().add(
                     ExpressionHelper.createDependencyFromEObject(data));
         }

@@ -61,6 +61,7 @@ import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
+import org.bonitasoft.studio.engine.operation.AbstractBonitaURLBuilder;
 import org.bonitasoft.studio.engine.operation.ApplicationURLBuilder;
 import org.bonitasoft.studio.form.preview.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
@@ -188,7 +189,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 
     protected void handleProcessForm(final IProgressMonitor monitor, final Configuration configuration, final AbstractProcess proc,
             final ExternalBrowserInstance browserInstance, final long procId) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
-        final ApplicationURLBuilder builder = new ApplicationURLBuilder(proc, configuration.getName(), procId);
+        final AbstractBonitaURLBuilder builder = new ApplicationURLBuilder(proc, configuration.getName(), procId);
         final URL url = builder.toURL(monitor);
         final OpenBrowserOperation openCmd = new OpenBrowserOperation(url);
         if (browser.getLocation() != null) {

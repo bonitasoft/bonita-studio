@@ -29,6 +29,7 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
+import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
@@ -36,6 +37,7 @@ import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
+import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -59,7 +61,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         mapping.toContractInput(aContractInput().withName("employee").withType(ContractInputType.COMPLEX).build());
         final BusinessObjectData businessObjectData = aBusinessData().withName("myEmployee").build();
         final Expression expression = expressionBuilder.toExpression(businessObjectData,
-                mapping);
+                mapping, false);
 
         ExpressionAssert.assertThat(expression)
                 .hasName("employee.address")
@@ -77,7 +79,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
         final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
         final Expression expression = expressionBuilder.toExpression(aBusinessData().withName("myEmployee").build(),
-                mapping);
+                mapping, false);
 
         ExpressionAssert.assertThat(expression)
                 .hasName("lastName")
@@ -98,7 +100,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         final BusinessObjectData data = aBusinessData().withName("myEmployee").build();
         final Expression expression = expressionBuilder.toExpression(data,
-                mapping);
+                mapping, false);
 
         ExpressionAssert.assertThat(expression)
                 .hasName("employee.lastName")
@@ -107,6 +109,26 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 .hasType(ExpressionConstants.SCRIPT_TYPE);
         assertThat(expression.getReferencedElements()).hasSize(1);
         ContractInputAssert.assertThat((ContractInput) expression.getReferencedElements().get(0)).hasName("employee");
+    }
+
+    @Test
+    public void should_not_add_businessVariable_dependency_forInitializationScript() throws JavaModelException, BusinessObjectInstantiationException {
+        final FieldToContractInputMappingExpressionBuilder expressionBuilder = new FieldToContractInputMappingExpressionBuilder(repositoryAccessor,
+                expressionEditorService);
+
+        final RelationField address = aCompositionField("address", aBO("Address").build());
+        final FieldToContractInputMapping mapping = aRelationMapping(address).build();
+        mapping.toContractInput(aContractInput().withName("employee").withType(ContractInputType.COMPLEX).build());
+        final BusinessObjectData businessObjectData = aBusinessData().withName("myEmployee").build();
+        final Expression expression = expressionBuilder.toExpression(businessObjectData,
+                mapping, true);
+
+        ExpressionAssert.assertThat(expression)
+                .hasName("employee.address")
+                .hasContent("def addressVar = myEmployee.address == null ? new Address() : myEmployee.address" + System.lineSeparator() + "return addressVar")
+                .hasReturnType("Address")
+                .hasType(ExpressionConstants.SCRIPT_TYPE);
+        assertThat(expression.getReferencedElements()).hasSize(1);
     }
 
 }

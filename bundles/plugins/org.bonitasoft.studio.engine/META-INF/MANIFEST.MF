@@ -75,6 +75,9 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.expression,
  org.bonitasoft.engine.operation,
  org.bonitasoft.engine.platform,
+ org.bonitasoft.engine.profile,
+ org.bonitasoft.engine.search,
+ org.bonitasoft.engine.search.impl,
  org.bonitasoft.engine.session,
  org.bonitasoft.engine.util
 

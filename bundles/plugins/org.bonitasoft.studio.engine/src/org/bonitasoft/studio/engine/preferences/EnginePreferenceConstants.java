@@ -39,6 +39,7 @@ public class EnginePreferenceConstants {
     public static final String REST_SERVER_ADDRESS_PROPERTY = BonitaConstants.REST_SERVER_ADDRESS_PROPERTY ;
     public static final String DEBUG_MODE = "debug";
     public static final String TOGGLE_STATE_FOR_NO_INITIATOR="toggleStateForNoInitiatorWarning";
+    public static final String TOGGLE_STATE_FOR_CONTRACT_AND_NOFORM_AND_INITIATOR = "TOGGLE_STATE_FOR_CONTRACT_AND_NOFORM_AND_INITIATOR";
     public static final String DROP_BUSINESS_DATA_DB_ON_EXIT_PREF = "DROP_BUSINESS_DATA_DB_ON_EXIT_PREF";
     public static final String DROP_BUSINESS_DATA_DB_ON_INSTALL = "DROP_BUSINESS_DATA_DB_ON_INSTALL";
 
