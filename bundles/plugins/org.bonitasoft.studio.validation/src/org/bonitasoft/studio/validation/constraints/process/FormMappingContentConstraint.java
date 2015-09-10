@@ -17,9 +17,13 @@ package org.bonitasoft.studio.validation.constraints.process;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
@@ -59,10 +63,15 @@ public class FormMappingContentConstraint extends AbstractLiveValidationMarkerCo
             if (formMapping.eContainer() instanceof MainProcess) {
                 return ctx.createFailureStatus(Messages.formMappingAtDiagramLevel_ModelInconsistency);
             } else {
-                return ctx.createFailureStatus(Messages.emptyFormMappingWarning);
+                return ctx.createFailureStatus(Messages.bind(Messages.emptyFormMappingWarning, formMappingType(formMapping)));
             }
         }
         return ctx.createSuccessStatus();
+    }
+
+    private String formMappingType(final FormMapping formMapping) {
+        return Objects.equals(formMapping.eContainingFeature(), ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING) ? Messages.overviewFormMapping
+                : formMapping.eContainer() instanceof Task ? Messages.entryFormMapping : Messages.instantiationFormMapping;
     }
 
     private IStatus doValidateURLMapping(final IValidationContext ctx, final FormMapping formMapping) {

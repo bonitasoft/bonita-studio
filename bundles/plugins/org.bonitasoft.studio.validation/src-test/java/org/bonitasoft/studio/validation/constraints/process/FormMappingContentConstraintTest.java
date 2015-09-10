@@ -16,6 +16,7 @@ package org.bonitasoft.studio.validation.constraints.process;
 
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
+import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,14 +31,27 @@ import org.junit.Test;
 public class FormMappingContentConstraintTest {
 
     @Test
-    public void should_fail_if_form_mapping_is_INTERNAL_and_has_no_target_form() throws Exception {
+    public void should_fail_if_form_mapping_is_INTERNAL_and_has_no_target_overview_form() throws Exception {
         final FormMappingContentConstraint internalFormMappingConstraint = new FormMappingContentConstraint();
 
-        final IValidationContext validationContext = aValidationContext(aFormMapping().withType(FormMappingType.INTERNAL).havingTargetForm(anExpression())
-                .build());
+        final IValidationContext validationContext = aValidationContext(aPool()
+                .havingOverviewFormMapping(aFormMapping().withType(FormMappingType.INTERNAL).havingTargetForm(anExpression()))
+                .build().getOverviewFormMapping());
         internalFormMappingConstraint.performBatchValidation(validationContext);
 
-        verify(validationContext).createFailureStatus(Messages.emptyFormMappingWarning);
+        verify(validationContext).createFailureStatus(Messages.bind(Messages.emptyFormMappingWarning, Messages.overviewFormMapping));
+    }
+
+    @Test
+    public void should_fail_if_form_mapping_is_INTERNAL_and_has_no_target_instantiation_form() throws Exception {
+        final FormMappingContentConstraint internalFormMappingConstraint = new FormMappingContentConstraint();
+
+        final IValidationContext validationContext = aValidationContext(aPool()
+                .havingFormMapping(aFormMapping().withType(FormMappingType.INTERNAL).havingTargetForm(anExpression()))
+                .build().getFormMapping());
+        internalFormMappingConstraint.performBatchValidation(validationContext);
+
+        verify(validationContext).createFailureStatus(Messages.bind(Messages.emptyFormMappingWarning, Messages.instantiationFormMapping));
     }
 
     @Test
