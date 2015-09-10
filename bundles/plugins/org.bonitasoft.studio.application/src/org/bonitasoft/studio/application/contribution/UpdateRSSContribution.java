@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011-2013 BonitaSoft S.A.
+ * Copyright (C) 2011-2015 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,10 +25,12 @@ import java.net.URLConnection;
 
 import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
+import org.osgi.framework.Version;
 
 /**
  * @author Romain Bioteau
@@ -136,28 +138,48 @@ public class UpdateRSSContribution implements IPreStartupContribution {
     public void execute() {
         new UpdateRSSThread(
                 "7-0-community",
-                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=163&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=2",
+                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=163&bos_redirect_product=bos&bos_redirect_major_version=" + getMajorVersion()
+                        + "&bos_redirect_minor_version=" + getMinorVersion(),
                 getClass()).start();
         new UpdateRSSThread(
                 "7-0-blogs",
-                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=152&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=2",
+                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=152&bos_redirect_product=bos&bos_redirect_major_version=" + getMajorVersion()
+                        + "&bos_redirect_minor_version=" + getMinorVersion(),
                 getClass()).start();
         new UpdateRSSThread(
                 "7-0-documentation",
-                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=158&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=2",
+                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=158&bos_redirect_product=bos&bos_redirect_major_version=" + getMajorVersion()
+                        + "&bos_redirect_minor_version=" + getMinorVersion(),
                 getClass()).start();
         new UpdateRSSThread(
                 "7-0-examples-community",
-                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=159&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=2",
+                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=159&bos_redirect_product=bos&bos_redirect_major_version=" + getMajorVersion()
+                        + "&bos_redirect_minor_version=" + getMinorVersion(),
                 getClass()).start();
         new UpdateRSSThread(
                 "7-0-training",
-                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=153&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=2",
+                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=153&bos_redirect_product=bos&bos_redirect_major_version=" + getMajorVersion()
+                        + "&bos_redirect_minor_version=" + getMinorVersion(),
                 getClass()).start();
         new UpdateRSSThread(
                 "7-0-videos-community",
-                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=154&bos_redirect_product=bos&bos_redirect_major_version=7.0&bos_redirect_minor_version=2",
+                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=154&bos_redirect_product=bos&bos_redirect_major_version=" + getMajorVersion()
+                        + "&bos_redirect_minor_version=" + getMinorVersion(),
                 getClass()).start();
+    }
+
+    protected Version getProductVersion() {
+        return new Version(ProductVersion.CURRENT_VERSION);
+    }
+
+    protected String getMajorVersion() {
+        final Version version = getProductVersion();
+        return version.getMajor() + "." + version.getMinor();
+    }
+
+    protected String getMinorVersion() {
+        final Version version = getProductVersion();
+        return Integer.toString(version.getMicro());
     }
 
     /*
