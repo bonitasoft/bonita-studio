@@ -46,7 +46,7 @@ public class BusinessObjectInitializerFactoryTest {
         final RelationField aCompositionField = aCompositionField("employee", aBO("Employee").build());
         final FieldToContractInputMapping mapping = aRelationMapping(aCompositionField)
                 .addChild(aSimpleMapping(aStringField("name").build())).build();
-        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mapping, aBusinessData().withName("employee").build());
+        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mapping, aBusinessData().withName("employee").build(), false);
 
         assertThat(propertyInitializer).isInstanceOf(NewBusinessObjectInitializer.class);
     }
@@ -60,7 +60,7 @@ public class BusinessObjectInitializerFactoryTest {
         final FieldToContractInputMapping mapping = FieldToContractInputMappingBuilder
                 .aRelationMapping(aCompositionField)
                 .addChild(aSimpleMapping(aStringField("name").build())).build();
-        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mapping, aBusinessData().withName("employee").build());
+        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mapping, aBusinessData().withName("employee").build(), false);
 
         assertThat(propertyInitializer).isInstanceOf(NewBusinessObjectListInitializer.class);
     }
@@ -71,7 +71,7 @@ public class BusinessObjectInitializerFactoryTest {
 
         final BusinessObject businessObject = aBO("Employee").withField(anAggregationField("country", aBO("Country").build())).build();
         final List<FieldToContractInputMapping> mappings = new FieldToContractInputMappingFactory().createMappingForBusinessObjectType(businessObject);
-        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mappings.get(0), aBusinessData().withName("employee").build());
+        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mappings.get(0), aBusinessData().withName("employee").build(), false);
 
         assertThat(propertyInitializer).isInstanceOf(BusinessObjectQueryInitializer.class);
     }
@@ -84,7 +84,7 @@ public class BusinessObjectInitializerFactoryTest {
         final BusinessObject businessObject = aBO("Employee").withField(anAggregationField).build();
         final List<FieldToContractInputMapping> mappings = new FieldToContractInputMappingFactory().createMappingForBusinessObjectType(businessObject);
         final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mappings.get(0), aBusinessData()
-                .withName("employee").build());
+                .withName("employee").build(), false);
 
         assertThat(propertyInitializer).isInstanceOf(MultipleBusinessObjectQueryInitializer.class);
     }

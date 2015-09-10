@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.contract.ui.wizard;
 
 import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -56,7 +55,6 @@ import org.eclipse.ui.ISharedImages;
  */
 public class ContractInputGenerationWizard extends Wizard {
 
-    static final String HIDE_GENERATION_SUCCESS_DIALOG = "SHOW_GENERATION_SUCCESS_DIALOG";
     private final EditingDomain editingDomain;
     private final ContractContainer contractContainer;
     private CreateContractInputFromBusinessObjectWizardPage contractInputFromBusinessObjectWizardPage;
@@ -68,6 +66,8 @@ public class ContractInputGenerationWizard extends Wizard {
     private final IPreferenceStore preferenceStore;
     private final ISharedImages sharedImagesService;
     private final FieldToContractInputMappingExpressionBuilder expressionBuilder;
+    private final ContractInputGenerationInfoDialogFactory infoDialogFactory;
+    private final GenerationOptions generationOptions;
 
     public ContractInputGenerationWizard(final ContractContainer contractContainer,
             final EditingDomain editingDomain,
@@ -75,10 +75,12 @@ public class ContractInputGenerationWizard extends Wizard {
             final FieldToContractInputMappingOperationBuilder operationBuilder,
             final FieldToContractInputMappingExpressionBuilder expressionBuilder,
             final IPreferenceStore preferenceStore,
-            final ISharedImages sharedImagesService) {
+            final ISharedImages sharedImagesService,
+            final ContractInputGenerationInfoDialogFactory infoDialogFactory) {
         setWindowTitle(Messages.contractInputGenerationTitle);
         setDefaultPageImageDescriptor(Pics.getWizban());
         this.contractContainer = contractContainer;
+        generationOptions = new GenerationOptions();
         this.editingDomain = editingDomain;
         this.repositoryAccessor = repositoryAccessor;
         fieldToContractInputMappingFactory = new FieldToContractInputMappingFactory();
@@ -86,6 +88,7 @@ public class ContractInputGenerationWizard extends Wizard {
         this.expressionBuilder = expressionBuilder;
         this.preferenceStore = preferenceStore;
         this.sharedImagesService = sharedImagesService;
+        this.infoDialogFactory = infoDialogFactory;
     }
 
     @Override
@@ -97,9 +100,8 @@ public class ContractInputGenerationWizard extends Wizard {
         }
         addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable,
                 repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)));
-        contractInputFromBusinessObjectWizardPage = new CreateContractInputFromBusinessObjectWizardPage(contractContainer.getContract(),
-                selectedDataObservable, fieldToContractInputMappingFactory, repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class),
-                sharedImagesService);
+        contractInputFromBusinessObjectWizardPage = new CreateContractInputFromBusinessObjectWizardPage(contractContainer.getContract(), generationOptions,
+                selectedDataObservable, fieldToContractInputMappingFactory, repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
         contractInputFromBusinessObjectWizardPage.setTitle();
         addPage(contractInputFromBusinessObjectWizardPage);
     }
@@ -130,28 +132,44 @@ public class ContractInputGenerationWizard extends Wizard {
         final BusinessObjectData data = (BusinessObjectData) selectedDataObservable.getValue();
         final RootContractInputGenerator contractInputGenerator = new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
                 contractInputFromBusinessObjectWizardPage.getMappings(), repositoryAccessor, operationBuilder, expressionBuilder);
-        try {
-            contractInputGenerator.build(data);
-        } catch (final OperationCreationException e) {
-            BonitaStudioLog.error("Failed to create Operations from contract", e);
-            new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e).open();
-            return false;
+        final int returnCode = openInfoDialog();
+        if (returnCode == MessageDialogWithToggle.OK || returnCode == ContractInputGenerationInfoDialogFactory.NOT_OPENED) {
+            try {
+                if (contractContainer instanceof Pool) {
+                    contractInputGenerator.buildForInstanciation(data);
+                } else {
+                    contractInputGenerator.build(data);
+                }
+            } catch (final OperationCreationException e) {
+                BonitaStudioLog.error("Failed to create Operations from contract", e);
+                new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e).open();
+                return false;
+            }
+            editingDomain.getCommandStack().execute(createCommand(contractInputGenerator, data));
+            openWarningDialog(contractInputGenerator.isAllAttributesGenerated());
+            return true;
         }
-        editingDomain.getCommandStack().execute(createCommand(contractInputGenerator, data));
-        openWarningDialog(contractInputGenerator.isAllAttributesGenerated());
-        openInfoDialog();
-        return true;
+        contractInputFromBusinessObjectWizardPage.disableAutoGeneration();
+        return false;
     }
 
-    protected CompoundCommand createCommand(final RootContractInputGenerator contractInputGenerator, final BusinessObjectData data) {
+    private int openInfoDialog() {
+        return infoDialogFactory.openInfoDialog(preferenceStore, getShell(), contractContainer,
+                generationOptions.isAutogeneratedScript());
+    }
+
+    protected CompoundCommand createCommand(final RootContractInputGenerator contractInputGenerator, final BusinessObjectData data
+            ) {
         final CompoundCommand cc = new CompoundCommand();
         cc.append(AddCommand.create(editingDomain, contractContainer.getContract(), ProcessPackage.Literals.CONTRACT__INPUTS,
                 contractInputGenerator.getRootContractInput()));
-        if (contractContainer instanceof OperationContainer && contractInputFromBusinessObjectWizardPage.getIsAutogeneratedOperation()) {
+
+        if (contractContainer instanceof OperationContainer
+                && generationOptions.isAutogeneratedScript()) {
             cc.appendIfCanExecute(AddCommand.create(editingDomain, contractContainer, ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS,
                     contractInputGenerator.getMappingOperations()));
         }
-        if (contractContainer instanceof Pool && contractInputFromBusinessObjectWizardPage.getIsAutogeneratedScript()) {
+        if (contractContainer instanceof Pool && generationOptions.isAutogeneratedScript()) {
             cc.appendIfCanExecute(SetCommand.create(editingDomain, data, ProcessPackage.Literals.DATA__DEFAULT_VALUE,
                     contractInputGenerator.getInitialValueExpression()));
 
@@ -159,25 +177,13 @@ public class ContractInputGenerationWizard extends Wizard {
         return cc;
     }
 
-    protected void openInfoDialog() {
-        if (contractContainer instanceof OperationContainer && isNullOrEmpty(preferenceStore.getString(HIDE_GENERATION_SUCCESS_DIALOG))) {
-            MessageDialogWithToggle.openInformation(getShell(),
-                    Messages.contractGenerationTitle,
-                    Messages.contractGenerationMsg,
-                    Messages.doNotShowMeAgain,
-                    false,
-                    preferenceStore,
-                    HIDE_GENERATION_SUCCESS_DIALOG);
-        }
-    }
-
     protected void openWarningDialog(final boolean allAttributesGenerated) {
         if (!allAttributesGenerated) {
             MessageDialog.openWarning(getShell(), Messages.notAllAttributesGeneratedTitle, Messages.notAllAttributesGeneratedMsg);
         }
     }
-    
-     /**
+
+    /**
      * @return
      */
     public CreateContractInputFromBusinessObjectWizardPage getContractInputFromBusinessObjectWizardPage() {

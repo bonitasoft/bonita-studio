@@ -150,6 +150,8 @@ public class Messages extends NLS {
     public static String updatePortWarningTitle;
 
     public static String buildingBar;
+    public static String contractButNoFormTitle;
+    public static String contractButNoFormMessage;
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$

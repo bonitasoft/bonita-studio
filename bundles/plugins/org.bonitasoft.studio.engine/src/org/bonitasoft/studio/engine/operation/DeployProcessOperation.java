@@ -48,7 +48,6 @@ import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.ui.dialog.ProcessEnablementProblemsDialog;
-import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.FormMappingType;
@@ -129,20 +128,6 @@ public class DeployProcessOperation {
         }
     }
 
-    protected APISession createSession(final AbstractProcess process, final IProgressMonitor monitor) throws Exception {
-        final Configuration configuration = BarExporter.getInstance().getConfiguration(process, configurationId);
-        APISession session;
-        try {
-            session = BOSEngineManager.getInstance().loginTenant(configuration.getUsername(), configuration.getPassword(), monitor);
-        } catch (final Exception e1) {
-            throw new Exception(Messages.bind(Messages.loginFailed, new String[] { configuration.getUsername(), process.getName(), process.getVersion() }), e1);
-        }
-        if (session == null) {
-            throw new Exception(Messages.bind(Messages.loginFailed, new String[] { configuration.getUsername(), process.getName(), process.getVersion() }));
-        }
-        return session;
-    }
-
     private IStatus enable(final IProgressMonitor monitor) {
         IStatus status = Status.CANCEL_STATUS;
         for (final Entry<AbstractProcess, Long> entry : processIdsMap.entrySet()) {
@@ -188,7 +173,7 @@ public class DeployProcessOperation {
         ProcessDefinition def = null;
         APISession session = null;
         try {
-            session = createSession(process, monitor);
+            session = BOSEngineManager.getInstance().createSession(process, configurationId, monitor);
             final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
             def = processApi.deploy(bar);
         } catch (final ProcessDeployException e) {
@@ -254,7 +239,7 @@ public class DeployProcessOperation {
     }
 
     protected IStatus enableProcess(final AbstractProcess process, final IProgressMonitor monitor) throws Exception {
-        final APISession session = createSession(process, monitor);
+        final APISession session = BOSEngineManager.getInstance().createSession(process, configurationId, monitor);
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
         final Long processDefinitionId = processIdsMap.get(process);
         try {
@@ -300,7 +285,7 @@ public class DeployProcessOperation {
     }
 
     protected void undeployProcess(final AbstractProcess process, final IProgressMonitor monitor) throws Exception {
-        final APISession session = createSession(process, monitor);
+        final APISession session = BOSEngineManager.getInstance().createSession(process, configurationId, monitor);
         try {
             final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
             final long nbDeployedProcesses = processApi.getNumberOfProcessDeploymentInfos();
@@ -388,6 +373,10 @@ public class DeployProcessOperation {
             final List<Problem> processResolutionProblems) {
         return new ProcessEnablementProblemsDialog(Display.getDefault().getActiveShell(), Messages.processEnableFailedMessage,
                 process, processResolutionProblems);
+    }
+
+    public long getProcessDefId(final AbstractProcess process) {
+        return processIdsMap.get(process);
     }
 
 }
