@@ -123,7 +123,6 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
                         new OpenBrowserOperation(url).execute();
                     } else {
                         if (hasContractOnInstanciation((Pool) processToRun)) {
-                            //TODO: with another message?
                             url = deployOperation.getUrlFor(processToRun, monitor);
                             redirectToPortalTaskListWhenContractAndNoFormAndInitiator();
                         } else {
@@ -140,6 +139,9 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
                     url = deployOperation.getUrlFor(processToRun, monitor);
                     redirectToPortalTaskListWhenNoInitiator();
                 }
+            } else {
+                //TODO: remove this use case which is used only in tests
+                url = deployOperation.getUrlFor(processToRun, monitor);
             }
         } catch (final Exception e) {
             status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
