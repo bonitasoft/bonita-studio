@@ -88,7 +88,7 @@ public class SelectBusinessDataWizardPage extends WizardPage {
         final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(businessDataTableViewer);
         dbc.bindValue(observeSingleSelection, selectedDataObservable);
 
-        final MultiValidator multiValidator = new BusinessDataSelectedValidator(availableBusinessData, selectedDataObservable);
+        final MultiValidator multiValidator = new BusinessDataSelectedValidator(availableBusinessData, selectedDataObservable, businessObjectStore);
         dbc.addValidationStatusProvider(multiValidator);
         WizardPageSupport.create(this, dbc);
     }
