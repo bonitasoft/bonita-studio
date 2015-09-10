@@ -284,8 +284,9 @@ public class FormPreviewOperation implements IRunnableWithProgress {
     }
 
     protected void undeployProcess(final ProcessAPI processApi, final ProcessDeploymentInfo info) throws ProcessDefinitionNotFoundException, DeletionException {
-        if (info.getName().equals(lastProcessDeployed) && info.getVersion().equals(formPreviewInit.VERSION)) {
+        if (info.getName().equals(lastProcessDeployed) && info.getVersion().equals(AbstractFormPreviewInitialization.VERSION)) {
             try {
+                processApi.deleteProcessInstances(info.getProcessId(), 0, 10);
                 if (processApi.getProcessDeploymentInfo(info.getProcessId()).getActivationState() == ActivationState.ENABLED) {
                     processApi.disableProcess(info.getProcessId());
                 }
