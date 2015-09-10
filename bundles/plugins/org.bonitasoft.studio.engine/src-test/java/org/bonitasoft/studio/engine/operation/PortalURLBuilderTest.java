@@ -19,7 +19,6 @@ package org.bonitasoft.studio.engine.operation;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
@@ -88,7 +87,6 @@ public class PortalURLBuilderTest {
     @Test
     public void shouldGetConfigurationReturnNull() {
         doCallRealMethod().when(portalURLBuilder).getConfiguration();
-        doNothing().when(portalURLBuilder).initConfigurationId();
 
         assertThat(portalURLBuilder.getConfiguration()).isNull();
     }
