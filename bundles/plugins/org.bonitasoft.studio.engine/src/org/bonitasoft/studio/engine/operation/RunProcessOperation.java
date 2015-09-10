@@ -180,7 +180,7 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
                             Messages.dontaskagain,
                             false,
                             preferenceStore,
-                            EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR);
+                            togglePreference);
                 }
 
             }
