@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.form.preview;
@@ -41,6 +39,8 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.JavaType;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -53,27 +53,21 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.internal.browser.IBrowserDescriptor;
 
 /**
- *@Author Aur�lie Zara
- *
- *
+ * @Author Aur�lie Zara
  */
 public abstract class AbstractFormPreviewInitialization {
-
 
     protected Form form;
     protected Form formCopy;
     protected ApplicationLookNFeelFileStore lookNFeel;
     protected IBrowserDescriptor browser;
-    public static final String VERSION ="1.0";
+    public static final String VERSION = "1.0";
     private static final String EMPTY_LIST = "empty_list";
-    private static final String GROOVY_SCRIPT_EMPTY_LIST= "[]";
+    private static final String GROOVY_SCRIPT_EMPTY_LIST = "[]";
     protected boolean isOnTask = false;
     protected boolean canPreview = true;
 
-
-
-
-    public AbstractFormPreviewInitialization(final Form form,final ApplicationLookNFeelFileStore lookNFeel,final IBrowserDescriptor browser) {
+    public AbstractFormPreviewInitialization(final Form form, final ApplicationLookNFeelFileStore lookNFeel, final IBrowserDescriptor browser) {
         this.form = form;
         this.lookNFeel = lookNFeel;
         this.browser = browser;
@@ -81,28 +75,29 @@ public abstract class AbstractFormPreviewInitialization {
         initializeAllWidgets(formCopy);
     }
 
-
-    public AbstractProcess createAbstractProcess(final Configuration configuration){
+    public AbstractProcess createAbstractProcess(final Configuration configuration) {
         final AbstractProcess proc = ProcessFactory.eINSTANCE.createPool();
-        proc.setName(form.getName()+" preview");
+        proc.setName(form.getName() + " preview");
         proc.setVersion(VERSION);
-        if (lookNFeel !=null && lookNFeel.getName()!=null){
+        final FormMapping formMapping = ProcessFactory.eINSTANCE.createFormMapping();
+        formMapping.setType(FormMappingType.LEGACY);
+        proc.setFormMapping(formMapping);
+        if (lookNFeel != null && lookNFeel.getName() != null) {
             proc.setBasedOnLookAndFeel(lookNFeel.getName());
         }
-        final Element parent =ModelHelper.getParentFlowElement(form);
-        if (parent ==null){
+        final Element parent = ModelHelper.getParentFlowElement(form);
+        if (parent == null) {
             proc.getForm().add(formCopy);
             initializeProcessActor(configuration, proc);
         } else {
-            if (parent instanceof Task){
-                initializeTask(parent,proc,configuration);
+            if (parent instanceof Task) {
+                initializeTask(parent, proc, configuration);
             }
         }
         configuration.setUsername(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
         configuration.setPassword("bpm");
         return proc;
     }
-
 
     /**
      * @param configuration
@@ -122,7 +117,6 @@ public abstract class AbstractFormPreviewInitialization {
         }
     }
 
-
     /**
      * @param parentProcess
      */
@@ -138,24 +132,26 @@ public abstract class AbstractFormPreviewInitialization {
         });
     }
 
-
-    private void initializeTask(final Element parent,final AbstractProcess proc, final Configuration configuration){
+    protected Task initializeTask(final Element parent, final AbstractProcess proc, final Configuration configuration) {
         final AbstractProcess parentProc = ModelHelper.getParentProcess(parent);
-        final Task task= ProcessFactory.eINSTANCE.createTask();
-        task.setName(((Task)parent).getName());
+        final Task task = ProcessFactory.eINSTANCE.createTask();
+        task.setName(((Task) parent).getName());
         task.getForm().add(formCopy);
+        final FormMapping formMapping = ProcessFactory.eINSTANCE.createFormMapping();
+        formMapping.setType(FormMappingType.LEGACY);
+        task.setFormMapping(formMapping);
         if (!parentProc.getActors().isEmpty()) {
             copyActors(parentProc, proc);
 
             if (((Task) parent).getActor() != null) {
-                addActorToTask(task,((Task)parent).getActor());
+                addActorToTask(task, ((Task) parent).getActor());
             } else {
-                if(ModelHelper.getParentContainer(parent) instanceof Lane){
+                if (ModelHelper.getParentContainer(parent) instanceof Lane) {
                     final Lane lane = ModelHelper.getParentLane(parent);
-                    final Actor actorCopy=addActorToTask(task,lane.getActor());
+                    final Actor actorCopy = addActorToTask(task, lane.getActor());
                     proc.getActors().add(actorCopy);
                 } else {
-                    canPreview=false;
+                    canPreview = false;
                     openNoActorErrorMessage(task);
                 }
 
@@ -168,24 +164,24 @@ public abstract class AbstractFormPreviewInitialization {
             canPreview = false;
             openNoActorErrorMessage(task);
         }
+        return task;
     }
 
-
-    private Actor addActorToTask(final Task task,final Actor actor){
+    private Actor addActorToTask(final Task task, final Actor actor) {
         final Actor actorCopy = EcoreUtil.copy(actor);
         actorCopy.setInitiator(true);
         task.setActor(actorCopy);
         return actorCopy;
     }
 
-
     protected void setActorMapping(final AbstractProcess proc, final Configuration previewConfiguration) {
-        final ProcessConfigurationRepositoryStore configurationStore =  RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+        final ProcessConfigurationRepositoryStore configurationStore = RepositoryManager.getInstance().getRepositoryStore(
+                ProcessConfigurationRepositoryStore.class);
         final String id = ModelHelper.getEObjectID(proc);
-        final ProcessConfigurationFileStore configurationFileStore = configurationStore.getChild(id+".conf");
+        final ProcessConfigurationFileStore configurationFileStore = configurationStore.getChild(id + ".conf");
         final Configuration configuration = configurationFileStore.getContent();
         ActorMappingsType actorMapping = EcoreUtil.copy(configuration.getActorMappings());
-        if (actorMapping==null){
+        if (actorMapping == null) {
             //MessageDialog.openError(Display.getCurrent().getActiveShell(),Messages.noActorMappingDefinedTitle ,  Messages.noActorMappingDefined);
             //canPreview = false;
             actorMapping = ActorMappingFactory.eINSTANCE.createActorMappingsType();
@@ -199,7 +195,7 @@ public abstract class AbstractFormPreviewInitialization {
             newMapping.setRoles(ActorMappingFactory.eINSTANCE.createRoles());
             actorMapping.getActorMapping().add(newMapping);
         } else {
-            for(final ActorMapping mapping : actorMapping.getActorMapping()){
+            for (final ActorMapping mapping : actorMapping.getActorMapping()) {
                 mapping.getMemberships().getMembership().clear();
                 mapping.getGroups().getGroup().clear();
                 mapping.getUsers().getUser().clear();
@@ -211,11 +207,11 @@ public abstract class AbstractFormPreviewInitialization {
 
     }
 
-    private void initializeForm(){
+    private void initializeForm() {
         formCopy = EcoreUtil.copy(form);
         final List<Expression> exprs = ModelHelper.getAllItemsOfType(formCopy, ExpressionPackage.Literals.EXPRESSION);
-        for (Expression expr:exprs){
-            expr = initializeExpression(form,expr);
+        for (Expression expr : exprs) {
+            expr = initializeExpression(form, expr);
         }
         formCopy.getData().clear();
         formCopy.getKpis().clear();
@@ -226,15 +222,15 @@ public abstract class AbstractFormPreviewInitialization {
 
     protected abstract void initializeAllWidgets(Form formCopy);
 
-    private Expression initializeExpression(final Form form,final Expression expr){
-        if (ExpressionConstants.VARIABLE_TYPE.equals(expr.getType())){
+    private Expression initializeExpression(final Form form, final Expression expr) {
+        if (ExpressionConstants.VARIABLE_TYPE.equals(expr.getType())) {
             handleVariableExpression(form, expr);
-        } else if (ExpressionConstants.PARAMETER_TYPE.equals(expr.getType())){
+        } else if (ExpressionConstants.PARAMETER_TYPE.equals(expr.getType())) {
             handleParameterExpression(expr);
-        } else if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())){
+        } else if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())) {
             handleScriptExpression(expr);
         }
-        else if(!ExpressionConstants.CONSTANT_TYPE.equals(expr.getType())){
+        else if (!ExpressionConstants.CONSTANT_TYPE.equals(expr.getType())) {
             toEmptyConstantExpression(expr);
         }
         return expr;
@@ -247,41 +243,40 @@ public abstract class AbstractFormPreviewInitialization {
         expr.getReferencedElements().clear();
     }
 
-
     protected void handleParameterExpression(final Expression expr) {
         final Parameter parameter = (Parameter) expr.getReferencedElements().get(0);
         expr.setType(ExpressionConstants.CONSTANT_TYPE);
         expr.setContent(parameter.getValue());
     }
 
-
-    protected void handleScriptExpression(final Expression expr){
-        if (expr.getReferencedElements()==null || expr.getReferencedElements().isEmpty()){
-            if (EMPTY_LIST.equals(expr.getName()) && GROOVY_SCRIPT_EMPTY_LIST.equals(expr.getContent())){
+    protected void handleScriptExpression(final Expression expr) {
+        if (expr.getReferencedElements() == null || expr.getReferencedElements().isEmpty()) {
+            if (EMPTY_LIST.equals(expr.getName()) && GROOVY_SCRIPT_EMPTY_LIST.equals(expr.getContent())) {
                 toEmptyConstantExpression(expr);
             }
-        } if (expr.getReferencedElements()!=null && !expr.getReferencedElements().isEmpty()){
+        }
+        if (expr.getReferencedElements() != null && !expr.getReferencedElements().isEmpty()) {
             toEmptyConstantExpression(expr);
         }
     }
 
     protected void handleVariableExpression(final Form form, final Expression expr) {
         final Data data = getReferencedData(form, expr);
-        if (data !=null && data.getDefaultValue()!=null && data.getDefaultValue().getContent()!=null && !data.getDefaultValue().getContent().isEmpty()){
+        if (data != null && data.getDefaultValue() != null && data.getDefaultValue().getContent() != null && !data.getDefaultValue().getContent().isEmpty()) {
             if (data.getDataType() instanceof JavaType) {
                 expr.setType(ExpressionConstants.SCRIPT_TYPE);
                 expr.setInterpreter(ExpressionConstants.GROOVY);
-                if (data.getDefaultValue().getReferencedElements().isEmpty()){
+                if (data.getDefaultValue().getReferencedElements().isEmpty()) {
                     expr.setContent(data.getDefaultValue().getContent());
                     expr.getReferencedElements().clear();
                 } else {
                     toEmptyConstantExpression(expr);
                 }
-            } else if (data.getDataType() instanceof XMLData){
+            } else if (data.getDataType() instanceof XMLData) {
                 toEmptyConstantExpression(expr);
             } else {
                 final String defaultValueType = data.getDefaultValue().getType();
-                if (defaultValueType.equals(ExpressionConstants.SCRIPT_TYPE) || defaultValueType.equals(ExpressionConstants.CONSTANT_TYPE)  ){
+                if (defaultValueType.equals(ExpressionConstants.SCRIPT_TYPE) || defaultValueType.equals(ExpressionConstants.CONSTANT_TYPE)) {
                     expr.setType(data.getDefaultValue().getType());
                     expr.setInterpreter(data.getDefaultValue().getInterpreter());
                     expr.setContent(data.getDefaultValue().getContent());
@@ -295,27 +290,26 @@ public abstract class AbstractFormPreviewInitialization {
         }
     }
 
-    private Data getReferencedData(final Form form,final Expression expr){
+    private Data getReferencedData(final Form form, final Expression expr) {
         final List<Data> datas = ModelHelper.getAccessibleData(form, true);
-        for (final Data data:datas){
-            if (data.getName().equals(expr.getName())){
+        for (final Data data : datas) {
+            if (data.getName().equals(expr.getName())) {
                 return data;
             }
         }
         return null;
     }
 
-
-    private void copyActors(final AbstractProcess proc,final AbstractProcess procCopy){
+    private void copyActors(final AbstractProcess proc, final AbstractProcess procCopy) {
         final List<Actor> actors = proc.getActors();
-        for (final Actor actor:actors){
+        for (final Actor actor : actors) {
             procCopy.getActors().add(EcoreUtil.copy(actor));
         }
     }
 
-    protected void deleteAllOperations(final Widget widget){
+    protected void deleteAllOperations(final Widget widget) {
         final List<Operation> operations = ModelHelper.getAllItemsOfType(widget, ExpressionPackage.Literals.OPERATION);
-        for (final Operation operation:operations){
+        for (final Operation operation : operations) {
             EcoreUtil.delete(operation);
         }
     }
@@ -327,14 +321,12 @@ public abstract class AbstractFormPreviewInitialization {
         return form;
     }
 
-
     /**
      * @return the formCopy
      */
     public Form getFormCopy() {
         return formCopy;
     }
-
 
     /**
      * @return the lookNFeel
@@ -343,14 +335,12 @@ public abstract class AbstractFormPreviewInitialization {
         return lookNFeel;
     }
 
-
     /**
      * @return the browser
      */
     public IBrowserDescriptor getBrowser() {
         return browser;
     }
-
 
     /**
      * @return the isOnTask
@@ -359,14 +349,11 @@ public abstract class AbstractFormPreviewInitialization {
         return isOnTask;
     }
 
-
     /**
      * @return the canPreview
      */
     public boolean isCanPreview() {
         return canPreview;
     }
-
-
 
 }

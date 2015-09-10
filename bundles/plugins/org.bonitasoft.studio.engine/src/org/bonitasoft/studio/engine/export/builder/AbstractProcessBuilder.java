@@ -282,7 +282,7 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
      * @param iteratorExpression
      */
     protected void addIteratorToContext(final Object contextBuilder, final Task task, final org.bonitasoft.studio.model.expression.Expression iteratorExpression) {
-        if (ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(iteratorExpression.getType())
+        if (iteratorExpression != null && ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(iteratorExpression.getType())
                 && iteratorExpression.getName() != null
                 && !iteratorExpression.getName().isEmpty()
                 && task instanceof DataAware) {
