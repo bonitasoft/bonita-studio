@@ -63,7 +63,7 @@ public class FieldToContractInputMappingExpressionBuilder {
         final String script = getScriptText(isOnPool, mappingOperationScriptBuilder);
         final Expression scriptExpression = ExpressionHelper.createGroovyScriptExpression(script, mapping.getFieldType());
         addScriptDependencies(mappingOperationScriptBuilder, mapping.getContractInput(), data, scriptExpression, isOnPool);
-        scriptExpression.setName(Joiner.on(".").join(toAncestorNameList().apply(contractInput)));
+        setGroovyScriptName(scriptExpression, data, contractInput, isOnPool);
         return scriptExpression;
     }
 
@@ -73,6 +73,14 @@ public class FieldToContractInputMappingExpressionBuilder {
             return mappingOperationScriptBuilder.toInstanciationScript();
         } else {
             return mappingOperationScriptBuilder.toScript();
+        }
+    }
+
+    private void setGroovyScriptName(final Expression scriptExpression, final BusinessObjectData data, final ContractInput contractInput, final boolean isOnPool) {
+        if (isOnPool) {
+            scriptExpression.setName("init" + data.getName().substring(0, 1).toUpperCase() + data.getName().substring(1) + "()");
+        } else {
+            scriptExpression.setName(Joiner.on(".").join(toAncestorNameList().apply(contractInput)));
         }
     }
 
