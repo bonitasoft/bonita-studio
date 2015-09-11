@@ -47,7 +47,7 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
         scriptBuilder.append(" = ");
         listConstructor(scriptBuilder, businessObject);
 
-        if (shouldAppendExistingObjects()) {
+        if (canAppendExistingObjects()) {
             appendExistingBusinessObjects(scriptBuilder, businessObject);
         }
 
@@ -61,7 +61,7 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
         scriptBuilder.append(System.lineSeparator());
     }
 
-    protected boolean shouldAppendExistingObjects() {
+    protected boolean canAppendExistingObjects() {
         return contractInput.eContainer() != null && !isOnPool;
     }
 
@@ -122,7 +122,8 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
     }
 
     protected void appendExistingBusinessObjects(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
-        addCommentLine(scriptBuilder, String.format("Append existing %s", getLast(Splitter.on(".").split(refName))));
+        addCommentLine(scriptBuilder, String.format("Uncomment line below to append existing %s", getLast(Splitter.on(".").split(refName))));
+        scriptBuilder.append("//");
         scriptBuilder.append(listVarName(businessObject));
         scriptBuilder.append(".addAll(");
         scriptBuilder.append(refName);

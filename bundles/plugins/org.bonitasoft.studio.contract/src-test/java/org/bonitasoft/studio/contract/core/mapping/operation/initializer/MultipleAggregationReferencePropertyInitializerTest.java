@@ -50,8 +50,8 @@ public class MultipleAggregationReferencePropertyInitializerTest {
 
         assertThat(initialValue).isEqualTo("{" + System.lineSeparator()
                 + "def employeeList = []" + System.lineSeparator()
-                + "//Append existing emp" + System.lineSeparator()
-                + "employeeList.addAll(emp)" + System.lineSeparator()
+                + "//Uncomment line below to append existing emp" + System.lineSeparator()
+                + "//employeeList.addAll(emp)" + System.lineSeparator()
                 + "//For each item collected in multiple input" + System.lineSeparator()
                 + "employees.each{" + System.lineSeparator()
                 + "//Add aggregated Employee instance" + System.lineSeparator()
