@@ -169,7 +169,7 @@ public class RootContractInputGeneratorTest {
         rootContractInputGenerator.build(businessObjectData);
 
         final ArgumentCaptor<FieldToContractInputMapping> argumentCaptor = ArgumentCaptor.forClass(FieldToContractInputMapping.class);
-        verify(expressionBuilder).toExpression(eq(businessObjectData), argumentCaptor.capture());
+        verify(expressionBuilder).toExpression(eq(businessObjectData), argumentCaptor.capture(), eq(false));
         final FieldToContractInputMapping fieldToContractInputMapping = argumentCaptor.getValue();
         assertThat(fieldToContractInputMapping.getField().getName()).isEqualTo("rootInputName");
         assertThat(fieldToContractInputMapping.getField().isCollection()).isFalse();
@@ -192,7 +192,7 @@ public class RootContractInputGeneratorTest {
         rootContractInputGenerator.build(businessObjectData);
 
         final ArgumentCaptor<FieldToContractInputMapping> argumentCaptor = ArgumentCaptor.forClass(FieldToContractInputMapping.class);
-        verify(expressionBuilder).toExpression(eq(businessObjectData), argumentCaptor.capture());
+        verify(expressionBuilder).toExpression(eq(businessObjectData), argumentCaptor.capture(), eq(false));
         final FieldToContractInputMapping fieldToContractInputMapping = argumentCaptor.getValue();
         assertThat(fieldToContractInputMapping.getField().getName()).isEqualTo("rootInputName");
         assertThat(fieldToContractInputMapping.getField().isCollection()).isTrue();

@@ -36,6 +36,7 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -495,9 +496,17 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
 
     public void clear() {
         try {
-            for (final IResource toDelete : getResourcesApplicationFolder().members()) {
-                toDelete.delete(true, Repository.NULL_PROGRESS_MONITOR);
-            }
+            getResourcesApplicationFolder().accept(new IResourceVisitor() {
+
+                @Override
+                public boolean visit(IResource resource) throws CoreException {
+                    if (resource instanceof IFile) {
+                        resource.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                        BonitaStudioLog.debug(resource.getName() + " has been deleted.", Activator.PLUGIN_ID);
+                    }
+                    return true;
+                }
+            });
             deleteIfExists(getConfirmationTemplate());
             deleteIfExists(getConsultationTemplate());
             deleteIfExists(getErrorTemplate());
