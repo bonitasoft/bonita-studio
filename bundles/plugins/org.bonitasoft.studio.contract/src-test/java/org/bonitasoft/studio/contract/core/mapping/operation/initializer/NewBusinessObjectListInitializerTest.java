@@ -43,8 +43,8 @@ public class NewBusinessObjectListInitializerTest {
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX).multiple()
                                 .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX))).build()));
         assertThat(propertyInitializer.getInitialValue()).isEqualTo("def addressList = []" + System.lineSeparator()
-                + "//Append existing myAddresses" + System.lineSeparator()
-                + "addressList.addAll(myAddresses)" + System.lineSeparator()
+                + "//Uncomment line below to append existing myAddresses" + System.lineSeparator()
+                + "//addressList.addAll(myAddresses)" + System.lineSeparator()
                 + "//For each item collected in multiple input" + System.lineSeparator()
                 + "employee.address.each{" + System.lineSeparator()
                 + "//Add a new composed Address instance" + System.lineSeparator()
