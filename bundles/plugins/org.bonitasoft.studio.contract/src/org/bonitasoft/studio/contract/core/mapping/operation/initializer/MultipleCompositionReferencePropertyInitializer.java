@@ -20,6 +20,7 @@ import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.wit
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
@@ -30,8 +31,8 @@ public class MultipleCompositionReferencePropertyInitializer extends NewBusiness
 
     public MultipleCompositionReferencePropertyInitializer(final BusinessObject parentBusinessObject, final RelationField field,
             final ContractInput contractInput,
-            final String refName, final boolean isOnPool) {
-        super(field, contractInput, refName, isOnPool);
+            final String refName, VariableNameResolver variableNameResolver, final boolean isOnPool) {
+        super(field, contractInput, refName, variableNameResolver, isOnPool);
         this.parentBusinessObject = parentBusinessObject;
     }
 

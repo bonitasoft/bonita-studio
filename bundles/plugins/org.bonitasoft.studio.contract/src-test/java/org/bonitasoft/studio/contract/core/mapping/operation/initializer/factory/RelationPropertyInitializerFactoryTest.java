@@ -29,6 +29,7 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.AggregationReferencePropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.CompositionReferencePropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IPropertyInitializer;
@@ -98,7 +99,7 @@ public class RelationPropertyInitializerFactoryTest {
     }
 
     private RelationPropertyInitializerFactory newFactory() {
-        return new RelationPropertyInitializerFactory();
+        return new RelationPropertyInitializerFactory(new VariableNameResolver());
     }
 
 }

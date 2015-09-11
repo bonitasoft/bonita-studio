@@ -25,6 +25,7 @@ import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Test;
 
@@ -44,7 +45,8 @@ public class MultipleAggregationReferencePropertyInitializerTest {
 
         final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(null, employeeBo,
                 employeesField, aContractInput().withName("persistenceId")
-                        .in(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()).build(), "emp", false);
+                        .in(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()).build(),
+                "emp", new VariableNameResolver(), false);
 
         final String initialValue = initializer.getInitialValue();
 
@@ -77,7 +79,8 @@ public class MultipleAggregationReferencePropertyInitializerTest {
 
         final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(null, employeeBo,
                 employeesField, aContractInput().withName("persistenceId")
-                        .in(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()).build(), "emp", true);
+                        .in(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()).build(),
+                "emp", new VariableNameResolver(), true);
 
         final String initialValue = initializer.getInitialValue();
 
@@ -112,7 +115,8 @@ public class MultipleAggregationReferencePropertyInitializerTest {
                 employeesField,
                 aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()
                         .havingInput(aContractInput().withName("persistenceId"))
-                        .in(aContractInput().withName("direcotries").withType(ContractInputType.COMPLEX).multiple()).build(), "emp", false);
+                        .in(aContractInput().withName("direcotries").withType(ContractInputType.COMPLEX).multiple()).build(),
+                "emp", new VariableNameResolver(), false);
 
         final String initialValue = initializer.getInitialValue();
 

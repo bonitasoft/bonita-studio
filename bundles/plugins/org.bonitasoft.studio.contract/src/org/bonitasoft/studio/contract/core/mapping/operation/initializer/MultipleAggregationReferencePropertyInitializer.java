@@ -20,6 +20,7 @@ import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.wit
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
@@ -30,8 +31,8 @@ public class MultipleAggregationReferencePropertyInitializer extends MultipleBus
 
     public MultipleAggregationReferencePropertyInitializer(final BusinessObject multipleParentBusinessObject, final BusinessObject businessObject,
             final RelationField field,
-            final ContractInput contractInput, final String refName, final boolean isOnPool) {
-        super(businessObject, field, contractInput, refName, isOnPool);
+            final ContractInput contractInput, final String refName, VariableNameResolver variableNameResolver, final boolean isOnPool) {
+        super(businessObject, field, contractInput, refName, variableNameResolver, isOnPool);
         this.multipleParentBusinessObject = multipleParentBusinessObject;
     }
 
