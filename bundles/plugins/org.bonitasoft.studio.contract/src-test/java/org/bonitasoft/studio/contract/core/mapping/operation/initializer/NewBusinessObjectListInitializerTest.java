@@ -24,6 +24,7 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Test;
 
@@ -37,7 +38,8 @@ public class NewBusinessObjectListInitializerTest {
                 businessObject);
         addressField.setCollection(true);
         final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(addressField, aContractInput().withName("address")
-                .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build(), "myAddresses", false);
+                .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build(), "myAddresses", new VariableNameResolver(),
+                false);
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX).multiple()
@@ -65,7 +67,8 @@ public class NewBusinessObjectListInitializerTest {
                 businessObject);
         addressField.setCollection(true);
         final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(addressField, aContractInput().withName("address")
-                .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build(), "myAddresses", true);
+                .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build(), "myAddresses", new VariableNameResolver(),
+                true);
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX).multiple()
@@ -91,7 +94,7 @@ public class NewBusinessObjectListInitializerTest {
                 businessObject);
         addressField.setCollection(true);
         final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(addressField, aContractInput().withName("addresses")
-                .multiple().build(), "myAddress", false);
+                .multiple().build(), "myAddress", new VariableNameResolver(), false);
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX).multiple()

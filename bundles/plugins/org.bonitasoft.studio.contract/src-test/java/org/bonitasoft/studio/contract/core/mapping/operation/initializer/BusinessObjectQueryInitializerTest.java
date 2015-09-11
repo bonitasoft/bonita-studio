@@ -20,6 +20,7 @@ import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aStringFie
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.anAggregationField;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class BusinessObjectQueryInitializerTest {
         final BusinessObjectQueryInitializer initializer = new BusinessObjectQueryInitializer(null, anAggregationField("country", aBO("org.test.Country")
                 .build()),
                 aContractInput().withName("countryInput").withType(ContractInputType.COMPLEX).havingInput(aContractInput().withName("persistenceId")).build(),
-                "myCountry");
+                "myCountry", new VariableNameResolver());
 
         initializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(null, aStringField("persistenceId").build(),
                 aContractInput().withName("persistenceId").in(aContractInput().withName("countryInput").withType(ContractInputType.COMPLEX)).build()));
@@ -59,6 +60,6 @@ public class BusinessObjectQueryInitializerTest {
                 aContractInput()
                         .withName("notPersistenceId")
                         .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()).build(),
-                "myData.employees");
+                "myData.employees", new VariableNameResolver());
     }
 }

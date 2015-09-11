@@ -21,6 +21,7 @@ import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Test;
 
@@ -34,7 +35,7 @@ public class MultipleCompositionReferencePropertyInitializerTest {
                 aContractInput().withName("addresses").multiple()
                         .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX))
                         .build(),
-                "employee", false);
+                "employee", new VariableNameResolver(), false);
 
         assertThat(initializer.getInitialValue()).isEqualTo("{" + System.lineSeparator()
                 + "def addressList = []" + System.lineSeparator()
@@ -59,7 +60,7 @@ public class MultipleCompositionReferencePropertyInitializerTest {
                 aContractInput().withName("addresses").multiple()
                         .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX))
                         .build(),
-                "employee", true);
+                "employee", new VariableNameResolver(), true);
 
         assertThat(initializer.getInitialValue()).isEqualTo("{" + System.lineSeparator()
                 + "def addressList = []" + System.lineSeparator()
@@ -83,7 +84,7 @@ public class MultipleCompositionReferencePropertyInitializerTest {
                 aContractInput().withName("addresses").multiple()
                         .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple())
                         .build(),
-                "employee", false);
+                "employee", new VariableNameResolver(), false);
 
         assertThat(initializer.getInitialValue()).isEqualTo("{" + System.lineSeparator()
                 + "def addressList = []" + System.lineSeparator()

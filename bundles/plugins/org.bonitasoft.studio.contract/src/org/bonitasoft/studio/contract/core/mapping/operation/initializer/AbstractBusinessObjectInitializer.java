@@ -23,11 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.engine.bdm.BDMQueryUtil;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -37,10 +37,12 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
     protected final RelationField field;
     protected final List<IPropertyInitializer> propertyInitializers = new ArrayList<IPropertyInitializer>();
     protected final String refName;
+    protected final VariableNameResolver variableNameResolver;
 
-    public AbstractBusinessObjectInitializer(final RelationField field, final String refName) {
+    public AbstractBusinessObjectInitializer(final RelationField field, final String refName, VariableNameResolver variableNameResolver) {
         this.field = field;
         this.refName = refName;
+        this.variableNameResolver = variableNameResolver;
     }
 
     public void addPropertyInitializer(final IPropertyInitializer propertyInitializer) {
@@ -59,17 +61,18 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
 
         final StringBuilder scriptBuilder = new StringBuilder();
         addCommentBeforeConstructor(scriptBuilder, businessObject);
-        delcareVariable(scriptBuilder, varName(businessObject));
+        final String varName = variableNameResolver.newVarName(businessObject);
+        delcareVariable(scriptBuilder, varName);
         scriptBuilder.append(" = ");
         constructor(scriptBuilder, businessObject, checkExistence());
 
         scriptBuilder.append(System.lineSeparator());
 
         for (final IPropertyInitializer propertyInitializer : propertyInitializers) {
-            initializeProperty(scriptBuilder, propertyInitializer, businessObject);
+            initializeProperty(scriptBuilder, propertyInitializer, varName);
         }
 
-        returnVar(scriptBuilder, businessObject);
+        returnVar(scriptBuilder, varName);
         return scriptBuilder.toString();
     }
 
@@ -86,9 +89,10 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
         }
     }
 
-    protected void initializeProperty(final StringBuilder scriptBuilder, final IPropertyInitializer propertyInitializer, final BusinessObject businessObject)
+    protected void initializeProperty(final StringBuilder scriptBuilder, final IPropertyInitializer propertyInitializer,
+            final String varName)
             throws BusinessObjectInstantiationException {
-        scriptBuilder.append(varName(businessObject));
+        scriptBuilder.append(varName);
         scriptBuilder.append(".");
         scriptBuilder.append(propertyInitializer.getPropertyName());
         scriptBuilder.append(" = ");
@@ -133,10 +137,10 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
         };
     }
 
-    protected void returnVar(final StringBuilder scriptBuilder, final BusinessObject bo) {
+    protected void returnVar(final StringBuilder scriptBuilder, final String varName) {
         scriptBuilder.append("return");
         scriptBuilder.append(" ");
-        scriptBuilder.append(varName(bo));
+        scriptBuilder.append(varName);
     }
 
     protected void delcareVariable(final StringBuilder scriptBuilder, final String varName) {
@@ -145,9 +149,6 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
         scriptBuilder.append(varName);
     }
 
-    protected String varName(final BusinessObject bo) {
-        return uncapitalizeFirst(BDMQueryUtil.getSimpleBusinessObjectName(bo.getQualifiedName())) + "Var";
-    }
 
     protected String uncapitalizeFirst(final String value) {
         return Character.toLowerCase(value.charAt(0)) + value.substring(1, value.length());
