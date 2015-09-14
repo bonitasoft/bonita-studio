@@ -47,7 +47,7 @@ public class MultipleAggregationReferencePropertyInitializer extends MultipleBus
     }
 
     @Override
-    protected boolean shouldAppendExistingObjects() {
+    protected boolean canAppendExistingObjects() {
         return multipleParentBusinessObject == null && !isOnPool;
     }
 
