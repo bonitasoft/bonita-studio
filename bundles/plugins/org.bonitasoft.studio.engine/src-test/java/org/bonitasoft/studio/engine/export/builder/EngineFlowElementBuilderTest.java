@@ -22,6 +22,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -211,6 +212,22 @@ public class EngineFlowElementBuilderTest {
         verify(taskBuilder).addContextEntry(eq("pData_ref"), argument.capture());
         assertThat(argument.getValue().getName()).isEqualTo("pData");
         assertThat(argument.getValue().getExpressionType()).isEqualTo(ExpressionType.TYPE_BUSINESS_DATA_REFERENCE.name());
+    }
+
+    @Test
+    public void testAddIteratorToContext_robustnessWithNullValue() {
+        final Data collectionDataToMultiInstantiate = BusinessObjectDataBuilder.aBusinessData().withName("bData").withClassname("classname").build();
+
+        final TaskBuilder taskB = TaskBuilder.aTask().havingCollectionDataToMultiInstantiate(collectionDataToMultiInstantiate)
+                .havingData(collectionDataToMultiInstantiate);
+
+        final Pool pool = PoolBuilder.aPool().havingElements(taskB).build();
+        final MainProcess mainProcess = MainProcessBuilder.aMainProcess().build();
+        mainProcess.getElements().add(pool);
+        mainProcess.getDatatypes().add(BusinessObjectDataTypeBuilder.aBusinessObjectDataType().withName("classname").build());
+        flowElementSwitch.addContext(taskBuilder, (Task) pool.getElements().get(0));
+
+        verify(taskBuilder, times(0)).addContextEntry(anyString(), any(Expression.class));
     }
 
     @Test

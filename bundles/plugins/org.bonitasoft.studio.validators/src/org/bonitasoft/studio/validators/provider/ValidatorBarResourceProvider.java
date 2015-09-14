@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2014 Bonitasoft S.A.
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,8 @@ import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.SourceFileStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
@@ -47,31 +48,32 @@ public class ValidatorBarResourceProvider implements BARResourcesProvider {
 
     @Override
     public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
-            final Set<EObject> exludedObject) {
+            final Set<EObject> exludedObject) throws FileNotFoundException {
         if (configuration == null) {
             return;
         }
+        final List<BarResource> resources = findAndCreateBarResourceForValidator(configuration);
+
+        for (final BarResource barResource : resources) {
+            builder.addExternalResource(barResource);
+        }
+    }
+
+    protected List<BarResource> findAndCreateBarResourceForValidator(final Configuration configuration) throws FileNotFoundException {
         final List<BarResource> resources = new ArrayList<BarResource>();
-        final ValidatorDescriptorRepositoryStore validatorDescStore = RepositoryManager.getInstance().getRepositoryStore(
-                ValidatorDescriptorRepositoryStore.class);
-        final ValidatorSourceRepositorySotre validatorSourceStore = RepositoryManager.getInstance().getRepositoryStore(ValidatorSourceRepositorySotre.class);
+        final ValidatorDescriptorRepositoryStore validatorDescStore = getRepositoryAccessor().getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
+        final ValidatorSourceRepositorySotre validatorSourceStore = getRepositoryAccessor().getRepositoryStore(ValidatorSourceRepositorySotre.class);
         final FragmentContainer validatorContainer = getContainer(configuration);
         if (validatorContainer != null) {
             for (final FragmentContainer validator : validatorContainer.getChildren()) {
-
                 final String validatorId = validator.getId();
                 final ValidatorDescriptorFileStore defFile = validatorDescStore.getChild(validatorId + "."
                         + ValidatorDescriptorRepositoryStore.VALIDATOR_EXT);
                 if (defFile == null) {
                     throw new RuntimeException("Validator descriptor not found for id " + validatorId + "!");
-                }
-                if (defFile != null && defFile.canBeShared()) {
+                } else if (defFile.canBeShared()) {
                     final ValidatorDescriptor descriptor = defFile.getContent();
-                    final SourceFileStore file = (SourceFileStore) validatorSourceStore.getChild(descriptor.getClassName());
-                    if (file == null) {
-                        throw new RuntimeException("Validator class " + descriptor.getClassName() + " not found for validator definition " + validatorId + "!");
-                    }
-
+                    final SourceFileStore file = findSourceFileStoreForValidator(validatorSourceStore, validatorId, descriptor);
                     try {
                         final byte[] content = createJarContentAsByteArray(file);
                         resources.add(new BarResource(ValidatorSourceRepositorySotre.VALIDATOR_PATH_IN_BAR + descriptor.getClassName() + ".jar", content));
@@ -81,13 +83,22 @@ public class ValidatorBarResourceProvider implements BARResourcesProvider {
                 }
             }
         }
-
-        for (final BarResource barResource : resources) {
-            builder.addExternalResource(barResource);
-        }
+        return resources;
     }
 
-    private byte[] createJarContentAsByteArray(final SourceFileStore file) throws IOException, InvocationTargetException, InterruptedException,
+    protected SourceFileStore findSourceFileStoreForValidator(final ValidatorSourceRepositorySotre validatorSourceStore, final String validatorId,
+            final ValidatorDescriptor descriptor) throws FileNotFoundException {
+        final AbstractFileStore child = validatorSourceStore.getChild(descriptor.getClassName());
+        if (child == null) {
+            throw new FileNotFoundException("Validator class " + descriptor.getClassName() + " not found for validator definition " + validatorId + "!");
+        }
+        if (!(child instanceof SourceFileStore)) {
+            throw new RuntimeException("Invalid validator definition " + validatorId + "!");
+        }
+        return (SourceFileStore) child;
+    }
+
+    protected byte[] createJarContentAsByteArray(final SourceFileStore file) throws IOException, InvocationTargetException, InterruptedException,
             FileNotFoundException {
         final File tmpFile = File.createTempFile(file.getName(), ".jar", ProjectUtil.getBonitaStudioWorkFolder());
         tmpFile.deleteOnExit();
@@ -102,11 +113,17 @@ public class ValidatorBarResourceProvider implements BARResourcesProvider {
 
     private FragmentContainer getContainer(final Configuration configuration) {
         for (final FragmentContainer container : configuration.getApplicationDependencies()) {
-            if (container.getId().equals(FragmentTypes.VALIDATOR)) {
+            if (FragmentTypes.VALIDATOR.equals(container.getId())) {
                 return container;
             }
         }
         return null;
+    }
+
+    protected RepositoryAccessor getRepositoryAccessor() {
+        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        return repositoryAccessor;
     }
 
 }

@@ -47,7 +47,7 @@ public class MultipleCompositionReferencePropertyInitializer extends NewBusiness
     }
 
     @Override
-    protected boolean shouldAppendExistingObjects() {
+    protected boolean canAppendExistingObjects() {
         return parentBusinessObject == null && !isOnPool;
     }
 
