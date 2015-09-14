@@ -19,6 +19,7 @@ import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.a
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.anAggregationField;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.junit.Test;
 
 public class AggregationReferencePropertyInitializerTest {
@@ -27,7 +28,7 @@ public class AggregationReferencePropertyInitializerTest {
     public void should_call_query_in_a_closure() throws Exception {
         final AggregationReferencePropertyInitializer propertyInitializer = new AggregationReferencePropertyInitializer(null, anAggregationField("country",
                 aBO("country").build()), aContractInput().withName("persistenceId").in(aContractInput().withName("country")).build(),
-                "");
+                "", new VariableNameResolver());
 
         final String initialValue = propertyInitializer.getInitialValue();
 
