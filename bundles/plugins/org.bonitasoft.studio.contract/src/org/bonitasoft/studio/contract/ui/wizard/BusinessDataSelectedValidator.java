@@ -16,7 +16,10 @@ package org.bonitasoft.studio.contract.ui.wizard;
 
 import java.util.List;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
@@ -28,16 +31,20 @@ public final class BusinessDataSelectedValidator extends MultiValidator {
 
     private final List<Data> availableBusinessData;
     private final WritableValue selectedDataObservable;
+    private final BusinessObjectModelRepositoryStore businessObjectStore;
 
-    public BusinessDataSelectedValidator(final List<Data> availableBusinessData, final WritableValue selectedDataObservable) {
+    public BusinessDataSelectedValidator(final List<Data> availableBusinessData, final WritableValue selectedDataObservable,
+            final BusinessObjectModelRepositoryStore businessObjectStore) {
         this.availableBusinessData = availableBusinessData;
         this.selectedDataObservable = selectedDataObservable;
+        this.businessObjectStore = businessObjectStore;
     }
 
     @Override
     protected IStatus validate() {
         if (selectedDataObservable.getValue() != null) {
-            return Status.OK_STATUS;
+            final BusinessObjectData value = (BusinessObjectData) selectedDataObservable.getValue();
+            return toBusinessObject(value) != null ? Status.OK_STATUS : ValidationStatus.error(Messages.invalidBusinessDataSelected);
         } else {
             if (availableBusinessData.isEmpty()) {
                 return ValidationStatus.warning(Messages.warningAddFromData_noDataAvailable);
@@ -45,5 +52,9 @@ public final class BusinessDataSelectedValidator extends MultiValidator {
                 return ValidationStatus.warning(Messages.warningAddFromData_noDataSelected);
             }
         }
+    }
+
+    private BusinessObject toBusinessObject(final BusinessObjectData selectedData) {
+        return businessObjectStore.getBusinessObjectByQualifiedName(selectedData.getClassName());
     }
 }
