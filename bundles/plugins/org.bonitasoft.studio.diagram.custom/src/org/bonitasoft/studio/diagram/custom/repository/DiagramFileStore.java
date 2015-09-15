@@ -312,7 +312,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
     private void setReadOnlyAndOpenWarningDialogAboutReadOnly(final DiagramEditor editor) {
         setReadOnly(true);
-        Display.getDefault().syncExec(new Runnable() {
+        Display.getDefault().asyncExec(new Runnable() {
 
             @Override
             public void run() {
