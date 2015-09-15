@@ -18,7 +18,9 @@ package org.bonitasoft.studio.common.gmf.tools.convert;
 
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
+import org.bonitasoft.studio.model.process.BoundaryMessageEvent;
 import org.bonitasoft.studio.model.process.Connection;
+import org.bonitasoft.studio.model.process.MessageFlow;
 import org.bonitasoft.studio.model.process.TargetElement;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -49,8 +51,17 @@ public final class RemoveBoundaryWithItsFlows extends AbstractEMFOperation {
          */
         boundaryHolder.getBoundaryIntermediateEvents().remove(boundaryToRemove);
         cleanExceptionFlow();
+        cleanMessageFlow();
 
         return new Status(IStatus.OK, "org.bonitasoft.studio.diagram.common", "Remove boundary child succeeded");
+    }
+
+    private void cleanMessageFlow() {
+        if (boundaryToRemove instanceof BoundaryMessageEvent) {
+            final MessageFlow messageFlow = ((BoundaryMessageEvent) boundaryToRemove).getIncomingMessag();
+            EcoreUtil.remove(messageFlow);
+            messageFlow.getSource().getOutgoingMessages().remove(messageFlow);
+        }
     }
 
     protected void cleanExceptionFlow() {

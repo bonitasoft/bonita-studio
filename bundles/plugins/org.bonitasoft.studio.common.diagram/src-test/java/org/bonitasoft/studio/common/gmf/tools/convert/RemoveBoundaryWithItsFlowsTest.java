@@ -19,9 +19,15 @@ package org.bonitasoft.studio.common.gmf.tools.convert;
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
+import org.bonitasoft.studio.model.process.BoundaryMessageEvent;
+import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.MessageFlow;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.SendTask;
+import org.bonitasoft.studio.model.process.builders.MainProcessBuilder;
 import org.bonitasoft.studio.model.process.builders.PoolBuilder;
+import org.bonitasoft.studio.model.process.builders.SendTaskBuilder;
 import org.bonitasoft.studio.model.process.builders.SequenceFlowBuilder;
 import org.bonitasoft.studio.model.process.builders.TaskBuilder;
 import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
@@ -72,6 +78,32 @@ public class RemoveBoundaryWithItsFlowsTest {
         Assertions.assertThat(pool.getConnections()).isEmpty();
         Assertions.assertThat(firstBoundaryTarget.getIncoming()).isEmpty();
         Assertions.assertThat(secondBoundaryTarget.getIncoming()).isEmpty();
+    }
+
+    @Test
+    public void testBoundaryMessageRemovedWithMessageFlow() throws Exception {
+        final SendTaskBuilder taskSourceOfMessageFlow = SendTaskBuilder.aSendTask().withName("Source Task of message flow");
+        final TaskBuilder taskWithABoundary = TaskBuilder.aTask().withName("Task with Boundary Message");
+        final MainProcess diagram = MainProcessBuilder.aMainProcess()
+                .havingElements(
+                        PoolBuilder.aPool().havingElements(taskWithABoundary),
+                        PoolBuilder.aPool().havingElements(taskSourceOfMessageFlow)).build();
+        final Pool poolContainingBoundary = (Pool) diagram.getElements().get(0);
+        final Activity boundaryHolder = (Activity) poolContainingBoundary.getElements().get(0);
+        final BoundaryMessageEvent boundaryToRemove = ProcessFactory.eINSTANCE.createBoundaryMessageEvent();
+        boundaryHolder.getBoundaryIntermediateEvents().add(boundaryToRemove);
+
+        final Pool poolContainingSourceMessagFlow = (Pool) diagram.getElements().get(1);
+        final SendTask messageFlowSource = (SendTask) poolContainingSourceMessagFlow.getElements().get(0);
+        final MessageFlow messageFlow = ProcessFactory.eINSTANCE.createMessageFlow();
+        messageFlow.setSource(messageFlowSource);
+        messageFlow.setTarget(boundaryToRemove);
+        messageFlowSource.getOutgoingMessages().add(messageFlow);
+
+        new RemoveBoundaryWithItsFlows(domain, boundaryToRemove, boundaryHolder).doExecute(null, null);
+
+        Assertions.assertThat(poolContainingBoundary.getConnections()).isEmpty();
+        Assertions.assertThat(messageFlowSource.getOutgoingMessages()).isEmpty();
     }
 
 }
