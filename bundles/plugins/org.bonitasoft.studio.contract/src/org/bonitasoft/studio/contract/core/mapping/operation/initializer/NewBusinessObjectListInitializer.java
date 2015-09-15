@@ -21,6 +21,7 @@ import org.bonitasoft.engine.bdm.BDMQueryUtil;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
@@ -31,8 +32,9 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
     protected ContractInput contractInput;
     protected final boolean isOnPool;
 
-    public NewBusinessObjectListInitializer(final RelationField field, final ContractInput contractInput, final String refName, final boolean isOnPool) {
-        super(field, refName);
+    public NewBusinessObjectListInitializer(final RelationField field, final ContractInput contractInput, final String refName,
+            VariableNameResolver variableNameResolver, final boolean isOnPool) {
+        super(field, refName, variableNameResolver);
         this.contractInput = contractInput;
         this.isOnPool = isOnPool;
     }
@@ -43,16 +45,17 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
         checkNotNullableFields(businessObject);
 
         final StringBuilder scriptBuilder = new StringBuilder();
-        delcareVariable(scriptBuilder, listVarName(businessObject));
+        final String listVarName = variableNameResolver.newListVarName(businessObject);
+        delcareVariable(scriptBuilder, listVarName);
         scriptBuilder.append(" = ");
         listConstructor(scriptBuilder, businessObject);
 
         if (canAppendExistingObjects()) {
-            appendExistingBusinessObjects(scriptBuilder, businessObject);
+            appendExistingBusinessObjects(scriptBuilder, listVarName);
         }
 
-        forEach(scriptBuilder, businessObject);
-        returnListVar(scriptBuilder, businessObject);
+        forEach(scriptBuilder, businessObject, listVarName);
+        returnListVar(scriptBuilder, listVarName);
         return scriptBuilder.toString();
     }
 
@@ -65,13 +68,14 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
         return contractInput.eContainer() != null && !isOnPool;
     }
 
-    private void returnListVar(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
+    private void returnListVar(final StringBuilder scriptBuilder, final String listVarName) {
         scriptBuilder.append("return");
         scriptBuilder.append(" ");
-        scriptBuilder.append(listVarName(businessObject));
+        scriptBuilder.append(listVarName);
     }
 
-    private void forEach(final StringBuilder scriptBuilder, final BusinessObject businessObject) throws BusinessObjectInstantiationException {
+    private void forEach(final StringBuilder scriptBuilder, final BusinessObject businessObject, String listVarName)
+            throws BusinessObjectInstantiationException {
         addCommentLine(scriptBuilder, "For each item collected in multiple input");
 
         //Iterate over the multiple input collection
@@ -82,24 +86,25 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
         addCommentBeforeAddToList(scriptBuilder, businessObject);
 
         //Add new business object based on current element in collection
-        scriptBuilder.append(listVarName(businessObject));
+        scriptBuilder.append(listVarName);
         scriptBuilder.append(".add({ ");
         scriptBuilder.append(iteratorName(businessObject));
         scriptBuilder.append(" ->");
         scriptBuilder.append(System.lineSeparator());
 
         //Instantiate the new business object
-        delcareVariable(scriptBuilder, varName(businessObject));
+        final String varName = variableNameResolver.newVarName(businessObject);
+        delcareVariable(scriptBuilder, varName);
         scriptBuilder.append(" = ");
         constructor(scriptBuilder, businessObject, false);
         scriptBuilder.append(System.lineSeparator());
 
         //Set new business object instance properties
         for (final IPropertyInitializer propertyInitializer : propertyInitializers) {
-            initializeProperty(scriptBuilder, propertyInitializer, businessObject);
+            initializeProperty(scriptBuilder, propertyInitializer, varName);
         }
 
-        returnVar(scriptBuilder, businessObject);
+        returnVar(scriptBuilder, varName);
         scriptBuilder.append(System.lineSeparator());
 
         scriptBuilder.append("}(it))");
@@ -121,18 +126,14 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
         return "current" + BDMQueryUtil.getSimpleBusinessObjectName(bo.getQualifiedName()) + "Input";
     }
 
-    protected void appendExistingBusinessObjects(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
+    protected void appendExistingBusinessObjects(final StringBuilder scriptBuilder, final String listVarName) {
         addCommentLine(scriptBuilder, String.format("Uncomment line below to append existing %s", getLast(Splitter.on(".").split(refName))));
         scriptBuilder.append("//");
-        scriptBuilder.append(listVarName(businessObject));
+        scriptBuilder.append(listVarName);
         scriptBuilder.append(".addAll(");
         scriptBuilder.append(refName);
         scriptBuilder.append(")");
         scriptBuilder.append(System.lineSeparator());
-    }
-
-    private String listVarName(final BusinessObject bo) {
-        return uncapitalizeFirst(BDMQueryUtil.getSimpleBusinessObjectName(bo.getQualifiedName())) + "List";
     }
 
     @Override

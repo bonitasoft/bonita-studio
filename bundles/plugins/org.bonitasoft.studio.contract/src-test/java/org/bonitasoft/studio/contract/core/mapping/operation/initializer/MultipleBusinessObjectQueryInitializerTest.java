@@ -25,6 +25,7 @@ import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,7 +51,7 @@ public class MultipleBusinessObjectQueryInitializerTest {
                 aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()
                         .havingInput(aContractInput()
                                 .withName("persistenceId")).build(),
-                "myData.employees", false);
+                "myData.employees", new VariableNameResolver(), false);
         initializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(employeeBo, nameField, aContractInput().withName("name")
                 .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()).build()));
 
@@ -77,6 +78,6 @@ public class MultipleBusinessObjectQueryInitializerTest {
                 aContractInput()
                         .withName("notPersistenceId")
                         .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()).build(),
-                "myData.employees", false);
+                "myData.employees", new VariableNameResolver(), false);
     }
 }

@@ -23,6 +23,7 @@ import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class CompositionReferencePropertyInitializerTest {
     public void should_initialize_object_poperty_in_a_closure() throws Exception {
         final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.TEXT).notNullable().build();
         final CompositionReferencePropertyInitializer propertyInitializer = new CompositionReferencePropertyInitializer(aCompositionField("address",
-                aBO("org.test.Address").withField(streetField).build()), aContractInput().build(), "employee.address");
+                aBO("org.test.Address").withField(streetField).build()), aContractInput().build(), new VariableNameResolver(), "employee.address");
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(null,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX)
@@ -58,7 +59,7 @@ public class CompositionReferencePropertyInitializerTest {
         final CompositionReferencePropertyInitializer propertyInitializer = new CompositionReferencePropertyInitializer(
                 aCompositionField("address", aBO("org.test.Address").withField(aSimpleField().withName("street").notNullable().build()).build()),
                 aContractInput().build(),
-                "employee.address");
+                new VariableNameResolver(), "employee.address");
 
         thrown.expect(BusinessObjectInstantiationException.class);
         propertyInitializer.getInitialValue();
