@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -133,13 +133,12 @@ public class BOSEngineManager {
             monitor.beginTask(Messages.initializingProcessEngine, IProgressMonitor.UNKNOWN);
             initBonitaHome();
             BOSWebServerManager.getInstance().startServer(monitor);
-            postEngineStart();
-            isRunning = true;
+            isRunning = postEngineStart();
             monitor.done();
         }
     }
 
-    protected void postEngineStart() {
+    protected boolean postEngineStart() {
         //RESUME ENGINE IF PAUSED AT STARTUP
         try {
             final APISession apiSession = getLoginAPI().login(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD);
@@ -147,15 +146,24 @@ public class BOSEngineManager {
             if (tenantManagementAPI.isPaused()) {
                 tenantManagementAPI.resume();
             }
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
-        }
-
-        try {
             executePostStartupContributions();
         } catch (final Exception e) {
-            BonitaStudioLog.error(e);
+            return handlePostEngineStartException(e);
         }
+        return true;
+    }
+
+    private boolean handlePostEngineStartException(final Exception e) {
+        if (tomcatServerIsRunning()) {
+            BonitaStudioLog.error(e);
+        } else {
+            BonitaStudioLog.warning("Tomcat server has been shutdown before first start ended.", EnginePlugin.PLUGIN_ID);
+        }
+        return false;
+    }
+
+    protected boolean tomcatServerIsRunning() {
+        return BOSWebServerManager.getInstance().serverIsStarted();
     }
 
     public synchronized void stop() {

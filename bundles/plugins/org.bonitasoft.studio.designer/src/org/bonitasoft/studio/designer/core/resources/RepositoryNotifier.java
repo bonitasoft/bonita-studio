@@ -39,8 +39,10 @@ public class RepositoryNotifier {
     }
 
     public void postDelete(final IRepositoryFileStore fileStore) throws ResourceNotFoundException {
-        fileStore.getParentStore().refresh();
-        repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_DELETE, fileStore));
+        if (fileStore != null) {
+            fileStore.getParentStore().refresh();
+            repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_DELETE, fileStore));
+        }
     }
 
     public void postClose(final IRepositoryFileStore fileStore) throws ResourceNotFoundException {
@@ -57,8 +59,10 @@ public class RepositoryNotifier {
     }
 
     public void postSave(final IRepositoryFileStore fileStore) {
-        fileStore.getParentStore().refresh();
-        repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, fileStore));
+        if (fileStore != null) {
+            fileStore.getParentStore().refresh();
+            repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, fileStore));
+        }
     }
 
     private void checkExists(final IRepositoryFileStore fileStore) throws ResourceNotFoundException {
