@@ -89,7 +89,8 @@ public class WorkspaceServerResource extends ServerResource {
 
     @Post("text/plain")
     public void dispatch(final String filePath) throws ResourceNotFoundException, LockedResourceException {
-        repositoryNotifier.dispatch(WorkspaceAPIEvent.valueOf(action), toFileStore(filePath));
+            final IRepositoryFileStore fileStore = toFileStore(filePath);
+            repositoryNotifier.dispatch(WorkspaceAPIEvent.valueOf(action), fileStore);
     }
 
     @Get
