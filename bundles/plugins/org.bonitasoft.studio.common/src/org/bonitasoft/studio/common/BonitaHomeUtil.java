@@ -48,6 +48,8 @@ public class BonitaHomeUtil {
 	private static final String SERVER_URL = "server.url";
 	private static final String APPLICATION_NAME = "application.name";
 	private static final String BONITA_APPLICATION = "bonita";
+    private static final String BONITA_CLIENT_HOST_DEFAULT = "bonita.client.host.default";
+    private static final String BONITA_CLIENT_PORT_DEFAULT = "bonita.client.port.default";
 
 	public static File getBonitaHome() {
 		return new File(ResourcesPlugin.getWorkspace().getRoot().getLocation()
@@ -103,7 +105,10 @@ public class BonitaHomeUtil {
 				destBonitaHome.mkdir();
 				final File srcBonitaHome = BonitaHomeUtil.getReferenceBonitaHome();
 				FileUtil.copyDir(srcBonitaHome, destBonitaHome);
-				configureBonitaClient(HTTP,"localhost",8080);
+
+                final String bonitaHostDefaultPortValue = System.getProperty(BONITA_CLIENT_HOST_DEFAULT, "localhost");
+                final int bonitaClientDefaultPortValue = Integer.parseInt(System.getProperty(BONITA_CLIENT_PORT_DEFAULT, "8080"));
+                configureBonitaClient(HTTP, bonitaHostDefaultPortValue, bonitaClientDefaultPortValue);
 				BonitaStudioLog.debug("BONITA.HOME installed.", Activator.PLUGIN_ID);
 			}
 			if (!destBonitaHome.getAbsolutePath().equals(
