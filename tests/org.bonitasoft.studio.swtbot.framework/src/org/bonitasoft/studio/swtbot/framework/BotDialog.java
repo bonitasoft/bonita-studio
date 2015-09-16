@@ -33,7 +33,7 @@ public class BotDialog extends BotBase {
     public BotDialog(final SWTGefBot bot, final String dialogTitle) {
         super(bot);
         this.dialogTitle = dialogTitle;
-        bot.waitUntil(Conditions.shellIsActive(dialogTitle), 1000);
+        bot.waitUntil(Conditions.shellIsActive(dialogTitle), 10000);
     }
 
     /**
