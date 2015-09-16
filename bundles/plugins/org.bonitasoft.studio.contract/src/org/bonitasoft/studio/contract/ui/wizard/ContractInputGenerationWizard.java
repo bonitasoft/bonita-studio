@@ -39,6 +39,7 @@ import org.bonitasoft.studio.model.process.OperationContainer;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.AddCommand;
@@ -60,6 +61,8 @@ public class ContractInputGenerationWizard extends Wizard {
     private CreateContractInputFromBusinessObjectWizardPage contractInputFromBusinessObjectWizardPage;
     private List<Data> availableBusinessData;
     private WritableValue selectedDataObservable;
+    private WritableValue rootNameObservable;
+    private WritableList fieldToContractInputMappingsObservable;
     private final FieldToContractInputMappingFactory fieldToContractInputMappingFactory;
     private final RepositoryAccessor repositoryAccessor;
     private final FieldToContractInputMappingOperationBuilder operationBuilder;
@@ -94,6 +97,8 @@ public class ContractInputGenerationWizard extends Wizard {
     @Override
     public void addPages() {
         selectedDataObservable = new WritableValue();
+        rootNameObservable = new WritableValue();
+        fieldToContractInputMappingsObservable = new WritableList();
         availableBusinessData = availableBusinessData();
         if (!availableBusinessData.isEmpty()) {
             selectedDataObservable.setValue(availableBusinessData.get(0));
@@ -101,9 +106,14 @@ public class ContractInputGenerationWizard extends Wizard {
         addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable,
                 repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)));
         contractInputFromBusinessObjectWizardPage = new CreateContractInputFromBusinessObjectWizardPage(contractContainer.getContract(), generationOptions,
-                selectedDataObservable, fieldToContractInputMappingFactory, repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
+                selectedDataObservable, rootNameObservable, fieldToContractInputMappingFactory, fieldToContractInputMappingsObservable,
+                repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
         contractInputFromBusinessObjectWizardPage.setTitle();
         addPage(contractInputFromBusinessObjectWizardPage);
+        if (contractContainer instanceof Pool) {
+            addPage(new GeneratedScriptEditionPage(rootNameObservable, fieldToContractInputMappingsObservable, selectedDataObservable, repositoryAccessor,
+                    operationBuilder, expressionBuilder));
+        }
     }
 
     protected List<Data> availableBusinessData() {
