@@ -21,25 +21,34 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
+import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorDefinitionTreeLabelProvider;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.util.test.conditions.SelectNodeUnder;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
-import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
  * @author Aurelie Zara
- * 
+ *
  */
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ActorFilterEditionTest extends SWTBotGefTestCase {
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        ConnectorEditPlugin.getPlugin().getPreferenceStore().setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
+    }
 
     public void createActorFilterDefinition(final String id, final String version) {
         SWTBotActorFilterUtil.activateActorFilterDefinitionShell(bot);
@@ -75,15 +84,11 @@ public class ActorFilterEditionTest extends SWTBotGefTestCase {
         assertEquals(bot.textWithLabel("Definition id *").getText(), id);
         assertEquals(bot.textWithLabel("Version *").getText(), version);
         bot.textWithLabel("Definition id *").setText(id2);
-        bot.waitUntil(new ICondition(){
+        bot.waitUntil(new DefaultCondition() {
 
             @Override
             public boolean test() throws Exception {
                 return id2.equals(bot.textWithLabel("Definition id *").getText());
-            }
-
-            @Override
-            public void init(final SWTBot bot) {
             }
 
             @Override
