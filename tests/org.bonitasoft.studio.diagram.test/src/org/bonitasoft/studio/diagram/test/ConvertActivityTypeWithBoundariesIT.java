@@ -19,41 +19,29 @@ package org.bonitasoft.studio.diagram.test;
 import java.io.IOException;
 
 import org.assertj.core.api.Assertions;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SendTask;
 import org.bonitasoft.studio.model.process.ServiceTask;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ConvertActivityTypeWithBoundariesIT extends SWTBotGefTestCase {
 
+    @Rule
+    public SWTGefBotRule botRule = new SWTGefBotRule(bot);
+
     private final static String STEP_WITH_BOUNDARY_NAME = "Step1";
-
-    boolean disablePopupState;
-    @Override
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        disablePopupState = FileActionDialog.getDisablePopup();
-        FileActionDialog.setDisablePopup(true);
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        FileActionDialog.setDisablePopup(disablePopupState);
-    }
 
     @Test
     public void testConvertWithRemovedTimerBoundary() throws Exception {
