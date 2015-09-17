@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.test.swtbot.TestProcessDependencies;
 import org.bonitasoft.studio.connectors.test.swtbot.ConnectorEditedInAsingleCommandIT;
+import org.bonitasoft.studio.diagram.test.ConvertActivityTypeWithBoundariesIT;
 import org.bonitasoft.studio.diagram.test.NewRunTest;
 import org.bonitasoft.studio.diagram.test.SharedEditingDomainTests;
 import org.bonitasoft.studio.diagram.test.TestBoundariesCreation;
@@ -114,7 +115,8 @@ import org.junit.runners.Suite;
     TestOrganizationPassword.class,
     BarImportReportIT.class,
     CallActivityMappingIT.class,
-    CreateDeployExportBusinessObjectIT.class
+        CreateDeployExportBusinessObjectIT.class,
+        ConvertActivityTypeWithBoundariesIT.class
 })
 public class AllSWTBotTests2 {
 
