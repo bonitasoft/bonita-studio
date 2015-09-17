@@ -78,6 +78,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.matchers.WithId;
 import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
@@ -246,7 +247,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
     }
 
     /**
-     * @param bot
+     * @param wBot
      * @param resourceNameInClasspath
      * @param importName: type of import (Bonita, xpdl, jpdl, ...)
      * @param diagramEditorTitle
@@ -254,37 +255,33 @@ public class SWTBotTestUtil implements SWTBotConstants {
      * @param mustAskOverride
      * @throws IOException
      */
-    public static void importProcessWIthPathFromClass(final SWTWorkbenchBot bot, final String resourceNameInClasspath, final String importName,
+    public static void importProcessWIthPathFromClass(final SWTWorkbenchBot wBot, final String resourceNameInClasspath, final String importName,
             final String diagramEditorTitle, final Class<?> srcClass, final boolean mustAskOverride) throws IOException {
         BonitaStudioLog.log("SWTBot begin to import " + resourceNameInClasspath + " in mode " + importName);
         final boolean disable = FileActionDialog.getDisablePopup();
         FileActionDialog.setDisablePopup(true);
-        waitUntilBonitaBPmShellIsActive(bot);
-        final SWTBotMenu menu = bot.menu("Diagram");
+        waitUntilBonitaBPmShellIsActive(wBot);
+        final SWTBotMenu menu = wBot.menu("Diagram");
         menu.menu("Import...").click();
 
-        bot.waitUntil(Conditions.shellIsActive("Import..."));
+        wBot.waitUntil(Conditions.shellIsActive("Import..."));
         URL url = srcClass.getResource(resourceNameInClasspath);
         url = FileLocator.toFileURL(url);
         final File file = new File(url.getFile());
-        bot.text().setText(file.getAbsolutePath());
-        bot.table().select(importName);
-        bot.button("Import").click();
-        bot.waitUntil(new ICondition() {
+        wBot.text().setText(file.getAbsolutePath());
+        wBot.table().select(importName);
+        wBot.button("Import").click();
+        wBot.waitUntil(new DefaultCondition() {
 
             @Override
             public boolean test() throws Exception {
-                for (final SWTBotEditor aBot : bot.editors()) {
+                for (final SWTBotEditor aBot : wBot.editors()) {
                     if (aBot.getTitle().contains(diagramEditorTitle)) {
                         return true;
                     }
                 }
 
                 return false;
-            }
-
-            @Override
-            public void init(final SWTBot bot) {
             }
 
             @Override
