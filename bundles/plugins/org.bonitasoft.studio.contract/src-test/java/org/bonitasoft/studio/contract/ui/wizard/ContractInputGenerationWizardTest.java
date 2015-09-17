@@ -167,7 +167,7 @@ public class ContractInputGenerationWizardTest {
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
                 preferenceStore, sharedImages, dialogFactory);
-        wizard.addPages();
+
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
         wizard.setContainer(wizardContainer);

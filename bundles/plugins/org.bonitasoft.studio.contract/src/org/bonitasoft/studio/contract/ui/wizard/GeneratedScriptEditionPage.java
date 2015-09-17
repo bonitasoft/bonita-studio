@@ -69,7 +69,7 @@ public class GeneratedScriptEditionPage extends WizardPage {
             final FieldToContractInputMappingOperationBuilder operationBuilder, final FieldToContractInputMappingExpressionBuilder expressionBuilder) {
         super(GeneratedScriptEditionPage.class.getName());
         this.rootNameObservable = rootNameObservable;
-        this.fieldToContractInputMappingsObservable = fieldToContactInputMappingsObservable;
+        fieldToContractInputMappingsObservable = fieldToContactInputMappingsObservable;
         this.selectedDataObservable = selectedDataObservable;
         this.operationBuilder = operationBuilder;
         this.expressionBuilder = expressionBuilder;
@@ -113,23 +113,33 @@ public class GeneratedScriptEditionPage extends WizardPage {
      * @param viewer
      */
     protected void generateExpressionScript(final ExpressionViewer viewer) {
-        final EObject container = ((Element) selectedDataObservable.getValue()).eContainer();
-        viewer.setContext(container);
-        viewer.setInput(container);
-        final RootContractInputGenerator rootContractInputGenerator = createRootContractInputGenerator();
-        rootContractInput = rootContractInputGenerator.getRootContractInput();
-        if (!fieldToContractInputMappingsObservable.isEmpty()) {
-            try {
-                rootContractInputGenerator.buildForInstanciation((BusinessObjectData) selectedDataObservable.getValue());
-                viewer.setSelection(new StructuredSelection(rootContractInputGenerator.getInitialValueExpression()));
-            } catch (final OperationCreationException e) {
-                BonitaStudioLog.error("Failed to create Operations from contract", e);
-                new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e).open();
+        if (selectedDataObservable.getValue() != null) {
+            final EObject container = ((Element) selectedDataObservable.getValue()).eContainer();
+            viewer.setContext(container);
+            viewer.setInput(container);
+            final RootContractInputGenerator rootContractInputGenerator = createRootContractInputGenerator();
+            rootContractInput = rootContractInputGenerator.getRootContractInput();
+            if (!fieldToContractInputMappingsObservable.isEmpty()) {
+                try {
+                    rootContractInputGenerator.buildForInstanciation((BusinessObjectData) selectedDataObservable.getValue());
+                    setViewerSelection(viewer, rootContractInputGenerator);
+                } catch (final OperationCreationException e) {
+                    BonitaStudioLog.error("Failed to create Operations from contract", e);
+                    new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e).open();
+                }
             }
         }
     }
 
-    private RootContractInputGenerator createRootContractInputGenerator() {
+    /**
+     * @param viewer
+     * @param rootContractInputGenerator
+     */
+    protected void setViewerSelection(final ExpressionViewer viewer, final RootContractInputGenerator rootContractInputGenerator) {
+        viewer.setSelection(new StructuredSelection(rootContractInputGenerator.getInitialValueExpression()));
+    }
+
+    protected RootContractInputGenerator createRootContractInputGenerator() {
         final List<FieldToContractInputMapping> mappings = new ArrayList<FieldToContractInputMapping>();
 
         for (final Object mapping : fieldToContractInputMappingsObservable) {
