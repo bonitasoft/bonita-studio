@@ -28,22 +28,26 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author Baptiste Mesta
  *
  */
+@RunWith(SWTBotJunit4ClassRunner.class)
 public class TestConvertToMessage extends SWTBotGefTestCase {
+
     @Test
     public void testConvertToMessage() throws InterruptedException{
         //bug 1983
         /*Create a new form*/
-        SWTBotMenu menu = bot.menu("Diagram");
+        final SWTBotMenu menu = bot.menu("Diagram");
         SWTBotTestUtil.createNewDiagram(bot);
         SWTBotEditor botEditor = bot.activeEditor();
         SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
@@ -64,29 +68,31 @@ public class TestConvertToMessage extends SWTBotGefTestCase {
         /*Search the Combo for switch type*/
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
-        SWTBotView generalProperties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL);
+        final SWTBotView generalProperties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL);
         generalProperties.bot().textWithLabel("Show label").setText("testDisplayLabel");
         final SWTBotGefEditor gefEditor = gmfEditor;
         bot.waitUntil(new DefaultCondition() {
-			
-			public boolean test() throws Exception {
-				Expression displayLabel = ((Widget)(((IGraphicalEditPart)gefEditor.getEditPart("testDisplayLabel").parent().part()).resolveSemanticElement())).getDisplayLabel();
+
+			@Override
+            public boolean test() throws Exception {
+				final Expression displayLabel = ((Widget)(((IGraphicalEditPart)gefEditor.getEditPart("testDisplayLabel").parent().part()).resolveSemanticElement())).getDisplayLabel();
 				return displayLabel.getContent().equals("testDisplayLabel");
 			}
-			
-			public String getFailureMessage() {
+
+			@Override
+            public String getFailureMessage() {
 				return "no display label set";
 			}
 		});
-        SWTBotCombo combo = generalProperties.bot().comboBox("Checkbox") ;
+        final SWTBotCombo combo = generalProperties.bot().comboBox("Checkbox") ;
         /*Change type to duration*/
         combo.setSelection("Message");
         /*Search the duration Editpart*/
         //TODO : search directly the Editpart
-        SWTBotGefEditPart mainPart = gmfEditor.mainEditPart();
+        final SWTBotGefEditPart mainPart = gmfEditor.mainEditPart();
         boolean found = false;
         EditPart part = null;
-        for(SWTBotGefEditPart p : mainPart.children()){
+        for(final SWTBotGefEditPart p : mainPart.children()){
             if(p.part() instanceof MessageInfoEditPart){
                 found = true;
                 part = p.part();
