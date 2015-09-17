@@ -38,13 +38,13 @@ import org.eclipse.text.edits.MalformedTreeException;
 public class MappingOperationScriptBuilder {
 
     private static final IFormatterPreferences DEFAULT_FORMATTER_PREFS = new DefaultFormatterPreferences();
-    private final BusinessObjectInitializerFactory businessObjectInitializerFactory = new BusinessObjectInitializerFactory();
-    private final PropertyInitializerFactory propertyInitializerFactory = new PropertyInitializerFactory(new RelationPropertyInitializerFactory());
+    private final BusinessObjectInitializerFactory businessObjectInitializerFactory;
     private static final int FORMAT_LEVEL = 0;
     private boolean needsDataDependency = false;
     private final BusinessObjectData data;
     private final FieldToContractInputMapping mapping;
     private final Field field;
+    private final PropertyInitializerFactory propertyInitializerFactory;
 
     public MappingOperationScriptBuilder(final BusinessObjectData data,
             final FieldToContractInputMapping mapping,
@@ -52,6 +52,9 @@ public class MappingOperationScriptBuilder {
         this.data = data;
         this.mapping = mapping;
         this.field = field;
+        final VariableNameResolver variableNameResolver = new VariableNameResolver();
+        businessObjectInitializerFactory = new BusinessObjectInitializerFactory(variableNameResolver);
+        propertyInitializerFactory = new PropertyInitializerFactory(new RelationPropertyInitializerFactory(variableNameResolver));
     }
 
     public String toInstanciationScript() throws BusinessObjectInstantiationException {

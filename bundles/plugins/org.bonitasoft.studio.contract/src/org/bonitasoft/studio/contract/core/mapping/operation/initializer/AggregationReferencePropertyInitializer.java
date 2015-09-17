@@ -17,13 +17,14 @@ package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInput;
 
 public class AggregationReferencePropertyInitializer extends BusinessObjectQueryInitializer implements IPropertyInitializer {
 
     public AggregationReferencePropertyInitializer(final BusinessObject multipleParentBo, final RelationField field, final ContractInput contractInput,
-            final String refName) {
-        super(multipleParentBo, field, contractInput, refName);
+            final String refName, VariableNameResolver variableNameResolver) {
+        super(multipleParentBo, field, contractInput, refName, variableNameResolver);
     }
 
     @Override

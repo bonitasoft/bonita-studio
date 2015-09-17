@@ -27,6 +27,7 @@ import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
@@ -39,8 +40,8 @@ public class MultipleBusinessObjectQueryInitializer extends NewBusinessObjectLis
 
     public MultipleBusinessObjectQueryInitializer(final BusinessObject businessObject,
             final RelationField field,
-            final ContractInput contractInput, final String refName, final boolean isOnPool) {
-        super(field, contractInput, refName, isOnPool);
+            final ContractInput contractInput, final String refName, VariableNameResolver variableNameResolver, final boolean isOnPool) {
+        super(field, contractInput, refName, variableNameResolver, isOnPool);
         persistenceIdInput = persistenceIdInput(contractInput);
         this.businessObject = businessObject;
     }
@@ -51,10 +52,10 @@ public class MultipleBusinessObjectQueryInitializer extends NewBusinessObjectLis
     }
 
     @Override
-    protected void initializeProperty(final StringBuilder scriptBuilder, final IPropertyInitializer propertyInitializer, final BusinessObject businessObject)
+    protected void initializeProperty(final StringBuilder scriptBuilder, final IPropertyInitializer propertyInitializer, final String varName)
             throws BusinessObjectInstantiationException {
         if (!isPersistenceIdInitializer(propertyInitializer)) {
-            super.initializeProperty(scriptBuilder, propertyInitializer, businessObject);
+            super.initializeProperty(scriptBuilder, propertyInitializer, varName);
         }
     }
 
