@@ -106,17 +106,25 @@ public class ContractInputGenerationWizard extends Wizard {
         }
         addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable,
                 repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)));
-        contractInputFromBusinessObjectWizardPage = new CreateContractInputFromBusinessObjectWizardPage(contractContainer.getContract(), generationOptions,
-                selectedDataObservable, rootNameObservable, fieldToContractInputMappingFactory, fieldToContractInputMappingsObservable,
-                repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
+        contractInputFromBusinessObjectWizardPage = createCreateContractInputFromBusinessObjectWizardPage();
         contractInputFromBusinessObjectWizardPage.setTitle();
         addPage(contractInputFromBusinessObjectWizardPage);
         if (contractContainer instanceof Pool) {
-            generatedScriptEditionPage = new GeneratedScriptEditionPage(rootNameObservable, fieldToContractInputMappingsObservable, selectedDataObservable,
-                    repositoryAccessor,
-                    operationBuilder, expressionBuilder);
+            generatedScriptEditionPage = createGeneratedScriptEditionPage();
             addPage(generatedScriptEditionPage);
         }
+    }
+
+    protected CreateContractInputFromBusinessObjectWizardPage createCreateContractInputFromBusinessObjectWizardPage() {
+        return new CreateContractInputFromBusinessObjectWizardPage(contractContainer.getContract(), generationOptions,
+                selectedDataObservable, rootNameObservable, fieldToContractInputMappingFactory, fieldToContractInputMappingsObservable,
+                repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
+    }
+
+    protected GeneratedScriptEditionPage createGeneratedScriptEditionPage() {
+        return new GeneratedScriptEditionPage(rootNameObservable, fieldToContractInputMappingsObservable, selectedDataObservable,
+                repositoryAccessor,
+                operationBuilder, expressionBuilder);
     }
 
     protected List<Data> availableBusinessData() {
