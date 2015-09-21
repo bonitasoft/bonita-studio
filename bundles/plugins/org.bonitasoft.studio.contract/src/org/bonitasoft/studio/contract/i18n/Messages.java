@@ -102,4 +102,6 @@ public class Messages extends NLS {
     public static String manuallyDefinedOperationProcessButton;
     public static String contractStrictGenerationMsg;
     public static String invalidBusinessDataSelected;
+    public static String setGeneratedScriptPreviewPageDescription;
+    public static String generatedScriptPreviewTitle;
 }

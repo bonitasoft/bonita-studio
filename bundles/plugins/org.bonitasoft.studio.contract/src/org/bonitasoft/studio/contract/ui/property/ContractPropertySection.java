@@ -253,6 +253,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
                         fieldToContractInputMappingOperationBuilder,
                         fieldToContractInputMappingExpressionBuilder,
                         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore(),
+                        org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore(),
                         sharedImages, new ContractInputGenerationInfoDialogFactory()),
                 this, true);
         dialog.open();
