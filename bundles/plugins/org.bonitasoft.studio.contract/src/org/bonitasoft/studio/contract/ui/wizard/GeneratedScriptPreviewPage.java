@@ -17,7 +17,6 @@ package org.bonitasoft.studio.contract.ui.wizard;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -27,30 +26,32 @@ import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInp
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.expression.editor.viewer.GroovyOnlyExpressionViewer;
+import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
+import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.eclipse.core.databinding.observable.list.IListChangeListener;
-import org.eclipse.core.databinding.observable.list.ListChangeEvent;
+import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.WritableList;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author aurelie
  */
-public class GeneratedScriptEditionPage extends WizardPage {
+public class GeneratedScriptPreviewPage extends WizardPage {
 
     private final WritableValue selectedDataObservable;
     private final WritableValue rootNameObservable;
@@ -58,23 +59,50 @@ public class GeneratedScriptEditionPage extends WizardPage {
     private final FieldToContractInputMappingOperationBuilder operationBuilder;
     private final RepositoryAccessor repositoryAccessor;
     private final FieldToContractInputMappingExpressionBuilder expressionBuilder;
-    private ContractInput rootContractInput;
-    private ExpressionViewer viewer;
+    private IDocument document;
+    private Expression generatedExpression;
+    private final IPreferenceStore groovyStore;
 
     /**
      * @param pageName
      */
-    public GeneratedScriptEditionPage(final WritableValue rootNameObservable, final WritableList fieldToContactInputMappingsObservable,
-            final WritableValue selectedDataObservable, final RepositoryAccessor repositoryAccessor,
+    public GeneratedScriptPreviewPage(final WritableValue rootNameObservable, final WritableList fieldToContactInputMappingsObservable,
+            final WritableValue selectedDataObservable, final RepositoryAccessor repositoryAccessor, final IPreferenceStore groovyStore,
             final FieldToContractInputMappingOperationBuilder operationBuilder, final FieldToContractInputMappingExpressionBuilder expressionBuilder) {
-        super(GeneratedScriptEditionPage.class.getName());
+        super(GeneratedScriptPreviewPage.class.getName());
+        setTitle(Messages.generatedScriptPreviewTitle);
         this.rootNameObservable = rootNameObservable;
         fieldToContractInputMappingsObservable = fieldToContactInputMappingsObservable;
         this.selectedDataObservable = selectedDataObservable;
         this.operationBuilder = operationBuilder;
         this.expressionBuilder = expressionBuilder;
         this.repositoryAccessor = repositoryAccessor;
-        rootContractInput = ProcessFactory.eINSTANCE.createContractInput();
+        this.groovyStore = groovyStore;
+        generatedExpression = ExpressionFactory.eINSTANCE.createExpression();
+    }
+
+    public void setDescription() {
+        if (selectedDataObservable.getValue() != null) {
+            setDescription(Messages.bind(Messages.setGeneratedScriptPreviewPageDescription, ((Element) selectedDataObservable.getValue()).getName()));
+            EMFObservables.observeDetailValue(Realm.getDefault(), selectedDataObservable, ProcessPackage.Literals.ELEMENT__NAME).addValueChangeListener(
+                    new IValueChangeListener() {
+
+                        @Override
+                        public void handleValueChange(final ValueChangeEvent event) {
+                            setDescription(Messages.bind(Messages.setGeneratedScriptPreviewPageDescription, event.diff.getNewValue()));
+                        }
+                    });
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.wizard.WizardPage#setTitle(java.lang.String)
+     */
+    @Override
+    public void setTitle(final String title) {
+        // TODO Auto-generated method stub
+        super.setTitle(title);
     }
 
     /*
@@ -84,45 +112,42 @@ public class GeneratedScriptEditionPage extends WizardPage {
     @Override
     public void createControl(final Composite parent) {
 
-        final Composite composite = new Composite(parent, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        final Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
+        mainComposite.setLayout(new FillLayout(SWT.VERTICAL));
 
-        viewer = new GroovyOnlyExpressionViewer(composite, SWT.BORDER);
+        final GroovyViewer groovyViewer = new GroovyViewer(mainComposite, repositoryAccessor.getRepositoryStore(ProvidedGroovyRepositoryStore.class),
+                groovyStore, true);
+        groovyViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
+        final SourceViewer sourceViewer = groovyViewer.getSourceViewer();
+        sourceViewer.setEditable(false);
+        document = groovyViewer.getDocument();
+        document.set(generatedExpression.getContent());
+        setControl(mainComposite);
+    }
 
-        viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        viewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.QUERY_TYPE,
-                ExpressionConstants.CONTRACT_INPUT_TYPE, ExpressionConstants.PARAMETER_TYPE));
-        viewer.addEditorFilter(ExpressionConstants.CONTRACT_INPUT_TYPE, ExpressionConstants.PARAMETER_TYPE);
-        generateExpressionScript(viewer);
-
-        fieldToContractInputMappingsObservable.addListChangeListener(new IListChangeListener() {
-
-            @Override
-            public void handleListChange(final ListChangeEvent event) {
-                generateExpressionScript(viewer);
-                viewer.refresh();
-            }
-        });
-
-        setControl(composite);
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
+     */
+    @Override
+    public void setVisible(final boolean visible) {
+        super.setVisible(visible);
+        generateExpressionScript();
     }
 
     /**
      * @param dbc
      * @param viewer
      */
-    protected void generateExpressionScript(final ExpressionViewer viewer) {
+    protected void generateExpressionScript() {
         if (selectedDataObservable.getValue() != null) {
-            final EObject container = ((Element) selectedDataObservable.getValue()).eContainer();
-            viewer.setContext(container);
-            viewer.setInput(container);
             final RootContractInputGenerator rootContractInputGenerator = createRootContractInputGenerator();
-            rootContractInput = rootContractInputGenerator.getRootContractInput();
             if (!fieldToContractInputMappingsObservable.isEmpty()) {
                 try {
                     rootContractInputGenerator.buildForInstanciation((BusinessObjectData) selectedDataObservable.getValue());
-                    setViewerSelection(viewer, rootContractInputGenerator);
+                    generatedExpression = rootContractInputGenerator.getInitialValueExpression();
+                    document.set(generatedExpression.getContent());
                 } catch (final OperationCreationException e) {
                     BonitaStudioLog.error("Failed to create Operations from contract", e);
                     new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e).open();
@@ -131,31 +156,15 @@ public class GeneratedScriptEditionPage extends WizardPage {
         }
     }
 
-    /**
-     * @param viewer
-     * @param rootContractInputGenerator
-     */
-    protected void setViewerSelection(final ExpressionViewer viewer, final RootContractInputGenerator rootContractInputGenerator) {
-        viewer.setSelection(new StructuredSelection(rootContractInputGenerator.getInitialValueExpression()));
-    }
-
     protected RootContractInputGenerator createRootContractInputGenerator() {
         final List<FieldToContractInputMapping> mappings = new ArrayList<FieldToContractInputMapping>();
 
         for (final Object mapping : fieldToContractInputMappingsObservable) {
             mappings.add((FieldToContractInputMapping) mapping);
         }
+
         return new RootContractInputGenerator((String) rootNameObservable.getValue(), mappings,
                 repositoryAccessor, operationBuilder, expressionBuilder);
-    }
-
-    public ContractInput getRootContractInput() {
-        return rootContractInput;
-    }
-
-    public Expression getGeneratedScript() {
-        final StructuredSelection selection = (StructuredSelection) viewer.getSelection();
-        return (Expression) selection.getFirstElement();
     }
 
 }
