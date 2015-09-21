@@ -17,6 +17,7 @@ package org.bonitasoft.studio.contract.core.mapping.operation.initializer.factor
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.BusinessObjectQueryInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IPropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleBusinessObjectQueryInitializer;
@@ -26,6 +27,12 @@ import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInput;
 
 public class BusinessObjectInitializerFactory extends AbsractInitializerFactory implements InitializerFactory {
+
+    private final VariableNameResolver variableNameResolver;
+
+    public BusinessObjectInitializerFactory(VariableNameResolver variableNameResolver) {
+        this.variableNameResolver = variableNameResolver;
+    }
 
     @Override
     public IPropertyInitializer newPropertyInitializer(final FieldToContractInputMapping mapping, final BusinessObjectData data, final boolean isOnPool) {
@@ -38,20 +45,21 @@ public class BusinessObjectInitializerFactory extends AbsractInitializerFactory 
     private IPropertyInitializer newAggregatedObjectInitializer(final FieldToContractInputMapping mapping,
             final BusinessObjectData data,
             final RelationField relationField, final boolean isOnPool) {
-        return relationField.isCollection() ?
-                new MultipleBusinessObjectQueryInitializer(businessObject(mapping), relationField,
-                        mapping.getContractInput(), toRefName(mapping, data), isOnPool)
+        return relationField.isCollection() ? new MultipleBusinessObjectQueryInitializer(businessObject(mapping), relationField,
+                mapping.getContractInput(), toRefName(mapping, data), variableNameResolver, isOnPool)
                 : new BusinessObjectQueryInitializer(firstMultipleParentBusinessObject(mapping), relationField,
                         mapping.getContractInput(),
-                        toRefName(mapping, data));
+                        toRefName(mapping, data),
+                        variableNameResolver);
     }
 
     private IPropertyInitializer newComposedObjectInitializer(final FieldToContractInputMapping mapping,
             final BusinessObjectData data,
             final RelationField relationField, final boolean isOnPool) {
-        return relationField.isCollection() ?
-                new NewBusinessObjectListInitializer(relationField, mapping.getContractInput(), toRefName(mapping, data), isOnPool) :
-                new NewBusinessObjectInitializer(relationField, toRefName(mapping, data), mapping.getContractInput().eContainer() instanceof ContractInput);
+        return relationField.isCollection()
+                ? new NewBusinessObjectListInitializer(relationField, mapping.getContractInput(), toRefName(mapping, data), variableNameResolver, isOnPool)
+                : new NewBusinessObjectInitializer(relationField, toRefName(mapping, data), variableNameResolver,
+                        mapping.getContractInput().eContainer() instanceof ContractInput);
     }
 
 }

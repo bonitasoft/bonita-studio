@@ -1,5 +1,21 @@
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.form.preview;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
@@ -12,6 +28,8 @@ import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.FormMappingType;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.repository.themes.ApplicationLookNFeelFileStore;
@@ -89,5 +107,22 @@ public class AbstractFormPreviewInitializationTest {
         doNothing().when(formPreviewInit).openNoActorErrorMessage(any(Element.class));
         formPreviewInit.createAbstractProcess(configuration);
         verify(formPreviewInit).openNoActorErrorMessage(any(Element.class));
+    }
+
+    @Test
+    public void should_process_have_a_legacy_form_mapping() {
+        final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
+        doNothing().when(formPreviewInit).openNoActorErrorMessage(any(Element.class));
+        final AbstractProcess process = formPreviewInit.createAbstractProcess(configuration);
+        assertThat(process.getFormMapping().getType()).isEqualTo(FormMappingType.LEGACY);
+    }
+
+    @Test
+    public void should_task_have_a_legacy_form_mapping() {
+        final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
+        doNothing().when(formPreviewInit).openNoActorErrorMessage(any(Element.class));
+        final Pool pool = ProcessFactory.eINSTANCE.createPool();
+        final Task task = formPreviewInit.initializeTask(aTask().in(pool).build(), pool, configuration);
+        assertThat(task.getFormMapping().getType()).isEqualTo(FormMappingType.LEGACY);
     }
 }

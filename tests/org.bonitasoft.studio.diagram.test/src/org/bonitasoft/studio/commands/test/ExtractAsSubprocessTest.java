@@ -1,19 +1,16 @@
 /**
- * Copyright (C) 2010-2013 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
+ * Copyright (C) 2010-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.commands.test;
 
@@ -32,7 +29,6 @@ import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.bonitasoft.studio.test.swtbot.util.conditions.EditorOpenCondition;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
@@ -68,6 +64,7 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         /* (non-Javadoc)
          * @see org.eclipse.swtbot.swt.finder.waits.ICondition#test()
          */
+        @Override
         public boolean test() throws Exception {
             if (bot.activeShell().getText().toLowerCase().startsWith("overwrite")) {
                 bot.button(IDialogConstants.OK_LABEL).click();
@@ -78,6 +75,7 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         /* (non-Javadoc)
          * @see org.eclipse.swtbot.swt.finder.waits.ICondition#getFailureMessage()
          */
+        @Override
         public String getFailureMessage() {
             return "No new editor opened";
         }
@@ -176,11 +174,13 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         //use a waitUntil in order to wait UI operation to finish
         bot.waitUntil(new DefaultCondition() {
 
-			public boolean test() throws Exception {
+			@Override
+            public boolean test() throws Exception {
 				return 2 == lane.getElements().size();
 			}
 
-			public String getFailureMessage() {
+			@Override
+            public String getFailureMessage() {
 				return "Not same number of nodes in main as expected";
 			}
 		});
@@ -208,11 +208,13 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         //use a waitUntil in order to wait UI operation to finish
         bot.waitUntil(new DefaultCondition() {
 
-			public boolean test() throws Exception {
+			@Override
+            public boolean test() throws Exception {
 				return 2 == lane.getElements().size();
 			}
 
-			public String getFailureMessage() {
+			@Override
+            public String getFailureMessage() {
 				return "Not same number of nodes in main as expected";
 			}
 		});
@@ -228,7 +230,7 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
     public void importProcess() throws IOException {
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "BoundaryProcess_1_0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "BoundaryProcess", this.getClass(), false);
         bot.waitUntil(new EditorOpenCondition(store.getChild("BoundaryProcess-1.0.proc").getResource()));
-        bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));//to avoid Progress information dialog
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
     }
 
 }
