@@ -108,12 +108,14 @@ public class ImportConnectorArchiveOperation {
             return status;
         }
 
-        importConnectorDefinition(tmp);
-
-        importConnectorImplementation(tmp);
-
-        PlatformUtil.delete(tmp, monitor);
-
+        try {
+            FileActionDialog.activateYesNoToAll();
+            importConnectorDefinition(tmp);
+            importConnectorImplementation(tmp);
+            PlatformUtil.delete(tmp, monitor);
+        } finally {
+            FileActionDialog.deactivateYesNoToAll();
+        }
         return Status.OK_STATUS;
     }
 
