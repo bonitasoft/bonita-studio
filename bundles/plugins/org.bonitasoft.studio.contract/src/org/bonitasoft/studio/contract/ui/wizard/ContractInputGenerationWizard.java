@@ -33,6 +33,7 @@ import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInp
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractContainer;
@@ -73,7 +74,8 @@ public class ContractInputGenerationWizard extends Wizard {
     private final ContractInputGenerationInfoDialogFactory infoDialogFactory;
     private final GenerationOptions generationOptions;
     private GeneratedScriptPreviewPage generatedScriptPreviewPage;
-    private final IPreferenceStore groovyStore;
+    private final ContractInputGenerationWizardPagesFactory contractInputWizardPagesFactory;
+    private final GroovySourceViewerFactory sourceViewerFactory;
 
     public ContractInputGenerationWizard(final ContractContainer contractContainer,
             final EditingDomain editingDomain,
@@ -81,9 +83,10 @@ public class ContractInputGenerationWizard extends Wizard {
             final FieldToContractInputMappingOperationBuilder operationBuilder,
             final FieldToContractInputMappingExpressionBuilder expressionBuilder,
             final IPreferenceStore preferenceStore,
-            final IPreferenceStore groovyStore,
             final ISharedImages sharedImagesService,
-            final ContractInputGenerationInfoDialogFactory infoDialogFactory) {
+            final ContractInputGenerationInfoDialogFactory infoDialogFactory,
+            final ContractInputGenerationWizardPagesFactory contractInputWizardPagesFactory,
+            final GroovySourceViewerFactory sourceViewerFactory) {
         setWindowTitle(Messages.contractInputGenerationTitle);
         setDefaultPageImageDescriptor(Pics.getWizban());
         this.contractContainer = contractContainer;
@@ -95,7 +98,8 @@ public class ContractInputGenerationWizard extends Wizard {
         this.expressionBuilder = expressionBuilder;
         this.preferenceStore = preferenceStore;
         this.infoDialogFactory = infoDialogFactory;
-        this.groovyStore = groovyStore;
+        this.contractInputWizardPagesFactory = contractInputWizardPagesFactory;
+        this.sourceViewerFactory = sourceViewerFactory;
 
     }
 
@@ -108,28 +112,20 @@ public class ContractInputGenerationWizard extends Wizard {
         if (!availableBusinessData.isEmpty()) {
             selectedDataObservable.setValue(availableBusinessData.get(0));
         }
-        addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable,
+        addPage(contractInputWizardPagesFactory.createSelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable,
                 repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)));
-        contractInputFromBusinessObjectWizardPage = createCreateContractInputFromBusinessObjectWizardPage();
+        contractInputFromBusinessObjectWizardPage = contractInputWizardPagesFactory.createCreateContratInputFromBusinessObjectWizardPage(
+                contractContainer.getContract(), generationOptions, selectedDataObservable, rootNameObservable, fieldToContractInputMappingFactory,
+                fieldToContractInputMappingsObservable, repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
         contractInputFromBusinessObjectWizardPage.setTitle();
         addPage(contractInputFromBusinessObjectWizardPage);
         if (contractContainer instanceof Pool) {
-            generatedScriptPreviewPage = createGeneratedScriptPreviewPage();
+            generatedScriptPreviewPage = contractInputWizardPagesFactory.createGeneratedScriptPreviewPage(rootNameObservable,
+                    fieldToContractInputMappingsObservable, selectedDataObservable, repositoryAccessor, operationBuilder, expressionBuilder,
+                    sourceViewerFactory);
             generatedScriptPreviewPage.setDescription();
             addPage(generatedScriptPreviewPage);
         }
-    }
-
-    protected CreateContractInputFromBusinessObjectWizardPage createCreateContractInputFromBusinessObjectWizardPage() {
-        return new CreateContractInputFromBusinessObjectWizardPage(contractContainer.getContract(), generationOptions,
-                selectedDataObservable, rootNameObservable, fieldToContractInputMappingFactory, fieldToContractInputMappingsObservable,
-                repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
-    }
-
-    protected GeneratedScriptPreviewPage createGeneratedScriptPreviewPage() {
-        return new GeneratedScriptPreviewPage(rootNameObservable, fieldToContractInputMappingsObservable, selectedDataObservable,
-                repositoryAccessor, groovyStore,
-                operationBuilder, expressionBuilder);
     }
 
     protected List<Data> availableBusinessData() {
@@ -156,8 +152,7 @@ public class ContractInputGenerationWizard extends Wizard {
     @Override
     public boolean performFinish() {
         final BusinessObjectData data = (BusinessObjectData) selectedDataObservable.getValue();
-        final RootContractInputGenerator contractInputGenerator = new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
-                contractInputFromBusinessObjectWizardPage.getMappings(), repositoryAccessor, operationBuilder, expressionBuilder);
+        final RootContractInputGenerator contractInputGenerator = getRootContractGenerator();
         final int returnCode = openInfoDialog();
         if (returnCode == MessageDialogWithToggle.OK || returnCode == ContractInputGenerationInfoDialogFactory.NOT_OPENED) {
             try {
@@ -177,6 +172,21 @@ public class ContractInputGenerationWizard extends Wizard {
         }
         contractInputFromBusinessObjectWizardPage.disableAutoGeneration();
         return false;
+    }
+
+    /**
+     * @return
+     */
+    protected RootContractInputGenerator getRootContractGenerator() {
+        RootContractInputGenerator contractInputGenerator;
+        if (generatedScriptPreviewPage != null && generatedScriptPreviewPage.getRootContractInputGenerator() != null) {
+            contractInputGenerator = generatedScriptPreviewPage.getRootContractInputGenerator();
+
+        } else {
+            contractInputGenerator = new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
+                    contractInputFromBusinessObjectWizardPage.getMappings(), repositoryAccessor, operationBuilder, expressionBuilder);
+        }
+        return contractInputGenerator;
     }
 
     private int openInfoDialog() {
@@ -215,4 +225,5 @@ public class ContractInputGenerationWizard extends Wizard {
     public CreateContractInputFromBusinessObjectWizardPage getContractInputFromBusinessObjectWizardPage() {
         return contractInputFromBusinessObjectWizardPage;
     }
+
 }
