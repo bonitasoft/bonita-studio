@@ -16,13 +16,15 @@ package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 
 public class NewBusinessObjectInitializer extends AbstractBusinessObjectInitializer implements IPropertyInitializer {
 
     private final boolean checkExistsence;
 
-    public NewBusinessObjectInitializer(final RelationField field, final String refName, final boolean checkExistsence) {
-        super(field, refName);
+    public NewBusinessObjectInitializer(final RelationField field, final String refName, VariableNameResolver variableNameResolver,
+            final boolean checkExistsence) {
+        super(field, refName, variableNameResolver);
         this.checkExistsence = checkExistsence;
     }
 
