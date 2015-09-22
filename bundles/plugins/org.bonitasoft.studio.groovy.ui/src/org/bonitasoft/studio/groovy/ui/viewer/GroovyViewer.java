@@ -45,6 +45,7 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.codehaus.groovy.eclipse.GroovyPlugin;
 import org.codehaus.groovy.eclipse.core.preferences.PreferenceConstants;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
@@ -121,24 +122,14 @@ public class GroovyViewer implements IDocumentListener {
         this.isPageFlowContext = isPageFlowContext;
     }
 
-    public GroovyViewer(final Composite mainComposite, final ProvidedGroovyRepositoryStore store,
-            final IPreferenceStore groovyStore, final boolean isPageFlowContext) {
-        this(mainComposite, null, null, store, groovyStore);
-        this.isPageFlowContext = isPageFlowContext;
-    }
-
     public GroovyViewer(final Composite mainComposite, final IEditorInput input, final GroovyEditor groovyEditor) {
-        this(mainComposite, input, groovyEditor, RepositoryManager.getInstance().getRepositoryStore(
-                ProvidedGroovyRepositoryStore.class), org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore());
-    }
-
-    public GroovyViewer(final Composite mainComposite, final IEditorInput input, final GroovyEditor groovyEditor,
-            final ProvidedGroovyRepositoryStore groovyStore,
-            final IPreferenceStore groovyPreferenceStore) {
-        groovyPreferenceStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
-        groovyPreferenceStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
+        final IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
+        groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
+        groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
         if (input == null) {
-            tmpGroovyFileStore = groovyStore.createRepositoryFileStore("script" + System.currentTimeMillis() + ".groovy");
+            final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(
+                    ProvidedGroovyRepositoryStore.class);
+            tmpGroovyFileStore = store.createRepositoryFileStore("script" + System.currentTimeMillis() + ".groovy");
             tmpGroovyFileStore.save("");
             this.input = new FileEditorInput(tmpGroovyFileStore.getResource());
         } else {
@@ -146,7 +137,7 @@ public class GroovyViewer implements IDocumentListener {
         }
         editor = groovyEditor;
         if (editor == null) {
-            editor = new BonitaGroovyEditor(groovyPreferenceStore);
+            editor = new BonitaGroovyEditor(GroovyPlugin.getDefault().getPreferenceStore());
         }
         try {
             editor.getDocumentProvider().connect(input);

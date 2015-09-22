@@ -26,7 +26,7 @@ import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInp
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
+import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -40,13 +40,15 @@ import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * @author aurelie
@@ -61,14 +63,17 @@ public class GeneratedScriptPreviewPage extends WizardPage {
     private final FieldToContractInputMappingExpressionBuilder expressionBuilder;
     private IDocument document;
     private Expression generatedExpression;
-    private final IPreferenceStore groovyStore;
+    private final GroovySourceViewerFactory sourceViewerFactory;
+    private RootContractInputGenerator rootContractInputGenerator;
+    private Text scriptNameText;
 
     /**
      * @param pageName
      */
     public GeneratedScriptPreviewPage(final WritableValue rootNameObservable, final WritableList fieldToContactInputMappingsObservable,
-            final WritableValue selectedDataObservable, final RepositoryAccessor repositoryAccessor, final IPreferenceStore groovyStore,
-            final FieldToContractInputMappingOperationBuilder operationBuilder, final FieldToContractInputMappingExpressionBuilder expressionBuilder) {
+            final WritableValue selectedDataObservable, final RepositoryAccessor repositoryAccessor,
+            final FieldToContractInputMappingOperationBuilder operationBuilder, final FieldToContractInputMappingExpressionBuilder expressionBuilder,
+            final GroovySourceViewerFactory sourceViewerFactory) {
         super(GeneratedScriptPreviewPage.class.getName());
         setTitle(Messages.generatedScriptPreviewTitle);
         this.rootNameObservable = rootNameObservable;
@@ -77,7 +82,7 @@ public class GeneratedScriptPreviewPage extends WizardPage {
         this.operationBuilder = operationBuilder;
         this.expressionBuilder = expressionBuilder;
         this.repositoryAccessor = repositoryAccessor;
-        this.groovyStore = groovyStore;
+        this.sourceViewerFactory = sourceViewerFactory;
         generatedExpression = ExpressionFactory.eINSTANCE.createExpression();
     }
 
@@ -97,16 +102,6 @@ public class GeneratedScriptPreviewPage extends WizardPage {
 
     /*
      * (non-Javadoc)
-     * @see org.eclipse.jface.wizard.WizardPage#setTitle(java.lang.String)
-     */
-    @Override
-    public void setTitle(final String title) {
-        // TODO Auto-generated method stub
-        super.setTitle(title);
-    }
-
-    /*
-     * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -114,16 +109,38 @@ public class GeneratedScriptPreviewPage extends WizardPage {
 
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
-        mainComposite.setLayout(new FillLayout(SWT.VERTICAL));
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(15, 15).margins(10, 10).create());
+        createScriptNameComposite(mainComposite);
+        createScriptPreviewComposite(mainComposite);
+        setControl(mainComposite);
+    }
 
-        final GroovyViewer groovyViewer = new GroovyViewer(mainComposite, repositoryAccessor.getRepositoryStore(ProvidedGroovyRepositoryStore.class),
-                groovyStore, true);
+    /**
+     * @param mainComposite
+     */
+    protected void createScriptNameComposite(final Composite mainComposite) {
+
+        final Label scriptNameLabel = new Label(mainComposite, SWT.NONE);
+        scriptNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).create());
+        scriptNameLabel.setText(Messages.scriptNameLabel);
+        scriptNameText = new Text(mainComposite, SWT.BORDER);
+        scriptNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        scriptNameText.setEditable(false);
+    }
+
+    /**
+     * @param mainComposite
+     */
+    protected void createScriptPreviewComposite(final Composite mainComposite) {
+        final Composite previewComposite = new Composite(mainComposite, SWT.NONE);
+        previewComposite.setLayout(new FillLayout(SWT.VERTICAL));
+        previewComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 0).create());
+        final GroovyViewer groovyViewer = sourceViewerFactory.createSourceViewer(previewComposite, true);
         groovyViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         final SourceViewer sourceViewer = groovyViewer.getSourceViewer();
         sourceViewer.setEditable(false);
         document = groovyViewer.getDocument();
         document.set(generatedExpression.getContent());
-        setControl(mainComposite);
     }
 
     /*
@@ -142,12 +159,15 @@ public class GeneratedScriptPreviewPage extends WizardPage {
      */
     protected void generateExpressionScript() {
         if (selectedDataObservable.getValue() != null) {
-            final RootContractInputGenerator rootContractInputGenerator = createRootContractInputGenerator();
+            rootContractInputGenerator = createRootContractInputGenerator();
             if (!fieldToContractInputMappingsObservable.isEmpty()) {
                 try {
                     rootContractInputGenerator.buildForInstanciation((BusinessObjectData) selectedDataObservable.getValue());
                     generatedExpression = rootContractInputGenerator.getInitialValueExpression();
                     document.set(generatedExpression.getContent());
+                    if (generatedExpression.getName() != null) {
+                        scriptNameText.setText(generatedExpression.getName());
+                    }
                 } catch (final OperationCreationException e) {
                     BonitaStudioLog.error("Failed to create Operations from contract", e);
                     new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e).open();
@@ -165,6 +185,10 @@ public class GeneratedScriptPreviewPage extends WizardPage {
 
         return new RootContractInputGenerator((String) rootNameObservable.getValue(), mappings,
                 repositoryAccessor, operationBuilder, expressionBuilder);
+    }
+
+    public RootContractInputGenerator getRootContractInputGenerator() {
+        return rootContractInputGenerator;
     }
 
 }
