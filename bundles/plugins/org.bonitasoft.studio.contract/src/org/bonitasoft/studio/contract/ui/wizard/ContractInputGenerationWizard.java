@@ -18,6 +18,7 @@ import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
@@ -25,12 +26,14 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.RootContractInputGenerator;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractContainer;
@@ -39,6 +42,7 @@ import org.bonitasoft.studio.model.process.OperationContainer;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.AddCommand;
@@ -60,14 +64,18 @@ public class ContractInputGenerationWizard extends Wizard {
     private CreateContractInputFromBusinessObjectWizardPage contractInputFromBusinessObjectWizardPage;
     private List<Data> availableBusinessData;
     private WritableValue selectedDataObservable;
+    private WritableValue rootNameObservable;
+    private WritableList fieldToContractInputMappingsObservable;
     private final FieldToContractInputMappingFactory fieldToContractInputMappingFactory;
     private final RepositoryAccessor repositoryAccessor;
     private final FieldToContractInputMappingOperationBuilder operationBuilder;
     private final IPreferenceStore preferenceStore;
-    private final ISharedImages sharedImagesService;
     private final FieldToContractInputMappingExpressionBuilder expressionBuilder;
     private final ContractInputGenerationInfoDialogFactory infoDialogFactory;
     private final GenerationOptions generationOptions;
+    private GeneratedScriptPreviewPage generatedScriptPreviewPage;
+    private final ContractInputGenerationWizardPagesFactory contractInputWizardPagesFactory;
+    private final GroovySourceViewerFactory sourceViewerFactory;
 
     public ContractInputGenerationWizard(final ContractContainer contractContainer,
             final EditingDomain editingDomain,
@@ -76,7 +84,9 @@ public class ContractInputGenerationWizard extends Wizard {
             final FieldToContractInputMappingExpressionBuilder expressionBuilder,
             final IPreferenceStore preferenceStore,
             final ISharedImages sharedImagesService,
-            final ContractInputGenerationInfoDialogFactory infoDialogFactory) {
+            final ContractInputGenerationInfoDialogFactory infoDialogFactory,
+            final ContractInputGenerationWizardPagesFactory contractInputWizardPagesFactory,
+            final GroovySourceViewerFactory sourceViewerFactory) {
         setWindowTitle(Messages.contractInputGenerationTitle);
         setDefaultPageImageDescriptor(Pics.getWizban());
         this.contractContainer = contractContainer;
@@ -87,23 +97,35 @@ public class ContractInputGenerationWizard extends Wizard {
         this.operationBuilder = operationBuilder;
         this.expressionBuilder = expressionBuilder;
         this.preferenceStore = preferenceStore;
-        this.sharedImagesService = sharedImagesService;
         this.infoDialogFactory = infoDialogFactory;
+        this.contractInputWizardPagesFactory = contractInputWizardPagesFactory;
+        this.sourceViewerFactory = sourceViewerFactory;
+
     }
 
     @Override
     public void addPages() {
         selectedDataObservable = new WritableValue();
+        rootNameObservable = new WritableValue();
+        fieldToContractInputMappingsObservable = new WritableList(new ArrayList<FieldToContractInputMapping>(), FieldToContractInputMapping.class);
         availableBusinessData = availableBusinessData();
         if (!availableBusinessData.isEmpty()) {
             selectedDataObservable.setValue(availableBusinessData.get(0));
         }
-        addPage(new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable,
+        addPage(contractInputWizardPagesFactory.createSelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable,
                 repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)));
-        contractInputFromBusinessObjectWizardPage = new CreateContractInputFromBusinessObjectWizardPage(contractContainer.getContract(), generationOptions,
-                selectedDataObservable, fieldToContractInputMappingFactory, repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
+        contractInputFromBusinessObjectWizardPage = contractInputWizardPagesFactory.createCreateContratInputFromBusinessObjectWizardPage(
+                contractContainer.getContract(), generationOptions, selectedDataObservable, rootNameObservable, fieldToContractInputMappingFactory,
+                fieldToContractInputMappingsObservable, repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
         contractInputFromBusinessObjectWizardPage.setTitle();
         addPage(contractInputFromBusinessObjectWizardPage);
+        if (contractContainer instanceof Pool) {
+            generatedScriptPreviewPage = contractInputWizardPagesFactory.createGeneratedScriptPreviewPage(rootNameObservable,
+                    fieldToContractInputMappingsObservable, selectedDataObservable, repositoryAccessor, operationBuilder, expressionBuilder,
+                    sourceViewerFactory);
+            generatedScriptPreviewPage.setDescription();
+            addPage(generatedScriptPreviewPage);
+        }
     }
 
     protected List<Data> availableBusinessData() {
@@ -130,8 +152,7 @@ public class ContractInputGenerationWizard extends Wizard {
     @Override
     public boolean performFinish() {
         final BusinessObjectData data = (BusinessObjectData) selectedDataObservable.getValue();
-        final RootContractInputGenerator contractInputGenerator = new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
-                contractInputFromBusinessObjectWizardPage.getMappings(), repositoryAccessor, operationBuilder, expressionBuilder);
+        final RootContractInputGenerator contractInputGenerator = getRootContractGenerator();
         final int returnCode = openInfoDialog();
         if (returnCode == MessageDialogWithToggle.OK || returnCode == ContractInputGenerationInfoDialogFactory.NOT_OPENED) {
             try {
@@ -151,6 +172,21 @@ public class ContractInputGenerationWizard extends Wizard {
         }
         contractInputFromBusinessObjectWizardPage.disableAutoGeneration();
         return false;
+    }
+
+    /**
+     * @return
+     */
+    protected RootContractInputGenerator getRootContractGenerator() {
+        RootContractInputGenerator contractInputGenerator;
+        if (generatedScriptPreviewPage != null && generatedScriptPreviewPage.getRootContractInputGenerator() != null) {
+            contractInputGenerator = generatedScriptPreviewPage.getRootContractInputGenerator();
+
+        } else {
+            contractInputGenerator = new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
+                    contractInputFromBusinessObjectWizardPage.getMappings(), repositoryAccessor, operationBuilder, expressionBuilder);
+        }
+        return contractInputGenerator;
     }
 
     private int openInfoDialog() {
@@ -189,4 +225,5 @@ public class ContractInputGenerationWizard extends Wizard {
     public CreateContractInputFromBusinessObjectWizardPage getContractInputFromBusinessObjectWizardPage() {
         return contractInputFromBusinessObjectWizardPage;
     }
+
 }
