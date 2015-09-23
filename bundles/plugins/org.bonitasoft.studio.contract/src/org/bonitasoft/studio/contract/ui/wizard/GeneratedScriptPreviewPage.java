@@ -106,7 +106,6 @@ public class GeneratedScriptPreviewPage extends WizardPage {
      */
     @Override
     public void createControl(final Composite parent) {
-
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(15, 15).margins(10, 10).create());
@@ -119,7 +118,6 @@ public class GeneratedScriptPreviewPage extends WizardPage {
      * @param mainComposite
      */
     protected void createScriptNameComposite(final Composite mainComposite) {
-
         final Label scriptNameLabel = new Label(mainComposite, SWT.NONE);
         scriptNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).create());
         scriptNameLabel.setText(Messages.scriptNameLabel);
@@ -178,11 +176,9 @@ public class GeneratedScriptPreviewPage extends WizardPage {
 
     protected RootContractInputGenerator createRootContractInputGenerator() {
         final List<FieldToContractInputMapping> mappings = new ArrayList<FieldToContractInputMapping>();
-
         for (final Object mapping : fieldToContractInputMappingsObservable) {
             mappings.add((FieldToContractInputMapping) mapping);
         }
-
         return new RootContractInputGenerator((String) rootNameObservable.getValue(), mappings,
                 repositoryAccessor, operationBuilder, expressionBuilder);
     }

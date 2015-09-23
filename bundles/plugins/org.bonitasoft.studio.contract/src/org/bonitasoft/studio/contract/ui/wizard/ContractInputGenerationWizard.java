@@ -174,14 +174,10 @@ public class ContractInputGenerationWizard extends Wizard {
         return false;
     }
 
-    /**
-     * @return
-     */
     protected RootContractInputGenerator getRootContractGenerator() {
         RootContractInputGenerator contractInputGenerator;
         if (generatedScriptPreviewPage != null && generatedScriptPreviewPage.getRootContractInputGenerator() != null) {
             contractInputGenerator = generatedScriptPreviewPage.getRootContractInputGenerator();
-
         } else {
             contractInputGenerator = new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
                     contractInputFromBusinessObjectWizardPage.getMappings(), repositoryAccessor, operationBuilder, expressionBuilder);
@@ -219,9 +215,6 @@ public class ContractInputGenerationWizard extends Wizard {
         }
     }
 
-    /**
-     * @return
-     */
     public CreateContractInputFromBusinessObjectWizardPage getContractInputFromBusinessObjectWizardPage() {
         return contractInputFromBusinessObjectWizardPage;
     }
