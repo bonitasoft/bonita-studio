@@ -166,6 +166,31 @@ public class FieldToContractInputMappingViewerCheckStateManagerTest {
 
     }
 
+    @Test
+    public void should_select_all_when_checkedAllState_calledWithStateTrue_and_itemsArePartiallySelected() {
+        final FieldToContractInputMappingViewerCheckStateManager checkedStateManager = new FieldToContractInputMappingViewerCheckStateManager();
+
+        final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
+        rootMapping1.setGenerated(true);
+        final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
+        final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
+        childMapping1.setGenerated(false);
+        childMapping2.setGenerated(true);
+        rootMapping1.addChild(childMapping1);
+        rootMapping1.addChild(childMapping2);
+        final SimpleFieldToContractInputMapping rootMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
+        rootMapping2.setGenerated(false);
+        final ArrayList<FieldToContractInputMapping> newArrayList = Lists.newArrayList(rootMapping1, rootMapping2);
+
+        final CheckboxTreeViewer viewer = aCheckBoxTreeViewer(newArrayList);
+        checkedStateManager.checkAllStateChange(newArrayList, viewer, true);
+
+        assertThat(viewer.getChecked(rootMapping1)).isTrue();
+        assertThat(viewer.getChecked(rootMapping2)).isTrue();
+        assertThat(viewer.getChecked(childMapping1)).isTrue();
+        assertThat(viewer.getChecked(childMapping2)).isTrue();
+    }
+
     private CheckboxTreeViewer aCheckBoxTreeViewer(final List<FieldToContractInputMapping> input) {
         final CheckboxTreeViewer viewer = new CheckboxTreeViewer(realmWithDisplay.createComposite());
         viewer.setContentProvider(new ObservableListTreeContentProvider(new FieldToContractInputMappingObservableFactory(),
