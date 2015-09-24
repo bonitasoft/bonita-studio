@@ -81,6 +81,12 @@
             <encoding>utf-8</encoding>
             <resolveUCN>1</resolveUCN>
         </language>
+        <language>
+            <code>ja</code>
+            <file>i18n/messages_ja.properties</file>
+            <encoding>utf-8</encoding>
+            <resolveUCN>1</resolveUCN>
+        </language>
     </customLanguageFileList>
 	<preShowHelpActionList>
 		<setInstallerVariable>

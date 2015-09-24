@@ -226,55 +226,7 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
             // reset boundary connections
             commands.clear();
 
-            for (final BoundaryEvent boundaryEvent : ((Activity) targetElement).getBoundaryIntermediateEvents()) {
-                final GraphicalEditPart boundaryEp = (GraphicalEditPart) targetEditPart.findEditPart(targetEditPart, boundaryEvent);
-
-                if (boundaryEp != null) {
-                    for (int i = 0; i < boundaryEvent.getOutgoing().size(); i++) {
-                        final Connection outgoing = boundaryEvent.getOutgoing().get(i);
-                        final GraphicalEditPart boundaryTargetEP = (GraphicalEditPart) parentEditPart.findEditPart(parentEditPart.getRoot(),outgoing.getTarget());
-
-                        if(boundaryTargetEP != null){
-
-                            final ConnectionEditPart ep = (ConnectionEditPart) GMFTools.findEditPart((EditPart) parentEditPart.getRoot().getChildren().get(0),outgoing) ;
-                            if(ep != null){
-                                try {
-                                    new DeleteCommand(ep.getNotationView()).execute(null, null);
-                                } catch (final ExecutionException e) {
-                                    BonitaStudioLog.error(e) ;
-                                }
-                            }
-
-                            final AbstractEMFOperation recreateExceptionFlowsOperation = new AbstractEMFOperation(editingDomain, "Recreate Exception flow") {
-
-                                @Override
-                                protected IStatus doExecute(final IProgressMonitor monitor, final IAdaptable info) throws ExecutionException {
-                                    final IElementType elementType = ElementTypeRegistry.getInstance().getType("org.bonitasoft.studio.diagram.SequenceFlow_4001");
-                                    final Edge edge = ViewService.getInstance().createEdge(elementType,
-                                            ModelHelper.getDiagramFor(ModelHelper.getMainProcess(targetElement),editingDomain),
-                                            ((IHintedType) elementType).getSemanticHint(), -1, true, targetEditPart.getDiagramPreferencesHint());
-                                    edge.setElement(outgoing);
-                                    edge.setSource(boundaryEp.getNotationView());
-                                    edge.setTarget(boundaryTargetEP.getNotationView());
-
-                                    edge.setVisible(true);
-
-                                    return new Status(IStatus.OK, "org.bonitasoft.studio.diagram.common", "Recreate Exception flow succeeded");
-                                }
-                            };
-                            try {
-                                recreateExceptionFlowsOperation.execute(monitor, null);
-                            } catch (final ExecutionException e) {
-                                BonitaStudioLog.error(e);
-                            }
-                        } else {
-                            // TODO: remove target from list because it has been
-                            // removed? for now this done at the end, in
-                            // refreshBoundaryElements
-                        }
-                    }
-                }
-            }
+            handleBoundaries(monitor, editingDomain, parentEditPart, targetElement, targetEditPart);
         }
 
         //        if (targetElement instanceof ConnectableElement) {
@@ -290,9 +242,62 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
         targetEditPart.refresh();// need to call refresh in order that it
         targetEditPart.getViewer().select(targetEditPart);
         targetEditPart.getRoot().refresh();
-        /* Need to refresh the boundaries elment at the end of the conversion */
+        /* Need to refresh the boundaries element at the end of the conversion */
         refreshBoundaryElements(editingDomain, targetElement, targetEditPart, childPositions);
         return CommandResult.newOKCommandResult(targetEditPart);
+    }
+
+    protected void handleBoundaries(final IProgressMonitor monitor, final TransactionalEditingDomain editingDomain, final GraphicalEditPart parentEditPart,
+            final EObject targetElement, final GraphicalEditPart targetEditPart) {
+        for (final BoundaryEvent boundaryEvent : ((Activity) targetElement).getBoundaryIntermediateEvents()) {
+            final GraphicalEditPart boundaryEp = (GraphicalEditPart) targetEditPart.findEditPart(targetEditPart, boundaryEvent);
+
+            if (boundaryEp != null) {
+                for (int i = 0; i < boundaryEvent.getOutgoing().size(); i++) {
+                    final Connection outgoing = boundaryEvent.getOutgoing().get(i);
+                    final GraphicalEditPart boundaryTargetEP = (GraphicalEditPart) parentEditPart.findEditPart(parentEditPart.getRoot(),outgoing.getTarget());
+
+                    if(boundaryTargetEP != null){
+
+                        final ConnectionEditPart ep = (ConnectionEditPart) GMFTools.findEditPart((EditPart) parentEditPart.getRoot().getChildren().get(0),outgoing) ;
+                        if(ep != null){
+                            try {
+                                new DeleteCommand(ep.getNotationView()).execute(null, null);
+                            } catch (final ExecutionException e) {
+                                BonitaStudioLog.error(e) ;
+                            }
+                        }
+
+                        final AbstractEMFOperation recreateExceptionFlowsOperation = new AbstractEMFOperation(editingDomain, "Recreate Exception flow") {
+
+                            @Override
+                            protected IStatus doExecute(final IProgressMonitor monitor, final IAdaptable info) throws ExecutionException {
+                                final IElementType elementType = ElementTypeRegistry.getInstance().getType("org.bonitasoft.studio.diagram.SequenceFlow_4001");
+                                final Edge edge = ViewService.getInstance().createEdge(elementType,
+                                        ModelHelper.getDiagramFor(ModelHelper.getMainProcess(targetElement),editingDomain),
+                                        ((IHintedType) elementType).getSemanticHint(), -1, true, targetEditPart.getDiagramPreferencesHint());
+                                edge.setElement(outgoing);
+                                edge.setSource(boundaryEp.getNotationView());
+                                edge.setTarget(boundaryTargetEP.getNotationView());
+
+                                edge.setVisible(true);
+
+                                return new Status(IStatus.OK, "org.bonitasoft.studio.diagram.common", "Recreate Exception flow succeeded");
+                            }
+                        };
+                        try {
+                            recreateExceptionFlowsOperation.execute(monitor, null);
+                        } catch (final ExecutionException e) {
+                            BonitaStudioLog.error(e);
+                        }
+                    } else {
+                        // TODO: remove target from list because it has been
+                        // removed? for now this done at the end, in
+                        // refreshBoundaryElements
+                    }
+                }
+            }
+        }
     }
 
     protected static void refreshBoundaryElements(final TransactionalEditingDomain editingDomain, final EObject targetElement,
@@ -315,22 +320,12 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
                      * can't be set on this kind of Element
                      */
                     if (targetElement instanceof Activity) {
-
-                        final AbstractEMFOperation operation = new AbstractEMFOperation(editingDomain, "Remove boundary child") {
-
-                            @Override
-                            protected IStatus doExecute(final IProgressMonitor monitor, final IAdaptable info) throws ExecutionException {
-                                /*
-                                 * Remove the BoundaryEvent from the list and
-                                 * its outgoing transition
-                                 */
-                                ((Activity) targetElement).getBoundaryIntermediateEvents().remove(childToResetPosition);
-                                if (childToResetPosition instanceof BoundaryEvent) {
-                                    ((BoundaryEvent) childToResetPosition).getOutgoing().clear();
-                                }
-                                return new Status(IStatus.OK, "org.bonitasoft.studio.diagram.common", "Remove boundary child succeeded");
-                            }
-                        };
+                        /*
+                         * Remove the BoundaryEvent from the list and
+                         * its outgoing transition
+                         */
+                        final AbstractEMFOperation operation = new RemoveBoundaryWithItsFlows(editingDomain, (BoundaryEvent) childToResetPosition,
+                                (Activity) targetElement);
                         try {
                             operation.execute(new NullProgressMonitor(), null);
                         } catch (final ExecutionException e) {
