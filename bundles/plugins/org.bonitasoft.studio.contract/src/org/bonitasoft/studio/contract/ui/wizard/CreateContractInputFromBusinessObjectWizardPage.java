@@ -21,6 +21,7 @@ import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFacto
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.uniqueValidator;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,6 +42,7 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
+import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
@@ -255,27 +257,35 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                 selectedDataObservable,
                 null,
                 updateValueStrategy().withConverter(selectedDataToFieldMappings()).create());
-        dbc.addValidationStatusProvider(new MultiValidator() {
+
+        final IViewerObservableSet checkedElements = ViewersObservables.observeCheckedElements(treeViewer, FieldToContractInputMapping.class);
+        final MultiValidator multiValidator = createEmptySelectionMultivalidator(checkedElements);
+        dbc.addValidationStatusProvider(multiValidator);
+
+        createButtonComposite(viewerComposite, manager, dbc);
+
+    }
+
+    protected MultiValidator createEmptySelectionMultivalidator(final IViewerObservableSet checkedElements) {
+        return new MultiValidator() {
 
             @Override
             protected IStatus validate() {
-                final IViewerObservableSet checkedElements = ViewersObservables.observeCheckedElements(treeViewer, FieldToContractInputMapping.class);
                 if (checkedElements.isEmpty()) {
                     return ValidationStatus.error(Messages.atLeastOneAttributeShouldBeSelectedError);
                 }
                 return ValidationStatus.ok();
             }
-        });
-
-        createButtonComposite(viewerComposite, manager);
-
+        };
     }
 
     /**
      * @param viewerComposite
      * @param manager
+     * @param dbc
      */
-    protected void createButtonComposite(final Composite viewerComposite, final FieldToContractInputMappingViewerCheckStateManager manager) {
+    protected void createButtonComposite(final Composite viewerComposite, final FieldToContractInputMappingViewerCheckStateManager manager,
+            final EMFDataBindingContext dbc) {
         final Composite buttonsComposite = new Composite(viewerComposite, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
@@ -287,10 +297,10 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 manager.checkAllStateChange(mappings, treeViewer, true);
+                updateValidationStatus(ValidationStatus.ok(), dbc);
             }
         });
         final Button deselect = new Button(buttonsComposite, SWT.FLAT);
-
         deselect.setText(Messages.deselect);
         deselect.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
         deselect.addSelectionListener(new SelectionAdapter() {
@@ -298,6 +308,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 manager.checkAllStateChange(mappings, treeViewer, false);
+                updateValidationStatus(ValidationStatus.error(Messages.atLeastOneAttributeShouldBeSelectedError), dbc);
             }
         });
     }
@@ -363,6 +374,29 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
     public void setRootName(final String rootName) {
         this.rootName = rootName;
+    }
+
+    protected void updateValidationStatus(final IStatus status, final EMFDataBindingContext dbc) {
+        if (status.isOK()) {
+            setErrorMessage(null);
+            final Iterator<?> it = dbc.getValidationStatusProviders()
+                    .iterator();
+            while (it.hasNext()) {
+                final ValidationStatusProvider provider = (ValidationStatusProvider) it
+                        .next();
+                final IStatus iStatus = (IStatus) provider
+                        .getValidationStatus().getValue();
+                if (!iStatus.isOK()) {
+                    setErrorMessage(iStatus.getMessage());
+                } else {
+                    setPageComplete(true);
+                }
+            }
+            setPageComplete(isPageComplete());
+        } else {
+            setErrorMessage(status.getMessage());
+            setPageComplete(false);
+        }
     }
 
 }
