@@ -23,7 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -32,7 +32,7 @@ import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
 import org.junit.Test;
 
 /**
- * @author Aurélien
+ * @author Aurï¿½lien
  *
  */
 public class TestBonitaAPI {
