@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012-2015 Bonitasoft S.A.
- * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -13,7 +13,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.diagram.custom.repository;
-import java.io.File;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -51,7 +52,6 @@ import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.swt.graphics.Image;
 
-
 /**
  * @author Romain Bioteau
  */
@@ -76,7 +76,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
 
     @Override
     public boolean canBeExported() {
-        return true;
+        return false;
     }
 
     @Override
