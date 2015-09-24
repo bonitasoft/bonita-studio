@@ -20,6 +20,7 @@ import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.BusinessObjectQueryInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IPropertyInitializer;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.InitializerContext;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleBusinessObjectQueryInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.NewBusinessObjectInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.NewBusinessObjectListInitializer;
@@ -30,36 +31,30 @@ public class BusinessObjectInitializerFactory extends AbsractInitializerFactory 
 
     private final VariableNameResolver variableNameResolver;
 
-    public BusinessObjectInitializerFactory(VariableNameResolver variableNameResolver) {
+    public BusinessObjectInitializerFactory(final VariableNameResolver variableNameResolver) {
         this.variableNameResolver = variableNameResolver;
     }
 
     @Override
     public IPropertyInitializer newPropertyInitializer(final FieldToContractInputMapping mapping, final BusinessObjectData data, final boolean isOnPool) {
         final RelationField relationField = (RelationField) mapping.getField();
-        return relationField.getType() == Type.AGGREGATION ? newAggregatedObjectInitializer(mapping, data, relationField, isOnPool)
-                : newComposedObjectInitializer(
-                        mapping, data, relationField, isOnPool);
+        final InitializerContext context = createContext(data, variableNameResolver, mapping, false, isOnPool);
+        return relationField.getType() == Type.AGGREGATION ? newAggregatedObjectInitializer(context)
+                : newComposedObjectInitializer(context);
     }
 
-    private IPropertyInitializer newAggregatedObjectInitializer(final FieldToContractInputMapping mapping,
-            final BusinessObjectData data,
-            final RelationField relationField, final boolean isOnPool) {
-        return relationField.isCollection() ? new MultipleBusinessObjectQueryInitializer(businessObject(mapping), relationField,
-                mapping.getContractInput(), toRefName(mapping, data), variableNameResolver, isOnPool)
-                : new BusinessObjectQueryInitializer(firstMultipleParentBusinessObject(mapping), relationField,
-                        mapping.getContractInput(),
-                        toRefName(mapping, data),
-                        variableNameResolver);
+    private IPropertyInitializer newAggregatedObjectInitializer(final InitializerContext context) {
+        return context.getField().isCollection() ?
+                new MultipleBusinessObjectQueryInitializer(businessObject(context.getMapping()), context)
+                : new BusinessObjectQueryInitializer(firstMultipleParentBusinessObject(context.getMapping()), context);
     }
 
-    private IPropertyInitializer newComposedObjectInitializer(final FieldToContractInputMapping mapping,
-            final BusinessObjectData data,
-            final RelationField relationField, final boolean isOnPool) {
-        return relationField.isCollection()
-                ? new NewBusinessObjectListInitializer(relationField, mapping.getContractInput(), toRefName(mapping, data), variableNameResolver, isOnPool)
-                : new NewBusinessObjectInitializer(relationField, toRefName(mapping, data), variableNameResolver,
-                        mapping.getContractInput().eContainer() instanceof ContractInput);
+    private IPropertyInitializer newComposedObjectInitializer(final InitializerContext context) {
+        if (context.getField().isCollection()) {
+            return new NewBusinessObjectListInitializer(context);
+        } else {
+            context.setCheckExistence(context.getMapping().getContractInput().eContainer() instanceof ContractInput);
+            return new NewBusinessObjectInitializer(context);
+        }
     }
-
 }

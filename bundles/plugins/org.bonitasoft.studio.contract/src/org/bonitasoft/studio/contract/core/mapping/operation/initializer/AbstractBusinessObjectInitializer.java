@@ -27,52 +27,63 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
 public abstract class AbstractBusinessObjectInitializer implements IPropertyInitializer {
 
-    protected final RelationField field;
     protected final List<IPropertyInitializer> propertyInitializers = new ArrayList<IPropertyInitializer>();
-    protected final String refName;
-    protected final VariableNameResolver variableNameResolver;
+    protected InitializerContext context;
+    private AbstractBusinessObjectInitializer parent;
 
-    public AbstractBusinessObjectInitializer(final RelationField field, final String refName, VariableNameResolver variableNameResolver) {
-        this.field = field;
-        this.refName = refName;
-        this.variableNameResolver = variableNameResolver;
+    public AbstractBusinessObjectInitializer(final InitializerContext context) {
+        this.context = context;
+    }
+
+    public InitializerContext getContext() {
+        return context;
     }
 
     public void addPropertyInitializer(final IPropertyInitializer propertyInitializer) {
+        propertyInitializer.setParent(this);
         propertyInitializers.add(propertyInitializer);
     }
 
     @Override
+    public void setParent(final AbstractBusinessObjectInitializer parentInitializer) {
+        parent = parentInitializer;
+    }
+
+    @Override
+    public AbstractBusinessObjectInitializer getParent() {
+        return parent;
+    }
+
+    @Override
     public String getPropertyName() {
-        return field.getName();
+        return context.getField().getName();
     }
 
     @Override
     public String getInitialValue() throws BusinessObjectInstantiationException {
-        final BusinessObject businessObject = field.getReference();
+        final BusinessObject businessObject = ((RelationField) context.getField()).getReference();
         checkNotNullableFields(businessObject);
 
         final StringBuilder scriptBuilder = new StringBuilder();
         addCommentBeforeConstructor(scriptBuilder, businessObject);
-        final String varName = variableNameResolver.newVarName(businessObject);
-        delcareVariable(scriptBuilder, varName);
+        final String localVariableName = context.getLocalVariableName();
+        delcareVariable(scriptBuilder, localVariableName);
         scriptBuilder.append(" = ");
-        constructor(scriptBuilder, businessObject, checkExistence());
+        constructor(scriptBuilder, businessObject);
 
         scriptBuilder.append(System.lineSeparator());
 
         for (final IPropertyInitializer propertyInitializer : propertyInitializers) {
-            initializeProperty(scriptBuilder, propertyInitializer, varName);
+            initializeProperty(scriptBuilder, propertyInitializer, localVariableName);
         }
 
-        returnVar(scriptBuilder, varName);
+        returnVar(scriptBuilder, localVariableName);
         return scriptBuilder.toString();
     }
 
@@ -149,12 +160,11 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
         scriptBuilder.append(varName);
     }
 
-
     protected String uncapitalizeFirst(final String value) {
         return Character.toLowerCase(value.charAt(0)) + value.substring(1, value.length());
     }
 
-    protected abstract void constructor(final StringBuilder scriptBuilder, final BusinessObject bo, final boolean checkEsistence);
+    protected abstract void constructor(final StringBuilder scriptBuilder, final BusinessObject bo);
 
     protected void addCommentLine(final StringBuilder scriptBuilder, final String comment) {
         scriptBuilder.append("//");

@@ -18,9 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.aBO;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aStringField;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.anAggregationField;
+import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
-import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
+import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,10 +34,16 @@ public class BusinessObjectQueryInitializerTest {
 
     @Test
     public void should_generate_a_script_using_query_to_retrieve_a_business_object_in_initial_value() throws Exception {
-        final BusinessObjectQueryInitializer initializer = new BusinessObjectQueryInitializer(null, anAggregationField("country", aBO("org.test.Country")
-                .build()),
-                aContractInput().withName("countryInput").withType(ContractInputType.COMPLEX).havingInput(aContractInput().withName("persistenceId")).build(),
-                "myCountry", new VariableNameResolver());
+        final InitializerContext context = new InitializerContext();
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(anAggregationField("country",
+                aBO("org.test.Country").build()));
+        context.setMapping(mapping);
+        context.setData(aBusinessData().withName("myCountry").build());
+        context.setContractInput(aContractInput().withName("countryInput").withType(ContractInputType.COMPLEX)
+                .havingInput(aContractInput().withName("persistenceId")).build());
+        context.setLocalVariableName("countryVar");
+
+        final BusinessObjectQueryInitializer initializer = new BusinessObjectQueryInitializer(null, context);
 
         initializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(null, aStringField("persistenceId").build(),
                 aContractInput().withName("persistenceId").in(aContractInput().withName("countryInput").withType(ContractInputType.COMPLEX)).build()));
@@ -54,12 +61,17 @@ public class BusinessObjectQueryInitializerTest {
 
     @Test
     public void should_throw_an_IllegalStateException_if_persistenceId_is_not_found() throws Exception {
+        final InitializerContext context = new InitializerContext();
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(anAggregationField("country",
+                aBO("org.test.Country").build()));
+        context.setMapping(mapping);
+        context.setData(aBusinessData().withName("myCountry").build());
+        context.setContractInput(aContractInput().withName("countryInput").withType(ContractInputType.COMPLEX)
+                .havingInput(aContractInput().withName("notPersistenceId")).build());
+        context.setLocalVariableName("countryVar");
+
         expectedException.expect(IllegalStateException.class);
 
-        new BusinessObjectQueryInitializer(null, null,
-                aContractInput()
-                        .withName("notPersistenceId")
-                        .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()).build(),
-                "myData.employees", new VariableNameResolver());
+        new BusinessObjectQueryInitializer(null, context);
     }
 }
