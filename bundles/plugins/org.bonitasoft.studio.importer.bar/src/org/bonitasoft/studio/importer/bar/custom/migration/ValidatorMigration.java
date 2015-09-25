@@ -82,7 +82,7 @@ public class ValidatorMigration extends ReportCustomMigration {
     }
 
     protected void createValidatorDescriptor(final Instance validator) throws JavaModelException {
-        final String validatorClassName = validator.get("validator Class");
+        final String validatorClassName = validator.get("validatorClass");
         final ValidatorDescriptorRepositoryStore validatorDescriptorStore = RepositoryManager.getInstance().getRepositoryStore(
                 ValidatorDescriptorRepositoryStore.class);
         ValidatorDescriptor descriptor = validatorDescriptorStore.getValidatorDescriptor(validatorClassName);
