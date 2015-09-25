@@ -508,6 +508,8 @@ public class Repository implements IRepository, IJavaContainer {
         final IStatus status = operation.run(NULL_PROGRESS_MONITOR);
         if (!status.isOK()) {
             logErrorStatus(status);
+        } else {
+            BonitaStudioLog.info(String.format("%s archive exported successfully.", fileName), CommonRepositoryPlugin.PLUGIN_ID);
         }
     }
 
