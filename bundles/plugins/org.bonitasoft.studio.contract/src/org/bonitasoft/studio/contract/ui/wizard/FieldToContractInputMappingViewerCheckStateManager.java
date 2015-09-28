@@ -62,8 +62,18 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
         mapping.setGenerated(event.getChecked());
         final CheckboxTreeViewer checkboxTreeViewer = (CheckboxTreeViewer) event.getSource();
         checkboxTreeViewer.setSubtreeChecked(mapping, event.getChecked());
+        setChildrenChecked(mapping, event.getChecked());
         selectParentIfChildIsSelected(event, mapping, checkboxTreeViewer);
         deselectParentIfNoChildSelected(event, mapping, checkboxTreeViewer);
+    }
+
+    private void setChildrenChecked(final FieldToContractInputMapping parent, final boolean state) {
+        for (final FieldToContractInputMapping mapping : parent.getChildren()) {
+            if (!Field.PERSISTENCE_ID.equals(mapping.getField().getName())) {
+                mapping.setGenerated(state);
+                setChildrenChecked(mapping, state);
+            }
+        }
     }
 
     private void deselectParentIfNoChildSelected(final CheckStateChangedEvent event, final FieldToContractInputMapping mapping,
@@ -78,6 +88,7 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
             }
             if (deselect) {
                 checkboxTreeViewer.setChecked(parentMapping, false);
+                mapping.getParent().setGenerated(false);
             }
         }
     }
@@ -91,6 +102,7 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
         if (event.getChecked()) {
             if (mapping.getParent() != null) {
                 checkboxTreeViewer.setChecked(mapping.getParent(), true);
+                mapping.getParent().setGenerated(true);
             }
         }
     }
