@@ -29,6 +29,8 @@
 	<requestedExecutionLevel>asInvoker</requestedExecutionLevel>
 	<singleInstanceCheck>1</singleInstanceCheck>
     <overrideGtkButtonText>1</overrideGtkButtonText>
+    <compressionAlgorithm>lzma-ultra</compressionAlgorithm>
+    <lzmaUltraBlockSize>100</lzmaUltraBlockSize>
 	<allowedLanguages>en es fr de it pt_BR ja ru</allowedLanguages>
 	<customLanguageFileList>
         <language>
@@ -76,6 +78,12 @@
         <language>
             <code>ru</code>
             <file>i18n/messages_ru.properties</file>
+            <encoding>utf-8</encoding>
+            <resolveUCN>1</resolveUCN>
+        </language>
+        <language>
+            <code>ja</code>
+            <file>i18n/messages_ja.properties</file>
             <encoding>utf-8</encoding>
             <resolveUCN>1</resolveUCN>
         </language>

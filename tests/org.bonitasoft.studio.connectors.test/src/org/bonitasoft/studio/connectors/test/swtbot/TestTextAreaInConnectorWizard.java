@@ -2,7 +2,7 @@ package org.bonitasoft.studio.connectors.test.swtbot;
 
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;

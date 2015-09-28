@@ -79,4 +79,9 @@ public class TomcatVmArgsBuilderTest {
         System.clearProperty("tomcat.extra.params");
         assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Djava.util.logging.config.file=").contains("logging.properties");
     }
+
+    @Test
+    public void should_launch_tomcat_with_768m_of_max_memoty_heap_space() throws Exception {
+        assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Xmx768m");
+    }
 }
