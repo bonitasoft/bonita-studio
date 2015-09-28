@@ -79,8 +79,9 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
     private void deselectParentIfNoChildSelected(final CheckStateChangedEvent event, final FieldToContractInputMapping mapping,
             final CheckboxTreeViewer checkboxTreeViewer) {
         final FieldToContractInputMapping parentMapping = mapping.getParent();
+        boolean deselect = true;
         if (!event.getChecked() && parentMapping != null && !isAggregationField(parentMapping.getField())) {
-            boolean deselect = true;
+
             for (final FieldToContractInputMapping m : parentMapping.getChildren()) {
                 if (checkboxTreeViewer.getChecked(m)) {
                     deselect = false;
@@ -88,7 +89,8 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
             }
             if (deselect) {
                 checkboxTreeViewer.setChecked(parentMapping, false);
-                mapping.getParent().setGenerated(false);
+                parentMapping.setGenerated(false);
+                deselectParentIfNoChildSelected(event, parentMapping, checkboxTreeViewer);
             }
         }
     }
@@ -100,9 +102,11 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
     private void selectParentIfChildIsSelected(final CheckStateChangedEvent event, final FieldToContractInputMapping mapping,
             final CheckboxTreeViewer checkboxTreeViewer) {
         if (event.getChecked()) {
-            if (mapping.getParent() != null) {
-                checkboxTreeViewer.setChecked(mapping.getParent(), true);
-                mapping.getParent().setGenerated(true);
+            final FieldToContractInputMapping parentMapping = mapping.getParent();
+            if (parentMapping != null) {
+                checkboxTreeViewer.setChecked(parentMapping, true);
+                parentMapping.setGenerated(true);
+                selectParentIfChildIsSelected(event, parentMapping, checkboxTreeViewer);
             }
         }
     }
