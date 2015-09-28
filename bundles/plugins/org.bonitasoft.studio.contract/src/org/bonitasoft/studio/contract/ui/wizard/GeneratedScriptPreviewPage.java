@@ -42,9 +42,11 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IEventConsumer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -137,6 +139,13 @@ public class GeneratedScriptPreviewPage extends WizardPage {
         groovyViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         final SourceViewer sourceViewer = groovyViewer.getSourceViewer();
         sourceViewer.setEditable(false);
+        sourceViewer.setEventConsumer(new IEventConsumer() {
+
+            @Override
+            public void processEvent(final VerifyEvent event) {
+                event.doit = false;
+            }
+        });
         document = groovyViewer.getDocument();
         document.set(generatedExpression.getContent());
     }
