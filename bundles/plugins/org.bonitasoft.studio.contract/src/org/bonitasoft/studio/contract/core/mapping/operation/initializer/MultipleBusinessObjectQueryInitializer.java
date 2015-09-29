@@ -24,10 +24,8 @@ import org.bonitasoft.engine.bdm.BDMQueryUtil;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
@@ -38,16 +36,14 @@ public class MultipleBusinessObjectQueryInitializer extends NewBusinessObjectLis
     private final ContractInput persistenceIdInput;
     private final BusinessObject businessObject;
 
-    public MultipleBusinessObjectQueryInitializer(final BusinessObject businessObject,
-            final RelationField field,
-            final ContractInput contractInput, final String refName, VariableNameResolver variableNameResolver, final boolean isOnPool) {
-        super(field, contractInput, refName, variableNameResolver, isOnPool);
-        persistenceIdInput = persistenceIdInput(contractInput);
+    public MultipleBusinessObjectQueryInitializer(final BusinessObject businessObject, final InitializerContext context) {
+        super(context);
+        persistenceIdInput = persistenceIdInput(context.getContractInput());
         this.businessObject = businessObject;
     }
 
     @Override
-    protected void constructor(final StringBuilder scriptBuilder, final BusinessObject businessObject, final boolean checkEsistence) {
+    protected void constructor(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
         daoQuery(scriptBuilder, businessObject);
     }
 

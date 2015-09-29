@@ -14,20 +14,14 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
-import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInput;
 
 public class CompositionReferencePropertyInitializer extends NewBusinessObjectInitializer implements IPropertyInitializer {
 
-    private final ContractInput contractInput;
-
-    public CompositionReferencePropertyInitializer(final RelationField field, final ContractInput contractInput, VariableNameResolver variableNameResolver,
-            final String refName) {
-        super(field, refName, variableNameResolver, true);
-        this.contractInput = contractInput;
+    public CompositionReferencePropertyInitializer(final InitializerContext context) {
+        super(context);
     }
 
     @Override
@@ -47,7 +41,7 @@ public class CompositionReferencePropertyInitializer extends NewBusinessObjectIn
     }
 
     private boolean hasAMultipleParent() {
-        final ContractInput parentInput = ModelHelper.getFirstContainerOfType(contractInput.eContainer(), ContractInput.class);
+        final ContractInput parentInput = ModelHelper.getFirstContainerOfType(context.getContractInput().eContainer(), ContractInput.class);
         return parentInput != null && parentInput.isMultiple();
     }
 

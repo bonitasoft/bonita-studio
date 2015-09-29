@@ -18,12 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.aBO;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aCompositionField;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aSimpleField;
+import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,8 +38,16 @@ public class CompositionReferencePropertyInitializerTest {
     @Test
     public void should_initialize_object_poperty_in_a_closure() throws Exception {
         final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.TEXT).notNullable().build();
-        final CompositionReferencePropertyInitializer propertyInitializer = new CompositionReferencePropertyInitializer(aCompositionField("address",
-                aBO("org.test.Address").withField(streetField).build()), aContractInput().build(), new VariableNameResolver(), "employee.address");
+
+        final InitializerContext context = new InitializerContext();
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(aCompositionField("address",
+                aBO("org.test.Address").withField(streetField).build()));
+        context.setMapping(mapping);
+        context.setData(aBusinessData().withName("employee").build());
+        context.setContractInput(aContractInput().build());
+        context.setLocalVariableName("addressVar");
+
+        final CompositionReferencePropertyInitializer propertyInitializer = new CompositionReferencePropertyInitializer(context);
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(null,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX)
@@ -56,10 +65,15 @@ public class CompositionReferencePropertyInitializerTest {
 
     @Test
     public void should_throw_an_BusinessObjectInstantiationException_when_creating_an_inconsistent_business_object() throws Exception {
-        final CompositionReferencePropertyInitializer propertyInitializer = new CompositionReferencePropertyInitializer(
-                aCompositionField("address", aBO("org.test.Address").withField(aSimpleField().withName("street").notNullable().build()).build()),
-                aContractInput().build(),
-                new VariableNameResolver(), "employee.address");
+        final InitializerContext context = new InitializerContext();
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(aCompositionField("address", aBO("org.test.Address")
+                .withField(aSimpleField().withName("street").notNullable().build()).build()));
+        context.setMapping(mapping);
+        context.setData(aBusinessData().withName("employee").build());
+        context.setContractInput(aContractInput().build());
+        context.setLocalVariableName("addressVar");
+
+        final CompositionReferencePropertyInitializer propertyInitializer = new CompositionReferencePropertyInitializer(context);
 
         thrown.expect(BusinessObjectInstantiationException.class);
         propertyInitializer.getInitialValue();

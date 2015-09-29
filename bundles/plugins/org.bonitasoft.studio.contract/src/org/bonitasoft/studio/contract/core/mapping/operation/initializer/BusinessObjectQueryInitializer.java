@@ -23,10 +23,8 @@ import org.bonitasoft.engine.bdm.BDMQueryUtil;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Optional;
@@ -36,10 +34,9 @@ public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitia
     private final ContractInput persistenceIdInput;
     private final BusinessObject multipleParentBusinessObject;
 
-    public BusinessObjectQueryInitializer(final BusinessObject multipleParentBusinessObject, final RelationField field,
-            final ContractInput contractInput, final String refName, VariableNameResolver variableNameResolver) {
-        super(field, refName, variableNameResolver);
-        persistenceIdInput = persistenceIdInput(contractInput);
+    public BusinessObjectQueryInitializer(final BusinessObject multipleParentBusinessObject, final InitializerContext context) {
+        super(context);
+        persistenceIdInput = persistenceIdInput(context.getContractInput());
         this.multipleParentBusinessObject = multipleParentBusinessObject;
     }
 
@@ -57,7 +54,7 @@ public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitia
     }
 
     @Override
-    protected void constructor(final StringBuilder scriptBuilder, final BusinessObject bo, final boolean checkEsistence) {
+    protected void constructor(final StringBuilder scriptBuilder, final BusinessObject bo) {
         daoQuery(scriptBuilder, bo);
     }
 
