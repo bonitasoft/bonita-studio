@@ -38,12 +38,14 @@ import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
@@ -91,12 +93,14 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     private final BusinessObjectModelRepositoryStore businessObjectStore;
     private final GenerationOptions generationOptions;
     private SelectObservableValue actionObservable;
+    private final WritableValue rootNameObservable;
+    private final WritableList fieldToContractInputMappingsObservable;
 
     protected CreateContractInputFromBusinessObjectWizardPage(final Contract contract,
             final GenerationOptions generationOptions,
             final WritableValue selectedDataObservable,
-            final FieldToContractInputMappingFactory fieldToContractInputMappingFactory,
-            final BusinessObjectModelRepositoryStore businessObjectStore) {
+            final WritableValue rootNameObservable, final FieldToContractInputMappingFactory fieldToContractInputMappingFactory,
+            final WritableList fieldToContractInputMappingsObservable, final BusinessObjectModelRepositoryStore businessObjectStore) {
         super(CreateContractInputFromBusinessObjectWizardPage.class.getName());
         setDescription(Messages.selectFieldToGenerateDescription);
         this.selectedDataObservable = selectedDataObservable;
@@ -104,6 +108,9 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         this.contract = contract;
         this.generationOptions = generationOptions;
         this.businessObjectStore = businessObjectStore;
+        this.rootNameObservable = rootNameObservable;
+        this.fieldToContractInputMappingsObservable = fieldToContractInputMappingsObservable;
+
     }
 
     public void setTitle() {
@@ -176,12 +183,14 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         final Label typeLabel = new Label(rootNameComposite, SWT.NONE);
         typeLabel.setText(Messages.inputOfType);
         final IObservableValue prefixObservable = PojoObservables.observeValue(this, "rootName");
+
         dbc.bindValue(prefixObservable,
                 EMFObservables.observeDetailValue(Realm.getDefault(), selectedDataObservable, ProcessPackage.Literals.ELEMENT__NAME),
                 neverUpdateValueStrategy().create(), updateValueStrategy().withConverter(dataNameToRootContractInputName()).create());
         dbc.bindValue(SWTObservables.observeText(prefixText, SWT.Modify),
                 prefixObservable, updateValueStrategy().withValidator(uniqueValidator().onProperty("name").in(contract.getInputs())).create(),
                 null);
+        dbc.bindValue(rootNameObservable, prefixObservable);
     }
 
     private IConverter dataNameToRootContractInputName() {
@@ -212,7 +221,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
     private void createProcessDataMappingTreeViewer(final Composite composite, final EMFDataBindingContext dbc) {
         treeViewer = new CheckboxTreeViewer(composite, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
-
         treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
         treeViewer.getTree().setHeaderVisible(true);
         treeViewer.addFilter(hidePersistenceIdMapping());
@@ -241,7 +249,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                 selectedDataObservable,
                 null,
                 updateValueStrategy().withConverter(selectedDataToFieldMappings()).create());
-
         dbc.addValidationStatusProvider(new MultiValidator() {
 
             @Override
@@ -275,10 +282,25 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                     return Collections.emptyList();
                 }
                 mappings = fieldToContractInputMappingFactory.createMappingForBusinessObjectType(toBusinessObject((BusinessObjectData) selectedData));
+                fieldToContractInputMappingsObservable.clear();
+                fieldToContractInputMappingsObservable.addAll(mappings);
                 return mappings;
             }
 
         };
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
+     */
+    @Override
+    public boolean canFlipToNextPage() {
+        if (contract.eContainer() instanceof Pool) {
+            return generationOptions.isAutogeneratedScript() && super.canFlipToNextPage();
+        } else {
+            return super.canFlipToNextPage();
+        }
     }
 
     private BusinessObject toBusinessObject(final BusinessObjectData selectedData) {
@@ -287,6 +309,13 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
     public List<FieldToContractInputMapping> getMappings() {
         return mappings;
+    }
+
+    /**
+     * @param mappings the mappings to set
+     */
+    public void setMappings(final List<FieldToContractInputMapping> mappings) {
+        this.mappings = mappings;
     }
 
     public String getRootName() {
