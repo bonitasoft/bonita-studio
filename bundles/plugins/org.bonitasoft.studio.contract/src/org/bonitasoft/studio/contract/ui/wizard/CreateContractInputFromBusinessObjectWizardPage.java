@@ -88,7 +88,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     private CheckboxTreeViewer treeViewer;
     private final FieldToContractInputMappingFactory fieldToContractInputMappingFactory;
     private List<FieldToContractInputMapping> mappings;
-
     private String rootName;
     private final Contract contract;
     private final BusinessObjectModelRepositoryStore businessObjectStore;
@@ -222,7 +221,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
     private void createProcessDataMappingTreeViewer(final Composite composite, final EMFDataBindingContext dbc) {
         treeViewer = new CheckboxTreeViewer(composite, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
-
         treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
         treeViewer.getTree().setHeaderVisible(true);
         treeViewer.addFilter(hidePersistenceIdMapping());
