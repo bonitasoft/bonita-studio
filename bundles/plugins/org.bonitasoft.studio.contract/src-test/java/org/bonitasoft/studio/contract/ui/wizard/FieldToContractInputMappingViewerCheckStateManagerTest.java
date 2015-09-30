@@ -53,6 +53,7 @@ public class FieldToContractInputMappingViewerCheckStateManagerTest {
         checkedStateManager.checkStateChanged(new CheckStateChangedEvent(viewer, childMapping, true));
 
         assertThat(viewer.getChecked(rootMapping)).isTrue();
+        assertThat(rootMapping.isGenerated()).isTrue();
     }
 
     @Test
@@ -67,6 +68,7 @@ public class FieldToContractInputMappingViewerCheckStateManagerTest {
         checkedStateManager.checkStateChanged(new CheckStateChangedEvent(viewer, childMapping, false));
 
         assertThat(viewer.getChecked(rootMapping)).isFalse();
+        assertThat(rootMapping.isGenerated()).isFalse();
     }
 
     @Test
@@ -83,6 +85,25 @@ public class FieldToContractInputMappingViewerCheckStateManagerTest {
         checkedStateManager.checkStateChanged(new CheckStateChangedEvent(viewer, childMapping1, false));
 
         assertThat(viewer.getChecked(rootMapping)).isTrue();
+    }
+
+    @Test
+    public void should_regeneratedAttributes_whenReselectParent() {
+        final FieldToContractInputMappingViewerCheckStateManager checkedStateManager = new FieldToContractInputMappingViewerCheckStateManager();
+        final FieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
+        final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
+        final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
+        rootMapping.addChild(childMapping1);
+        rootMapping.addChild(childMapping2);
+        final CheckboxTreeViewer viewer = aCheckBoxTreeViewer(Lists.newArrayList(rootMapping));
+        checkedStateManager.checkStateChanged(new CheckStateChangedEvent(viewer, rootMapping, false));
+        assertThat(rootMapping.isGenerated()).isFalse();
+        assertThat(childMapping1.isGenerated()).isFalse();
+        assertThat(childMapping2.isGenerated()).isFalse();
+        checkedStateManager.checkStateChanged(new CheckStateChangedEvent(viewer, rootMapping, true));
+        assertThat(rootMapping.isGenerated()).isTrue();
+        assertThat(childMapping1.isGenerated()).isTrue();
+        assertThat(childMapping2.isGenerated()).isTrue();
     }
 
     @Test
