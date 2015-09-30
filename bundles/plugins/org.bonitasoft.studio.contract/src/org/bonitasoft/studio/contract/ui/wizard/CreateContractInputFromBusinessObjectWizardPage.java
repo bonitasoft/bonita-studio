@@ -256,6 +256,12 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                 final IViewerObservableSet checkedElements = ViewersObservables.observeCheckedElements(treeViewer, FieldToContractInputMapping.class);
                 if (checkedElements.isEmpty()) {
                     return ValidationStatus.error(Messages.atLeastOneAttributeShouldBeSelectedError);
+                } else {
+                    for (final FieldToContractInputMapping mapping : mappings) {
+                        if (!mapping.getField().isNullable() && !mapping.isGenerated()) {
+                            return ValidationStatus.error(Messages.bind(Messages.mandatoryFieldsShouldBeSelectedError, mapping.getField().getName()));
+                        }
+                    }
                 }
                 return ValidationStatus.ok();
             }
