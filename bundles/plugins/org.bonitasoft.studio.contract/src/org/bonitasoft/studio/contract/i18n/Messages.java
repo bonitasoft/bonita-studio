@@ -105,6 +105,6 @@ public class Messages extends NLS {
     public static String setGeneratedScriptPreviewPageDescription;
     public static String generatedScriptPreviewTitle;
     public static String scriptNameLabel;
-    public static String select;
-    public static String deselect;
+    public static String selectAll;
+    public static String deselectAll;
 }

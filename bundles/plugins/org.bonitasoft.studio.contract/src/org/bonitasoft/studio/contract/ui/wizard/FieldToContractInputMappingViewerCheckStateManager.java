@@ -16,8 +16,6 @@ package org.bonitasoft.studio.contract.ui.wizard;
 
 import static com.google.common.collect.Iterables.any;
 
-import java.util.List;
-
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
@@ -74,6 +72,8 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
             if (!Field.PERSISTENCE_ID.equals(mapping.getField().getName())) {
                 mapping.setGenerated(state);
                 setChildrenChecked(mapping, state);
+            } else {
+                mapping.setGenerated(true);
             }
         }
     }
@@ -123,10 +123,4 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
         };
     }
 
-    public void checkAllStateChange(final List<FieldToContractInputMapping> mappings, final CheckboxTreeViewer treeViewer, final boolean state) {
-        for (final FieldToContractInputMapping mapping : mappings) {
-            new CheckStateChangedEvent(treeViewer, mapping, state);
-            checkStateChanged(new CheckStateChangedEvent(treeViewer, mapping, state));
-        }
-    }
 }

@@ -16,7 +16,6 @@ package org.bonitasoft.studio.contract.ui.wizard;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.field.RelationField;
@@ -116,79 +115,6 @@ public class FieldToContractInputMappingViewerCheckStateManagerTest {
         final CheckboxTreeViewer viewer = aCheckBoxTreeViewer(Lists.newArrayList(rootMapping));
         checkedStateManager.checkStateChanged(new CheckStateChangedEvent(viewer, rootMapping, false));
         assertThat(viewer.getChecked(rootMapping)).isFalse();
-    }
-
-    @Test
-    public void should_deselect_all_when_checkedAllState_calledWithStateFalse() {
-        final FieldToContractInputMappingViewerCheckStateManager checkedStateManager = new FieldToContractInputMappingViewerCheckStateManager();
-
-        final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
-        final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
-        final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
-        rootMapping1.addChild(childMapping1);
-        rootMapping1.addChild(childMapping2);
-        final SimpleFieldToContractInputMapping rootMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
-        final ArrayList<FieldToContractInputMapping> newArrayList = Lists.newArrayList(rootMapping1, rootMapping2);
-
-        final CheckboxTreeViewer viewer = aCheckBoxTreeViewer(newArrayList);
-        checkedStateManager.checkAllStateChange(newArrayList, viewer, false);
-
-        assertThat(viewer.getChecked(rootMapping1)).isFalse();
-        assertThat(viewer.getChecked(rootMapping2)).isFalse();
-        assertThat(viewer.getChecked(childMapping1)).isFalse();
-        assertThat(viewer.getChecked(childMapping2)).isFalse();
-
-    }
-
-    @Test
-    public void should_select_all_when_checkedAllState_calledWithStateTrue() {
-        final FieldToContractInputMappingViewerCheckStateManager checkedStateManager = new FieldToContractInputMappingViewerCheckStateManager();
-
-        final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
-        rootMapping1.setGenerated(false);
-        final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
-        final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
-        childMapping1.setGenerated(false);
-        childMapping2.setGenerated(false);
-        rootMapping1.addChild(childMapping1);
-        rootMapping1.addChild(childMapping2);
-        final SimpleFieldToContractInputMapping rootMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
-        rootMapping2.setGenerated(false);
-        final ArrayList<FieldToContractInputMapping> newArrayList = Lists.newArrayList(rootMapping1, rootMapping2);
-
-        final CheckboxTreeViewer viewer = aCheckBoxTreeViewer(newArrayList);
-        checkedStateManager.checkAllStateChange(newArrayList, viewer, true);
-
-        assertThat(viewer.getChecked(rootMapping1)).isTrue();
-        assertThat(viewer.getChecked(rootMapping2)).isTrue();
-        assertThat(viewer.getChecked(childMapping1)).isTrue();
-        assertThat(viewer.getChecked(childMapping2)).isTrue();
-
-    }
-
-    @Test
-    public void should_select_all_when_checkedAllState_calledWithStateTrue_and_itemsArePartiallySelected() {
-        final FieldToContractInputMappingViewerCheckStateManager checkedStateManager = new FieldToContractInputMappingViewerCheckStateManager();
-
-        final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
-        rootMapping1.setGenerated(true);
-        final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
-        final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
-        childMapping1.setGenerated(false);
-        childMapping2.setGenerated(true);
-        rootMapping1.addChild(childMapping1);
-        rootMapping1.addChild(childMapping2);
-        final SimpleFieldToContractInputMapping rootMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
-        rootMapping2.setGenerated(false);
-        final ArrayList<FieldToContractInputMapping> newArrayList = Lists.newArrayList(rootMapping1, rootMapping2);
-
-        final CheckboxTreeViewer viewer = aCheckBoxTreeViewer(newArrayList);
-        checkedStateManager.checkAllStateChange(newArrayList, viewer, true);
-
-        assertThat(viewer.getChecked(rootMapping1)).isTrue();
-        assertThat(viewer.getChecked(rootMapping2)).isTrue();
-        assertThat(viewer.getChecked(childMapping1)).isTrue();
-        assertThat(viewer.getChecked(childMapping2)).isTrue();
     }
 
     private CheckboxTreeViewer aCheckBoxTreeViewer(final List<FieldToContractInputMapping> input) {

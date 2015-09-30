@@ -21,7 +21,6 @@ import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFacto
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.uniqueValidator;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,12 +41,13 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
-import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.WritableList;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
@@ -257,12 +257,42 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                 selectedDataObservable,
                 null,
                 updateValueStrategy().withConverter(selectedDataToFieldMappings()).create());
-
         final IViewerObservableSet checkedElements = ViewersObservables.observeCheckedElements(treeViewer, FieldToContractInputMapping.class);
+        final WritableValue checkedObservableValue = new WritableValue();
+        checkedObservableValue.setValue(checkedElements);
+        final WritableValue mappingsObservableValue = new WritableValue();
+        mappingsObservableValue.setValue(fieldToContractInputMappingsObservable);
         final MultiValidator multiValidator = createEmptySelectionMultivalidator(checkedElements);
         dbc.addValidationStatusProvider(multiValidator);
+        dbc.bindValue(checkedObservableValue, mappingsObservableValue,
+                updateValueStrategy().withConverter(new Converter(IObservableSet.class, WritableList.class) {
 
-        createButtonComposite(viewerComposite, manager, dbc);
+                    @Override
+                    public Object convert(final Object fromObject) {
+                        final IObservableSet set = (IObservableSet) fromObject;
+                        for (final FieldToContractInputMapping mapping : mappings) {
+                            if (set.contains(mapping)) {
+                                mapping.setGenerated(true);
+                            } else {
+                                mapping.setGenerated(false);
+                            }
+                        }
+                        return mappingsObservableValue;
+                    }
+                }).create(), updateValueStrategy().withConverter(new Converter(WritableList.class, IObservableSet.class) {
+
+                    @Override
+                    public Object convert(final Object fromObject) {
+                        final IObservableSet set = new WritableSet();
+                        for (final FieldToContractInputMapping mapping : mappings) {
+                            if (mapping.isGenerated()) {
+                                set.add(mapping);
+                            }
+                        }
+                        return set;
+                    }
+                }).create());
+        createButtonComposite(viewerComposite, manager, checkedElements);
 
     }
 
@@ -285,32 +315,49 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
      * @param dbc
      */
     protected void createButtonComposite(final Composite viewerComposite, final FieldToContractInputMappingViewerCheckStateManager manager,
-            final EMFDataBindingContext dbc) {
+            final IObservableSet checkElements) {
         final Composite buttonsComposite = new Composite(viewerComposite, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
-        final Button select = new Button(buttonsComposite, SWT.FLAT);
-        select.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
-        select.setText(Messages.select);
-        select.addSelectionListener(new SelectionAdapter() {
+        final Button selectAll = new Button(buttonsComposite, SWT.FLAT);
+        selectAll.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
+        selectAll.setText(Messages.selectAll);
+        selectAll.addSelectionListener(createSelectAllListener(checkElements));
+        final Button deselectAll = new Button(buttonsComposite, SWT.FLAT);
+        deselectAll.setText(Messages.deselectAll);
+        deselectAll.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
+        deselectAll.addSelectionListener(createDeselectAllListener(checkElements));
+    }
+
+    /**
+     * @param checkElements
+     * @return
+     */
+    protected SelectionAdapter createDeselectAllListener(final IObservableSet checkElements) {
+        return new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                manager.checkAllStateChange(mappings, treeViewer, true);
-                updateValidationStatus(ValidationStatus.ok(), dbc);
+                checkElements.clear();
+                generateAllMappings(mappings, false);
             }
-        });
-        final Button deselect = new Button(buttonsComposite, SWT.FLAT);
-        deselect.setText(Messages.deselect);
-        deselect.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
-        deselect.addSelectionListener(new SelectionAdapter() {
+        };
+    }
+
+    /**
+     * @param checkElements
+     * @return
+     */
+    protected SelectionAdapter createSelectAllListener(final IObservableSet checkElements) {
+        return new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                manager.checkAllStateChange(mappings, treeViewer, false);
-                updateValidationStatus(ValidationStatus.error(Messages.atLeastOneAttributeShouldBeSelectedError), dbc);
+                checkElements.clear();
+                checkAllMappings(checkElements, mappings);
+                generateAllMappings(mappings, true);
             }
-        });
+        };
     }
 
     private ViewerFilter hidePersistenceIdMapping() {
@@ -336,7 +383,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                 fieldToContractInputMappingsObservable.addAll(mappings);
                 return mappings;
             }
-
         };
     }
 
@@ -376,27 +422,20 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         this.rootName = rootName;
     }
 
-    protected void updateValidationStatus(final IStatus status, final EMFDataBindingContext dbc) {
-        if (status.isOK()) {
-            setErrorMessage(null);
-            final Iterator<?> it = dbc.getValidationStatusProviders()
-                    .iterator();
-            while (it.hasNext()) {
-                final ValidationStatusProvider provider = (ValidationStatusProvider) it
-                        .next();
-                final IStatus iStatus = (IStatus) provider
-                        .getValidationStatus().getValue();
-                if (!iStatus.isOK()) {
-                    setErrorMessage(iStatus.getMessage());
-                } else {
-                    setPageComplete(true);
-                }
+    public void generateAllMappings(final List<FieldToContractInputMapping> mappingList, final boolean state) {
+        for (final FieldToContractInputMapping mapping : mappingList) {
+            if (!Field.PERSISTENCE_ID.equals(mapping.getField().getName())) {
+                mapping.setGenerated(state);
+                generateAllMappings(mapping.getChildren(), state);
             }
-            setPageComplete(isPageComplete());
-        } else {
-            setErrorMessage(status.getMessage());
-            setPageComplete(false);
         }
     }
 
+    public void checkAllMappings(final IObservableSet checkedElements, final List<FieldToContractInputMapping> mappingList) {
+        for (final FieldToContractInputMapping mapping : mappingList) {
+            checkedElements.add(mapping);
+            checkAllMappings(checkedElements, mapping.getChildren());
+
+        }
+    }
 }
