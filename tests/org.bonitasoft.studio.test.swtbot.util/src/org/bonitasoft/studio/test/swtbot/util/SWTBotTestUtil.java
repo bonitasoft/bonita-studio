@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -297,6 +298,17 @@ public class SWTBotTestUtil implements SWTBotConstants {
         bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita BPM"), 40000);
     }
 
+    public static void waitUntilBonitaBPmShellIsActive(final SWTWorkbenchBot bot, String repoName) {
+        if (repoName == null || Objects.equals(repoName, "default")) {
+            waitUntilBonitaBPmShellIsActive(bot);
+            bot.shell("Bonita BPM").setFocus();
+        } else {
+            bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita BPM - " + repoName), 40000);
+            bot.shell("Bonita BPM - " + repoName).setFocus();
+        }
+
+    }
+
     /**
      * Create a new Form and save it
      *
@@ -475,7 +487,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
      * @param selectedElementName
      * @param dropLocation
      */
-    public static void selectTransitionFromSelectedElementAndDragIt(final SWTBotGefEditor gmfEditor, final String selectedElementName, final Point dropLocation) {
+    public static void selectTransitionFromSelectedElementAndDragIt(final SWTBotGefEditor gmfEditor, final String selectedElementName,
+            final Point dropLocation) {
         selectElementInContextualPaletteAndDragIt(gmfEditor, selectedElementName, CONTEXTUALPALETTE_SEQUENCEFLOW, dropLocation);
     }
 
