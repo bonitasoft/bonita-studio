@@ -271,11 +271,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                     public Object convert(final Object fromObject) {
                         final IObservableSet set = (IObservableSet) fromObject;
                         for (final FieldToContractInputMapping mapping : mappings) {
-                            if (set.contains(mapping)) {
-                                mapping.setGenerated(true);
-                            } else {
-                                mapping.setGenerated(false);
-                            }
+                            mapping.setGenerated(set.contains(mapping));
                         }
                         return mappingsObservableValue;
                     }
