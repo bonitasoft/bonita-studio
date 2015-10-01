@@ -72,6 +72,8 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
             if (!Field.PERSISTENCE_ID.equals(mapping.getField().getName())) {
                 mapping.setGenerated(state);
                 setChildrenChecked(mapping, state);
+            } else {
+                mapping.setGenerated(true);
             }
         }
     }
