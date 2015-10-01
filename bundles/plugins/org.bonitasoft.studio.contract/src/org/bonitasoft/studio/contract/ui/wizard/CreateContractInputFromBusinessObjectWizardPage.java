@@ -265,31 +265,40 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         final MultiValidator multiValidator = createEmptySelectionMultivalidator(checkedElements);
         dbc.addValidationStatusProvider(multiValidator);
         dbc.bindValue(checkedObservableValue, mappingsObservableValue,
-                updateValueStrategy().withConverter(new Converter(IObservableSet.class, WritableList.class) {
-
-                    @Override
-                    public Object convert(final Object fromObject) {
-                        final IObservableSet set = (IObservableSet) fromObject;
-                        for (final FieldToContractInputMapping mapping : mappings) {
-                            mapping.setGenerated(set.contains(mapping));
-                        }
-                        return mappingsObservableValue;
-                    }
-                }).create(), updateValueStrategy().withConverter(new Converter(WritableList.class, IObservableSet.class) {
-
-                    @Override
-                    public Object convert(final Object fromObject) {
-                        final IObservableSet set = new WritableSet();
-                        for (final FieldToContractInputMapping mapping : mappings) {
-                            if (mapping.isGenerated()) {
-                                set.add(mapping);
-                            }
-                        }
-                        return set;
-                    }
-                }).create());
+                updateValueStrategy().withConverter(createMappingsToCheckedElementsConverter(mappingsObservableValue)).create(), updateValueStrategy()
+                        .withConverter(createCheckedElementsToMappingsConverter()).create());
         createButtonComposite(viewerComposite, manager, checkedElements);
 
+    }
+
+    protected Converter createMappingsToCheckedElementsConverter(final WritableValue mappingsObservableValue) {
+        return new Converter(IObservableSet.class, WritableList.class) {
+
+            @Override
+            public Object convert(final Object fromObject) {
+                final IObservableSet set = (IObservableSet) fromObject;
+                for (final FieldToContractInputMapping mapping : mappings) {
+                    mapping.setGenerated(set.contains(mapping));
+                }
+                return mappingsObservableValue;
+            }
+        };
+    }
+
+    protected Converter createCheckedElementsToMappingsConverter() {
+        return new Converter(WritableList.class, IObservableSet.class) {
+
+            @Override
+            public Object convert(final Object fromObject) {
+                final IObservableSet set = new WritableSet();
+                for (final FieldToContractInputMapping mapping : mappings) {
+                    if (mapping.isGenerated()) {
+                        set.add(mapping);
+                    }
+                }
+                return set;
+            }
+        };
     }
 
     protected MultiValidator createEmptySelectionMultivalidator(final IViewerObservableSet checkedElements) {
@@ -305,11 +314,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         };
     }
 
-    /**
-     * @param viewerComposite
-     * @param manager
-     * @param dbc
-     */
     protected void createButtonComposite(final Composite viewerComposite, final FieldToContractInputMappingViewerCheckStateManager manager,
             final IObservableSet checkElements) {
         final Composite buttonsComposite = new Composite(viewerComposite, SWT.NONE);
@@ -325,10 +329,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         deselectAll.addSelectionListener(createDeselectAllListener(checkElements));
     }
 
-    /**
-     * @param checkElements
-     * @return
-     */
     protected SelectionAdapter createDeselectAllListener(final IObservableSet checkElements) {
         return new SelectionAdapter() {
 
@@ -340,10 +340,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         };
     }
 
-    /**
-     * @param checkElements
-     * @return
-     */
     protected SelectionAdapter createSelectAllListener(final IObservableSet checkElements) {
         return new SelectionAdapter() {
 
@@ -403,9 +399,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         return mappings;
     }
 
-    /**
-     * @param mappings the mappings to set
-     */
     public void setMappings(final List<FieldToContractInputMapping> mappings) {
         this.mappings = mappings;
     }
