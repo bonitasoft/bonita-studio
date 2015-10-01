@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
+import org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
