@@ -7,8 +7,6 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 
-import junit.framework.Assert;
-
 import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -31,6 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.junit.Assert;
 import org.omg.spec.bpmn.di.util.DiResourceFactoryImpl;
 import org.omg.spec.bpmn.model.DocumentRoot;
 

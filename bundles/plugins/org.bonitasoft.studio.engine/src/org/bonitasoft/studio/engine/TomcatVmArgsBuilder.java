@@ -90,7 +90,7 @@ public class TomcatVmArgsBuilder {
     protected void addMemoryOptions(final StringBuilder args) {
         args.append("-Xms128m");
         args.append(" ");
-        args.append("-Xmx512m");
+        args.append("-Xmx768m");
         args.append(" ");
         args.append("-XX:MaxPermSize=256m");
     }

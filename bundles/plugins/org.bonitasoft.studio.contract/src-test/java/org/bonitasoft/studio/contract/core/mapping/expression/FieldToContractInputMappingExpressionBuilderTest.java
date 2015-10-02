@@ -124,7 +124,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 mapping, true);
 
         ExpressionAssert.assertThat(expression)
-                .hasName("employee.address")
+                .hasName("initMyEmployee()")
                 .hasContent("def addressVar = myEmployee.address == null ? new Address() : myEmployee.address" + System.lineSeparator() + "return addressVar")
                 .hasReturnType("Address")
                 .hasType(ExpressionConstants.SCRIPT_TYPE);

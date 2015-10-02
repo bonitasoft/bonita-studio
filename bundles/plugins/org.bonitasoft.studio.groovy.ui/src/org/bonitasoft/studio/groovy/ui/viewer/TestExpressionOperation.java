@@ -138,7 +138,7 @@ public class TestExpressionOperation implements IRunnableWithProgress {
             if (processApi != null && procId != -1) {
                 try {
                     processApi.disableProcess(procId);
-                    processApi.deleteProcess(procId);
+                    processApi.deleteProcessDefinition(procId);
                 } catch (final Exception e) {
                     BonitaStudioLog.error(e);
                 }
@@ -186,7 +186,7 @@ public class TestExpressionOperation implements IRunnableWithProgress {
                     } catch (final ProcessActivationException e) {
 
                     }
-                    processApi.deleteProcess(info.getProcessId());
+                    processApi.deleteProcessDefinition(info.getProcessId());
                 }
             }
         }
