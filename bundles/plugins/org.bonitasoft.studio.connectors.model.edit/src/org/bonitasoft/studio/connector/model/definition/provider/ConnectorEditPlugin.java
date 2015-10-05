@@ -60,9 +60,9 @@ public final class ConnectorEditPlugin extends EMFPlugin {
     public ResourceLocator getPluginResourceLocator() {
 		return plugin;
 	}
-    
-   
-    
+
+
+
     /**
 	 * Returns the singleton instance of the Eclipse plugin.
 	 * <!-- begin-user-doc -->
@@ -81,7 +81,7 @@ public final class ConnectorEditPlugin extends EMFPlugin {
 	 * @generated
 	 */
     public static class Implementation extends EclipsePlugin {
-      
+
     	private ScopedPreferenceStore preferenceStore;
 
 
@@ -98,19 +98,18 @@ public final class ConnectorEditPlugin extends EMFPlugin {
 			//
 			plugin = this;
 		}
-        
+
         public IPreferenceStore getPreferenceStore() {
             // Create the preference store lazily.
             if (preferenceStore == null) {
-                preferenceStore = new ScopedPreferenceStore(new InstanceScope(),getSymbolicName());
-
+                preferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, getSymbolicName());
             }
             return preferenceStore;
         }
-        
-        
+
+
         @Override
-        public void stop(BundleContext context) throws Exception {
+        public void stop(final BundleContext context) throws Exception {
         	super.stop(context);
         	preferenceStore = null;
         }

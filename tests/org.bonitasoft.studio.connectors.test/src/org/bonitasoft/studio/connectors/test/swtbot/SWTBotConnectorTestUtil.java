@@ -20,7 +20,7 @@ package org.bonitasoft.studio.connectors.test.swtbot;
 
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;

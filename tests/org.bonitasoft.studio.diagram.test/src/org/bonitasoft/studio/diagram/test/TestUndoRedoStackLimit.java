@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.diagram.test;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.commands.ExecutionException;

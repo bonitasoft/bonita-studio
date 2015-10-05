@@ -29,6 +29,8 @@
 	<requestedExecutionLevel>asInvoker</requestedExecutionLevel>
 	<singleInstanceCheck>1</singleInstanceCheck>
     <overrideGtkButtonText>1</overrideGtkButtonText>
+    <compressionAlgorithm>lzma-ultra</compressionAlgorithm>
+    <lzmaUltraBlockSize>100</lzmaUltraBlockSize>
 	<allowedLanguages>en es fr de it pt_BR ja ru</allowedLanguages>
 	<customLanguageFileList>
         <language>
