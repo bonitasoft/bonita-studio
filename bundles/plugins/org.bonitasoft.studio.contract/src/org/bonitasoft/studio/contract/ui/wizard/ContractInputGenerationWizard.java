@@ -41,6 +41,7 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.OperationContainer;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.WritableValue;
@@ -215,7 +216,8 @@ public class ContractInputGenerationWizard extends Wizard {
 
     protected void openWarningDialog(final boolean allAttributesGenerated) {
         if (!allAttributesGenerated) {
-            MessageDialog.openWarning(getShell(), Messages.notAllAttributesGeneratedTitle, Messages.notAllAttributesGeneratedMsg);
+            final String message = contractContainer instanceof Task ? Messages.notAllAttributesGeneratedTaskMsg : Messages.notAllAttributesGeneratedMsg;
+            MessageDialog.openWarning(getShell(), Messages.notAllAttributesGeneratedTitle, message);
         }
     }
 
