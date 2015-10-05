@@ -34,6 +34,7 @@ import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.wizard.labelProvider.FieldNameColumnLabelProvider;
 import org.bonitasoft.studio.contract.ui.wizard.labelProvider.FieldTypeColumnLabelProvider;
 import org.bonitasoft.studio.contract.ui.wizard.labelProvider.InputTypeColumnLabelProvider;
+import org.bonitasoft.studio.contract.ui.wizard.labelProvider.MandatoryColumnLabelProvider;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -88,7 +89,7 @@ import com.google.common.base.Function;
  */
 public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage {
 
-    private static final int DEFAULT_BUTTON_WIDTH_HINT = 85;
+    private static final int DEFAULT_BUTTON_WIDTH_HINT = 130;
     private final WritableValue selectedDataObservable;
     private CheckboxTreeViewer treeViewer;
     private final FieldToContractInputMappingFactory fieldToContractInputMappingFactory;
@@ -253,6 +254,12 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         inputTypeTreeViewerColumn.getColumn().setText(Messages.inputType);
         inputTypeTreeViewerColumn.getColumn().setWidth(150);
         inputTypeTreeViewerColumn.setLabelProvider(new InputTypeColumnLabelProvider());
+
+        final TreeViewerColumn mandatoryTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
+        mandatoryTreeViewerColumn.getColumn().setText(Messages.mandatory);
+        mandatoryTreeViewerColumn.getColumn().setWidth(80);
+        mandatoryTreeViewerColumn.setLabelProvider(new MandatoryColumnLabelProvider());
+
         dbc.bindValue(ViewersObservables.observeInput(treeViewer),
                 selectedDataObservable,
                 null,
@@ -308,25 +315,71 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
             protected IStatus validate() {
                 if (checkedElements.isEmpty()) {
                     return ValidationStatus.error(Messages.atLeastOneAttributeShouldBeSelectedError);
+                } else {
+                    final StringBuilder sb = new StringBuilder();
+                    validateMandatoryFieldsNotSelected(sb, mappings, checkedElements);
+                    if (sb.length() > 0) {
+                        return ValidationStatus.warning(Messages.bind(Messages.mandatoryFieldsNotSelectedWarning, sb.toString()));
+                    }
                 }
+
                 return ValidationStatus.ok();
             }
         };
     }
 
+    protected void validateMandatoryFieldsNotSelected(final StringBuilder sb,
+            final List<FieldToContractInputMapping> mappings, final IObservableSet checkedElements) {
+        for (final FieldToContractInputMapping mapping : mappings) {
+            if (!checkedElements.contains(mapping) && !mapping.isGenerated() && !mapping.getField().isNullable()) {
+                sb.append(mapping.getField().getName() + ", ");
+            }
+            validateMandatoryFieldsNotSelected(sb, mapping.getChildren(), checkedElements);
+        }
+    }
+
     protected void createButtonComposite(final Composite viewerComposite, final FieldToContractInputMappingViewerCheckStateManager manager,
-            final IObservableSet checkElements) {
+            final IObservableSet checkedElements) {
         final Composite buttonsComposite = new Composite(viewerComposite, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
         final Button selectAll = new Button(buttonsComposite, SWT.FLAT);
         selectAll.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
         selectAll.setText(Messages.selectAll);
-        selectAll.addSelectionListener(createSelectAllListener(checkElements));
+        selectAll.addSelectionListener(createSelectAllListener(checkedElements));
         final Button deselectAll = new Button(buttonsComposite, SWT.FLAT);
         deselectAll.setText(Messages.deselectAll);
         deselectAll.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
-        deselectAll.addSelectionListener(createDeselectAllListener(checkElements));
+        deselectAll.addSelectionListener(createDeselectAllListener(checkedElements));
+        final Button selectMandatories = new Button(buttonsComposite, SWT.FLAT);
+        selectMandatories.setText(Messages.selectMandatories);
+        selectMandatories.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
+        selectMandatories.addSelectionListener(createMandatoryAttributesSelectionListener(checkedElements));
+    }
+
+    protected SelectionAdapter createMandatoryAttributesSelectionListener(final IObservableSet checkedElements) {
+        return new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                checkMandatoryAttributes(checkedElements, mappings);
+            }
+
+            protected void checkMandatoryAttributes(final IObservableSet checkedElements, final List<FieldToContractInputMapping> mappings) {
+                for (final FieldToContractInputMapping mapping : mappings) {
+                    if (!mapping.getField().isNullable() && !mapping.isGenerated()) {
+                        checkedElements.add(mapping);
+                        checkAllMappings(checkedElements, mapping.getChildren());
+                        generateAllMappings(mapping.getChildren(), true);
+                        if (mapping.getParent() != null && !checkedElements.contains(mapping.getParent())) {
+                            checkedElements.add(mapping.getParent());
+                        }
+                    }
+                    checkMandatoryAttributes(checkedElements, mapping.getChildren());
+                }
+
+            }
+        };
     }
 
     protected SelectionAdapter createDeselectAllListener(final IObservableSet checkElements) {
@@ -427,4 +480,5 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
         }
     }
+
 }

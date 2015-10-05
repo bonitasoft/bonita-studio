@@ -39,7 +39,7 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
     protected final String refName;
     protected final VariableNameResolver variableNameResolver;
 
-    public AbstractBusinessObjectInitializer(final RelationField field, final String refName, VariableNameResolver variableNameResolver) {
+    public AbstractBusinessObjectInitializer(final RelationField field, final String refName, final VariableNameResolver variableNameResolver) {
         this.field = field;
         this.refName = refName;
         this.variableNameResolver = variableNameResolver;
@@ -57,7 +57,6 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
     @Override
     public String getInitialValue() throws BusinessObjectInstantiationException {
         final BusinessObject businessObject = field.getReference();
-        checkNotNullableFields(businessObject);
 
         final StringBuilder scriptBuilder = new StringBuilder();
         addCommentBeforeConstructor(scriptBuilder, businessObject);
@@ -148,7 +147,6 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
         scriptBuilder.append(" ");
         scriptBuilder.append(varName);
     }
-
 
     protected String uncapitalizeFirst(final String value) {
         return Character.toLowerCase(value.charAt(0)) + value.substring(1, value.length());

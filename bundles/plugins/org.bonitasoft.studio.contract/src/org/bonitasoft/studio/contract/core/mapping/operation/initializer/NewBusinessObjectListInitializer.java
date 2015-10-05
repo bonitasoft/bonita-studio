@@ -33,7 +33,7 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
     protected final boolean isOnPool;
 
     public NewBusinessObjectListInitializer(final RelationField field, final ContractInput contractInput, final String refName,
-            VariableNameResolver variableNameResolver, final boolean isOnPool) {
+            final VariableNameResolver variableNameResolver, final boolean isOnPool) {
         super(field, refName, variableNameResolver);
         this.contractInput = contractInput;
         this.isOnPool = isOnPool;
@@ -42,7 +42,6 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
     @Override
     public String getInitialValue() throws BusinessObjectInstantiationException {
         final BusinessObject businessObject = field.getReference();
-        checkNotNullableFields(businessObject);
 
         final StringBuilder scriptBuilder = new StringBuilder();
         final String listVarName = variableNameResolver.newListVarName(businessObject);
@@ -74,7 +73,7 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
         scriptBuilder.append(listVarName);
     }
 
-    private void forEach(final StringBuilder scriptBuilder, final BusinessObject businessObject, String listVarName)
+    private void forEach(final StringBuilder scriptBuilder, final BusinessObject businessObject, final String listVarName)
             throws BusinessObjectInstantiationException {
         addCommentLine(scriptBuilder, "For each item collected in multiple input");
 
