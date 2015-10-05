@@ -22,7 +22,6 @@ import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.
 
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
-import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Rule;
@@ -59,13 +58,4 @@ public class NewBusinessObjectInitializerTest {
                 + "return addressVar");
     }
 
-    @Test
-    public void should_throw_an_BusinessObjectInstantiationException_when_creating_an_inconsistent_business_object() throws Exception {
-        final NewBusinessObjectInitializer propertyInitializer = new NewBusinessObjectInitializer(
-                aCompositionField("address", aBO("org.test.Address").withField(aSimpleField().withName("street").notNullable().build()).build()), "myAddress",
-                new VariableNameResolver(), true);
-
-        thrown.expect(BusinessObjectInstantiationException.class);
-        propertyInitializer.getInitialValue();
-    }
 }
