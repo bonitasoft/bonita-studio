@@ -19,6 +19,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.designer.i18n.Messages;
