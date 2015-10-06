@@ -14,9 +14,6 @@
  */
 package org.bonitasoft.studio.groovy.ui.dialog;
 
-import java.net.URL;
-
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.groovy.GroovyPlugin;
 import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
 import org.bonitasoft.studio.groovy.library.IFunction;
@@ -47,12 +44,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 
@@ -61,9 +53,6 @@ import org.eclipse.ui.dialogs.PatternFilter;
  */
 public class GroovyEditorDocumentationDialogTray extends DialogTray {
 
-    private static final String GROOVY_DOC_LINK = "<a href=\"http://groovy-lang.org/single-page-documentation.html\">" + Messages.groovyDocumentationLink + "</a>"; //$NON-NLS-1$ //$NON-NLS-2$
-    protected static final String GROOVY_BROWSER_ID = "org.bonitasoft.studio.groovy.browser"; //$NON-NLS-1$
-
     private ListViewer categoriesList;
     private FilteredTree functionsList;
     private StyledText documenationText;
@@ -71,6 +60,7 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
     private HTMLTextPresenter fPresenter;
     private String javadocHtml;
     private final TextPresentation fPresentation = new TextPresentation();
+    private final GroovyHelpLinkFactory groovyHelpLinkFactory = new GroovyHelpLinkFactory();
 
     public GroovyEditorDocumentationDialogTray(final GroovyViewer viewer) {
         super();
@@ -102,32 +92,12 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
         return mainComposite;
     }
 
-    private void createGroovyHelpLink(final Composite parent) {
-        final Link docLinkText = new Link(parent, SWT.NONE);
-        docLinkText.setText(GROOVY_DOC_LINK);
-        docLinkText.addListener(SWT.Selection, new Listener() {
-
-            @Override
-            public void handleEvent(final Event event) {
-
-                try {
-                    final IWebBrowser browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(GROOVY_BROWSER_ID);
-                    browser.openURL(new URL(event.text));
-                } catch (final Exception e) {
-                    BonitaStudioLog.error(e);
-                }
-
-            }
-        });
-
-    }
-
     private void createFunctionCategories(final Composite parent) {
         final Composite catComposite = new Composite(parent, SWT.NONE);
         catComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         catComposite.setLayout(new GridLayout(1, true));
 
-        createGroovyHelpLink(catComposite);
+        groovyHelpLinkFactory.createGroovyHelpLink(catComposite);
 
         final Label catTitle = new Label(catComposite, SWT.NONE);
         catTitle.setText(Messages.categoriesTitle);
