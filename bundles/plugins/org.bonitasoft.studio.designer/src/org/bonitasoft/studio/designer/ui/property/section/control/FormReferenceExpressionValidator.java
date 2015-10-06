@@ -22,10 +22,12 @@ import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
@@ -38,9 +40,12 @@ public class FormReferenceExpressionValidator implements IExpressionValidator {
 
     private final RepositoryAccessor repositoryAccessor;
 
+    private final EStructuralFeature feature;
+
     @Inject
-    public FormReferenceExpressionValidator(final RepositoryAccessor repositoryAccessor) {
+    public FormReferenceExpressionValidator(final RepositoryAccessor repositoryAccessor, final EStructuralFeature feature) {
         this.repositoryAccessor = repositoryAccessor;
+        this.feature = feature;
     }
 
     /*
@@ -51,8 +56,13 @@ public class FormReferenceExpressionValidator implements IExpressionValidator {
     public IStatus validate(final Object value) {
         final String content = inputExpression.getContent();
         final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
-        return repositoryStore.getChild(content) == null ? ValidationStatus.error(Messages.bind(Messages.pageDoesntExists,
-                String.format("%s (%s)", inputExpression.getName(), content))) : ValidationStatus.ok();
+        if (ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING.equals(feature)) {
+            return repositoryStore.getChild(content) == null ? ValidationStatus.error(Messages.bind(Messages.pageDoesntExists,
+                    String.format("%s (%s)", inputExpression.getName(), content))) : ValidationStatus.ok();
+        } else {
+            return repositoryStore.getChild(content) == null ? ValidationStatus.error(Messages.bind(Messages.formDoesntExists,
+                    String.format("%s (%s)", inputExpression.getName(), content))) : ValidationStatus.ok();
+        }
     }
 
     /*
@@ -79,7 +89,7 @@ public class FormReferenceExpressionValidator implements IExpressionValidator {
      */
     @Override
     public void setContext(final EObject context) {
-
+        context.getClass();
     }
 
     /*
