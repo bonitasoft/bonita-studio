@@ -20,6 +20,7 @@ package org.bonitasoft.studio.common.editingdomain;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -60,7 +61,22 @@ public class BonitaResourceSetInfoDelegate {
 
     public final void stopResourceListening() {
         if (theSynchronizer != null) {
-            theSynchronizer.dispose();
+            final TransactionalEditingDomain synchonizerEditingDomain = theSynchronizer.getEditingDomain();
+            if (synchonizerEditingDomain != null) {
+                try {
+                    synchonizerEditingDomain.runExclusive(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            theSynchronizer.dispose();
+                        }
+                    });
+                } catch (final InterruptedException e) {
+                    BonitaStudioLog.error("Error while disposing the WorkspaceSynchronizer", e);
+                }
+            } else {
+                theSynchronizer.dispose();
+            }
         }
         theSynchronizer = null;
     }
