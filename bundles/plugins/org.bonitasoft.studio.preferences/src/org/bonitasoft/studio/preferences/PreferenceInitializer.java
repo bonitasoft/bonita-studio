@@ -24,7 +24,6 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.internal.core.IInternalDebugCoreConstants;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
-import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
@@ -72,9 +71,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.DISABLE_OPEN_EDITOR_IN_PLACE, true);
 
         initDefaultDebugPreferences();
-
-        final IPreferenceStore jdtUIStore = PreferenceConstants.getPreferenceStore();
-        jdtUIStore.setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES, Boolean.FALSE);
     }
 
     protected IPreferenceStore getAPIPreferenceStore() {
