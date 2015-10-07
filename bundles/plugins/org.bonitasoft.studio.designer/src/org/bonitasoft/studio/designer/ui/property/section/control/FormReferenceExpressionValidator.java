@@ -53,9 +53,12 @@ public class FormReferenceExpressionValidator implements IExpressionValidator {
     public IStatus validate(final Object value) {
         final String content = inputExpression.getContent();
         final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
-        final String errorMessage = ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING.equals(feature) ? Messages.bind(Messages.pageDoesntExists,
-                String.format("%s (%s)", inputExpression.getName(), content)) : Messages.bind(Messages.formDoesntExists,
-                String.format("%s (%s)", inputExpression.getName(), content));
+        String errorMessage = null;
+        if (ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING.equals(feature)) {
+            errorMessage = Messages.bind(Messages.pageDoesntExist, content);
+        } else {
+            errorMessage = Messages.bind(Messages.formDoesntExist, content);
+        }
         return repositoryStore.getChild(content) == null ? ValidationStatus.error(errorMessage) : ValidationStatus.ok();
     }
 
