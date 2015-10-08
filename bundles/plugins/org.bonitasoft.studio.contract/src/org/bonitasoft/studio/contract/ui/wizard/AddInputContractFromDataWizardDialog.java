@@ -67,7 +67,6 @@ public class AddInputContractFromDataWizardDialog extends FinishAndAddCustomWiza
         super.updateButtons();
         final Button nextButton = getButton(IDialogConstants.NEXT_ID);
         if (getCurrentPage() instanceof CreateContractInputFromBusinessObjectWizardPage) {
-            final CreateContractInputFromBusinessObjectWizardPage page = (CreateContractInputFromBusinessObjectWizardPage) getCurrentPage();
             nextButton.setText(Messages.preview);
         } else {
             nextButton.setText(IDialogConstants.NEXT_LABEL);
