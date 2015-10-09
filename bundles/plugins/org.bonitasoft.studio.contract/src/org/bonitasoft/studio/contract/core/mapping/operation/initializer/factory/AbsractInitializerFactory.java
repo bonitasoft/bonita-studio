@@ -18,7 +18,9 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.InitializerContext;
+import org.bonitasoft.studio.model.process.Data;
 
 public abstract class AbsractInitializerFactory implements InitializerFactory {
 
@@ -40,19 +42,21 @@ public abstract class AbsractInitializerFactory implements InitializerFactory {
         return parentMapping != null ? ((RelationField) parentMapping.getField()).getReference() : null;
     }
 
-    protected String toRefName(final FieldToContractInputMapping mapping, final BusinessObjectData data) {
-        return mapping.getParent() != null ? toParentRefName(mapping.getParent()) + "." + mapping.getField().getName() : data.getName() + "."
-                + mapping.getField().getName();
-    }
-
-    protected String toParentRefName(final FieldToContractInputMapping mapping) {
-        String refName = mapping.getField().getName();
-        FieldToContractInputMapping parent = mapping.getParent();
-        while (parent != null) {
-            refName = parent.getField().getName() + "." + refName;
-            parent = parent.getParent();
-        }
-        return refName;
+    protected InitializerContext createContext(final Data data,
+            final VariableNameResolver resolver,
+            final FieldToContractInputMapping mapping,
+            final boolean checkExistence,
+            final boolean isOnPool) {
+        final InitializerContext context = new InitializerContext();
+        final BusinessObject businessObject = ((RelationField) mapping.getField()).getReference();
+        context.setMapping(mapping);
+        context.setCheckExistence(checkExistence);
+        context.setOnPool(isOnPool);
+        context.setData(data);
+        context.setContractInput(mapping.getContractInput());
+        context.setLocalListVariableName(resolver.newListVarName(businessObject));
+        context.setLocalVariableName(resolver.newVarName(businessObject));
+        return context;
     }
 
 }

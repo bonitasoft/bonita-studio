@@ -18,10 +18,7 @@ import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAn
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withComplexMultipleInHierarchy;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
-import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
 
@@ -29,10 +26,10 @@ public class MultipleAggregationReferencePropertyInitializer extends MultipleBus
 
     private final BusinessObject multipleParentBusinessObject;
 
-    public MultipleAggregationReferencePropertyInitializer(final BusinessObject multipleParentBusinessObject, final BusinessObject businessObject,
-            final RelationField field,
-            final ContractInput contractInput, final String refName, VariableNameResolver variableNameResolver, final boolean isOnPool) {
-        super(businessObject, field, contractInput, refName, variableNameResolver, isOnPool);
+    public MultipleAggregationReferencePropertyInitializer(final BusinessObject multipleParentBusinessObject,
+            final BusinessObject businessObject,
+            final InitializerContext context) {
+        super(businessObject, context);
         this.multipleParentBusinessObject = multipleParentBusinessObject;
     }
 
@@ -49,7 +46,7 @@ public class MultipleAggregationReferencePropertyInitializer extends MultipleBus
 
     @Override
     protected boolean canAppendExistingObjects() {
-        return multipleParentBusinessObject == null && !isOnPool;
+        return multipleParentBusinessObject == null && !context.isOnPool();
     }
 
     @Override

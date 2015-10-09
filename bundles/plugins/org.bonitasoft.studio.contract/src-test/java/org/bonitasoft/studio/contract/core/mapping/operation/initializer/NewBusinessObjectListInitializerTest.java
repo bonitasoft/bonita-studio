@@ -18,13 +18,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.aBO;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aCompositionField;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aSimpleField;
+import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
-import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
+import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Test;
 
@@ -37,16 +38,24 @@ public class NewBusinessObjectListInitializerTest {
         final RelationField addressField = aCompositionField("address",
                 businessObject);
         addressField.setCollection(true);
-        final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(addressField, aContractInput().withName("address")
-                .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build(), "myAddresses", new VariableNameResolver(),
-                false);
+
+        final InitializerContext context = new InitializerContext();
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(addressField);
+        context.setMapping(mapping);
+        context.setData(aBusinessData().withName("employee").build());
+        context.setContractInput(aContractInput().withName("address")
+                .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
+        context.setLocalVariableName("addressVar");
+        context.setLocalListVariableName("addressList");
+
+        final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(context);
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX).multiple()
                                 .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX))).build()));
         assertThat(propertyInitializer.getInitialValue()).isEqualTo("def addressList = []" + System.lineSeparator()
-                + "//Uncomment line below to append existing myAddresses" + System.lineSeparator()
-                + "//addressList.addAll(myAddresses)" + System.lineSeparator()
+                + "//Uncomment line below to append existing address" + System.lineSeparator()
+                + "//addressList.addAll(employee.address)" + System.lineSeparator()
                 + "//For each item collected in multiple input" + System.lineSeparator()
                 + "employee.address.each{" + System.lineSeparator()
                 + "//Add a new composed Address instance" + System.lineSeparator()
@@ -66,9 +75,18 @@ public class NewBusinessObjectListInitializerTest {
         final RelationField addressField = aCompositionField("address",
                 businessObject);
         addressField.setCollection(true);
-        final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(addressField, aContractInput().withName("address")
-                .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build(), "myAddresses", new VariableNameResolver(),
-                true);
+
+        final InitializerContext context = new InitializerContext();
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(addressField);
+        context.setMapping(mapping);
+        context.setData(aBusinessData().withName("employee").build());
+        context.setContractInput(aContractInput().withName("address")
+                .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
+        context.setLocalVariableName("addressVar");
+        context.setLocalListVariableName("addressList");
+        context.setOnPool(true);
+
+        final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(context);
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX).multiple()
@@ -93,8 +111,17 @@ public class NewBusinessObjectListInitializerTest {
         final RelationField addressField = aCompositionField("address",
                 businessObject);
         addressField.setCollection(true);
-        final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(addressField, aContractInput().withName("addresses")
-                .multiple().build(), "myAddress", new VariableNameResolver(), false);
+
+        final InitializerContext context = new InitializerContext();
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(addressField);
+        context.setMapping(mapping);
+        context.setData(aBusinessData().withName("employee").build());
+        context.setContractInput(aContractInput().withName("addresses")
+                .multiple().build());
+        context.setLocalVariableName("addressVar");
+        context.setLocalListVariableName("addressList");
+
+        final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(context);
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX).multiple()
@@ -111,5 +138,4 @@ public class NewBusinessObjectListInitializerTest {
                 + "}" + System.lineSeparator()
                 + "return addressList");
     }
-
 }
