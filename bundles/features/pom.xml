@@ -11,6 +11,7 @@
      <module>studio-feature</module>
      <module>studio-bos-specific-feature</module>
      <module>bos-branding-feature</module>
+     <module>org.bonitasoft.eclipse.platform.patch</module>
   </modules>
   
   <parent>

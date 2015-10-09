@@ -16,7 +16,9 @@
  */
 package org.bonitasoft.studio.swtbot.framework.application.menu;
 
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 
@@ -31,6 +33,7 @@ public class AbstractBotMenu extends BotBase {
     }
 
     protected void openMenu(final String menuLabel) {
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot, RepositoryManager.getInstance().getCurrentRepository().getName());
         bot.menu(menuLabel).click();
     }
 }
