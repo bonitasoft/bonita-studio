@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -22,7 +22,7 @@ import org.eclipse.osgi.util.NLS;
 public final class Messages extends NLS {
 
 	private static final String BUNDLE_NAME = "messages";//$NON-NLS-1$
-	
+
 	public static String userDefinedCatLabel;
 	public static String stringCatLabel;
 	public static String numberCatLabel;
@@ -30,8 +30,10 @@ public final class Messages extends NLS {
 	public static String otherCatLabel;
 	public static String groovyScriptRepository;
 	public static String groovyProvidedScriptRepository;
-
 	public static String noDocumentationAvailable;
+    public static String errorBuildingJarForGroovyScriptsForProcess;
+    public static String errorBuildingJarForProvidedGroovyScriptsForProcess;
+    public static String errorBuildingJarForGroovyScriptsFor6xApplication;
 
 	private Messages() {
 		// Do not instantiate
