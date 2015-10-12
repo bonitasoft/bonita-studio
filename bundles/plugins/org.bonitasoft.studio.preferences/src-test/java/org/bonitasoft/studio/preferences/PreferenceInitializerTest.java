@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Locale;
 
+import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,21 +32,35 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class PreferenceInitializerTest {
 
     @Mock
-    public IPreferenceStore apiPrefStore, webPrefStore, bonitaPrefStore;
+    public IPreferenceStore apiPrefStore, webPrefStore, bonitaPrefStore, jdtPrefStore;
 
     @Test
     public void testLegacyModeDeactivatedByDefault() throws Exception {
         final PreferenceInitializer preferenceInitializer = spy(new PreferenceInitializer());
-        doReturn(apiPrefStore).when(preferenceInitializer).getAPIPreferenceStore();
-        doReturn(webPrefStore).when(preferenceInitializer).getWebBrowserPreferenceStore();
-        doReturn(bonitaPrefStore).when(preferenceInitializer).getBonitaPreferenceStore();
-        doReturn(new Locale[] {}).when(preferenceInitializer).getStudioLocales();
-        doNothing().when(preferenceInitializer).setUTF8DefaultEncoding();
-        doNothing().when(preferenceInitializer).initDefaultDebugPreferences();
+        setupeMocks(preferenceInitializer);
 
         preferenceInitializer.initializeDefaultPreferences();
 
         verify(bonitaPrefStore).setDefault(BonitaPreferenceConstants.SHOW_LEGACY_6X_MODE, false);
     }
 
+    @Test
+    public void should_disable_mark_occurence() throws Exception {
+        final PreferenceInitializer preferenceInitializer = spy(new PreferenceInitializer());
+        setupeMocks(preferenceInitializer);
+
+        preferenceInitializer.initializeDefaultPreferences();
+
+        verify(jdtPrefStore).setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES, Boolean.FALSE);
+    }
+
+    private void setupeMocks(final PreferenceInitializer preferenceInitializer) {
+        doReturn(apiPrefStore).when(preferenceInitializer).getAPIPreferenceStore();
+        doReturn(webPrefStore).when(preferenceInitializer).getWebBrowserPreferenceStore();
+        doReturn(bonitaPrefStore).when(preferenceInitializer).getBonitaPreferenceStore();
+        doReturn(jdtPrefStore).when(preferenceInitializer).getJDTPreferenceStore();
+        doReturn(new Locale[] {}).when(preferenceInitializer).getStudioLocales();
+        doNothing().when(preferenceInitializer).setUTF8DefaultEncoding();
+        doNothing().when(preferenceInitializer).initDefaultDebugPreferences();
+    }
 }
