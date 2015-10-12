@@ -19,18 +19,21 @@ import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.a
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.anAggregationField;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
-import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
+import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.junit.Test;
 
 public class AggregationReferencePropertyInitializerTest {
 
     @Test
     public void should_call_query_in_a_closure() throws Exception {
-        final AggregationReferencePropertyInitializer propertyInitializer = new AggregationReferencePropertyInitializer(null, anAggregationField("country",
-                aBO("country").build()), aContractInput().withName("persistenceId").in(aContractInput().withName("country")).build(),
-                "", new VariableNameResolver());
+        final InitializerContext context = new InitializerContext();
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(anAggregationField("country",
+                aBO("country").build()));
+        context.setMapping(mapping);
+        context.setContractInput(aContractInput().withName("persistenceId").in(aContractInput().withName("country")).build());
+        context.setLocalVariableName("countryVar");
 
-        final String initialValue = propertyInitializer.getInitialValue();
+        final String initialValue = new AggregationReferencePropertyInitializer(null, context).getInitialValue();
 
         assertThat(initialValue).isEqualTo("{" + System.lineSeparator()
                 + "//Retrieve aggregated country using its DAO and persistenceId" + System.lineSeparator()

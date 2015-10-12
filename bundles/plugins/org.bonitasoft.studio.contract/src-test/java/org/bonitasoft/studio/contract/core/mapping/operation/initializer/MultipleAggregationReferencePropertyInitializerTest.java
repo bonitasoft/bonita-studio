@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.aBO;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aStringField;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.anAggregationField;
+import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -25,7 +26,7 @@ import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
-import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
+import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Test;
 
@@ -43,17 +44,23 @@ public class MultipleAggregationReferencePropertyInitializerTest {
         final RelationField employeesField = anAggregationField("employees", employeeBo);
         employeesField.setCollection(true);
 
-        final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(null, employeeBo,
-                employeesField, aContractInput().withName("persistenceId")
-                        .in(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()).build(),
-                "emp", new VariableNameResolver(), false);
+        final InitializerContext context = new InitializerContext();
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(employeesField);
+        context.setMapping(mapping);
+        context.setData(aBusinessData().withName("emp").build());
+        context.setContractInput(aContractInput().withName("persistenceId")
+                .in(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()).build());
+        context.setLocalVariableName("employeeVar");
+        context.setLocalListVariableName("employeeList");
+
+        final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(null, employeeBo, context);
 
         final String initialValue = initializer.getInitialValue();
 
         assertThat(initialValue).isEqualTo("{" + System.lineSeparator()
                 + "def employeeList = []" + System.lineSeparator()
-                + "//Uncomment line below to append existing emp" + System.lineSeparator()
-                + "//employeeList.addAll(emp)" + System.lineSeparator()
+                + "//Uncomment line below to append existing employees" + System.lineSeparator()
+                + "//employeeList.addAll(emp.employees)" + System.lineSeparator()
                 + "//For each item collected in multiple input" + System.lineSeparator()
                 + "employees.each{" + System.lineSeparator()
                 + "//Add aggregated Employee instance" + System.lineSeparator()
@@ -77,11 +84,17 @@ public class MultipleAggregationReferencePropertyInitializerTest {
         final RelationField employeesField = anAggregationField("employees", employeeBo);
         employeesField.setCollection(true);
 
-        final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(null, employeeBo,
-                employeesField, aContractInput().withName("persistenceId")
-                        .in(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()).build(),
-                "emp", new VariableNameResolver(), true);
+        final InitializerContext context = new InitializerContext();
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(employeesField);
+        context.setMapping(mapping);
+        context.setData(aBusinessData().withName("emp").build());
+        context.setContractInput(aContractInput().withName("persistenceId")
+                .in(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()).build());
+        context.setLocalVariableName("employeeVar");
+        context.setLocalListVariableName("employeeList");
+        context.setOnPool(true);
 
+        final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(null, employeeBo, context);
         final String initialValue = initializer.getInitialValue();
 
         assertThat(initialValue).isEqualTo("{" + System.lineSeparator()
@@ -111,13 +124,18 @@ public class MultipleAggregationReferencePropertyInitializerTest {
         employeesField.setCollection(true);
         directoryBo.addField(employeesField);
 
-        final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(directoryBo, employeeBo,
-                employeesField,
-                aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()
-                        .havingInput(aContractInput().withName("persistenceId"))
-                        .in(aContractInput().withName("direcotries").withType(ContractInputType.COMPLEX).multiple()).build(),
-                "emp", new VariableNameResolver(), false);
+        final InitializerContext context = new InitializerContext();
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(employeesField);
+        context.setMapping(mapping);
+        context.setData(aBusinessData().withName("emp").build());
+        context.setContractInput(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()
+                .havingInput(aContractInput().withName("persistenceId"))
+                .in(aContractInput().withName("direcotries").withType(ContractInputType.COMPLEX).multiple()).build());
+        context.setLocalVariableName("employeeVar");
+        context.setLocalListVariableName("employeeList");
 
+        final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(directoryBo, employeeBo,
+                context);
         final String initialValue = initializer.getInitialValue();
 
         assertThat(initialValue).isEqualTo("{" + System.lineSeparator()

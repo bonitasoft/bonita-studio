@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.aBO;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aStringField;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.anAggregationField;
+import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -25,7 +26,7 @@ import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
-import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
+import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,11 +48,18 @@ public class MultipleBusinessObjectQueryInitializerTest {
         employeeBo.addField(nameField);
         final RelationField employeesField = anAggregationField("employees", employeeBo);
         employeesField.setCollection(true);
-        final MultipleBusinessObjectQueryInitializer initializer = new MultipleBusinessObjectQueryInitializer(employeeBo, employeesField,
-                aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()
-                        .havingInput(aContractInput()
-                                .withName("persistenceId")).build(),
-                "myData.employees", new VariableNameResolver(), false);
+
+        final InitializerContext context = new InitializerContext();
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(employeesField);
+        context.setMapping(mapping);
+        context.setData(aBusinessData().withName("myData").build());
+        context.setContractInput(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()
+                .havingInput(aContractInput()
+                        .withName("persistenceId")).build());
+        context.setLocalVariableName("employeeVar");
+        context.setLocalListVariableName("employeeList");
+
+        final MultipleBusinessObjectQueryInitializer initializer = new MultipleBusinessObjectQueryInitializer(employeeBo, context);
         initializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(employeeBo, nameField, aContractInput().withName("name")
                 .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()).build()));
 
@@ -74,10 +82,14 @@ public class MultipleBusinessObjectQueryInitializerTest {
     public void should_throw_an_IllegalStateException_if_persistenceId_is_not_found() throws Exception {
         expectedException.expect(IllegalStateException.class);
 
-        new MultipleBusinessObjectQueryInitializer(null, null,
-                aContractInput()
-                        .withName("notPersistenceId")
-                        .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()).build(),
-                "myData.employees", new VariableNameResolver(), false);
+        final InitializerContext context = new InitializerContext();
+        context.setData(aBusinessData().withName("myData").build());
+        context.setContractInput(aContractInput()
+                .withName("notPersistenceId")
+                .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()).build());
+        context.setLocalVariableName("employeeVar");
+        context.setLocalListVariableName("employeeList");
+
+        new MultipleBusinessObjectQueryInitializer(null, context);
     }
 }

@@ -90,7 +90,7 @@ public abstract class FieldToContractInputMapping {
     }
 
     public MappingOperationScriptBuilder getScriptBuilder(final BusinessObjectData data) throws BusinessObjectInstantiationException {
-        return new MappingOperationScriptBuilder(data, this, field);
+        return new MappingOperationScriptBuilder(data, this);
     }
 
     protected abstract ContractInputType toContractInputType();

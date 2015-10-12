@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -28,6 +28,7 @@ import org.bonitasoft.studio.validators.descriptor.validator.ValidatorDescriptor
 import org.bonitasoft.studio.validators.descriptor.validator.ValidatorFactory;
 import org.bonitasoft.studio.validators.descriptor.validator.ValidatorType;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
@@ -64,7 +65,7 @@ public class ValidatorMigration extends ReportCustomMigration {
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel)
             throws MigrationException {
-        RepositoryManager.getInstance().getCurrentRepository().build(Repository.NULL_PROGRESS_MONITOR);
+        buildRepository();
         for (final Instance validator : model.getAllInstances("form.Validator")) {
             setDisplayName(validator, model);
             setParameter(validator, model);
@@ -76,7 +77,11 @@ public class ValidatorMigration extends ReportCustomMigration {
         }
     }
 
-    private void createValidatorDescriptor(final Instance validator) throws JavaModelException {
+    protected void buildRepository() {
+        RepositoryManager.getInstance().getCurrentRepository().build(Repository.NULL_PROGRESS_MONITOR);
+    }
+
+    protected void createValidatorDescriptor(final Instance validator) throws JavaModelException {
         final String validatorClassName = validator.get("validatorClass");
         final ValidatorDescriptorRepositoryStore validatorDescriptorStore = RepositoryManager.getInstance().getRepositoryStore(
                 ValidatorDescriptorRepositoryStore.class);
@@ -106,36 +111,75 @@ public class ValidatorMigration extends ReportCustomMigration {
         }
     }
 
-    private void setParameter(final Instance validator, final Model model) {
+    protected void setParameter(final Instance validator, final Model model) {
         Instance expression = null;
-        if (validatorParameters.containsKey(validator.getUuid())) {
-            String stringToParse = validatorParameters.get(validator.getUuid());
-            final String className = validator.get("validatorClass");
-            if (className != null && (className.contains("GroovyPageValidator") || className.contains("GroovyFieldValidator"))) {
+        final String validatorUUID = validator.getUuid();
+        if (validatorParameters.containsKey(validatorUUID)) {
+            String stringToParse = validatorParameters.get(validatorUUID);
+            String newReturnType = String.class.getName();
+            boolean returnTypeFixed = false;
+            if (isBonitaGroovyBasedValidator(validator)) {
                 stringToParse = stringToParse.startsWith("${") ? stringToParse : "${" + stringToParse + "}";
+                newReturnType = Boolean.class.getName();
+                returnTypeFixed = true;
             }
-            expression = getConverter(model, getScope(validator)).parse(stringToParse, String.class.getName(), false);
+            expression = getConverter(model, getScope(validator)).parse(stringToParse, newReturnType, returnTypeFixed);
             if (ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))) {
                 expression.set("name", "parameterScript");
             }
-            addReportChange((String) validator.get("name"), validator.getEClass().getName(), validator.getUuid(),
-                    Messages.validatorParameterMigrationDescription, Messages.validatorsProperty,
-                    StringToExpressionConverter.getStatusForExpression(expression));
+            final int status = computeStatus(expression, newReturnType);
+            addReportChange(
+                    (String) validator.get("name"),
+                    validator.getEClass().getName(),
+                    validatorUUID,
+                    Messages.validatorParameterMigrationDescription,
+                    Messages.validatorsProperty,
+                    status);
         } else {
-            expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false);
+            expression = createEmptyParameterExpression(validator, model);
         }
         validator.set("parameter", expression);
     }
 
+    protected Instance createEmptyParameterExpression(final Instance validator, final Model model) {
+        final boolean isBonitaGroovyBasedValidator = isBonitaGroovyBasedValidator(validator);
+        final String returnType = isBonitaGroovyBasedValidator ? Boolean.class.getName() : String.class.getName();
+        return StringToExpressionConverter.createExpressionInstance(
+                model,
+                "",
+                "",
+                returnType,
+                ExpressionConstants.CONSTANT_TYPE,
+                isBonitaGroovyBasedValidator);
+    }
+
+    protected int computeStatus(final Instance expression, final String newReturnType) {
+        int status = StringToExpressionConverter.getStatusForExpression(expression);
+        if (!Boolean.class.getName().equals(newReturnType)) {
+            status = IStatus.WARNING;
+        }
+        return status;
+    }
+
+    protected boolean isBonitaGroovyBasedValidator(final Instance validator) {
+        final String className = validator.get("validatorClass");
+        return className != null
+                && (className.contains("GroovyPageValidator") || className.contains("GroovyFieldValidator"));
+    }
+
     private void setDisplayName(final Instance validator, final Model model) {
         Instance expression = null;
-        if (validatorLabels.containsKey(validator.getUuid())) {
-            expression = getConverter(model, getScope(validator)).parse(validatorLabels.get(validator.getUuid()), String.class.getName(), true);
+        final String validatorUUID = validator.getUuid();
+        if (validatorLabels.containsKey(validatorUUID)) {
+            expression = getConverter(model, getScope(validator)).parse(validatorLabels.get(validatorUUID), String.class.getName(), true);
             if (ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))) {
                 expression.set("name", "errorMessageScript");
             }
-            addReportChange((String) validator.get("name"), validator.getEClass().getName(), validator.getUuid(),
-                    Messages.validatorDisplayNameMigrationDescription, Messages.validatorsProperty,
+            addReportChange((String) validator.get("name"),
+                    validator.getEClass().getName(),
+                    validatorUUID,
+                    Messages.validatorDisplayNameMigrationDescription,
+                    Messages.validatorsProperty,
                     StringToExpressionConverter.getStatusForExpression(expression));
         } else {
             expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);

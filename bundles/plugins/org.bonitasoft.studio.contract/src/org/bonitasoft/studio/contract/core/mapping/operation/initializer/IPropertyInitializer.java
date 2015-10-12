@@ -21,4 +21,8 @@ public interface IPropertyInitializer {
     String getPropertyName();
 
     String getInitialValue() throws BusinessObjectInstantiationException;
+
+    void setParent(AbstractBusinessObjectInitializer parentInitializer);
+
+    AbstractBusinessObjectInitializer getParent();
 }
