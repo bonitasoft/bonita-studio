@@ -478,9 +478,9 @@ public class PageComponentSwitchBuilder {
             final ExpressionCollectionViewer viewer = new ExpressionCollectionViewer(composite, 0, object.isFixedRows(), object.getCols().intValue(),
                     object.isFixedCols(), object.getColsCaption(), true, false);
             if (desc != null && !desc.isEmpty()) {
-                viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
+                viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).indent(10, 0).create());
             } else {
-                viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+                viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
             }
             for (int i = 0; i < object.getCols().intValue(); i++) {
                 viewer.addFilter(connectorExpressionContentTypeFilter);
@@ -500,6 +500,7 @@ public class PageComponentSwitchBuilder {
                         parameter.setExpression(expression);
                     }
                     viewer.setSelection(expression);
+                    composite.layout();
                 }
 
                 @Override
@@ -512,6 +513,7 @@ public class PageComponentSwitchBuilder {
                         parameter.setExpression(expression);
                     }
                     viewer.setSelection(expression);
+                    composite.layout();
                 }
             });
 
@@ -550,9 +552,9 @@ public class PageComponentSwitchBuilder {
             @SuppressWarnings("unchecked")
             final ExpressionCollectionViewer viewer = new ExpressionCollectionViewer(composite, 0, false, 1, true, Collections.EMPTY_LIST, true, false);
             if (desc != null && !desc.isEmpty()) {
-                viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
+                viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).indent(10, 0).create());
             } else {
-                viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+                viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
             }
 
             if (object.isShowDocuments()) {
@@ -577,6 +579,7 @@ public class PageComponentSwitchBuilder {
                         parameter.setExpression(expression);
                     }
                     viewer.setSelection(expression);
+                    composite.layout();
                 }
 
                 @Override
@@ -589,6 +592,7 @@ public class PageComponentSwitchBuilder {
                         parameter.setExpression(expression);
                     }
                     viewer.setSelection(expression);
+                    composite.layout();
                 }
             });
 

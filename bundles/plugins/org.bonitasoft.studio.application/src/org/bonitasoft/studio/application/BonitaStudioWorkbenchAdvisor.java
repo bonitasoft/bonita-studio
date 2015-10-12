@@ -71,6 +71,7 @@ import org.eclipse.gmf.runtime.lite.svg.SVGFigure;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
@@ -79,11 +80,13 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.browser.WebBrowserUtil;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
+import org.osgi.framework.Bundle;
 
 import com.google.common.base.Joiner;
 
@@ -134,6 +137,19 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         configurer.setSaveAndRestore(true);
         final IContextService contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
         contextService.activateContext("org.bonitasoft.studio.context.id");
+        initializeIDEImages(configurer);
+    }
+
+    /**
+     * Workaround to load icons for Common Navigator componenet in a RCP
+     */
+    private void initializeIDEImages(final IWorkbenchConfigurer configurer) {
+        IDE.registerAdapters();
+        //Declared projects icon
+        final String ICONS_PATH = "icons/full/obj16/";
+        final Bundle ideBundle = Platform.getBundle(IDEWorkbenchPlugin.IDE_WORKBENCH);
+        configurer.declareImage(IDE.SharedImages.IMG_OBJ_PROJECT, ImageDescriptor.createFromURL(ideBundle.getEntry(ICONS_PATH + "prj_obj.gif")), true);
+        configurer.declareImage(IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED, ImageDescriptor.createFromURL(ideBundle.getEntry(ICONS_PATH + "cprj_obj.gif")), true);
     }
 
     @Override
