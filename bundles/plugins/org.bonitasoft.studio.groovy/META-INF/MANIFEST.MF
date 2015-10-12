@@ -33,7 +33,9 @@ Require-Bundle: org.eclipse.ui,
  org.codehaus.groovy.eclipse.refactoring;bundle-version="2.8.0",
  org.codehaus.groovy.eclipse.quickfix;bundle-version="2.9.1",
  com.google.guava;bundle-version="11.0.1",
- org.eclipse.e4.core.di
+ org.eclipse.e4.core.di,
+ org.junit;bundle-version="4.11.0";resolution:=optional,
+ assertj-core;bundle-version="1.5.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
