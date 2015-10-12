@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.contract.ui.wizard;
 
 import org.bonitasoft.studio.common.jface.dialog.FinishAndAddCustomWizardDialog;
+import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.ContractPropertySection;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizard;
@@ -56,4 +57,21 @@ public class AddInputContractFromDataWizardDialog extends FinishAndAddCustomWiza
             contractPropertySection.openAddInputWizardDialog();
         }
     }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.jface.dialog.FinishAndAddCustomWizardDialog#updateButtons()
+     */
+    @Override
+    public void updateButtons() {
+        super.updateButtons();
+        final Button nextButton = getButton(IDialogConstants.NEXT_ID);
+        if (getCurrentPage() instanceof CreateContractInputFromBusinessObjectWizardPage) {
+            nextButton.setText(Messages.preview);
+        } else {
+            nextButton.setText(IDialogConstants.NEXT_LABEL);
+        }
+
+    }
+
 }

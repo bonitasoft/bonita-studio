@@ -107,4 +107,5 @@ public class Messages extends NLS {
     public static String scriptNameLabel;
     public static String selectAll;
     public static String deselectAll;
+    public static String preview;
 }
