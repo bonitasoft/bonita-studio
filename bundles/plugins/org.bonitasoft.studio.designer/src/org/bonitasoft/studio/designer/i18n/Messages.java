@@ -29,7 +29,7 @@ public class Messages extends NLS {
     public static String externalURL;
     public static String targetForm;
     public static String url;
-    public static String pageDoesntExists;
+    public static String pageDoesntExist;
     public static String caseStartFormMappingDescription;
     public static String entryFormMappingDescription;
     public static String caseOverviewFormMappingDescription;
@@ -65,6 +65,7 @@ public class Messages extends NLS {
     public static String noFormMessageOnTask;
     public static String noFormMessageOnProcess;
     public static String urlNotDefined;
+    public static String formDoesntExist;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

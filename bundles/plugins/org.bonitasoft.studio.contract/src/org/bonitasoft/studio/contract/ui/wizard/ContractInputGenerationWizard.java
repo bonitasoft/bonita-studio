@@ -76,6 +76,7 @@ public class ContractInputGenerationWizard extends Wizard {
     private GeneratedScriptPreviewPage generatedScriptPreviewPage;
     private final ContractInputGenerationWizardPagesFactory contractInputWizardPagesFactory;
     private final GroovySourceViewerFactory sourceViewerFactory;
+    private SelectBusinessDataWizardPage selectBusinessDataWizardPage;
 
     public ContractInputGenerationWizard(final ContractContainer contractContainer,
             final EditingDomain editingDomain,
@@ -112,8 +113,9 @@ public class ContractInputGenerationWizard extends Wizard {
         if (!availableBusinessData.isEmpty()) {
             selectedDataObservable.setValue(availableBusinessData.get(0));
         }
-        addPage(contractInputWizardPagesFactory.createSelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable,
-                repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)));
+        selectBusinessDataWizardPage = contractInputWizardPagesFactory.createSelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable,
+                repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
+        addPage(selectBusinessDataWizardPage);
         contractInputFromBusinessObjectWizardPage = contractInputWizardPagesFactory.createCreateContratInputFromBusinessObjectWizardPage(
                 contractContainer.getContract(), generationOptions, selectedDataObservable, rootNameObservable, fieldToContractInputMappingFactory,
                 fieldToContractInputMappingsObservable, repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
@@ -171,6 +173,8 @@ public class ContractInputGenerationWizard extends Wizard {
             return true;
         }
         contractInputFromBusinessObjectWizardPage.disableAutoGeneration();
+        getContainer().showPage(contractInputFromBusinessObjectWizardPage);
+        contractInputFromBusinessObjectWizardPage.setPreviousPage(selectBusinessDataWizardPage);
         return false;
     }
 

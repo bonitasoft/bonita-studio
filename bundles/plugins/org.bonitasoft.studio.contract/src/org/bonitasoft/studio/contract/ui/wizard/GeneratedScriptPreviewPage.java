@@ -26,6 +26,7 @@ import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInp
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.groovy.ui.dialog.GroovyHelpLinkFactory;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -111,14 +112,12 @@ public class GeneratedScriptPreviewPage extends WizardPage {
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(15, 15).margins(10, 10).create());
+        createGroovyHelpLinkComposite(mainComposite);
         createScriptNameComposite(mainComposite);
         createScriptPreviewComposite(mainComposite);
         setControl(mainComposite);
     }
 
-    /**
-     * @param mainComposite
-     */
     protected void createScriptNameComposite(final Composite mainComposite) {
         final Label scriptNameLabel = new Label(mainComposite, SWT.NONE);
         scriptNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).create());
@@ -128,9 +127,14 @@ public class GeneratedScriptPreviewPage extends WizardPage {
         scriptNameText.setEditable(false);
     }
 
-    /**
-     * @param mainComposite
-     */
+    private void createGroovyHelpLinkComposite(final Composite mainComposite) {
+        final GroovyHelpLinkFactory groovyHelpLinkFactory = new GroovyHelpLinkFactory();
+        final Composite groovyHelpComposite = new Composite(mainComposite, SWT.NONE);
+        groovyHelpComposite.setLayout(new FillLayout(SWT.VERTICAL));
+        groovyHelpComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.END, SWT.CENTER).create());
+        groovyHelpLinkFactory.createGroovyHelpLink(groovyHelpComposite);
+    }
+
     protected void createScriptPreviewComposite(final Composite mainComposite) {
         final Composite previewComposite = new Composite(mainComposite, SWT.NONE);
         previewComposite.setLayout(new FillLayout(SWT.VERTICAL));

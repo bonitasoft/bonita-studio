@@ -15,32 +15,27 @@
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 
 public class NewBusinessObjectInitializer extends AbstractBusinessObjectInitializer implements IPropertyInitializer {
 
-    private final boolean checkExistsence;
-
-    public NewBusinessObjectInitializer(final RelationField field, final String refName, VariableNameResolver variableNameResolver,
-            final boolean checkExistsence) {
-        super(field, refName, variableNameResolver);
-        this.checkExistsence = checkExistsence;
+    public NewBusinessObjectInitializer(final InitializerContext context) {
+        super(context);
     }
 
     @Override
     protected boolean checkExistence() {
-        return checkExistsence;
+        return context.checkExistence();
     }
 
     @Override
-    protected void constructor(final StringBuilder scriptBuilder, final BusinessObject bo, final boolean checkExistence) {
-        if (checkExistence) {
-            scriptBuilder.append(refName);
+    protected void constructor(final StringBuilder scriptBuilder, final BusinessObject bo) {
+        if (checkExistence()) {
+            final String ref = context.getRef(getParent() != null ? getParent().getContext() : null);
+            scriptBuilder.append(ref);
             scriptBuilder.append(" == null ? ");
             newBusinessObject(scriptBuilder, bo);
             scriptBuilder.append(" : ");
-            scriptBuilder.append(refName);
+            scriptBuilder.append(ref);
         } else {
             newBusinessObject(scriptBuilder, bo);
         }

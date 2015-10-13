@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation;
 
-import java.util.Objects;
-
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
@@ -43,15 +41,12 @@ public class MappingOperationScriptBuilder {
     private boolean needsDataDependency = false;
     private final BusinessObjectData data;
     private final FieldToContractInputMapping mapping;
-    private final Field field;
     private final PropertyInitializerFactory propertyInitializerFactory;
 
     public MappingOperationScriptBuilder(final BusinessObjectData data,
-            final FieldToContractInputMapping mapping,
-            final Field field) {
+            final FieldToContractInputMapping mapping) {
         this.data = data;
         this.mapping = mapping;
-        this.field = field;
         final VariableNameResolver variableNameResolver = new VariableNameResolver();
         businessObjectInitializerFactory = new BusinessObjectInitializerFactory(variableNameResolver);
         propertyInitializerFactory = new PropertyInitializerFactory(new RelationPropertyInitializerFactory(variableNameResolver));
@@ -67,7 +62,7 @@ public class MappingOperationScriptBuilder {
 
     private String toScript(final boolean isOnPool) throws BusinessObjectInstantiationException {
         mapping.getContractInput();
-        return format(buildPropertyInitializerTree(mapping, field, data, isOnPool).getInitialValue());
+        return format(buildPropertyInitializerTree(mapping, businessObjectInitializerFactory, data, isOnPool).getInitialValue());
     }
 
     private String format(final String initialValue) {
@@ -80,30 +75,29 @@ public class MappingOperationScriptBuilder {
         return document.get();
     }
 
-    private IPropertyInitializer buildPropertyInitializerTree(final FieldToContractInputMapping mapping, final Field rootField, final BusinessObjectData data,
+    private IPropertyInitializer buildPropertyInitializerTree(final FieldToContractInputMapping mapping,
+            final InitializerFactory initializerFactory,
+            final BusinessObjectData data,
             final boolean isOnPool) {
         final Field field = mapping.getField();
         if (field instanceof SimpleField) {
             return propertyInitializerFactory.newPropertyInitializer(mapping, data, isOnPool);
         }
         if (field instanceof RelationField) {
-            final AbstractBusinessObjectInitializer scriptInitializer = (AbstractBusinessObjectInitializer) findInitializerFactory(field, rootField)
+            final AbstractBusinessObjectInitializer scriptInitializer = (AbstractBusinessObjectInitializer) initializerFactory
                     .newPropertyInitializer(
                             mapping,
-                            data, isOnPool);
+                            data,
+                            isOnPool);
             for (final FieldToContractInputMapping child : mapping.getChildren()) {
                 if (child.isGenerated()) {
-                    scriptInitializer.addPropertyInitializer(buildPropertyInitializerTree(child, rootField, data, isOnPool));
+                    scriptInitializer.addPropertyInitializer(buildPropertyInitializerTree(child, propertyInitializerFactory, data, isOnPool));
                 }
             }
             needsDataDependency = scriptInitializer instanceof NewBusinessObjectInitializer;
             return scriptInitializer;
         }
         throw new UnsupportedOperationException(field.getClass().getName() + " type is not supported");
-    }
-
-    private InitializerFactory findInitializerFactory(final Field field, final Field rootField) {
-        return Objects.equals(field, rootField) ? businessObjectInitializerFactory : propertyInitializerFactory;
     }
 
     public boolean needsDataDependency() {
