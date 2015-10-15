@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Groovy Runtime Plug-in
 Bundle-SymbolicName: org.codehaus.groovy
-Bundle-Version: 2.4.300.qualifier
+Bundle-Version: 2.4.3.xx-201509250011-e44
 Bundle-ClassPath: groovy-eclipse.jar,
  lib/ivy-2.3.0.jar,
  lib/bsf-2.4.0.jar,

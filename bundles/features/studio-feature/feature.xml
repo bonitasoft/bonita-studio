@@ -469,7 +469,7 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          id="org.codehaus.groovy"
          download-size="0"
          install-size="0"
-         version="2.4.3.xx-201509250011-e44"/>
+         version="2.4.300.xx-201509250011-e44"/>
 
    <plugin
          id="org.eclipse.ui.views.properties.tabbed"
