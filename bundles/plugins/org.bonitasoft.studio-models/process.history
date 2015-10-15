@@ -9924,5 +9924,9 @@
       </changes>
     </changes>
   </releases>
+  <releases date="2015-10-15T11:43:27.494+0200" label="7.2.0-001">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateGroovyConnectorVersionTo102"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateTransactionalGroovyConnectorVersionTo101"/>
+  </releases>
   <releases/>
 </history:History>
