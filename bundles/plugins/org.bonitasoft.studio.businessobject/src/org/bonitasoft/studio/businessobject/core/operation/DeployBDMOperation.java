@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2013 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2013-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -14,11 +14,15 @@
  */
 package org.bonitasoft.studio.businessobject.core.operation;
 
+import static com.google.common.io.ByteStreams.toByteArray;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -42,15 +46,23 @@ import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.PlatformUI;
 
 import com.google.common.base.Preconditions;
 
-/**
- * @author Romain Bioteau
- */
+
 public class DeployBDMOperation implements IRunnableWithProgress {
+
+    private static final String BDM_DEPLOYED_TOPIC = "bdm/deployed";
+
+    private static final String BDM_CLIENT = "bdm-client";
+
+    private static final String BDM_DAO = "bdm-dao";
+
+    private static final String MODEL = "model";
 
     private final BusinessObjectModelFileStore fileStore;
 
@@ -131,8 +143,12 @@ public class DeployBDMOperation implements IRunnableWithProgress {
 
             if (containsBusinessObjects(bom)) {
                 final byte[] zipContent = tenantManagementAPI.getClientBDMZip();
-                final byte[] jarContent = retrieveModelJarContent(zipContent);
-                updateDependency(jarContent);
+                final Map<String, byte[]> jarContent = retrieveContent(zipContent);
+                updateDependency(jarContent.get(BDM_CLIENT));
+                final Map<String, Object> data = new HashMap<>();
+                data.put(MODEL, bom);
+                data.put(BDM_DAO, jarContent.get(BDM_DAO));
+                eventBroker().post(BDM_DEPLOYED_TOPIC, data);
             } else {
                 removeDependency();
             }
@@ -160,6 +176,10 @@ public class DeployBDMOperation implements IRunnableWithProgress {
         }
     }
 
+    protected IEventBroker eventBroker() {
+        return (IEventBroker) PlatformUI.getWorkbench().getService(IEventBroker.class);
+    }
+
     protected void removeDependency() {
         final DependencyRepositoryStore dependencyRepositoryStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DependencyRepositoryStore.class);
@@ -178,25 +198,23 @@ public class DeployBDMOperation implements IRunnableWithProgress {
         return preferenceStore.getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL);
     }
 
-    protected byte[] retrieveModelJarContent(final byte[] zipContent) throws IOException {
+    protected Map<String, byte[]> retrieveContent(final byte[] zipContent) throws IOException {
         Assert.isNotNull(zipContent);
         ByteArrayInputStream is = null;
         ZipInputStream zis = null;
-        ByteArrayOutputStream out = null;
+        final ByteArrayOutputStream out = null;
+        final Map<String, byte[]> result = new HashMap<>();
         try {
             is = new ByteArrayInputStream(zipContent);
             zis = new ZipInputStream(is);
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
                 final String entryName = entry.getName();
-                if (entryName.contains("model") && entryName.endsWith(".jar")) {
-                    out = new ByteArrayOutputStream();
-                    int len = 0;
-                    final byte[] buffer = new byte[1024];
-                    while ((len = zis.read(buffer)) > 0) {
-                        out.write(buffer, 0, len);
-                    }
-                    return out.toByteArray();
+                if (entryName.contains(MODEL) && entryName.endsWith(".jar")) {
+                    result.put(BDM_CLIENT, toByteArray(zis));
+                }
+                if (entryName.contains("dao") && entryName.endsWith(".jar")) {
+                    result.put(BDM_DAO, toByteArray(zis));
                 }
             }
         } finally {
@@ -211,8 +229,9 @@ public class DeployBDMOperation implements IRunnableWithProgress {
             }
         }
 
-        return null;
+        return result;
     }
+
 
     protected void updateDependency(final byte[] jarContent) throws InvocationTargetException {
         ByteArrayInputStream is = null;
