@@ -24,29 +24,22 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Collections;
-import java.util.List;
 
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.flownode.HumanTaskInstance;
-import org.bonitasoft.engine.bpm.process.ActivationState;
-import org.bonitasoft.engine.bpm.process.IllegalProcessStateException;
 import org.bonitasoft.engine.bpm.process.ProcessActivationException;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
 import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
-import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
-import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoCriterion;
 import org.bonitasoft.engine.bpm.process.ProcessExecutionException;
 import org.bonitasoft.engine.bpm.process.ProcessInstance;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
-import org.bonitasoft.engine.exception.DeletionException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.exception.UpdateException;
 import org.bonitasoft.engine.identity.UserNotFoundException;
 import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.BonitaConstants;
 import org.bonitasoft.studio.common.ProjectUtil;
@@ -63,6 +56,7 @@ import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.operation.AbstractBonitaURLBuilder;
 import org.bonitasoft.studio.engine.operation.ApplicationURLBuilder;
+import org.bonitasoft.studio.engine.operation.UndeployProcessOperation;
 import org.bonitasoft.studio.form.preview.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
@@ -134,7 +128,9 @@ public class FormPreviewOperation implements IRunnableWithProgress {
                 processApi = BOSEngineManager.getInstance().getProcessAPI(session);
                 Assert.isNotNull(processApi);
 
-                undeployDeployedProcess(proc, processApi);
+                final UndeployProcessOperation undeployProcessOperation = new UndeployProcessOperation(BOSEngineManager.getInstance());
+                undeployProcessOperation.addProcessToUndeploy(proc);
+                undeployProcessOperation.run(monitor);
 
                 final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc, configuration, Collections.EMPTY_SET, false);
                 cleanResources(proc, resource);
@@ -267,35 +263,6 @@ public class FormPreviewOperation implements IRunnableWithProgress {
         proc = (AbstractProcess) resource.getEObject(proc.eResource().getURIFragment(proc));
         final CompoundCommand cc = WebTemplatesUtil.createAddTemplateCommand(editingDomain, proc, lookNFeel, new NullProgressMonitor());
         editingDomain.getCommandStack().execute(cc);
-    }
-
-    protected void undeployDeployedProcess(final AbstractProcess process, final ProcessAPI processApi) throws InvalidSessionException,
-            ProcessDefinitionNotFoundException, IllegalProcessStateException, DeletionException {
-        final long nbDeployedProcesses = processApi.getNumberOfProcessDeploymentInfos();
-        if (nbDeployedProcesses > 0) {
-            if (lastProcessDeployed == null) {
-                lastProcessDeployed = process.getName();
-            }
-            final List<ProcessDeploymentInfo> processes = processApi.getProcessDeploymentInfos(0, (int) nbDeployedProcesses,
-                    ProcessDeploymentInfoCriterion.DEFAULT);
-            for (final ProcessDeploymentInfo info : processes) {
-                undeployProcess(processApi, info);
-            }
-        }
-    }
-
-    protected void undeployProcess(final ProcessAPI processApi, final ProcessDeploymentInfo info) throws ProcessDefinitionNotFoundException, DeletionException {
-        if (info.getName().equals(lastProcessDeployed) && info.getVersion().equals(AbstractFormPreviewInitialization.VERSION)) {
-            try {
-                processApi.deleteProcessInstances(info.getProcessId(), 0, 10);
-                if (processApi.getProcessDeploymentInfo(info.getProcessId()).getActivationState() == ActivationState.ENABLED) {
-                    processApi.disableProcess(info.getProcessId());
-                }
-            } catch (final ProcessActivationException e) {
-                BonitaStudioLog.error(e);
-            }
-            processApi.deleteProcessDefinition(info.getProcessId());
-        }
     }
 
 }

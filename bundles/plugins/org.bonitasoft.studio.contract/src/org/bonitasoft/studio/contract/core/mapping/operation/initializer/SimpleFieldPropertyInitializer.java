@@ -30,6 +30,7 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
     private final SimpleField field;
     private final ContractInput contractInput;
     private final BusinessObject parentBusinessObject;
+    private AbstractBusinessObjectInitializer parent;
 
     public SimpleFieldPropertyInitializer(final BusinessObject parentBusinessObject, final SimpleField field, final ContractInput contractInput) {
         this.parentBusinessObject = parentBusinessObject;
@@ -74,5 +75,15 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
 
     private String iteratorName() {
         return "current" + BDMQueryUtil.getSimpleBusinessObjectName(parentBusinessObject.getQualifiedName()) + "Input";
+    }
+
+    @Override
+    public void setParent(final AbstractBusinessObjectInitializer parentInitializer) {
+        parent = parentInitializer;
+    }
+
+    @Override
+    public AbstractBusinessObjectInitializer getParent() {
+        return parent;
     }
 }

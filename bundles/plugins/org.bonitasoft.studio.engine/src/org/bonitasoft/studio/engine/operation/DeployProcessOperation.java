@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009-2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2015 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,13 +33,10 @@ import java.util.Set;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.process.Problem;
-import org.bonitasoft.engine.bpm.process.ProcessActivationException;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
 import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
 import org.bonitasoft.engine.bpm.process.ProcessDeployException;
 import org.bonitasoft.engine.bpm.process.ProcessEnablementException;
-import org.bonitasoft.engine.exception.DeletionException;
-import org.bonitasoft.engine.exception.ProcessInstanceHierarchicalDeletionException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -69,8 +67,6 @@ import com.google.common.base.Predicate;
  * @author Aurelien Pupier
  */
 public class DeployProcessOperation {
-
-    private static final int MAX_RESULTS = 1000;
 
     private Set<EObject> excludedObject = new HashSet<EObject>();
 
@@ -110,14 +106,18 @@ public class DeployProcessOperation {
 
     public IStatus run(final IProgressMonitor monitor) {
         Assert.isTrue(!processes.isEmpty());
+        IStatus status = null;
         try {
-            undeploy(monitor);
+            status = undeploy(processes, monitor);
         } catch (final Exception e) {
             BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             return new Status(Status.ERROR, EnginePlugin.PLUGIN_ID, Messages.undeploymentFailedMessage, e);
         }
+        if (!status.isOK()) {
+            return status;
+        }
         try {
-            IStatus status = deploy(monitor);
+            status = deploy(monitor);
             if (status.getSeverity() == IStatus.OK) {
                 status = enable(monitor);
             }
@@ -262,7 +262,7 @@ public class DeployProcessOperation {
         }
         IStatus status = openProcessEnablementProblemsDialog(process, processResolutionProblems);
         if (status.isOK()) {
-            undeployProcess(process, monitor);
+            undeploy(Collections.singletonList(process), monitor);
             status = deployProcess(process, monitor);
             if (status.getSeverity() != IStatus.OK) {
                 return status;
@@ -273,83 +273,12 @@ public class DeployProcessOperation {
         }
     }
 
-    /**
-     * @param monitor
-     * @throws DeletingEnabledProcessException
-     * @throws Exception
-     */
-    protected void undeploy(final IProgressMonitor monitor) throws Exception {
+    protected IStatus undeploy(final List<AbstractProcess> processes, final IProgressMonitor monitor) throws Exception {
+        final UndeployProcessOperation undeployProcessOperation = new UndeployProcessOperation(BOSEngineManager.getInstance());
         for (final AbstractProcess process : processes) {
-            undeployProcess(process, monitor);
+            undeployProcessOperation.addProcessToUndeploy(process);
         }
-    }
-
-    protected void undeployProcess(final AbstractProcess process, final IProgressMonitor monitor) throws Exception {
-        final APISession session = BOSEngineManager.getInstance().createSession(process, configurationId, monitor);
-        try {
-            final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-            final long nbDeployedProcesses = processApi.getNumberOfProcessDeploymentInfos();
-            if (nbDeployedProcesses > 0) {
-                final long processDefinitionId = processApi.getProcessDefinitionId(process.getName(), process.getVersion());
-                disableProcessDefinition(process, processApi, processDefinitionId, monitor);
-                deleteProcessInstances(process, processApi, processDefinitionId, monitor);
-                deleteArchivedProcessInstances(processApi, processDefinitionId);
-                deleteProcessDefinition(process, processApi, processDefinitionId, monitor);
-            }
-        } catch (final ProcessDefinitionNotFoundException e) {
-            // Skip
-        } finally {
-            if (session != null) {
-                BOSEngineManager.getInstance().logoutDefaultTenant(session);
-            }
-        }
-    }
-
-    private void deleteProcessDefinition(final AbstractProcess process, final ProcessAPI processApi, final long processDefinitionId,
-            final IProgressMonitor monitor)
-            throws DeletionException {
-        monitor.subTask(Messages.bind(Messages.deletingProcessDefinition, getProcessLabel(process)));
-        processApi.deleteProcessDefinition(processDefinitionId);
-    }
-
-    private void deleteArchivedProcessInstances(final ProcessAPI processApi, final long processDefinitionId) throws DeletionException {
-        boolean allInstancesDeleted = false;
-        while (!allInstancesDeleted) {
-            final long nbDeletedProcessInstances = processApi.deleteArchivedProcessInstances(processDefinitionId, 0, MAX_RESULTS);
-            allInstancesDeleted = nbDeletedProcessInstances < MAX_RESULTS;
-        }
-    }
-
-    private void deleteProcessInstances(final AbstractProcess process, final ProcessAPI processApi, final long processDefinitionId,
-            final IProgressMonitor monitor)
-            throws DeletionException {
-        boolean allInstancesDeleted = false;
-        monitor.subTask(Messages.bind(Messages.deletingProcessInstances, getProcessLabel(process)));
-        while (!allInstancesDeleted) {
-            try {
-                final long nbDeletedProcessInstances = processApi.deleteProcessInstances(processDefinitionId, 0, MAX_RESULTS);
-                allInstancesDeleted = nbDeletedProcessInstances < MAX_RESULTS;
-            } catch (final DeletionException e) {
-                if (e instanceof ProcessInstanceHierarchicalDeletionException) {
-                    final long blockingProcessId = ((ProcessInstanceHierarchicalDeletionException) e).getProcessInstanceId();
-                    processApi.deleteProcessInstance(blockingProcessId);
-                } else {
-                    throw e;
-                }
-            }
-        }
-    }
-
-    private void disableProcessDefinition(final AbstractProcess process, final ProcessAPI processApi, final long processDefinitionId,
-            final IProgressMonitor monitor)
-            throws ProcessDefinitionNotFoundException {
-        monitor.subTask(Messages.bind(Messages.undeploying, getProcessLabel(process)));
-        try {
-            monitor.subTask(Messages.bind(Messages.disablingProcessDefinition, getProcessLabel(process)));
-            processApi.disableProcess(processDefinitionId);
-        } catch (final ProcessActivationException e) {
-            BonitaStudioLog.debug("Failed to disable the process", e, EnginePlugin.PLUGIN_ID);
-        }
+        return undeployProcessOperation.run(monitor);
     }
 
     private String getProcessLabel(final AbstractProcess process) {

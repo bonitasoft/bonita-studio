@@ -24,7 +24,7 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
-import org.bonitasoft.studio.designer.ui.property.section.control.FormReferenceExpressionValidator;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +42,8 @@ public class FormReferenceExpressionValidatorTest {
 
     @Test
     public void is_relevant_for_FORM_REFERENCE_TYPE() throws Exception {
-        final FormReferenceExpressionValidator formReferenceExpressionValidator = new FormReferenceExpressionValidator(repositoryAccessor);
+        final FormReferenceExpressionValidator formReferenceExpressionValidator = new FormReferenceExpressionValidator(repositoryAccessor,
+                ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
 
         final boolean isRelevant = formReferenceExpressionValidator.isRelevantForExpressionType(ExpressionConstants.FORM_REFERENCE_TYPE);
 
@@ -51,7 +52,8 @@ public class FormReferenceExpressionValidatorTest {
 
     @Test
     public void is_not_relevant_for_other_expression_type_than_FORM_REFERENCE_TYPE() throws Exception {
-        final FormReferenceExpressionValidator formReferenceExpressionValidator = new FormReferenceExpressionValidator(repositoryAccessor);
+        final FormReferenceExpressionValidator formReferenceExpressionValidator = new FormReferenceExpressionValidator(repositoryAccessor,
+                ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
 
         final boolean isRelevant = formReferenceExpressionValidator.isRelevantForExpressionType(ExpressionConstants.CONSTANT_TYPE);
 
@@ -60,7 +62,20 @@ public class FormReferenceExpressionValidatorTest {
 
     @Test
     public void return_an_error_status_if_page_id_is_not_in_the_repository() throws Exception {
-        final FormReferenceExpressionValidator formReferenceExpressionValidator = new FormReferenceExpressionValidator(repositoryAccessor);
+        final FormReferenceExpressionValidator formReferenceExpressionValidator = new FormReferenceExpressionValidator(repositoryAccessor,
+                ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
+        formReferenceExpressionValidator.setInputExpression(ExpressionHelper.createFormReferenceExpression("Step1", "step1-id"));
+        doReturn(aWebPageStoreMockContaining()).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
+
+        final IStatus status = formReferenceExpressionValidator.validate("Step1");
+
+        assertThat(status).isNotOK();
+    }
+
+    @Test
+    public void return_an_error_status_if_page_id_is_not_in_the_repository_for_overviewPageFlow() throws Exception {
+        final FormReferenceExpressionValidator formReferenceExpressionValidator = new FormReferenceExpressionValidator(repositoryAccessor,
+                ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING);
         formReferenceExpressionValidator.setInputExpression(ExpressionHelper.createFormReferenceExpression("Step1", "step1-id"));
         doReturn(aWebPageStoreMockContaining()).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
 
@@ -71,7 +86,8 @@ public class FormReferenceExpressionValidatorTest {
 
     @Test
     public void return_a_valid_status_if_page_id_is_present_in_the_repository() throws Exception {
-        final FormReferenceExpressionValidator formReferenceExpressionValidator = new FormReferenceExpressionValidator(repositoryAccessor);
+        final FormReferenceExpressionValidator formReferenceExpressionValidator = new FormReferenceExpressionValidator(repositoryAccessor,
+                ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
         formReferenceExpressionValidator.setInputExpression(ExpressionHelper.createFormReferenceExpression("Step1", "step1-id"));
         doReturn(aWebPageStoreMockContaining("step1-id", "step2-id")).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
 

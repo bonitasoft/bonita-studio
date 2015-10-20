@@ -54,9 +54,6 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
     private RepositoryAccessor repositoryAccessor;
 
     @Inject
-    private FormReferenceExpressionValidator formReferenceExpressionValidator;
-
-    @Inject
     private CreateOrEditFormProposalListener createOrEditListener;
 
     private FormMappingRadioGroup formMappingRadioGroup;
@@ -64,6 +61,8 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
     @Override
     protected void createContent(final Composite parent) {
         context = new EMFDataBindingContext();
+        final FormReferenceExpressionValidator formReferenceExpressionValidator = new FormReferenceExpressionValidator(repositoryAccessor,
+                getFormMappingFeature());
         formMappingRadioGroup = new FormMappingRadioGroup(parent, getWidgetFactory(), preferenceStore,
                 repositoryAccessor, formReferenceExpressionValidator, createOrEditListener);
         final IObservableValue formMappingObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),

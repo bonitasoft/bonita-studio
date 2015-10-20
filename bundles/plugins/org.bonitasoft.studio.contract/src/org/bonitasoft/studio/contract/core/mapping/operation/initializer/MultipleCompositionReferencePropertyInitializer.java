@@ -18,10 +18,7 @@ import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAn
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withComplexMultipleInHierarchy;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
-import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
 
@@ -29,10 +26,8 @@ public class MultipleCompositionReferencePropertyInitializer extends NewBusiness
 
     private final BusinessObject parentBusinessObject;
 
-    public MultipleCompositionReferencePropertyInitializer(final BusinessObject parentBusinessObject, final RelationField field,
-            final ContractInput contractInput,
-            final String refName, VariableNameResolver variableNameResolver, final boolean isOnPool) {
-        super(field, contractInput, refName, variableNameResolver, isOnPool);
+    public MultipleCompositionReferencePropertyInitializer(final BusinessObject parentBusinessObject, final InitializerContext context) {
+        super(context);
         this.parentBusinessObject = parentBusinessObject;
     }
 
@@ -49,7 +44,7 @@ public class MultipleCompositionReferencePropertyInitializer extends NewBusiness
 
     @Override
     protected boolean canAppendExistingObjects() {
-        return parentBusinessObject == null && !isOnPool;
+        return parentBusinessObject == null && !context.isOnPool();
     }
 
     @Override
