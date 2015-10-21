@@ -280,5 +280,7 @@ public class Messages extends NLS {
     public static String unicityErrorMessage;
     public static String validationFailureReservedKeywordsAPIREST;
     public static String uiDesignerModuleName;
+    public static String invalidPath;
+    public static String pathDoesNotExist;
 
 }
