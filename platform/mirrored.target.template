@@ -223,15 +223,14 @@
 <unit id="org.eclipse.babel.nls_datatools_pt.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.recommenders_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.packaging_it.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.9.1.xx-201411061335-e44-RELEASE"/>
-<unit id="org.codehaus.groovy18.feature.feature.group" version="2.9.1.xx-201411061335-e44-RELEASE"/>
-<unit id="org.codehaus.groovy.jdt.patch.feature.group" version="2.9.1.xx-201411061335-e44-RELEASE"/>
-<unit id="org.codehaus.groovy23.feature.feature.group" version="2.9.1.xx-201411061335-e44-RELEASE"/>
+<unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.9.2.xx-201509250011-e44"/>
+<unit id="org.codehaus.groovy.jdt.patch.feature.group" version="2.9.2.xx-201509250011-e44"/>
+<unit id="org.codehaus.groovy24.feature.feature.group" version="2.9.2.xx-201509250011-e44"/>
 <unit id="com.google.guava.sdk.feature.feature.group" version="11.0.1"/>
 <unit id="com.google.guava.runtime.feature.feature.group" version="11.0.1"/>
 <unit id="org.eclipse.m2e.feature.feature.group" version="1.5.1.20150109-1820"/>
 <unit id="com.google.guava" version="15.0.0.v201403281430"/>
-<unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="2.9.1.xx-201411061335-e44-RELEASE"/>
+<unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="2.9.2.xx-201509250011-e44"/>
 <unit id="org.eclipse.m2e.jdt" version="1.5.1.20150109-1820"/>
 <unit id="org.jspresso.contrib.sjsplugin.spock.feature.feature.group" version="2.12.0.201509182051"/>
 </location>
