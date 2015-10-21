@@ -14,13 +14,21 @@
  */
 package org.bonitasoft.studio.engine.operation;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.net.HttpURLConnection;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.session.APISession;
@@ -30,6 +38,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -39,6 +48,8 @@ public class UndeployProcessOperationTest {
 
     @Mock
     private ProcessAPI processAPI;
+    @Mock
+    private HttpURLConnection connection;
 
     @Test
     public void should_disable_process_definition_before_deleting_instances_and_definition() throws Exception {
@@ -51,7 +62,12 @@ public class UndeployProcessOperationTest {
         inOrder.verify(processAPI).disableProcess(1L);
         inOrder.verify(processAPI).deleteProcessInstances(1L, 0, 1000);
         inOrder.verify(processAPI).deleteArchivedProcessInstances(1L, 0, 1000);
-        inOrder.verify(processAPI).deleteProcessDefinition(1L);
+        inOrder.verify(processAPI, never()).deleteProcessDefinition(1L);
+
+        final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        verify(operation, times(2)).openConnection(captor.capture());
+        assertThat(captor.getAllValues())
+                .contains("http://localhost:8080/bonita/bonita/API/bpm/process/1", "http://localhost:8080/bonita/bonita/logoutservice");
     }
 
     private UndeployProcessOperation createFixture() throws Exception {
@@ -59,6 +75,11 @@ public class UndeployProcessOperationTest {
         when(engineManager.createSession(notNull(AbstractProcess.class), anyString(), any(IProgressMonitor.class))).thenReturn(mock(APISession.class));
         when(engineManager.getProcessAPI(notNull(APISession.class))).thenReturn(processAPI);
         when(processAPI.getNumberOfProcessDeploymentInfos()).thenReturn(1L);
-        return new UndeployProcessOperation(engineManager);
+        final UndeployProcessOperation operation = spy(new UndeployProcessOperation(engineManager));
+        doReturn(connection).when(operation).openLoginConnection(any(IProgressMonitor.class));
+        doReturn(connection).when(operation).openConnection(anyString());
+        doReturn(HttpURLConnection.HTTP_OK).when(connection).getResponseCode();
+        doReturn("http://localhost:8080/bonita").when(operation).getUrlBase();
+        return operation;
     }
 }
