@@ -50,6 +50,10 @@ public class ValidatorFactory {
         return new FileNameValidator(inputName);
     }
 
+    public static IValidator pathValidator(final String inputName) {
+        return new PathValidator(inputName);
+    }
+
     public static IValidator urlEncodableInputValidator(final String inputName) {
         return new URLEncodableInputValidator(inputName);
     }
