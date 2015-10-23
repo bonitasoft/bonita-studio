@@ -20,6 +20,7 @@ import java.io.File;
 import java.nio.file.InvalidPathException;
 
 import org.eclipse.core.runtime.IStatus;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -49,12 +50,15 @@ public class PathValidatorTest {
 
     @Test
     public void should_throw_an_InvalidPathException_if_path_contains_illegal_character() throws Exception {
+        assumeOSIsWindows();
+
         final PathValidator pathValidator = new PathValidator("location");
 
         expectedException.expect(InvalidPathException.class);
 
         pathValidator.validate("/my/path/*");
     }
+
 
     @Test
     public void should_fail_if_path_if_does_not_exists() throws Exception {
@@ -73,4 +77,10 @@ public class PathValidatorTest {
 
         assertThat(status).isOK();
     }
+
+    private void assumeOSIsWindows() {
+        final String osName = System.getProperty("os.name");
+        Assume.assumeTrue(osName != null && osName.startsWith("Windows"));
+    }
+
 }
