@@ -14,7 +14,12 @@
  */
 package org.bonitasoft.studio.swt.rules;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.bonitasoft.studio.swt.DefaultRealm;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
@@ -67,6 +72,14 @@ public class RealmWithDisplay extends ExternalResource {
         gc.fillRectangle(image.getBounds());
         gc.dispose();
         return image;
+    }
+
+    public IWizard wizardWithContainer() {
+        final IWizard wizard = mock(IWizard.class);
+        final IWizardContainer wizardContainer = mock(IWizardContainer.class);
+        when(wizardContainer.getShell()).thenReturn(getShell());
+        when(wizard.getContainer()).thenReturn(wizardContainer);
+        return wizard;
     }
 
     protected Color createColor() {
