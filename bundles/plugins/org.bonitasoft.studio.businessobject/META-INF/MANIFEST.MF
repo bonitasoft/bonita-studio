@@ -40,7 +40,9 @@ Require-Bundle: org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.eclipse.emf.transaction,
  org.eclipse.emf.databinding,
  org.bonitasoft.studio.browser;bundle-version="6.5.0",
- com.google.guava
+ com.google.guava,
+ org.eclipse.e4.core.services,
+ org.eclipse.osgi.services;bundle-version="3.4.0"
 Export-Package: org.bonitasoft.studio.businessobject.core.operation,or
  g.bonitasoft.studio.businessobject.core.repository,org.bonitasoft.stu
  dio.businessobject.ui,org.bonitasoft.studio.businessobject.ui.wizard

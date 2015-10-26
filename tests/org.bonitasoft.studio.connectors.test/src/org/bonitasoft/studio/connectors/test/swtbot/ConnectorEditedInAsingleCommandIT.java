@@ -37,13 +37,13 @@ public class ConnectorEditedInAsingleCommandIT extends SWTBotGefTestCase {
         final BotConnectorsPropertySection selectConnectorsTab = botProcessDiagramPerspective.getDiagramPropertiesPart().selectExecutionTab()
                 .selectConnectorsInTab();
         final BotAddConnectorDialog addConnector = selectConnectorsTab.addConnector();
-        addConnector.selectConnectorInCategory("Script", "Groovy 1.8");
+        addConnector.selectConnectorInCategory("Script", "Groovy 2.4");
         addConnector.next().setName("testSingleTransaction");
         new BotScriptExpressionEditor(bot, addConnector.next().editScript(0)).setName("scriptName").setScriptContent("dummy content").ok();
         addConnector.finish();
         botProcessDiagramPerspective.activeProcessDiagramEditor().getGmfEditor().save();
 
-        final BotEditConnectorDialog botEditConnectorDialog = selectConnectorsTab.editConnector(0, "Groovy 1.8 (1.0.0)");
+        final BotEditConnectorDialog botEditConnectorDialog = selectConnectorsTab.editConnector(0, "Groovy 2.4 (1.0.1)");
         botEditConnectorDialog.setName("updatedName");
         botEditConnectorDialog.next().finish();
 

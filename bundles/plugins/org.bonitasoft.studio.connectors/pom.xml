@@ -431,14 +431,14 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-scripting-groovy-impl</artifactId>
-									<version>1.0.11</version>
+									<version>1.0.12</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
                                     <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-scripting-groovy-script-impl</artifactId>
-                                    <version>1.0.1</version>
+                                    <version>1.0.2</version>
                                     <classifier>connector</classifier>
                                     <type>zip</type>
                                 </artifactItem>

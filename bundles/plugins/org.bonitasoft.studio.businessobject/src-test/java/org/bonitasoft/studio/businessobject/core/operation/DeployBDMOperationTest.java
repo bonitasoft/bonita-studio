@@ -16,6 +16,8 @@ package org.bonitasoft.studio.businessobject.core.operation;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
@@ -25,6 +27,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bonitasoft.engine.api.TenantAdministrationAPI;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -35,6 +39,7 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,6 +69,9 @@ public class DeployBDMOperationTest {
 
     private BusinessObjectModel bom;
 
+    @Mock
+    private IEventBroker eventBroker;
+
     /**
      * @throws java.lang.Exception
      */
@@ -78,8 +86,11 @@ public class DeployBDMOperationTest {
         bo.getFields().add(firstName);
         bom.getBusinessObjects().add(bo);
         operationUnderTest = spy(new DeployBDMOperation(bdmFileStore));
+        doReturn(eventBroker).when(operationUnderTest).eventBroker();
         doReturn(bom).when(bdmFileStore).getContent();
-        doReturn(new byte[512]).when(operationUnderTest).retrieveModelJarContent(any(byte[].class));
+        final Map<String, byte[]> result = new HashMap<>();
+        result.put("bdm-client", new byte[512]);
+        doReturn(result).when(operationUnderTest).retrieveContent(any(byte[].class));
         doReturn(false).when(operationUnderTest).dropDBOnInstall();
         when(manager.getTenantAdministrationAPI((APISession) anyObject())).thenReturn(tenantAdminAPI);
         doReturn(manager).when(operationUnderTest).getBOSEngineManagerEx();
@@ -125,11 +136,12 @@ public class DeployBDMOperationTest {
         operationUnderTest.run(Repository.NULL_PROGRESS_MONITOR);
         verify(manager).loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
         verify(bdmFileStore).getContent();
-        final InOrder inOrder = inOrder(tenantAdminAPI);
+        final InOrder inOrder = inOrder(tenantAdminAPI, eventBroker);
         inOrder.verify(tenantAdminAPI).pause();
         inOrder.verify(tenantAdminAPI).cleanAndUninstallBusinessDataModel();
         inOrder.verify(tenantAdminAPI).installBusinessDataModel(any(byte[].class));
         inOrder.verify(tenantAdminAPI).resume();
+        inOrder.verify(eventBroker).post(eq("bdm/deployed"), notNull(Map.class));
         verify(tenantAdminAPI).getClientBDMZip();
     }
 
