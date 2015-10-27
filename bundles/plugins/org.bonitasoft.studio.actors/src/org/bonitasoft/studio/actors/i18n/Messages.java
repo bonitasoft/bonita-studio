@@ -269,6 +269,5 @@ public class Messages extends NLS {
     public static String importOrganizationWithWarningTitle;
     public static String importOrganizationWithWarningMessage;
     public static String userNameIsEmpty;
-
-
+    public static String organizationName;
 }
