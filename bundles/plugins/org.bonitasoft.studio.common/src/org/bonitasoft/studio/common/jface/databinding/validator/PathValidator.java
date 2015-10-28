@@ -24,7 +24,7 @@ import org.eclipse.m2m.internal.qvt.oml.NLS;
 
 import com.google.common.base.Strings;
 
-public class PathValidator extends TypedValidator<String> {
+public class PathValidator extends TypedValidator<String, IStatus> {
 
     private final String inputName;
 

@@ -17,13 +17,13 @@ package org.bonitasoft.studio.common.jface.databinding.validator;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 
-public abstract class TypedValidator<T> implements IValidator {
+public abstract class TypedValidator<T, S extends IStatus> implements IValidator {
 
     @Override
-    public final IStatus validate(final Object value) {
+    public final S validate(final Object value) {
         return doValidate((T) value);
     }
 
-    protected abstract IStatus doValidate(final T value);
+    protected abstract S doValidate(final T value);
 
 }
