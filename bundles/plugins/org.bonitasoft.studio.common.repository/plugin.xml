@@ -71,9 +71,6 @@
                 class="org.bonitasoft.studio.common.repository.BonitaProjectNature">
           </run>
        </runtime>
-       <builder
-             id="org.bonitasoft.studio.businessobject.BusinessObjectCodeGenerator">
-       </builder>
     </extension>
    
 </plugin>
