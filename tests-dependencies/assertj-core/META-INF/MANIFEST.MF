@@ -7,6 +7,7 @@ Bundle-ClassPath: assertj-core-1.5.0.jar
 Export-Package: org.assertj.core.api;version="1.5.0";uses:="org.assertj.core.condition,org.assertj.core.api.filter,net.sf.cglib.proxy",
  org.assertj.core.api.filter;version="1.5.0";uses:="org.assertj.core.api",
  org.assertj.core.condition;version="1.5.0";uses:="org.assertj.core.api",
+ org.assertj.core.data,
  org.assertj.core.description;version="1.5.0",
  org.assertj.core.error;version="1.5.0",
  org.assertj.core.groups;version="1.5.0",
