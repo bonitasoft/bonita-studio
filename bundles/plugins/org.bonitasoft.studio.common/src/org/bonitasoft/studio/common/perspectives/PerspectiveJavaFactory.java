@@ -26,19 +26,20 @@ import org.eclipse.ui.IPageLayout;
  * @author Aurelien Pupier
  */
 public class PerspectiveJavaFactory extends AbstractPerspectiveFactory {
-	
+
 	public static String JAVA_PERSPECTIVE_ID = "org.bonitasoft.studio.perspective.java";
-	
-	protected void configureIntroView(IPageLayout layout) {
+
+	protected void configureIntroView(final IPageLayout layout) {
 		layout.getViewLayout("org.eclipse.ui.internal.introview").setCloseable(false);
 		layout.getViewLayout("org.eclipse.ui.internal.introview").setMoveable(false);
 	}
-	
-	public void createInitialLayout(IPageLayout layout) {
-       String editorArea = layout.getEditorArea();
-       
+
+	@Override
+    public void createInitialLayout(final IPageLayout layout) {
+       final String editorArea = layout.getEditorArea();
+
        // Bottom left.
-       IFolderLayout rightView = layout.createFolder(
+       final IFolderLayout rightView = layout.createFolder(
                "rightView", IPageLayout.RIGHT, 0.75f,//$NON-NLS-1$
                editorArea);//$NON-NLS-1$
        rightView.addView(IPageLayout.ID_OUTLINE);
@@ -51,8 +52,8 @@ public class PerspectiveJavaFactory extends AbstractPerspectiveFactory {
 	 * @see org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory#isRelevantFor(org.eclipse.ui.IEditorPart)
 	 */
 	@Override
-	public boolean isRelevantFor(IEditorPart part) {
-		return part instanceof JavaEditor;
+	public boolean isRelevantFor(final IEditorPart part) {
+        return part instanceof JavaEditor && !isInsideprojectWithREStApiExtensionNature(part);
 	}
 
 
