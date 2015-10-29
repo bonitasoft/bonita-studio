@@ -38,9 +38,9 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Baptiste Mesta
- * 
+ *
  * Utility class that help works with perspectives
- * 
+ *
  */
 public class BonitaPerspectivesUtils {
 
