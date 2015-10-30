@@ -24,6 +24,7 @@ import org.apache.xbean.classloader.NonLockingJarFileClassLoader;
 import org.bonitasoft.engine.api.CommandAPI;
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.LoginAPI;
+import org.bonitasoft.engine.api.PageAPI;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.ProfileAPI;
 import org.bonitasoft.engine.api.TenantAPIAccessor;
@@ -324,6 +325,10 @@ public class BOSEngineManager {
     public ProfileAPI getProfileAPI(final APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException,
             UnknownAPITypeException {
         return TenantAPIAccessor.getProfileAPI(session);
+    }
+
+    public PageAPI getPageAPI(final APISession session) throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+        return TenantAPIAccessor.getCustomPageAPI(session);
     }
 
     public TenantAdministrationAPI getTenantAdministrationAPI(final APISession session)
