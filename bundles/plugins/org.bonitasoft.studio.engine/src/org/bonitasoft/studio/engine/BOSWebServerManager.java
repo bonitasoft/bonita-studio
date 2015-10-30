@@ -473,11 +473,15 @@ public class BOSWebServerManager {
         }
     }
 
-    public String generateLoginURL(final String username, final String password) {
+    public String generateUrlBase() {
         final IPreferenceStore store = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
         final String port = store.getString(BonitaPreferenceConstants.CONSOLE_PORT);
         final String host = store.getString(BonitaPreferenceConstants.CONSOLE_HOST);
-        return "http://" + host + ":" + port + LOGINSERVICE_PATH + "username=" + username + "&password=" + password;
+        return "http://" + host + ":" + port;
+    }
+
+    public String generateLoginURL(final String username, final String password) {
+        return generateUrlBase() + LOGINSERVICE_PATH + "username=" + username + "&password=" + password;
     }
 
     public void cleanBeforeShutdown() {

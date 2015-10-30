@@ -81,7 +81,7 @@ public class ComputeScriptDependenciesJob extends Job {
             return Collections.<EObject> emptyList();
         }
         final String expression = groovyCompilationUnit.getSource();
-        if (cache.get(expression) == null) {
+        if (expression != null && cache.get(expression) == null) {
             final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
             final ContentAssistContext assistContext = finder.findContentAssistContext(groovyCompilationUnit);
 

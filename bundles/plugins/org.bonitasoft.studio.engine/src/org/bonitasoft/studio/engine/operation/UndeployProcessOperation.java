@@ -15,6 +15,16 @@
 
 package org.bonitasoft.studio.engine.operation;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +36,7 @@ import org.bonitasoft.engine.exception.ProcessInstanceHierarchicalDeletionExcept
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -41,12 +52,13 @@ import org.eclipse.core.runtime.Status;
  */
 public class UndeployProcessOperation {
 
+    private static final String API_LOGOUT = "/bonita/logoutservice";
+    private static final String API_PROCESS_RESOURCE = "/bonita/API/bpm/process/";
+    private static final String HTTP_METHOD_DELETE = "DELETE";
+    private static final String HTTP_METHOD_POST = "POST";
     private static final int MAX_RESULTS = 1000;
-
     private String configurationId;
-
     private final List<AbstractProcess> processes = new ArrayList<AbstractProcess>();
-
     private final BOSEngineManager engineManager;
 
     public UndeployProcessOperation(final BOSEngineManager engineManager) {
@@ -104,9 +116,56 @@ public class UndeployProcessOperation {
 
     private void deleteProcessDefinition(final AbstractProcess process, final ProcessAPI processApi, final long processDefinitionId,
             final IProgressMonitor monitor)
-            throws DeletionException {
+            throws DeletionException, URISyntaxException, IOException {
         monitor.subTask(Messages.bind(Messages.deletingProcessDefinition, getProcessLabel(process)));
-        processApi.deleteProcessDefinition(processDefinitionId);
+        CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
+        logToSession(monitor);
+        try {
+            deleteProcessDefinition(processApi, processDefinitionId);
+        } finally {
+            logoutFromSession();
+        }
+    }
+
+    protected void deleteProcessDefinition(final ProcessAPI processApi, final long processDefinitionId) throws IOException, MalformedURLException,
+            ProtocolException, DeletionException {
+        final HttpURLConnection deleteConnection = openConnection(getUrlBase() + API_PROCESS_RESOURCE + processDefinitionId);
+        deleteConnection.setRequestMethod(HTTP_METHOD_DELETE);
+        if (HttpURLConnection.HTTP_OK != deleteConnection.getResponseCode()) {
+            processApi.deleteProcessDefinition(processDefinitionId);
+        }
+        deleteConnection.disconnect();
+    }
+
+    protected HttpURLConnection openConnection(final String url) throws IOException, MalformedURLException {
+        return (HttpURLConnection) new URL(url).openConnection();
+    }
+
+    protected String getUrlBase() {
+        return BOSWebServerManager.getInstance().generateUrlBase();
+    }
+
+    protected void logoutFromSession() throws IOException, MalformedURLException, ProtocolException {
+        final HttpURLConnection logoutConnection = openConnection(getUrlBase() + API_LOGOUT);
+        logoutConnection.setRequestMethod(HTTP_METHOD_POST);
+        if (HttpURLConnection.HTTP_OK != logoutConnection.getResponseCode()) {
+            BonitaStudioLog.error("Cannot unlog to session " + logoutConnection.getResponseCode(), EnginePlugin.PLUGIN_ID);
+        }
+    }
+
+    protected void logToSession(final IProgressMonitor monitor) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException, IOException {
+        final HttpURLConnection connection = openLoginConnection(monitor);
+        if (HttpURLConnection.HTTP_OK != connection.getResponseCode()) {
+            BonitaStudioLog.error("Cannot log to session " + connection.getResponseCode(), EnginePlugin.PLUGIN_ID);
+        }
+        connection.disconnect();
+    }
+
+    protected HttpURLConnection openLoginConnection(final IProgressMonitor monitor) throws MalformedURLException, UnsupportedEncodingException,
+            URISyntaxException, IOException {
+        final URL loginUrl = new LoginUrlBuilder().toURL(monitor);
+        final HttpURLConnection connection = (HttpURLConnection) loginUrl.openConnection();
+        return connection;
     }
 
     private void deleteArchivedProcessInstances(final ProcessAPI processApi, final long processDefinitionId) throws DeletionException {
