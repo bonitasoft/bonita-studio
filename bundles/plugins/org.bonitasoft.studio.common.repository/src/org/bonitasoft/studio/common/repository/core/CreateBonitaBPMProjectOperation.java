@@ -14,11 +14,15 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -52,8 +56,21 @@ public class CreateBonitaBPMProjectOperation implements IWorkspaceRunnable {
             project.setDescription(
                     new ProjectDescriptionBuilder().withProjectName(project.getName()).withComment(ProductVersion.CURRENT_VERSION).havingNatures(natures)
                             .havingBuilders(builders).build(), monitor);
+            addBuildProperties(monitor);
         }
         createJavaProject(monitor);
+    }
+
+    private void addBuildProperties(IProgressMonitor monitor) throws CoreException {
+        final IFile buildPropertiesFile = project.getFile("build.properties");
+        if (!buildPropertiesFile.exists()) {
+            final java.util.Properties properties = new java.util.Properties();
+            try (final ByteArrayInputStream is = new ByteArrayInputStream(new String("custom = true").getBytes());) {
+                buildPropertiesFile.create(is, true, monitor);
+            } catch (final IOException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
     }
 
     private void createJavaProject(final IProgressMonitor monitor) {
