@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -32,21 +33,31 @@ import org.eclipse.emf.edapt.migration.MigrationException;
 public abstract class AbstractFolderRepositoryStore<T extends IRepositoryFileStore> extends AbstractRepositoryStore<T> {
 
     @Override
-    public T getChild(final String widgetFolderName) {
-        if (widgetFolderName != null) {
-            final IFolder folder = getResource().getFolder(widgetFolderName);
-            if (!folder.isSynchronized(IResource.DEPTH_INFINITE) && folder.isAccessible()) {
-                try {
-                    folder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
-                } catch (final CoreException e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
+    public T getChild(final String folderName) {
+        if (folderName != null) {
+            final IFolder folder = getResource().getFolder(folderName);
+            refresh(folder);
             if (folder.exists()) {
-                return createRepositoryFileStore(widgetFolderName);
+                return createRepositoryFileStore(folderName);
             }
         }
         return null;
+    }
+
+    protected void refresh(final IFolder folder) {
+        try {
+            folder.getWorkspace().run(new IWorkspaceRunnable() {
+
+                @Override
+                public void run(IProgressMonitor monitor) throws CoreException {
+                    if (!folder.isSynchronized(IResource.DEPTH_INFINITE)) {
+                        folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+                    }
+                }
+            }, Repository.NULL_PROGRESS_MONITOR);
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e);
+        }
     }
 
     @Override

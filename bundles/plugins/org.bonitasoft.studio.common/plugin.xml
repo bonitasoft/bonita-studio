@@ -26,6 +26,19 @@
             name="Bonita XML Editor">
       </editor>
    </extension>
+<extension
+          id="RestAPIExtensionNature"
+          name="Rest API Extension"
+          point="org.eclipse.core.resources.natures">
+       <builder
+             id="org.bonitasoft.studio.rest.api.extension.pagePropertyBuilder">
+       </builder>
+       <runtime>
+          <run
+                class="org.bonitasoft.studio.common.RestAPIExtensionNature">
+          </run>
+       </runtime>
+    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective

@@ -64,6 +64,12 @@ public abstract class AbstractBonitaURLBuilder {
 
     public URL toURL(final IProgressMonitor monitor) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
         final String locale = getWebLocale();
+        final String loginURL = buildLoginUrl();
+        return new URL(loginURL + "&redirectUrl="
+                + URLEncoder.encode(getRedirectURL(locale, monitor), ENCODING_UTF8));
+    }
+
+    protected String buildLoginUrl() {
         String userName = getDefaultUsername();
         String password = getDefaultPassword();
 
@@ -73,9 +79,7 @@ public abstract class AbstractBonitaURLBuilder {
             password = conf.getPassword();
         }
 
-        final String loginURL = buildLoginUrl(userName, password);
-        return new URL(loginURL + "&redirectUrl="
-                + URLEncoder.encode(getRedirectURL(locale, monitor), ENCODING_UTF8));
+        return buildLoginUrl(userName, password);
     }
 
     protected abstract Configuration getConfiguration();

@@ -22,11 +22,16 @@ import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aCompositi
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aSimpleField;
 import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
@@ -37,6 +42,7 @@ import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
+import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,11 +56,12 @@ public class FieldToContractInputMappingExpressionBuilderTest {
     private RepositoryAccessor repositoryAccessor;
     @Mock
     private ExpressionEditorService expressionEditorService;
+    @Mock
+    private GroovyCompilationUnit groovyCompilationUnit;
 
     @Test
     public void should_create_an_operation_for_a_given_complex_contact_input_and_a_composite_reference_business_data_field() throws Exception {
-        final FieldToContractInputMappingExpressionBuilder expressionBuilder = new FieldToContractInputMappingExpressionBuilder(repositoryAccessor,
-                expressionEditorService);
+        final FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
         final RelationField address = aCompositionField("address", aBO("Address").build());
         final FieldToContractInputMapping mapping = aRelationMapping(address).build();
@@ -71,10 +78,16 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         assertThat(expression.getReferencedElements()).hasSize(2);
     }
 
+    private FieldToContractInputMappingExpressionBuilder newExpressionBuilder() throws JavaModelException {
+        final FieldToContractInputMappingExpressionBuilder expressionBuilder = spy(new FieldToContractInputMappingExpressionBuilder(repositoryAccessor,
+                expressionEditorService));
+        doReturn(groovyCompilationUnit).when(expressionBuilder).groovyCompilationUnit(any(Expression.class));
+        return expressionBuilder;
+    }
+
     @Test
     public void should_create_an_operation_for_a_given_simple_contact_input_and_a_primitive_business_data_field() throws Exception {
-        final FieldToContractInputMappingExpressionBuilder expressionBuilder = new FieldToContractInputMappingExpressionBuilder(repositoryAccessor,
-                expressionEditorService);
+        final FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
         final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
@@ -90,8 +103,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
     @Test
     public void should_create_an_operation_for_a_given_complex_contact_input_and_a_primitive_business_data_field() throws Exception {
-        final FieldToContractInputMappingExpressionBuilder expressionBuilder = new FieldToContractInputMappingExpressionBuilder(repositoryAccessor,
-                expressionEditorService);
+        final FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
         final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
@@ -113,8 +125,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
     @Test
     public void should_not_add_businessVariable_dependency_forInitializationScript() throws JavaModelException, BusinessObjectInstantiationException {
-        final FieldToContractInputMappingExpressionBuilder expressionBuilder = new FieldToContractInputMappingExpressionBuilder(repositoryAccessor,
-                expressionEditorService);
+        final FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
         final RelationField address = aCompositionField("address", aBO("Address").build());
         final FieldToContractInputMapping mapping = aRelationMapping(address).build();
@@ -131,4 +142,16 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         assertThat(expression.getReferencedElements()).hasSize(1);
     }
 
+    @Test
+    public void should_delete_compilation_unit_after_dependencies_resolution() throws Exception {
+        final FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
+
+        final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
+        final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
+        expressionBuilder.toExpression(aBusinessData().withName("myEmployee").build(),
+                mapping, false);
+
+        verify(groovyCompilationUnit).delete(true, Repository.NULL_PROGRESS_MONITOR);
+
+    }
 }

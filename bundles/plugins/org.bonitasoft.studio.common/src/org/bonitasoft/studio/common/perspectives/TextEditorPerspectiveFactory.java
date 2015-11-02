@@ -28,14 +28,15 @@ import org.eclipse.ui.internal.browser.WebBrowserEditor;
  */
 @SuppressWarnings("restriction")
 public class TextEditorPerspectiveFactory extends AbstractPerspectiveFactory {
-	
+
 	public static String PERSPECTIVE_ID = "org.bonitasoft.studio.perspective.textEditor";
 
-	public void createInitialLayout(IPageLayout layout) {
+	@Override
+    public void createInitialLayout(final IPageLayout layout) {
 		//no layout
 	}
-	
-	protected void configureIntroView(IPageLayout layout) {
+
+	protected void configureIntroView(final IPageLayout layout) {
 		layout.getViewLayout("org.eclipse.ui.internal.introview").setCloseable(false);
 		layout.getViewLayout("org.eclipse.ui.internal.introview").setMoveable(false);
 	}
@@ -44,8 +45,9 @@ public class TextEditorPerspectiveFactory extends AbstractPerspectiveFactory {
 	 * @see org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory#isRelevantFor(org.eclipse.ui.IEditorPart)
 	 */
 	@Override
-	public boolean isRelevantFor(IEditorPart part) {
-		return part instanceof TextEditor || part instanceof BonitaXMLEditor || part instanceof WebBrowserEditor;
+	public boolean isRelevantFor(final IEditorPart part) {
+        return (part instanceof TextEditor || part instanceof BonitaXMLEditor || part instanceof WebBrowserEditor)
+                && !isInsideprojectWithREStApiExtensionNature(part);
 	}
 
 	/* (non-Javadoc)
