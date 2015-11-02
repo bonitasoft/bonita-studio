@@ -41,43 +41,7 @@
       <extension
          point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension
-            targetID="org.bonitasoft.studio.perspective.process">
-         <hiddenMenuItem
-               id="org.eclipse.ui.run">
-         </hiddenMenuItem>
-      </perspectiveExtension>
-      <perspectiveExtension
-            targetID="org.bonitasoft.studio.common.perspective.form">
-         <hiddenMenuItem
-               id="org.eclipse.ui.run">
-         </hiddenMenuItem>
-      </perspectiveExtension>
-      <perspectiveExtension
-            targetID="org.bonitasoft.studio.perspective.java">
-         <hiddenMenuItem
-               id="org.eclipse.ui.run">
-         </hiddenMenuItem>
-      </perspectiveExtension>
-      <perspectiveExtension
-            targetID="org.bonitasoft.studio.perspective.textEditor">
-         <hiddenMenuItem
-               id="org.eclipse.ui.run">
-         </hiddenMenuItem>
-      </perspectiveExtension>
-      <perspectiveExtension
-            targetID="org.bonitasoft.studio.perspective.theme">
-         <hiddenMenuItem
-               id="org.eclipse.ui.run">
-         </hiddenMenuItem>
-      </perspectiveExtension>
-      <perspectiveExtension
-            targetID="org.bonitasoft.studio.common.perspective.form.migration">
-         <hiddenMenuItem
-               id="org.eclipse.ui.run">
-         </hiddenMenuItem>
-      </perspectiveExtension>
-      <perspectiveExtension
-            targetID="org.bonitasoft.studio.migration.perspective.process">
+            targetID="*">
          <hiddenMenuItem
                id="org.eclipse.ui.run">
          </hiddenMenuItem>
