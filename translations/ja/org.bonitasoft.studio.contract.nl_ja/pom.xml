@@ -4,11 +4,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.bonitasoft.studio.translations</groupId>
-    <version>7.1.3.RC1</version>
+    <version>7.1.3-SNAPSHOT</version>
     <artifactId>ja</artifactId>
   </parent>
   <groupId>org.bonitasoft.studio.contract.nl_ja</groupId>
   <artifactId>org.bonitasoft.studio.contract.nl_ja</artifactId>
-  <version>7.1.3.RC1</version>
+  <version>7.1.3-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>
