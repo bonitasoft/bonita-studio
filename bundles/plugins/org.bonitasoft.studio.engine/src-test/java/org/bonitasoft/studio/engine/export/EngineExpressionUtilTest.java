@@ -33,6 +33,7 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
+import org.bonitasoft.studio.model.process.builders.DocumentBuilder;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
 
@@ -64,6 +65,24 @@ public class EngineExpressionUtilTest {
                 .hasContent("document1")
                 .hasReturnType(org.bonitasoft.engine.bpm.document.Document.class.getName())
                 .hasExpressionType(ExpressionType.TYPE_DOCUMENT.name());
+    }
+
+    @Test
+    public void should_createExpression_document_list() throws Exception {
+        //given
+        final Expression studioExpression = createStudioExpression("document1", "document1", List.class.getName(),
+                ExpressionConstants.DOCUMENT_TYPE);
+        studioExpression.getReferencedElements().add(DocumentBuilder.aDocument().multiple().build());
+
+        //when
+        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
+
+        //then
+        EngineExpressionAssert.assertThat(engineExpression)
+                .hasName("document1")
+                .hasContent("document1")
+                .hasReturnType(List.class.getName())
+                .hasExpressionType(ExpressionType.TYPE_DOCUMENT_LIST.name());
     }
 
     @Test
