@@ -61,6 +61,8 @@ public class CreateBonitaBPMProjectOperationTest {
     private IFolder metaInfFolder;
     @Mock
     private IFile manifestFile;
+    @Mock
+    private IFile buildFile;
 
     /**
      * @throws java.lang.Exception
@@ -70,6 +72,7 @@ public class CreateBonitaBPMProjectOperationTest {
         createBonitaBPMProjectOperation = spy(new CreateBonitaBPMProjectOperation(workspace, "my project"));
         doReturn(root).when(workspace).getRoot();
         doReturn(javaProject).when(createBonitaBPMProjectOperation).asJavaProject();
+        doReturn(buildFile).when(project).getFile("build.properties");
     }
 
     @Test
