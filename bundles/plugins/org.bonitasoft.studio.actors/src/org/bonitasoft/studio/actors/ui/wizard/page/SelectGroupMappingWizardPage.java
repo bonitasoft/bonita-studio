@@ -16,7 +16,10 @@
  */
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
@@ -79,7 +82,7 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
         super.createControl(parent) ;
 
         final Composite mainComposite = (Composite) getControl();
-        Composite viewersComposite = new Composite(mainComposite, SWT.NONE) ;
+        final Composite viewersComposite = new Composite(mainComposite, SWT.NONE) ;
         viewersComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(SWT.DEFAULT,250).create()) ;
         viewersComposite.setLayout(GridLayoutFactory.swtDefaults().numColumns(1).margins(0, 0).extendedMargins(0, 0, 10, 0).equalWidth(false).create()) ;
 
@@ -87,15 +90,15 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
         availableGroupViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
         availableGroupViewer.getTable().setHeaderVisible(true) ;
         availableGroupViewer.setContentProvider(new ArrayContentProvider()) ;
-        TableLayout layout = new TableLayout() ;
+        final TableLayout layout = new TableLayout() ;
         layout.addColumnData(new ColumnWeightData(100));
         availableGroupViewer.getTable().setLayout(layout) ;
 
-        TableViewerColumn columnViewer = new TableViewerColumn(availableGroupViewer, SWT.NONE) ;
-        TableColumn usernameColumn = columnViewer.getColumn() ;
+        final TableViewerColumn columnViewer = new TableViewerColumn(availableGroupViewer, SWT.NONE) ;
+        final TableColumn usernameColumn = columnViewer.getColumn() ;
         usernameColumn.setText(Messages.groupName);
         columnViewer.setLabelProvider(new ColumnLabelProvider());
-        TableColumnSorter sorter = new TableColumnSorter(availableGroupViewer) ;
+        final TableColumnSorter sorter = new TableColumnSorter(availableGroupViewer) ;
         sorter.setColumn(usernameColumn) ;
 
         availableGroupViewer.setInput(availableGroups) ;
@@ -128,19 +131,29 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
      * @return
      */
 	private boolean groupSelectionIsValid(IObservableSet checkedElementsObservable) {
-		List<Object> list1 = new ArrayList<Object>();
-		List<Object> list2 = new ArrayList<Object>();
-		Iterator<?> it = checkedElementsObservable.iterator();
+        final List<Path> list1 = new ArrayList<Path>();
+        final List<Path> list2 = new ArrayList<Path>();
+		final Iterator<?> it = checkedElementsObservable.iterator();
 		while(it.hasNext()){
-			Object obj = it.next();
-			list1.add(obj);
-			list2.add(obj);
+            String groupName = (String) it.next();
+            if (groupName.startsWith("/")) {
+                groupName = groupName.substring(1);
+            }
+            final String[] splitted = groupName.split("/");
+            Path groupPath = null;
+            if (splitted.length > 1) {
+                groupPath = Paths.get(splitted[0], Arrays.copyOfRange(splitted, 1, splitted.length));
+            } else {
+                groupPath = Paths.get(splitted[0]);
+            }
+            list1.add(groupPath);
+            list2.add(groupPath);
 		}
 	
-		for(Object o1 : list1){
-			String s1 = (String) o1;
-			for(Object o2 : list2){
-				String s2 = (String) o2;
+        for (final Path o1 : list1) {
+            final Path s1 = o1;
+            for (final Path o2 : list2) {
+                final Path s2 = o2;
 				if(!s1.equals(s2) && (s2.startsWith(s1) || s1.startsWith(s2)) ){
 					return false;
 				}
@@ -152,7 +165,7 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
 	
     protected void removedGroup(List<String> removedGroups) {
         selectedGroups.removeAll(removedGroups) ;
-        for(Group g : groups){
+        for(final Group g : groups){
             if(removedGroups.contains(GroupContentProvider.getGroupPath(g))
                     && !availableGroups.contains(GroupContentProvider.getGroupPath(g))){
                 availableGroups.add(GroupContentProvider.getGroupPath(g)) ;
@@ -179,8 +192,8 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
             groups = organization.getGroups().getGroup() ;
 
             availableGroups.clear() ;
-            for(Group g : groups){
-                String groupPath = GroupContentProvider.getGroupPath(g) ;
+            for(final Group g : groups){
+                final String groupPath = GroupContentProvider.getGroupPath(g) ;
                 if(!selectedGroups.contains(groupPath)){
                     availableGroups.add(groupPath) ;
                 }
