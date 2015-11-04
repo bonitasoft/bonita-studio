@@ -22,6 +22,7 @@ import static org.bonitasoft.studio.model.expression.builders.OperationBuilder.a
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.ContractConstraintBuilder.aContractConstraint;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 
 import java.util.Set;
@@ -31,6 +32,7 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
@@ -71,6 +73,24 @@ public class RefactorContractInputOperationTest {
         refactorOperation.run(monitor);
 
         assertThat(contractInputExpression).hasName("lastName").hasContent("lastName");
+    }
+
+    @Test
+    public void should_not_update_contract_input_reference_in_contract_input_expressions_in_task_when_container_is_a_pool() throws Exception {
+        final Task aTaskWithContractAndOperations = aTaskWithContractAndOperations();
+        final Pool pool = aPool().havingContract(aContract().havingInput(aContractInput().withName("firstName"))).build();
+        pool.getElements().add(aTaskWithContractAndOperations);
+        final Expression contractInputExpression = aTaskWithContractAndOperations.getOperations().get(0).getRightOperand();
+        final RefactorContractInputOperation refactorOperation = new RefactorContractInputOperation(pool,
+                scriptRefactorOperationFactory, RefactoringOperationType.UPDATE);
+        final ContractInput oldItem = pool.getContract().getInputs().get(0);
+        final ContractInput newtem = EcoreUtil.copy(oldItem);
+        newtem.setName("lastName");
+        refactorOperation.addItemToRefactor(newtem, oldItem);
+        refactorOperation.setEditingDomain(transactionalEditingDomain());
+
+        refactorOperation.run(monitor);
+        assertThat(contractInputExpression).hasName("firstName").hasContent("firstName");
     }
 
     @Test
