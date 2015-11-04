@@ -68,14 +68,19 @@ public class QueryExpressionProviderTest {
         assertThat(model.getBusinessObjects()).hasSize(1);
         final BusinessObjectExpressionQuery businessObjectExpressionQuery = model.getBusinessObjects().get(0);
         assertThat(businessObjectExpressionQuery.getQualifiedName()).isEqualTo("org.bonita.Employee");
-        assertThat(businessObjectExpressionQuery.getQueryExpressions()).extracting("name").containsOnly("Employee.find", "Employee.findByEmployeeId",
+        String countExpressionName = "Employee.count";
+		assertThat(businessObjectExpressionQuery.getQueryExpressions()).extracting("name").containsOnly("Employee.find", countExpressionName, "Employee.findByEmployeeId",
                 "Employee.findByPersistenceId");
         for (final Expression exp : businessObjectExpressionQuery.getQueryExpressions()) {
             ExpressionAssert.assertThat(exp).hasType(queryExpressionProvider.getExpressionType());
             assertThat(exp.getName()).isNotEmpty();
             assertThat(exp.getContent()).isNotEmpty();
             assertThat(exp.getType()).isNotEmpty();
-            assertThat(exp.getReferencedElements()).isNotEmpty();
+            if(exp.getName().equals(countExpressionName)) {
+            	assertThat(exp.getReferencedElements()).isEmpty();
+            } else {
+            	assertThat(exp.getReferencedElements()).isNotEmpty();
+            }
         }
     }
 
