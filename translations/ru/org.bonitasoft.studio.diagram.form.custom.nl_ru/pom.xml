@@ -5,10 +5,10 @@
   <parent>
     <artifactId>ru</artifactId>
     <groupId>org.bonitasoft.studio.translations</groupId>
-    <version>7.1.3</version>
+    <version>7.1.3-SNAPSHOT</version>
   </parent>
   <groupId>org.bonitasoft.studio.translations.ru</groupId>
   <artifactId>org.bonitasoft.studio.diagram.form.custom.nl_ru</artifactId>
-  <version>7.1.3</version>
+  <version>7.1.3-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>
