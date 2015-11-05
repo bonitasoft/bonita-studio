@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bonitasoft.engine.bdm.BDMQueryUtil;
+import org.bonitasoft.engine.bdm.BDMSimpleNameProvider;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 
 public class VariableNameResolver {
@@ -42,7 +42,7 @@ public class VariableNameResolver {
     }
 
     private String varName(final BusinessObject businessObject, String varSuffix) {
-        final String simpleBusinessObjectName = BDMQueryUtil.getSimpleBusinessObjectName(businessObject.getQualifiedName());
+        final String simpleBusinessObjectName = BDMSimpleNameProvider.getSimpleBusinessObjectName(businessObject.getQualifiedName());
         String result = uncapitalizeFirst(simpleBusinessObjectName) + varSuffix;
         if (context.containsKey(varKey(varSuffix, simpleBusinessObjectName))) {
             result = result + String.valueOf(context.get(varKey(varSuffix, simpleBusinessObjectName)));

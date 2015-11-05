@@ -20,7 +20,7 @@ import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.wit
 
 import java.util.Objects;
 
-import org.bonitasoft.engine.bdm.BDMQueryUtil;
+import org.bonitasoft.engine.bdm.BDMSimpleNameProvider;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
@@ -67,7 +67,7 @@ public class MultipleBusinessObjectQueryInitializer extends NewBusinessObjectLis
     @Override
     protected void addCommentBeforeAddToList(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
         addCommentLine(scriptBuilder,
-                String.format("Add aggregated %s instance", BDMQueryUtil.getSimpleBusinessObjectName(businessObject.getQualifiedName())));
+                String.format("Add aggregated %s instance", BDMSimpleNameProvider.getSimpleBusinessObjectName(businessObject.getQualifiedName())));
     }
 
     protected void daoQuery(final StringBuilder scriptBuilder, final BusinessObject bo) {
@@ -83,7 +83,7 @@ public class MultipleBusinessObjectQueryInitializer extends NewBusinessObjectLis
     }
 
     private String daoName(final BusinessObject bo) {
-        return uncapitalizeFirst(BDMQueryUtil.getSimpleBusinessObjectName(bo.getQualifiedName())) + "DAO";
+        return uncapitalizeFirst(BDMSimpleNameProvider.getSimpleBusinessObjectName(bo.getQualifiedName())) + "DAO";
     }
 
     protected ContractInput persistenceIdInput(final ContractInput contractInput) {

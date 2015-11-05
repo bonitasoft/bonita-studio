@@ -21,7 +21,6 @@ import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.
 
 import java.util.List;
 
-import org.bonitasoft.engine.bdm.BDMQueryUtil;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
@@ -86,7 +85,7 @@ public class RelationFieldToContractInputMappingTest {
         final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(aRelationField("address",
                 Type.COMPOSITION,
                 addressBo));
-        fieldToContractInputMapping.addChild(new SimpleFieldToContractInputMapping((SimpleField) BDMQueryUtil.getField("street", addressBo)));
+        fieldToContractInputMapping.addChild(new SimpleFieldToContractInputMapping((SimpleField) addressBo.getField("street")));
         fieldToContractInputMapping.toContractInput(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)
                 .build());
 

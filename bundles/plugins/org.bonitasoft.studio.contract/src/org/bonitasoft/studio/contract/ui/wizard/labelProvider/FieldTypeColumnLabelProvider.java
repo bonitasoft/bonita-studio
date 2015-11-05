@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.contract.ui.wizard.labelProvider;
 
-import org.bonitasoft.engine.bdm.BDMQueryUtil;
+import org.bonitasoft.engine.bdm.BDMSimpleNameProvider;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
@@ -43,7 +43,7 @@ public class FieldTypeColumnLabelProvider extends ColumnLabelProvider {
         if (field instanceof SimpleField) {
             sb.append(((SimpleField) field).getType().name());
         } else if (field instanceof RelationField) {
-            sb.append(BDMQueryUtil.getSimpleBusinessObjectName(((RelationField) field).getReference().getQualifiedName()));
+            sb.append(BDMSimpleNameProvider.getSimpleBusinessObjectName(((RelationField) field).getReference().getQualifiedName()));
         }
         if (field.isCollection()) {
             sb.append(">");
