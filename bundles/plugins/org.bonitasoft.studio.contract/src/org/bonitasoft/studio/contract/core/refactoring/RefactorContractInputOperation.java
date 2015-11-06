@@ -33,6 +33,7 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
@@ -71,10 +72,16 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
      */
     @Override
     protected Set<ScriptContainer<?>> allScriptWithReferencedElement(final RefactorPair<ContractInput, ContractInput> pairRefactor) {
-        final Set<ScriptContainer<?>> allScriptWithReferencedElement = super.allScriptWithReferencedElement(pairRefactor);
+        final Set<ScriptContainer<?>> allScriptWithReferencedElement = super.allScriptWithReferencedElement(pairRefactor, container instanceof Pool);
         allScriptWithReferencedElement.addAll(constraintExpressionsReferencing(ModelHelper.getFirstContainerOfType(pairRefactor.getOldValue(), Contract.class),
                 pairRefactor.getOldValue()));
         return allScriptWithReferencedElement;
+    }
+
+    @Override
+    protected void addAllScriptExpressionsSetToRefactor(final Set<ScriptContainer<?>> scriptExpressionsSetToRefactor,
+            final RefactorPair<ContractInput, ContractInput> pairRefactor) {
+        scriptExpressionsSetToRefactor.addAll(allScriptWithReferencedElement(pairRefactor, container instanceof Pool));
     }
 
     private Collection<? extends ScriptContainer<?>> constraintExpressionsReferencing(final Contract contract, final ContractInput contractInput) {
@@ -105,7 +112,8 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
     }
 
     private void updateContractInputExpressions(final CompoundCommand cc) {
-        for (final Expression exp : filter(getAllElementOfTypeIn(container, Expression.class), withExpressionType(ExpressionConstants.CONTRACT_INPUT_TYPE))) {
+        for (final Expression exp : filter(getAllElementOfTypeIn(container, Expression.class, container instanceof Pool),
+                withExpressionType(ExpressionConstants.CONTRACT_INPUT_TYPE))) {
             for (final ContractInputRefactorPair pairToRefactor : filter(pairsToRefactor, matchingOldName(exp.getName()))) {
                 final ContractInput newValue = pairToRefactor.getNewValue();
                 cc.append(new UpdateExpressionCommand(getEditingDomain(), exp, newValue != null ? createContractInputExpression(newValue)

@@ -126,7 +126,7 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
             if (shouldUpdateReferencesInScripts(pairRefactor)) {
                 final Z oldValue = pairRefactor.getOldValue();
                 if (oldValue instanceof EObject) {
-                    scriptExpressionsSetToRefactor.addAll(allScriptWithReferencedElement(pairRefactor));
+                    addAllScriptExpressionsSetToRefactor(scriptExpressionsSetToRefactor, pairRefactor);
                 }
             }
         }
@@ -151,33 +151,44 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
         }
     }
 
-    protected Set<ScriptContainer<?>> allScriptWithReferencedElement(final RefactorPair<Y, Z> pairRefactor) {
+    protected void addAllScriptExpressionsSetToRefactor(final Set<ScriptContainer<?>> scriptExpressionsSetToRefactor, final RefactorPair<Y, Z> pairRefactor) {
+        scriptExpressionsSetToRefactor.addAll(allScriptWithReferencedElement(pairRefactor));
+    }
+
+    protected Set<ScriptContainer<?>> allScriptWithReferencedElement(final RefactorPair<Y, Z> pairRefactor, final boolean onlyInPool) {
         final Set<ScriptContainer<?>> result = newHashSet();
         final Z oldValue = pairRefactor.getOldValue();
         final EObject container = getContainer(oldValue);
-        result.addAll(allGroovyScriptWithReferencedElement(container, oldValue));
-        result.addAll(allPatternScriptWithReferencedElement(container, oldValue));
-        result.addAll(allConditionExpressionWithReferencedElement(container, oldValue));
+        result.addAll(allGroovyScriptWithReferencedElement(container, oldValue, onlyInPool));
+        result.addAll(allPatternScriptWithReferencedElement(container, oldValue, onlyInPool));
+        result.addAll(allConditionExpressionWithReferencedElement(container, oldValue, onlyInPool));
         return result;
     }
 
-    private Collection<? extends ScriptContainer<?>> allPatternScriptWithReferencedElement(final EObject container, final Z referencedElement) {
+    protected Set<ScriptContainer<?>> allScriptWithReferencedElement(final RefactorPair<Y, Z> pairRefactor) {
+        return allScriptWithReferencedElement(pairRefactor, false);
+    }
+
+    private Collection<? extends ScriptContainer<?>> allPatternScriptWithReferencedElement(final EObject container, final Z referencedElement,
+            final boolean onlyInPool) {
         return Sets.newHashSet(transform(
-                filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class),
+                filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class, onlyInPool),
                         and(withExpressionType(ExpressionConstants.PATTERN_TYPE), withReferencedElement(referencedElement))),
                 toTextExpressionScriptContainer(dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));
     }
 
-    private Collection<? extends ScriptContainer<?>> allConditionExpressionWithReferencedElement(final EObject container, final Z referencedElement) {
+    private Collection<? extends ScriptContainer<?>> allConditionExpressionWithReferencedElement(final EObject container, final Z referencedElement,
+            final boolean onlyInPool) {
         return Sets.newHashSet(transform(
-                filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class),
+                filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class, onlyInPool),
                         and(withExpressionType(ExpressionConstants.CONDITION_TYPE), withReferencedElement(referencedElement))),
                 toConditionExpressionScriptContainer(dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));
     }
 
-    private Collection<? extends ScriptContainer<?>> allGroovyScriptWithReferencedElement(final EObject container, final Z referencedElement) {
+    private Collection<? extends ScriptContainer<?>> allGroovyScriptWithReferencedElement(final EObject container, final Z referencedElement,
+            final boolean onlyInPool) {
         return newHashSet(transform(
-                filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class),
+                filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class, onlyInPool),
                         and(withExpressionType(ExpressionConstants.SCRIPT_TYPE), withReferencedElement(referencedElement))),
                 toGroovyExpressionScriptContainer(dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));
     }

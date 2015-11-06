@@ -1816,19 +1816,25 @@ public class ModelHelper {
         return (T) current;
     }
 
-    public static <T extends EObject> List<T> getAllElementOfTypeIn(final EObject container, final Class<T> type) {
+    public static <T extends EObject> List<T> getAllElementOfTypeIn(final EObject container, final Class<T> type, final boolean onlyInPool) {
         final List<T> res = new ArrayList<T>();
-        addAllItemsOfContainer(container, res, type);
+        addAllItemsOfContainer(container, res, type, onlyInPool);
         return res;
     }
 
-    private static <T extends EObject> void addAllItemsOfContainer(final EObject container, final List<T> res, final Class<T> type) {
+    public static <T extends EObject> List<T> getAllElementOfTypeIn(final EObject container, final Class<T> type) {
+        return getAllElementOfTypeIn(container, type, false);
+    }
+
+    private static <T extends EObject> void addAllItemsOfContainer(final EObject container, final List<T> res, final Class<T> type, final boolean onlyInPool) {
         if (container != null) {
             if (type.isAssignableFrom(container.getClass())) {
                 res.add((T) container);
             }
-            for (final EObject child : container.eContents()) {
-                addAllItemsOfContainer(child, res, type);
+            if (!(onlyInPool && container instanceof Activity)) {
+                for (final EObject child : container.eContents()) {
+                    addAllItemsOfContainer(child, res, type, onlyInPool);
+                }
             }
         }
 
