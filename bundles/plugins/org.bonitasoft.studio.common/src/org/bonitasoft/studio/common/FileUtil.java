@@ -39,6 +39,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.zip.ZipEntry;
@@ -51,6 +52,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 
+import com.google.common.io.Files;
 import com.thebuzzmedia.imgscalr.Scalr;
 
 /**
@@ -64,22 +66,14 @@ public class FileUtil {
     public static int bufferSize = 2*8192;
 
     public static void replaceStringInFile(File file, String match, String replacingString){
-        try (BufferedReader reader = new BufferedReader(new FileReader(file));
-                final FileWriter writer = new FileWriter(file.getAbsolutePath())) {
+        try {
+            final Charset utf8 = Charset.forName("UTF-8");
+            Files.write(Files.toString(file, utf8).replace(match, replacingString), file,
+                    utf8);
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
+        }
 
-            final StringBuilder sb = new StringBuilder();
-            String line = ""; //$NON-NLS-1$
-            while((line = reader.readLine()) != null)
-            {
-                sb.append(line);
-                sb.append(System.lineSeparator());//$NON-NLS-1$
-            }
-            writer.write(sb.toString().replaceAll(match, replacingString));
-        }
-        catch (final IOException ioe)
-        {
-            BonitaStudioLog.error(ioe);
-        }
     }
 
 
