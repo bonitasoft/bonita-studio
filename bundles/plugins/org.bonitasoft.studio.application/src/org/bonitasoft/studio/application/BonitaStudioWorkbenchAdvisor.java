@@ -73,6 +73,7 @@ import org.eclipse.gmf.runtime.lite.svg.SVGFigure;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
@@ -416,7 +417,11 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     private void checkCurrentRepository(final IProgressMonitor monitor) {
-        final String current = CommonRepositoryPlugin.getDefault().getPreferenceStore().getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
+        final IPreferenceStore preferenceStore = CommonRepositoryPlugin.getDefault().getPreferenceStore();
+        final String current = preferenceStore.getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
+        if (!RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME.equals(current) && !ResourcesPlugin.getWorkspace().getRoot().getProject(current).exists()) {
+            preferenceStore.setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY, RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME);
+        }
         final IRepository repository = RepositoryManager.getInstance().getCurrentRepository();
         if (repository.getProject().exists() && !RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME.equals(repository.getName())) {
             if (!repository.getProject().isOpen()) {

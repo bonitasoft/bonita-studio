@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.common.repository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,6 +33,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 /**
  * @author Romain Bioteau
@@ -194,6 +196,11 @@ public class RepositoryManager {
         repository.create(monitor);
         repository.open(monitor);
         preferenceStore.setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY, repositoryName);
+        try {
+            ((ScopedPreferenceStore) preferenceStore).save();
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
+        }
     }
 
 }
