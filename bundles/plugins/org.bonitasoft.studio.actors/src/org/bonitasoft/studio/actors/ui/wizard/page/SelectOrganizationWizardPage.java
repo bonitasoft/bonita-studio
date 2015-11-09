@@ -18,14 +18,13 @@ import java.util.List;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
-import org.bonitasoft.studio.actors.preference.ActorsPreferenceConstants;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -46,10 +45,12 @@ import org.eclipse.swt.widgets.Label;
 public abstract class SelectOrganizationWizardPage extends WizardPage implements ISelectionChangedListener {
 
     private final OrganizationRepositoryStore organizationStore;
+    private final ActiveOrganizationProvider activeOrganizationProvider;
 
     public SelectOrganizationWizardPage() {
         super(SelectOrganizationWizardPage.class.getName());
         organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
+        activeOrganizationProvider = new ActiveOrganizationProvider();
     }
 
     /*
@@ -83,8 +84,9 @@ public abstract class SelectOrganizationWizardPage extends WizardPage implements
 
         organizationCombo.addSelectionChangedListener(this);
         organizationCombo.setInput(organizationStore.getChildren());
-        final String id = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(ActorsPreferenceConstants.DEFAULT_ORGANIZATION);
-        IRepositoryFileStore defaultOrganization = organizationStore.getChild(id + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
+
+        IRepositoryFileStore defaultOrganization = organizationStore
+                .getChild(activeOrganizationProvider.getActiveOrganization() + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
         if (defaultOrganization == null) {
             final List<OrganizationFileStore> orga = organizationStore.getChildren();
             if (!orga.isEmpty()) {

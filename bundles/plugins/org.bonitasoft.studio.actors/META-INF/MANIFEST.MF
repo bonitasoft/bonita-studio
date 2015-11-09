@@ -12,7 +12,6 @@ Export-Package: org.bonitasoft.studio.actors,
  org.bonitasoft.studio.actors.model.organization,
  org.bonitasoft.studio.actors.model.organization.impl,
  org.bonitasoft.studio.actors.model.organization.util,
- org.bonitasoft.studio.actors.preference,
  org.bonitasoft.studio.actors.repository,
  org.bonitasoft.studio.actors.ui.wizard.page,
  org.bonitasoft.studio.actors.validator
