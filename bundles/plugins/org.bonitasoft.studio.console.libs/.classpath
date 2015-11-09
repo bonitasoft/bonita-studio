@@ -10,5 +10,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/theme-builder.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/forms-model.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/forms-server.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-lang3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
