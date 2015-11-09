@@ -407,6 +407,13 @@ public class EngineExpressionUtil {
             return createPatternExpression(expressionBuilder, expression);
         }
         if (ExpressionConstants.DOCUMENT_TYPE.equals(type)) {
+            final EList<EObject> referencedElements = expression.getReferencedElements();
+            if (!referencedElements.isEmpty()) {
+                final Document document = (Document) referencedElements.get(0);
+                if (document.isMultiple()) {
+                    return createDocumentListExpression(expressionBuilder, expression);
+                }
+            }
             return createDocumentExpression(expressionBuilder, expression);
         }
         if (ExpressionConstants.DOCUMENT_LIST_TYPE.equals(type)) {

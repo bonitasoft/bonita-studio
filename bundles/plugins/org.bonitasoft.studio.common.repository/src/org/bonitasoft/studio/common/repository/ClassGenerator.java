@@ -45,7 +45,6 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
-import org.eclipse.jdt.internal.core.BinaryType;
 import org.eclipse.jdt.internal.corext.fix.CleanUpConstants;
 import org.eclipse.jdt.internal.corext.refactoring.RefactoringExecutionStarter;
 import org.eclipse.jdt.internal.ui.fix.CodeFormatCleanUp;
@@ -71,15 +70,15 @@ public class ClassGenerator {
 
     public static IFile generateConnectorImplementationAbstractClass(ConnectorImplementation implementation, ConnectorDefinition definition,
             String superClassName, SourceRepositoryStore sourceStore, IProgressMonitor monitor) throws Exception {
-        String className = implementation.getImplementationClassname();
+        final String className = implementation.getImplementationClassname();
         String packageName = "";
         String simpleClassName = className;
         if (className != null && className.indexOf(".") != -1) {
             packageName = className.substring(0, className.lastIndexOf("."));
             simpleClassName = className.substring(className.lastIndexOf(".") + 1, className.length());
         }
-        String abstractClassName = "Abstract" + simpleClassName;
-        String qualifiedAbstractClassName = packageName + "." + abstractClassName;
+        final String abstractClassName = "Abstract" + simpleClassName;
+        final String qualifiedAbstractClassName = packageName + "." + abstractClassName;
 
         final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
         IType classType = javaProject.findType(qualifiedAbstractClassName);
@@ -93,7 +92,7 @@ public class ClassGenerator {
 
         createAbstractClassContent(classType, definition, className, monitor);
 
-        Map<String, String> settings = new Hashtable<String, String>();
+        final Map<String, String> settings = new Hashtable<String, String>();
         settings.put(CleanUpConstants.FORMAT_SOURCE_CODE, CleanUpOptions.TRUE);
         Shell activeShell = Display.getDefault().getActiveShell();
         boolean disposeShell = false;
@@ -129,7 +128,7 @@ public class ClassGenerator {
 
     public static IFile generateConnectorImplementationClass(ConnectorImplementation implementation, ConnectorDefinition definition,
             SourceRepositoryStore sourceStore, IProgressMonitor monitor) throws Exception {
-        String className = implementation.getImplementationClassname();
+        final String className = implementation.getImplementationClassname();
 
         final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
         IType classType = javaProject.findType(className);
@@ -143,9 +142,9 @@ public class ClassGenerator {
             }
             classType = generateImplementationClass(packageName, simpleClassName, sourceStore, monitor);
 
-            IType abstractConnectorType = javaProject.findType(AbstractConnector.class.getName());
-            IType abstractFilterType = javaProject.findType(AbstractUserFilter.class.getName());
-            ITypeHierarchy hierarchy = classType.newTypeHierarchy(javaProject, monitor);
+            final IType abstractConnectorType = javaProject.findType(AbstractConnector.class.getName());
+            final IType abstractFilterType = javaProject.findType(AbstractUserFilter.class.getName());
+            final ITypeHierarchy hierarchy = classType.newTypeHierarchy(javaProject, monitor);
 
             if (hierarchy.contains(abstractConnectorType)) {
                 StringBuilder executeMethodContent = new StringBuilder("@Override\nprotected void executeBusinessLogic() throws ConnectorException{\n\t");
@@ -172,7 +171,7 @@ public class ClassGenerator {
                 classType.createMethod(executeMethodContent.toString(), null, true, monitor);
 
                 executeMethodContent = new StringBuilder("@Override\npublic List<Long> filter(final String actorName) throws UserFilterException {\n\t");
-                executeMethodContent.append("//TODO execute the user filter here\n\t//The method must return a list of actor id's\n\t");
+                executeMethodContent.append("//TODO execute the user filter here\n\t//The method must return a list of user id's\n\t");
                 executeMethodContent.append("//you can use getApiAccessor() and getExecutionContext()");
                 executeMethodContent.append("\n\treturn null;\n\n}\n");
                 classType.createMethod(executeMethodContent.toString(), null, true, monitor);
@@ -182,7 +181,7 @@ public class ClassGenerator {
                 executeMethodContent.append("\n\t//the user if there is only one result returned by the filter method");
                 executeMethodContent.append("\n\treturn super.shouldAutoAssignTaskIfSingleResult();\n\n}\n");
                 classType.createMethod(executeMethodContent.toString(), null, true, monitor);
-                ICompilationUnit compilationUnit = classType.getCompilationUnit();
+                final ICompilationUnit compilationUnit = classType.getCompilationUnit();
                 compilationUnit.createImport("java.util.List", null, monitor);
                 compilationUnit.createImport(CONNECTOR_VALIDATION_EXCEPTION_QUALIFIED_NAME, null, monitor);
                 compilationUnit.createImport(USER_FILTER_EXCEPTION_QUALIFIED_NAME, null, monitor);
@@ -197,14 +196,14 @@ public class ClassGenerator {
 
         final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
 
-        NewClassWizardPage classWizard = new NewClassWizardPage();
+        final NewClassWizardPage classWizard = new NewClassWizardPage();
         classWizard.setSuperClass(superClassName, false);
         classWizard.setAddComments(true, false);
         classWizard.setModifiers(classWizard.F_PUBLIC | classWizard.F_ABSTRACT, false);
         classWizard.setTypeName(className, false);
         classWizard.setMethodStubSelection(false, false, false, false);
         IPackageFragmentRoot packageFragmentRoot = null;
-        IResource srcFolder = sourceStore.getResource();
+        final IResource srcFolder = sourceStore.getResource();
         packageFragmentRoot = javaProject.getPackageFragmentRoot(srcFolder);
         classWizard.setPackageFragmentRoot(packageFragmentRoot, false);
         IPackageFragment packageFragment = packageFragmentRoot.getPackageFragment(packageName == null ? "" : packageName);
@@ -220,17 +219,17 @@ public class ClassGenerator {
             throws Exception {
         final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
 
-        IType abstractConnectorType = javaProject.findType(AbstractConnector.class.getName());
-        IType abstractFilterType = javaProject.findType(AbstractUserFilter.class.getName());
+        final IType abstractConnectorType = javaProject.findType(AbstractConnector.class.getName());
+        final IType abstractFilterType = javaProject.findType(AbstractUserFilter.class.getName());
         String abstractClassName = "Abstract" + className;
         if (packageName != null && !packageName.isEmpty()) {
             abstractClassName = packageName + "." + abstractClassName;
         }
-        IType classType = javaProject.findType(abstractClassName);
+        final IType classType = javaProject.findType(abstractClassName);
         if (classType == null) {
             throw new ClassNotFoundException(abstractClassName);
         }
-        ITypeHierarchy hierarchy = classType.newTypeHierarchy(javaProject, progressMonitor);
+        final ITypeHierarchy hierarchy = classType.newTypeHierarchy(javaProject, progressMonitor);
         String tempatePattern = null;
         if (hierarchy.contains(abstractConnectorType)) {
             tempatePattern = "/**\n*The connector execution will follow the steps" +
@@ -248,16 +247,16 @@ public class ClassGenerator {
                     "\n* 4 - shouldAutoAssignTaskIfSingleResult() --> auto-assign the task if filter returns a single result\n*/";
         }
 
-        NewClassWizardPage classWizard = new NewClassWizardPage();
+        final NewClassWizardPage classWizard = new NewClassWizardPage();
         classWizard.enableCommentControl(true);
 
-        ProjectTemplateStore fTemplateStore = new ProjectTemplateStore(RepositoryManager.getInstance().getCurrentRepository().getProject());
+        final ProjectTemplateStore fTemplateStore = new ProjectTemplateStore(RepositoryManager.getInstance().getCurrentRepository().getProject());
         try {
             fTemplateStore.load();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             BonitaStudioLog.error(e);
         }
-        Template t = fTemplateStore.findTemplateById("org.eclipse.jdt.ui.text.codetemplates.typecomment");
+        final Template t = fTemplateStore.findTemplateById("org.eclipse.jdt.ui.text.codetemplates.typecomment");
         t.setPattern(tempatePattern);
 
         classWizard.setSuperClass(abstractClassName, false);
@@ -266,7 +265,7 @@ public class ClassGenerator {
         classWizard.setTypeName(className, false);
         classWizard.setMethodStubSelection(false, false, false, false);
         IPackageFragmentRoot packageFragmentRoot = null;
-        IResource srcFolder = sourceStore.getResource();
+        final IResource srcFolder = sourceStore.getResource();
         packageFragmentRoot = javaProject.getPackageFragmentRoot(srcFolder);
         classWizard.setPackageFragmentRoot(packageFragmentRoot, false);
         IPackageFragment packageFragment = packageFragmentRoot.getPackageFragment(packageName == null ? "" : packageName);
@@ -281,20 +280,20 @@ public class ClassGenerator {
     private static void createAbstractClassContent(IType classType, ConnectorDefinition definition, String className, IProgressMonitor monitor)
             throws Exception {
 
-        for (Input input : definition.getInput()) {
-            String fieldName = NamingUtils.toJavaIdentifier(input.getName().toUpperCase(), true) + "_INPUT_PARAMETER";
-            IField field = classType.getField(fieldName);
+        for (final Input input : definition.getInput()) {
+            final String fieldName = NamingUtils.toJavaIdentifier(input.getName().toUpperCase(), true) + "_INPUT_PARAMETER";
+            final IField field = classType.getField(fieldName);
 
             /* check a field with this name not already exist */
             if (field != null && field.exists()) {
                 field.delete(true, monitor);
             }
 
-            String fieldDefinition = "protected final static String " + fieldName + " = \"" + input.getName() + "\" ;";
+            final String fieldDefinition = "protected final static String " + fieldName + " = \"" + input.getName() + "\" ;";
             classType.createField(fieldDefinition, null, true, null);
 
             final String getterName = "get" + NamingUtils.toJavaIdentifier(input.getName(), true);
-            IMethod getterMethod = classType.getMethod(getterName, null);
+            final IMethod getterMethod = classType.getMethod(getterName, null);
             if (getterMethod != null && getterMethod.exists()) { // Regenerate method
                 getterMethod.delete(true, monitor);
             }
@@ -306,36 +305,36 @@ public class ClassGenerator {
 
         }
 
-        for (Output output : definition.getOutput()) {
-            String fieldName = NamingUtils.toJavaIdentifier(output.getName().toUpperCase(), true) + "_OUTPUT_PARAMETER";
-            IField field = classType.getField(fieldName);
+        for (final Output output : definition.getOutput()) {
+            final String fieldName = NamingUtils.toJavaIdentifier(output.getName().toUpperCase(), true) + "_OUTPUT_PARAMETER";
+            final IField field = classType.getField(fieldName);
 
             /* check a field with this name not already exist */
             if (field != null && field.exists()) {
                 field.delete(true, monitor);
             }
 
-            String fieldDefinition = "protected final String " + fieldName + " = \"" + output.getName() + "\" ;";
+            final String fieldDefinition = "protected final String " + fieldName + " = \"" + output.getName() + "\" ;";
             classType.createField(fieldDefinition, null, true, null);
 
             final String setterName = "set" + NamingUtils.toJavaIdentifier(output.getName(), true);
 
-            String inputName = NamingUtils.toJavaIdentifier(output.getName(), false);
+            final String inputName = NamingUtils.toJavaIdentifier(output.getName(), false);
             classType.createMethod(
                     "protected final void " + setterName + "(" + output.getType() + " " + inputName + ") {\n" +
                             "\t setOutputParameter(" + fieldName + " , " + inputName + " );\n" +
                             "}\n", null, true, null);
         }
 
-        IMethod validateMethod = classType.getMethod("validateInputParameters", null);
+        final IMethod validateMethod = classType.getMethod("validateInputParameters", null);
         if (validateMethod != null && validateMethod.exists()) {
             validateMethod.delete(true, monitor);
         }
 
-        StringBuilder validateMethodContent = new StringBuilder("@Override\npublic void validateInputParameters() throws ConnectorValidationException{\n\t");
+        final StringBuilder validateMethodContent = new StringBuilder("@Override\npublic void validateInputParameters() throws ConnectorValidationException{\n\t");
 
-        for (Input input : definition.getInput()) {
-            String getterName = "get" + NamingUtils.toJavaIdentifier(input.getName(), true);
+        for (final Input input : definition.getInput()) {
+            final String getterName = "get" + NamingUtils.toJavaIdentifier(input.getName(), true);
             validateMethodContent.append("try{ \n\t" +
                     getterName + "();\n" +
                     " }catch (ClassCastException cce) {\n\t" +
@@ -366,14 +365,14 @@ public class ClassGenerator {
 
     private static void generateGetterComment(ConnectorDefinition definition, StringBuilder stringBuilder) {
 
-        for (Input input : definition.getInput()) {
-            String getter = "\n\t//get" + NamingUtils.toJavaIdentifier(input.getName(), true) + "();";
+        for (final Input input : definition.getInput()) {
+            final String getter = "\n\t//get" + NamingUtils.toJavaIdentifier(input.getName(), true) + "();";
             stringBuilder.append(getter);
         }
         stringBuilder.append("\n\n\t//TODO execute your business logic here \n");
         stringBuilder.append("\n\t//WARNING : Set the output of the connector execution. If outputs are not set, connector fails");
-        for (Output output : definition.getOutput()) {
-            String setter = "\n\t//set" + NamingUtils.toJavaIdentifier(output.getName(), true) + "(" + NamingUtils.toJavaIdentifier(output.getName(), false)
+        for (final Output output : definition.getOutput()) {
+            final String setter = "\n\t//set" + NamingUtils.toJavaIdentifier(output.getName(), true) + "(" + NamingUtils.toJavaIdentifier(output.getName(), false)
                     + ");";
             stringBuilder.append(setter);
 

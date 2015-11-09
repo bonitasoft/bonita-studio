@@ -15,45 +15,19 @@
 package org.bonitasoft.studio.common.jface;
 
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 
 public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
 
-    protected static final String CHECKED_KEY = "checkedKey";// NON-NLS-1
-    protected static final String UNCHECK_KEY = "uncheckKey";// NON-NLS-1
-    protected static final String DISABLED_CHECKED_KEY = "checkedKeyDisabled";// NON-NLS-1
-    protected static final String DISABLED_UNCHECKED_KEY = "uncheckKeyDisabled";// NON-NLS-1
-
     public AbstractCheckboxLabelProvider(final ColumnViewer viewer) {
-        if (JFaceResources.getImageRegistry().getDescriptor(UNCHECK_KEY) == null) {
-            JFaceResources.getImageRegistry().put(UNCHECK_KEY,
-                    makeShot(viewer.getControl().getShell(), false, true));
-        }
-        if (JFaceResources.getImageRegistry().getDescriptor(CHECKED_KEY) == null) {
-            JFaceResources.getImageRegistry().put(CHECKED_KEY,
-                    makeShot(viewer.getControl().getShell(), true, true));
-        }
-        if (JFaceResources.getImageRegistry().getDescriptor(DISABLED_CHECKED_KEY) == null) {
-            JFaceResources.getImageRegistry().put(DISABLED_CHECKED_KEY,
-                    makeShot(viewer.getControl().getShell(), true, false));
-        }
-        if (JFaceResources.getImageRegistry().getDescriptor(DISABLED_UNCHECKED_KEY) == null) {
-            JFaceResources.getImageRegistry().put(DISABLED_UNCHECKED_KEY,
-                    makeShot(viewer.getControl().getShell(), false, false));
-        }
     }
 
     /*
@@ -62,15 +36,7 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
      */
     @Override
     public Image getImage(final Object element) {
-        if (isSelected(element)) {
-            if (isEnabled(element)) {
-                return JFaceResources.getImage(CHECKED_KEY);
-            } else {
-                return JFaceResources.getImage(DISABLED_CHECKED_KEY);
-            }
-
-        }
-        return isEnabled(element) ? JFaceResources.getImage(UNCHECK_KEY) : JFaceResources.getImage(DISABLED_UNCHECKED_KEY);
+        return checkboxImage(isSelected(element), isEnabled(element));
     }
 
     /*
@@ -88,35 +54,12 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
         return true;
     }
 
-    private Image makeShot(final Shell shell, final boolean type, final boolean enabled) {
-        if (SWT.getPlatform().equals("gtk")) {
-            final Image image = gtkFallBack(type, enabled);
-            if (image != null) {
-                return image;
-            }
-        }
-        final Shell s = new Shell(shell, SWT.NO_TRIM);
-        final Button b = new Button(s, SWT.CHECK);
-        b.setSelection(type);
-        final Point bsize = b.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-        b.setSize(bsize);
-        b.setLocation(0, 0);
-        s.setSize(bsize);
-        b.setEnabled(enabled);
-        s.open();
-        final GC gc = new GC(b);
-        final Image image = new Image(shell.getDisplay(), bsize.x, bsize.y);
-        gc.copyArea(image, 0, 0);
-        gc.dispose();
-        s.close();
-        return image;
-    }
 
-    private Image gtkFallBack(final boolean selected, final boolean enabled) {
+    private Image checkboxImage(final boolean selected, final boolean enabled) {
         if (selected) {
-            return enabled ? Pics.getImage("/checkboxes/checkbox_selected.png") : Pics.getImage("/checkboxes/checkbox_disabled_selected.png");
+            return enabled ? Pics.getImage("/checkboxes/checkbox_yes.png") : Pics.getImage("/checkboxes/checkbox_yes_disabled.png");
         }
-        return enabled ? Pics.getImage("/checkboxes/checkbox_unselected.png") : Pics.getImage("/checkboxes/checkbox_disabled_unselected.png");
+        return enabled ? Pics.getImage("/checkboxes/checkbox_no.png") : Pics.getImage("/checkboxes/checkbox_no_disabled.png");
     }
 
     @Override

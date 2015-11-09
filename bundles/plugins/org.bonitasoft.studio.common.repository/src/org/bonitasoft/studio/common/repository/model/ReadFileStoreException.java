@@ -23,4 +23,8 @@ public class ReadFileStoreException extends Exception {
         super(message, exception);
     }
 
+    public ReadFileStoreException(final String message) {
+        super(message);
+    }
+
 }
