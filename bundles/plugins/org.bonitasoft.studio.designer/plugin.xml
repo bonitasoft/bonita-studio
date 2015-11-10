@@ -41,7 +41,7 @@
 <extension
       point="org.bonitasoft.studio.expression.proposalListener">
    <proposalListner
-         name="&lt;A&gt;Create a new form...&lt;/A&gt;"
+         name="%createNewFormLabel"
          providerClass="org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener"
          type="FORM_REFERENCE_TYPE">
    </proposalListner>
