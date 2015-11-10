@@ -316,6 +316,10 @@ public class Messages extends NLS {
     public static String defaultValueBusinessDataTooltip;
     public static String cleaningBusinessObjects;
 
+    public static String countQueryInfo;
+
+    public static String missingCountQuery;
+
     private Messages() {
     }
 
