@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.model.process.builders;
 
 import org.bonitasoft.studio.model.Buildable;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
@@ -69,6 +70,11 @@ public class DataBuilder<T extends Data, B extends DataBuilder<T, B>> extends El
 
     public B havingDefaultValue(final ExpressionBuilder defaultValueExpression) {
         getBuiltInstance().setDefaultValue(defaultValueExpression.build());
+        return getThis();
+    }
+
+    public B havingDefaultValue(final Expression defaultValueExpression) {
+        getBuiltInstance().setDefaultValue(defaultValueExpression);
         return getThis();
     }
 
