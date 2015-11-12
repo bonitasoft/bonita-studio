@@ -24,7 +24,6 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.internal.core.IInternalDebugCoreConstants;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
@@ -47,14 +46,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         setUTF8DefaultEncoding();
         initDefaultWebPreferences(store, webStore);
 
-        store.setDefault(USER_NAME, USER_NAME_DEFAULT);
-        store.setDefault(USER_PASSWORD, USER_PASSWORD_DEFAULT);
         store.setDefault(SHOW_CONDITION_ON_TRANSITION, "false");
         store.setDefault(DELETE_TENANT_ON_EXIT, true);
         store.setDefault(LOAD_ORGANIZATION, true);
         store.setDefault(AUTOMATIC_ID, "true");
-        store.setDefault(TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION, MessageDialogWithToggle.NEVER);
-        store.setDefault(PUBLISH_ORGANIZATION, false);
 
         initDefaultLocalesPreference(store);
 
@@ -63,7 +58,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         store.setDefault(PREF_ENABLE_VALIDATION, true);
         store.setDefault(DEFAULT_USERXP_THEME, "default");
         store.setDefault(DEFAULT_APPLICATION_THEME, "Default Application");
-        store.setDefault(DEFAULT_ORGANIZATION, DEFAULT_ORGANIZATION_NAME);
         store.setDefault(VALIDATION_BEFORE_RUN, true);
         store.setDefault(ASK_RENAME_ON_FIRST_SAVE, true);
         store.setDefault(ALWAYS_USE_SCRIPTING_MODE, false);

@@ -20,7 +20,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenceConstants;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.server.PortConfigurator;
@@ -92,12 +94,14 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
         loginGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         loginGroup.setText(Messages.loginAs);
 
-        final StringFieldEditor user = new StringFieldEditor(BonitaPreferenceConstants.USER_NAME, Messages.userNameLLabel, loginGroup);
+        final StringFieldEditor user = new StringFieldEditor(OrganizationPreferenceConstants.DEFAULT_USER, Messages.userNameLLabel, loginGroup);
+        user.setPreferenceStore(CommonRepositoryPlugin.getDefault().getPreferenceStore());
         addField(user);
         user.getTextControl(loginGroup).setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(0, 15).create());
         user.getLabelControl(loginGroup).setLayoutData(GridDataFactory.fillDefaults().grab(false, false).indent(0, 15).create());
 
-        final PasswordFieldEditor password = new PasswordFieldEditor(BonitaPreferenceConstants.USER_PASSWORD, Messages.userPasswordLabel, loginGroup);
+        final PasswordFieldEditor password = new PasswordFieldEditor(OrganizationPreferenceConstants.DEFAULT_PASSWORD, Messages.userPasswordLabel, loginGroup);
+        password.setPreferenceStore(CommonRepositoryPlugin.getDefault().getPreferenceStore());
         addField(password);
 
         defaultTheme = new ComboFieldEditor(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, Messages.defaultUserXPThemeLabel + " " + bonitaPortalModuleName,
