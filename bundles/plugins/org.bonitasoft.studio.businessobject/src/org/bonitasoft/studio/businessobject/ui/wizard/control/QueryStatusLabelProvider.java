@@ -106,7 +106,7 @@ public class QueryStatusLabelProvider extends StyledCellLabelProvider {
         return true;
     }
 
-    private Predicate<Query> countQueryWithName(String name) {
+    private Predicate<Query> countQueryWithName(final String name) {
         return new Predicate<Query>() {
 
             @Override
