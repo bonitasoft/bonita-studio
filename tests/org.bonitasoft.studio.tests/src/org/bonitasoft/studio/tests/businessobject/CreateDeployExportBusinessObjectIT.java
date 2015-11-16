@@ -238,10 +238,10 @@ public class CreateDeployExportBusinessObjectIT extends SWTBotGefTestCase {
         int index = 0;
         for (final Entry<String, String> paramEntry : queryParam.entrySet()) {
             bot.button("Add").click();
-            paramTableBot.click(index, 1);
+            paramTableBot.click(index, 0);
             bot.text("param1").typeText(paramEntry.getKey());
 
-            paramTableBot.click(index, 2);
+            paramTableBot.click(index, 1);
             bot.ccomboBox(String.class.getName()).setSelection(paramEntry.getValue());
             keyboard.pressShortcut(Keystrokes.CR);
             index++;
