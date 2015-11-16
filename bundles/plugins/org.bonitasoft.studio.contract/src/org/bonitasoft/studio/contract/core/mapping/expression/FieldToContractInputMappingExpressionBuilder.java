@@ -94,10 +94,12 @@ public class FieldToContractInputMappingExpressionBuilder {
             groovyScriptExpression.getReferencedElements().add(
                     ExpressionHelper.createDependencyFromEObject(data));
         }
-        final ComputeScriptDependenciesJob job = new ComputeScriptDependenciesJob(groovyCompilationUnit(groovyScriptExpression));
+        final GroovyCompilationUnit groovyCompilationUnit = groovyCompilationUnit(groovyScriptExpression);
+        final ComputeScriptDependenciesJob job = new ComputeScriptDependenciesJob(groovyCompilationUnit);
         job.setNodes(availableDao());
         job.setContext(ModelHelper.getParentPool(data));
         groovyScriptExpression.getReferencedElements().addAll(job.findDependencies());
+        groovyCompilationUnit.delete(true, Repository.NULL_PROGRESS_MONITOR);
     }
 
     private List<ScriptVariable> availableDao() {
@@ -112,7 +114,7 @@ public class FieldToContractInputMappingExpressionBuilder {
         return scriptVariables;
     }
 
-    private GroovyCompilationUnit groovyCompilationUnit(final Expression groovyScriptExpression) throws JavaModelException {
+    protected GroovyCompilationUnit groovyCompilationUnit(final Expression groovyScriptExpression) throws JavaModelException {
         return (GroovyCompilationUnit) new GroovyCompilationUnitFactory(repositoryAccessor).newCompilationUnit(groovyScriptExpression.getContent(),
                 Repository.NULL_PROGRESS_MONITOR);
     }

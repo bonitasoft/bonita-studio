@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -168,7 +169,8 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
     @Override
     public List<T> getChildren() {
         refresh();
-        if (getCompatibleExtensions() != null) {
+        Set<String> compatibleExtensions = getCompatibleExtensions();
+        if (compatibleExtensions != null && !compatibleExtensions.isEmpty()) {
             return super.getChildren();
         }
         final List<T> result = new ArrayList<T>();

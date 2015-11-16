@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.jdt.CreateJarOperation;
+import org.bonitasoft.studio.groovy.Messages;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
@@ -43,8 +44,10 @@ import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Romain Bioteau
@@ -77,30 +80,38 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
         for (final GroovyFileStore file : providedStore.getChildren()) {
             compilationUnits.add(file.getCompilationUnit());
         }
-        if (!compilationUnits.isEmpty()) {
-            final File targetJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), ProvidedGroovyRepositoryStore.EXPORTED_PROVIDED_JAR_NAME);
-            final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar, toArray(compilationUnits, ICompilationUnit.class));
-            createJarOperation.run(Repository.NULL_PROGRESS_MONITOR);
-            if (createJarOperation.getStatus().isOK()) {
-                builder.addClasspathResource(new BarResource(targetJar.getName(), toByteArray(targetJar)));
-            }
-            targetJar.delete();
-        }
+        addGroovyCompilationUnitToClasspath(builder, compilationUnits, ProvidedGroovyRepositoryStore.EXPORTED_PROVIDED_JAR_NAME);
     }
 
     protected void addGroovyScriptDependenciesToClasspath(
             final BusinessArchiveBuilder builder,
             final Configuration configuration,
             final List<FragmentContainer> containers) throws InvocationTargetException, InterruptedException, IOException {
-        final ICompilationUnit[] compilationUnits = collectCompilationUnits(configuration, containers);
-        if (compilationUnits.length > 0) {
-            final File targetJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), GroovyRepositoryStore.EXPORTED_JAR_NAME);
-            final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar, compilationUnits);
+        final Set<ICompilationUnit> compilationUnits = collectCompilationUnits(configuration, containers);
+        addGroovyCompilationUnitToClasspath(builder, compilationUnits, GroovyRepositoryStore.EXPORTED_JAR_NAME);
+    }
+
+    protected void addGroovyCompilationUnitToClasspath(final BusinessArchiveBuilder builder, final Set<ICompilationUnit> compilationUnits,
+            final String exportedProvidedJarName) throws InvocationTargetException, InterruptedException, IOException {
+        if (!compilationUnits.isEmpty()) {
+            final File targetJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), exportedProvidedJarName);
+            final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar, toArray(compilationUnits, ICompilationUnit.class));
             createJarOperation.run(Repository.NULL_PROGRESS_MONITOR);
-            if (createJarOperation.getStatus().isOK()) {
+            final IStatus status = createJarOperation.getStatus();
+            if (status.isOK()) {
                 builder.addClasspathResource(new BarResource(targetJar.getName(), toByteArray(targetJar)));
+                targetJar.delete();
+            } else {
+                targetJar.delete();
+                if (GroovyRepositoryStore.EXPORTED_JAR_NAME.equals(exportedProvidedJarName)) {
+                    throw new JarExportFailedException(
+                            Messages.errorBuildingJarForGroovyScriptsForProcess + " ",
+                            status);
+                } else {
+                    throw new JarExportFailedException(NLS.bind(Messages.errorBuildingJarForProvidedGroovyScriptsForProcess + " ",
+                            org.bonitasoft.studio.common.Messages.bosProductName), status);
+                }
             }
-            targetJar.delete();
         }
     }
 
@@ -108,19 +119,26 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
             final BusinessArchiveBuilder builder,
             final Configuration configuration,
             final List<FragmentContainer> containers) throws InvocationTargetException, InterruptedException, IOException {
-        final ICompilationUnit[] compilationUnits = collectCompilationUnits(configuration, containers);
-        if (compilationUnits.length > 0) {
-            final File targetJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), GroovyRepositoryStore.EXPORTED_JAR_NAME);
-            final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar, compilationUnits);
+        final Set<ICompilationUnit> compilationUnits = collectCompilationUnits(configuration, containers);
+        final String exportedJarName = GroovyRepositoryStore.EXPORTED_JAR_NAME;
+        if (!compilationUnits.isEmpty()) {
+            final File targetJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), exportedJarName);
+            final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar, toArray(compilationUnits, ICompilationUnit.class));
             createJarOperation.run(Repository.NULL_PROGRESS_MONITOR);
-            if (createJarOperation.getStatus().isOK()) {
+            final IStatus status = createJarOperation.getStatus();
+            if (status.isOK()) {
                 builder.addExternalResource(new BarResource(EXTERNAL_LIB_BAR_LOCATION + targetJar.getName(), toByteArray(targetJar)));
+                targetJar.delete();
+            } else {
+                targetJar.delete();
+                throw new JarExportFailedException(
+                        Messages.errorBuildingJarForGroovyScriptsFor6xApplication + " ",
+                        status);
             }
-            targetJar.delete();
         }
     }
 
-    private ICompilationUnit[] collectCompilationUnits(final Configuration configuration, final List<FragmentContainer> containers) {
+    private Set<ICompilationUnit> collectCompilationUnits(final Configuration configuration, final List<FragmentContainer> containers) {
         final Set<ICompilationUnit> result = new HashSet<ICompilationUnit>();
         if (configuration != null) {
             final GroovyRepositoryStore store = repositoryAccessor.getRepositoryStore(GroovyRepositoryStore.class);
@@ -137,7 +155,7 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
                 }
             }
         }
-        return toArray(result, ICompilationUnit.class);
+        return result;
     }
 
 }
