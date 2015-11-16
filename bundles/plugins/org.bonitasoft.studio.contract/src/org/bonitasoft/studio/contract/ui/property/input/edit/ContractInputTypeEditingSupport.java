@@ -39,6 +39,18 @@ public class ContractInputTypeEditingSupport extends PropertyEditingSupport impl
         this.controller = controller;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.views.properties.PropertyEditingSupport#canEdit(java.lang.Object)
+     */
+    @Override
+    protected boolean canEdit(Object object) {
+        if (getViewer().isCellEditorActive()) {
+            return false;
+        }
+        return super.canEdit(object);
+    }
+
     @Override
     protected void initializeCellEditorValue(final CellEditor cellEditor, final ViewerCell cell) {
         super.initializeCellEditorValue(cellEditor, cell);
