@@ -110,6 +110,7 @@ public class BonitaPreferenceDialog extends Dialog {
      */
     public BonitaPreferenceDialog(final Shell parentShell) {
         super(parentShell);
+        setShellStyle(SWT.CLOSE | SWT.BORDER | SWT.APPLICATION_MODAL);
         applyOnBack = new ArrayList<IPreferencePage>();
     }
 
