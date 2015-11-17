@@ -177,7 +177,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
             final InputStream is = super.handlePreImport(fileName, inputStream);
             copyIs = new CopyInputStream(is);
             final Resource r = getTmpEMFResource("beforeImport.conf",
-                    copyIs.getCopy());
+                    copyIs.getFile());
             try {
                 r.load(Collections.EMPTY_MAP);
             } catch (final IOException e) {
