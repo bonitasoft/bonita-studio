@@ -37,8 +37,6 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
     @Override
     public String getInitialValue() throws BusinessObjectInstantiationException {
         final BusinessObject businessObject = context.getField().getReference();
-        checkNotNullableFields(businessObject);
-
         final StringBuilder scriptBuilder = new StringBuilder();
         final String listVarName = context.getLocalListVariableName();
         delcareVariable(scriptBuilder, listVarName);

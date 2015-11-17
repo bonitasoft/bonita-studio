@@ -19,6 +19,7 @@ import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBui
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
@@ -146,4 +147,49 @@ public class CreateContractInputFromBusinessObjectWizardPageTest {
         assertThat(checkedElements.size()).isEqualTo(4);
         assertThat(checkedElements.containsAll(Lists.newArrayList(rootMapping1, rootMapping2, childMapping1, childMapping2)));
     }
+
+    @Test
+    public void should_selectAllMandatoryAttributes_whenClickingOnMandatoryAttributes() {
+        final BusinessObjectData data = aBusinessData().withName("employee").withClassname("org.company.Employee").build();
+        final Contract contract = aContract().build();
+        final Pool process = aPool().havingContract(aContract()).build();
+        process.getData().add(data);
+        final GenerationOptions options = new GenerationOptions();
+        final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
+        final WritableValue selectedDataObservable = new WritableValue();
+        selectedDataObservable.setValue(data);
+        final WritableValue rootNameObservable = new WritableValue();
+        rootNameObservable.setValue("employeeInput");
+        final WritableList fieldToContractInputMappingsObservable = new WritableList();
+        final CreateContractInputFromBusinessObjectWizardPage page = new CreateContractInputFromBusinessObjectWizardPage(contract, options,
+                selectedDataObservable, rootNameObservable, new FieldToContractInputMappingFactory(), fieldToContractInputMappingsObservable, store);
+        final RelationField rootField1 = Mockito.mock(RelationField.class);
+        final RelationField rootField2 = Mockito.mock(RelationField.class);
+        final SimpleField childField1 = Mockito.mock(SimpleField.class);
+        final SimpleField childField2 = Mockito.mock(SimpleField.class);
+        when(rootField1.isNullable()).thenReturn(false);
+        when(rootField2.isNullable()).thenReturn(true);
+        when(childField1.isNullable()).thenReturn(true);
+        when(childField2.isNullable()).thenReturn(false);
+        final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(rootField1);
+        final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(childField1);
+        final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(childField2);
+        rootMapping1.addChild(childMapping1);
+        rootMapping1.addChild(childMapping2);
+        rootMapping1.setGenerated(false);
+        final FieldToContractInputMapping rootMapping2 = new RelationFieldToContractInputMapping(rootField2);
+        rootMapping2.setGenerated(false);
+        childMapping1.setGenerated(false);
+        childMapping2.setGenerated(false);
+        page.setMappings(Lists.newArrayList(rootMapping1, rootMapping2));
+        final WritableSet checkedElements = new WritableSet();
+        final SelectionAdapter listener = page.createMandatoryAttributesSelectionListener(checkedElements);
+        listener.widgetSelected(mock(SelectionEvent.class));
+        assertThat(checkedElements.size()).isEqualTo(3);
+        assertThat(checkedElements.contains(rootMapping1)).isTrue();
+        assertThat(checkedElements.contains(rootMapping2)).isFalse();
+        assertThat(checkedElements.contains(childMapping1)).isTrue();
+        assertThat(checkedElements.contains(childMapping2)).isTrue();
+    }
+
 }
