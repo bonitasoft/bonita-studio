@@ -42,11 +42,10 @@ public class EmptySelectionMultivalidator extends MultiValidator {
 
     @Override
     protected IStatus validate() {
-        if (checkedElements.isEmpty() && allMappingsNotGenerated()) {
+        if (checkedElements.isEmpty()) {
             return ValidationStatus.error(Messages.atLeastOneAttributeShouldBeSelectedError);
         } else {
             final StringBuilder sb = new StringBuilder();
-
             validateMandatoryFieldsNotSelected(sb, mappings, checkedElements);
             if (sb.length() > 0) {
                 if (sb.indexOf(",") == sb.lastIndexOf(",")) {
@@ -58,17 +57,6 @@ public class EmptySelectionMultivalidator extends MultiValidator {
             }
         }
         return ValidationStatus.ok();
-    }
-
-    private boolean allMappingsNotGenerated() {
-        if (mappings != null) {
-            for (final FieldToContractInputMapping mapping : mappings) {
-                if (mapping.isGenerated()) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     private void validateMandatoryFieldsNotSelected(final StringBuilder sb,
