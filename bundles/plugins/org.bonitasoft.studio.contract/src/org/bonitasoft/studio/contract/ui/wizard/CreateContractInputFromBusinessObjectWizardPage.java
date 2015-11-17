@@ -47,7 +47,6 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
-import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
@@ -253,20 +252,22 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         inputTypeTreeViewerColumn.getColumn().setText(Messages.inputType);
         inputTypeTreeViewerColumn.getColumn().setWidth(150);
         inputTypeTreeViewerColumn.setLabelProvider(new InputTypeColumnLabelProvider());
-        dbc.bindValue(ViewersObservables.observeInput(treeViewer),
+        final IViewerObservableSet checkedElements = ViewersObservables.observeCheckedElements(treeViewer, FieldToContractInputMapping.class);
+        final IObservableValue observeInput = ViewersObservables.observeInput(treeViewer);
+        dbc.bindValue(observeInput,
                 selectedDataObservable,
                 null,
                 updateValueStrategy().withConverter(selectedDataToFieldMappings()).create());
-        final IViewerObservableSet checkedElements = ViewersObservables.observeCheckedElements(treeViewer, FieldToContractInputMapping.class);
+
         final WritableValue checkedObservableValue = new WritableValue();
         checkedObservableValue.setValue(checkedElements);
         final WritableValue mappingsObservableValue = new WritableValue();
         mappingsObservableValue.setValue(fieldToContractInputMappingsObservable);
         final MultiValidator multiValidator = createEmptySelectionMultivalidator(checkedElements);
         dbc.addValidationStatusProvider(multiValidator);
-        dbc.bindValue(checkedObservableValue, mappingsObservableValue,
+        dbc.bindValue(checkedObservableValue, observeInput,
                 updateValueStrategy().withConverter(createMappingsToCheckedElementsConverter(mappingsObservableValue)).create(), updateValueStrategy()
-                        .withConverter(createCheckedElementsToMappingsConverter()).create());
+                        .withConverter(createCheckedElementsToMappingsConverter(checkedElements)).create());
         createButtonComposite(viewerComposite, manager, checkedElements);
 
     }
@@ -285,23 +286,23 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         };
     }
 
-    protected Converter createCheckedElementsToMappingsConverter() {
+    protected Converter createCheckedElementsToMappingsConverter(final IObservableSet checkedElements) {
         return new Converter(WritableList.class, IObservableSet.class) {
 
             @Override
             public Object convert(final Object fromObject) {
-                final IObservableSet set = new WritableSet();
+                checkedElements.clear();
                 for (final FieldToContractInputMapping mapping : mappings) {
                     if (mapping.isGenerated()) {
-                        set.add(mapping);
+                        checkedElements.add(mapping);
                     }
                 }
-                return set;
+                return checkedElements;
             }
         };
     }
 
-    protected MultiValidator createEmptySelectionMultivalidator(final IViewerObservableSet checkedElements) {
+    protected MultiValidator createEmptySelectionMultivalidator(final IObservableSet checkedElements) {
         return new MultiValidator() {
 
             @Override
