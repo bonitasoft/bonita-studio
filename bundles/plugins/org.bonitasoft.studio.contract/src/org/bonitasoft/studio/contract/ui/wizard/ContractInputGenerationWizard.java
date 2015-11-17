@@ -217,7 +217,8 @@ public class ContractInputGenerationWizard extends Wizard {
     protected void openWarningDialog(final boolean allAttributesGenerated) {
         if (!allAttributesGenerated) {
             final String message = contractContainer instanceof Task ? Messages.notAllAttributesGeneratedTaskMsg : Messages.notAllAttributesGeneratedMsg;
-            MessageDialog.openWarning(getShell(), Messages.notAllAttributesGeneratedTitle, message);
+            final String title = contractContainer instanceof Task ? Messages.notAllAttributesGeneratedTaskTitle : Messages.notAllAttributesGeneratedTitle;
+            MessageDialog.openWarning(getShell(), title, message);
         }
     }
 

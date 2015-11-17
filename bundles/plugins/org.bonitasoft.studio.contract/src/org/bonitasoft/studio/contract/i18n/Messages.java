@@ -112,4 +112,5 @@ public class Messages extends NLS {
     public static String selectMandatories;
     public static String mandatoryFieldsNotSelectedWarning;
     public static String mandatoryFieldsNotSelectedStepWarning;
+    public static String notAllAttributesGeneratedTaskTitle;
 }
