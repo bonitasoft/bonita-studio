@@ -19,6 +19,7 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -30,6 +31,7 @@ import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.model.process.AbstractPageFlow;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -179,12 +181,19 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
             public IStatus validate(final Object value) {
                 if (element instanceof Widget) {
                     final Widget widget = (Widget) element;
-                    final List<Widget> widgets = ModelHelper.getAllWidgetInsidePageFlow((PageFlow) ModelHelper.getPageFlow(widget));
+                    final AbstractPageFlow pageFlow = ModelHelper.getPageFlow(widget);
+                    List<Widget> widgets = new ArrayList<Widget>();
+                    if (pageFlow != null) {
+                        widgets = ModelHelper.getAllWidgetInsidePageFlow((PageFlow) pageFlow);
+                    } else {
+                        widgets = ModelHelper.getAllWidgetInsideForm(ModelHelper.getForm((Widget) element));
+                    }
                     for (final Widget wd : widgets) {
                         if (!wd.equals(widget) && wd.getName().equals(value)) {
                             return ValidationStatus.error(Messages.bind(Messages.widgetNameAllreadyExistError, wd.getName()));
                         }
-                    }
+                        }
+
                 }
                 return ValidationStatus.ok();
             }
