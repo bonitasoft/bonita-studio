@@ -35,11 +35,9 @@ import org.bonitasoft.studio.actors.model.organization.util.OrganizationAdapterF
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationResourceFactoryImpl;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationResourceImpl;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
@@ -56,6 +54,8 @@ import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.swt.graphics.Image;
+
+import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
@@ -146,36 +146,11 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
     }
 
     @Override
-    protected Resource getTmpEMFResource(String fileName,final InputStream inputStream) {
-        FileOutputStream fos = null;
-        File tmpFile = null ;
-        try{
+    protected Resource getTmpEMFResource(String fileName, final File originalFile) throws IOException {
             fileName = fileName.replaceAll(".xml", ".organization");
-            tmpFile = File.createTempFile("tmp", fileName, ProjectUtil.getBonitaStudioWorkFolder());
-            fos = new FileOutputStream(tmpFile);
-            FileUtil.copy(inputStream, fos);
-            final Resource resource = new OrganizationResourceFactoryImpl().createResource(URI.createFileURI(tmpFile.getAbsolutePath()));
-            return resource;
-        }catch (final Exception e) {
-            BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-        }finally{
-            if(fos != null){
-                try {
-                    fos.close();
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
-                }
-            }
-            if(inputStream != null){
-                try{
-                    inputStream.close();
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
-                }
-            }
-        }
-
-        return null;
+        final File tmpFile = File.createTempFile("tmp", fileName, ProjectUtil.getBonitaStudioWorkFolder());
+        Files.copy(originalFile, tmpFile);
+        return new OrganizationResourceFactoryImpl().createResource(URI.createFileURI(tmpFile.getAbsolutePath()));
     }
 
 

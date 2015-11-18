@@ -17,7 +17,6 @@ package org.bonitasoft.studio.connectors.repository;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -58,6 +56,8 @@ import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.swt.graphics.Image;
 
+import com.google.common.io.Files;
+
 /**
  * @author Romain Bioteau
  */
@@ -66,6 +66,7 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
     private static final String STORE_NAME = "connectors-conf";
     private static final Set<String> extensions = new HashSet<String>();
     public static final String CONF_EXT = "connectorconfig";
+
     static {
         extensions.add(CONF_EXT);
     }
@@ -178,38 +179,12 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
     }
 
     @Override
-    protected Resource getTmpEMFResource(final String fileName, final InputStream inputStream) {
-        FileOutputStream fos = null;
-        File tmpFile = null;
-        try {
-            tmpFile = File.createTempFile("tmp", fileName,
-                    ProjectUtil.getBonitaStudioWorkFolder());
-            fos = new FileOutputStream(tmpFile);
-            FileUtil.copy(inputStream, fos);
-            final Resource resource = new ConnectorConfigurationResourceFactoryImpl()
-                    .createResource(
-                    URI.createFileURI(tmpFile.getAbsolutePath()));
-            return resource;
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-                }
-            }
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-                }
-            }
-        }
-
-        return null;
+    protected Resource getTmpEMFResource(final String fileName, final File originalFile) throws IOException {
+        final File tmpFile = File.createTempFile("tmp", fileName,
+                ProjectUtil.getBonitaStudioWorkFolder());
+        Files.copy(originalFile, tmpFile);
+        return new ConnectorConfigurationResourceFactoryImpl()
+                .createResource(URI.createFileURI(tmpFile.getAbsolutePath()));
     }
 
     @Override
@@ -219,7 +194,7 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
             final InputStream is = super.handlePreImport(fileName, inputStream);
             copyIs = new CopyInputStream(is);
             final ConnectorConfigurationResourceImpl r = (ConnectorConfigurationResourceImpl) getTmpEMFResource("beforeImport",
-                    copyIs.getCopy());
+                    copyIs.getFile());
             try {
                 r.load(r.getDefaultLoadOptions());
             } catch (final IOException e) {

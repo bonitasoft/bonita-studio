@@ -393,7 +393,7 @@ public class DiagramRepositoryStore extends
             final InputStream is = super.handlePreImport(fileName, inputStream);
             copyIs = new CopyInputStream(is);
             diagramResource = getTmpEMFResource("beforeImport.proc",
-                    copyIs.getCopy());
+                    copyIs.getFile());
 
             diagramResource.load(Collections.EMPTY_MAP);
             if (diagramResource.getContents().isEmpty()) {
