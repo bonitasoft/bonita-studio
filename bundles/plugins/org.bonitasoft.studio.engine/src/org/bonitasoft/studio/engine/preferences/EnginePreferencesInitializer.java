@@ -37,7 +37,7 @@ public class EnginePreferencesInitializer extends AbstractPreferenceInitializer 
         store.setDefault(EnginePreferenceConstants.REMOTE_DEPLOYMENT_CHOICE, EnginePreferenceConstants.STANDARD_MODE);
         store.setDefault(EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR, MessageDialogWithToggle.NEVER);
         store.setDefault(EnginePreferenceConstants.TOGGLE_STATE_FOR_CONTRACT_AND_NOFORM_AND_INITIATOR, MessageDialogWithToggle.NEVER);
-        store.setDefault(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_EXIT_PREF, true);
+        store.setDefault(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_EXIT_PREF, false);
         store.setDefault(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL, false);
         store.setDefault(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true);
     }

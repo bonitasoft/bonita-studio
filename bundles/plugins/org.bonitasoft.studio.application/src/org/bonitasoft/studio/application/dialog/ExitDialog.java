@@ -15,7 +15,11 @@
 package org.bonitasoft.studio.application.dialog;
 
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
+import org.eclipse.core.runtime.IProduct;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -34,13 +38,44 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 
 public class ExitDialog extends MessageDialogWithToggle {
 
-    public static ExitDialog openExitDialog(final Shell parentShell) {
-        final ExitDialog exitDialog = new ExitDialog(parentShell, IDEWorkbenchMessages.PromptOnExitDialog_shellTitle, null, null, WARNING, new String[] {
-                IDialogConstants.OK_LABEL,
-                IDialogConstants.CANCEL_LABEL },
-                0, IDEWorkbenchMessages.PromptOnExitDialog_choice, false);
-        exitDialog.open();
-        return exitDialog;
+    public static MessageDialogWithToggle openExitDialog(final Shell parentShell) {
+        MessageDialogWithToggle dialog = null;
+        if (deleteTenantOnExit()) {
+            dialog = new ExitDialog(parentShell, IDEWorkbenchMessages.PromptOnExitDialog_shellTitle, null, null, WARNING, new String[] {
+                    IDialogConstants.OK_LABEL,
+                    IDialogConstants.CANCEL_LABEL },
+                    0, IDEWorkbenchMessages.PromptOnExitDialog_choice, false);
+            dialog.open();
+        } else {
+            dialog = MessageDialogWithToggle
+                    .openOkCancelConfirm(parentShell,
+                            IDEWorkbenchMessages.PromptOnExitDialog_shellTitle,
+                            exitMessage(),
+                            IDEWorkbenchMessages.PromptOnExitDialog_choice,
+                            false, null, null);
+        }
+        return dialog;
+    }
+
+    private static boolean deleteTenantOnExit() {
+        return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT);
+    }
+
+    protected static String exitMessage() {
+        String productName = null;
+        final IProduct product = Platform.getProduct();
+        if (product != null) {
+            productName = product.getName();
+        }
+        String message = null;
+        if (productName == null) {
+            message = IDEWorkbenchMessages.PromptOnExitDialog_message0;
+        } else {
+            message = NLS.bind(
+                    IDEWorkbenchMessages.PromptOnExitDialog_message1,
+                    productName);
+        }
+        return message;
     }
 
     public ExitDialog(final Shell parentShell, final String dialogTitle, final Image image, final String message, final int dialogImageType,
@@ -89,4 +124,5 @@ public class ExitDialog extends MessageDialogWithToggle {
                         SWT.DEFAULT).applyTo(messageLabel);
         return composite;
     }
+
 }

@@ -16,7 +16,14 @@ package org.bonitasoft.studio.actors.action;
 
 import java.io.FileNotFoundException;
 
+import org.bonitasoft.engine.api.IdentityAPI;
+import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.SearchException;
+import org.bonitasoft.engine.exception.ServerAPIException;
+import org.bonitasoft.engine.exception.UnknownAPITypeException;
+import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.studio.actors.operation.PublishOrganizationOperation;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
@@ -24,6 +31,7 @@ import org.bonitasoft.studio.common.extension.IEngineAction;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 
@@ -44,7 +52,8 @@ public class PublishActiveOrganizationAction implements IEngineAction {
      */
     @Override
     public void run(final APISession session) throws Exception {
-        if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.LOAD_ORGANIZATION)) {
+        if (noOrganizationDeployed(session)
+                || BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.LOAD_ORGANIZATION)) {
             final String artifactId = activeOrganizationProvider.getActiveOrganization();
             final OrganizationRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
             final OrganizationFileStore organizationFileStore = store.getChild(artifactId + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
@@ -57,4 +66,11 @@ public class PublishActiveOrganizationAction implements IEngineAction {
         }
     }
 
+    private boolean noOrganizationDeployed(final APISession session)
+            throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, SearchException {
+        final IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session);
+        return identityAPI.searchUsers(new SearchOptionsBuilder(0, 1).done()).getCount() == 0
+                && identityAPI.searchGroups(new SearchOptionsBuilder(0, 1).done()).getCount() == 0
+                && identityAPI.searchRoles(new SearchOptionsBuilder(0, 1).done()).getCount() == 0;
+    }
 }

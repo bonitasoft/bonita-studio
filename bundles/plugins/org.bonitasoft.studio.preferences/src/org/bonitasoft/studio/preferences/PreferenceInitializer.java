@@ -48,8 +48,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         initDefaultWebPreferences(store, webStore);
 
         store.setDefault(SHOW_CONDITION_ON_TRANSITION, "false");
-        store.setDefault(DELETE_TENANT_ON_EXIT, true);
-        store.setDefault(LOAD_ORGANIZATION, true);
+        store.setDefault(DELETE_TENANT_ON_EXIT, false);
+        store.setDefault(LOAD_ORGANIZATION, false);
         store.setDefault(AUTOMATIC_ID, "true");
 
         initDefaultLocalesPreference(store);
