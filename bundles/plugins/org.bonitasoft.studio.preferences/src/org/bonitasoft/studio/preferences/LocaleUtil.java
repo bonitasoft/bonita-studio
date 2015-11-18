@@ -23,7 +23,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.bonitasoft.studio.common.BonitaHomeUtil;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 
 /**
  * @author Romain Bioteau
@@ -42,7 +42,7 @@ public class LocaleUtil {
     };
 
     public static Locale[] getProtalLocales() {
-        final File portalI18NFolder = BonitaHomeUtil.getPortalI18NFolder();
+        final File portalI18NFolder = RepositoryManager.getInstance().getCurrentRepository().getBonitaHomeHandler().getPortalI18NFolder();
         final String[] poFiles = portalI18NFolder.list(new FilenameFilter() {
 
             @Override

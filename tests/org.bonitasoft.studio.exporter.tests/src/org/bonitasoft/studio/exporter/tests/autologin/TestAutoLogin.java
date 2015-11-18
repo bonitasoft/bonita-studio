@@ -22,8 +22,8 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
-import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.engine.export.BarExporter;
@@ -109,7 +109,7 @@ public class TestAutoLogin {
 
     @Test
     public void testGetSecurityConfigStudio() throws Exception {
-        final File file = BonitaHomeUtil.getDefaultTenantSecurityConfigStudioFile();
+        final File file = RepositoryManager.getInstance().getCurrentRepository().getBonitaHomeHandler().getDefaultTenantSecurityConfigStudioFile();
         assertTrue("Default Studio config file can't be retrieved. It might impact Workspace API.", file.exists());
     }
 }

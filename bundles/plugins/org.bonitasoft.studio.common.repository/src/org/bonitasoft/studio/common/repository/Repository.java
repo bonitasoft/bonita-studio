@@ -39,6 +39,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
+import org.bonitasoft.studio.common.repository.core.BonitaHomeHandler;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaBPMProjectOperation;
 import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
 import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
@@ -99,6 +100,8 @@ public class Repository implements IRepository, IJavaContainer {
     public static final IProgressMonitor NULL_PROGRESS_MONITOR = new NullProgressMonitor();
 
     private static final String CLASS = "class";
+
+    private static final String BONITA_HOME_NAME = "bonita_home";
 
     private final IProject project;
 
@@ -224,6 +227,7 @@ public class Repository implements IRepository, IJavaContainer {
         }
         try {
             projectManifestFactory.createProjectManifest(project, monitor);
+            initBonitaHome(monitor);
             initRepositoryStores(monitor);
             enableBuild();
             bonitaBPMProjectClasspath.create(this, monitor);
@@ -231,6 +235,11 @@ public class Repository implements IRepository, IJavaContainer {
             BonitaStudioLog.error(e);
         }
         return this;
+    }
+
+    protected void initBonitaHome(final IProgressMonitor monitor) throws CoreException {
+        final BonitaHomeHandler bonitaHomeHandler = getBonitaHomeHandler();
+        bonitaHomeHandler.initBonitaHome(monitor);
     }
 
     protected void updateStudioShellText() {
@@ -727,6 +736,11 @@ public class Repository implements IRepository, IJavaContainer {
 
     public IScopeContext getScopeContext() {
         return new ProjectScope(project);
+    }
+
+    @Override
+    public BonitaHomeHandler getBonitaHomeHandler() {
+        return new BonitaHomeHandler(getProject());
     }
 
 }
