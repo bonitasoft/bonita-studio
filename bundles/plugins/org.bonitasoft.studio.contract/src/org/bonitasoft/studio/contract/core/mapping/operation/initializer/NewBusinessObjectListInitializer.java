@@ -17,7 +17,7 @@ package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 import static com.google.common.collect.Iterables.getLast;
 import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameList;
 
-import org.bonitasoft.engine.bdm.BDMQueryUtil;
+import org.bonitasoft.engine.bdm.BDMSimpleNameProvider;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -108,7 +108,7 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
 
     protected void addCommentBeforeAddToList(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
         addCommentLine(scriptBuilder,
-                String.format("Add a new composed %s instance", BDMQueryUtil.getSimpleBusinessObjectName(businessObject.getQualifiedName())));
+                String.format("Add a new composed %s instance", BDMSimpleNameProvider.getSimpleBusinessObjectName(businessObject.getQualifiedName())));
     }
 
     protected String inputListToIterate() {
@@ -116,7 +116,7 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
     }
 
     protected String iteratorName(final BusinessObject bo) {
-        return "current" + BDMQueryUtil.getSimpleBusinessObjectName(bo.getQualifiedName()) + "Input";
+        return "current" + BDMSimpleNameProvider.getSimpleBusinessObjectName(bo.getQualifiedName()) + "Input";
     }
 
     protected void appendExistingBusinessObjects(final StringBuilder scriptBuilder, final String listVarName) {

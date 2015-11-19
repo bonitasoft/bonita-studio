@@ -17,7 +17,7 @@ package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameListUntilMultipleComplex;
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withComplexMultipleInHierarchy;
 
-import org.bonitasoft.engine.bdm.BDMQueryUtil;
+import org.bonitasoft.engine.bdm.BDMSimpleNameProvider;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.common.functions.ContractInputFunctions;
@@ -74,7 +74,7 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
     }
 
     private String iteratorName() {
-        return "current" + BDMQueryUtil.getSimpleBusinessObjectName(parentBusinessObject.getQualifiedName()) + "Input";
+        return "current" + BDMSimpleNameProvider.getSimpleBusinessObjectName(parentBusinessObject.getQualifiedName()) + "Input";
     }
 
     @Override

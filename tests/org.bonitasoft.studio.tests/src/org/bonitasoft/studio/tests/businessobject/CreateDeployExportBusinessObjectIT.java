@@ -216,10 +216,10 @@ public class CreateDeployExportBusinessObjectIT extends SWTBotGefTestCase {
         bot.buttonInGroup("Add", boName).click();
         final SWTBotTable table = bot.tableInGroup(boName);
 
-        table.click(queryIndex, 0);
+        table.click(queryIndex, 1);
         bot.textInGroup("query1", boName).typeText(queryName);
 
-        table.click(queryIndex, 1);
+        table.click(queryIndex, 2);
         bot.button("...").click();
         bot.waitUntil(Conditions.shellIsActive("Create query"));
         bot.styledText().setText(content);

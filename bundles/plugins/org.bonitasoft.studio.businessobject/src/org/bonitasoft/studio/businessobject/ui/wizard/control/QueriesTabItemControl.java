@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,6 +18,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.engine.bdm.BDMQueryUtil;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.Query;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.QueryContentEditingSupport;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.QueryNameEditingSupport;
@@ -46,6 +47,7 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
@@ -57,18 +59,14 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Widget;
 
-import org.bonitasoft.engine.bdm.BDMQueryUtil;
-import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.Query;
-
 /**
  * @author Romain Bioteau
- * 
  */
 public class QueriesTabItemControl extends AbstractTabItemControl {
 
@@ -223,10 +221,25 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         return nameColumnViewer;
     }
 
+    protected TableViewerColumn createStatusColumn(DataBindingContext ctx, IViewerObservableValue viewerObservableValue, TableViewer queriesTableViewer) {
+        TableViewerColumn statusColumn = new TableViewerColumn(queriesTableViewer, SWT.LEFT);
+        statusColumn.setLabelProvider(new QueryStatusLabelProvider(viewerObservableValue));
+        return statusColumn;
+    }
+
     protected Composite createCustomQueriesControl(DataBindingContext ctx, final IViewerObservableValue viewerObservableValue, final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
+
+        Label countQueryInfoLabel = new Label(composite, SWT.WRAP);
+        countQueryInfoLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(50, 0).hint(450, SWT.DEFAULT).create());
+        countQueryInfoLabel.setText(Messages.countQueryInfo);
+
+        ControlDecoration controlDecoration = new ControlDecoration(countQueryInfoLabel, SWT.LEFT);
+        controlDecoration.setImage(composite.getDisplay().getSystemImage(SWT.ICON_INFORMATION));
+        controlDecoration.setMarginWidth(5);
+        controlDecoration.show();
 
         final Composite buttonsComposite = new Composite(composite, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).indent(0, 20).create());
@@ -245,6 +258,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         TableLayout tableLayout = new TableLayout();
         tableLayout.addColumnData(new ColumnWeightData(1));
         tableLayout.addColumnData(new ColumnWeightData(3));
+        tableLayout.addColumnData(new ColumnWeightData(9));
         queriesTableViewer.getTable().setLayout(tableLayout);
 
         UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
@@ -277,6 +291,9 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
             }
         });
 
+        ColumnViewerToolTipSupport.enableFor(queriesTableViewer);
+        
+        createStatusColumn(ctx, viewerObservableValue, queriesTableViewer);
         TableViewerColumn nameColumnViewer = createQueryNameColumn(ctx, queriesTableViewer);
         nameColumnViewer.setEditingSupport(new QueryNameEditingSupport(viewerObservableValue, nameColumnViewer.getViewer(), ctx));
         TableViewerColumn queryContentColumnViewer = createQueryContentColumn(ctx, queriesTableViewer);
