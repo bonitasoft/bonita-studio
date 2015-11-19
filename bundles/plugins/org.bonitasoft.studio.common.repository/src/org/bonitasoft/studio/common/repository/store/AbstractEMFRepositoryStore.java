@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -18,13 +16,11 @@ package org.bonitasoft.studio.common.repository.store;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
@@ -51,72 +47,74 @@ import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 
+import com.google.common.io.Files;
+
 /**
  * @author Romain Bioteau
- *
  */
 public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
-		extends AbstractRepositoryStore<T> implements IRepositoryStore<T> {
+        extends AbstractRepositoryStore<T>implements IRepositoryStore<T> {
 
-	private static final String MIGRATION_HISTORY_PATH = "process.history";
+    private static final String MIGRATION_HISTORY_PATH = "process.history";
 
-	private AdapterFactoryLabelProvider labelProvider;
+    private AdapterFactoryLabelProvider labelProvider;
 
-	private final ComposedAdapterFactory adapterFactory;
+    private final ComposedAdapterFactory adapterFactory;
 
-	private Migrator migrator;
+    private Migrator migrator;
 
-	public AbstractEMFRepositoryStore() {
-		super();
-		adapterFactory = new ComposedAdapterFactory(
-				ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-		adapterFactory
-				.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-		adapterFactory
-				.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-		addAdapterFactory(adapterFactory);
+    public AbstractEMFRepositoryStore() {
+        super();
+        adapterFactory = new ComposedAdapterFactory(
+                ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+        adapterFactory
+                .addAdapterFactory(new ResourceItemProviderAdapterFactory());
+        adapterFactory
+                .addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+        addAdapterFactory(adapterFactory);
 
-	}
+    }
 
-	/**
-	 * public for test purpose
-	 *
-	 * @return
-	 */
-	public Migrator initializeMigrator() {
-		if (migrator == null) {
-			final URI migratorURI = URI.createPlatformPluginURI(
-					getMigrationHistoryPath(), true);
-			try {
-				migrator = new Migrator(migratorURI, new BundleClassLoader(
-						MigrationPlugin.getDefault().getBundle()));
-			} catch (final MigrationException e) {
-				BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-			}
-		}
-		return migrator;
-	}
+    /**
+     * public for test purpose
+     *
+     * @return
+     */
+    public Migrator initializeMigrator() {
+        if (migrator == null) {
+            final URI migratorURI = URI.createPlatformPluginURI(
+                    getMigrationHistoryPath(), true);
+            try {
+                migrator = new Migrator(migratorURI, new BundleClassLoader(
+                        MigrationPlugin.getDefault().getBundle()));
+            } catch (final MigrationException e) {
+                BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+            }
+        }
+        return migrator;
+    }
 
-	protected String getMigrationHistoryPath() {
-		return "/"
-				+ Platform.getBundle("org.bonitasoft.studio-models")
-						.getSymbolicName() + "/" + MIGRATION_HISTORY_PATH;
-	}
+    protected String getMigrationHistoryPath() {
+        return "/"
+                + Platform.getBundle("org.bonitasoft.studio-models")
+                        .getSymbolicName()
+                + "/" + MIGRATION_HISTORY_PATH;
+    }
 
-	public AdapterFactoryLabelProvider getLabelProvider() {
-		if (labelProvider != null) {
-			labelProvider.dispose();
-		}
-		labelProvider = new AdapterFactoryLabelProvider(adapterFactory);
-		return labelProvider;
-	}
+    public AdapterFactoryLabelProvider getLabelProvider() {
+        if (labelProvider != null) {
+            labelProvider.dispose();
+        }
+        labelProvider = new AdapterFactoryLabelProvider(adapterFactory);
+        return labelProvider;
+    }
 
-	protected abstract void addAdapterFactory(
-			ComposedAdapterFactory adapterFactory);
+    protected abstract void addAdapterFactory(
+            ComposedAdapterFactory adapterFactory);
 
     public EditingDomain getEditingDomain(final URI uri) {
         return createAdapterFactoryEditingDomain();
-	}
+    }
 
     public EditingDomain getEditingDomain() {
         return createAdapterFactoryEditingDomain();
@@ -127,143 +125,119 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
                 new BasicCommandStack(), new HashMap<Resource, Boolean>());
     }
 
-	@Override
-	protected InputStream handlePreImport(final String fileName,
-			final InputStream inputStream) throws MigrationException,
-			IOException {
-		final InputStream is = super.handlePreImport(fileName, inputStream);
-		if (fileName.endsWith(".properties")
-				|| fileName.toLowerCase().endsWith(".png")
-				|| fileName.toLowerCase().endsWith(".jpg")
-				|| fileName.toLowerCase().endsWith(".gif")
-				|| fileName.toLowerCase().endsWith(".jpeg")
-				| fileName.toLowerCase().endsWith(".xsd")) {// not an emf
-															// resource
-			return is;
-		}
-		final CopyInputStream copyIs = new CopyInputStream(is);
-		final InputStream originalStream = copyIs.getCopy();
+    @Override
+    protected InputStream handlePreImport(final String fileName,
+            final InputStream inputStream) throws MigrationException,
+                    IOException {
+        final InputStream is = super.handlePreImport(fileName, inputStream);
+        if (fileName.endsWith(".properties")
+                || fileName.toLowerCase().endsWith(".png")
+                || fileName.toLowerCase().endsWith(".jpg")
+                || fileName.toLowerCase().endsWith(".gif")
+                || fileName.toLowerCase().endsWith(".jpeg")
+                        | fileName.toLowerCase().endsWith(".xsd")) {// not an emf
+                                                                                                                                                                                                                                                                                      // resource
+            return is;
+        }
+        final CopyInputStream copyIs = new CopyInputStream(is);
+        final InputStream originalStream = copyIs.getCopy();
 
-		final Resource resource = getTmpEMFResource(fileName, copyIs.getCopy());
-		if (resource == null) {
-			BonitaStudioLog.debug(
-					"Failed to retrieve EMF Resource for migration",
-					CommonRepositoryPlugin.PLUGIN_ID);
-			copyIs.close();
-			return originalStream;
-		}
-		final URI resourceURI = resource.getURI();
-		final File tmpFile = new File(resource.getURI().toFileString());
-		final String nsURI = ReleaseUtils.getNamespaceURI(resourceURI);
+        final Resource resource = getTmpEMFResource(fileName, copyIs.getFile());
+        if (resource == null) {
+            BonitaStudioLog.debug(
+                    "Failed to retrieve EMF Resource for migration",
+                    CommonRepositoryPlugin.PLUGIN_ID);
+            copyIs.close();
+            return originalStream;
+        }
+        final URI resourceURI = resource.getURI();
+        final File tmpFile = new File(resource.getURI().toFileString());
+        final String nsURI = ReleaseUtils.getNamespaceURI(resourceURI);
 
-		if (nsURI == null) {
-			tmpFile.delete();
-			copyIs.close();
-			throw new IOException(fileName);
-		}
+        if (nsURI == null) {
+            tmpFile.delete();
+            copyIs.close();
+            throw new IOException(fileName);
+        }
 
-		final Migrator targetMigrator = getMigrator(nsURI);
-		if (targetMigrator != null) {
-			final Release release = getRelease(targetMigrator, resource);
-			if (release != null && !release.isLatestRelease()) {
-				try {
+        final Migrator targetMigrator = getMigrator(nsURI);
+        if (targetMigrator != null) {
+            final Release release = getRelease(targetMigrator, resource);
+            if (release != null && !release.isLatestRelease()) {
+                try {
                     BonitaStudioLog.debug("Performing migration on " + fileName + " from " + release.getLabel() + " to latest...",
                             CommonRepositoryPlugin.PLUGIN_ID);
-					performMigration(targetMigrator, resourceURI, release);
-				} catch (final MigrationException e) {
-					if (tmpFile != null) {
-						tmpFile.delete();
-					}
-					if (copyIs != null) {
-						copyIs.close();
-					}
-					throw e;
-				}
-				try {
-					copyIs.close();
-					final FileInputStream newIs = new FileInputStream(tmpFile);
-					tmpFile.delete();
-					return newIs;
-				} catch (final Exception e) {
-					BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-					return null;
-				} finally {
-					if (tmpFile != null) {
-						tmpFile.delete();
-					}
-					if (copyIs != null) {
-						copyIs.close();
-					}
-				}
-			}
-		}
+                    performMigration(targetMigrator, resourceURI, release);
+                } catch (final MigrationException e) {
+                    if (tmpFile != null) {
+                        tmpFile.delete();
+                    }
+                    if (copyIs != null) {
+                        copyIs.close();
+                    }
+                    throw e;
+                }
+                try {
+                    copyIs.close();
+                    final FileInputStream newIs = new FileInputStream(tmpFile);
+                    tmpFile.delete();
+                    return newIs;
+                } catch (final Exception e) {
+                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+                    return null;
+                } finally {
+                    if (tmpFile != null) {
+                        tmpFile.delete();
+                    }
+                    if (copyIs != null) {
+                        copyIs.close();
+                    }
+                }
+            }
+        }
 
-		tmpFile.delete();
-		copyIs.close();
-		return originalStream;
-	}
+        tmpFile.delete();
+        copyIs.close();
+        return originalStream;
+    }
 
-	/**
-	 * @param nsURI
-	 * @return
-	 */
-	public Migrator getMigrator(final String nsURI) {
-		Migrator targetMigrator = initializeMigrator();
-		if (migrator.getNsURIs().contains(nsURI)) {
-			targetMigrator = migrator;
-		} else {
-			targetMigrator = MigratorRegistry.getInstance().getMigrator(nsURI);
-		}
-		return targetMigrator;
-	}
+    /**
+     * @param nsURI
+     * @return
+     */
+    public Migrator getMigrator(final String nsURI) {
+        Migrator targetMigrator = initializeMigrator();
+        if (migrator.getNsURIs().contains(nsURI)) {
+            targetMigrator = migrator;
+        } else {
+            targetMigrator = MigratorRegistry.getInstance().getMigrator(nsURI);
+        }
+        return targetMigrator;
+    }
 
-	protected Release getRelease(final Migrator targetMigrator,
-			final Resource resource) {
-		return targetMigrator.getRelease(resource.getURI()).iterator().next();
-	}
+    protected Release getRelease(final Migrator targetMigrator,
+            final Resource resource) {
+        return targetMigrator.getRelease(resource.getURI()).iterator().next();
+    }
 
-	protected void performMigration(final Migrator migrator,
-			final URI resourceURI, final Release release)
-			throws MigrationException {
-		migrator.setLevel(ValidationLevel.RELEASE);
-		migrator.migrateAndSave(Collections.singletonList(resourceURI),
-				release, null, Repository.NULL_PROGRESS_MONITOR);
-	}
+    protected void performMigration(final Migrator migrator,
+            final URI resourceURI, final Release release)
+                    throws MigrationException {
+        migrator.setLevel(ValidationLevel.RELEASE);
+        migrator.migrateAndSave(Collections.singletonList(resourceURI),
+                release, null, Repository.NULL_PROGRESS_MONITOR);
+    }
 
-	protected Resource getTmpEMFResource(final String fileName,
-			final InputStream inputStream) {
-		final EditingDomain editingDomain = getEditingDomain();
-		FileOutputStream fos = null;
-		File tmpFile = null;
-		try {
-			tmpFile = File.createTempFile("tmp", fileName,
-					ProjectUtil.getBonitaStudioWorkFolder());
-			fos = new FileOutputStream(tmpFile);
-			FileUtil.copy(inputStream, fos);
-			final Resource resource = editingDomain.getResourceSet()
-					.createResource(
-							URI.createFileURI(tmpFile.getAbsolutePath()));
-			return resource;
-		} catch (final Exception e) {
-			BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-		} finally {
-			if (fos != null) {
-				try {
-					fos.close();
-				} catch (final IOException e) {
-					BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-				}
-			}
-			if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (final IOException e) {
-					BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-				}
-			}
-		}
+    protected Resource getTmpEMFResource(final String fileName,
+            final File originalFile) throws IOException {
+        final EditingDomain editingDomain = getEditingDomain();
+        final File tmpFile = File.createTempFile("tmp", fileName,
+                ProjectUtil.getBonitaStudioWorkFolder());
+        Files.copy(originalFile, tmpFile);
+        return editingDomain.getResourceSet()
+                .createResource(
+                        URI.createFileURI(tmpFile.getAbsolutePath()));
 
-		return null;
-	}
+    }
 
 }

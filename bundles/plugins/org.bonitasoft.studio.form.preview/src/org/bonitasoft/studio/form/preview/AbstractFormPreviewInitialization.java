@@ -99,22 +99,28 @@ public abstract class AbstractFormPreviewInitialization {
         return proc;
     }
 
-    /**
-     * @param configuration
-     * @param proc
-     */
     protected void initializeProcessActor(final Configuration configuration, final AbstractProcess proc) {
+        AbstractProcess parentProcess = null;
         if (form.eContainer() instanceof AbstractProcess) {
-            final AbstractProcess parentProcess = (AbstractProcess) form.eContainer();
-            if (parentProcess.getActors().isEmpty()) {
-                canPreview = false;
-                openNoActorErrorMessage(parentProcess);
-
-            } else {
-                copyActors(parentProcess, proc);
-                setActorMapping(parentProcess, configuration);
-            }
+            parentProcess = (AbstractProcess) form.eContainer();
+        } else {
+            parentProcess = ProcessFactory.eINSTANCE.createPool();
+            parentProcess.setName("Preview template");
+            parentProcess.setVersion("1.0");
+            final Actor actor = ProcessFactory.eINSTANCE.createActor();
+            actor.setInitiator(true);
+            actor.setName("preview");
+            parentProcess.getActors().add(actor);
         }
+        if (parentProcess.getActors().isEmpty()) {
+            canPreview = false;
+            openNoActorErrorMessage(parentProcess);
+
+        } else {
+            copyActors(parentProcess, proc);
+            setActorMapping(parentProcess, configuration);
+        }
+
     }
 
     /**
@@ -179,11 +185,12 @@ public abstract class AbstractFormPreviewInitialization {
                 ProcessConfigurationRepositoryStore.class);
         final String id = ModelHelper.getEObjectID(proc);
         final ProcessConfigurationFileStore configurationFileStore = configurationStore.getChild(id + ".conf");
-        final Configuration configuration = configurationFileStore.getContent();
-        ActorMappingsType actorMapping = EcoreUtil.copy(configuration.getActorMappings());
+        ActorMappingsType actorMapping = null;
+        if (configurationFileStore != null) {
+            final Configuration configuration = configurationFileStore.getContent();
+            actorMapping = EcoreUtil.copy(configuration.getActorMappings());
+        }
         if (actorMapping == null) {
-            //MessageDialog.openError(Display.getCurrent().getActiveShell(),Messages.noActorMappingDefinedTitle ,  Messages.noActorMappingDefined);
-            //canPreview = false;
             actorMapping = ActorMappingFactory.eINSTANCE.createActorMappingsType();
             final ActorMapping newMapping = ActorMappingFactory.eINSTANCE.createActorMapping();
             newMapping.setName(proc.getActors().get(0).getName());
@@ -229,8 +236,7 @@ public abstract class AbstractFormPreviewInitialization {
             handleParameterExpression(expr);
         } else if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())) {
             handleScriptExpression(expr);
-        }
-        else if (!ExpressionConstants.CONSTANT_TYPE.equals(expr.getType())) {
+        } else if (!ExpressionConstants.CONSTANT_TYPE.equals(expr.getType())) {
             toEmptyConstantExpression(expr);
         }
         return expr;

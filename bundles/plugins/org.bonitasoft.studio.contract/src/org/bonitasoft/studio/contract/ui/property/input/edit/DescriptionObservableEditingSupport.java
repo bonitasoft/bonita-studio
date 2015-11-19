@@ -46,4 +46,16 @@ public class DescriptionObservableEditingSupport extends CustomTextEMFObservable
                 .withValidator(maxLengthValidator(Messages.description, INPUT_DESC_MAX_LENGTH)).create();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport#canEdit(java.lang.Object)
+     */
+    @Override
+    protected boolean canEdit(Object element) {
+        if (getViewer().isCellEditorActive()) {
+            return false;
+        }
+        return super.canEdit(element);
+    }
+
 }
