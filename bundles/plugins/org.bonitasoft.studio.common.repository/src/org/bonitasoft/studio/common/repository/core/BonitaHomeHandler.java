@@ -32,7 +32,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BonitaHomeHandler {
 
-    private static final String BONITA_HOME = "bonita_home";
+    public static final String BONITA_HOME = "bonita_home";
     private final IProject project;
 
     public BonitaHomeHandler(IProject project) {
