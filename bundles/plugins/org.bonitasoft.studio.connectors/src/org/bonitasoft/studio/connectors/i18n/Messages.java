@@ -181,6 +181,8 @@ public class Messages extends NLS {
     public static String selectMoveOrCopyAction;
     public static String copy;
 
+    public static String providedDefinitionAlreadyExists;
+
     /**
      * @param event
      * @return
