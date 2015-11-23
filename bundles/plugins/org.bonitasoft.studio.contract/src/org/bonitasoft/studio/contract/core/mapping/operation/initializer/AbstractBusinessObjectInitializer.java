@@ -25,7 +25,6 @@ import java.util.Set;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 
 import com.google.common.base.Function;
@@ -67,9 +66,7 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
 
     @Override
     public String getInitialValue() throws BusinessObjectInstantiationException {
-        final BusinessObject businessObject = ((RelationField) context.getField()).getReference();
-        checkNotNullableFields(businessObject);
-
+        final BusinessObject businessObject = context.getField().getReference();
         final StringBuilder scriptBuilder = new StringBuilder();
         addCommentBeforeConstructor(scriptBuilder, businessObject);
         final String localVariableName = context.getLocalVariableName();

@@ -14,13 +14,13 @@
 		<tychoExtrasVersion>0.21.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>7.2.0-SNAPSHOT</bundle.version>
-        <ui.designer.version>1.2.1</ui.designer.version>
+        <ui.designer.version>1.2.3</ui.designer.version>
 		<engine.version>7.2.0-SNAPSHOT</engine.version>
 		<connector.version>6.1.1</connector.version>
 		<simulation.version>6.1.0</simulation.version>
 		<filters.version>7.2.0-SNAPSHOT</filters.version>
 		<theme.builder.version>6.1.0</theme.builder.version>
-		<watchdog.version>6.0.1</watchdog.version>
+		<watchdog.version>7.2.0</watchdog.version>
 		<p2MirrorUrl>http://repositories.rd.lan/p2/7.2</p2MirrorUrl>
 		<!-- Sonar -->
 		<jacoco.version>0.7.2.201409121644</jacoco.version>
@@ -275,7 +275,7 @@
 			<properties>
 				<os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
 			</properties>
-		</profile>		
+		</profile>
 		<profile>
 			<id>tag-trunk</id>
 			<build>

@@ -113,6 +113,7 @@ public class AbstractFormPreviewInitializationTest {
     public void should_process_have_a_legacy_form_mapping() {
         final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
         doNothing().when(formPreviewInit).openNoActorErrorMessage(any(Element.class));
+        doNothing().when(formPreviewInit).initializeProcessActor(any(Configuration.class), any(AbstractProcess.class));
         final AbstractProcess process = formPreviewInit.createAbstractProcess(configuration);
         assertThat(process.getFormMapping().getType()).isEqualTo(FormMappingType.LEGACY);
     }

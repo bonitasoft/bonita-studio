@@ -14,40 +14,25 @@
  */
 package org.bonitasoft.studio.contract.ui.wizard.labelProvider;
 
-import org.bonitasoft.engine.bdm.BDMSimpleNameProvider;
-import org.bonitasoft.engine.bdm.model.field.Field;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 
 /**
  * @author aurelie
  */
-public class FieldTypeColumnLabelProvider extends ColumnLabelProvider {
+public class MandatoryColumnLabelProvider extends ColumnLabelProvider {
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+     */
     @Override
     public String getText(final Object element) {
         if (element instanceof FieldToContractInputMapping) {
-            final Field field = ((FieldToContractInputMapping) element).getField();
-            return typeLabel(field);
+            final FieldToContractInputMapping mapping = (FieldToContractInputMapping) element;
+            return Boolean.valueOf(!mapping.getField().isNullable()).toString();
         }
         return super.getText(element);
     }
 
-    private String typeLabel(final Field field) {
-        final StringBuilder sb = new StringBuilder();
-        if (field.isCollection()) {
-            sb.append("List<");
-        }
-        if (field instanceof SimpleField) {
-            sb.append(((SimpleField) field).getType().name());
-        } else if (field instanceof RelationField) {
-            sb.append(BDMSimpleNameProvider.getSimpleBusinessObjectName(((RelationField) field).getReference().getQualifiedName()));
-        }
-        if (field.isCollection()) {
-            sb.append(">");
-        }
-        return sb.toString();
-    }
 }

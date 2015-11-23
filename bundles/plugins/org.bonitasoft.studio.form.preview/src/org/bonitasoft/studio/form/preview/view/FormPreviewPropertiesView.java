@@ -213,20 +213,23 @@ public class FormPreviewPropertiesView extends ViewPart {
         if (advancedFormPreview != null) {
             advancedFormPreview.setForm(form);
         }
-        //webBrowserCombo.setSelection(new StructuredSelection(BrowserManager.getInstance().getCurrentWebBrowser()));
     }
 
     private ApplicationLookNFeelFileStore getCurrentLookNFeel() {
         if (getSite().getPage().getActiveEditor() instanceof FormDiagramEditor) {
+            final String themeId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                    .getString(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME);
             final Form form = (Form) ((FormDiagramEditor) getSite().getPage().getActiveEditor()).getDiagramEditPart().resolveSemanticElement();
             final AbstractProcess process = ModelHelper.getParentProcess(form);
-            ApplicationLookNFeelFileStore lnfStore = (ApplicationLookNFeelFileStore) repositoryStore.getChild(process.getBasedOnLookAndFeel());
-            if (lnfStore == null) {
-                final String themeId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                        .getString(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME);
-                lnfStore = (ApplicationLookNFeelFileStore) repositoryStore.getChild(themeId);
+
+            if (process != null) {
+                ApplicationLookNFeelFileStore lnfStore = (ApplicationLookNFeelFileStore) repositoryStore.getChild(process.getBasedOnLookAndFeel());
+                if (lnfStore == null) {
+                    lnfStore = (ApplicationLookNFeelFileStore) repositoryStore.getChild(themeId);
+                }
+                return lnfStore;
             }
-            return lnfStore;
+            return (ApplicationLookNFeelFileStore) repositoryStore.getChild(themeId);
         }
         return null;
     }

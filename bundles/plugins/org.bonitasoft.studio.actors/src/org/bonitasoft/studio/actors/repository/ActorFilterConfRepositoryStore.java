@@ -173,7 +173,7 @@ public class ActorFilterConfRepositoryStore extends AbstractEMFRepositoryStore<D
             final InputStream is = super.handlePreImport(fileName, inputStream);
             copyIs = new CopyInputStream(is);
             final Resource r = getTmpEMFResource("beforeImport.connectorconfig",
-                    copyIs.getCopy());
+                    copyIs.getFile());
             try {
                 r.load(Collections.EMPTY_MAP);
             } catch (final IOException e) {
