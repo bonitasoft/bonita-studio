@@ -19,7 +19,7 @@ import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.wit
 
 import java.util.Objects;
 
-import org.bonitasoft.engine.bdm.BDMQueryUtil;
+import org.bonitasoft.engine.bdm.BDMSimpleNameProvider;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
@@ -50,7 +50,7 @@ public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitia
         addCommentLine(
                 scriptBuilder,
                 String.format("Retrieve aggregated %s using its DAO and persistenceId",
-                        BDMQueryUtil.getSimpleBusinessObjectName(businessObject.getQualifiedName())));
+                		BDMSimpleNameProvider.getSimpleBusinessObjectName(businessObject.getQualifiedName())));
     }
 
     @Override
@@ -83,7 +83,7 @@ public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitia
     }
 
     private String daoName(final BusinessObject bo) {
-        return uncapitalizeFirst(BDMQueryUtil.getSimpleBusinessObjectName(bo.getQualifiedName())) + "DAO";
+        return uncapitalizeFirst(BDMSimpleNameProvider.getSimpleBusinessObjectName(bo.getQualifiedName())) + "DAO";
     }
 
     @Override
