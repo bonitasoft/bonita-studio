@@ -105,6 +105,7 @@ public class ContractIT extends SWTBotGefTestCase {
         constraintRow.setName("Check empty report");
         constraintRow.setExpression("expenseReport.expenseLines.size() > 0");
         constraintRow.setErrorMessages("An expense report must have at lease one expense line");
+        contractTabBot.selectConstraintTab(); // FIXME: For new CI, change focus to 'validate' model. Otherwise default row remains in model.
 
         bot.waitUntil(new AssertionCondition() {
 
