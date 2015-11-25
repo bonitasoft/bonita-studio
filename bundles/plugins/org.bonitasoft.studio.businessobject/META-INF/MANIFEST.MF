@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Business Object Plugin
 Bundle-Localization: plugin
 Bundle-SymbolicName: org.bonitasoft.studio.businessobject;singleton:=true
-Bundle-Version: 7.1.3.qualifier
+Bundle-Version: 7.1.4.qualifier
 Bundle-Activator: org.bonitasoft.studio.businessobject.BusinessObjectPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

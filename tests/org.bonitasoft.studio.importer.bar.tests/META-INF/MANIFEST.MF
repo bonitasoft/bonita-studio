@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bar Importer Tests
 Bundle-SymbolicName: org.bonitasoft.studio.importer.bar.tests
-Bundle-Version: 7.1.3.qualifier
+Bundle-Version: 7.1.4.qualifier
 Bundle-Activator: org.bonitasoft.studio.importer.bar.tests.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.core.runtime,
