@@ -36,7 +36,6 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
@@ -50,8 +49,6 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
-
-import com.google.common.base.Preconditions;
 
 
 public class DeployBDMOperation implements IRunnableWithProgress {
@@ -86,7 +83,6 @@ public class DeployBDMOperation implements IRunnableWithProgress {
      */
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        Preconditions.checkState(!PlatformUtil.isHeadless());
         login(monitor);
         synchronized (deployLock) {
             doDeployBDM(monitor);
@@ -148,7 +144,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
                 final Map<String, Object> data = new HashMap<>();
                 data.put(MODEL, bom);
                 data.put(BDM_DAO, jarContent.get(BDM_DAO));
-                eventBroker().post(BDM_DEPLOYED_TOPIC, data);
+                eventBroker().send(BDM_DEPLOYED_TOPIC, data);
             } else {
                 removeDependency();
             }
