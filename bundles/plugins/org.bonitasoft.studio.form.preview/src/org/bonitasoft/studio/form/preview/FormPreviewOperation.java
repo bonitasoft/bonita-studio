@@ -48,6 +48,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
@@ -89,15 +90,16 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 
     private final ApplicationLookNFeelFileStore lookNFeel;
     private final IBrowserDescriptor browser;
-    private static String lastProcessDeployed;
     private static final int MAX_IT = 100;
     private TransactionalEditingDomain editingDomain;
     private final AbstractFormPreviewInitialization formPreviewInit;
+    private final ActiveOrganizationProvider activeOrganizationProvider;
 
     public FormPreviewOperation(final AbstractFormPreviewInitialization formPreviewInit) {
         this.formPreviewInit = formPreviewInit;
         lookNFeel = formPreviewInit.getLookNFeel();
         browser = formPreviewInit.getBrowser();
+        activeOrganizationProvider = new ActiveOrganizationProvider();
     }
 
     /*
@@ -150,7 +152,6 @@ public class FormPreviewOperation implements IRunnableWithProgress {
             } finally {
                 if (session != null) {
                     BOSEngineManager.getInstance().logoutDefaultTenant(session);
-                    lastProcessDeployed = proc.getName();
                 }
             }
         }
@@ -159,8 +160,8 @@ public class FormPreviewOperation implements IRunnableWithProgress {
     protected void handleTaskForm(final IProgressMonitor monitor, final APISession session, final ProcessAPI processApi, final long procId,
             final Configuration configuration,
             final AbstractProcess proc, final ExternalBrowserInstance browserInstance) throws BonitaHomeNotSetException, ServerAPIException,
-            UnknownAPITypeException, UserNotFoundException, ProcessDefinitionNotFoundException, ProcessActivationException, ProcessExecutionException,
-            InterruptedException, UpdateException, UnsupportedEncodingException, MalformedURLException {
+                    UnknownAPITypeException, UserNotFoundException, ProcessDefinitionNotFoundException, ProcessActivationException, ProcessExecutionException,
+                    InterruptedException, UpdateException, UnsupportedEncodingException, MalformedURLException {
         final IdentityAPI identityApi = BOSEngineManager.getInstance().getIdentityAPI(session);
         final long userId = identityApi.getUserByUserName(BonitaConstants.STUDIO_TECHNICAL_USER_NAME).getId();
         final ProcessInstance procInstance = processApi.startProcess(procId);
@@ -226,8 +227,8 @@ public class FormPreviewOperation implements IRunnableWithProgress {
             userName = configuration.getUsername();
             password = configuration.getPassword();
         } else {
-            userName = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_NAME);
-            password = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_PASSWORD);
+            userName = activeOrganizationProvider.getDefaultUser();
+            password = activeOrganizationProvider.getDefaultPassword();
         }
         return generateLoginUrl(userName, password);
     }
