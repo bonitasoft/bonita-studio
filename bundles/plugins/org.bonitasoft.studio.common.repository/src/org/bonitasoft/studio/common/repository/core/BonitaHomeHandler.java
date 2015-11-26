@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BonitaHomeHandler {
 
+    private static final String TENANT_ID = "1";
     public static final String BONITA_HOME = "bonita_home";
     private final IProject project;
 
@@ -41,11 +42,11 @@ public class BonitaHomeHandler {
     }
 
     public void cleanTenant() {
-        final File bonitaServerFile = Paths.get(getRoot(), "engine-server", "work", "tenants", "1").toFile();
+        final File bonitaServerFile = Paths.get(getRoot(), "engine-server", "work", "tenants", TENANT_ID).toFile();
         PlatformUtil.delete(bonitaServerFile, null);
-        final File bonitaClientFile = Paths.get(getRoot(), "engine-client", "work", "tenants", "1").toFile();
+        final File bonitaClientFile = Paths.get(getRoot(), "engine-client", "work", "tenants", TENANT_ID).toFile();
         PlatformUtil.delete(bonitaClientFile, null);
-        final File bonitaWebClientFile = Paths.get(getRoot(), "client", "tenants", "1").toFile();
+        final File bonitaWebClientFile = Paths.get(getRoot(), "client", "tenants", TENANT_ID).toFile();
         PlatformUtil.delete(bonitaWebClientFile, null);
         final File platformTomcatConfig = Paths.get(getRoot(), "client", "platform", "conf", "platform-tenant-config.properties").toFile();
         PlatformUtil.delete(platformTomcatConfig, null);
@@ -147,6 +148,6 @@ public class BonitaHomeHandler {
     }
 
     public IFile getCustomPermissionMappingFile() {
-        return project.getFile(BONITA_HOME + "/client/tenants/1/conf/custom-permissions-mapping.properties");
+        return project.getFile(BONITA_HOME + "/client/tenants/" + TENANT_ID + "/conf/custom-permissions-mapping.properties");
     }
 }
