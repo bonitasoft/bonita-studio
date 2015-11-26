@@ -18,8 +18,10 @@ import java.util.List;
 
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -33,27 +35,32 @@ public class EmptySelectionMultivalidator extends MultiValidator {
     private final IObservableSet checkedElements;
     private List<FieldToContractInputMapping> mappings;
     private final EObject container;
+    private final WritableValue selectedDataObservable;
 
-    public EmptySelectionMultivalidator(final IObservableSet checkedElements, final List<FieldToContractInputMapping> mappings, final EObject container) {
+    public EmptySelectionMultivalidator(final WritableValue selectedDataObservable, final IObservableSet checkedElements,
+            final List<FieldToContractInputMapping> mappings, final EObject container) {
         this.checkedElements = checkedElements;
         this.mappings = mappings;
         this.container = container;
+        this.selectedDataObservable = selectedDataObservable;
     }
 
     @Override
     protected IStatus validate() {
-        if (checkedElements.isEmpty()) {
-            return ValidationStatus.error(Messages.atLeastOneAttributeShouldBeSelectedError);
-        } else {
-            final StringBuilder sb = new StringBuilder();
-            validateMandatoryFieldsNotSelected(sb, mappings, checkedElements);
-            if (sb.length() > 0) {
-                if (sb.indexOf(",") == sb.lastIndexOf(",")) {
-                    sb.replace(sb.lastIndexOf(","), sb.lastIndexOf(",") + 1, "");
+        if (selectedDataObservable.getValue() instanceof BusinessObjectData) {
+            if (checkedElements.isEmpty()) {
+                return ValidationStatus.error(Messages.atLeastOneAttributeShouldBeSelectedError);
+            } else {
+                final StringBuilder sb = new StringBuilder();
+                validateMandatoryFieldsNotSelected(sb, mappings, checkedElements);
+                if (sb.length() > 0) {
+                    if (sb.indexOf(",") == sb.lastIndexOf(",")) {
+                        sb.replace(sb.lastIndexOf(","), sb.lastIndexOf(",") + 1, "");
+                    }
+                    final String message = container instanceof Task ? Messages.mandatoryFieldsNotSelectedStepWarning
+                            : Messages.mandatoryFieldsNotSelectedWarning;
+                    return ValidationStatus.warning(Messages.bind(message, sb.toString()));
                 }
-                final String message = container instanceof Task ? Messages.mandatoryFieldsNotSelectedStepWarning
-                        : Messages.mandatoryFieldsNotSelectedWarning;
-                return ValidationStatus.warning(Messages.bind(message, sb.toString()));
             }
         }
         return ValidationStatus.ok();

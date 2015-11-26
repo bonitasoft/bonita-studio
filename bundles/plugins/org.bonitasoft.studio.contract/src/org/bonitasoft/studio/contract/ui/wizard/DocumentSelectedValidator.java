@@ -16,11 +16,8 @@ package org.bonitasoft.studio.contract.ui.wizard;
 
 import java.util.List;
 
-import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.Document;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
@@ -28,40 +25,39 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-public final class BusinessDataSelectedValidator extends MultiValidator {
+/**
+ * @author aurelie
+ */
+public class DocumentSelectedValidator extends MultiValidator {
 
-    private final List<Data> availableBusinessData;
     private final WritableValue selectedDataObservable;
-    private final BusinessObjectModelRepositoryStore businessObjectStore;
+    private final List<Document> availableDocuments;
     private final SelectObservableValue selectionTypeObservable;
 
-    public BusinessDataSelectedValidator(final List<Data> availableBusinessData, final WritableValue selectedDataObservable,
-            final SelectObservableValue selectionTypeObservable,
-            final BusinessObjectModelRepositoryStore businessObjectStore) {
-        this.availableBusinessData = availableBusinessData;
+    public DocumentSelectedValidator(final WritableValue selectedDataObservable, final SelectObservableValue selectionTypeObservable,
+            final List<Document> availableDocuments) {
         this.selectedDataObservable = selectedDataObservable;
+        this.availableDocuments = availableDocuments;
         this.selectionTypeObservable = selectionTypeObservable;
-        this.businessObjectStore = businessObjectStore;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.core.databinding.validation.MultiValidator#validate()
+     */
     @Override
     protected IStatus validate() {
         final Object selectedData = selectedDataObservable.getValue();
-        if (selectedData != null && selectedData instanceof BusinessObjectData) {
-            final BusinessObjectData value = (BusinessObjectData) selectedData;
-            return toBusinessObject(value) != null ? Status.OK_STATUS : ValidationStatus.error(Messages.invalidBusinessDataSelected);
+        if (selectedData != null && selectedData instanceof Document) {
+            return selectedData != null ? Status.OK_STATUS : ValidationStatus.error(Messages.invalidBusinessDataSelected);
         } else {
-            if (availableBusinessData.isEmpty()) {
-                return selectionTypeObservable.getValue().equals(Boolean.TRUE) ? ValidationStatus.warning(Messages.warningAddFromData_noDataAvailable)
+            if (availableDocuments.isEmpty()) {
+                return selectionTypeObservable.getValue().equals(Boolean.FALSE) ? ValidationStatus.warning(Messages.warningAddFromData_noDocumentAvailable)
                         : Status.OK_STATUS;
             } else {
-                return selectionTypeObservable.getValue().equals(Boolean.TRUE) ? ValidationStatus.warning(Messages.warningAddFromData_noDataSelected)
+                return selectionTypeObservable.getValue().equals(Boolean.FALSE) ? ValidationStatus.warning(Messages.warningAddFromData_noDocumentSelected)
                         : Status.OK_STATUS;
             }
         }
-    }
-
-    private BusinessObject toBusinessObject(final BusinessObjectData selectedData) {
-        return businessObjectStore.getBusinessObjectByQualifiedName(selectedData.getClassName());
     }
 }
