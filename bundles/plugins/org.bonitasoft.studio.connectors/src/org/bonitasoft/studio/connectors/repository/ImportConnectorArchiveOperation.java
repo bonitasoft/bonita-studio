@@ -18,8 +18,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.NamingUtils;
@@ -34,7 +37,10 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.connector.model.definition.DocumentRoot;
+import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionResourceFactoryImpl;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
@@ -42,11 +48,16 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
  * @author Romain Bioteau
  */
-public class ImportConnectorArchiveOperation {
+public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
 
     private File zipFile;
 
@@ -85,13 +96,18 @@ public class ImportConnectorArchiveOperation {
         }
     };
 
+    private IStatus status = Status.OK_STATUS;
+
     public void setFile(final File file) {
         zipFile = file;
     }
 
-    public IStatus run(final IProgressMonitor monitor) {
+    @Override
+    public void run(final IProgressMonitor monitor) {
+        monitor.beginTask(Messages.importingConnectorArchive, IProgressMonitor.UNKNOWN);
         if (zipFile == null) {
-            return ValidationStatus.error("input file not set");
+            status = ValidationStatus.error("input file not set");
+            return;
         }
         final File tmp = new File(ProjectUtil.getBonitaStudioWorkFolder(), "tmpImportConnectorDir");
         tmp.delete();
@@ -102,10 +118,10 @@ public class ImportConnectorArchiveOperation {
             BonitaStudioLog.error(e);
         }
 
-        final IStatus status = readManifest(tmp);
+        status = readManifest(tmp);
         if (status.getSeverity() != IStatus.OK) {
             PlatformUtil.delete(tmp, monitor);
-            return status;
+            return;
         }
 
         try {
@@ -116,7 +132,10 @@ public class ImportConnectorArchiveOperation {
         } finally {
             FileActionDialog.deactivateYesNoToAll();
         }
-        return Status.OK_STATUS;
+    }
+
+    public IStatus getStatus() {
+        return status;
     }
 
     private IStatus readManifest(final File tmp) {
@@ -198,23 +217,56 @@ public class ImportConnectorArchiveOperation {
             final File defFile = files[0];
             final IRepositoryStore defStore = getDefinitionStore();
             IRepositoryFileStore fileStore = null;
-            try {
-                final FileInputStream fis = new FileInputStream(defFile);
-                fileStore = defStore.importInputStream(defFile.getName(), fis);
-                fis.close();
+            try (final FileInputStream fis = new FileInputStream(defFile);) {
+                final ConnectorDefinition connectorDefinition = toConnectorDefinition(defFile);
+                if (connectorDefinition == null) {
+                    fileStore = defStore.importInputStream(defFile.getName(), fis);
+                } else {
+                    final IRepositoryFileStore existingDef = defStore.getChild(defFile.getName());
+                    if (existingDef == null || !existingDef.isReadOnly()
+                            || !defintionHasIdAndVersion(existingDef, connectorDefinition.getId(), connectorDefinition.getVersion())) {
+                        fileStore = defStore.importInputStream(defFile.getName(), fis);
+                    } else {
+                        status = ValidationStatus.warning(Messages.bind(Messages.providedDefinitionAlreadyExists, existingDef.getDisplayName()));
+                    }
+                }
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);
             }
-            importIcons(tmpDir);
-            importMessages(tmpDir);
             if (fileStore != null) {
-                try {
-                    importDefinitionDependencies(tmpDir, (ConnectorDefinition) fileStore.getContent());
-                } catch (final ReadFileStoreException e) {
-                    BonitaStudioLog.error("Failed to read connector implementation", e);
+                importIcons(tmpDir);
+                importMessages(tmpDir);
+                if (fileStore != null) {
+                    try {
+                        importDefinitionDependencies(tmpDir, (ConnectorDefinition) fileStore.getContent());
+                    } catch (final ReadFileStoreException e) {
+                        BonitaStudioLog.error("Failed to read connector implementation", e);
+                    }
                 }
             }
         }
+    }
+
+    protected ConnectorDefinition toConnectorDefinition(final File defFile) {
+        final Resource r = new ConnectorDefinitionResourceFactoryImpl().createResource(URI.createFileURI(defFile.getAbsolutePath()));
+        try {
+            r.load(Collections.emptyMap());
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
+        }
+        final EList<EObject> contents = r.getContents();
+        if (!contents.isEmpty()) {
+            final DocumentRoot documentRoot = (DocumentRoot) contents.get(0);
+            if (documentRoot != null) {
+                return documentRoot.getConnectorDefinition();
+            }
+        }
+        return null;
+    }
+
+    private boolean defintionHasIdAndVersion(IRepositoryFileStore definition, String id, String version) throws ReadFileStoreException {
+        final ConnectorDefinition content = (ConnectorDefinition) definition.getContent();
+        return Objects.equals(id, content.getId()) && Objects.equals(version, content.getVersion());
     }
 
     private void importMessages(final File tmpDir) {
