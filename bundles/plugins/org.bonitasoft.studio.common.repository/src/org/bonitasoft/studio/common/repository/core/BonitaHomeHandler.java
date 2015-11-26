@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -32,19 +33,20 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BonitaHomeHandler {
 
+    private static final String TENANT_ID = "1";
     public static final String BONITA_HOME = "bonita_home";
     private final IProject project;
 
-    public BonitaHomeHandler(IProject project) {
+    public BonitaHomeHandler(final IProject project) {
         this.project = project;
     }
 
     public void cleanTenant() {
-        final File bonitaServerFile = Paths.get(getRoot(), "engine-server", "work", "tenants", "1").toFile();
+        final File bonitaServerFile = Paths.get(getRoot(), "engine-server", "work", "tenants", TENANT_ID).toFile();
         PlatformUtil.delete(bonitaServerFile, null);
-        final File bonitaClientFile = Paths.get(getRoot(), "engine-client", "work", "tenants", "1").toFile();
+        final File bonitaClientFile = Paths.get(getRoot(), "engine-client", "work", "tenants", TENANT_ID).toFile();
         PlatformUtil.delete(bonitaClientFile, null);
-        final File bonitaWebClientFile = Paths.get(getRoot(), "client", "tenants", "1").toFile();
+        final File bonitaWebClientFile = Paths.get(getRoot(), "client", "tenants", TENANT_ID).toFile();
         PlatformUtil.delete(bonitaWebClientFile, null);
         final File platformTomcatConfig = Paths.get(getRoot(), "client", "platform", "conf", "platform-tenant-config.properties").toFile();
         PlatformUtil.delete(platformTomcatConfig, null);
@@ -85,11 +87,11 @@ public class BonitaHomeHandler {
         return Paths.get(getRoot(), "engine-server", "work", "platform").toFile();
     }
 
-    public String getRoot(){
+    public String getRoot() {
         return project.getFile(BONITA_HOME).getLocation().toFile().getAbsolutePath();
     }
 
-    public void initBonitaHome(IProgressMonitor monitor) throws CoreException {
+    public void initBonitaHome(final IProgressMonitor monitor) throws CoreException {
         final File bonitaHome = new File(getRoot());
         if (!bonitaHome.exists()) {
             final URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat/bonita");
@@ -143,5 +145,9 @@ public class BonitaHomeHandler {
                 + File.separator + "platform"
                 + File.separator + "work"
                 + File.separator + "i18n");
+    }
+
+    public IFile getCustomPermissionMappingFile() {
+        return project.getFile(BONITA_HOME + "/client/tenants/" + TENANT_ID + "/conf/custom-permissions-mapping.properties");
     }
 }
