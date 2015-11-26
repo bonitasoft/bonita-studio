@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -35,7 +36,7 @@ public class BonitaHomeHandler {
     public static final String BONITA_HOME = "bonita_home";
     private final IProject project;
 
-    public BonitaHomeHandler(IProject project) {
+    public BonitaHomeHandler(final IProject project) {
         this.project = project;
     }
 
@@ -85,11 +86,11 @@ public class BonitaHomeHandler {
         return Paths.get(getRoot(), "engine-server", "work", "platform").toFile();
     }
 
-    public String getRoot(){
+    public String getRoot() {
         return project.getFile(BONITA_HOME).getLocation().toFile().getAbsolutePath();
     }
 
-    public void initBonitaHome(IProgressMonitor monitor) throws CoreException {
+    public void initBonitaHome(final IProgressMonitor monitor) throws CoreException {
         final File bonitaHome = new File(getRoot());
         if (!bonitaHome.exists()) {
             final URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat/bonita");
@@ -143,5 +144,9 @@ public class BonitaHomeHandler {
                 + File.separator + "platform"
                 + File.separator + "work"
                 + File.separator + "i18n");
+    }
+
+    public IFile getCustomPermissionMappingFile() {
+        return project.getFile(BONITA_HOME + "/client/tenants/1/conf/custom-permissions-mapping.properties");
     }
 }
