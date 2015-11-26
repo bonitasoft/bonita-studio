@@ -41,6 +41,7 @@ import org.bonitasoft.studio.refactoring.core.script.ScriptContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -71,10 +72,22 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
      */
     @Override
     protected Set<ScriptContainer<?>> allScriptWithReferencedElement(final RefactorPair<ContractInput, ContractInput> pairRefactor) {
-        final Set<ScriptContainer<?>> allScriptWithReferencedElement = super.allScriptWithReferencedElement(pairRefactor);
+        final Set<ScriptContainer<?>> allScriptWithReferencedElement = newHashSet(
+                filter(super.allScriptWithReferencedElement(pairRefactor), inContractContainer(
+                        ModelHelper.getFirstContainerOfType(pairRefactor.getOldValue(), ContractContainer.class))));
         allScriptWithReferencedElement.addAll(constraintExpressionsReferencing(ModelHelper.getFirstContainerOfType(pairRefactor.getOldValue(), Contract.class),
                 pairRefactor.getOldValue()));
         return allScriptWithReferencedElement;
+    }
+
+    private Predicate<ScriptContainer<?>> inContractContainer(final ContractContainer contractContainer) {
+        return new Predicate<ScriptContainer<?>>() {
+
+            @Override
+            public boolean apply(ScriptContainer<?> sc) {
+                return EcoreUtil.equals(ModelHelper.getFirstContainerOfType(sc.getModelElement(), ContractContainer.class), contractContainer);
+            }
+        };
     }
 
     private Collection<? extends ScriptContainer<?>> constraintExpressionsReferencing(final Contract contract, final ContractInput contractInput) {
@@ -106,7 +119,7 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
 
     private void updateContractInputExpressions(final CompoundCommand cc) {
         for (final Expression exp : filter(getAllElementOfTypeIn(container, Expression.class), withExpressionType(ExpressionConstants.CONTRACT_INPUT_TYPE))) {
-            for (final ContractInputRefactorPair pairToRefactor : filter(pairsToRefactor, matchingOldName(exp.getName()))) {
+            for (final ContractInputRefactorPair pairToRefactor : filter(pairsToRefactor, matches(exp))) {
                 final ContractInput newValue = pairToRefactor.getNewValue();
                 cc.append(new UpdateExpressionCommand(getEditingDomain(), exp, newValue != null ? createContractInputExpression(newValue)
                         : createDefaultExpression(exp)));
@@ -119,12 +132,14 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
         return ExpressionHelper.createConstantExpression("", exp.isReturnTypeFixed() ? exp.getReturnType() : String.class.getName());
     }
 
-    private Predicate<ContractInputRefactorPair> matchingOldName(final String expressionName) {
+    private Predicate<ContractInputRefactorPair> matches(final Expression expression) {
         return new Predicate<ContractInputRefactorPair>() {
 
             @Override
             public boolean apply(final ContractInputRefactorPair refactorPair) {
-                return refactorPair.getOldValueName().equals(expressionName);
+                return refactorPair.getOldValueName().equals(expression.getName())
+                        && EcoreUtil.equals(ModelHelper.getFirstContainerOfType(expression, ContractContainer.class),
+                                ModelHelper.getFirstContainerOfType(refactorPair.getOldValue(), ContractContainer.class));
             }
         };
     }

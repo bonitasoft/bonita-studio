@@ -22,8 +22,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Properties;
 
 import org.bonitasoft.engine.util.APITypeManager;
@@ -36,12 +34,6 @@ import org.eclipse.core.runtime.FileLocator;
  *
  */
 public class BonitaHomeUtil {
-
-	public static final String ENGINE_LOG_DESTINATION_FILE = "org.bonitasoft.studio.engine.log.destination.file";
-	private static final String STUDIO_ENGINE_LOGGING_PROPERTIES = ResourcesPlugin
-			.getWorkspace().getRoot().getLocation().toFile().getAbsolutePath()
-			+ File.separator + "logback.xml";
-
 
 	private static final String API_TYPE = "org.bonitasoft.engine.api-type";
 	public static final String HTTP = "HTTP";
@@ -56,35 +48,6 @@ public class BonitaHomeUtil {
 				.toString(), "bonita");
 	}
 
-	public static String getJaasPath() {
-		return getBonitaHome().getAbsolutePath() + File.separator + "external"
-				+ File.separator + "security" + File.separator
-				+ "jaas-standard.cfg";
-	}
-
-	public static File getPortalI18NFolder() {
-	    final File bonitaFolder =  new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "tomcat"+File.separator+"bonita");
-        return new File(bonitaFolder, "client"
-                + File.separator + "platform"
-                + File.separator + "work"
-                + File.separator + "i18n");
-    }
-
-
-
-	public static InputStream getLoggingFile() {
-		return BonitaHomeUtil.class
-				.getResourceAsStream("/resources/logging/logback.xml");
-	}
-
-	public static File getReferenceExternalFolder() {
-		try {
-			return new File(getReferenceBonitaHome(), "external");
-		} catch (final Exception ex) {
-			BonitaStudioLog.error(ex);
-			return null;
-		}
-	}
 
 	public static File getReferenceBonitaHome() throws IOException {
 		return new File(FileLocator.toFileURL(
@@ -169,38 +132,4 @@ public class BonitaHomeUtil {
 		}
 	}
 
-	public static File getStudioLoggingFile() {
-		return new File(STUDIO_ENGINE_LOGGING_PROPERTIES);
-	}
-
-	public static File getDefaultTenantSecurityConfigFile(final long tenantId) {
-		final File bonitaFolder =  new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "tomcat"+File.separator+"bonita");
-		return new File(bonitaFolder,"client"+File.separator+"tenants"+File.separator+String.valueOf(tenantId)+File.separator+"conf"+File.separator+"security-config.properties");
-	}
-
-	public static File getDefaultTenantSecurityConfigStudioFile() {
-		final URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita-home");
-		File bonitaFolder = null;
-		try {
-			bonitaFolder = new File(FileLocator.toFileURL(url).getFile());
-			return new File(bonitaFolder,"client"+File.separator+"platform"+File.separator+"tenant-template"+File.separator+"conf"+File.separator+"security-config.properties");
-		} catch (final IOException e) {
-			BonitaStudioLog.error(e);
-		}
-
-		return null ;
-	}
-
-	public static File getDefaultPlatformTenantConfigFile() {
-		final URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita-home");
-		File bonitaFolder = null;
-		try {
-			bonitaFolder = new File(FileLocator.toFileURL(url).getFile());
-			return new File(bonitaFolder,"client"+File.separator+"platform"+File.separator+"conf"+File.separator+"platform-tenant-config.properties");
-		} catch (final IOException e) {
-			BonitaStudioLog.error(e);
-		}
-
-		return null ;
-	}
 }

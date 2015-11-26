@@ -45,9 +45,24 @@ public class «EXPAND className» extends org.eclipse.gmf.runtime.diagram.ui.pro
 		}
 		super.dispose();
 	}
+	
+	«REM»Remove unwanted contextual popup contributions«ENDREM»
+    /**
+	*@Generated BonitaSoft
+	*/
+    @Override
+    protected void addDefaultExclusions() {
+        super.addDefaultExclusions();
+        final java.util.Set exclusionSet = getExclusionSet();
+        exclusionSet.add("org.eclipse.releng.tools.advancedFixCopyrights");
+        exclusionSet.add("groovyfile");
+        exclusionSet.add("groovyresource");
+    }
 
-	«EXPAND xpt::Common::generatedMemberComment»
 	«REM»Remove the contibution of the delete from model action«ENDREM»
+	/**
+	*@Generated BonitaSoft
+	*/
 	public void buildContextMenu(final org.eclipse.jface.action.IMenuManager menu) {
 		getViewer().flush();
 		try {

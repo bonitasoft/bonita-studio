@@ -53,7 +53,7 @@ public class ImportActorFilterArchiveOperation extends ImportConnectorArchiveOpe
 
     @Override
     protected SourceRepositoryStore<?> getSourceStore() {
-        return (SourceRepositoryStore<?>) RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
+        return RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
     }
 
 }

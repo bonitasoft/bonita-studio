@@ -33,7 +33,6 @@ import java.util.regex.Pattern;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
-import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -42,6 +41,7 @@ import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.BonitaHomeHandler;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
@@ -124,7 +124,7 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
                     targetProcess = ModelHelper.getParentProcess(process);
                 }
                 final String id = ModelHelper.getEObjectID(targetProcess);
-                final ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(id);
+                final ApplicationResourceFileStore artifact = resourceStore.getChild(id);
                 if (artifact != null) {
                     replaceUrl(htmlDir, artifact.getResourcesApplicationFolder().getFolder("application").getLocation().toFile().toURI(), "application/",
                             process.getName(), process.getVersion());
@@ -165,7 +165,7 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
             final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(
                     ApplicationResourceRepositoryStore.class);
             final String processUUID = ModelHelper.getEObjectID(process);
-            final ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID);
+            final ApplicationResourceFileStore artifact = resourceStore.getChild(processUUID);
             if (artifact != null) {
                 replaceUrl(resourceFile, artifact.getResourcesApplicationFolder().getLocation().toFile().toURI(), "", process.getName(), process.getVersion());
             }
@@ -329,9 +329,10 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 
     protected void addAutologin(final List<BarResource> res, final AbstractProcess process, final Configuration conf) throws Exception {
         if (process.isAutoLogin()) {
-            File securityConfig = BonitaHomeUtil.getDefaultTenantSecurityConfigFile(TENANT_ID);
+            final BonitaHomeHandler bonitaHomeHandler = RepositoryManager.getInstance().getCurrentRepository().getBonitaHomeHandler();
+            File securityConfig = bonitaHomeHandler.getDefaultTenantSecurityConfigFile(TENANT_ID);
             if (!securityConfig.exists()) {
-                securityConfig = BonitaHomeUtil.getDefaultTenantSecurityConfigStudioFile();
+                securityConfig = bonitaHomeHandler.getDefaultTenantSecurityConfigStudioFile();
             }
             if (securityConfig.exists()) {
                 final Properties properties = new Properties();
