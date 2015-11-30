@@ -24,12 +24,14 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 
 public class BonitaHomeHandler {
 
@@ -147,7 +149,10 @@ public class BonitaHomeHandler {
                 + File.separator + "i18n");
     }
 
-    public IFile getCustomPermissionMappingFile() {
-        return project.getFile(BONITA_HOME + "/client/tenants/" + TENANT_ID + "/conf/custom-permissions-mapping.properties");
+    public IFile getCustomPermissionMappingFile() throws CoreException {
+        final IFile file = project
+                .getFile(Path.fromOSString(Paths.get(BONITA_HOME, "client", "tenants", TENANT_ID, "conf", "custom-permissions-mapping.properties").toString()));
+        file.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+        return file;
     }
 }
