@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
 
@@ -426,7 +427,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             public void selectionChanged(final SelectionChangedEvent event) {
                 final String eventObject = (String) ((StructuredSelection) event.getSelection()).getFirstElement();
                 String selectedManager = "";
-                if (!eventObject.isEmpty()) {
+                if (!isNullOrEmpty(eventObject)) {
                     selectedManager = eventObject;
                 }
                 final User selectedUser = (User) userSingleSelectionObservable.getValue();
