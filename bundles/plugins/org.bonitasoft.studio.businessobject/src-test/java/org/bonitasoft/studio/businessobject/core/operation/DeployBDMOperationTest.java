@@ -141,7 +141,7 @@ public class DeployBDMOperationTest {
         inOrder.verify(tenantAdminAPI).cleanAndUninstallBusinessDataModel();
         inOrder.verify(tenantAdminAPI).installBusinessDataModel(any(byte[].class));
         inOrder.verify(tenantAdminAPI).resume();
-        inOrder.verify(eventBroker).post(eq("bdm/deployed"), notNull(Map.class));
+        inOrder.verify(eventBroker).send(eq("bdm/deployed"), notNull(Map.class));
         verify(tenantAdminAPI).getClientBDMZip();
     }
 

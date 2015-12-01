@@ -14,8 +14,11 @@
  */
 package org.bonitasoft.studio.common.perspectives;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.common.RestAPIExtensionNature;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -23,7 +26,6 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPerspectiveFactory;
 
 /**
- *
  * Must extends this class to enable the automatic switch between perspectives depending of the editor type
  *
  * @author Baptiste Mesta
@@ -31,27 +33,29 @@ import org.eclipse.ui.IPerspectiveFactory;
  */
 public abstract class AbstractPerspectiveFactory implements IPerspectiveFactory {
 
-	/**
-	 * returns true if the perspective must be activated when opening the editor part given in param
-	 *
-	 * @param part
-	 * 			the editor part that is brought to top
-	 * @return
-	 * 		true if perspective must be activated, false otherwise
-	 */
-	public abstract boolean isRelevantFor(IEditorPart part);
+    private static final String CUSTOM_PERMISSIONS_MAPPING_FILE = "custom-permissions-mapping.properties";
 
-	/**
-	 *
-	 * @return the id of the perspective
-	 */
-	public abstract String getID();
+    /**
+     * returns true if the perspective must be activated when opening the editor part given in param
+     *
+     * @param part
+     *        the editor part that is brought to top
+     * @return
+     *         true if perspective must be activated, false otherwise
+     */
+    public abstract boolean isRelevantFor(IEditorPart part);
+
+    /**
+     * @return the id of the perspective
+     */
+    public abstract String getID();
 
     protected boolean isInsideprojectWithREStApiExtensionNature(final IEditorPart part) {
         final IEditorInput editorInput = part.getEditorInput();
         if (editorInput instanceof IFileEditorInput) {
             try {
-                return ((IFileEditorInput) editorInput).getFile().getProject().hasNature(RestAPIExtensionNature.NATURE_ID);
+                final IFile file = ((IFileEditorInput) editorInput).getFile();
+                return file.getProject().hasNature(RestAPIExtensionNature.NATURE_ID) || Objects.equals(file.getName(), CUSTOM_PERMISSIONS_MAPPING_FILE);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }

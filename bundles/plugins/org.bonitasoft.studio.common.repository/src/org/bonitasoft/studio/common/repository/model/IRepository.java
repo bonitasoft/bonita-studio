@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.core.BonitaHomeHandler;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -78,5 +79,7 @@ public interface IRepository extends IFileStoreChangeListener {
     IRepository create(IProgressMonitor monitor);
 
     boolean isOnline();
+
+    BonitaHomeHandler getBonitaHomeHandler();
 
 }

@@ -151,6 +151,7 @@
 <unit id="org.eclipse.sdk.feature.group" version="4.4.0.v20140925-0400"/>
 <unit id="org.eclipse.emf.ecore.source.feature.group" version="2.10.1.v20140901-1043"/>
 <unit id="org.eclipse.equinox.p2.discovery.feature.feature.group" version="1.0.200.v20140512-1802"/>
+<unit id="com.google.guava" version="15.0.0.v201403281430"/>
 <repository location="http://download.eclipse.org/releases/luna/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -265,10 +266,13 @@
 <unit id="org.eclipse.babel.nls_datatools_pt.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.recommenders_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.packaging_it.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.m2e.feature.feature.group" version="1.5.1.20150109-1820"/>
-<unit id="com.google.guava" version="15.0.0.v201403281430"/>
-<unit id="org.eclipse.m2e.jdt" version="1.5.1.20150109-1820"/>
 <repository location="http://archive.eclipse.org/technology/babel/update-site/R0.12.1/luna"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.m2e.feature.feature.group" version="1.6.2.20150902-0002"/>
+<unit id="org.eclipse.m2e.sdk.feature.feature.group" version="1.6.2.20150902-0002"/>
+<unit id="org.eclipse.m2e.jdt" version="1.6.2.20150902-0002"/>
+<repository location="http://download.eclipse.org/technology/m2e/releases"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.jspresso.contrib.sjsplugin.spock.feature.feature.group" version="2.12.0.201509182051"/>

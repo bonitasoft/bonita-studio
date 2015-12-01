@@ -40,6 +40,7 @@ public class TomcatVmArgsBuilderTest {
         doNothing().when(tomcatVmArgsBuilder).addUIDesignerOptions(any(StringBuilder.class));
         doNothing().when(tomcatVmArgsBuilder).addWatchDogProperties(any(StringBuilder.class));
         doReturn("test.bonita.product.application.id").when(tomcatVmArgsBuilder).getProductApplicationId();
+        doReturn("bonita.home.root").when(tomcatVmArgsBuilder).getBonitaHomeRoot();
     }
 
     @Test

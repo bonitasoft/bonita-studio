@@ -39,6 +39,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
+import org.bonitasoft.studio.common.repository.core.BonitaHomeHandler;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaBPMProjectOperation;
 import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
 import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
@@ -62,6 +63,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -72,6 +74,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -97,6 +100,8 @@ public class Repository implements IRepository, IJavaContainer {
     public static final IProgressMonitor NULL_PROGRESS_MONITOR = new NullProgressMonitor();
 
     private static final String CLASS = "class";
+
+    private static final String BONITA_HOME_NAME = "bonita_home";
 
     private final IProject project;
 
@@ -161,16 +166,11 @@ public class Repository implements IRepository, IJavaContainer {
     }
 
     protected CreateBonitaBPMProjectOperation newProjectWorkspaceOperation(final String projectName, final IWorkspace workspace) {
-        return new CreateBonitaBPMProjectOperation(workspace, projectName).
-                addNature("org.eclipse.xtext.ui.shared.xtextNature").
-                addNature("org.bonitasoft.studio.common.repository.bonitaNature").
-                addNature(JavaCore.NATURE_ID).
-                addNature("org.eclipse.pde.PluginNature").
-                addNature("org.eclipse.jdt.groovy.core.groovyNature").
-                addBuilder("org.eclipse.jdt.core.javabuilder").
-                addBuilder("org.eclipse.xtext.ui.shared.xtextBuilder").
-                addBuilder("org.eclipse.pde.ManifestBuilder").
-                addBuilder("org.eclipse.pde.SchemaBuilder");
+        return new CreateBonitaBPMProjectOperation(workspace, projectName).addNature("org.eclipse.xtext.ui.shared.xtextNature")
+                .addNature("org.bonitasoft.studio.common.repository.bonitaNature").addNature(JavaCore.NATURE_ID).addNature("org.eclipse.pde.PluginNature")
+                .addNature("org.eclipse.jdt.groovy.core.groovyNature").addBuilder("org.eclipse.jdt.core.javabuilder")
+                .addBuilder("org.eclipse.xtext.ui.shared.xtextBuilder").addBuilder("org.eclipse.pde.ManifestBuilder")
+                .addBuilder("org.eclipse.pde.SchemaBuilder");
     }
 
     /*
@@ -227,6 +227,7 @@ public class Repository implements IRepository, IJavaContainer {
         }
         try {
             projectManifestFactory.createProjectManifest(project, monitor);
+            initBonitaHome(monitor);
             initRepositoryStores(monitor);
             enableBuild();
             bonitaBPMProjectClasspath.create(this, monitor);
@@ -234,6 +235,11 @@ public class Repository implements IRepository, IJavaContainer {
             BonitaStudioLog.error(e);
         }
         return this;
+    }
+
+    protected void initBonitaHome(final IProgressMonitor monitor) throws CoreException {
+        final BonitaHomeHandler bonitaHomeHandler = getBonitaHomeHandler();
+        bonitaHomeHandler.initBonitaHome(monitor);
     }
 
     protected void updateStudioShellText() {
@@ -701,16 +707,11 @@ public class Repository implements IRepository, IJavaContainer {
     }
 
     protected BonitaBPMProjectMigrationOperation newProjectMigrationOperation(final IProject project) {
-        return new BonitaBPMProjectMigrationOperation(project, this).
-                addNature("org.eclipse.xtext.ui.shared.xtextNature").
-                addNature("org.bonitasoft.studio.common.repository.bonitaNature").
-                addNature(JavaCore.NATURE_ID).
-                addNature("org.eclipse.pde.PluginNature").
-                addNature("org.eclipse.jdt.groovy.core.groovyNature").
-                addBuilder("org.eclipse.jdt.core.javabuilder").
-                addBuilder("org.eclipse.xtext.ui.shared.xtextBuilder").
-                addBuilder("org.eclipse.pde.ManifestBuilder").
-                addBuilder("org.eclipse.pde.SchemaBuilder");
+        return new BonitaBPMProjectMigrationOperation(project, this).addNature("org.eclipse.xtext.ui.shared.xtextNature")
+                .addNature("org.bonitasoft.studio.common.repository.bonitaNature").addNature(JavaCore.NATURE_ID).addNature("org.eclipse.pde.PluginNature")
+                .addNature("org.eclipse.jdt.groovy.core.groovyNature").addBuilder("org.eclipse.jdt.core.javabuilder")
+                .addBuilder("org.eclipse.xtext.ui.shared.xtextBuilder").addBuilder("org.eclipse.pde.ManifestBuilder")
+                .addBuilder("org.eclipse.pde.SchemaBuilder");
     }
 
     @Override
@@ -731,6 +732,15 @@ public class Repository implements IRepository, IJavaContainer {
     @Override
     public boolean isLoaded() {
         return stores != null && !stores.isEmpty();
+    }
+
+    public IScopeContext getScopeContext() {
+        return new ProjectScope(project);
+    }
+
+    @Override
+    public BonitaHomeHandler getBonitaHomeHandler() {
+        return new BonitaHomeHandler(getProject());
     }
 
 }

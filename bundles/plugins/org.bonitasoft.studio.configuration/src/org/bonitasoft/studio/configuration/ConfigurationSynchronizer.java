@@ -1,18 +1,16 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.configuration;
 
@@ -25,6 +23,7 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.i18n.Messages;
@@ -40,8 +39,6 @@ import org.bonitasoft.studio.model.configuration.util.ConfigurationResourceFacto
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -59,7 +56,6 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ConfigurationSynchronizer {
 
@@ -68,47 +64,50 @@ public class ConfigurationSynchronizer {
     private AdapterFactoryEditingDomain editingDomain;
     private ComposedAdapterFactory adapterFactory;
     private final boolean synchronizeLocalConfiguraiton;
+    private final ActiveOrganizationProvider activeOrganizationProvider;
     private static ArrayList<IConfigurationSynchronizer> synchronizers;
     private static ArrayList<IProcessConfigurationWizardPage> wizardPages;
     private static final String CONFIGURATION_WIZARD_PAGE_ID = "org.bonitasoft.studio.configuration.wizardPage";
     private static final String CLASS_ATTRIBUTE = "class";
 
-    public ConfigurationSynchronizer(AbstractProcess process, Configuration configuration){
-        this.process = process ;
-        this.configuration = configuration ;
-        synchronizeLocalConfiguraiton= ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON.equals(configuration.getName()) || configuration.getName() == null ;
-        editingDomain = (AdapterFactoryEditingDomain) TransactionUtil.getEditingDomain(process) ;
+    public ConfigurationSynchronizer(final AbstractProcess process, final Configuration configuration) {
+        this.process = process;
+        this.configuration = configuration;
+        synchronizeLocalConfiguraiton = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON.equals(configuration.getName()) || configuration.getName() == null;
+        editingDomain = (AdapterFactoryEditingDomain) TransactionUtil.getEditingDomain(process);
+        activeOrganizationProvider = new ActiveOrganizationProvider();
         initializaSynchronizers();
         initializaWizardPages();
     }
 
     protected void initializaSynchronizers() {
-        if(synchronizers == null){
-            synchronizers = new ArrayList<IConfigurationSynchronizer>() ;
-            for(IConfigurationElement elem :  BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.configuration.synchronizer")){
+        if (synchronizers == null) {
+            synchronizers = new ArrayList<IConfigurationSynchronizer>();
+            for (final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance()
+                    .getConfigurationElements("org.bonitasoft.studio.configuration.synchronizer")) {
                 try {
                     synchronizers.add((IConfigurationSynchronizer) elem.createExecutableExtension("class"));
-                } catch (CoreException e) {
-                    BonitaStudioLog.error(e) ;
+                } catch (final CoreException e) {
+                    BonitaStudioLog.error(e);
                 }
             }
         }
     }
 
     protected void initializaWizardPages() {
-        if(wizardPages == null){
+        if (wizardPages == null) {
             wizardPages = new ArrayList<IProcessConfigurationWizardPage>();
-            IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(CONFIGURATION_WIZARD_PAGE_ID);
-            for(IConfigurationElement e :elems){
+            final IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(CONFIGURATION_WIZARD_PAGE_ID);
+            for (final IConfigurationElement e : elems) {
                 try {
-                    IProcessConfigurationWizardPage page =  (IProcessConfigurationWizardPage) e.createExecutableExtension(CLASS_ATTRIBUTE) ;
+                    final IProcessConfigurationWizardPage page = (IProcessConfigurationWizardPage) e.createExecutableExtension(CLASS_ATTRIBUTE);
                     wizardPages.add(page);
-                } catch (Exception e1){
-                    BonitaStudioLog.error(e1) ;
+                } catch (final Exception e1) {
+                    BonitaStudioLog.error(e1);
                 }
             }
-            wizardPages.add(new ProcessDependenciesConfigurationWizardPage()) ;
-            wizardPages.add(new ApplicationDependenciesConfigurationWizardPage()) ;
+            wizardPages.add(new ProcessDependenciesConfigurationWizardPage());
+            wizardPages.add(new ApplicationDependenciesConfigurationWizardPage());
         }
     }
 
@@ -117,118 +116,115 @@ public class ConfigurationSynchronizer {
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-        adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory()) ;
-        adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
+        adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory());
+        adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
 
         // command stack that will notify this editor as commands are executed
-        BasicCommandStack commandStack = new BasicCommandStack();
+        final BasicCommandStack commandStack = new BasicCommandStack();
 
         // Create the editing domain with our adapterFactory and command stack.
-        editingDomain = new AdapterFactoryEditingDomain(adapterFactory,commandStack, new HashMap<Resource, Boolean>());
-        editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl()) ;
+        editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
+        editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl());
     }
 
-    public void synchronize(){
-    	synchronize(Repository.NULL_PROGRESS_MONITOR);
+    public void synchronize() {
+        synchronize(Repository.NULL_PROGRESS_MONITOR);
     }
-    
-    public void synchronize(IProgressMonitor monitor){
-    	monitor.beginTask(Messages.synchronizingConfiguration, IProgressMonitor.UNKNOWN);
-        boolean dispose = false ;
-        if(editingDomain == null){
-            initializeEditingDomain() ;
-            dispose = true ;
+
+    public void synchronize(final IProgressMonitor monitor) {
+        monitor.beginTask(Messages.synchronizingConfiguration, IProgressMonitor.UNKNOWN);
+        boolean dispose = false;
+        if (editingDomain == null) {
+            initializeEditingDomain();
+            dispose = true;
         }
         CompoundCommand cc = new CompoundCommand();
-        boolean exists = false ;
-        for(Configuration c : process.getConfigurations()){
-            if(c.equals(configuration)){
-                exists = true ;
+        boolean exists = false;
+        for (final Configuration c : process.getConfigurations()) {
+            if (c.equals(configuration)) {
+                exists = true;
             }
         }
 
-        if(configuration.getName() == null){
-            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__NAME, ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) ;
-        }
-        
-        if(configuration.getVersion() == null || !ModelVersion.CURRENT_VERSION.equals(configuration.getVersion())){
-        	 cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__VERSION, ModelVersion.CURRENT_VERSION)) ;
+        if (configuration.getName() == null) {
+            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__NAME,
+                    ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON));
         }
 
-        synchronizeFragmentContainers(cc) ;
+        if (configuration.getVersion() == null || !ModelVersion.CURRENT_VERSION.equals(configuration.getVersion())) {
+            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__VERSION, ModelVersion.CURRENT_VERSION));
+        }
 
-        editingDomain.getCommandStack().execute(cc) ;
+        synchronizeFragmentContainers(cc);
+
+        editingDomain.getCommandStack().execute(cc);
         cc = new CompoundCommand();
 
-        if(!exists && !synchronizeLocalConfiguraiton){
-            cc.append(AddCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__CONFIGURATIONS, configuration)) ;
+        if (!exists && !synchronizeLocalConfiguraiton) {
+            cc.append(AddCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__CONFIGURATIONS, configuration));
         }
 
-        for(IConfigurationSynchronizer synchronier :synchronizers){
-            synchronier.synchronize(configuration,process,cc,editingDomain) ;
+        for (final IConfigurationSynchronizer synchronier : synchronizers) {
+            synchronier.synchronize(configuration, process, cc, editingDomain);
         }
 
-        if(configuration.getUsername() == null || configuration.getUsername().isEmpty()){
-            String defaultUserName = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_NAME) ;
-            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__USERNAME, defaultUserName)) ;
+        if (configuration.getUsername() == null || configuration.getUsername().isEmpty()) {
+            final String defaultUserName = activeOrganizationProvider.getDefaultUser();
+            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__USERNAME, defaultUserName));
         }
-        if(configuration.getPassword() == null || configuration.getPassword().isEmpty()){
-            String defaultPassword = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_PASSWORD) ;
-            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__PASSWORD, defaultPassword)) ;
+        if (configuration.getPassword() == null || configuration.getPassword().isEmpty()) {
+            final String defaultPassword = activeOrganizationProvider.getDefaultPassword();
+            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__PASSWORD, defaultPassword));
         }
 
-        editingDomain.getCommandStack().execute(cc) ;
+        editingDomain.getCommandStack().execute(cc);
 
-        if(dispose){
-            adapterFactory.dispose() ;
+        if (dispose) {
+            adapterFactory.dispose();
         }
 
     }
 
-
-    private void synchronizeFragmentContainers(CompoundCommand cc) {
-        for(IConfigurationSynchronizer synchronier :synchronizers){
-            String containerId =  synchronier.getFragmentContainerId() ;
-            EStructuralFeature dependencyKind = synchronier.getDependencyKind()  ;
-            if(containerId != null && dependencyKind != null){
-                synchronizeFragmentContainer(dependencyKind,containerId,cc);
+    private void synchronizeFragmentContainers(final CompoundCommand cc) {
+        for (final IConfigurationSynchronizer synchronier : synchronizers) {
+            final String containerId = synchronier.getFragmentContainerId();
+            final EStructuralFeature dependencyKind = synchronier.getDependencyKind();
+            if (containerId != null && dependencyKind != null) {
+                synchronizeFragmentContainer(dependencyKind, containerId, cc);
             }
         }
-        synchronizeFragmentContainer(ConfigurationPackage.Literals.CONFIGURATION__APPLICATION_DEPENDENCIES,FragmentTypes.OTHER, cc) ;
-        synchronizeFragmentContainer(ConfigurationPackage.Literals.CONFIGURATION__PROCESS_DEPENDENCIES,FragmentTypes.OTHER, cc) ;
+        synchronizeFragmentContainer(ConfigurationPackage.Literals.CONFIGURATION__APPLICATION_DEPENDENCIES, FragmentTypes.OTHER, cc);
+        synchronizeFragmentContainer(ConfigurationPackage.Literals.CONFIGURATION__PROCESS_DEPENDENCIES, FragmentTypes.OTHER, cc);
     }
 
-    protected void synchronizeFragmentContainer(EStructuralFeature dependencyKind,String containerId,CompoundCommand cc) {
-        boolean containerExists = false ;
-        List<FragmentContainer> containers = (List<FragmentContainer>) configuration.eGet(dependencyKind) ;
-        for(FragmentContainer fc : containers){
-            if(fc.getId().equals(containerId)){
-                containerExists = true ;
-                break ;
+    protected void synchronizeFragmentContainer(final EStructuralFeature dependencyKind, final String containerId, final CompoundCommand cc) {
+        boolean containerExists = false;
+        final List<FragmentContainer> containers = (List<FragmentContainer>) configuration.eGet(dependencyKind);
+        for (final FragmentContainer fc : containers) {
+            if (fc.getId().equals(containerId)) {
+                containerExists = true;
+                break;
             }
         }
-        if(!containerExists){
-            FragmentContainer fc = ConfigurationFactory.eINSTANCE.createFragmentContainer() ;
-            fc.setId(containerId) ;
-            cc.append(AddCommand.create(editingDomain, configuration, dependencyKind,fc)) ;
+        if (!containerExists) {
+            final FragmentContainer fc = ConfigurationFactory.eINSTANCE.createFragmentContainer();
+            fc.setId(containerId);
+            cc.append(AddCommand.create(editingDomain, configuration, dependencyKind, fc));
         }
     }
-
 
     /**
-     * 
      * @param configuration
      * @return true if the configuration is runnable
      */
-    public boolean isConfigurationValid(){
-        for(IProcessConfigurationWizardPage page : wizardPages){
-            if(page.isConfigurationPageValid(configuration) != null){
+    public boolean isConfigurationValid() {
+        for (final IProcessConfigurationWizardPage page : wizardPages) {
+            if (page.isConfigurationPageValid(configuration) != null) {
                 return false;
             }
         }
         return true;
     }
-
 
     public Configuration getConfiguration() {
         return configuration;

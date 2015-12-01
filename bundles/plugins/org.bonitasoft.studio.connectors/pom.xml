@@ -371,7 +371,7 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-jasper-impl</artifactId>
-									<version>1.0.0</version>
+									<version>1.0.4</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
@@ -379,7 +379,7 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-ldap-impl</artifactId>
-									<version>1.0.0</version>
+									<version>1.0.1</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
