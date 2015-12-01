@@ -426,7 +426,7 @@ public class Repository implements IRepository, IJavaContainer {
 
     @Override
     public <T> T getRepositoryStore(final Class<T> repositoryStoreClass) {
-        if (stores == null || stores.isEmpty()) {
+        if (!isLoaded()) {
             initRepositoryStores(NULL_PROGRESS_MONITOR);
             enableBuild();
         }
