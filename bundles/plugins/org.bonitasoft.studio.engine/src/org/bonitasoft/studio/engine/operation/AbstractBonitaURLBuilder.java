@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,13 +20,13 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
-
 
 public abstract class AbstractBonitaURLBuilder {
 
@@ -50,16 +48,20 @@ public abstract class AbstractBonitaURLBuilder {
         return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
     }
 
+    protected ActiveOrganizationProvider getActiveOrganizationProvider() {
+        return new ActiveOrganizationProvider();
+    }
+
     protected String getWebLocale() {
         return getPreferenceStore().getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE);
     }
 
     protected String getDefaultPassword() {
-        return getPreferenceStore().getString(BonitaPreferenceConstants.USER_PASSWORD);
+        return getActiveOrganizationProvider().getDefaultPassword();
     }
 
     protected String getDefaultUsername() {
-        return getPreferenceStore().getString(BonitaPreferenceConstants.USER_NAME);
+        return getActiveOrganizationProvider().getDefaultUser();
     }
 
     public URL toURL(final IProgressMonitor monitor) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {

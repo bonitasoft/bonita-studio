@@ -22,6 +22,8 @@ import static org.bonitasoft.studio.model.expression.builders.OperationBuilder.a
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.ContractConstraintBuilder.aContractConstraint;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 
 import java.util.Set;
@@ -31,6 +33,7 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
@@ -38,7 +41,9 @@ import org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperation
 import org.bonitasoft.studio.refactoring.core.script.ScriptContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,6 +59,8 @@ public class RefactorContractInputOperationTest {
     private final IProgressMonitor monitor = new NullProgressMonitor();
     @Mock
     private IScriptRefactoringOperationFactory scriptRefactorOperationFactory;
+    @Mock
+    private EditingDomain domain;
 
     @Test
     public void should_update_contract_input_reference_in_contract_input_expressions() throws Exception {
@@ -99,11 +106,37 @@ public class RefactorContractInputOperationTest {
 
         final ContractInput contractInput = aTaskWithContract.getContract().getInputs()
                 .get(0);
+        final ContractInput newProcessInput = EcoreUtil.copy(contractInput);
+        newProcessInput.setName("newInputName");
         final Set<ScriptContainer<?>> allScriptWithReferencedElement = refactorOperation.allScriptWithReferencedElement(new ContractInputRefactorPair(
-                EcoreUtil.copy(contractInput),
+                newProcessInput,
                 contractInput));
 
         assertThat(allScriptWithReferencedElement.iterator().next().getModelElement().eContainer()).isNotNull();
+    }
+
+    @Test
+    public void should_not_refactor_input_with_same_name_in_another_contract_container() throws Exception {
+        final Pool process = aPool().havingContract(aContract().havingInput(aContractInput().withName("myInput")))
+                .havingData(aData().withName("aTextData")
+                        .havingDefaultValue(ExpressionHelper.createContractInputExpression(aContractInput().withName("myInput").build())))
+                .havingElements(aTask().havingContract(aContract().havingInput(aContractInput().withName("myInput"))).havingData(aData().withName("aTextData")
+                        .havingDefaultValue(ExpressionHelper.createContractInputExpression(aContractInput().withName("myInput").build()))))
+                .build();
+        
+        final RefactorContractInputOperation refactorOperation = new RefactorContractInputOperation(process,
+                scriptRefactorOperationFactory,
+                RefactoringOperationType.UPDATE);
+        refactorOperation.setEditingDomain(domain);
+        final ContractInput processInput = process.getContract().getInputs().get(0);
+        final ContractInput newInput = EcoreUtil.copy(processInput);
+        newInput.setName("newName");
+        refactorOperation.addItemToRefactor(newInput, processInput);
+        
+        CompoundCommand cc = new CompoundCommand();
+        cc = refactorOperation.doBuildCompoundCommand(cc, monitor);
+
+        assertThat(cc.getCommandList()).hasSize(1);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -113,12 +146,6 @@ public class RefactorContractInputOperationTest {
 
     private TransactionalEditingDomainImpl transactionalEditingDomain() {
         return new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory());
-    }
-
-    private ContractContainer aTaskWithContract() {
-        return aTask().havingContract(aContract()
-                .havingInput(aContractInput().withName("firstName"))
-                .havingConstraint(aContractConstraint().withExpression("firstName.length > 0").havingInput("firstName"))).build();
     }
 
     private ContractContainer aTaskWithContractAndGlobalConstraint() {

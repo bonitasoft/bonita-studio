@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -25,7 +23,6 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class DeployBDMOnStartup implements IEngineAction {
 
@@ -35,10 +32,10 @@ public class DeployBDMOnStartup implements IEngineAction {
      */
     @Override
     public void run(APISession session) throws Exception {
-        BusinessObjectModelRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        BusinessObjectModelFileStore fileStore = store.getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+        final BusinessObjectModelRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        final BusinessObjectModelFileStore fileStore = store.getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
         if (fileStore != null) {
-            DeployBDMOperation deployBDMOperation = new DeployBDMOperation(fileStore);
+            final DeployBDMOperation deployBDMOperation = new DeployBDMOperation(fileStore);
             deployBDMOperation.setSession(session);
             deployBDMOperation.run(Repository.NULL_PROGRESS_MONITOR);
         }

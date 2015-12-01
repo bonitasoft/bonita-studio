@@ -31,10 +31,6 @@ public interface BonitaPreferenceConstants {
     public static final String CONSOLE_BROWSER_ID = "org.bonitasoft.studio.console.browser"; //$NON-NLS-1$
     public static final String APPLICATION_BROWSER_ID = "org.bonitasoft.studio.application.browser"; //$NON-NLS-1$
     public static final String HELP_BROWSER_ID = "org.bonitasoft.studio.help.browser"; //$NON-NLS-1$
-    public static final String USER_NAME = "bonitaUserName"; //$NON-NLS-1$
-    public static final String USER_PASSWORD = "bonitaUserPassword"; //$NON-NLS-1$
-    public static final String USER_NAME_DEFAULT = "walter.bates"; //$NON-NLS-1$
-    public static String USER_PASSWORD_DEFAULT = "bpm"; //$NON-NLS-1$
     public static final String DELETE_TENANT_ON_EXIT = "dropDataBase"; //$NON-NLS-1$
     public static final String LOAD_ORGANIZATION = "retrieveUsers"; //$NON-NLS-1$
     public static final String CURRENT_UXP_LOCALE = "currentUXPLocale"; //$NON-NLS-1$
@@ -160,13 +156,9 @@ public interface BonitaPreferenceConstants {
     public static final String PREF_ENABLE_VALIDATION = "org.bonitasoft.studio.enableValidation";
     public static final String DEFAULT_USERXP_THEME = "defaultUserXPTheme";
     public static final String DEFAULT_APPLICATION_THEME = "defaultAppliXPTheme";
-    public static final String DEFAULT_ORGANIZATION = "defaultOrganization";
-    public static final String DEFAULT_ORGANIZATION_NAME = "ACME";
     public static final String VALIDATION_BEFORE_RUN = "validateBeforeRun";
     public static final String ASK_RENAME_ON_FIRST_SAVE = "renameOnFirstSave";
     public static final String ALWAYS_USE_SCRIPTING_MODE = "useScriptingMode";
-    public static final String TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION = "toggleStateForPublishOrganization";
-    public static final String PUBLISH_ORGANIZATION = "publishOrganization";
     public static final String DEFAULT_STUDIO_LOCALE = "defaultLocale";
     public static final int DEFAULT_PORT = 8080;
     public static final String DEFAULT_HOST = "localhost";

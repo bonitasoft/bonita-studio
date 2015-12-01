@@ -20,10 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.User;
-import org.bonitasoft.studio.actors.preference.ActorsPreferenceConstants;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.actors.ui.wizard.page.AbstractOrganizationWizardPage;
 import org.bonitasoft.studio.actors.ui.wizard.page.GroupsWizardPage;
@@ -33,16 +33,18 @@ import org.bonitasoft.studio.actors.ui.wizard.page.UsersWizardPage;
 import org.bonitasoft.studio.actors.validator.OrganizationValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenceConstants;
 import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -50,7 +52,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
@@ -70,8 +71,10 @@ public class ManageOrganizationWizard extends Wizard {
     private Organization activeOrganization;
     private boolean activeOrganizationHasBeenModified = false;
     String userName;
+    private final ActiveOrganizationProvider activeOrganizationProvider;
 
     public ManageOrganizationWizard() {
+        activeOrganizationProvider = new ActiveOrganizationProvider();
         organizations = new ArrayList<Organization>();
         organizationsWorkingCopy = new ArrayList<Organization>();
         setWindowTitle(Messages.manageOrganizationTitle);
@@ -83,8 +86,10 @@ public class ManageOrganizationWizard extends Wizard {
                 BonitaStudioLog.error("Failed read organization content", e);
             }
         }
-        final String activeOrganizationName = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .getString(BonitaPreferenceConstants.DEFAULT_ORGANIZATION);
+        final IScopeContext projectScope = RepositoryManager.getInstance().getCurrentRepository().getScopeContext();
+        final IEclipsePreferences node = projectScope.getNode(ActorsPlugin.PLUGIN_ID);
+        final String activeOrganizationName = node.get(OrganizationPreferenceConstants.DEFAULT_ORGANIZATION,
+                OrganizationPreferenceConstants.DEFAULT_ORGANIZATION_NAME);
         for (final Organization orga : organizations) {
             final Organization copy = EcoreUtil.copy(orga);
             if (activeOrganizationName.equals(orga.getName())) {
@@ -190,12 +195,11 @@ public class ManageOrganizationWizard extends Wizard {
             BonitaStudioLog.error(e);
             return false;
         }
-        final IPreferenceStore preferenceStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
-        final String pref = preferenceStore.getString(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION);
-        final boolean publishOrganization = preferenceStore.getBoolean(ActorsPreferenceConstants.PUBLISH_ORGANIZATION);
+        final String pref = activeOrganizationProvider.getPublishOrganizationState();
+        final boolean publishOrganization = activeOrganizationProvider.shouldPublishOrganization();
         if (publishOrganization && MessageDialogWithToggle.ALWAYS.equals(pref)) {
             try {
-                publishOrganization(preferenceStore);
+                publishOrganization();
             } catch (final InvocationTargetException e) {
                 BonitaStudioLog.error(e);
 
@@ -209,25 +213,20 @@ public class ManageOrganizationWizard extends Wizard {
                         Messages.organizationHasBeenModifiedTitle,
                         null, Messages.bind(Messages.organizationHasBeenModifiedMessage, activeOrganization.getName()), MessageDialog.WARNING, buttons, 0,
                         Messages.doNotDisplayAgain, false);
-                mdwt.setPrefStore(preferenceStore);
-                mdwt.setPrefKey(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION);
+                mdwt.setPrefStore(activeOrganizationProvider.getPreferenceStore());
+                mdwt.setPrefKey(OrganizationPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION);
                 final int index = mdwt.open();
                 if (index == 2) {
                     try {
-                        publishOrganization(preferenceStore);
-                        if (mdwt.getToggleState()) {
-                            preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, true);
-                        }
-                    } catch (final InvocationTargetException e) {
-                        BonitaStudioLog.error(e);
-
-                    } catch (final InterruptedException e) {
+                        publishOrganization();
+                        activeOrganizationProvider.savePublishOrganization(mdwt.getToggleState());
+                    } catch (final InvocationTargetException | InterruptedException e) {
                         BonitaStudioLog.error(e);
                     }
                 } else {
                     if (mdwt.getToggleState()) {
-                        preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, false);
-                        preferenceStore.setDefault(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION, MessageDialogWithToggle.ALWAYS);
+                        activeOrganizationProvider.savePublishOrganization(false);
+                        activeOrganizationProvider.savePublishOrganizationState(MessageDialogWithToggle.ALWAYS);
                     }
                 }
             }
@@ -236,13 +235,13 @@ public class ManageOrganizationWizard extends Wizard {
         return true;
     }
 
-    private void publishOrganization(final IPreferenceStore preferenceStore) throws InvocationTargetException, InterruptedException {
+    private void publishOrganization() throws InvocationTargetException, InterruptedException {
         getContainer().run(true, false, new IRunnableWithProgress() {
 
             @Override
             public void run(final IProgressMonitor maonitor) throws InvocationTargetException, InterruptedException {
                 maonitor.beginTask(Messages.synchronizingOrganization, IProgressMonitor.UNKNOWN);
-                userName = preferenceStore.getString(BonitaPreferenceConstants.USER_NAME);
+                userName = activeOrganizationProvider.getDefaultUser();
 
                 if (isUserExist(activeOrganization.getUsers().getUser(), userName)) {
 

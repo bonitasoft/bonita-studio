@@ -22,6 +22,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
+import org.bonitasoft.studio.common.repository.core.BonitaHomeHandler;
 import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
 import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
@@ -50,6 +51,8 @@ public class RepositoryTest {
     private IProgressMonitor monitor;
     @Mock
     private ProjectClasspathFactory bonitaBPMProjectClasspath;
+    @Mock
+    private BonitaHomeHandler bonitaHomeHandler;
 
     @Test
     public void should_open_trigger_project_manifest_factory() throws Exception {
@@ -80,7 +83,7 @@ public class RepositoryTest {
 
     @Test
     public void should_refresh_project_when_deleting_an_open_repository() throws Exception {
-        final Repository repository = spy(newRepository());
+        final Repository repository = newRepository();
         doReturn(true).when(repository).isBuildEnable();
         doReturn(true).when(project).isOpen();
 
@@ -90,8 +93,10 @@ public class RepositoryTest {
     }
 
     private Repository newRepository() {
-        return new Repository(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager, projectManifestFactory,
-                bonitaBPMProjectClasspath, true);
+        final Repository repo = spy(new Repository(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager, projectManifestFactory,
+                bonitaBPMProjectClasspath, true));
+        doReturn(bonitaHomeHandler).when(repo).getBonitaHomeHandler();
+        return repo;
     }
 
 }

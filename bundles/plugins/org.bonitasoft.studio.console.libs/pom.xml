@@ -357,6 +357,30 @@
 					</execution>
 				</executions>
 			</plugin>
+             <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.3</version>
+                <executions>
+                    <execution>
+                        <id>Enable web security files hot reload mode</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <file>${security.config.file}</file>
+                    <replacements>
+                        <replacement>
+                            <token>security.rest.api.authorizations.check.debug   false</token>
+                            <value>#Debug mode enabled by default in Studio environment
+security.rest.api.authorizations.check.debug   true</value>
+                        </replacement>
+                    </replacements>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 
