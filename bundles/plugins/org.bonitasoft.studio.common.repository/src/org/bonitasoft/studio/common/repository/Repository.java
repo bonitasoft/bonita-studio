@@ -101,8 +101,6 @@ public class Repository implements IRepository, IJavaContainer {
 
     private static final String CLASS = "class";
 
-    private static final String BONITA_HOME_NAME = "bonita_home";
-
     private final IProject project;
 
     private SortedMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>> stores;
@@ -118,6 +116,8 @@ public class Repository implements IRepository, IJavaContainer {
     private final IWorkspace workspace;
 
     private final ProjectClasspathFactory bonitaBPMProjectClasspath;
+
+    private boolean isLoaded = false;
 
     public Repository(final IWorkspace workspace,
             final IProject project,
@@ -286,9 +286,11 @@ public class Repository implements IRepository, IJavaContainer {
             stores.clear();
             stores = null;
         }
+        isLoaded = false;
     }
 
     protected synchronized void initRepositoryStores(final IProgressMonitor monitor) {
+        isLoaded = false;
         if (stores == null || stores.isEmpty()) {
             disableBuild();
             stores = new TreeMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>>(new Comparator<Class<?>>() {
@@ -317,6 +319,7 @@ public class Repository implements IRepository, IJavaContainer {
                 }
             }
         }
+        isLoaded = true;
     }
 
     private boolean migrationEnabled() {
@@ -731,7 +734,7 @@ public class Repository implements IRepository, IJavaContainer {
 
     @Override
     public boolean isLoaded() {
-        return stores != null && !stores.isEmpty();
+        return isLoaded;
     }
 
     public IScopeContext getScopeContext() {
