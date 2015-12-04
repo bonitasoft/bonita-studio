@@ -2,7 +2,7 @@
 <feature
       id="studio-bos-specific-feature"
       label="BOS specific bundles"
-      version="7.1.4.qualifier"
+      version="7.1.5.qualifier"
       provider-name="BonitaSoft S.A.">
 
    <description url="http://www.example.com/description">
@@ -22,7 +22,7 @@ This software is licensed under GPL v2.
    </license>
 
    <requires>
-      <import feature="studio-feature" version="7.1.4" match="equivalent"/>
+      <import feature="studio-feature" version="7.1.5" match="equivalent"/>
    </requires>
 
    <plugin

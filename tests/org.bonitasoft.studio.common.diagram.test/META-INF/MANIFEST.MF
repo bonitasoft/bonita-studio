@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Common Diagram Test Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.common.diagram.test
-Bundle-Version: 7.1.4.qualifier
+Bundle-Version: 7.1.5.qualifier
 Bundle-Activator: org.bonitasoft.studio.common.diagram.test.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
