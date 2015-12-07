@@ -225,10 +225,12 @@ public class ContractInputController implements IViewerController {
     }
 
     protected boolean openConfirmation(final List<?> selectedInput) {
-        final StringBuilder message = new StringBuilder(Messages.removeInputConfirmationMessage);
+        final StringBuilder message = new StringBuilder(Messages.removeInputConfirmationMessagePart1);
         for (final Object input : selectedInput) {
             message.append(SWT.CR);
             message.append("- " + ((ContractInput) input).getName());
+            message.append(SWT.CR);
+            message.append(Messages.removeInputConfirmationMessagesPart2);
         }
         return FileActionDialog.getDisablePopup() ? true : MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
                 Messages.removeInputConfirmationTitle, message.toString());
