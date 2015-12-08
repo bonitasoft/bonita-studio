@@ -54,8 +54,9 @@ public class EmptySelectionMultivalidator extends MultiValidator {
                 final StringBuilder sb = new StringBuilder();
                 validateMandatoryFieldsNotSelected(sb, mappings, checkedElements);
                 if (sb.length() > 0) {
-                    if (sb.indexOf(",") == sb.lastIndexOf(",")) {
-                        sb.replace(sb.lastIndexOf(","), sb.lastIndexOf(",") + 1, "");
+                    int lastIndexOf = sb.lastIndexOf(",");
+                    if (sb.indexOf(",") == lastIndexOf) {
+                        sb.replace(lastIndexOf, lastIndexOf + 1, "");
                     }
                     final String message = container instanceof Task ? Messages.mandatoryFieldsNotSelectedStepWarning
                             : Messages.mandatoryFieldsNotSelectedWarning;

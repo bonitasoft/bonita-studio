@@ -18,6 +18,10 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.uniqueValidator;
 
 import java.util.List;
@@ -25,7 +29,6 @@ import java.util.List;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.ui.BusinessObjectDataStyledLabelProvider;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.widgets.CustomStackLayout;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -34,6 +37,7 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.DocumentType;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -80,6 +84,7 @@ public class SelectDataWizardPage extends WizardPage {
 
     private static final String INPUT = "_input";
     private static final String DOC_INPUT = "_doc_input";
+    private static final int INPUT_NAME_MAX_LENGTH = 50;
     List<Data> availableBusinessData;
     final WritableValue selectedDataObservable;
     private final BusinessObjectModelRepositoryStore businessObjectStore;
@@ -92,13 +97,12 @@ public class SelectDataWizardPage extends WizardPage {
     private final Contract contract;
     private String rootName;
     private SelectObservableValue selectionTypeObservable;
-    private final DataTypeSelectionOptions dataTypeSelectionOptions;
     private CustomStackLayout stackLayout;
+    private boolean businessDataTypeSelected = true;
 
     public SelectDataWizardPage(final Contract contract, final List<Data> availableBusinessData, final List<Document> availableDocuments,
             final WritableValue selectedDataObservable,
             final WritableValue rootNameObservable,
-            final DataTypeSelectionOptions dataTypeSelectionOptions,
             final BusinessObjectModelRepositoryStore businessObjectStore) {
         super(SelectDataWizardPage.class.getName());
         setTitle(Messages.SelectBusinessDataWizardPageTitle);
@@ -109,7 +113,6 @@ public class SelectDataWizardPage extends WizardPage {
         this.businessObjectStore = businessObjectStore;
         this.rootNameObservable = rootNameObservable;
         this.contract = contract;
-        this.dataTypeSelectionOptions = dataTypeSelectionOptions;
     }
 
     /*
@@ -127,7 +130,7 @@ public class SelectDataWizardPage extends WizardPage {
         stackLayout = new CustomStackLayout(stackedComposite);
         stackedComposite.setLayout(stackLayout);
         stackedComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        createbusinessVariableTableViewerComposite(stackedComposite, dbc);
+        createBusinessVariableTableViewerComposite(stackedComposite, dbc);
         createDocumentTableViewerComposite(stackedComposite, dbc);
         createDocumentNameField(composite, dbc);
         bindRadioButtonsToComposite(dbc);
@@ -157,7 +160,7 @@ public class SelectDataWizardPage extends WizardPage {
         }
     }
 
-    public void createbusinessVariableTableViewerComposite(final Composite parent, final DataBindingContext dbc) {
+    public void createBusinessVariableTableViewerComposite(final Composite parent, final DataBindingContext dbc) {
         businessVariableTableViewerComposite = new Composite(parent, SWT.NONE);
         businessVariableTableViewerComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         businessVariableTableViewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -184,7 +187,7 @@ public class SelectDataWizardPage extends WizardPage {
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 if (!availableBusinessData.isEmpty()) {
-                    dataTypeSelectionOptions.setBusinessDataTypeSelected(true);
+                    setBusinessDataTypeSelected(true);
                     selectedDataObservable.setValue(availableBusinessData.get(0));
                 }
             }
@@ -214,7 +217,7 @@ public class SelectDataWizardPage extends WizardPage {
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 if (!availableDocuments.isEmpty()) {
-                    dataTypeSelectionOptions.setBusinessDataTypeSelected(false);
+                    setBusinessDataTypeSelected(false);
                     selectedDataObservable.setValue(availableDocuments.get(0));
                 }
             }
@@ -226,7 +229,7 @@ public class SelectDataWizardPage extends WizardPage {
 
             @Override
             public IStatus validate(final Object value) {
-                if (value instanceof Document) {
+                if (value instanceof Document && contract.eContainer() instanceof Pool) {
                     final Document document = (Document) value;
                     return DocumentType.NONE.equals(document.getDocumentType()) ? Status.OK_STATUS
                             : ValidationStatus.warning(Messages.bind(Messages.defaultValueAlreadyDefinedWarning, document.getName()));
@@ -240,8 +243,7 @@ public class SelectDataWizardPage extends WizardPage {
         dbc.bindValue(PojoObservables.observeValue(stackLayout, "topControl"), selectionTypeObservable, neverUpdateValueStrategy().create(),
                 updateValueStrategy()
                         .withConverter(dataTypeSelectionToCompositeConverter()).create());
-        dbc.bindValue(selectionTypeObservable, PojoObservables.observeValue(dataTypeSelectionOptions, "businessDataTypeSelected"));
-
+        dbc.bindValue(selectionTypeObservable, PojoObservables.observeValue(this, "businessDataTypeSelected"));
     }
 
     private IConverter dataTypeSelectionToCompositeConverter() {
@@ -262,25 +264,35 @@ public class SelectDataWizardPage extends WizardPage {
         final Label documentInputNameLabel = new Label(documentInputNameComposite, SWT.NONE);
         documentInputNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         documentInputNameLabel.setText(Messages.rootContractInputName);
-        final Text documentInputNameText = new Text(documentInputNameComposite, SWT.BORDER);
-        documentInputNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        final Text inputNameText = createContractInputNameText(documentInputNameComposite);
+        inputNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         final Label dataTypeLabel = new Label(documentInputNameComposite, SWT.NONE);
-
         final IObservableValue prefixObservable = PojoObservables.observeValue(this, "rootName");
         dbc.bindValue(prefixObservable,
                 EMFObservables.observeDetailValue(Realm.getDefault(), selectedDataObservable, ProcessPackage.Literals.ELEMENT__NAME),
                 neverUpdateValueStrategy().create(),
                 updateValueStrategy().withConverter(documentToRootContractInputName())
                         .create());
-        final UpdateValueStrategy documentInputNameUpdateStrategy = updateValueStrategy().withValidator(
-                uniqueValidator().onProperty("name").in(contract.getInputs())).create();
-        documentInputNameUpdateStrategy.setBeforeSetValidator(new EmptyInputValidator(Messages.rootContractInputName));
-        dbc.bindValue(SWTObservables.observeText(documentInputNameText, SWT.Modify),
-                prefixObservable, documentInputNameUpdateStrategy, null);
+        dbc.bindValue(SWTObservables.observeText(inputNameText, SWT.Modify),
+                prefixObservable, targetToModelConvertStrategy(), null);
         dbc.bindValue(rootNameObservable, prefixObservable);
         dbc.bindValue(SWTObservables.observeText(dataTypeLabel), selectionTypeObservable,
                 neverUpdateValueStrategy().create(),
                 updateValueStrategy().withConverter(createSelectionTypeToLabelTextConverter()).create());
+    }
+
+    protected Text createContractInputNameText(final Composite documentInputNameComposite) {
+        return new Text(documentInputNameComposite, SWT.BORDER);
+    }
+
+    protected UpdateValueStrategy targetToModelConvertStrategy() {
+        return updateValueStrategy()
+                .withValidator(
+                        multiValidator()
+                                .addValidator(mandatoryValidator(Messages.rootContractInputName))
+                                .addValidator(maxLengthValidator(Messages.rootContractInputName, INPUT_NAME_MAX_LENGTH))
+                                .addValidator(groovyReferenceValidator(Messages.rootContractInputName).startsWithLowerCase())
+                                .addValidator(uniqueValidator().onProperty("name").in(contract.getInputs()))).create();
     }
 
     protected IConverter createSelectionTypeToLabelTextConverter() {
@@ -306,7 +318,6 @@ public class SelectDataWizardPage extends WizardPage {
             public Object convert(final Object fromObject) {
                 final String name = selectedDataObservable.getValue() instanceof Document ? fromObject + DOC_INPUT : fromObject + INPUT;
                 return NamingUtils.generateNewName(newHashSet(transform(contract.getInputs(), toContactInputName())), name, 0);
-
             }
         };
     }
@@ -340,10 +351,7 @@ public class SelectDataWizardPage extends WizardPage {
      */
     @Override
     public boolean isPageComplete() {
-        if (availableBusinessData.isEmpty() && dataTypeSelectionOptions.isBusinessDataTypeSelected()) {
-            return false;
-        }
-        if (availableDocuments.isEmpty() && !dataTypeSelectionOptions.isBusinessDataTypeSelected()) {
+        if (availableBusinessData.isEmpty() && isBusinessDataTypeSelected() || availableDocuments.isEmpty() && !isBusinessDataTypeSelected()) {
             return false;
         }
         if (selectedDataObservable.getValue() instanceof BusinessObjectData) {
@@ -371,6 +379,20 @@ public class SelectDataWizardPage extends WizardPage {
      */
     public void setRootName(final String rootName) {
         this.rootName = rootName;
+    }
+
+    /**
+     * @return the businessDataTypeSelected
+     */
+    public boolean isBusinessDataTypeSelected() {
+        return businessDataTypeSelected;
+    }
+
+    /**
+     * @param businessDataTypeSelected the businessDataTypeSelected to set
+     */
+    public void setBusinessDataTypeSelected(final boolean businessDataTypeSelected) {
+        this.businessDataTypeSelected = businessDataTypeSelected;
     }
 
 }

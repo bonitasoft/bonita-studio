@@ -52,10 +52,10 @@ public final class BusinessDataSelectedValidator extends MultiValidator {
             return toBusinessObject(value) != null ? Status.OK_STATUS : ValidationStatus.error(Messages.invalidBusinessDataSelected);
         } else {
             if (availableBusinessData.isEmpty()) {
-                return selectionTypeObservable.getValue().equals(Boolean.TRUE) ? ValidationStatus.warning(Messages.warningAddFromData_noDataAvailable)
+                return Boolean.TRUE.equals(selectionTypeObservable.getValue()) ? ValidationStatus.warning(Messages.warningAddFromData_noDataAvailable)
                         : Status.OK_STATUS;
             } else {
-                return selectionTypeObservable.getValue().equals(Boolean.TRUE) ? ValidationStatus.warning(Messages.warningAddFromData_noDataSelected)
+                return Boolean.TRUE.equals(selectionTypeObservable.getValue()) ? ValidationStatus.warning(Messages.warningAddFromData_noDataSelected)
                         : Status.OK_STATUS;
             }
         }

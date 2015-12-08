@@ -26,7 +26,7 @@ public class DocumentStyledLabelProvider extends DataStyledTreeLabelProvider {
 
     @Override
     public void update(final ViewerCell cell) {
-        Object element = cell.getElement();
+        final Object element = cell.getElement();
         if (element instanceof Document) {
             final Document document = (Document) element;
             final StyledString styledString = new StyledString();
@@ -36,8 +36,8 @@ public class DocumentStyledLabelProvider extends DataStyledTreeLabelProvider {
             styledString.append(" -- ", StyledString.DECORATIONS_STYLER);
             cell.setText(styledString.getString());
             cell.setStyleRanges(styledString.getStyleRanges());
+            cell.setImage(getImage(element));
         }
-
     }
 
     /*

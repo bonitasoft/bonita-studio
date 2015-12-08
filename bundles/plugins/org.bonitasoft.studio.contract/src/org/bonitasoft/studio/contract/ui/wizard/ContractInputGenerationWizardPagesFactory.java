@@ -48,8 +48,7 @@ public class ContractInputGenerationWizardPagesFactory {
             final WritableValue selectedDataObservable,
             final WritableValue rootNameObservable,
             final BusinessObjectModelRepositoryStore businessObjectStore) {
-        return new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable, rootNameObservable,
-                new DataTypeSelectionOptions(), businessObjectStore);
+        return new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable, rootNameObservable, businessObjectStore);
     }
 
     public GeneratedScriptPreviewPage createGeneratedScriptPreviewPage(final WritableValue rootNameObservable,
