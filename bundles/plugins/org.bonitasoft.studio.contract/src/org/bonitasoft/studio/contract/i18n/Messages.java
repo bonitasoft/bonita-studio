@@ -116,8 +116,6 @@ public class Messages extends NLS {
     public static String notAllAttributesGeneratedTaskTitle;
     public static String businessVariable;
     public static String document;
-    public static String warningAddFromData_noDocumentSelected;
-    public static String warningAddFromData_noDocumentAvailable;
     public static String defaultValueAlreadyDefinedWarning;
     public static String fileInputType;
     public static String openUpdateDocumentOperationWarningTitle;
