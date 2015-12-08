@@ -16,6 +16,7 @@ package org.bonitasoft.studio.expression.editor.viewer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -131,6 +132,24 @@ public class ExpressionViewerTest {
         mockedExprViewer.setContext(input1);
 
         assertThat(mockedExprViewer.isOldContextAndInputSimilar(input2)).isFalse();
+    }
+
+    @Test
+    public void getContentTypeFromInputNullSupport() throws Exception {
+        doCallRealMethod().when(mockedExprViewer).getContentTypeFromInput(anyString());
+        final Expression selectedExpression = ExpressionBuilder.aConstantExpression().build();
+        doReturn(selectedExpression).when(mockedExprViewer).getSelectedExpression();
+
+        assertThat(mockedExprViewer.getContentTypeFromInput("test")).isEqualTo(ExpressionConstants.CONSTANT_TYPE);
+    }
+
+    @Test
+    public void getContentTypeFromInputMessageContent() throws Exception {
+        doCallRealMethod().when(mockedExprViewer).getContentTypeFromInput(anyString());
+        final Expression selectedExpression = ExpressionBuilder.anExpression().withExpressionType(ExpressionConstants.MESSAGE_ID_TYPE).build();
+        doReturn(selectedExpression).when(mockedExprViewer).getSelectedExpression();
+
+        assertThat(mockedExprViewer.getContentTypeFromInput("test")).isEqualTo(ExpressionConstants.MESSAGE_ID_TYPE);
     }
 
 }
