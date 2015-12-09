@@ -50,6 +50,8 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.observable.ChangeEvent;
+import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
@@ -337,7 +339,6 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             public void widgetSelected(final SelectionEvent e) {
                 if (automaticResolutionButton.getSelection()) {
                     removeDependencyButton.setEnabled(false);
-                    dependencyJob.schedule();
                 }
                 depndencySection.setExpanded(!automaticResolutionButton.getSelection());
             }
@@ -490,6 +491,17 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), autoDepsModelObservable);
         dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), SWTObservables
                 .observeEnabled(addDependencyButton), opposite, new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
+        autoDepsModelObservable.addChangeListener(new IChangeListener() {
+
+            @Override
+            public void handleChange(final ChangeEvent event) {
+                if ((Boolean) autoDepsModelObservable.getValue()) {
+                    if (dependencyJob != null) {
+                        dependencyJob.schedule();
+                    }
+                }
+            }
+        });
         depndencySection.setExpanded(!automaticResolutionButton.getSelection());
 
         addDependencyButton.setEnabled(!inputExpression.isAutomaticDependencies());
