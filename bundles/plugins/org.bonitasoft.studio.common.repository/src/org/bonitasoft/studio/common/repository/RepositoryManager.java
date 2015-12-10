@@ -132,7 +132,12 @@ public class RepositoryManager {
     public Repository getRepository(final String repositoryName, final boolean migrationEnabled) {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IProject project = workspace.getRoot().getProject(repositoryName);
-        if (project == null || !project.exists()) {
+        try {
+            if (project == null || !project.exists() || !project.hasNature(BonitaProjectNature.NATURE_ID)) {
+                return null;
+            }
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e);
             return null;
         }
         return createRepository(repositoryName, migrationEnabled);
