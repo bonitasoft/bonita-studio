@@ -49,6 +49,8 @@ public class StringToExpressionConverter {
 
     private boolean useSimulationDataScope = false;
 
+    private String dataNameToIgnore;
+
     public StringToExpressionConverter(final Model model,
             final Instance container) {
         Assert.isNotNull(model);
@@ -388,21 +390,15 @@ public class StringToExpressionConverter {
         }
         if (currentDataName != null) {
             for (final String dataName : data.keySet()) {
-                if (currentDataName.contains(dataName)) {
+                if (currentDataName.contains(dataName) && !dataName.equals(dataNameToIgnore)) {
                     final int index = currentDataName.indexOf(dataName);
-                    final boolean validPrefix = isValidPrefix(currentDataName,
-                            index);
-                    final boolean validSuffix = isValidSuffix(currentDataName,
-                            dataName, index);
+                    final boolean validPrefix = isValidPrefix(currentDataName, index);
+                    final boolean validSuffix = isValidSuffix(currentDataName, dataName, index);
                     if (validPrefix && validSuffix) {
-                        final Instance dependencyInstance = createVariableDependencyInstance(data
-                                .get(dataName));
-                        final List<Instance> instList = expression
-                                .get("referencedElements");
-                        if (!dependancyAlreadyExists(instList,
-                                dependencyInstance)) {
-                            expression.add("referencedElements",
-                                    dependencyInstance);
+                        final Instance dependencyInstance = createVariableDependencyInstance(data.get(dataName));
+                        final List<Instance> instList = expression.get("referencedElements");
+                        if (!dependancyAlreadyExists(instList, dependencyInstance)) {
+                            expression.add("referencedElements", dependencyInstance);
                             hasAdded = true;
                         }
                     }
@@ -415,7 +411,7 @@ public class StringToExpressionConverter {
     private boolean isValidSuffix(final String currentDataName,
             final String dataName, final int index) {
         boolean validSuffix = false;
-        if (index + dataName.length() < currentDataName.length() - 1) {
+        if (index + dataName.length() < currentDataName.length()) {
             final String suffix = currentDataName.substring(
                     index + dataName.length(), index + dataName.length() + 1);
             if (!Character.isLetter(suffix.toCharArray()[0])) {
@@ -596,6 +592,10 @@ public class StringToExpressionConverter {
                 this.data.put((String) data.get("name"), data);
             }
         }
+    }
+
+    public void setDataToIgnore(final String dataName) {
+        dataNameToIgnore = dataName;
     }
 
 }
