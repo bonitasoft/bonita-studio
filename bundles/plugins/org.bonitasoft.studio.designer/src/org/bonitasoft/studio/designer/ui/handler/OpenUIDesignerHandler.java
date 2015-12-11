@@ -64,7 +64,8 @@ public class OpenUIDesignerHandler extends AbstractHandler {
 
                 @Override
                 public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    monitor.beginTask(Messages.waitingForTomcatServer, IProgressMonitor.UNKNOWN);
+                    monitor.beginTask(Messages.bind(Messages.waitingForTomcatServer, org.bonitasoft.studio.common.Messages.uiDesignerModuleName),
+                            IProgressMonitor.UNKNOWN);
                     connectToURL(url, monitor);
                 }
 
