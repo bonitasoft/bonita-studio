@@ -938,6 +938,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             return ExpressionConstants.SEARCH_INDEX_TYPE;
         } else if (ExpressionConstants.QUERY_TYPE.equals(expressionType)) {
             return ExpressionConstants.QUERY_TYPE;
+        } else if (ExpressionConstants.MESSAGE_ID_TYPE.equals(expressionType)) {
+            return ExpressionConstants.MESSAGE_ID_TYPE;
         }
 
         final Set<String> cache = new HashSet<String>();

@@ -64,10 +64,12 @@ public class DataDefaultValueMigration extends ReportCustomMigration {
                     final String defaultValue = dataDefaultValue.get(uuid);
                     final StringToExpressionConverter converter = getConverter(model, getScope(data));
                     final String returnType = StringToExpressionConverter.getDataReturnType(data);
+                    final String dataName = data.get("name");
+                    converter.setDataToIgnore(dataName);
                     expression = converter.parse(defaultValue, returnType, false);
                     final String expressionType = expression.get("type");
                     if(ExpressionConstants.SCRIPT_TYPE.equals(expressionType)){
-                        expression.set("name",data.get("name")+"DefaultValueScript");
+                        expression.set("name",dataName+"DefaultValueScript");
                         final List<Instance> dependencies =  expression.get("referencedElements");
                         boolean invalidDependency = false ;
                         for(final Instance dependency : dependencies){

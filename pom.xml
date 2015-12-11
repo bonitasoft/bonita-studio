@@ -275,7 +275,7 @@
 			<properties>
 				<os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
 			</properties>
-		</profile>
+		</profile>		
 		<profile>
 			<id>tag-trunk</id>
 			<build>
