@@ -132,13 +132,29 @@ public class RepositoryManager {
     public Repository getRepository(final String repositoryName, final boolean migrationEnabled) {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IProject project = workspace.getRoot().getProject(repositoryName);
+        if (project == null || !project.exists()) {
+            return null;
+        }
+        boolean toClose = false;
         try {
-            if (project == null || !project.exists() || !project.hasNature(BonitaProjectNature.NATURE_ID)) {
+            if (!project.isAccessible()) {
+                project.open(Repository.NULL_PROGRESS_MONITOR);
+                toClose = true;
+            }
+            if (!project.hasNature(BonitaProjectNature.NATURE_ID)) {
                 return null;
             }
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
             return null;
+        } finally {
+            if (toClose) {
+                try {
+                    project.close(Repository.NULL_PROGRESS_MONITOR);
+                } catch (final CoreException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
         }
         return createRepository(repositoryName, migrationEnabled);
     }
