@@ -16,6 +16,9 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard.validator;
 
+import org.bonitasoft.engine.bdm.BDMQueryUtil;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.Query;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -25,10 +28,6 @@ import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 
-import org.bonitasoft.engine.bdm.BDMQueryUtil;
-import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.Query;
-
 /**
  * @author Romain Bioteau
  * 
@@ -37,9 +36,9 @@ public class QueryNameCellEditorValidator implements ICellEditorValidator, IVali
 
     public static final int MAX_QUERY_NAME_LENGTH = 150;
 
-    private BusinessObject bo;
+    private final BusinessObject bo;
 
-    private Query query;
+    private final Query query;
 
     public QueryNameCellEditorValidator(BusinessObject bo, Query query) {
         this.bo = bo;
@@ -52,7 +51,7 @@ public class QueryNameCellEditorValidator implements ICellEditorValidator, IVali
      */
     @Override
     public String isValid(Object value) {
-        IStatus status = doValidate(value);
+        final IStatus status = doValidate(value);
         if (!status.isOK()) {
             return status.getMessage();
         }
@@ -73,12 +72,12 @@ public class QueryNameCellEditorValidator implements ICellEditorValidator, IVali
         if (!status.isOK()) {
             return status;
         }
-        for (String queryName : BDMQueryUtil.getAllProvidedQueriesNameForBusinessObject(bo)) {
+        for (final String queryName : BDMQueryUtil.getAllProvidedQueriesNameForBusinessObject(bo)) {
             if (name.equalsIgnoreCase(queryName)) {
                 return ValidationStatus.error(Messages.bind(Messages.queryNameReserved, name));
             }
         }
-        for (Query query : bo.getQueries()) {
+        for (final Query query : bo.getQueries()) {
             if (query.getName().equalsIgnoreCase(name) && !this.query.equals(query)) {
                 return ValidationStatus.error(Messages.queryNameAlreadyExists);
             }
