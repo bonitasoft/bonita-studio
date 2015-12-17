@@ -21,44 +21,40 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
-import org.eclipse.core.databinding.observable.value.SelectObservableValue;
+import org.bonitasoft.studio.model.process.Document;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-public final class BusinessDataSelectedValidator extends MultiValidator {
+public final class AvailableDataValidator extends MultiValidator {
 
     private final List<Data> availableBusinessData;
     private final WritableValue selectedDataObservable;
     private final BusinessObjectModelRepositoryStore businessObjectStore;
-    private final SelectObservableValue selectionTypeObservable;
+    private final List<Document> availableDocuments;
 
-    public BusinessDataSelectedValidator(final List<Data> availableBusinessData, final WritableValue selectedDataObservable,
-            final SelectObservableValue selectionTypeObservable,
+    public AvailableDataValidator(final List<Data> availableBusinessData, final WritableValue selectedDataObservable,
+            final List<Document> availableDocuments,
             final BusinessObjectModelRepositoryStore businessObjectStore) {
         this.availableBusinessData = availableBusinessData;
         this.selectedDataObservable = selectedDataObservable;
-        this.selectionTypeObservable = selectionTypeObservable;
         this.businessObjectStore = businessObjectStore;
+        this.availableDocuments = availableDocuments;
     }
 
     @Override
     protected IStatus validate() {
+        if (availableBusinessData.isEmpty() && availableDocuments.isEmpty()) {
+            return ValidationStatus.warning(Messages.warningAddFromData_noDataAvailable);
+        }
         final Object selectedData = selectedDataObservable.getValue();
         if (selectedData != null && selectedData instanceof BusinessObjectData) {
             final BusinessObjectData value = (BusinessObjectData) selectedData;
             return toBusinessObject(value) != null ? Status.OK_STATUS : ValidationStatus.error(Messages.invalidBusinessDataSelected);
-        } else {
-            if (availableBusinessData.isEmpty()) {
-                return Boolean.TRUE.equals(selectionTypeObservable.getValue()) ? ValidationStatus.warning(Messages.warningAddFromData_noDataAvailable)
-                        : Status.OK_STATUS;
-            } else {
-                return Boolean.TRUE.equals(selectionTypeObservable.getValue()) ? ValidationStatus.warning(Messages.warningAddFromData_noDataSelected)
-                        : Status.OK_STATUS;
-            }
         }
+        return Status.OK_STATUS;
     }
 
     private BusinessObject toBusinessObject(final BusinessObjectData selectedData) {

@@ -15,7 +15,10 @@
 package org.bonitasoft.studio.contract.ui.property;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.studio.model.process.builders.DocumentBuilder.aDocument;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.anyString;
@@ -29,6 +32,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.data.ui.property.section.PoolAdaptableSelectionProvider;
 import org.bonitasoft.studio.designer.ui.contribution.CreateAndEditFormContributionItem;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -75,6 +79,9 @@ public class ContractPropertySectionTest {
     private ContractContainerAdaptableSelectionProvider selectionProvider;
 
     @Mock
+    private PoolAdaptableSelectionProvider poolSelectionProvider;
+
+    @Mock
     private CreateAndEditFormContributionItem contributionItem;
 
     @Mock
@@ -109,7 +116,8 @@ public class ContractPropertySectionTest {
     @Before
     public void setUp() throws Exception {
         parent = realm.createComposite();
-        section = spy(new ContractPropertySection(sharedImages, eclipseContext, selectionProvider, repositoryAccessor, operationBuilder, expressionBuilder,
+        section = spy(new ContractPropertySection(sharedImages, eclipseContext, selectionProvider, poolSelectionProvider, repositoryAccessor, operationBuilder,
+                expressionBuilder,
                 progressService));
         when(tabbedPropertySheetPage.getWidgetFactory()).thenReturn(new TabbedPropertySheetWidgetFactory());
         doReturn(contributionItem).when(section).newContributionItem(CreateAndEditFormContributionItem.class);
@@ -193,5 +201,35 @@ public class ContractPropertySectionTest {
         section.init(new WritableValue(task.getContract(), Contract.class));
         doReturn(aTask().build()).when(selectionProvider).getAdapter(EObject.class);
         assertThat(section.getSectionDescription()).isEqualTo(Messages.stepContractSectionDescription);
+    }
+
+    @Test
+    public void should_bindGenerateButtonEnablement_convert_boolean_value_to_true_when_pool_contains_business_variable() {
+        final Pool pool = aPool().havingContract(aContract()).havingData(aBusinessData().build()).build();
+        section.init(new WritableValue(pool.getContract(), Contract.class));
+        doReturn(new StructuredSelection(pool)).when(poolSelectionProvider).getSelection();
+        final Button button = new Button(parent, SWT.PUSH);
+        section.bindGenerateButtonEnablement(button);
+        assertThat(button.isEnabled()).isTrue();
+    }
+
+    @Test
+    public void should_bindGenerateButtonEnablement_convert_return_boolean_value_to_true_when_pool_contains_documents() {
+        final Pool pool = aPool().havingContract(aContract()).havingDocuments(aDocument().build()).build();
+        section.init(new WritableValue(pool.getContract(), Contract.class));
+        doReturn(new StructuredSelection(pool)).when(poolSelectionProvider).getSelection();
+        final Button button = new Button(parent, SWT.PUSH);
+        section.bindGenerateButtonEnablement(button);
+        assertThat(button.isEnabled()).isTrue();
+    }
+
+    @Test
+    public void should_bindGenerateButtonEnablement_convert_return_boolean_value_to_false_when_pool_contains_no_data() {
+        final Pool pool = aPool().havingContract(aContract()).havingData(aData().build()).build();
+        section.init(new WritableValue(pool.getContract(), Contract.class));
+        doReturn(new StructuredSelection(pool)).when(poolSelectionProvider).getSelection();
+        final Button button = new Button(parent, SWT.PUSH);
+        section.bindGenerateButtonEnablement(button);
+        assertThat(button.isEnabled()).isFalse();
     }
 }

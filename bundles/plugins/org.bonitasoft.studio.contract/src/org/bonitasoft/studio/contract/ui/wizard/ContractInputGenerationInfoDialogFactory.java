@@ -19,6 +19,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.OperationContainer;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Shell;
@@ -45,6 +46,11 @@ public class ContractInputGenerationInfoDialogFactory {
                     SHOW_GENERATION_SUCCESS_DIALOG).getReturnCode();
         }
         return NOT_OPENED;
+    }
+
+    public void openUpdateDocumentOperationWarning(final String documentName, final Shell shell) {
+        MessageDialog.openWarning(shell, Messages.openUpdateDocumentOperationWarningTitle,
+                Messages.bind(Messages.openUpdateDocumentOperationWarningMessages, documentName));
     }
 
     private String getInfoMessage(final ContractContainer contractContainer) {

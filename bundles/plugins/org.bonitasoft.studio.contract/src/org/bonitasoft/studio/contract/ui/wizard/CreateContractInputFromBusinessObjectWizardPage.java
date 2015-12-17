@@ -14,12 +14,9 @@
  */
 package org.bonitasoft.studio.contract.ui.wizard;
 
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Sets.newHashSet;
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.uniqueValidator;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +24,6 @@ import java.util.Objects;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.i18n.Messages;
@@ -37,7 +33,6 @@ import org.bonitasoft.studio.contract.ui.wizard.labelProvider.InputTypeColumnLab
 import org.bonitasoft.studio.contract.ui.wizard.labelProvider.MandatoryColumnLabelProvider;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -75,10 +70,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-
-import com.google.common.base.Function;
 
 /**
  * @author aurelie
@@ -95,7 +86,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     private final BusinessObjectModelRepositoryStore businessObjectStore;
     private final GenerationOptions generationOptions;
     private SelectObservableValue actionObservable;
-    private final WritableValue rootNameObservable;
     private final WritableList fieldToContractInputMappingsObservable;
     private Button deselectAll;
     private Button selectMandatories;
@@ -105,7 +95,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     protected CreateContractInputFromBusinessObjectWizardPage(final Contract contract,
             final GenerationOptions generationOptions,
             final WritableValue selectedDataObservable,
-            final WritableValue rootNameObservable, final FieldToContractInputMappingFactory fieldToContractInputMappingFactory,
+            final FieldToContractInputMappingFactory fieldToContractInputMappingFactory,
             final WritableList fieldToContractInputMappingsObservable, final BusinessObjectModelRepositoryStore businessObjectStore) {
         super(CreateContractInputFromBusinessObjectWizardPage.class.getName());
         setDescription(Messages.selectFieldToGenerateDescription);
@@ -114,8 +104,8 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         this.contract = contract;
         this.generationOptions = generationOptions;
         this.businessObjectStore = businessObjectStore;
-        this.rootNameObservable = rootNameObservable;
         this.fieldToContractInputMappingsObservable = fieldToContractInputMappingsObservable;
+        mappings = new ArrayList<FieldToContractInputMapping>();
     }
 
     public void setTitle() {
@@ -143,7 +133,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        createRootNameControl(dbc, composite);
         createProcessDataMappingTreeViewer(composite, dbc);
         createReminderText(dbc, composite);
         setControl(composite);
@@ -174,54 +163,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
     public void disableAutoGeneration() {
         actionObservable.setValue(false);
-    }
-
-    private void createRootNameControl(final EMFDataBindingContext dbc, final Composite composite) {
-        final Composite rootNameComposite = new Composite(composite, SWT.NONE);
-        rootNameComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 10).create());
-        rootNameComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        final Label label = new Label(rootNameComposite, SWT.NONE);
-        label.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
-        label.setText(Messages.rootContractInputName);
-        final Text prefixText = new Text(rootNameComposite, SWT.BORDER);
-        prefixText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        final Label typeLabel = new Label(rootNameComposite, SWT.NONE);
-        typeLabel.setText(Messages.inputOfType);
-        final IObservableValue prefixObservable = PojoObservables.observeValue(this, "rootName");
-
-        dbc.bindValue(prefixObservable,
-                EMFObservables.observeDetailValue(Realm.getDefault(), selectedDataObservable, ProcessPackage.Literals.ELEMENT__NAME),
-                neverUpdateValueStrategy().create(), updateValueStrategy().withConverter(dataNameToRootContractInputName()).create());
-        dbc.bindValue(SWTObservables.observeText(prefixText, SWT.Modify),
-                prefixObservable, updateValueStrategy().withValidator(uniqueValidator().onProperty("name").in(contract.getInputs())).create(),
-                null);
-        dbc.bindValue(rootNameObservable, prefixObservable);
-    }
-
-    private IConverter dataNameToRootContractInputName() {
-        return new Converter(String.class, String.class) {
-
-            @Override
-            public Object convert(final Object fromObject) {
-                final String className = (String) EMFObservables.observeDetailValue(Realm.getDefault(), selectedDataObservable,
-                        ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME).getValue();
-                if (className != null) {
-                    final String name = fromObject + "Input";
-                    return NamingUtils.generateNewName(newHashSet(transform(contract.getInputs(), toContactInputName())), name, 0);
-                }
-                return "";
-            }
-        };
-    }
-
-    private Function<ContractInput, String> toContactInputName() {
-        return new Function<ContractInput, String>() {
-
-            @Override
-            public String apply(final ContractInput input) {
-                return input.getName();
-            }
-        };
     }
 
     private void createProcessDataMappingTreeViewer(final Composite composite, final EMFDataBindingContext dbc) {
@@ -271,7 +212,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         checkedObservableValue.setValue(checkedElements);
         final WritableValue mappingsObservableValue = new WritableValue();
         mappingsObservableValue.setValue(fieldToContractInputMappingsObservable);
-        multiValidator = new EmptySelectionMultivalidator(checkedElements, mappings, contract.eContainer());
+        multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements, mappings, contract.eContainer());
         dbc.addValidationStatusProvider(multiValidator);
         dbc.bindValue(checkedObservableValue, observeInput,
                 updateValueStrategy().withConverter(createMappingsToCheckedElementsConverter(mappingsObservableValue)).create(), updateValueStrategy()
@@ -393,7 +334,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
             @Override
             public Object convert(final Object selectedData) {
-                if (selectedData == null) {
+                if (selectedData == null || !(selectedData instanceof BusinessObjectData)) {
                     return Collections.emptyList();
                 }
                 mappings = fieldToContractInputMappingFactory.createMappingForBusinessObjectType(toBusinessObject((BusinessObjectData) selectedData));
@@ -415,9 +356,8 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     public boolean canFlipToNextPage() {
         if (contract.eContainer() instanceof Pool) {
             return generationOptions.isAutogeneratedScript() && super.canFlipToNextPage();
-        } else {
-            return super.canFlipToNextPage();
         }
+        return super.canFlipToNextPage();
     }
 
     private BusinessObject toBusinessObject(final BusinessObjectData selectedData) {

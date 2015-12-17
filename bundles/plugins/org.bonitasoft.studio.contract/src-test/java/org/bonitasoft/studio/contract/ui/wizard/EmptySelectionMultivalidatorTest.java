@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.contract.ui.wizard;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.Mockito.mock;
 
@@ -25,9 +26,11 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.set.WritableSet;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +51,10 @@ public class EmptySelectionMultivalidatorTest {
     @Test
     public void shouldReturnErrorWhenNoElementsAreChecked() {
         final IObservableSet checkedElements = new WritableSet();
-        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(checkedElements,
+        final WritableValue selectedDataObservable = new WritableValue();
+        final BusinessObjectData businessObjectData = aBusinessData().withClassname("org.test.Employee").build();
+        selectedDataObservable.setValue(businessObjectData);
+        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements,
                 new ArrayList<FieldToContractInputMapping>(), aPool().build());
         assertThat(multiValidator.validate().isOK()).isFalse();
     }
@@ -57,7 +63,10 @@ public class EmptySelectionMultivalidatorTest {
     public void shouldReturnOkStatusWhenAtLeastOneElementIsChecked() {
         final IObservableSet checkedElements = new WritableSet();
         checkedElements.add(mock(FieldToContractInputMapping.class));
-        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(checkedElements,
+        final WritableValue selectedDataObservable = new WritableValue();
+        final BusinessObjectData businessObjectData = aBusinessData().withClassname("org.test.Employee").build();
+        selectedDataObservable.setValue(businessObjectData);
+        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements,
                 new ArrayList<FieldToContractInputMapping>(), aPool().build());
         assertThat(multiValidator.validate().isOK()).isTrue();
     }
@@ -79,7 +88,10 @@ public class EmptySelectionMultivalidatorTest {
         checkedElements.add(rootMapping1);
         checkedElements.add(rootMapping2);
         checkedElements.add(childMapping2);
-        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(checkedElements,
+        final WritableValue selectedDataObservable = new WritableValue();
+        final BusinessObjectData businessObjectData = aBusinessData().withClassname("org.test.Employee").build();
+        selectedDataObservable.setValue(businessObjectData);
+        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements,
                 Lists.newArrayList(rootMapping1, rootMapping2), aPool().build());
         assertThat(multiValidator.validate().isOK()).isFalse();
     }
@@ -102,7 +114,10 @@ public class EmptySelectionMultivalidatorTest {
         checkedElements.add(rootMapping2);
         checkedElements.add(childMapping2);
         checkedElements.add(childMapping1);
-        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(checkedElements,
+        final WritableValue selectedDataObservable = new WritableValue();
+        final BusinessObjectData businessObjectData = aBusinessData().withClassname("org.test.Employee").build();
+        selectedDataObservable.setValue(businessObjectData);
+        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements,
                 Lists.newArrayList(rootMapping1, rootMapping2), aPool().build());
         assertThat(multiValidator.validate().isOK()).isTrue();
     }
