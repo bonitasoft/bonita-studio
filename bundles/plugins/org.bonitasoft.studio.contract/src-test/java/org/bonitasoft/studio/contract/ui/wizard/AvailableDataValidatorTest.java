@@ -26,13 +26,14 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class BusinessDataSelectedValidatorTest {
+public class AvailableDataValidatorTest {
 
     @Rule
     public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
@@ -47,7 +48,9 @@ public class BusinessDataSelectedValidatorTest {
 
         final BusinessObjectModelRepositoryStore businessObjectStore = mock(BusinessObjectModelRepositoryStore.class);
         when(businessObjectStore.getBusinessObjectByQualifiedName(businessObjectData.getClassName())).thenReturn(new BusinessObject());
-        assertThat(new BusinessDataSelectedValidator(availableBusinessData, selectedDataObservable, businessObjectStore).validate().isOK()).isTrue();
+        assertThat(
+                new AvailableDataValidator(availableBusinessData, selectedDataObservable, new ArrayList<Document>(), businessObjectStore)
+                        .validate().isOK()).isTrue();
     }
 
     @Test
@@ -55,7 +58,8 @@ public class BusinessDataSelectedValidatorTest {
         final WritableValue selectedDataObservable = new WritableValue();
         final List<Data> availableBusinessData = new ArrayList<Data>();
         assertThat(
-                new BusinessDataSelectedValidator(availableBusinessData, selectedDataObservable, mock(BusinessObjectModelRepositoryStore.class)).validate()
+                new AvailableDataValidator(availableBusinessData, selectedDataObservable, new ArrayList<Document>(),
+                        mock(BusinessObjectModelRepositoryStore.class)).validate()
                         .isOK()).isFalse();
     }
 
@@ -69,16 +73,21 @@ public class BusinessDataSelectedValidatorTest {
 
         final BusinessObjectModelRepositoryStore businessObjectStore = mock(BusinessObjectModelRepositoryStore.class);
         when(businessObjectStore.getBusinessObjectByQualifiedName(businessObjectData.getClassName())).thenReturn(null);
-        assertThat(new BusinessDataSelectedValidator(availableBusinessData, selectedDataObservable, businessObjectStore).validate().isOK()).isFalse();
+        assertThat(
+                new AvailableDataValidator(availableBusinessData, selectedDataObservable, new ArrayList<Document>(), businessObjectStore)
+                        .validate().isOK()).isFalse();
     }
 
     @Test
     public void testValidate_KO_forInvalidBusinessDataSelected() throws Exception {
         final WritableValue selectedDataObservable = new WritableValue();
         final List<Data> availableBusinessData = new ArrayList<Data>();
-        availableBusinessData.add(ProcessFactory.eINSTANCE.createData());
+        final BusinessObjectData data = ProcessFactory.eINSTANCE.createBusinessObjectData();
+        availableBusinessData.add(data);
+        selectedDataObservable.setValue(data);
         assertThat(
-                new BusinessDataSelectedValidator(availableBusinessData, selectedDataObservable, mock(BusinessObjectModelRepositoryStore.class)).validate()
+                new AvailableDataValidator(availableBusinessData, selectedDataObservable, new ArrayList<Document>(),
+                        mock(BusinessObjectModelRepositoryStore.class)).validate()
                         .isOK()).isFalse();
     }
 

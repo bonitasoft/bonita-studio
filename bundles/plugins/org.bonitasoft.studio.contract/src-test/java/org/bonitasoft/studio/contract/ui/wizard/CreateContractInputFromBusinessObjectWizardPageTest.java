@@ -68,7 +68,7 @@ public class CreateContractInputFromBusinessObjectWizardPageTest {
         rootNameObservable.setValue("employeeInput");
         final WritableList fieldToContractInputMappingsObservable = new WritableList();
         final CreateContractInputFromBusinessObjectWizardPage page = new CreateContractInputFromBusinessObjectWizardPage(contract, options,
-                selectedDataObservable, rootNameObservable, new FieldToContractInputMappingFactory(), fieldToContractInputMappingsObservable, store);
+                selectedDataObservable, new FieldToContractInputMappingFactory(), fieldToContractInputMappingsObservable, store);
         final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
         final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
         final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
@@ -100,7 +100,7 @@ public class CreateContractInputFromBusinessObjectWizardPageTest {
         rootNameObservable.setValue("employeeInput");
         final WritableList fieldToContractInputMappingsObservable = new WritableList();
         final CreateContractInputFromBusinessObjectWizardPage page = new CreateContractInputFromBusinessObjectWizardPage(contract, options,
-                selectedDataObservable, rootNameObservable, new FieldToContractInputMappingFactory(), fieldToContractInputMappingsObservable, store);
+                selectedDataObservable, new FieldToContractInputMappingFactory(), fieldToContractInputMappingsObservable, store);
         final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
         final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
         final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
@@ -132,7 +132,7 @@ public class CreateContractInputFromBusinessObjectWizardPageTest {
         rootNameObservable.setValue("employeeInput");
         final WritableList fieldToContractInputMappingsObservable = new WritableList();
         final CreateContractInputFromBusinessObjectWizardPage page = new CreateContractInputFromBusinessObjectWizardPage(contract, options,
-                selectedDataObservable, rootNameObservable, new FieldToContractInputMappingFactory(), fieldToContractInputMappingsObservable, store);
+                selectedDataObservable, new FieldToContractInputMappingFactory(), fieldToContractInputMappingsObservable, store);
         final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
         final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
         final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
@@ -162,7 +162,7 @@ public class CreateContractInputFromBusinessObjectWizardPageTest {
         rootNameObservable.setValue("employeeInput");
         final WritableList fieldToContractInputMappingsObservable = new WritableList();
         final CreateContractInputFromBusinessObjectWizardPage page = new CreateContractInputFromBusinessObjectWizardPage(contract, options,
-                selectedDataObservable, rootNameObservable, new FieldToContractInputMappingFactory(), fieldToContractInputMappingsObservable, store);
+                selectedDataObservable, new FieldToContractInputMappingFactory(), fieldToContractInputMappingsObservable, store);
         final RelationField rootField1 = Mockito.mock(RelationField.class);
         final RelationField rootField2 = Mockito.mock(RelationField.class);
         final SimpleField childField1 = Mockito.mock(SimpleField.class);

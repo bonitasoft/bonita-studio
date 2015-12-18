@@ -24,6 +24,7 @@ import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInpu
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.Document;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 
@@ -38,13 +39,16 @@ public class ContractInputGenerationWizardPagesFactory {
             final FieldToContractInputMappingFactory fieldToContractInputMappingFactory,
             final WritableList fieldToContractInputMappingsObservable,
             final BusinessObjectModelRepositoryStore businessObjectStore) {
-        return new CreateContractInputFromBusinessObjectWizardPage(contract, generationOptions, selectedDataObservable, rootNameObservable,
+        return new CreateContractInputFromBusinessObjectWizardPage(contract, generationOptions, selectedDataObservable,
                 fieldToContractInputMappingFactory, fieldToContractInputMappingsObservable, businessObjectStore);
     }
 
-    public SelectBusinessDataWizardPage createSelectBusinessDataWizardPage(final List<Data> availableBusinessData, final WritableValue selectedDataObservable,
+    public SelectDataWizardPage createSelectBusinessDataWizardPage(final Contract contract, final List<Data> availableBusinessData,
+            final List<Document> availableDocuments,
+            final WritableValue selectedDataObservable,
+            final WritableValue rootNameObservable,
             final BusinessObjectModelRepositoryStore businessObjectStore) {
-        return new SelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable, businessObjectStore);
+        return new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable, rootNameObservable, businessObjectStore);
     }
 
     public GeneratedScriptPreviewPage createGeneratedScriptPreviewPage(final WritableValue rootNameObservable,

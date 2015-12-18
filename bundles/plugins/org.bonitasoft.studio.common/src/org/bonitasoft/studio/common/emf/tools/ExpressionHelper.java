@@ -19,7 +19,9 @@ import static com.google.common.collect.Iterables.find;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
+import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
@@ -401,7 +403,7 @@ public class ExpressionHelper {
     public static Operation createDefaultConnectorOutputOperation(final Output output) {
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
         final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
-        assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+        assignment.setType(isDocumentValue(output) ? ExpressionConstants.SET_DOCUMENT_OPERATOR : ExpressionConstants.ASSIGNMENT_OPERATOR);
         operation.setOperator(assignment);
 
         final Expression rightOperand = ExpressionFactory.eINSTANCE.createExpression();
@@ -415,6 +417,10 @@ public class ExpressionHelper {
         final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression();
         operation.setLeftOperand(leftOperand);
         return operation;
+    }
+
+    private static boolean isDocumentValue(Output output) {
+        return Objects.equals(DocumentValue.class.getName(), output.getType());
     }
 
     public static Data dataFromIteratorExpression(final MultiInstantiable parentFlowElement, final Expression iteratorExpression, final MainProcess mainProcess) {
