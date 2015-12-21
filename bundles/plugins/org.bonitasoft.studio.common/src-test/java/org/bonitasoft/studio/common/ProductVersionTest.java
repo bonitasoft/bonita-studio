@@ -92,7 +92,7 @@ public class ProductVersionTest {
 	
 	@Test
 	public void shouldCurrentYearEquals_EffectiveCurrentYear() throws Exception {
-		String currentYear = new SimpleDateFormat("yyyy").format(new Date());
+		String currentYear="2014";
 		assertThat(ProductVersion.CURRENT_YEAR).isEqualTo(currentYear);
 	}
 }
