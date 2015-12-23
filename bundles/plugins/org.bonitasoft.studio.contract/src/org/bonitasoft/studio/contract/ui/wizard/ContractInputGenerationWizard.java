@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -34,12 +36,21 @@ import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInpu
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractContainer;
+import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.OperationContainer;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.pics.Pics;
@@ -77,7 +88,8 @@ public class ContractInputGenerationWizard extends Wizard {
     private GeneratedScriptPreviewPage generatedScriptPreviewPage;
     private final ContractInputGenerationWizardPagesFactory contractInputWizardPagesFactory;
     private final GroovySourceViewerFactory sourceViewerFactory;
-    private SelectBusinessDataWizardPage selectBusinessDataWizardPage;
+    private SelectDataWizardPage selectBusinessDataWizardPage;
+    private List<Document> availableDocuments;
 
     public ContractInputGenerationWizard(final ContractContainer contractContainer,
             final EditingDomain editingDomain,
@@ -113,8 +125,17 @@ public class ContractInputGenerationWizard extends Wizard {
         availableBusinessData = availableBusinessData();
         if (!availableBusinessData.isEmpty()) {
             selectedDataObservable.setValue(availableBusinessData.get(0));
+        } else {
+            final Pool pool = ModelHelper.getParentPool(contractContainer);
+            if (!pool.getDocuments().isEmpty()) {
+                selectedDataObservable.setValue(pool.getDocuments().get(0));
+            }
         }
-        selectBusinessDataWizardPage = contractInputWizardPagesFactory.createSelectBusinessDataWizardPage(availableBusinessData, selectedDataObservable,
+        availableDocuments = ModelHelper.getParentPool(contractContainer).getDocuments();
+        selectBusinessDataWizardPage = contractInputWizardPagesFactory.createSelectBusinessDataWizardPage(contractContainer.getContract(),
+                availableBusinessData, availableDocuments,
+                selectedDataObservable,
+                rootNameObservable,
                 repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
         addPage(selectBusinessDataWizardPage);
         contractInputFromBusinessObjectWizardPage = contractInputWizardPagesFactory.createCreateContratInputFromBusinessObjectWizardPage(
@@ -142,7 +163,7 @@ public class ContractInputGenerationWizard extends Wizard {
      */
     @Override
     public boolean canFinish() {
-        if (availableBusinessData.isEmpty()) {
+        if (availableBusinessData.isEmpty() && availableDocuments.isEmpty()) {
             return false;
         }
         return super.canFinish();
@@ -154,6 +175,17 @@ public class ContractInputGenerationWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
+        final Object selectedData = selectedDataObservable.getValue();
+        if (selectedData instanceof BusinessObjectData) {
+            return perFormFinishForBusinessObjectData();
+        }
+        if (selectedData instanceof Document) {
+            return performFinishForDocument();
+        }
+        return true;
+    }
+
+    private boolean perFormFinishForBusinessObjectData() {
         final BusinessObjectData data = (BusinessObjectData) selectedDataObservable.getValue();
         final RootContractInputGenerator contractInputGenerator = getRootContractGenerator();
         final int returnCode = openInfoDialog();
@@ -179,12 +211,47 @@ public class ContractInputGenerationWizard extends Wizard {
         return false;
     }
 
+    private boolean performFinishForDocument() {
+        final Document document = (Document) selectedDataObservable.getValue();
+        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
+        input.setType(ContractInputType.FILE);
+        input.setMultiple(document.isMultiple());
+        input.setName((String) rootNameObservable.getValue());
+        final CompoundCommand cc = new CompoundCommand();
+        cc.append(AddCommand.create(editingDomain, contractContainer.getContract(), ProcessPackage.Literals.CONTRACT__INPUTS, input));
+        if (contractContainer instanceof Task) {
+            createDocumentUpdateOperation(document, input, cc);
+        } else {
+            cc.append(SetCommand.create(editingDomain, document, ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE, DocumentType.CONTRACT));
+            cc.append(SetCommand.create(editingDomain, document, ProcessPackage.Literals.DOCUMENT__CONTRACT_INPUT, input));
+        }
+        editingDomain.getCommandStack().execute(cc);
+        return true;
+    }
+
+    private void createDocumentUpdateOperation(final Document document, final ContractInput input, final CompoundCommand cc) {
+        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        final Expression rightOperand = ExpressionHelper.createExpressionFromEObject(input);
+        final Expression leftOperand = ExpressionHelper.createDocumentReferenceExpression(document);
+        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
+        if (document.isMultiple()) {
+            operator.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
+        } else {
+            operator.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR);
+        }
+        operation.setLeftOperand(leftOperand);
+        operation.setRightOperand(rightOperand);
+        operation.setOperator(operator);
+        cc.append(AddCommand.create(editingDomain, contractContainer, ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS, operation));
+        infoDialogFactory.openUpdateDocumentOperationWarning(document.getName(), getShell());
+    }
+
     protected RootContractInputGenerator getRootContractGenerator() {
         RootContractInputGenerator contractInputGenerator;
         if (generatedScriptPreviewPage != null && generatedScriptPreviewPage.getRootContractInputGenerator() != null) {
             contractInputGenerator = generatedScriptPreviewPage.getRootContractInputGenerator();
         } else {
-            contractInputGenerator = new RootContractInputGenerator(contractInputFromBusinessObjectWizardPage.getRootName(),
+            contractInputGenerator = new RootContractInputGenerator((String) rootNameObservable.getValue(),
                     contractInputFromBusinessObjectWizardPage.getMappings(), repositoryAccessor, operationBuilder, expressionBuilder);
         }
         return contractInputGenerator;

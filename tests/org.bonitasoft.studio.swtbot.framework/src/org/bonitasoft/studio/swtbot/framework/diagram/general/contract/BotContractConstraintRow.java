@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,13 +27,10 @@ import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class BotContractConstraintRow extends BotBase {
-
 
     private TableItem tableItem;
     private final SWTBotTableItem swtBotTableItem;
@@ -54,12 +49,13 @@ public class BotContractConstraintRow extends BotBase {
         swtBotTableItem = getTableItem(bot.tableWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_CONSTRAINT_TABLE), row);
     }
 
-    public BotContractConstraintRow setName(final String name){
+    public BotContractConstraintRow setName(final String name) {
         constraintTable.setFocus();
         constraintTable.click(row, NAME_COLUMN);
         bot.textWithId(SWTBotConstants.SWTBOT_ID_CONSTRAINT_NAME_TEXTEDITOR);
         typeText(name);
         pressEnter();
+        bot.waitUntil(textApplied(name, NAME_COLUMN));
         return this;
     }
 
@@ -75,7 +71,6 @@ public class BotContractConstraintRow extends BotBase {
 
     private SWTBotTableItem getTableItem(final SWTBotTable swtBotTable, final int row) {
         Display.getDefault().syncExec(new Runnable() {
-
 
             @Override
             public void run() {
@@ -93,11 +88,21 @@ public class BotContractConstraintRow extends BotBase {
         bot.textWithId(SWTBotConstants.SWTBOT_ID_CONSTRAINT_ERROR_MESSAGE_TEXTEDITOR);
         typeText(errorMessage);
         pressEnter();
-        bot.waitUntil(new ICondition() {
+        bot.waitUntil(textApplied(errorMessage, ERROR_MESSAGE_COLUMN));
+        return this;
+    }
+
+    public BotContractConstraintRow select() {
+        swtBotTableItem.select();
+        return this;
+    }
+
+    private ICondition textApplied(final String text, final int column) {
+        return new ICondition() {
 
             @Override
             public boolean test() throws Exception {
-                return errorMessage.equals(constraintTable.getTableItem(row).getText(ERROR_MESSAGE_COLUMN));
+                return text.equals(constraintTable.getTableItem(row).getText(column));
             }
 
             @Override
@@ -106,18 +111,8 @@ public class BotContractConstraintRow extends BotBase {
 
             @Override
             public String getFailureMessage() {
-                return "item not found: " + errorMessage + " in " + constraintTable.getTableItem(row).getText(ERROR_MESSAGE_COLUMN);
+                return "item not found: " + text + " in " + constraintTable.getTableItem(row).getText(column);
             }
-        });
-        return this;
+        };
     }
-
-
-
-    public BotContractConstraintRow select() {
-        swtBotTableItem.select();
-        return this;
-    }
-
-
 }

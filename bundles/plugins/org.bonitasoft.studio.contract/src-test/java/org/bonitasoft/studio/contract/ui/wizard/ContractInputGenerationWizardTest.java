@@ -27,6 +27,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
@@ -36,7 +37,11 @@ import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
@@ -101,7 +106,7 @@ public class ContractInputGenerationWizardTest {
                 expressionBuilder, preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
         wizard.addPages();
 
-        assertThat(wizard.getPages()[0]).isInstanceOf(SelectBusinessDataWizardPage.class);
+        assertThat(wizard.getPages()[0]).isInstanceOf(SelectDataWizardPage.class);
     }
 
     @Test
@@ -114,7 +119,7 @@ public class ContractInputGenerationWizardTest {
                 expressionBuilder, preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
         wizard.addPages();
 
-        assertThat(wizard.getPages()[0]).isInstanceOf(SelectBusinessDataWizardPage.class);
+        assertThat(wizard.getPages()[0]).isInstanceOf(SelectDataWizardPage.class);
     }
 
     @Test
@@ -131,7 +136,7 @@ public class ContractInputGenerationWizardTest {
         when(sourceViewerFactory.createSourceViewer(any(Composite.class), any(Boolean.class))).thenReturn(groovyViewer);
         when(groovyViewer.getSourceViewer()).thenReturn(sourceViewer);
         when(groovyViewer.getDocument()).thenReturn(document);
-        
+
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
                 preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
@@ -141,8 +146,7 @@ public class ContractInputGenerationWizardTest {
         wizard.setContainer(wizardContainer);
         wizard.createPageControls(realmWithDisplay.createComposite());
         wizard.performFinish();
-
-        assertThat(process.getContract().getInputs()).extracting("name").contains("employeeInput");
+        assertThat(process.getContract().getInputs()).extracting("name").contains("employee_input");
         assertThat(process.getContract().getInputs().get(0).getInputs()).extracting("name").contains("firstName");
     }
 
@@ -151,7 +155,7 @@ public class ContractInputGenerationWizardTest {
         final BusinessObjectData data = aBusinessData().withName("employee").withClassname("org.company.Employee").build();
         final Pool process = aPool().havingContract(aContract()).build();
         process.getData().add(data);
-        
+
         final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
         when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
                 BusinessObjectBuilder.aBO("org.company.Employee").withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
@@ -192,7 +196,7 @@ public class ContractInputGenerationWizardTest {
         when(sourceViewerFactory.createSourceViewer(any(Composite.class), any(Boolean.class))).thenReturn(groovyViewer);
         when(groovyViewer.getSourceViewer()).thenReturn(sourceViewer);
         when(groovyViewer.getDocument()).thenReturn(document);
-        
+
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
                 preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
@@ -220,7 +224,7 @@ public class ContractInputGenerationWizardTest {
                 BusinessObjectBuilder.aBO("org.company.Employee").withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
         when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.SHOW_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
-        
+
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
                 preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
@@ -251,12 +255,12 @@ public class ContractInputGenerationWizardTest {
         when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.SHOW_GENERATION_SUCCESS_DIALOG)).thenReturn("always");
         when(operationBuilder.toOperation(any(BusinessObjectData.class), any(FieldToContractInputMapping.class))).thenReturn(
                 anOperation().build());
-        
+
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder,
                 preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
         wizard.addPages();
-        
+
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
         wizard.setContainer(wizardContainer);
@@ -267,21 +271,70 @@ public class ContractInputGenerationWizardTest {
     }
 
     @Test
+    public void should_add_DocumentUpdateOperation_whenDataIsDocument_onFinish() {
+        final Task task = aTask().havingContract(aContract()).build();
+        final Pool process = aPool().havingContract(aContract()).build();
+        final Document document1 = ProcessFactory.eINSTANCE.createDocument();
+        document1.setName("myDocument");
+        process.getDocuments().add(document1);
+        process.getElements().add(task);
+
+        final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(), repositoryAccessor, operationBuilder,
+                expressionBuilder,
+                preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
+        wizard.addPages();
+
+        final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
+        when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
+        wizard.setContainer(wizardContainer);
+        wizard.createPageControls(realmWithDisplay.createComposite());
+        wizard.performFinish();
+
+        assertThat(task.getContract().getInputs().get(0).getType()).isEqualTo(ContractInputType.FILE);
+        assertThat(task.getOperations().get(0).getLeftOperand().getName()).isEqualTo("myDocument");
+        assertThat(task.getOperations().get(0).getRightOperand().getType()).isEqualTo(ExpressionConstants.CONTRACT_INPUT_TYPE);
+        assertThat(task.getOperations().get(0).getRightOperand().getName()).isEqualTo("myDocument_doc_input");
+    }
+
+    @Test
+    public void should_add_FileInput_whenDataIsDocument_onFinish() {
+        final Pool process = aPool().havingContract(aContract()).build();
+        process.getDocuments().add(ProcessFactory.eINSTANCE.createDocument());
+        when(sourceViewerFactory.createSourceViewer(any(Composite.class), any(Boolean.class))).thenReturn(groovyViewer);
+        when(groovyViewer.getSourceViewer()).thenReturn(sourceViewer);
+        when(groovyViewer.getDocument()).thenReturn(document);
+
+        final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
+                expressionBuilder,
+                preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
+        wizard.addPages();
+
+        final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
+        when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
+        wizard.setContainer(wizardContainer);
+        wizard.createPageControls(realmWithDisplay.createComposite());
+        wizard.performFinish();
+
+        assertThat(process.getContract().getInputs().get(0).getType()).isEqualTo(ContractInputType.FILE);
+        assertThat(process.getDocuments().get(0).getDocumentType()).isEqualTo(DocumentType.CONTRACT);
+    }
+
+    @Test
     public void should_canFinish_return_false_when_no_data_is_defined() {
         final Pool process = aPool().havingContract(aContract()).build();
         when(sourceViewerFactory.createSourceViewer(any(Composite.class), any(Boolean.class))).thenReturn(groovyViewer);
         when(groovyViewer.getSourceViewer()).thenReturn(sourceViewer);
         when(groovyViewer.getDocument()).thenReturn(document);
-        
+
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder, preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
         wizard.addPages();
-        
+
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
         wizard.setContainer(wizardContainer);
         wizard.createPageControls(realmWithDisplay.createComposite());
-        
+
         assertThat(wizard.canFinish()).isFalse();
     }
 
@@ -290,7 +343,7 @@ public class ContractInputGenerationWizardTest {
         final Pool process = aPool().havingContract(aContract()).build();
         final BusinessObjectData data = aBusinessData().withClassname("com.company.Employee").build();
         process.getData().add(data);
-        
+
         final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
         Mockito.doReturn(BusinessObjectBuilder.aBO("com.company.Employee").withField(SimpleFieldBuilder.aTextField("name").build()).build()).when(store)
                 .getBusinessObjectByQualifiedName("com.company.Employee");
@@ -298,16 +351,16 @@ public class ContractInputGenerationWizardTest {
         when(sourceViewerFactory.createSourceViewer(any(Composite.class), any(Boolean.class))).thenReturn(groovyViewer);
         when(groovyViewer.getSourceViewer()).thenReturn(sourceViewer);
         when(groovyViewer.getDocument()).thenReturn(document);
-        
+
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(), repositoryAccessor, operationBuilder,
                 expressionBuilder, preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
         wizard.addPages();
-        
+
         final IWizardContainer wizardContainer = Mockito.mock(IWizardContainer.class);
         when(wizardContainer.getShell()).thenReturn(realmWithDisplay.getShell());
         wizard.setContainer(wizardContainer);
         wizard.createPageControls(realmWithDisplay.createComposite());
-        
+
         assertThat(wizard.canFinish()).isTrue();
     }
 
