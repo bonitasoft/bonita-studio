@@ -23,7 +23,6 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.batik.bridge.BridgeContext;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
-import org.apache.batik.util.XMLResourceDescriptor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -74,8 +73,8 @@ public class SVGFigure extends Figure {
         if (uri == null) {
             return;
         }
-        final String parser = XMLResourceDescriptor.getXMLParserClassName();
-        final SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
+
+        final SAXSVGDocumentFactory factory = new CustomSAXSVGDocumentFactory();
         try {
             Document document;
             if (documentsMap.containsKey(uri)) {
