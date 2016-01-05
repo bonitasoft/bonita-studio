@@ -42,7 +42,6 @@ import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.PatternExpressionViewer;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -250,11 +249,6 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
     protected Label createFieldLabel(final Composite composite,final int verticalAlignment, final String id, final boolean isMandatory) {
         return componentBuilder.createFieldLabel(composite, verticalAlignment, id, isMandatory);
     }
-
-    protected ConnectorParameter getConnectorParameter(final String inputName, final WidgetComponent object, final Input input) {
-        return componentBuilder.getConnectorParameter(inputName, object, input);
-    }
-
 
     protected AbstractExpression createExpression(final WidgetComponent widget,final Input input) {
         final String inputClassName = input.getType() ;
