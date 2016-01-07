@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" ?>
 <rss version="2.0">
   <channel>
-    <pubDate>2015-05-13</pubDate>
+    <pubDate>2015-12-07</pubDate>
     <author>Bonitasoft</author>
     <category>Community</category>
     <title>Bonitasoft community</title>
@@ -11,7 +11,7 @@
        <author>Antoine Mottier</author>
        <category>Community</category>
        <title>Forums</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://community.bonitasoft.com/answers</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://community.bonitasoft.com/questions-and-answers</link>
        <description></description>
     </item>
 	<item>

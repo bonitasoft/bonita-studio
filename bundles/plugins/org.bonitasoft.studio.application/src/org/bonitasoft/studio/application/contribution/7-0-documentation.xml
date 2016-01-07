@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" ?>
 <rss version="2.0">
   <channel>
-    <pubDate>2015-05-13</pubDate>
+    <pubDate>2015-12-07</pubDate>
     <author>Bonitasoft</author>
     <category>Documentation</category>
     <title>Bonitasoft Documentation</title>
@@ -18,7 +18,7 @@
        <author>Antoine Mottier</author>
        <category>Documentation</category>
        <title>Getting Started</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://documentation.bonitasoft.com/getting-started-0</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://documentation.bonitasoft.com/getting-started-tutorial-2</link>
        <description></description>
     </item>
     <item>
