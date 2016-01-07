@@ -232,6 +232,7 @@ public class Messages extends NLS {
     public static String nameUnicityConstraintVariable;
     public static String formMappingAtDiagramLevel_ModelInconsistency;
     public static String instantiationFormMapping;
+    public static String conflictingQueryNamesInBusinessObject;
 
     static {
         // initialize resource bundle
