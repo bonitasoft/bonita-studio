@@ -76,7 +76,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage {
 
-    private static final int DEFAULT_BUTTON_WIDTH_HINT = 130;
+    private static final int DEFAULT_BUTTON_WIDTH_HINT = 200;
     private final WritableValue selectedDataObservable;
     private CheckboxTreeViewer treeViewer;
     private final FieldToContractInputMappingFactory fieldToContractInputMappingFactory;
