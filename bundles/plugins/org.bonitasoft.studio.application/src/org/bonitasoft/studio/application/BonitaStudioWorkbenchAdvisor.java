@@ -47,7 +47,6 @@ import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.job.WorkspaceInitializationJob;
 import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobContribution;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
@@ -64,7 +63,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -413,7 +411,11 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     protected void doInitWorkspace() {
-        new WorkspaceInitializationJob(repositoryAccessor).schedule();
+        try {
+            repositoryAccessor.start(monitor);
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e);
+        }
     }
 
     private void checkCurrentRepository(final IProgressMonitor monitor) {
@@ -689,11 +691,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     @Override
     public void postStartup() {
         super.postStartup();
-        try {
-            Job.getJobManager().join(WorkspaceInitializationJob.WORKSPACE_INIT_FAMILY, monitor);
-        } catch (final OperationCanceledException | InterruptedException e) {
-            BonitaStudioLog.error(e);
-        }
         if (PlatformUI.isWorkbenchRunning()) {
             sendUserInfo();
             openStartupDialog();
