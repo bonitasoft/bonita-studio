@@ -54,23 +54,23 @@ public class RepositoryTest {
     @Mock
     private BonitaHomeHandler bonitaHomeHandler;
 
-    @Test
-    public void should_open_trigger_project_manifest_factory() throws Exception {
-        final Repository repository = newRepository();
-
-        repository.open(monitor);
-
-        verify(projectManifestFactory).createProjectManifest(project, monitor);
-    }
-
-    @Test
-    public void should_open_trigger_project_classpath_factory() throws Exception {
-        final Repository repository = newRepository();
-
-        repository.open(monitor);
-
-        verify(bonitaBPMProjectClasspath).create(repository, monitor);
-    }
+    //    @Test
+    //    public void should_open_trigger_project_manifest_factory() throws Exception {
+    //        final Repository repository = newRepository();
+    //
+    //        repository.open(monitor);
+    //
+    //        verify(projectManifestFactory).createProjectManifest(project, monitor);
+    //    }
+    //
+    //    @Test
+    //    public void should_open_trigger_project_classpath_factory() throws Exception {
+    //        final Repository repository = newRepository();
+    //
+    //        repository.open(monitor);
+    //
+    //        verify(bonitaBPMProjectClasspath).create(repository, monitor);
+    //    }
 
     @Test
     public void should_not_refresh_project_when_deleting_a_closed_repository() throws Exception {
