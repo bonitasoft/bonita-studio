@@ -62,7 +62,6 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
-import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -227,17 +226,11 @@ public class Repository implements IRepository, IJavaContainer {
             BonitaStudioLog.error(e);
         }
         try {
-            workspace.run(new IWorkspaceRunnable() {
-
-                @Override
-                public void run(IProgressMonitor monitor) throws CoreException {
-                    projectManifestFactory.createProjectManifest(project, monitor);
-                    initBonitaHome(monitor);
-                    initRepositoryStores(monitor);
-                    enableBuild();
-                    bonitaBPMProjectClasspath.create(Repository.this, monitor);
-                }
-            }, monitor);
+            projectManifestFactory.createProjectManifest(project, monitor);
+            initBonitaHome(monitor);
+            initRepositoryStores(monitor);
+            enableBuild();
+            bonitaBPMProjectClasspath.create(this, monitor);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
