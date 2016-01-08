@@ -1,37 +1,44 @@
 ﻿<?xml version="1.0" ?>
 <rss version="2.0">
   <channel>
-    <pubDate>2015-05-13</pubDate>
+    <pubDate>2016-01-07</pubDate>
     <author>Bonitasoft</author>
     <category>Videos</category>
-    <title>Bonitasoft community videos</title>
+    <title>Bonitasoft subscription videos</title>
     <description>Videos from Bonitasoft</description>
-    <item>
+	<item>
        <author>Antoine Mottier</author>
        <category>Videos</category>
-       <title>Bonita BPM 7 Overview</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/videos</link>
+       <title>Bonita BPM Camp</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/videos/bpm-camp-bonita-bpm-71</link>
        <description></description>
     </item>
     <item>
        <author>Antoine Mottier</author>
        <category>Videos</category>
-       <title>Process Modeling with Bonita BPM</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/videos</link>
+       <title>UI Designer deep dive</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/videos/bonita-bpm-7-ui-designer-technical-deep-dive</link>
+       <description></description>
+    </item>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Videos</category>
+       <title>Bonita BPM 7 UI Designer</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/videos/bonita-bpm-7-ui-designer-basics</link>
+       <description></description>
+    </item>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Videos</category>
+       <title>Bonita BPM 7 Contract</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/videos/bonita-bpm-7-contract</link>
        <description></description>
     </item>
     <item>
        <author>Antoine Mottier</author>
        <category>Videos</category>
        <title>Manage business data efficiently</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/videos</link>
-       <description></description>
-    </item>
-    <item>
-       <author>Antoine Mottier</author>
-       <category>Videos</category>
-       <title>Keep your processes agile</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/videos</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/videos/bonita-bpm-7-business-data-management</link>
        <description></description>
     </item>
    </channel>

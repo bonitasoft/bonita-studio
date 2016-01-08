@@ -1,7 +1,7 @@
-﻿﻿<?xml version="1.0" ?>
+﻿<?xml version="1.0" ?>
 <rss version="2.0">
   <channel>
-    <pubDate>2015-06-08</pubDate>
+    <pubDate>2016-01-07</pubDate>
     <author>Bonitasoft</author>
     <category>News</category>
     <title>Bonitasoft latest blog posts</title>
@@ -9,51 +9,51 @@
     <description>Latest posts from the Bonitasoft blog</description>
 
     <item>
-       <pubDate>2015-07-08</pubDate>
+       <pubDate>2016-01-05</pubDate>
        <author>Miguel Valdés Faura</author>
        <category>News</category>
-       <title>We’re a different kind of BPM company</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/were-different-kind-bpm-company</link>
+       <title>People to follow in 2016</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/people-follow-2016-blogs-twitter-and-linkedin</link>
        <description></description>
-    </item>	
-    <item>
-       <pubDate>2015-07-02</pubDate>
-       <author>Laura Balp</author>
+    </item>
+	<item>
+       <pubDate>2016-01-01</pubDate>
+       <author>Mickey Farrance</author>
        <category>News</category>
-       <title>Bonita BPM 7.0.1 now available!</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/bonita-bpm-701-here</link>
+       <title>Happy 2016 from the Bonitasoft team!</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/happy-2016-bonitasoft-team</link>
+       <description></description>
+    </item>
+	<item>
+       <pubDate>2015-12-15</pubDate>
+       <author>Mickey Farrance</author>
+       <category>News</category>
+       <title>CEO perspective</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/ceo-perspective-lessons-learned-launch-bonita-bpm-7</link>
        <description></description>
     </item>
     <item>
-       <pubDate>2015-06-22</pubDate>
-       <author>Miguel Valdés Faura</author>
+       <pubDate>2015-12-08</pubDate>
+       <author>Quauhtli Martínez</author>
        <category>News</category>
-       <title>Time to Set Developers Free</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/time-set-developers-free</link>
+       <title>BPM for drones</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/bpm-drones-dronewares-view</link>
        <description></description>
     </item>
     <item>
-       <pubDate>2015-06-18</pubDate>
-       <author>Laura Balp</author>
+       <pubDate>2015-12-01</pubDate>
+       <author>Mickey Farrance</author>
        <category>News</category>
-       <title>Bonita BPM 7.0.0 now available!</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/bonita-bpm-70-here</link>
+       <title>EnerNOC: finalist, WfMC Global Awards</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/enernoc-finalist-wfmc-global-awards-excellence-bpm-workflow</link>
        <description></description>
     </item>
     <item>
-       <pubDate>2015-06-16</pubDate>
-       <author>Miguel Valdés Faura</author>
+       <pubDate>2015-11-24</pubDate>
+       <author>Mickey Farrance</author>
        <category>News</category>
-       <title>The benefits of creating "Living Applications"</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/benefits-creating-living-applications</link>
-       <description></description>
-    </item>
-    <item>
-       <pubDate>2015-06-01</pubDate>
-       <author>Miguel Valdés Faura</author>
-       <category>News</category>
-       <title>A new wave of customization</title>
-       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/new-wave-customization</link>
+       <title>Amigolog offers Bonita BPM on the Cloud</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/for-you-to-read/blog/amigolog-offers-bonita-bpm-cloud</link>
        <description></description>
     </item>
 

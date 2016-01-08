@@ -1198,8 +1198,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         return nameConverter;
     }
 
-    public void addExpressionValidator(final IExpressionValidator comaprisonExpressionValidator) {
-        expressionViewerValidator.addValidator(comaprisonExpressionValidator);
+    public void addExpressionValidator(final IExpressionValidator validator) {
+        expressionViewerValidator.addValidator(validator);
     }
 
     public void addExpressionValidationListener(final IExpressionValidationListener listener) {
