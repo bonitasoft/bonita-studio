@@ -282,5 +282,6 @@ public class Messages extends NLS {
     public static String uiDesignerModuleName;
     public static String invalidPath;
     public static String pathDoesNotExist;
+    public static String moreDetails;
 
 }
