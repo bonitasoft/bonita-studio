@@ -103,7 +103,7 @@ public class CustomUserInfoConnectorConfigurationWizardPage extends AbstractConn
     private void createCustomExpressionViewerWithCustomInfo(final PageComponentSwitchBuilder componentSwitchBuilder, final Composite composite,
             final Text object) {
         final OrganizationRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
-        final String fileName = activeOrganizationProvider.getActiveOrganization();
+        final String fileName = activeOrganizationProvider.getActiveOrganization() + "." + OrganizationRepositoryStore.ORGANIZATION_EXT;
         componentSwitchBuilder.createTextControl(composite, object, new CustomUserInfoNameExpressionProvider(store, fileName),
                 new CustomUserInfoLabelProvider());
     }
