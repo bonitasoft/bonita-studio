@@ -146,7 +146,7 @@ public class ContractInputGenerationWizardTest {
         wizard.setContainer(wizardContainer);
         wizard.createPageControls(realmWithDisplay.createComposite());
         wizard.performFinish();
-        assertThat(process.getContract().getInputs()).extracting("name").contains("employee_input");
+        assertThat(process.getContract().getInputs()).extracting("name").contains("employeeInput");
         assertThat(process.getContract().getInputs().get(0).getInputs()).extracting("name").contains("firstName");
     }
 
@@ -293,7 +293,7 @@ public class ContractInputGenerationWizardTest {
         assertThat(task.getContract().getInputs().get(0).getType()).isEqualTo(ContractInputType.FILE);
         assertThat(task.getOperations().get(0).getLeftOperand().getName()).isEqualTo("myDocument");
         assertThat(task.getOperations().get(0).getRightOperand().getType()).isEqualTo(ExpressionConstants.CONTRACT_INPUT_TYPE);
-        assertThat(task.getOperations().get(0).getRightOperand().getName()).isEqualTo("myDocument_doc_input");
+        assertThat(task.getOperations().get(0).getRightOperand().getName()).isEqualTo("myDocumentDocumentInput");
     }
 
     @Test
@@ -341,7 +341,7 @@ public class ContractInputGenerationWizardTest {
     @Test
     public void should_canFinish_return_true_when_data_is_selected() {
         final Pool process = aPool().havingContract(aContract()).build();
-        final BusinessObjectData data = aBusinessData().withClassname("com.company.Employee").build();
+        final BusinessObjectData data = aBusinessData().withName("employee").withClassname("com.company.Employee").build();
         process.getData().add(data);
 
         final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
