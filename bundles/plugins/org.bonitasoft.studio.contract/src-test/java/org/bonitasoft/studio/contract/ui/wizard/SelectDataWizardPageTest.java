@@ -141,7 +141,7 @@ public class SelectDataWizardPageTest {
                 rootNameObservable, store);
         page.setWizard(wizardWithContainer());
         page.createControl(realmWithDisplay.createComposite());
-        assertThat(rootNameObservable.getValue()).isEqualTo("myData_input");
+        assertThat(rootNameObservable.getValue()).isEqualTo("myDataInput");
     }
 
     @Test
