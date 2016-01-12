@@ -82,8 +82,8 @@ import com.google.common.base.Function;
  */
 public class SelectDataWizardPage extends WizardPage {
 
-    private static final String INPUT = "_input";
-    private static final String DOC_INPUT = "_doc_input";
+    private static final String INPUT = "Input";
+    private static final String DOC_INPUT = "DocumentInput";
     private static final int INPUT_NAME_MAX_LENGTH = 50;
     List<Data> availableBusinessData;
     final WritableValue selectedDataObservable;
