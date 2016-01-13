@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.expression.editor.viewer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.IBonitaVariableContext;
@@ -134,6 +135,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     private EMFDataBindingContext validationContext;
     private String mandatoryLabel;
     private Binding bindValue;
+    private final List<IAddLineListener> addLineLineListeners = new ArrayList<>();
 
     public void setEditingDomain(final EditingDomain editingDomain) {
         this.editingDomain = editingDomain;
@@ -297,7 +299,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         } else {
             buttonComposite = new Composite(parent, SWT.NONE);
         }
-        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).align(SWT.FILL, SWT.TOP).create());
+        final int topIndent = captions.isEmpty() ? 0 : 15;
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).align(SWT.FILL, SWT.TOP).indent(0, topIndent).create());
 
         final RowLayout rl = new RowLayout(SWT.VERTICAL);
         rl.spacing = 3;
@@ -533,12 +536,20 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         AbstractExpression newExpression = null;
         if (expressionInput instanceof ListExpression) {
             newExpression = addElementInListExpression(expressionInput);
+            fireLineAdded(Collections.<Expression> singletonList((Expression) newExpression));
         } else if (expressionInput instanceof TableExpression) {
             newExpression = addLineInTableExpression(expressionInput);
+            fireLineAdded(((ListExpression) newExpression).getExpressions());
         }
 
         refresh();
         putCursorOnNewElement(colIndexToEdit, newExpression);
+    }
+
+    protected void fireLineAdded(List<Expression> expressions) {
+        for (final IAddLineListener listener : addLineLineListeners) {
+            listener.newLinedAdded(expressions);
+        }
     }
 
     private AbstractExpression addElementInListExpression(final Object expressionInput) {
@@ -548,8 +559,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         return newExpression;
     }
 
-    private AbstractExpression addLineInTableExpression(final Object expressionInput) {
-        AbstractExpression newExpression;
+    private ListExpression addLineInTableExpression(final Object expressionInput) {
         final ListExpression rowExp = createListExpressionForNewLineInTable();
         if (editingDomain == null) {
             editingDomain = TransactionUtil.getEditingDomain(expressionInput);
@@ -566,8 +576,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         } else {
             ((TableExpression) expressionInput).getExpressions().add(rowExp);
         }
-        newExpression = rowExp;
-        return newExpression;
+
+        return rowExp;
     }
 
     private ListExpression createListExpressionForNewLineInTable() {
@@ -1190,6 +1200,10 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         mandatoryLabel = label;
         validationContext = context;
 
+    }
+
+    public void addLineListener(IAddLineListener listener) {
+        addLineLineListeners.add(listener);
     }
 
 }

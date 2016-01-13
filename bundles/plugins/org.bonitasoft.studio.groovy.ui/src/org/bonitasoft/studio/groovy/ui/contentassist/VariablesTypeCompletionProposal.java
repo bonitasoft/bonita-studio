@@ -79,6 +79,9 @@ public class VariablesTypeCompletionProposal implements IJavaCompletionProposalC
             if (unit instanceof GroovyCompilationUnit) {
                 final ITextViewer viewer = context.getViewer();
                 final List<ScriptVariable> scriptVariables = getScriptVariables(viewer);
+                if (scriptVariables.isEmpty()) {
+                    return list;
+                }
                 if (((GroovyCompilationUnit) unit).getModuleNode() == null) {
                     return Collections.emptyList();
                 }

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -95,6 +96,10 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
     private ITreeContentProvider contentProvider;
 
     private boolean isPageFlowContext = false;
+
+    private MultiValidator validationStatusProvider;
+
+    private EMFDataBindingContext dataBindingContext;
 
     @Override
     public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
@@ -245,7 +250,7 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
     public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context, final Expression inputExpression,
             final ViewerFilter[] filters,
             final ExpressionViewer expressionViewer) {
-
+        this.dataBindingContext = dataBindingContext;
         editorInputExpression = inputExpression;
         setContentProvider(new PojoBrowserContentProvider());
         javaTreeviewer.setContentProvider(getContentProvider());
@@ -273,10 +278,11 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
             @Override
             public Object convert(final Object data) {
                 if (data instanceof Data) {
-                    return ((Data) data).getName() + " - " + ((JavaObjectData) data).getClassName() + "#" + editorInputExpression.getContent();
+                    return ((Data) data).getName() + " - " + NamingUtils.getSimpleName(((JavaObjectData) data).getClassName()) + "#"
+                            + editorInputExpression.getContent();
                 } else if (data instanceof IMethod) {
                     final JavaObjectData data2 = (JavaObjectData) editorInputExpression.getReferencedElements().get(0);
-                    return data2.getName() + " - " + data2.getClassName() + "#" + ((IMethod) data).getElementName();
+                    return data2.getName() + " - " + NamingUtils.getSimpleName(data2.getClassName()) + "#" + ((IMethod) data).getElementName();
                 }
                 return null;
             }
@@ -396,13 +402,27 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
         dataBindingContext.bindValue(javaViewerSingleSelection, returnTypeObservable, selectionToReturnType,
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
         dataBindingContext.bindValue(SWTObservables.observeText(typeText, SWT.Modify), returnTypeObservable);
-        dataBindingContext.addValidationStatusProvider(new MultiValidator() {
+        validationStatusProvider = new MultiValidator() {
 
             @Override
             protected IStatus validate() {
                 return javaViewerSingleSelection.getValue() instanceof IMethod ? ValidationStatus.ok() : ValidationStatus.error("");
             }
-        });
+        };
+        dataBindingContext.addValidationStatusProvider(validationStatusProvider);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor#dispose()
+     */
+    @Override
+    public void dispose() {
+        if (validationStatusProvider != null) {
+            dataBindingContext.removeValidationStatusProvider(validationStatusProvider);
+            validationStatusProvider.dispose();
+        }
+        super.dispose();
     }
 
     private boolean acceptExpression(final ExpressionViewer viewer, final Expression e, final EObject context, final ViewerFilter[] filters) {
