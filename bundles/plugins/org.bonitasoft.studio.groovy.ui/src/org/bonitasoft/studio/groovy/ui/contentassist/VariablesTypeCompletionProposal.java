@@ -35,7 +35,6 @@ import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
 import org.codehaus.groovy.eclipse.codeassist.requestor.GroovyCompletionProposalComputer;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jdt.core.CompletionContext;
 import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
@@ -43,8 +42,6 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
-import org.eclipse.jdt.groovy.core.util.ReflectionUtils;
-import org.eclipse.jdt.internal.codeassist.InternalCompletionContext;
 import org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer;
 import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
@@ -70,18 +67,20 @@ public class VariablesTypeCompletionProposal implements IJavaCompletionProposalC
     public List<ICompletionProposal> computeCompletionProposals(final ContentAssistInvocationContext context, final IProgressMonitor monitor) {
         final List<ICompletionProposal> list = new ArrayList<ICompletionProposal>();
         if (context instanceof JavaContentAssistInvocationContext) {
-            final CompletionContext coreContext = ((JavaContentAssistInvocationContext) context).getCoreContext();
-            if (coreContext != null && !coreContext.isExtended()) {
-                // must use reflection to set the fields
-                ReflectionUtils.setPrivateField(InternalCompletionContext.class, "isExtended", coreContext, true);
+            final ITextViewer viewer = context.getViewer();
+            final List<ScriptVariable> scriptVariables = getScriptVariables(viewer);
+            if (scriptVariables.isEmpty()) {
+                return list;
             }
+            //            final CompletionContext coreContext = ((JavaContentAssistInvocationContext) context).getCoreContext();
+            //            if (coreContext != null && !coreContext.isExtended()) {
+            //                // must use reflection to set the fields
+            //                ReflectionUtils.setPrivateField(InternalCompletionContext.class, "isExtended", coreContext, true);
+            //                ReflectionUtils.setPrivateField(InternalCompletionContext.class, "extendedContext", coreContext,
+            //                        new GroovyExtendedCompletionContext(getContext(), requestor.currentScope));
+            //            }
             final ICompilationUnit unit = ((JavaContentAssistInvocationContext) context).getCompilationUnit();
             if (unit instanceof GroovyCompilationUnit) {
-                final ITextViewer viewer = context.getViewer();
-                final List<ScriptVariable> scriptVariables = getScriptVariables(viewer);
-                if (scriptVariables.isEmpty()) {
-                    return list;
-                }
                 if (((GroovyCompilationUnit) unit).getModuleNode() == null) {
                     return Collections.emptyList();
                 }

@@ -55,13 +55,13 @@ public class VariablesCompletionProposalProvider implements IJavaCompletionPropo
     public List<ICompletionProposal> computeCompletionProposals(final ContentAssistInvocationContext context, final IProgressMonitor monitor) {
         final List<ICompletionProposal> list = new ArrayList<ICompletionProposal>();
         if (context instanceof JavaContentAssistInvocationContext) {
+            final ITextViewer viewer = context.getViewer();
+            final List<ScriptVariable> variables = getScriptVariables(viewer);
+            if (variables.isEmpty()) {
+                return list;
+            }
             final ICompilationUnit unit = ((JavaContentAssistInvocationContext) context).getCompilationUnit();
             if (unit instanceof GroovyCompilationUnit) {
-                final ITextViewer viewer = context.getViewer();
-                final List<ScriptVariable> variables = getScriptVariables(viewer);
-                if (variables.isEmpty()) {
-                    return list;
-                }
                 if (((GroovyCompilationUnit) unit).getModuleNode() == null) {
                     return Collections.emptyList();
                 }
