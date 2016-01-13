@@ -69,6 +69,7 @@ public class VariablesTypeCompletionProposal implements IJavaCompletionProposalC
     @Override
     public List<ICompletionProposal> computeCompletionProposals(final ContentAssistInvocationContext context, final IProgressMonitor monitor) {
         final List<ICompletionProposal> list = new ArrayList<ICompletionProposal>();
+        boolean extendContext = false;
         try {
             if (context instanceof JavaContentAssistInvocationContext) {
                 final ITextViewer viewer = context.getViewer();
@@ -80,8 +81,7 @@ public class VariablesTypeCompletionProposal implements IJavaCompletionProposalC
                 if (coreContext != null && !coreContext.isExtended()) {
                     // must use reflection to set the fields
                     ReflectionUtils.setPrivateField(InternalCompletionContext.class, "isExtended", coreContext, true);
-                    //                ReflectionUtils.setPrivateField(InternalCompletionContext.class, "extendedContext", coreContext,
-                    //                        new GroovyExtendedCompletionContext(getContext(), requestor.currentScope));
+                    extendContext = true;
                 }
                 final ICompilationUnit unit = ((JavaContentAssistInvocationContext) context).getCompilationUnit();
                 if (unit instanceof GroovyCompilationUnit) {
@@ -167,7 +167,7 @@ public class VariablesTypeCompletionProposal implements IJavaCompletionProposalC
             }
         } finally {
             final CompletionContext coreContext = ((JavaContentAssistInvocationContext) context).getCoreContext();
-            if (coreContext != null && coreContext.isExtended()) {
+            if (extendContext && coreContext != null && coreContext.isExtended()) {
                 // must use reflection to set the fields
                 ReflectionUtils.setPrivateField(InternalCompletionContext.class, "isExtended", coreContext, false);
             }
