@@ -28,13 +28,8 @@ import org.bonitasoft.studio.preferences.i18n.Messages;
 import org.bonitasoft.studio.repository.themes.ApplicationLookNFeelFileStore;
 import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
 import org.eclipse.gmf.runtime.common.ui.preferences.CheckBoxFieldEditor;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -73,34 +68,16 @@ public class BonitaRunPreferencePage extends AbstractBonitaPreferencePage  imple
         final CheckBoxFieldEditor validateBeforeRunEditor = new CheckBoxFieldEditor(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN, Messages.validateBeforeRun, getFieldEditorParent());
         addField(validateBeforeRunEditor) ;
 
-        new Label(getFieldEditorParent(), SWT.NONE);
-
-        Composite radioComposite = new Composite(getFieldEditorParent(), SWT.NONE) ;
-        radioComposite.setLayoutData(GridDataFactory.fillDefaults().span(3,1).grab(true,false).create()) ;
-        radioComposite.setLayout(new GridLayout(1, false)) ;
-
-
-        radioFiled = new RadioGroupFieldEditor(BonitaPreferenceConstants.APLLICATION_DEPLOYMENT_MODE,"", 1, new String[][] {
-                { Messages.embeddedMode, BonitaPreferenceConstants.ALL_IN_BAR },
-                {Messages.warMode, BonitaPreferenceConstants.WAR_GENERATION }}, radioComposite,
-                true) ;//TODO: remove use group when we will reactivate war mode
-
-        radioFiled.getLabelControl(radioComposite).dispose();
-        radioFiled.getRadioBoxControl(radioComposite).setLayoutData(GridDataFactory.fillDefaults().span(3, 1).create()) ;
-        radioFiled.setEnabled(false, null);
-               
-        addField(radioFiled) ;
-
         defaultAppLookNFeel = new ComboFieldEditor(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME, Messages.defaultAppliThemeLabel,getAvailableThemes(), getFieldEditorParent()) ;
         addField(defaultAppLookNFeel);
     }
 
     private String[][] getAvailableThemes() {
-        LookNFeelRepositoryStore store = (LookNFeelRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class) ;
-        List<ApplicationLookNFeelFileStore> artifacts = store.getApplicationLookNFeels();
-        String[][]  result = new String[artifacts.size()][] ;
+        final LookNFeelRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class) ;
+        final List<ApplicationLookNFeelFileStore> artifacts = store.getApplicationLookNFeels();
+        final String[][]  result = new String[artifacts.size()][] ;
         for(int i = 0 ; i < artifacts.size() ; i++){
-            String[] item = {  artifacts.get(i).getDisplayName(), artifacts.get(i).getName() };
+            final String[] item = {  artifacts.get(i).getDisplayName(), artifacts.get(i).getName() };
             result[i] = item ;
         }
 
@@ -114,6 +91,7 @@ public class BonitaRunPreferencePage extends AbstractBonitaPreferencePage  imple
      * @see
      * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
      */
+    @Override
     public void init(IWorkbench workbench) {
     }
 
