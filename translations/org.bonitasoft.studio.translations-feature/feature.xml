@@ -459,14 +459,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.omg.schema.spec.bpmn.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.actors.nl_es"
          download-size="0"
          install-size="0"
@@ -509,14 +501,6 @@
 
    <plugin
          id="org.bonitasoft.studio.condition.ui.nl_fr"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.configuration.nl_de"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -1165,15 +1149,7 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.parameters.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
+         
    <plugin
          id="org.bonitasoft.studio.designer.nl_es"
          download-size="0"
