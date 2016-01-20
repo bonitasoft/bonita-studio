@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.bonitasoft.studio.expressions.test
 Bundle-SymbolicName: org.bonitasoft.studio.expressions.test;singleton:=true
-Bundle-Version: 7.2.0.qualifier
+Bundle-Version: 7.2.1.qualifier
 Bundle-Activator: org.bonitasoft.studio.expressions.test.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.swtbot.eclipse.gef.finder;bundle-version="2.0.5",
