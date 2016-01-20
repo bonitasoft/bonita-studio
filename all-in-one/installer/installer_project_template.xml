@@ -31,7 +31,7 @@
     <overrideGtkButtonText>1</overrideGtkButtonText>
     <compressionAlgorithm>lzma-ultra</compressionAlgorithm>
     <lzmaUltraBlockSize>100</lzmaUltraBlockSize>
-	<allowedLanguages>en es fr de it pt_BR ja ru</allowedLanguages>
+	<allowedLanguages>en es fr ja</allowedLanguages>
 	<customLanguageFileList>
         <language>
             <code>en</code>
