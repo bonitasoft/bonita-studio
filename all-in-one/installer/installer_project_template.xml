@@ -31,7 +31,7 @@
     <overrideGtkButtonText>1</overrideGtkButtonText>
     <compressionAlgorithm>lzma-ultra</compressionAlgorithm>
     <lzmaUltraBlockSize>100</lzmaUltraBlockSize>
-	<allowedLanguages>en es fr de it pt_BR ja ru</allowedLanguages>
+	<allowedLanguages>en es fr ja</allowedLanguages>
 	<customLanguageFileList>
         <language>
             <code>en</code>
@@ -45,39 +45,9 @@
             <encoding>utf-8</encoding>
             <resolveUCN>1</resolveUCN>
         </language>
-        <language>
-            <code>de</code>
-            <file>i18n/messages_de.properties</file>
-            <encoding>utf-8</encoding>
-            <resolveUCN>1</resolveUCN>
-        </language>
          <language>
             <code>es</code>
             <file>i18n/messages_es.properties</file>
-            <encoding>utf-8</encoding>
-            <resolveUCN>1</resolveUCN>
-        </language>
-         <language>
-            <code>it</code>
-            <file>i18n/messages_it.properties</file>
-            <encoding>utf-8</encoding>
-            <resolveUCN>1</resolveUCN>
-        </language>
-         <language>
-            <code>pt_BR</code>
-            <file>i18n/messages_pt.properties</file>
-            <encoding>utf-8</encoding>
-            <resolveUCN>1</resolveUCN>
-        </language>
-         <language>
-            <code>pt</code>
-            <file>i18n/messages_pt.properties</file>
-            <encoding>utf-8</encoding>
-            <resolveUCN>1</resolveUCN>
-        </language>
-        <language>
-            <code>ru</code>
-            <file>i18n/messages_ru.properties</file>
             <encoding>utf-8</encoding>
             <resolveUCN>1</resolveUCN>
         </language>

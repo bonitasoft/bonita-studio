@@ -325,13 +325,15 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         if (currentExpressionEditor != null) {
             currentExpressionEditor.dispose();
         }
-
+        if (dataBindingContext != null) {
+            dataBindingContext.dispose();
+        }
         currentExpressionEditor = provider.getExpressionEditor(inputExpression, context);
         currentExpressionEditor.setIsPageFlowContext(isPageFlowContext);
         if (currentExpressionEditor != null) {
-            if (dataBindingContext != null) {
-                dataBindingContext.dispose();
-            }
+            //            if (dataBindingContext != null) {
+            //                dataBindingContext.dispose();
+            //            }
             dataBindingContext = new EMFDataBindingContext();
             currentExpressionEditor.createExpressionEditor(contentComposite, dataBindingContext, isPassword);
             contentComposite.layout(true, true);
@@ -388,6 +390,9 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
     public boolean close() {
         if (getTray() != null) {
             closeTray();
+        }
+        if (dataBindingContext != null) {
+            dataBindingContext.dispose();
         }
         if (currentExpressionEditor != null) {
             currentExpressionEditor.dispose();

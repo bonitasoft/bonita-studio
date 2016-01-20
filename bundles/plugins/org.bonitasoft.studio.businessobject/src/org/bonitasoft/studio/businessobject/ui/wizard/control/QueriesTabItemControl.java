@@ -26,6 +26,7 @@ import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.QueryConten
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.QueryNameEditingSupport;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.ReadOnlyQueryContentEditingSupport;
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.properties.Well;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -39,6 +40,7 @@ import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -59,20 +61,20 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Romain Bioteau
  */
 public class QueriesTabItemControl extends AbstractTabItemControl {
 
-    private IObservableList fieldsList;
+    private final IObservableList fieldsList;
 
-    private WritableList defaultQueriesList;
+    private final WritableList defaultQueriesList;
 
     private static final String DEFAULT_QUERY_NAME = "query";
 
@@ -89,7 +91,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
 
             @Override
             public void handleValueChange(ValueChangeEvent event) {
-                BusinessObject selectedBo = (BusinessObject) event.diff.getNewValue();
+                final BusinessObject selectedBo = (BusinessObject) event.diff.getNewValue();
                 updateDefaultQueries(selectedBo);
             }
 
@@ -98,9 +100,9 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                Widget item = e.item;
+                final Widget item = e.item;
                 if (item instanceof TabItem && Messages.queries.equals(((TabItem) item).getText())) {
-                    BusinessObject selectedBo = (BusinessObject) viewerObservableValue.getValue();
+                    final BusinessObject selectedBo = (BusinessObject) viewerObservableValue.getValue();
                     updateDefaultQueries(selectedBo);
                 }
             }
@@ -115,17 +117,17 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         radioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).span(2, 1).create());
         radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(5, 5, 5, 0).spacing(20, 0).create());
 
-        Button defaultQueriesRadioButton = new Button(radioComposite, SWT.RADIO);
+        final Button defaultQueriesRadioButton = new Button(radioComposite, SWT.RADIO);
         defaultQueriesRadioButton.setLayoutData(GridDataFactory.swtDefaults().create());
         defaultQueriesRadioButton.setText(Messages.defaultQueriesOption);
 
-        ControlDecoration controlDecoration = new ControlDecoration(defaultQueriesRadioButton, SWT.RIGHT);
+        final ControlDecoration controlDecoration = new ControlDecoration(defaultQueriesRadioButton, SWT.RIGHT);
         controlDecoration.setDescriptionText(Messages.defaultQueriesHint);
         controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
         controlDecoration.setShowOnlyOnFocus(false);
         controlDecoration.setMarginWidth(-5);
 
-        Button customQueriesRadioButton = new Button(radioComposite, SWT.RADIO);
+        final Button customQueriesRadioButton = new Button(radioComposite, SWT.RADIO);
         customQueriesRadioButton.setText(Messages.customQueriesOption);
 
         final Composite stackComposite = new Composite(this, SWT.NONE);
@@ -136,14 +138,14 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         final Composite defaultComposite = createDefaultQueriesControl(ctx, viewerObservableValue, stackComposite);
         final Composite customComposite = createCustomQueriesControl(ctx, viewerObservableValue, stackComposite);
 
-        SelectObservableValue radioGroupObservable = new SelectObservableValue(String.class);
+        final SelectObservableValue radioGroupObservable = new SelectObservableValue(String.class);
         radioGroupObservable.addOption(DEFAULT, SWTObservables.observeSelection(defaultQueriesRadioButton));
         radioGroupObservable.addOption(CUSTOM, SWTObservables.observeSelection(customQueriesRadioButton));
         radioGroupObservable.addValueChangeListener(new IValueChangeListener() {
 
             @Override
             public void handleValueChange(ValueChangeEvent event) {
-                Object newValue = event.diff.getNewValue();
+                final Object newValue = event.diff.getNewValue();
                 if (DEFAULT.equals(newValue)) {
                     stackLayout.topControl = defaultComposite;
                 } else {
@@ -157,29 +159,29 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
     }
 
     protected void deleteQuery(IObservableList queryObserveDetailList, TableViewer queriesTableViewer) {
-        IStructuredSelection selection = (IStructuredSelection) queriesTableViewer.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection) queriesTableViewer.getSelection();
         queryObserveDetailList.removeAll(selection.toList());
     }
 
     protected void addQuery(IViewerObservableValue viewerObservableValue, IObservableList queryObserveDetailList, TableViewer queriesTableViewer) {
-        Query query = new Query(generateQueryName(viewerObservableValue), "", List.class.getName());
+        final Query query = new Query(generateQueryName(viewerObservableValue), "", List.class.getName());
         queryObserveDetailList.add(query);
         queriesTableViewer.editElement(query, 0);
     }
 
     protected String generateQueryName(IViewerObservableValue viewerObservableValue) {
-        Set<String> existingNames = new HashSet<String>();
-        BusinessObject businessObject = (BusinessObject) viewerObservableValue.getValue();
-        List<Query> queries = businessObject.getQueries();
-        for (Query q : queries) {
+        final Set<String> existingNames = new HashSet<String>();
+        final BusinessObject businessObject = (BusinessObject) viewerObservableValue.getValue();
+        final List<Query> queries = businessObject.getQueries();
+        for (final Query q : queries) {
             existingNames.add(q.getName());
         }
         return NamingUtils.generateNewName(existingNames, DEFAULT_QUERY_NAME, 1);
     }
 
     protected TableViewerColumn createQueryContentColumn(DataBindingContext ctx, TableViewer queriesTableViewer) {
-        TableViewerColumn queryContentColumnViewer = new TableViewerColumn(queriesTableViewer, SWT.LEFT);
-        TableColumn column = queryContentColumnViewer.getColumn();
+        final TableViewerColumn queryContentColumnViewer = new TableViewerColumn(queriesTableViewer, SWT.LEFT);
+        final TableColumn column = queryContentColumnViewer.getColumn();
         column.setText(Messages.query);
         queryContentColumnViewer.setLabelProvider(new ColumnLabelProvider() {
 
@@ -201,8 +203,8 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
     }
 
     protected TableViewerColumn createQueryNameColumn(DataBindingContext ctx, TableViewer queriesTableViewer) {
-        TableViewerColumn nameColumnViewer = new TableViewerColumn(queriesTableViewer, SWT.LEFT);
-        TableColumn column = nameColumnViewer.getColumn();
+        final TableViewerColumn nameColumnViewer = new TableViewerColumn(queriesTableViewer, SWT.LEFT);
+        final TableColumn column = nameColumnViewer.getColumn();
         column.setText(Messages.name + " *");
         nameColumnViewer.setLabelProvider(new ColumnLabelProvider() {
 
@@ -222,7 +224,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
     }
 
     protected TableViewerColumn createStatusColumn(DataBindingContext ctx, IViewerObservableValue viewerObservableValue, TableViewer queriesTableViewer) {
-        TableViewerColumn statusColumn = new TableViewerColumn(queriesTableViewer, SWT.LEFT);
+        final TableViewerColumn statusColumn = new TableViewerColumn(queriesTableViewer, SWT.LEFT);
         statusColumn.setLabelProvider(new QueryStatusLabelProvider(viewerObservableValue));
         return statusColumn;
     }
@@ -232,14 +234,8 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         composite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
 
-        Label countQueryInfoLabel = new Label(composite, SWT.WRAP);
-        countQueryInfoLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(50, 0).hint(450, SWT.DEFAULT).create());
-        countQueryInfoLabel.setText(Messages.countQueryInfo);
-
-        ControlDecoration controlDecoration = new ControlDecoration(countQueryInfoLabel, SWT.LEFT);
-        controlDecoration.setImage(composite.getDisplay().getSystemImage(SWT.ICON_INFORMATION));
-        controlDecoration.setMarginWidth(5);
-        controlDecoration.show();
+        final Well well = new Well(composite, Messages.countQueryInfo, new FormToolkit(getDisplay()), IStatus.INFO);
+        well.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).hint(450, SWT.DEFAULT).create());
 
         final Composite buttonsComposite = new Composite(composite, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).indent(0, 20).create());
@@ -255,7 +251,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         queriesTableViewer.getTable().setHeaderVisible(true);
         queriesTableViewer.setContentProvider(new ObservableListContentProvider());
 
-        TableLayout tableLayout = new TableLayout();
+        final TableLayout tableLayout = new TableLayout();
         tableLayout.addColumnData(new ColumnWeightData(1));
         tableLayout.addColumnData(new ColumnWeightData(3));
         tableLayout.addColumnData(new ColumnWeightData(9));
@@ -271,7 +267,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         });
         ctx.bindValue(SWTObservables.observeEnabled(queriesTableViewer.getTable()), viewerObservableValue, null, enableStrategy);
 
-        IViewerObservableValue constaintObserveSingleSelection = ViewersObservables.observeSingleSelection(queriesTableViewer);
+        final IViewerObservableValue constaintObserveSingleSelection = ViewersObservables.observeSingleSelection(queriesTableViewer);
         ctx.bindValue(SWTObservables.observeEnabled(deleteButton), constaintObserveSingleSelection, null, enableStrategy);
 
         enableStrategy = new UpdateValueStrategy();
@@ -294,9 +290,9 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         ColumnViewerToolTipSupport.enableFor(queriesTableViewer);
         
         createStatusColumn(ctx, viewerObservableValue, queriesTableViewer);
-        TableViewerColumn nameColumnViewer = createQueryNameColumn(ctx, queriesTableViewer);
+        final TableViewerColumn nameColumnViewer = createQueryNameColumn(ctx, queriesTableViewer);
         nameColumnViewer.setEditingSupport(new QueryNameEditingSupport(viewerObservableValue, nameColumnViewer.getViewer(), ctx));
-        TableViewerColumn queryContentColumnViewer = createQueryContentColumn(ctx, queriesTableViewer);
+        final TableViewerColumn queryContentColumnViewer = createQueryContentColumn(ctx, queriesTableViewer);
         queryContentColumnViewer.setEditingSupport(new QueryContentEditingSupport(queryContentColumnViewer.getViewer(), viewerObservableValue));
 
         final IObservableList queryObserveDetailList = PojoObservables.observeDetailList(viewerObservableValue, "queries", Query.class);
@@ -340,13 +336,13 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         queriesTableViewer.getTable().setHeaderVisible(true);
         queriesTableViewer.setContentProvider(new ObservableListContentProvider());
 
-        TableLayout tableLayout = new TableLayout();
+        final TableLayout tableLayout = new TableLayout();
         tableLayout.addColumnData(new ColumnWeightData(1));
         tableLayout.addColumnData(new ColumnWeightData(3));
         queriesTableViewer.getTable().setLayout(tableLayout);
 
         createQueryNameColumn(ctx, queriesTableViewer);
-        TableViewerColumn queryContentColumnViewer = createQueryContentColumn(ctx, queriesTableViewer);
+        final TableViewerColumn queryContentColumnViewer = createQueryContentColumn(ctx, queriesTableViewer);
         queryContentColumnViewer.setEditingSupport(new ReadOnlyQueryContentEditingSupport(queryContentColumnViewer.getViewer(), viewerObservableValue));
 
         queriesTableViewer.setInput(defaultQueriesList);

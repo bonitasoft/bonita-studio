@@ -425,9 +425,7 @@ public class PageComponentSwitchBuilder {
             } else {
                 viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
             }
-            for (int i = 0; i < array.getCols().intValue(); i++) {
-                viewer.addFilter(connectorExpressionContentTypeFilter);
-            }
+            configureArrayColumnFilters(array, viewer);
             if (input.isMandatory()) {
                 viewer.setMandatoryField(getLabel(array.getId()), context);
             }
@@ -463,6 +461,12 @@ public class PageComponentSwitchBuilder {
             return viewer;
         }
         return null;
+    }
+
+    protected void configureArrayColumnFilters(final Array array, final ExpressionCollectionViewer viewer) {
+        for (int i = 0; i < array.getCols().intValue(); i++) {
+            viewer.addFilter(connectorExpressionContentTypeFilter);
+        }
     }
 
     public Section createGroupControl(final Composite composite, final Group object) {
