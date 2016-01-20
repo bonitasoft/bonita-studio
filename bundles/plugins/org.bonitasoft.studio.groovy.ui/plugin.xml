@@ -58,28 +58,6 @@
       </scriptLanguage>
    </extension>
    <extension
-         id="org.bonitasoft.studio.contentProposal.processVariable.category"
-         name="Process variables"
-         point="org.eclipse.jdt.ui.javaCompletionProposalComputer">
-      <proposalCategory
-            icon="icons/Data.gif"></proposalCategory>
-   </extension>
-   <extension
-         id="processVariableComputer"
-         point="org.eclipse.jdt.ui.javaCompletionProposalComputer">
-      <javaCompletionProposalComputer
-            activate="true"
-            categoryId="org.bonitasoft.studio.contentProposal.processVariable.category"
-            class="org.bonitasoft.studio.groovy.ui.contentassist.VariablesCompletionProposalProvider">
-         <partition
-               type="__java_string">
-         </partition>
-         <partition
-               type="__dftl_partition_content_type">
-         </partition>
-      </javaCompletionProposalComputer>
-   </extension>
-   <extension
          point="org.codehaus.groovy.eclipse.codeassist.completion.completionProposalFilter">
       <proposalFilter
             proposalFilter="org.bonitasoft.studio.groovy.ui.contentassist.BonitaProposalFilter">
@@ -87,21 +65,6 @@
                projectNature="org.bonitasoft.studio.common.repository.bonitaNature">
          </appliesTo>
       </proposalFilter>
-   </extension>
-   <extension
-         id="processVariableTypeComputer"
-         point="org.eclipse.jdt.ui.javaCompletionProposalComputer">
-      <javaCompletionProposalComputer
-            activate="true"
-            categoryId="org.codehaus.groovy.eclipse.codeassist.category"
-            class="org.bonitasoft.studio.groovy.ui.contentassist.VariablesTypeCompletionProposal">
-         <partition
-               type="__dftl_partition_content_type">
-         </partition>
-         <partition
-               type="__java_string">
-         </partition>
-      </javaCompletionProposalComputer>
    </extension>
    <extension
          point="org.bonitasoft.studio.configuration.synchronizer">

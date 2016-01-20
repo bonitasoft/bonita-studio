@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -617,6 +618,12 @@ public class Repository implements IRepository, IJavaContainer {
                         jar = new File(workspacePath + File.separator + jar);
                     }
                     jars.add(jar.toURI().toURL());
+                }
+            }
+            final IFolder folder = project.getFolder("lib");
+            for (final IResource member : folder.members()) {
+                if (Objects.equals(member.getFileExtension(), "jar")) {
+                    jars.add(member.getLocation().toFile().toURI().toURL());
                 }
             }
         } catch (final Exception e) {
