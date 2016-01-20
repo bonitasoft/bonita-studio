@@ -28,6 +28,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -53,6 +54,7 @@ public class CellExpressionViewer extends ExpressionViewer {
     protected void createToolbar(final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
         toolbar = new ToolBar(control, SWT.FLAT | SWT.NO_FOCUS);
         toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).create());
+        toolbar.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         final ToolItem editControl = new ToolItem(toolbar, SWT.FLAT);
         editControl.setImage(Pics.getImage(PicsConstants.edit));
         editControl.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EDITBUTTON);

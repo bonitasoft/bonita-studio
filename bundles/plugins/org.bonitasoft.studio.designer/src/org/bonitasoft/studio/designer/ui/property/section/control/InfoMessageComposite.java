@@ -32,9 +32,9 @@ public class InfoMessageComposite extends Composite {
 
     public InfoMessageComposite(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory) {
         super(parent, SWT.NONE);
-        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 0, 10, 0).create());
+        setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 0, 10, 0).create());
         info = widgetFactory.createLabel(this, "", SWT.WRAP);
-        info.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).align(SWT.RIGHT, SWT.CENTER).create());
+        info.setLayoutData(GridDataFactory.swtDefaults().hint(600, SWT.DEFAULT).align(SWT.FILL, SWT.CENTER).create());
         widgetFactory.adapt(this);
     }
 

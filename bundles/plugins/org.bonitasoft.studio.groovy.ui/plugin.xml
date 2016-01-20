@@ -7,7 +7,7 @@
          point="org.codehaus.groovy.eclipse.ui.syntaxHighlightingExtension">
       <highlightingExtender
             extender="org.bonitasoft.studio.groovy.ui.contentassist.BonitaSyntaxHighlighting"
-            natureID="org.eclipse.jdt.groovy.core.groovyNature">
+            natureID="org.bonitasoft.studio.common.repository.bonitaNature">
       </highlightingExtender>
    </extension>
    <extension
@@ -84,10 +84,7 @@
       <proposalFilter
             proposalFilter="org.bonitasoft.studio.groovy.ui.contentassist.BonitaProposalFilter">
          <appliesTo
-               projectNature="org.eclipse.jdt.groovy.core.groovyNature">
-         </appliesTo>
-         <appliesTo
-               projectNature="org.eclipse.jdt.core.javanature">
+               projectNature="org.bonitasoft.studio.common.repository.bonitaNature">
          </appliesTo>
       </proposalFilter>
    </extension>
@@ -123,7 +120,7 @@
    </extension>
    <extension point="org.eclipse.jdt.groovy.core.typeLookup">
     	<lookup lookup="org.bonitasoft.studio.groovy.ui.contentassist.BonitaConstantsTypeLookup">
-      		<appliesTo projectNature="org.eclipse.jdt.groovy.core.groovyNature"/>
+      		<appliesTo projectNature="org.bonitasoft.studio.common.repository.bonitaNature"/>
     	</lookup>
 	</extension>
 

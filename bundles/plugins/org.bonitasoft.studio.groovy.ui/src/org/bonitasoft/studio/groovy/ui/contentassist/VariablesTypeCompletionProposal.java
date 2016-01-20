@@ -69,94 +69,108 @@ public class VariablesTypeCompletionProposal implements IJavaCompletionProposalC
     @Override
     public List<ICompletionProposal> computeCompletionProposals(final ContentAssistInvocationContext context, final IProgressMonitor monitor) {
         final List<ICompletionProposal> list = new ArrayList<ICompletionProposal>();
-        if (context instanceof JavaContentAssistInvocationContext) {
-            final CompletionContext coreContext = ((JavaContentAssistInvocationContext) context).getCoreContext();
-            if (coreContext != null && !coreContext.isExtended()) {
-                // must use reflection to set the fields
-                ReflectionUtils.setPrivateField(InternalCompletionContext.class, "isExtended", coreContext, true);
-            }
-            final ICompilationUnit unit = ((JavaContentAssistInvocationContext) context).getCompilationUnit();
-            if (unit instanceof GroovyCompilationUnit) {
+        boolean extendContext = false;
+        try {
+            if (context instanceof JavaContentAssistInvocationContext) {
                 final ITextViewer viewer = context.getViewer();
                 final List<ScriptVariable> scriptVariables = getScriptVariables(viewer);
-                if (((GroovyCompilationUnit) unit).getModuleNode() == null) {
-                    return Collections.emptyList();
+                if (scriptVariables.isEmpty()) {
+                    return list;
                 }
-                final ContentAssistContext assistContext = new GroovyCompletionProposalComputer().createContentAssistContext((GroovyCompilationUnit) unit,
-                        context.getInvocationOffset(), context.getDocument());
-                CharSequence prefix = null;
-                try {
-                    prefix = context.computeIdentifierPrefix();
-                } catch (final BadLocationException e) {
-                    BonitaStudioLog.error(e);
+                final CompletionContext coreContext = ((JavaContentAssistInvocationContext) context).getCoreContext();
+                if (coreContext != null && !coreContext.isExtended()) {
+                    // must use reflection to set the fields
+                    ReflectionUtils.setPrivateField(InternalCompletionContext.class, "isExtended", coreContext, true);
+                    extendContext = true;
                 }
-
-                if (assistContext != null && assistContext.completionNode instanceof VariableExpression) {
+                final ICompilationUnit unit = ((JavaContentAssistInvocationContext) context).getCompilationUnit();
+                if (unit instanceof GroovyCompilationUnit) {
+                    if (((GroovyCompilationUnit) unit).getModuleNode() == null) {
+                        return Collections.emptyList();
+                    }
+                    final ContentAssistContext assistContext = new GroovyCompletionProposalComputer().createContentAssistContext((GroovyCompilationUnit) unit,
+                            context.getInvocationOffset(), context.getDocument());
+                    CharSequence prefix = null;
                     try {
-                        final VariableExpression expr = (VariableExpression) assistContext.completionNode;
-                        if (scriptVariables != null) {
-                            for (final ScriptVariable f : scriptVariables) {
-                                if (expr.getName().equals(f.getName())) {
-                                    final IType type = javaProject.findType(f.getType());
-                                    if (type == null) {
-                                        return list;
-                                    }
-                                    for (final IMethod m : type.getMethods()) {
-                                        if (m.getElementName().startsWith(prefix.toString())) {
-                                            final GroovyCompletionProposal proposal = new GroovyCompletionProposal(CompletionProposal.METHOD_REF,
-                                                    context.getInvocationOffset());
-                                            proposal.setName(m.getElementName().toCharArray());
-                                            proposal.setCompletion(m.getElementName().substring(prefix.length()).toCharArray());
-                                            proposal.setFlags(m.getFlags());
+                        prefix = context.computeIdentifierPrefix();
+                    } catch (final BadLocationException e) {
+                        BonitaStudioLog.error(e);
+                    }
 
-                                            if (prefix.length() == m.getElementName().length()) {
-                                                proposal.setReplaceRange(context.getInvocationOffset(), context.getInvocationOffset());
-                                                proposal.setReceiverRange(0, 0);
-                                            } else {
-                                                proposal.setReplaceRange(context.getInvocationOffset() - prefix.length(), context.getInvocationOffset());
-                                                proposal.setReceiverRange(prefix.length(), prefix.length());
-                                            }
+                    if (assistContext != null && assistContext.completionNode instanceof VariableExpression) {
+                        try {
+                            final VariableExpression expr = (VariableExpression) assistContext.completionNode;
+                            if (scriptVariables != null) {
+                                for (final ScriptVariable f : scriptVariables) {
+                                    if (expr.getName().equals(f.getName())) {
+                                        final IType type = javaProject.findType(f.getType());
+                                        if (type == null) {
+                                            return list;
+                                        }
+                                        for (final IMethod m : type.getMethods()) {
+                                            if (m.getElementName().startsWith(prefix.toString())) {
+                                                final GroovyCompletionProposal proposal = new GroovyCompletionProposal(CompletionProposal.METHOD_REF,
+                                                        context.getInvocationOffset());
+                                                proposal.setName(m.getElementName().toCharArray());
+                                                proposal.setCompletion(m.getElementName().substring(prefix.length()).toCharArray());
+                                                proposal.setFlags(m.getFlags());
 
-                                            final char[][] parametersArray = new char[m.getParameterNames().length][256];
-                                            final List<Parameter> parameters = new ArrayList<Parameter>();
-                                            for (int i = 0; i < m.getParameterNames().length; i++) {
-                                                parametersArray[i] = m.getParameterNames()[i].toCharArray();
-                                                parameters.add(new Parameter(ClassHelper.make(Signature
-                                                        .getSignatureSimpleName(m.getParameterTypes()[i])), m.getParameterNames()[i]));
-                                            }
+                                                if (prefix.length() == m.getElementName().length()) {
+                                                    proposal.setReplaceRange(context.getInvocationOffset(), context.getInvocationOffset());
+                                                    proposal.setReceiverRange(0, 0);
+                                                } else {
+                                                    proposal.setReplaceRange(context.getInvocationOffset() - prefix.length(), context.getInvocationOffset());
+                                                    proposal.setReceiverRange(prefix.length(), prefix.length());
+                                                }
 
-                                            final ClassNode classNode = ClassHelper.make(m.getDeclaringType()
-                                                    .getFullyQualifiedName());
-                                            proposal.setDeclarationSignature(ProposalUtils.createTypeSignature(classNode));
-                                            proposal.setParameterNames(parametersArray);
-                                            if (m.getDeclaringType().getFullyQualifiedName().equals(f.getType())) {
-                                                proposal.setRelevance(100);
-                                            }
+                                                final char[][] parametersArray = new char[m.getParameterNames().length][256];
+                                                final List<Parameter> parameters = new ArrayList<Parameter>();
+                                                for (int i = 0; i < m.getParameterNames().length; i++) {
+                                                    parametersArray[i] = m.getParameterNames()[i].toCharArray();
+                                                    parameters.add(new Parameter(ClassHelper.make(Signature
+                                                            .getSignatureSimpleName(m.getParameterTypes()[i])), m.getParameterNames()[i]));
+                                                }
 
-                                            final MethodNode methodNode = new MethodNode(m.getElementName(), m.getFlags(), ClassHelper.make(Signature
-                                                    .getSignatureSimpleName(m.getReturnType())),
-                                                    parameters.toArray(new Parameter[parameters.size()]), new ClassNode[0], null);
-                                            final char[] methodSignature = ProposalUtils.createMethodSignature(methodNode);
-                                            proposal.setSignature(methodSignature);
+                                                final ClassNode classNode = ClassHelper.make(m.getDeclaringType()
+                                                        .getFullyQualifiedName());
+                                                proposal.setDeclarationSignature(ProposalUtils.createTypeSignature(classNode));
+                                                proposal.setParameterNames(parametersArray);
+                                                if (m.getDeclaringType().getFullyQualifiedName().equals(f.getType())) {
+                                                    proposal.setRelevance(100);
+                                                }
 
-                                            final GroovyJavaGuessingCompletionProposal groovyProposal = GroovyJavaGuessingCompletionProposal.createProposal(
-                                                    proposal,
-                                                    (JavaContentAssistInvocationContext) context, true, "Groovy", ProposalFormattingOptions.newFromOptions());
-                                            if (groovyProposal != null) {
-                                                list.add(groovyProposal);
+                                                final MethodNode methodNode = new MethodNode(m.getElementName(), m.getFlags(), ClassHelper.make(Signature
+                                                        .getSignatureSimpleName(m.getReturnType())),
+                                                        parameters.toArray(new Parameter[parameters.size()]), new ClassNode[0], null);
+                                                final char[] methodSignature = ProposalUtils.createMethodSignature(methodNode);
+                                                proposal.setSignature(methodSignature);
+
+                                                final GroovyJavaGuessingCompletionProposal groovyProposal = GroovyJavaGuessingCompletionProposal.createProposal(
+                                                        proposal,
+                                                        (JavaContentAssistInvocationContext) context, true, "Groovy",
+                                                        ProposalFormattingOptions.newFromOptions());
+                                                if (groovyProposal != null) {
+                                                    list.add(groovyProposal);
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
+                        } catch (final JavaModelException e) {
+                            BonitaStudioLog.error(e);
                         }
-                    } catch (final JavaModelException e) {
-                        BonitaStudioLog.error(e);
                     }
                 }
-            }
 
-            return list;
+                return list;
+            }
+        } finally {
+            final CompletionContext coreContext = ((JavaContentAssistInvocationContext) context).getCoreContext();
+            if (extendContext && coreContext != null && coreContext.isExtended()) {
+                // must use reflection to set the fields
+                ReflectionUtils.setPrivateField(InternalCompletionContext.class, "isExtended", coreContext, false);
+            }
         }
 
         return Collections.emptyList();

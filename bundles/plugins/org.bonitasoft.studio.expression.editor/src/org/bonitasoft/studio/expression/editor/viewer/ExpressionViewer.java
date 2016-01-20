@@ -489,7 +489,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         if ((style & SWT.BORDER) != 0) {
             indent = 16;
         }
-        contentAssistText.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).indent(indent, 0)
+        contentAssistText.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.FILL).indent(indent, 0)
                 .grab(true, false).create());
     }
 

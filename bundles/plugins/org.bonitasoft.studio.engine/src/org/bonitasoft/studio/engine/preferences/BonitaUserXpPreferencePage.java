@@ -20,9 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenceConstants;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.server.PortConfigurator;
@@ -31,21 +29,15 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.pages.AbstractBonitaPreferencePage;
-import org.bonitasoft.studio.preferences.pages.PasswordFieldEditor;
 import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
 import org.bonitasoft.studio.repository.themes.UserXpFileStore;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
@@ -88,22 +80,6 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
         port = new IntegerFieldEditor(BonitaPreferenceConstants.CONSOLE_PORT, Messages.consolePreferencePortLabel, getFieldEditorParent());
         port.setValidRange(PortConfigurator.MIN_PORT_NUMBER, PortConfigurator.MAX_PORT_NUMBER);
         addField(port);
-
-        final Group loginGroup = new Group(getFieldEditorParent(), SWT.NONE);
-        loginGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 15).create());
-        loginGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
-        loginGroup.setText(Messages.loginAs);
-
-        final StringFieldEditor user = new StringFieldEditor(OrganizationPreferenceConstants.DEFAULT_USER, Messages.userNameLLabel, loginGroup);
-        user.setPreferenceStore(CommonRepositoryPlugin.getDefault().getPreferenceStore());
-        addField(user);
-        user.getTextControl(loginGroup).setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(0, 15).create());
-        user.getLabelControl(loginGroup).setLayoutData(GridDataFactory.fillDefaults().grab(false, false).indent(0, 15).create());
-
-        final PasswordFieldEditor password = new PasswordFieldEditor(OrganizationPreferenceConstants.DEFAULT_PASSWORD, Messages.userPasswordLabel, loginGroup);
-        password.setPreferenceStore(CommonRepositoryPlugin.getDefault().getPreferenceStore());
-        addField(password);
-
         defaultTheme = new ComboFieldEditor(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, Messages.defaultUserXPThemeLabel + " " + bonitaPortalModuleName,
                 getAvailableThemes(), getFieldEditorParent());
         addField(defaultTheme);
