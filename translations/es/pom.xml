@@ -47,6 +47,7 @@
 		<module>org.bonitasoft.studio.importer.nl_es</module>
 		<module>org.bonitasoft.studio.intro.nl_es</module>
 		<module>org.bonitasoft.studio.jpdl.nl_es</module>
+        <module>org.bonitasoft.studio.legacy6x.nl_es</module>
 		<module>org.bonitasoft.studio.migration.nl_es</module>
 		<module>org.bonitasoft.studio.model.edit.custom.nl_es</module>
         <module>org.bonitasoft.studio.designer.nl_es</module>
