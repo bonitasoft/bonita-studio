@@ -24,9 +24,11 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.configuration.AbstractConnectorConfigurationSynchronizer;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
@@ -68,14 +70,14 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
 
 	@Override
 	protected List<Connector> getExistingConnectors(AbstractProcess process) {
-		List<Connector> connectors = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.CONNECTOR);
-		Set<Connector> toRemove = new HashSet<Connector>();
-		for(Connector c : connectors){
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.CONNECTOR);
+		final Set<Connector> toRemove = new HashSet<Connector>();
+		for(final Connector c : connectors){
 			if(c instanceof ActorFilter){
 				toRemove.add(c);
 			}
 			if(c.eContainer() instanceof Expression){
-				Expression exp = (Expression) c.eContainer() ;
+				final Expression exp = (Expression) c.eContainer() ;
 				if(!ExpressionConstants.CONNECTOR_TYPE.equals(exp.getType())){
 					toRemove.add(c);
 				}
@@ -87,7 +89,7 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
 
 	@Override
 	protected List<ConnectorImplementation> getAllImplementations(String defId,String defVersion) {
-		final ConnectorImplRepositoryStore store = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class) ;
+		final ConnectorImplRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class) ;
 		return store.getImplementations(defId,defVersion) ;
 	}
 
@@ -97,18 +99,19 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
 		return DefinitionResourceProvider.getInstance(defStore, ConnectorPlugin.getDefault().getBundle()) ;
 	}
 
-	protected void addNewConnectorDefinition(Configuration configuration, AbstractProcess process,CompoundCommand cc, EditingDomain editingDomain) {
+	@Override
+    protected void addNewConnectorDefinition(Configuration configuration, AbstractProcess process,CompoundCommand cc, EditingDomain editingDomain) {
 		super.addNewConnectorDefinition(configuration, process, cc, editingDomain);
 		addNewKPIConnectorDefinition(configuration, process, cc, editingDomain);
 	}
 
 	private void addNewKPIConnectorDefinition(Configuration configuration, AbstractProcess process, CompoundCommand cc,	EditingDomain editingDomain) {
-		List<DatabaseKPIBinding> kpiBindings = ModelHelper.getAllItemsOfType(process, KpiPackage.Literals.DATABASE_KPI_BINDING) ;
+		final List<DatabaseKPIBinding> kpiBindings = ModelHelper.getAllItemsOfType(process, KpiPackage.Literals.DATABASE_KPI_BINDING) ;
 		if(!kpiBindings.isEmpty()){
-			String defId = DB_CONNECTOR_FOR_KPI_ID ;
-			String defVersion = DB_CONNECTOR_VERSION ;
+			final String defId = DB_CONNECTOR_FOR_KPI_ID ;
+			final String defVersion = DB_CONNECTOR_VERSION ;
 			boolean exists = false ;
-			for(DefinitionMapping association : configuration.getDefinitionMappings()){
+			for(final DefinitionMapping association : configuration.getDefinitionMappings()){
 				if(FragmentTypes.CONNECTOR.equals(association.getType()) && association.getDefinitionId().equals(defId) && association.getDefinitionVersion().equals(defVersion)){
 					exists = true ;
 					updateAssociation(configuration,association,cc,editingDomain);
@@ -116,7 +119,7 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
 				}
 			}
 			if(!exists){
-				DefinitionMapping newAssociation = ConfigurationFactory.eINSTANCE.createDefinitionMapping() ;
+				final DefinitionMapping newAssociation = ConfigurationFactory.eINSTANCE.createDefinitionMapping() ;
 				newAssociation.setDefinitionId(defId) ;
 				newAssociation.setDefinitionVersion(defVersion) ;
 				newAssociation.setType(getFragmentContainerId()) ;
@@ -134,29 +137,29 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
 			ConnectorImplementation implementation,
 			EditingDomain editingDomain, CompoundCommand cc,boolean forceDriver) {
 		super.updateJarDependencies(connectorContainer, implementation, editingDomain,	cc,forceDriver);
-		store = (DatabaseConnectorPropertiesRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class) ;
-		DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store.getChild(implementation.getDefinitionId() + "."+DatabaseConnectorPropertiesRepositoryStore.CONF_EXT);
+		store = RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class) ;
+		final DatabaseConnectorPropertiesFileStore fileStore = store.getChild(implementation.getDefinitionId() + "."+DatabaseConnectorPropertiesRepositoryStore.CONF_EXT);
 		if (fileStore !=null){
-			String defaultDriver = fileStore.getDefault();
-			List<String> jars = fileStore.getJarList();
-			boolean autoAddDriver = fileStore.getAutoAddDriver() || forceDriver;
-			Configuration conf = (Configuration) connectorContainer.eContainer().eContainer();
+			final String defaultDriver = fileStore.getDefault();
+			final List<String> jars = fileStore.getJarList();
+			final boolean autoAddDriver = fileStore.getAutoAddDriver() || forceDriver;
+			final Configuration conf = (Configuration) connectorContainer.eContainer().eContainer();
 			FragmentContainer otherDependencies = null;
-			for(FragmentContainer c : conf.getProcessDependencies()){
+			for(final FragmentContainer c : conf.getProcessDependencies()){
 				if(FragmentTypes.OTHER.equals(c.getId())){
 					otherDependencies = c;
 				}
 			}
-			for (String jar : jars){
+			for (final String jar : jars){
 				boolean exists = false ;
-				for(Fragment dep : otherDependencies.getFragments()){
+				for(final Fragment dep : otherDependencies.getFragments()){
 					if(dep.getValue().equals(jar)){
 						exists = true ;
 						break ;
 					}
 				}
 				if (!exists){
-					Fragment depFragment = ConfigurationFactory.eINSTANCE.createFragment() ;
+					final Fragment depFragment = ConfigurationFactory.eINSTANCE.createFragment() ;
 					if (jar.equals(defaultDriver) && autoAddDriver){
 						depFragment.setExported(true) ;
 					} else {
@@ -170,5 +173,14 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
 			}
 		}
 	}
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.configuration.AbstractConnectorConfigurationSynchronizer#getImplementationStore()
+     */
+    @Override
+    protected AbstractConnectorImplRepositoryStore<EMFFileStore> getImplementationStore() {
+        return (AbstractConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+    }
 
 }
