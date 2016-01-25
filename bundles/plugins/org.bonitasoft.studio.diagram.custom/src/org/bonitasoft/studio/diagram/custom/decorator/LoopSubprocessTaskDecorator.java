@@ -80,7 +80,7 @@ public class LoopSubprocessTaskDecorator extends AbstractBonitaDecorator {
         if(view != null){
             final int height = ((Size)view.getLayoutConstraint()).getHeight() ;
             if(height != 0){
-                delta = - (height / 25) ;
+                delta = -(height / 10);
                 if(delta > -1 ){
                     delta = -1 ;
                 }
