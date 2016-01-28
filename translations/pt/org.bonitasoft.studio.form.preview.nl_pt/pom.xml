@@ -5,7 +5,7 @@
   <parent>
     <artifactId>pt</artifactId>
     <groupId>org.bonitasoft.studio.translations</groupId>
-<version>7.2.0.RC3</version>
+<version>7.2.0-SNAPSHOT</version>
     </parent>
     <groupId>org.bonitasoft.studio.translations.pt</groupId>
   <artifactId>org.bonitasoft.studio.form.preview.nl_pt</artifactId>
