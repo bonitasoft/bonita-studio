@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.properties.Well;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.ui.property.section.DataLabelProvider;
 import org.bonitasoft.studio.expression.editor.constant.ExpressionReturnTypeContentProvider;
@@ -184,9 +185,14 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 
     private Composite createStandardLoopContent(final Composite stackedComposite, final TabbedPropertySheetWidgetFactory widgetFactory) {
         final Composite standardLoopComposite = widgetFactory.createPlainComposite(stackedComposite, SWT.NONE);
-        standardLoopComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).extendedMargins(0, 0, 20, 0).create());
+        standardLoopComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).extendedMargins(0, 0, 10, 0).create());
 
-        widgetFactory.createLabel(standardLoopComposite, "", SWT.NONE);//FIILER
+        widgetFactory.createLabel(standardLoopComposite, "", SWT.NONE);//FILLER
+
+        final Well well = new Well(standardLoopComposite, Messages.processScopeVariableWarning, widgetFactory, IStatus.WARNING);
+        well.setLayoutData(GridDataFactory.swtDefaults().grab(false, false).span(2, 1).create());
+
+        widgetFactory.createLabel(standardLoopComposite, "", SWT.NONE);//FILLER
 
         final Button testAfterButton = widgetFactory.createButton(standardLoopComposite, Messages.testAfterLabel, SWT.RADIO);
         testAfterButton.setLayoutData(GridDataFactory.swtDefaults().create());
@@ -221,6 +227,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
         context.bindValue(ViewersObservables.observeInput(loopConditionExpressionViewer), selectionObservable);
         context.bindValue(ViewersObservables.observeSingleSelection(loopConditionExpressionViewer), CustomEMFEditObservables.observeDetailValue(
                 Realm.getDefault(), selectionObservable, ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_CONDITION));
+
 
         widgetFactory.createLabel(standardLoopComposite, Messages.maximumLoopLabel).setLayoutData(
                 GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());

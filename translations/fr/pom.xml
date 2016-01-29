@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>translations</artifactId>
-<version>7.2.0-SNAPSHOT</version>
+<version>7.3.0-SNAPSHOT</version>
 	</parent>
 
 	<modules>
@@ -47,6 +47,7 @@
 		<module>org.bonitasoft.studio.importer.nl_fr</module>
 		<module>org.bonitasoft.studio.intro.nl_fr</module>
 		<module>org.bonitasoft.studio.jpdl.nl_fr</module>
+        <module>org.bonitasoft.studio.legacy6x.nl_fr</module>
 		<module>org.bonitasoft.studio.migration.nl_fr</module>
 		<module>org.bonitasoft.studio.model.edit.custom.nl_fr</module>
         <module>org.bonitasoft.studio.designer.nl_fr</module>

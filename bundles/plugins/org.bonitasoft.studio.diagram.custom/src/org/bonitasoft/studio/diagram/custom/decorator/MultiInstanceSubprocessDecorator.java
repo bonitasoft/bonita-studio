@@ -57,24 +57,6 @@ public abstract class MultiInstanceSubprocessDecorator extends AbstractBonitaDec
     @Override
     protected abstract DecoratorSVGFigure getImageDecorator();
 
-    //    @Override
-    //    public void refresh() {
-    //        final IGraphicalEditPart node = (IGraphicalEditPart) ActivityDecoratorProvider.getDecoratorTargetNode(getDecoratorTarget());
-    //
-    //        //BUGFIX : NullPointerException if Root is null
-    //        if(node != null && node.getRoot() != null ){
-    //            final Activity activity= (Activity) node.getAdapter(Activity.class);
-    //            if (activity != null) {
-    //                if (activity.getMultiInstantiation() != null){
-    //                    DiagramEventBroker.getInstance(node.getEditingDomain()).addNotificationListener(activity,ProcessPackage.eINSTANCE.getActivity_IsMultiInstance(),notificationListener);
-    //                    DiagramEventBroker.getInstance(node.getEditingDomain()).addNotificationListener(activity.getMultiInstantiation(),ProcessPackage.eINSTANCE.getMultiInstantiation_Sequential(),notificationListener);
-    //                }else{
-    //                    DiagramEventBroker.getInstance(node.getEditingDomain()).removeNotificationListener(activity,ProcessPackage.eINSTANCE.getActivity_IsMultiInstance(),notificationListener);
-    //                }
-    //            }
-    //        }
-    //        super.refresh();
-    //    }
 
     @Override
     protected Direction getDirection() {
@@ -93,7 +75,7 @@ public abstract class MultiInstanceSubprocessDecorator extends AbstractBonitaDec
         if(view != null){
             final int height = ((Size)view.getLayoutConstraint()).getHeight() ;
             if(height != 0){
-                delta = - (height / 25) ;
+                delta = -(height / 10);
                 if(delta > -1 ){
                     delta = -1 ;
                 }

@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.bonitasoft.studio.bundles</groupId>
 		<artifactId>plugins</artifactId>
-        <version>7.2.0-SNAPSHOT</version>
+        <version>7.3.0-SNAPSHOT</version>
 	</parent>
 	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
 	<artifactId>org.bonitasoft.studio.connectors</artifactId>
@@ -387,7 +387,7 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-salesforce-createsobject-impl</artifactId>
-									<version>1.0.13</version>
+									<version>1.0.14</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
@@ -415,7 +415,7 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-salesforce-updatesobject-impl</artifactId>
-									<version>1.0.13</version>
+									<version>1.0.14</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>

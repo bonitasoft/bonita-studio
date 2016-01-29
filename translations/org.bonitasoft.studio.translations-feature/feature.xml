@@ -2,7 +2,7 @@
 <feature
       id="org.bonitasoft.studio.translations"
       label="Translations for BOS Studio"
-      version="7.2.0.qualifier"
+      version="7.3.0.qualifier"
       provider-name="BonitaSoft S.A.">
 
    <description url="http://www.example.com/description">
@@ -1216,6 +1216,31 @@
 
    <plugin
          id="org.bonitasoft.studio.contract.nl_ja"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+         
+   <plugin
+         id="org.bonitasoft.studio.legacy6x.nl_ja"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+     
+     <plugin
+         id="org.bonitasoft.studio.legacy6x.nl_es"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+     <plugin
+         id="org.bonitasoft.studio.legacy6x.nl_fr"
          download-size="0"
          install-size="0"
          version="0.0.0"
