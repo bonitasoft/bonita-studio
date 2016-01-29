@@ -50,6 +50,7 @@
 		<module>org.bonitasoft.studio.importer.bos.nl_ja</module>
 		<module>org.bonitasoft.studio.intro.nl_ja</module>
 		<module>org.bonitasoft.studio.jpdl.nl_ja</module>
+        <module>org.bonitasoft.studio.legacy6x.nl_ja</module>
 		<module>org.bonitasoft.studio.migration.nl_ja</module>
 		<module>org.bonitasoft.studio.model.edit.nl_ja</module>
 		<module>org.bonitasoft.studio.model.edit.custom.nl_ja</module>

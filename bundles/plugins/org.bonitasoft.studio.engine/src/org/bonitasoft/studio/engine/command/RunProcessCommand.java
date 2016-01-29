@@ -131,17 +131,20 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
             status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
-            if (!runSynchronously) {
-                Display.getDefault().syncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage, Messages.deploymentFailedMessage, e)
-                                .open();
-                    }
-                });
-            }
         }
+
+        if (!runSynchronously && !status.isOK()) {
+            Display.getDefault().syncExec(new Runnable() {
+
+                @Override
+                public void run() {
+                    new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage, Messages.deploymentFailedMessage, status,
+                            IStatus.ERROR)
+                                    .open();
+                }
+            });
+        }
+
 
         return status;
     }

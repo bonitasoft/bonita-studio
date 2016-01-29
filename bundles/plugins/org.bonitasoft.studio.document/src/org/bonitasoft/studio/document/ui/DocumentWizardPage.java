@@ -310,7 +310,7 @@ public class DocumentWizardPage extends WizardPage {
         multipleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
 
         final Composite radioContainer = new Composite(multipleComposite, SWT.NONE);
-        radioContainer.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(0, 0).create());
+        radioContainer.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(0, 0).spacing(10, 5).create());
         radioContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
         final Button radioButtonNone = createRadioButtonNone(radioContainer);
@@ -491,7 +491,7 @@ public class DocumentWizardPage extends WizardPage {
 
     private void createDocumentTypeRadioButtonComposition(final Composite parent, final EMFDataBindingContext emfDataBindingContext) {
         final Composite compo = new Composite(parent, SWT.NONE);
-        compo.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).create());
+        compo.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).spacing(10, 5).create());
         compo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         final Button radioButtonNone = createRadioButtonNone(compo);

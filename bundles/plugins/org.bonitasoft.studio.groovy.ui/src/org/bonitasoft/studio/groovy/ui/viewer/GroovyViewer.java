@@ -260,7 +260,7 @@ public class GroovyViewer implements IDocumentListener {
             if (context != null && filters != null) {
                 for (final Expression exp : expressions) {
                     for (final ViewerFilter filter : filters) {
-                        if (filter != null && !filter.select(viewer, input, exp)) {
+                        if (filter != null && !filter.select(viewer, context, exp)) {
                             filteredExpressions.remove(exp);
                         }
                     }

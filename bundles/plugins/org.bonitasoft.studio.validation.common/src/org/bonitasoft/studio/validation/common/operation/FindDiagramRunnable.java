@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.validation.common.operation;
 
+import java.io.IOException;
+import java.util.Collections;
+
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -38,6 +41,13 @@ public class FindDiagramRunnable implements Runnable {
      */
     @Override
     public void run() {
+        eResource.unload();
+        try {
+            eResource.load(Collections.emptyMap());
+        } catch (final IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         final TreeIterator<EObject> allContents = eResource.getAllContents();
         while (allContents.hasNext()) {
             final EObject eObject = allContents.next();

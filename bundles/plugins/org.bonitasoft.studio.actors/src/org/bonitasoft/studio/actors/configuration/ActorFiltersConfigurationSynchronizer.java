@@ -24,10 +24,12 @@ import org.bonitasoft.studio.actors.repository.ActorFilterImplRepositoryStore;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.configuration.AbstractConnectorConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connector;
@@ -52,7 +54,7 @@ public class ActorFiltersConfigurationSynchronizer extends AbstractConnectorConf
 
     @Override
     protected List<ConnectorImplementation> getAllImplementations(String defId,String defVersion) {
-        final ActorFilterImplRepositoryStore store = (ActorFilterImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class) ;
+        final ActorFilterImplRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class) ;
         return store.getImplementations(defId,defVersion) ;
     }
 
@@ -62,5 +64,13 @@ public class ActorFiltersConfigurationSynchronizer extends AbstractConnectorConf
         return DefinitionResourceProvider.getInstance(defStore, ActorsPlugin.getDefault().getBundle()) ;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.configuration.AbstractConnectorConfigurationSynchronizer#getImplementationStore()
+     */
+    @Override
+    protected AbstractConnectorImplRepositoryStore<EMFFileStore> getImplementationStore() {
+        return (AbstractConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
+    }
 
 }

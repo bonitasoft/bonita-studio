@@ -26,8 +26,11 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
@@ -40,10 +43,7 @@ import org.bonitasoft.studio.model.kpi.DatabaseKPIBinding;
 import org.bonitasoft.studio.model.kpi.KpiPackage;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connector;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.AddCommand;
@@ -246,12 +246,13 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
     }
 
     protected List<String> jarDependencies(final ConnectorImplementation implementation) {
-        final IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-        final boolean isCustom = rootPath.isPrefixOf(Path.fromOSString(implementation.eResource().getURI().toFileString()));
+        final AbstractConnectorImplRepositoryStore<EMFFileStore> store = getImplementationStore();
+        final IRepositoryFileStore fileStore = store.getImplementationFileStore(implementation.getImplementationId(),
+                implementation.getImplementationVersion());
         final List<String> dependencies = implementation.getJarDependencies() == null ? new ArrayList<String>() : newArrayList(implementation
                 .getJarDependencies()
                 .getJarDependency());
-        if (isCustom) {
+        if (fileStore != null && fileStore.canBeShared()) {
             final String implementationJar = NamingUtils.toConnectorImplementationJarName(implementation);
             if (!dependencies.contains(implementationJar)) {
                 dependencies.add(implementationJar);
@@ -260,6 +261,8 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
         }
         return dependencies;
     }
+
+    protected abstract AbstractConnectorImplRepositoryStore<EMFFileStore> getImplementationStore();
 
     private void removeConnectorDefinitions(final Configuration configuration, final AbstractProcess process, final CompoundCommand cc,
             final EditingDomain editingDomain) {
