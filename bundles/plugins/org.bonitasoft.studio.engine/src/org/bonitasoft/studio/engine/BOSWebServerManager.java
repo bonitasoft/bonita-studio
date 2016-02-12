@@ -96,7 +96,7 @@ public class BOSWebServerManager {
     protected static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
     protected final String tomcatInstanceLocation = new File(ResourcesPlugin
             .getWorkspace().getRoot().getLocation().toFile(), "tomcat")
-            .getAbsolutePath();
+                    .getAbsolutePath();
     private static final String TOMCAT_LOG_FILE = "tomcat.log";
 
     private static final int MAX_SERVER_START_TIME = 300000;
@@ -176,7 +176,7 @@ public class BOSWebServerManager {
     public synchronized void startServer(final IProgressMonitor monitor) {
         if (!serverIsStarted()) {
             BonitaHomeUtil.initBonitaHome();
-            copyTomcatBundleInWorkspace( monitor);
+            copyTomcatBundleInWorkspace(monitor);
             monitor.subTask(Messages.startingWebServer);
             if (BonitaStudioLog.isLoggable(IStatus.OK)) {
                 BonitaStudioLog.debug("Starting tomcat...",
@@ -251,27 +251,13 @@ public class BOSWebServerManager {
     }
 
     private void waitServerRunning(final IProgressMonitor monitor) {
-        int totalTime = 0;
-        while (totalTime < MAX_SERVER_START_TIME && tomcat != null
-                && tomcat.getServerState() != IServer.STATE_STARTED) {
-            try {
-                Thread.sleep(1000);
-                if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                    BonitaStudioLog.debug("Tomcat server state: " + tomcat.getServerState(),
-                            EnginePlugin.PLUGIN_ID);
-                }
-                totalTime = totalTime + 1000;
-            } catch (final InterruptedException e) {
-                BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-            }
-        }
-        if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-            if (tomcat.getServerState() == IServer.STATE_STARTED) {
-                BonitaStudioLog.debug("Tomcat server started.",
-                        EnginePlugin.PLUGIN_ID);
-            } else {
-                BonitaStudioLog.debug("Tomcat failed to start.",
-                        EnginePlugin.PLUGIN_ID);
+        if (tomcat.getServerState() == IServer.STATE_STARTED) {
+            BonitaStudioLog.debug("Tomcat server started.",
+                    EnginePlugin.PLUGIN_ID);
+        } else {
+            BonitaStudioLog.debug("Tomcat failed to start. Check the log file for more informations. (bonita.log or catalina.log)",
+                    EnginePlugin.PLUGIN_ID);
+            if (!PlatformUtil.isHeadless()) {
                 Display.getDefault().syncExec(new Runnable() {
 
                     @Override
@@ -282,8 +268,8 @@ public class BOSWebServerManager {
                                 Messages.cannotStartTomcatMessage);
                     }
                 });
-                return;
             }
+            return;
         }
         connectWithRetries();
     }
@@ -376,7 +362,7 @@ public class BOSWebServerManager {
 
     protected IServer configureServer(final IRuntime runtime, final IServerType sType, final IFile file, final IFolder configurationFolder,
             final IProgressMonitor monitor)
-            throws CoreException {
+                    throws CoreException {
         final IServer server = ServerCore.findServer(BONITA_TOMCAT_SERVER_ID);
         IServerWorkingCopy serverWC = null;
         if (server != null) {
