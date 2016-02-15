@@ -147,6 +147,20 @@ public class GroovyViewer implements IDocumentListener {
         } catch (final Exception e1) {
             BonitaStudioLog.error(e1);
         }
+
+        //        final GroovyCompilationUnit groovyCompilationUnit = editor.getGroovyCompilationUnit();
+        //        groovyCompilationUnit.getNewModuleInfo().module.getContext().getConfiguration()
+        //                .addCompilationCustomizers(new CompilationCustomizer(null) {
+        //
+        //                    @Override
+        //                    public void call(final SourceUnit source, final GeneratorContext context, final ClassNode classNode) throws CompilationFailedException {
+        //                        final VariableScope variableScope = classNode.getModule().getStatementBlock().getVariableScope();
+        //                        System.out.println(source);
+        //                        System.out.println(context);
+        //                        System.out.println(classNode);
+        //                    }
+        //                });
+
         final GroovyEditorActionFactory actionFactory = new GroovyEditorActionFactory(editor);
         getSourceViewer().getTextWidget().setTextLimit(MAX_SCRIPT_LENGTH);
         getSourceViewer().addTextListener(new ITextListener() {
@@ -199,7 +213,7 @@ public class GroovyViewer implements IDocumentListener {
                 if (e.keyCode == SWT.DEL) {
                     actionFactory.getDeleteAction().run();
                 } else
-                if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'i') {
+                    if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'i') {
                     actionFactory.getFormatAction().run();
                 }
             }
