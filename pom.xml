@@ -14,7 +14,7 @@
 		<tychoExtrasVersion>0.22.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>7.2.1-SNAPSHOT</bundle.version>
-		<ui.designer.version>1.2.12</ui.designer.version>
+		<ui.designer.version>1.2.14</ui.designer.version>
 		<engine.version>7.2.1-SNAPSHOT</engine.version>
 		<connector.version>6.1.1</connector.version>
 		<simulation.version>6.1.0</simulation.version>
