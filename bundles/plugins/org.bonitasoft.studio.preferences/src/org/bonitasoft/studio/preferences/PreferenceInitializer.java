@@ -16,6 +16,8 @@ package org.bonitasoft.studio.preferences;
 
 import java.util.Locale;
 
+import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
+import org.codehaus.groovy.eclipse.dsl.GroovyDSLCoreActivator;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
@@ -69,6 +71,16 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
         final IPreferenceStore jdtUIStore = getJDTPreferenceStore();
         jdtUIStore.setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES, Boolean.FALSE);
+
+        final IPreferenceStore groovyDSLstore = getGroovyDSLPreferenceStore();
+        groovyDSLstore.setDefault(DSLPreferencesInitializer.AUTO_ADD_DSL_SUPPORT, false);
+        groovyDSLstore.setValue(DSLPreferencesInitializer.AUTO_ADD_DSL_SUPPORT, false);
+        groovyDSLstore.setDefault(DSLPreferencesInitializer.DSLD_DISABLED, true);
+        groovyDSLstore.setValue(DSLPreferencesInitializer.DSLD_DISABLED, true);
+    }
+
+    protected IPreferenceStore getGroovyDSLPreferenceStore() {
+        return GroovyDSLCoreActivator.getDefault().getPreferenceStore();
     }
 
     protected IPreferenceStore getJDTPreferenceStore() {

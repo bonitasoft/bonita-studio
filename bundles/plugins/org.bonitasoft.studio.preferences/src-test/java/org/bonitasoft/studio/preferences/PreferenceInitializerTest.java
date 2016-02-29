@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Locale;
 
+import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.Test;
@@ -32,12 +33,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class PreferenceInitializerTest {
 
     @Mock
-    public IPreferenceStore apiPrefStore, webPrefStore, bonitaPrefStore, jdtPrefStore;
+    public IPreferenceStore apiPrefStore, webPrefStore, bonitaPrefStore, jdtPrefStore, dslPreferenceStore;
 
     @Test
     public void testLegacyModeDeactivatedByDefault() throws Exception {
         final PreferenceInitializer preferenceInitializer = spy(new PreferenceInitializer());
-        setupeMocks(preferenceInitializer);
+        setupMocks(preferenceInitializer);
 
         preferenceInitializer.initializeDefaultPreferences();
 
@@ -47,18 +48,30 @@ public class PreferenceInitializerTest {
     @Test
     public void should_disable_mark_occurence() throws Exception {
         final PreferenceInitializer preferenceInitializer = spy(new PreferenceInitializer());
-        setupeMocks(preferenceInitializer);
+        setupMocks(preferenceInitializer);
 
         preferenceInitializer.initializeDefaultPreferences();
 
         verify(jdtPrefStore).setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES, Boolean.FALSE);
     }
 
-    private void setupeMocks(final PreferenceInitializer preferenceInitializer) {
+    @Test
+    public void should_disable_groovy_dsl_support() throws Exception {
+        final PreferenceInitializer preferenceInitializer = spy(new PreferenceInitializer());
+        setupMocks(preferenceInitializer);
+
+        preferenceInitializer.initializeDefaultPreferences();
+
+        verify(dslPreferenceStore).setValue(DSLPreferencesInitializer.AUTO_ADD_DSL_SUPPORT, Boolean.FALSE);
+        verify(dslPreferenceStore).setValue(DSLPreferencesInitializer.DSLD_DISABLED, Boolean.TRUE);
+    }
+
+    private void setupMocks(final PreferenceInitializer preferenceInitializer) {
         doReturn(apiPrefStore).when(preferenceInitializer).getAPIPreferenceStore();
         doReturn(webPrefStore).when(preferenceInitializer).getWebBrowserPreferenceStore();
         doReturn(bonitaPrefStore).when(preferenceInitializer).getBonitaPreferenceStore();
         doReturn(jdtPrefStore).when(preferenceInitializer).getJDTPreferenceStore();
+        doReturn(dslPreferenceStore).when(preferenceInitializer).getGroovyDSLPreferenceStore();
         doReturn(new Locale[] {}).when(preferenceInitializer).getStudioLocales();
         doNothing().when(preferenceInitializer).setUTF8DefaultEncoding();
         doNothing().when(preferenceInitializer).initDefaultDebugPreferences();
