@@ -54,6 +54,9 @@ import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceC
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
+import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
+import org.codehaus.groovy.eclipse.dsl.GroovyDSLCoreActivator;
 import org.codehaus.groovy.eclipse.launchers.GroovyConsoleLineTracker;
 import org.eclipse.core.internal.databinding.beans.BeanPropertyHelper;
 import org.eclipse.core.internal.resources.Workspace;
@@ -401,6 +404,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         monitor.subTask(Messages.initializingCurrentRepository);
 
         disableInternalWebBrowser();
+        disableGroovyDSL();
         checkCurrentRepository(monitor);
 
         final List<IConfigurationElement> sortedConfigElems = retrievePreStartupContribution();
@@ -410,6 +414,16 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         doInitWorkspace();
         doStartEngine();
         executeContributions();
+    }
+
+    protected void disableGroovyDSL() {
+        final IPreferenceStore groovyDSLstore = GroovyDSLCoreActivator.getDefault().getPreferenceStore();
+        groovyDSLstore.setDefault(DSLPreferencesInitializer.AUTO_ADD_DSL_SUPPORT, false);
+        groovyDSLstore.setValue(DSLPreferencesInitializer.AUTO_ADD_DSL_SUPPORT, false);
+        groovyDSLstore.setDefault(DSLPreferencesInitializer.DSLD_DISABLED, true);
+        groovyDSLstore.setValue(DSLPreferencesInitializer.DSLD_DISABLED, true);
+        groovyDSLstore.setDefault(DSLPreferences.DISABLED_SCRIPTS, false);
+        groovyDSLstore.setValue(DSLPreferences.DISABLED_SCRIPTS, false);
     }
 
     protected void doInitWorkspace() {

@@ -17,11 +17,7 @@ package org.bonitasoft.studio.application;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.debug.DebugPlugin;
 import org.bonitasoft.studio.validation.ValidationPlugin;
-import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
-import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
-import org.codehaus.groovy.eclipse.dsl.GroovyDSLCoreActivator;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -64,13 +60,6 @@ public class ApplicationPlugin extends AbstractUIPlugin {
         try {
             DebugPlugin.getDefault().getBundle().start();
             ValidationPlugin.getDefault().getBundle().start();
-            final IPreferenceStore groovyDSLstore = GroovyDSLCoreActivator.getDefault().getPreferenceStore();
-            groovyDSLstore.setDefault(DSLPreferencesInitializer.AUTO_ADD_DSL_SUPPORT, false);
-            groovyDSLstore.setValue(DSLPreferencesInitializer.AUTO_ADD_DSL_SUPPORT, false);
-            groovyDSLstore.setDefault(DSLPreferencesInitializer.DSLD_DISABLED, true);
-            groovyDSLstore.setValue(DSLPreferencesInitializer.DSLD_DISABLED, true);
-            groovyDSLstore.setDefault(DSLPreferences.DISABLED_SCRIPTS, false);
-            groovyDSLstore.setValue(DSLPreferences.DISABLED_SCRIPTS, false);
         } catch (final BundleException e) {
             BonitaStudioLog.error(e);
         }
