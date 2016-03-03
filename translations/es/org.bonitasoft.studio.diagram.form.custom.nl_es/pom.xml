@@ -5,7 +5,7 @@
   <parent>
     <artifactId>es</artifactId>
     <groupId>org.bonitasoft.studio.translations</groupId>
-<version>7.2.1-SNAPSHOT</version>
+<version>7.2.1.RC1</version>
   </parent>
   <groupId>org.bonitasoft.studio.translations.es</groupId>
   <artifactId>org.bonitasoft.studio.diagram.form.custom.nl_es</artifactId>
