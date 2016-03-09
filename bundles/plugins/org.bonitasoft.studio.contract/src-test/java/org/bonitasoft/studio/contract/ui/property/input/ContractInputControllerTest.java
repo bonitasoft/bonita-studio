@@ -172,8 +172,7 @@ public class ContractInputControllerTest {
         verify(display).asyncExec(notNull(EditNameRunnable.class));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void should_addChildInput_throw_IllegalArgumentException_if_selection_in_viewer_is_empty() throws Exception {
+    public void should_addChildInput_return_null_if_selection_in_viewer_is_empty() throws Exception {
         final ContractInput input1 = ProcessFactory.eINSTANCE.createContractInput();
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
         contract.getInputs().add(input1);
@@ -182,7 +181,7 @@ public class ContractInputControllerTest {
         when(viewer.getSelection()).thenReturn(new StructuredSelection());
 
         final ContractInput input = contractInputController.addChildInput(viewer);
-        ContractInputAssert.assertThat(input1).hasInputs(input);
+        ContractInputAssert.assertThat(input1).isNull();
     }
 
     @Test
