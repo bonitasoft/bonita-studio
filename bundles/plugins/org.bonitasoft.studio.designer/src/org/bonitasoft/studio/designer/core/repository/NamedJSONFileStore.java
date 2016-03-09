@@ -14,9 +14,11 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.json.JSONException;
 
 /**
@@ -35,7 +37,8 @@ public class NamedJSONFileStore extends JSONFileStore {
         try {
             return getStringAttribute(ID_KEY);
         } catch (final JSONException | ReadFileStoreException e) {
-            throw new IllegalAccessError(String.format("Failed to retrieve id in JSON file %s, with key %s.", getName(), ID_KEY));
+            BonitaStudioLog.error(String.format("Failed to retrieve id in JSON file %s.json, with key %s.", getName(), ID_KEY), UIDesignerPlugin.PLUGIN_ID);
+            return null;
         }
     }
 
@@ -44,7 +47,8 @@ public class NamedJSONFileStore extends JSONFileStore {
         try {
             return getStringAttribute(NAME_KEY);
         } catch (final JSONException | ReadFileStoreException e) {
-            throw new IllegalAccessError(String.format("Failed to retrieve name in JSON file %s, with key %s.", getName(), NAME_KEY));
+            BonitaStudioLog.error(String.format("Failed to retrieve name in JSON file %s.json, with key %s.", getName(), NAME_KEY), UIDesignerPlugin.PLUGIN_ID);
+            return null;
         }
     }
 
