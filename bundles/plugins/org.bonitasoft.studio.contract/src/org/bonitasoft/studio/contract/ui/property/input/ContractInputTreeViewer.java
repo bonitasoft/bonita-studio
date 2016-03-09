@@ -124,6 +124,9 @@ public class ContractInputTreeViewer extends TreeViewer {
         final CellNavigationStrategy cellNavigationStrategy = new AddRowOnEnterCellNavigationStrategy(this, inputController);
         final TreeViewerFocusCellManager focusCellManager = new TreeViewerFocusCellManager(this, new FocusCellOwnerDrawHighlighter(
                 this), cellNavigationStrategy);
+
+        getControl().getAccessible().dispose();
+
         TreeViewerEditor.create(this, focusCellManager, new CharriageColumnViewerEditorActivationStrategy(this), ColumnViewerEditor.TABBING_HORIZONTAL |
                 ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR |
                 ColumnViewerEditor.TABBING_VERTICAL |
