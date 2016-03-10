@@ -2,7 +2,7 @@
 <feature
       id="org.bonitasoft.studio.translations"
       label="Translations for BOS Studio"
-      version="7.2.1.qualifier"
+      version="7.2.2.qualifier"
       provider-name="BonitaSoft S.A.">
 
    <description url="http://www.example.com/description">

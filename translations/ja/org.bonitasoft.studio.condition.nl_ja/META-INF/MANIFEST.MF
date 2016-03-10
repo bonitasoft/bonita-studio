@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: studio condition nl_ja
 Bundle-SymbolicName: org.bonitasoft.studio.condition.nl_ja
-Bundle-Version: 7.2.1.qualifier
+Bundle-Version: 7.2.2.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Fragment-Host: org.bonitasoft.studio.condition;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
