@@ -50,6 +50,7 @@ public class ProjectClasspathFactory {
 
     public void create(final Repository repository, final IProgressMonitor monitor) throws CoreException {
         if (!classpathExists(repository)) {
+            BonitaStudioLog.log(Messages.initializingProjectClasspath);
             monitor.subTask(Messages.initializingProjectClasspath);
             final IJavaProject javaProject = asJavaProject(repository);
             final Set<IClasspathEntry> entries = addClasspathEntries(repository);

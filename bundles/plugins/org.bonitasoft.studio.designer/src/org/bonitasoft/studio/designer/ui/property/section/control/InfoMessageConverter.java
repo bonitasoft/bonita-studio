@@ -45,7 +45,7 @@ public final class InfoMessageConverter extends Converter {
                 case LEGACY:
                     return getLegacyMessage(context, formMappingFeature);
                 case NONE:
-                    return context instanceof Task ? Messages.noFormMessageOnTask : Messages.noFormMessageOnProcess;
+                    return getNoFormMessage(context, formMappingFeature);
                 default:
                     break;
             }
@@ -72,6 +72,13 @@ public final class InfoMessageConverter extends Converter {
             return Messages.overviewLegacyInfo;
         }
         return context instanceof Task ? Messages.stepLegacyInfo : Messages.processLegacyInfo;
+    }
+
+    private String getNoFormMessage(final EObject context, final EReference formMappingFeature) {
+        if (ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING.equals(formMappingFeature)) {
+            return Messages.overviewnoFormMessage;
+        }
+        return context instanceof Task ? Messages.noFormMessageOnTask : Messages.noFormMessageOnProcess;
     }
 
 }

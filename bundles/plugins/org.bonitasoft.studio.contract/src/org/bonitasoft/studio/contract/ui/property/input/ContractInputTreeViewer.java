@@ -21,6 +21,7 @@ import org.bonitasoft.studio.contract.ui.property.AddRowOnEnterCellNavigationStr
 import org.bonitasoft.studio.contract.ui.property.CharriageColumnViewerEditorActivationStrategy;
 import org.bonitasoft.studio.contract.ui.property.input.edit.CheckboxPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.input.edit.ContractInputTypeEditingSupport;
+import org.bonitasoft.studio.contract.ui.property.input.edit.ContractInputTypePropertyDescriptor;
 import org.bonitasoft.studio.contract.ui.property.input.edit.DescriptionObservableEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.input.edit.InputNameObservableEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.input.labelProvider.ContractInputTypeCellLabelProvider;
@@ -112,7 +113,7 @@ public class ContractInputTreeViewer extends TreeViewer {
         this.inputController = inputController;
         this.emfDataBindingContext = emfDataBindingContext;
         final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-        propertySourceProvider = new AdapterFactoryContentProvider(adapterFactory);
+        propertySourceProvider = new ContractInputTypePropertyDescriptor(adapterFactory);
         adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
         getTree().setHeaderVisible(true);
         getTree().setLinesVisible(true);
@@ -123,6 +124,9 @@ public class ContractInputTreeViewer extends TreeViewer {
         final CellNavigationStrategy cellNavigationStrategy = new AddRowOnEnterCellNavigationStrategy(this, inputController);
         final TreeViewerFocusCellManager focusCellManager = new TreeViewerFocusCellManager(this, new FocusCellOwnerDrawHighlighter(
                 this), cellNavigationStrategy);
+
+        getControl().getAccessible().dispose();
+
         TreeViewerEditor.create(this, focusCellManager, new CharriageColumnViewerEditorActivationStrategy(this), ColumnViewerEditor.TABBING_HORIZONTAL |
                 ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR |
                 ColumnViewerEditor.TABBING_VERTICAL |
