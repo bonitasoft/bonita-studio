@@ -5,18 +5,10 @@
   <parent>
     <artifactId>fr</artifactId>
     <groupId>org.bonitasoft.studio.translations</groupId>
-<<<<<<< HEAD
     <version>7.3.0-SNAPSHOT</version>
-=======
-    <version>7.2.2-SNAPSHOT</version>
->>>>>>> refs/remotes/origin/7.2.x
   </parent>
+  
   <groupId>org.bonitasoft.studio.contract.nl_fr</groupId>
   <artifactId>org.bonitasoft.studio.contract.nl_fr</artifactId>
-<<<<<<< HEAD
-  <version>7.3.0-SNAPSHOT</version>
-=======
-  <version>7.2.2-SNAPSHOT</version>
->>>>>>> refs/remotes/origin/7.2.x
   <packaging>eclipse-plugin</packaging>
 </project>
