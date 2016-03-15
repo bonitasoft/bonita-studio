@@ -6,11 +6,7 @@
 	<parent>
 		<groupId>org.bonitasoft.studio.bundles</groupId>
 		<artifactId>plugins</artifactId>
-<<<<<<< HEAD
 		<version>7.3.0-SNAPSHOT</version>
-=======
-		<version>7.2.2-SNAPSHOT</version>
->>>>>>> refs/remotes/origin/7.2.x
 	</parent>
 	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
 	<artifactId>org.bonitasoft.studio.tests-utils</artifactId>
