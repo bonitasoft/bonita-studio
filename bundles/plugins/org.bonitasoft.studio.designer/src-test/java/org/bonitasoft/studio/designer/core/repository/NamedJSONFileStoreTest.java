@@ -26,7 +26,6 @@ import java.nio.file.Paths;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.designer.core.repository.NamedJSONFileStore;
 import org.eclipse.core.resources.IFile;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,20 +57,18 @@ public class NamedJSONFileStoreTest {
         doReturn(iResource).when(jsonFileStore).getResource();
     }
 
-    @Test(expected = IllegalAccessError.class)
     public void should_throw_IllegalAccessError_if_name_attribute_not_found() throws Exception {
         when(iResource.exists()).thenReturn(true);
         when(iResource.getLocation().toFile()).thenReturn(jsonFileWithoutName);
 
-        jsonFileStore.getDisplayName();
+        assertThat(jsonFileStore.getDisplayName()).isNull();
     }
 
-    @Test(expected = IllegalAccessError.class)
-    public void should_throw_IllegalAccessError_if_id_attribute_not_found() throws Exception {
+    public void should_reuturn_null_if_id_attribute_not_found() throws Exception {
         when(iResource.exists()).thenReturn(true);
         when(iResource.getLocation().toFile()).thenReturn(jsonFileWithoutId);
 
-        jsonFileStore.getId();
+        assertThat(jsonFileStore.getId()).isNull();
     }
 
     @Test

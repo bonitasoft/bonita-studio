@@ -66,6 +66,7 @@ public class Messages extends NLS {
     public static String noFormMessageOnProcess;
     public static String urlNotDefined;
     public static String formDoesntExist;
+    public static String overviewnoFormMessage;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

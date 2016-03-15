@@ -32,12 +32,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class PreferenceInitializerTest {
 
     @Mock
-    public IPreferenceStore apiPrefStore, webPrefStore, bonitaPrefStore, jdtPrefStore;
+    public IPreferenceStore apiPrefStore, webPrefStore, bonitaPrefStore, jdtPrefStore, dslPreferenceStore;
 
     @Test
     public void testLegacyModeDeactivatedByDefault() throws Exception {
         final PreferenceInitializer preferenceInitializer = spy(new PreferenceInitializer());
-        setupeMocks(preferenceInitializer);
+        setupMocks(preferenceInitializer);
 
         preferenceInitializer.initializeDefaultPreferences();
 
@@ -47,14 +47,15 @@ public class PreferenceInitializerTest {
     @Test
     public void should_disable_mark_occurence() throws Exception {
         final PreferenceInitializer preferenceInitializer = spy(new PreferenceInitializer());
-        setupeMocks(preferenceInitializer);
+        setupMocks(preferenceInitializer);
 
         preferenceInitializer.initializeDefaultPreferences();
 
         verify(jdtPrefStore).setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES, Boolean.FALSE);
     }
 
-    private void setupeMocks(final PreferenceInitializer preferenceInitializer) {
+
+    private void setupMocks(final PreferenceInitializer preferenceInitializer) {
         doReturn(apiPrefStore).when(preferenceInitializer).getAPIPreferenceStore();
         doReturn(webPrefStore).when(preferenceInitializer).getWebBrowserPreferenceStore();
         doReturn(bonitaPrefStore).when(preferenceInitializer).getBonitaPreferenceStore();

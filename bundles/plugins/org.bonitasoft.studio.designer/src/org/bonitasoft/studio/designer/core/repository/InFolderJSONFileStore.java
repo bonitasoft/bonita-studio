@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -46,9 +44,13 @@ public class InFolderJSONFileStore extends NamedJSONFileStore {
      */
     @Override
     public JSONObject getContent() throws ReadFileStoreException {
-        checkState(getResource().exists());
+        if (!getResource().exists()) {
+            throw new ReadFileStoreException(getResource().getLocation() + " does not exists.");
+        }
         final IFile jsonFile = getJSONIFile();
-        checkState(jsonFile.exists());
+        if (!jsonFile.exists()) {
+            throw new ReadFileStoreException(jsonFile.getLocation() + " does not exists.");
+        }
         return toJSONObject(jsonFile);
     }
 

@@ -333,7 +333,11 @@
 						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
 						<Bundle-Name>Bonita Console embedded in Studio</Bundle-Name>
 						<Bundle-Vendor>BonitaSoft S.A.</Bundle-Vendor>
+<<<<<<< HEAD
 						<Bundle-Version>7.3.0.qualifier</Bundle-Version>
+=======
+						<Bundle-Version>7.2.2.qualifier</Bundle-Version>
+>>>>>>> refs/remotes/origin/7.2.x
 						<Embed-Transitive>true</Embed-Transitive>
 						<Embed-Directory>${lib.dir}</Embed-Directory>
 						<Embed-StripVersion>true</Embed-StripVersion>

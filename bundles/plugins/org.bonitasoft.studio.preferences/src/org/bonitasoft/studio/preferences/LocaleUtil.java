@@ -47,7 +47,7 @@ public class LocaleUtil {
 
             @Override
             public boolean accept(final File parent, final String filename) {
-                return filename.endsWith(".po");
+                return filename.endsWith(".po") && filename.contains("portal");
             }
         });
         final Set<Locale> locales = new TreeSet<Locale>(localeComparator);

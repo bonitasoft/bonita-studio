@@ -43,7 +43,6 @@ import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.bonitasoft.studio.refactoring.core.script.GroovyScriptRefactoringOperationFactory;
 import org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperationFactory;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -114,7 +113,9 @@ public class ContractInputController implements IViewerController {
 
     public ContractInput addChildInput(final ColumnViewer viewer) {
         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-        Assert.isLegal(!selection.isEmpty());
+        if (selection.isEmpty()) {
+            return null;
+        }
 
         final ContractInput parentInput = (ContractInput) selection.getFirstElement();
         final ContractInput defaultInput = createDefaultInput(ModelHelper.getFirstContainerOfType(parentInput, Contract.class));

@@ -5,7 +5,11 @@
   <parent>
     <artifactId>it</artifactId>
     <groupId>org.bonitasoft.studio.translations</groupId>
+<<<<<<< HEAD
 <version>7.3.0-SNAPSHOT</version>
+=======
+<version>7.2.2-SNAPSHOT</version>
+>>>>>>> refs/remotes/origin/7.2.x
   </parent>
   <groupId>org.bonitasoft.studio.translations.it</groupId>
   <artifactId>org.bonitasoft.studio.xml.nl_it</artifactId>
