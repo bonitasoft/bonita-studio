@@ -14,17 +14,14 @@
  */
 package org.bonitasoft.studio.engine.server;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
+import org.bonitasoft.engine.api.ApiAccessType;
 import org.bonitasoft.engine.util.APITypeManager;
 import org.bonitasoft.studio.common.Activator;
-import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 
 /**
@@ -68,24 +65,11 @@ public class ClientBonitaHomeBuildler {
     public void writeClientProperties() throws IOException {
         BonitaStudioLog.debug("Configuring bonita client on host " + host + ":" + port + " with API_TYPE=" + clientProperties.get(API_TYPE),
                 Activator.PLUGIN_ID);
-        final File bonitaHome = BonitaHomeUtil.getBonitaHome();
-        final Path bonitaClientPath = bonitaHome.toPath().resolve(Paths.get("engine-client", "conf", "bonita-client-custom.properties"));
-        final File bonitaClientFile = bonitaClientPath.toFile();
-        if (!bonitaClientFile.exists()) {
-            BonitaHomeUtil.initBonitaHome();
-            if (!bonitaClientFile.exists()) {
-                throw new IllegalStateException("bonita-client-custom.properties not found in the bonita home");
-            }
-        }
-        try (final FileInputStream inStream = new FileInputStream(bonitaClientFile);
-                final FileOutputStream out = new FileOutputStream(bonitaClientFile)) {
-            clientProperties.load(inStream);
+        final Map<String, String> param = new HashMap<String, String>();
             if (HTTP.equals(clientProperties.get(API_TYPE))) {
-                clientProperties.setProperty(SERVER_URL, "http://" + host + ":" + port);
-                clientProperties.setProperty(APPLICATION_NAME, BONITA_APPLICATION);
+            param.put(SERVER_URL, "http://" + host + ":" + port);
+            param.put(APPLICATION_NAME, BONITA_APPLICATION);
             }
-            clientProperties.store(out, null);
-            APITypeManager.refresh();
-        }
+        APITypeManager.setAPITypeAndParams(ApiAccessType.valueOf(clientProperties.getProperty(API_TYPE)), param);
     }
 }

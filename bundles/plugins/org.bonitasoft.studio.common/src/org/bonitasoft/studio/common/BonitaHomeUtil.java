@@ -18,12 +18,11 @@
 package org.bonitasoft.studio.common;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.bonitasoft.engine.api.ApiAccessType;
 import org.bonitasoft.engine.util.APITypeManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -35,7 +34,6 @@ import org.eclipse.core.runtime.FileLocator;
  */
 public class BonitaHomeUtil {
 
-	private static final String API_TYPE = "org.bonitasoft.engine.api-type";
 	public static final String HTTP = "HTTP";
 	private static final String SERVER_URL = "server.url";
 	private static final String APPLICATION_NAME = "application.name";
@@ -55,31 +53,12 @@ public class BonitaHomeUtil {
 				.getFile());
 	}
 
-	/**
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 */
 	public synchronized static File initBonitaHome()  {
-		File destBonitaHome = null;
+		final File destBonitaHome = null;
 		try{
-			destBonitaHome = BonitaHomeUtil.getBonitaHome();
-			if (!destBonitaHome.exists()) {
-				BonitaStudioLog.debug("Initializing BONITA.HOME", Activator.PLUGIN_ID);
-				destBonitaHome.mkdir();
-				final File srcBonitaHome = BonitaHomeUtil.getReferenceBonitaHome();
-				FileUtil.copyDir(srcBonitaHome, destBonitaHome);
-
-                final String bonitaHostDefaultPortValue = System.getProperty(BONITA_CLIENT_HOST_DEFAULT, "localhost");
-                final int bonitaClientDefaultPortValue = Integer.parseInt(System.getProperty(BONITA_CLIENT_PORT_DEFAULT, "8080"));
-                configureBonitaClient(HTTP, bonitaHostDefaultPortValue, bonitaClientDefaultPortValue);
-				BonitaStudioLog.debug("BONITA.HOME installed.", Activator.PLUGIN_ID);
-			}
-			if (!destBonitaHome.getAbsolutePath().equals(
-					System.getProperty(BonitaConstants.HOME))) {
-				System.setProperty(BonitaConstants.HOME,
-						destBonitaHome.getAbsolutePath());
-			}
-
+            final String bonitaHostDefaultPortValue = System.getProperty(BONITA_CLIENT_HOST_DEFAULT, "localhost");
+            final int bonitaClientDefaultPortValue = Integer.parseInt(System.getProperty(BONITA_CLIENT_PORT_DEFAULT, "8080"));
+            configureBonitaClient(HTTP, bonitaHostDefaultPortValue, bonitaClientDefaultPortValue);
 		}catch (final Exception e) {
 			BonitaStudioLog.error(e);
 		}
@@ -88,48 +67,13 @@ public class BonitaHomeUtil {
 
 	public static void configureBonitaClient(final String apiType,final String host,final int serverPort) {
 		BonitaStudioLog.debug("Configuring bonita client on host "+host+":"+serverPort+" with API_TYPE="+apiType, Activator.PLUGIN_ID);
-		final File clientWorkFolder = new File(BonitaHomeUtil.getBonitaHome(),"engine-client"+File.separatorChar+"work");
-		final File clientConfFolder = new File(BonitaHomeUtil.getBonitaHome(),"engine-client"+File.separatorChar+"conf");
-		final File defaultBonitaClientFile = new File(clientWorkFolder,"bonita-client-community.properties");
-		final File customBonitaClientFile = new File(clientConfFolder,"bonita-client-custom.properties");
-		if(!defaultBonitaClientFile.exists()){
-            initBonitaHome();
-            if (!defaultBonitaClientFile.exists()) {
-                throw new RuntimeException("bonita-client.properties not found in the bonita home");
-            }
-		}
-		final Properties p = new Properties();
-		FileInputStream inStream = null;
-		FileOutputStream out = null;
-		try{
-			inStream = new FileInputStream(defaultBonitaClientFile);
-			p.load(inStream);
-			p.setProperty(API_TYPE, apiType);
+        final Map<String, String> parameters = new HashMap<>();
 			if(HTTP.equals(apiType)){
-				p.setProperty(SERVER_URL, "http://"+host+":"+serverPort);
-				p.setProperty(APPLICATION_NAME, BONITA_APPLICATION);
+                parameters.put(SERVER_URL, "http://" + host + ":" + serverPort);
+                parameters.put(APPLICATION_NAME, BONITA_APPLICATION);
 			}
-			out = new FileOutputStream(customBonitaClientFile);
-			p.store(out, null);
-			APITypeManager.refresh();
-		}catch (final Exception e) {
-			BonitaStudioLog.error(e);
-		}finally{
-			if(inStream != null){
-				try {
-					inStream.close();
-				} catch (final IOException e) {
+            APITypeManager.setAPITypeAndParams(ApiAccessType.valueOf(apiType), parameters);
 
-				}
-			}
-			if(out != null){
-				try {
-					out.close();
-				} catch (final IOException e) {
-
-				}
-			}
-		}
 	}
 
 }
