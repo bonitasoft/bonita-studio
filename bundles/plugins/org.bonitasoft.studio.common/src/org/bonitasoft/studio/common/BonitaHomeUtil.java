@@ -34,48 +34,48 @@ import org.eclipse.core.runtime.FileLocator;
  */
 public class BonitaHomeUtil {
 
-	public static final String HTTP = "HTTP";
-	private static final String SERVER_URL = "server.url";
-	private static final String APPLICATION_NAME = "application.name";
-	private static final String BONITA_APPLICATION = "bonita";
+    public static final String HTTP = "HTTP";
+    private static final String SERVER_URL = "server.url";
+    private static final String APPLICATION_NAME = "application.name";
+    private static final String BONITA_APPLICATION = "bonita";
     private static final String BONITA_CLIENT_HOST_DEFAULT = "bonita.client.host.default";
     private static final String BONITA_CLIENT_PORT_DEFAULT = "bonita.client.port.default";
 
-	public static File getBonitaHome() {
-		return new File(ResourcesPlugin.getWorkspace().getRoot().getLocation()
-				.toString(), "bonita");
-	}
+    public static File getBonitaHome() {
+        return new File(ResourcesPlugin.getWorkspace().getRoot().getLocation()
+                .toString(), "bonita");
+    }
 
 
-	public static File getReferenceBonitaHome() throws IOException {
-		return new File(FileLocator.toFileURL(
-				ProjectUtil.getConsoleLibsBundle().getEntry("bonita-home"))
-				.getFile());
-	}
+    public static File getReferenceBonitaHome() throws IOException {
+        return new File(FileLocator.toFileURL(
+                ProjectUtil.getConsoleLibsBundle().getEntry("bonita-home"))
+                .getFile());
+    }
 
-	public synchronized static File initBonitaHome()  {
-		final File destBonitaHome = null;
-		try{
+    public synchronized static File initBonitaHome()  {
+        final File destBonitaHome = null;
+        try{
             final String bonitaHostDefaultPortValue = System.getProperty(BONITA_CLIENT_HOST_DEFAULT, "localhost");
             final int bonitaClientDefaultPortValue = Integer.parseInt(System.getProperty(BONITA_CLIENT_PORT_DEFAULT, "8080"));
             configureBonitaClient(HTTP, bonitaHostDefaultPortValue, bonitaClientDefaultPortValue);
             //TODO to be removed
             System.setProperty(BonitaConstants.HOME, System.getProperty("java.io.tmpdir"));
-		}catch (final Exception e) {
-			BonitaStudioLog.error(e);
-		}
-		return destBonitaHome;
-	}
+        }catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        }
+        return destBonitaHome;
+    }
 
-	public static void configureBonitaClient(final String apiType,final String host,final int serverPort) {
-		BonitaStudioLog.debug("Configuring bonita client on host "+host+":"+serverPort+" with API_TYPE="+apiType, Activator.PLUGIN_ID);
+    public static void configureBonitaClient(final String apiType,final String host,final int serverPort) {
+        BonitaStudioLog.debug("Configuring bonita client on host "+host+":"+serverPort+" with API_TYPE="+apiType, Activator.PLUGIN_ID);
         final Map<String, String> parameters = new HashMap<>();
-			if(HTTP.equals(apiType)){
+            if(HTTP.equals(apiType)){
                 parameters.put(SERVER_URL, "http://" + host + ":" + serverPort);
                 parameters.put(APPLICATION_NAME, BONITA_APPLICATION);
-			}
+            }
             APITypeManager.setAPITypeAndParams(ApiAccessType.valueOf(apiType), parameters);
 
-	}
+    }
 
 }
