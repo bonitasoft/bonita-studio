@@ -117,7 +117,7 @@ public class ValidationMarkerProvider {
         }
     }
 
-    private static void addMarker(final DiagramEditPart diagramEP, final String constaintId, final EditPartViewer viewer, final IFile
+    private static synchronized void addMarker(final DiagramEditPart diagramEP, final String constaintId, final EditPartViewer viewer, final IFile
             target, final String elementId, final String location, final String message, final int statusSeverity) {
         if (target == null) {
             return;
@@ -134,6 +134,7 @@ public class ValidationMarkerProvider {
         if (target == null) {
             return;
         }
+
         final IMarker marker = org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.addMarker(target, elementId, location,
                 message, statusSeverity);
         addConstraintId(constraintId, marker);
