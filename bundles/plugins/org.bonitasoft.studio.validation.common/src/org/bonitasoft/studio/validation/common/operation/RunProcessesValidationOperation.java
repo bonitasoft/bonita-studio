@@ -159,7 +159,6 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
                 }
             }
         }
-
         validationOperation.run(monitor);
         status = validationOperation.getResult();
     }

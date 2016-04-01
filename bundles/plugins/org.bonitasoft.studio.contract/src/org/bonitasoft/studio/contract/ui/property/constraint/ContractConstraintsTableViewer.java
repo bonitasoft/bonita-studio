@@ -83,8 +83,6 @@ public class ContractConstraintsTableViewer extends TableViewer {
         final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(this, new FocusCellOwnerDrawHighlighter(
                 this), cellNavigationStrategy);
 
-        getControl().getAccessible().dispose();
-
         TableViewerEditor.create(this, focusCellManager, new CharriageColumnViewerEditorActivationStrategy(this), ColumnViewerEditor.TABBING_HORIZONTAL |
                 ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR |
                 ColumnViewerEditor.TABBING_VERTICAL |

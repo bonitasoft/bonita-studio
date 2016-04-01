@@ -275,6 +275,8 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
+            	checkedElements.clear();
+                generateAllMappings(mappings, false);
                 checkMandatoryAttributes(checkedElements, mappings);
             }
 

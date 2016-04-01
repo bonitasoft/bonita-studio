@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.ViewerColumn;
+import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
 
@@ -64,6 +65,20 @@ public class CustomPropertyColumnLabelProvider extends PropertyColumnLabelProvid
         if (!affectedElements.isEmpty()) {
             fireLabelProviderChanged(new LabelProviderChangedEvent(this, affectedElements.toArray()));
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.views.properties.PropertyColumnLabelProvider#getText(java.lang.Object)
+     */
+    @Override
+    public String getText(Object object) {
+        final IPropertySource propertySource = propertySourceProvider
+                .getPropertySource(object);
+        if (propertySource != null) {
+            return super.getText(object);
+        }
+        return null;
     }
 
 }
