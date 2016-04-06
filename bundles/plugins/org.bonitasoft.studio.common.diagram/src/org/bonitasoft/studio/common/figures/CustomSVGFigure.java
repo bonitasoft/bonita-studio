@@ -26,6 +26,9 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * @author Romain Bioteau
@@ -36,6 +39,9 @@ public class CustomSVGFigure extends SVGFigure {
 	protected String foregroundColor ;
 	protected String backgroundColor ;
 	private float strokeWidth;
+	private Element border;
+	private Node bgStyleNode;
+	private boolean foundBgElement = false;
 
 	public Document getSVGDocument(){
 		return super.getDocument() ;
@@ -81,48 +87,60 @@ public class CustomSVGFigure extends SVGFigure {
 		hexaColor = ("#"+red+green+blue).toUpperCase() ;
 		this.backgroundColor = hexaColor ;
 		this.strokeWidth = strokeWidth ;
+
+
+
 		repaint() ;
 	}
 
 	@Override
 	protected void paintFigure(Graphics graphics) {
-		super.paintFigure(graphics);
-		Document document = getDocument();
-		if (document == null) {
-			return;
-		}
+		double stroke = getPreferredSize().width *(strokeWidth > 0 ? strokeWidth : 2.0)/ getClientArea().getSize().width ;
 
-		if(foregroundColor != null && backgroundColor != null){
-			
-			if(document.getElementById("BORDER") != null){
-				document.getElementById("BORDER").setAttribute("stroke", foregroundColor) ;
-				if(strokeWidth > 0){
-					document.getElementById("BORDER").setAttribute("stroke-width", String.valueOf(strokeWidth)) ;
+		Document document = getDocument();
+		if(document!= null && foregroundColor != null && backgroundColor != null){
+
+			if(!foundBgElement) {
+
+				border = document.getElementById("BORDER");
+				Element svgid_1_ = document.getElementById("SVGID_1_");
+				NodeList stop = svgid_1_.getElementsByTagName("stop");
+				bgStyleNode = stop.item(0).getAttributes().getNamedItem("style");
+				foundBgElement  = true;
+			}
+
+			if(border != null){
+				border.setAttribute("stroke", foregroundColor) ;
+				if(stroke > 0){
+					border.setAttribute("stroke-width", String.valueOf(stroke)) ;
 				}
 			}
-			
-			if(document.getElementById("SVGID_1_") != null){
-				document.getElementById("SVGID_1_").getElementsByTagName("stop").item(0).getAttributes().getNamedItem("style").setNodeValue("stop-color:"+backgroundColor) ;
-				document.getElementById("SVGID_1_").getElementsByTagName("stop").item(1).getAttributes().getNamedItem("style").setNodeValue("stop-color:#FFFFFF") ;
+
+			if(bgStyleNode != null){
+				bgStyleNode.setNodeValue("stop-color:"+backgroundColor) ;
 			}
 		}
-		Image image = null;
-		try {
-			Rectangle r = getClientArea();
-			transcoder.setCanvasSize(specifyCanvasWidth ? r.width : -1, specifyCanvasHeight ? r.height : -1);
-			updateRenderingHints(graphics);
-			BufferedImage awtImage = transcoder.getBufferedImage();
-			if (awtImage != null) {
-				image = toSWT(Display.getCurrent(), awtImage);
-				graphics.drawImage(image, r.x, r.y);
-			}
-		} finally {
-			if (image != null) {
-				image.dispose();
+
+		if(document != null) {
+			Image image = null;
+
+			try {
+				Rectangle r = this.getClientArea();
+				this.transcoder.setCanvasSize(this.specifyCanvasWidth?r.width:-1, this.specifyCanvasHeight?r.height:-1);
+				this.updateRenderingHints(graphics);
+				BufferedImage awtImage = this.transcoder.getBufferedImage();
+				if(awtImage != null) {
+					image = toSWT(Display.getCurrent(), awtImage);
+					graphics.drawImage(image, r.x, r.y);
+				}
+			} finally {
+				if(image != null) {
+					image.dispose();
+				}
+
+				document = null;
 			}
 
-			document = null ;
 		}
 	}
-
 }
