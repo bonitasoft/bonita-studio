@@ -312,11 +312,14 @@ public class PageComponentSwitchBuilder {
             } else {
                 radioCompoiste.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
             }
-            final String defaultSelection = input.getDefaultValue();
+            String defaultSelection = input.getDefaultValue();
 
             ((Expression) parameter.getExpression()).setType(ExpressionConstants.CONSTANT_TYPE);
             ((Expression) parameter.getExpression()).setReturnType(input.getType());
             final String content = ((Expression) parameter.getExpression()).getContent();
+            if (defaultSelection == null) {
+                defaultSelection = object.getChoices().get(0);
+            }
             for (final String choice : object.getChoices()) {
                 final Button radioButton = new Button(radioCompoiste, SWT.RADIO);
                 radioButton.setText(choice);
@@ -331,6 +334,7 @@ public class PageComponentSwitchBuilder {
                         }
                     }
                 });
+                radioButton.setSelection(false);
                 if (content == null && defaultSelection != null && defaultSelection.equals(choice)) {
                     radioButton.setSelection(true);
                 } else if (content != null && content.equals(choice)) {
@@ -338,10 +342,7 @@ public class PageComponentSwitchBuilder {
                 }
 
             }
-            if (defaultSelection == null) {
-                final Button button = (Button) radioCompoiste.getChildren()[0];
-                button.setSelection(true);
-            }
+
             return radioCompoiste;
         }
         return null;
