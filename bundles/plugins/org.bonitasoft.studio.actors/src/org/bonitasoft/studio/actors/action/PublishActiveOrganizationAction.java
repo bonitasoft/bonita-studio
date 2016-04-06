@@ -25,6 +25,7 @@ import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.studio.actors.operation.PublishOrganizationOperation;
+import org.bonitasoft.studio.actors.operation.UpdateOrganizationOperation;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.extension.IEngineAction;
@@ -60,7 +61,7 @@ public class PublishActiveOrganizationAction implements IEngineAction {
             if (organizationFileStore == null) {
                 throw new FileNotFoundException(artifactId + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
             }
-            final PublishOrganizationOperation op = new PublishOrganizationOperation(organizationFileStore.getContent());
+            final PublishOrganizationOperation op = new UpdateOrganizationOperation(organizationFileStore.getContent());
             op.setSession(session);
             op.run(Repository.NULL_PROGRESS_MONITOR);
         }

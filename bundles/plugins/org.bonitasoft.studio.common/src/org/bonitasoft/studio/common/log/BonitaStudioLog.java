@@ -138,7 +138,7 @@ public class BonitaStudioLog {
     public static void debug(final String message, final Throwable throwable, final String bundleId) {
         final Logger logger = getLogger(bundleId);
         if (logger != null) {
-            logger.info(message, throwable);
+            logger.debug(throwable, message);
         } else {
             System.out.println(message);
         }

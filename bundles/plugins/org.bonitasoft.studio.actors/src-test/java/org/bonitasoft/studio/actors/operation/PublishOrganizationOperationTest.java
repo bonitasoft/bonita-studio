@@ -35,7 +35,7 @@ public class PublishOrganizationOperationTest {
         final User userWithUTF8Chars = OrganizationFactory.eINSTANCE.createUser();
         userWithUTF8Chars.setFirstName("社員番号");
         users.getUser().add(userWithUTF8Chars);
-        final String string = new PublishOrganizationOperation(organization).toString(organization);
+        final String string = new CleanPublishOrganizationOperation(organization).toString(organization);
         assertThat(string).contains("社員番号");
     }
 }

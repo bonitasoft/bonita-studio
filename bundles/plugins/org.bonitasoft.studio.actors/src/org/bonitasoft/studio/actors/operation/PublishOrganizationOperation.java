@@ -27,6 +27,10 @@ import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.ProfileAPI;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
+import org.bonitasoft.engine.exception.CreationException;
+import org.bonitasoft.engine.exception.DeletionException;
+import org.bonitasoft.engine.exception.SearchException;
+import org.bonitasoft.engine.identity.OrganizationImportException;
 import org.bonitasoft.engine.identity.User;
 import org.bonitasoft.engine.identity.UserCriterion;
 import org.bonitasoft.engine.profile.Profile;
@@ -58,9 +62,9 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
  * @author Romain Bioteau
  *
  */
-public class PublishOrganizationOperation implements IRunnableWithProgress{
+public abstract class PublishOrganizationOperation implements IRunnableWithProgress {
 
-    private final Organization organization;
+    protected final Organization organization;
     private APISession session;
     private boolean flushSession;
 
@@ -70,10 +74,6 @@ public class PublishOrganizationOperation implements IRunnableWithProgress{
 
     public void setSession(final APISession session){
         this.session = session;
-    }
-
-    public void setOrganization(final Organization organization){
-
     }
 
     /* (non-Javadoc)
@@ -89,7 +89,6 @@ public class PublishOrganizationOperation implements IRunnableWithProgress{
                 session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
                 flushSession = true;
             }
-
             final IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session);
             final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
             final SearchResult<ProcessDeploymentInfo> result = processApi.searchProcessDeploymentInfos(new SearchOptionsBuilder(0,Integer.MAX_VALUE).done());
@@ -97,9 +96,7 @@ public class PublishOrganizationOperation implements IRunnableWithProgress{
                 processApi.deleteProcessInstances(info.getProcessId(), 0, Integer.MAX_VALUE);
                 processApi.deleteArchivedProcessInstances(info.getProcessId(), 0, Integer.MAX_VALUE);
             }
-            identityAPI.deleteOrganization() ;
-            final String content = toString(organization);
-            identityAPI.importOrganization(content) ;
+            importOrganization(identityAPI);
             final ProfileAPI profileAPI =  BOSEngineManager.getInstance().getProfileAPI(session) ;
             applyAllProfileToUsers(identityAPI,profileAPI) ;
         }catch(final Exception e){
@@ -111,8 +108,10 @@ public class PublishOrganizationOperation implements IRunnableWithProgress{
             }
         }
     }
+    
+    protected abstract void importOrganization(IdentityAPI identityAPI) throws IOException, DeletionException, OrganizationImportException;
 
-    String toString(final Organization organization) throws IOException {
+    protected String toString(final Organization organization) throws IOException {
         final XMLResource resource = createResourceFromOrganization(organization);
         final XMLProcessor processor = new OrganizationXMLProcessor();
         final Map<String, Object> options = new HashMap<String, Object>();
@@ -149,7 +148,7 @@ public class PublishOrganizationOperation implements IRunnableWithProgress{
         exportedCopy.getUsers().getUser().add(user);
     }
 
-    protected void applyAllProfileToUsers(final IdentityAPI identityAPI, final ProfileAPI profileAPI) throws Exception {
+    protected void applyAllProfileToUsers(final IdentityAPI identityAPI, final ProfileAPI profileAPI) throws SearchException {
         final List<Long> profiles = new ArrayList<Long>() ;
         final SearchOptions options = new SearchOptionsBuilder(0, Integer.MAX_VALUE).sort("name", Order.DESC).done();
         final SearchResult<Profile> searchedProfiles = profileAPI.searchProfiles(options);
@@ -162,7 +161,11 @@ public class PublishOrganizationOperation implements IRunnableWithProgress{
         for(final User u : users){
             final long id =  u.getId() ;
             for(final Long profile : profiles){
-                profileAPI.createProfileMember(profile, id, -1L, -1L);
+                try {
+                    profileAPI.createProfileMember(profile, id, -1L, -1L);
+                } catch (final CreationException e) {
+                    BonitaStudioLog.debug("Failed to map a profile to user", e, ActorsPlugin.PLUGIN_ID);
+                }
             }
         }
     }
