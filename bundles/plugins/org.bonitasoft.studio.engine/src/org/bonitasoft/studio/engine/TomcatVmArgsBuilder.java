@@ -62,8 +62,8 @@ public class TomcatVmArgsBuilder {
         addWatchDogProperties(args);
         addSystemProperty(args, "eclipse.product", getProductApplicationId());
         addSystemProperty(args, BONITA_WEB_REGISTER, System.getProperty(BONITA_WEB_REGISTER, "1"));
-        addSystemProperty(args, "\"" + BonitaHomeHandler.DB_LOCATION_PROPERTY,
-                getDBLocation().getAbsolutePath() + "\"");
+        addSystemProperty(args, BonitaHomeHandler.DB_LOCATION_PROPERTY,
+                "\"" + getDBLocation().getAbsolutePath() + "\"");
 
         addUIDesignerOptions(args);
         final String res = args.toString();
