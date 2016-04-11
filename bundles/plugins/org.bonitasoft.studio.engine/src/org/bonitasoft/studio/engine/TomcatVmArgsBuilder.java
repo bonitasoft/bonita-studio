@@ -73,7 +73,7 @@ public class TomcatVmArgsBuilder {
         return res;
     }
 
-    protected File getDBLocation() {
+    public File getDBLocation() {
         return repositoryAccessor.getCurrentRepository().getBonitaHomeHandler().getDBLocation();
     }
 
