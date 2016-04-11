@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.exporter;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -328,22 +327,15 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 
     protected void addAutologin(final List<BarResource> res, final AbstractProcess process, final Configuration conf) throws Exception {
         if (process.isAutoLogin()) {
-            final byte[] content = BOSEngineManager.getInstance().getTenantConfigResourceContent(BOSEngineManager.SECURITY_CONFIG_PROPERTIES);
-            final ByteArrayInputStream is = new ByteArrayInputStream(content);
             final Properties properties = new Properties();
-            properties.load(is);
             properties.setProperty(AUTO_LOGIN_PROPERTY, Boolean.TRUE.toString());
             final String autoLoginUserName = conf.getAnonymousUserName();
             final String autoLoginPassword = conf.getAnonymousPassword();
-            if (autoLoginUserName != null && !autoLoginUserName.isEmpty()) {
-                properties.setProperty(AUTO_LOGIN_USERNAME_PROPERTY, autoLoginUserName);
-                properties.setProperty(AUTO_LOGIN_PASSWORD_PROPERTY, autoLoginPassword != null && !autoLoginPassword.isEmpty() ? autoLoginPassword : "");
-            }
-
+            properties.setProperty(AUTO_LOGIN_USERNAME_PROPERTY, autoLoginUserName);
+            properties.setProperty(AUTO_LOGIN_PASSWORD_PROPERTY, autoLoginPassword != null && !autoLoginPassword.isEmpty() ? autoLoginPassword : "");
             final ByteArrayOutputStream os = new ByteArrayOutputStream();
             properties.store(os, null);
             res.add(new BarResource(FORMS_FOLDER_IN_BAR + BOSEngineManager.SECURITY_CONFIG_PROPERTIES, os.toByteArray()));
-            is.close();
             os.close();
         }
     }
