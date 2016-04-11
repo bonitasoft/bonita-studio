@@ -53,6 +53,11 @@ public class ContractInputGenerationInfoDialogFactory {
                 Messages.bind(Messages.openUpdateDocumentOperationWarningMessages, documentName));
     }
 
+    public void openUpdateDocumentInitalContentWarning(final String documentName, final Shell shell) {
+        MessageDialog.openWarning(shell, Messages.updateInitialDocumentContentWarningTitle,
+                String.format(Messages.updateInitialDocumentContentWarningMsg, documentName));
+    }
+
     private String getInfoMessage(final ContractContainer contractContainer) {
         if (contractContainer instanceof OperationContainer) {
             return Messages.contractOperationGenerationMsg;

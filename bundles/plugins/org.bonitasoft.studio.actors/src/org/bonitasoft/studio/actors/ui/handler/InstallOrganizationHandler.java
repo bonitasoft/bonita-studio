@@ -15,15 +15,19 @@
 package org.bonitasoft.studio.actors.ui.handler;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.model.organization.Organization;
+import org.bonitasoft.studio.actors.operation.CleanPublishOrganizationOperation;
 import org.bonitasoft.studio.actors.operation.PublishOrganizationOperation;
+import org.bonitasoft.studio.actors.operation.UpdateOrganizationOperation;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -65,7 +69,8 @@ public class InstallOrganizationHandler extends AbstractHandler {
             } catch (final ReadFileStoreException e1) {
                 throw new ExecutionException("Failed to read organization content", e1);
             }
-            final PublishOrganizationOperation op = new PublishOrganizationOperation(organization);
+
+            final PublishOrganizationOperation op = publishOperation(organization);
             try {
                 op.run(Repository.NULL_PROGRESS_MONITOR);
             } catch (final Exception e) {
@@ -84,6 +89,12 @@ public class InstallOrganizationHandler extends AbstractHandler {
 
         }
         return null;
+    }
+
+    private PublishOrganizationOperation publishOperation(Organization organization) {
+        final String activeOrganization = new ActiveOrganizationProvider().getActiveOrganization();
+        return Objects.equals(organization.getName(), activeOrganization) ? new UpdateOrganizationOperation(organization)
+                : new CleanPublishOrganizationOperation(organization);
     }
 
 }

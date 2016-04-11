@@ -120,4 +120,6 @@ public class Messages extends NLS {
     public static String fileInputType;
     public static String openUpdateDocumentOperationWarningTitle;
     public static String openUpdateDocumentOperationWarningMessages;
+    public static String updateInitialDocumentContentWarningTitle;
+    public static String updateInitialDocumentContentWarningMsg;
 }

@@ -224,6 +224,7 @@ public class ContractInputGenerationWizard extends Wizard {
         } else {
             cc.append(SetCommand.create(editingDomain, document, ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE, DocumentType.CONTRACT));
             cc.append(SetCommand.create(editingDomain, document, ProcessPackage.Literals.DOCUMENT__CONTRACT_INPUT, input));
+            infoDialogFactory.openUpdateDocumentInitalContentWarning(document.getName(), getShell());
         }
         editingDomain.getCommandStack().execute(cc);
         return true;

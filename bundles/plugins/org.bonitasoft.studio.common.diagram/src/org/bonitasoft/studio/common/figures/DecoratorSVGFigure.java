@@ -24,6 +24,9 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * @author Romain Bioteau
@@ -31,74 +34,121 @@ import org.w3c.dom.Document;
  */
 public class DecoratorSVGFigure extends CustomSVGFigure {
 
+	boolean foundBgelements = false;
+	private Element border;
+	private Element border2;
+	private Element border3;
+	private Element border_style;
+	private Element border_style2;
+	private Element style;
+	private Element style2;
+	private Element style3;
+	private Element style4;
+	private Element fill;
+	private Element fill2;
+	private Node style1;
+
 	@Override
 	protected void paintFigure(Graphics graphics) {
-		super.paintFigure(graphics);
 		Document document = getDocument();
-		if (document == null) {
-			return;
-		}
 
-		if(foregroundColor != null && backgroundColor != null){
-			if(document.getElementById("BORDER") != null){
-				document.getElementById("BORDER").setAttribute("stroke", foregroundColor) ;
-			}
-			if(document.getElementById("BORDER2") != null){
-				document.getElementById("BORDER2").setAttribute("stroke", foregroundColor) ;
-			}
-			if(document.getElementById("BORDER3") != null){
-				document.getElementById("BORDER3").setAttribute("stroke", foregroundColor) ;
-			}
-			if(document.getElementById("BORDER_STYLE") != null){
-				document.getElementById("BORDER_STYLE").setAttribute("stroke", foregroundColor) ;
-				document.getElementById("BORDER_STYLE").setAttribute("style", "fill:"+foregroundColor) ;
-			}
-			if(document.getElementById("BORDER_STYLE2") != null){
-				document.getElementById("BORDER_STYLE2").setAttribute("stroke", foregroundColor) ;
-				document.getElementById("BORDER_STYLE2").setAttribute("style", "fill:"+foregroundColor) ;
-			}
-	
-			if(document.getElementById("STYLE") != null){
-				document.getElementById("STYLE").setAttribute("style", "fill:"+foregroundColor) ;
-			}
-			if(document.getElementById("STYLE2") != null){
-				document.getElementById("STYLE2").setAttribute("style", "fill:"+foregroundColor) ;
-			}
-			if(document.getElementById("STYLE3") != null){
-				document.getElementById("STYLE3").setAttribute("style", "fill:"+foregroundColor) ;
-			}
-			if(document.getElementById("STYLE4") != null){
-				document.getElementById("STYLE4").setAttribute("style", "fill:"+foregroundColor) ;
-			}
-			if(document.getElementById("FILL") != null){
-				document.getElementById("FILL").setAttribute("style", "fill:"+backgroundColor+";fill-opacity:0.6") ;
-			}
-			
-			if(document.getElementById("FILL2") != null){
-				document.getElementById("FILL2").setAttribute("style", "fill:"+backgroundColor+";fill-opacity:0.3") ;
-			}
-			
-			if(document.getElementById("SVGID_1_") != null){
-				document.getElementById("SVGID_1_").getElementsByTagName("stop").item(0).getAttributes().getNamedItem("style").setNodeValue("stop-color:"+backgroundColor) ;
-				document.getElementById("SVGID_1_").getElementsByTagName("stop").item(1).getAttributes().getNamedItem("style").setNodeValue("stop-color:#FFFFFF") ;
-			}
-		}
-		Image image = null;
-		try {
-			Rectangle r = getClientArea();
-			transcoder.setCanvasSize(specifyCanvasWidth ? r.width : -1, specifyCanvasHeight ? r.height : -1);
-			updateRenderingHints(graphics);
-			BufferedImage awtImage = transcoder.getBufferedImage();
-			if (awtImage != null) {
-				image = toSWT(Display.getCurrent(), awtImage);
-				graphics.drawImage(image, r.x, r.y);
-			}
-		} finally {
-			if (image != null) {
-				image.dispose();
+		if(document != null) {
+
+			if(foregroundColor != null && backgroundColor != null) {
+
+				if(!foundBgelements) {
+
+					border = document.getElementById("BORDER");
+					border2 = document.getElementById("BORDER2");
+					border3 = document.getElementById("BORDER3");
+					border_style = document.getElementById("BORDER_STYLE");
+					border_style2 = document.getElementById("BORDER_STYLE2");
+					style = document.getElementById("STYLE");
+					style2 = document.getElementById("STYLE2");
+					style3 = document.getElementById("STYLE3");
+					style4 = document.getElementById("STYLE4");
+					fill = document.getElementById("FILL");
+					fill2 = document.getElementById("FILL2");
+					final Element svgid_1_ = document.getElementById("SVGID_1_");
+					if (svgid_1_ != null) {
+						final NodeList stops = svgid_1_.getElementsByTagName("stop");
+						style1 = stops.item(0).getAttributes().getNamedItem("style");
+					}
+				}
+
+				if (border != null) {
+					border.setAttribute("stroke", foregroundColor);
+				}
+
+				if (border2 != null) {
+					border2.setAttribute("stroke", foregroundColor);
+				}
+
+				if (border3 != null) {
+					border3.setAttribute("stroke", foregroundColor);
+				}
+
+				if (border_style != null) {
+					border_style.setAttribute("stroke", foregroundColor);
+					border_style.setAttribute("style", "fill:" + foregroundColor);
+				}
+
+				if (border_style2 != null) {
+					border_style2.setAttribute("stroke", foregroundColor);
+					border_style2.setAttribute("style", "fill:" + foregroundColor);
+				}
+
+
+				if (style != null) {
+					style.setAttribute("style", "fill:" + foregroundColor);
+				}
+
+				if (style2 != null) {
+					style2.setAttribute("style", "fill:" + foregroundColor);
+				}
+
+				if (style3 != null) {
+					style3.setAttribute("style", "fill:" + foregroundColor);
+				}
+
+				if (style4 != null) {
+					style4.setAttribute("style", "fill:" + foregroundColor);
+				}
+
+				if (fill != null) {
+					fill.setAttribute("style", "fill:" + backgroundColor + ";fill-opacity:0.6");
+				}
+
+
+				if (fill2 != null) {
+					fill2.setAttribute("style", "fill:" + backgroundColor + ";fill-opacity:0.3");
+				}
+
+				if(style1 !=null) {
+					style1.setNodeValue("stop-color:" + backgroundColor);
+					//stops.item(1).getAttributes().getNamedItem("style").setNodeValue("stop-color:#FFFFFF");
+				}
 			}
 
-			document = null ;
+			Image image = null;
+
+			try {
+				final Rectangle r = this.getClientArea();
+				this.transcoder.setCanvasSize(this.specifyCanvasWidth?r.width:-1, this.specifyCanvasHeight?r.height:-1);
+				this.updateRenderingHints(graphics);
+				final BufferedImage awtImage = this.transcoder.getBufferedImage();
+				if(awtImage != null) {
+					image = toSWT(Display.getCurrent(), awtImage);
+					graphics.drawImage(image, r.x, r.y);
+				}
+			} finally {
+				if(image != null) {
+					image.dispose();
+				}
+
+				document = null;
+			}
+
 		}
 	}
 

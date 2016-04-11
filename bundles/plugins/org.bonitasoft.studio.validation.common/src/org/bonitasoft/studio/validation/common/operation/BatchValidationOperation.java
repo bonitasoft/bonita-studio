@@ -50,16 +50,16 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
  * @author Romain Bioteau
  */
-public class BatchValidationOperation implements IRunnableWithProgress {
+public class BatchValidationOperation extends WorkspaceModifyOperation {
 
     private final Map<Diagram, DiagramEditPart> diagramsToDiagramEditPart = new HashMap<Diagram, DiagramEditPart>();
     private final List<IFile> fileProcessed = new ArrayList<IFile>(); //Avoid duplicate
@@ -71,17 +71,20 @@ public class BatchValidationOperation implements IRunnableWithProgress {
         this.validationMarkerProvider = validationMarkerProvider;
     }
 
+
     /*
      * (non-Javadoc)
-     * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+    protected void execute(final IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
         Assert.isLegal(!diagramsToDiagramEditPart.isEmpty());
         monitor.beginTask(Messages.validating, diagramsToDiagramEditPart.size());
 
         buildEditPart();
         validationMarkerProvider.clearMarkers(diagramsToDiagramEditPart);
+
+     
         for (final Entry<Diagram, DiagramEditPart> entry : diagramsToDiagramEditPart.entrySet()) {
             final DiagramEditPart diagramEp = entry.getValue();
             final Diagram diagram = entry.getKey();
@@ -102,6 +105,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 
         offscreenEditPartFactory.dispose();
     }
+
 
     private String subTaskName(final EObject semanticElement) {
         return semanticElement instanceof Form ? Messages.bind(Messages.validatingForm, ((Form) semanticElement).getName()) : Messages.bind(
