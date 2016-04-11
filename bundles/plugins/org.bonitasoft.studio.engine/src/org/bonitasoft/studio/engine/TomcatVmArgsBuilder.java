@@ -18,6 +18,7 @@ import java.io.File;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.BonitaHomeHandler;
 import org.bonitasoft.studio.designer.core.WorkspaceResourceServerManager;
 import org.bonitasoft.studio.designer.core.WorkspaceSystemProperties;
 import org.bonitasoft.studio.engine.server.WatchdogManager;
@@ -28,6 +29,7 @@ public class TomcatVmArgsBuilder {
     private static final String WATCHDOG_TIMER = "org.bonitasoft.studio.watchdog.timer";
     protected static final String WATCHDOG_PORT_PROPERTY = "org.bonitasoft.studio.watchdog.port";
     protected static final String BONITA_WEB_REGISTER = "bonita.web.register";
+
 
     private final RepositoryAccessor repositoryAccessor;
 
@@ -60,6 +62,8 @@ public class TomcatVmArgsBuilder {
         addWatchDogProperties(args);
         addSystemProperty(args, "eclipse.product", getProductApplicationId());
         addSystemProperty(args, BONITA_WEB_REGISTER, System.getProperty(BONITA_WEB_REGISTER, "1"));
+        addSystemProperty(args, BonitaHomeHandler.DB_LOCATION_PROPERTY,
+                repositoryAccessor.getCurrentRepository().getBonitaHomeHandler().getDBLocation().getAbsolutePath());
 
         addUIDesignerOptions(args);
         final String res = args.toString();

@@ -17,13 +17,11 @@ package org.bonitasoft.studio.exporter.tests.autologin;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.engine.export.BarExporter;
@@ -107,9 +105,4 @@ public class TestAutoLogin {
 
     }
 
-    @Test
-    public void testGetSecurityConfigStudio() throws Exception {
-        final File file = RepositoryManager.getInstance().getCurrentRepository().getBonitaHomeHandler().getDefaultTenantSecurityConfigStudioFile();
-        assertTrue("Default Studio config file can't be retrieved. It might impact Workspace API.", file.exists());
-    }
 }

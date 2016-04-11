@@ -17,26 +17,23 @@ package org.bonitasoft.studio.common.repository.core;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
 
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.Repository;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 
 public class BonitaHomeHandler {
 
-    private static final String TENANT_ID = "1";
+    private static final String H2_DATABASE_FOLDER_NAME = "h2_database";
     public static final String BONITA_HOME = "bonita_home";
+    public static final String DB_LOCATION_PROPERTY = "org.bonitasoft.h2.database.dir";
+
     private final IProject project;
 
     public BonitaHomeHandler(final IProject project) {
@@ -44,19 +41,6 @@ public class BonitaHomeHandler {
     }
 
     public void cleanTenant() {
-        final File bonitaServerFile = Paths.get(getRoot(), "engine-server", "work", "tenants", TENANT_ID).toFile();
-        PlatformUtil.delete(bonitaServerFile, null);
-        final File bonitaClientFile = Paths.get(getRoot(), "engine-client", "work", "tenants", TENANT_ID).toFile();
-        PlatformUtil.delete(bonitaClientFile, null);
-        final File bonitaWebClientFile = Paths.get(getRoot(), "client", "tenants", TENANT_ID).toFile();
-        PlatformUtil.delete(bonitaWebClientFile, null);
-        final File platformTomcatConfig = Paths.get(getRoot(), "client", "platform", "conf", "platform-tenant-config.properties").toFile();
-        PlatformUtil.delete(platformTomcatConfig, null);
-        try {
-            FileUtil.copyFile(getDefaultPlatformTenantConfigFile(), platformTomcatConfig);
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-        }
         deleteBonitaDbFiles();
     }
 
@@ -69,7 +53,7 @@ public class BonitaHomeHandler {
     }
 
     protected void deleteDbFiles(final String fileStartName) {
-        final File workDir = getPlatformWorkDir();
+        final File workDir = getDBLocation();
         if (workDir != null && workDir.exists()) {
             for (final File file : workDir.listFiles()) {
                 final String fileName = file.getName();
@@ -83,10 +67,6 @@ public class BonitaHomeHandler {
                 }
             }
         }
-    }
-
-    protected File getPlatformWorkDir() {
-        return Paths.get(getRoot(), "engine-server", "work", "platform").toFile();
     }
 
     public String getRoot() {
@@ -109,50 +89,9 @@ public class BonitaHomeHandler {
         }
     }
 
-    public File getDefaultTenantSecurityConfigFile(final long tenantId) {
-        return new File(getRoot(), "client" + File.separator + "tenants" + File.separator + String.valueOf(tenantId) + File.separator + "conf"
-                + File.separator + "security-config.properties");
+    public File getDBLocation() {
+        return new File(getRoot(), H2_DATABASE_FOLDER_NAME);
     }
 
-    public File getDefaultTenantSecurityConfigStudioFile() {
-        final URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita-home");
-        File bonitaFolder = null;
-        try {
-            bonitaFolder = new File(FileLocator.toFileURL(url).getFile());
-            return new File(bonitaFolder, "client" + File.separator + "platform" + File.separator + "tenant-template" + File.separator + "conf" + File.separator
-                    + "security-config.properties");
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e);
-        }
 
-        return null;
-    }
-
-    public File getDefaultPlatformTenantConfigFile() {
-        final URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita-home");
-        File bonitaFolder = null;
-        try {
-            bonitaFolder = new File(FileLocator.toFileURL(url).getFile());
-            return new File(bonitaFolder,
-                    "client" + File.separator + "platform" + File.separator + "conf" + File.separator + "platform-tenant-config.properties");
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e);
-        }
-
-        return null;
-    }
-
-    public File getPortalI18NFolder() {
-        return new File(getRoot(), "client"
-                + File.separator + "platform"
-                + File.separator + "work"
-                + File.separator + "i18n");
-    }
-
-    public IFile getCustomPermissionMappingFile() throws CoreException {
-        final IFile file = project
-                .getFile(Path.fromOSString(Paths.get(BONITA_HOME, "client", "tenants", TENANT_ID, "conf", "custom-permissions-mapping.properties").toString()));
-        file.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
-        return file;
-    }
 }

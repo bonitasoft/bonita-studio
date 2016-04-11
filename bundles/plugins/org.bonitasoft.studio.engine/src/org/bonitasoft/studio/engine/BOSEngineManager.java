@@ -14,10 +14,12 @@
  */
 package org.bonitasoft.studio.engine;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.xbean.classloader.NonLockingJarFileClassLoader;
@@ -25,6 +27,8 @@ import org.bonitasoft.engine.api.CommandAPI;
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.LoginAPI;
 import org.bonitasoft.engine.api.PageAPI;
+import org.bonitasoft.engine.api.PlatformAPI;
+import org.bonitasoft.engine.api.PlatformAPIAccessor;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.ProfileAPI;
 import org.bonitasoft.engine.api.TenantAPIAccessor;
@@ -33,9 +37,14 @@ import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.exception.UpdateException;
+import org.bonitasoft.engine.platform.InvalidPlatformCredentialsException;
 import org.bonitasoft.engine.platform.LoginException;
+import org.bonitasoft.engine.platform.PlatformLoginException;
+import org.bonitasoft.engine.platform.PlatformLogoutException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.InvalidSessionException;
+import org.bonitasoft.engine.session.PlatformSession;
+import org.bonitasoft.engine.session.SessionNotFoundException;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -59,6 +68,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 public class BOSEngineManager {
 
+    public static final String CUSTOM_PERMISSIONS_MAPPING_PROPERTIES = "custom-permissions-mapping.properties";
+
     private static final String POSTSTARTUP_CONTIBUTION_ID = "org.bonitasoft.studio.engine.postEngineAction";
 
     public static final String PLATFORM_PASSWORD = "platform";
@@ -76,6 +87,10 @@ public class BOSEngineManager {
     public static final String DEFAULT_TENANT_DESC = "The default tenant created by the Studio";
 
     private static final String ENGINESERVERMANAGER_EXTENSION_D = "org.bonitasoft.studio.engine.bonitaEngineManager";
+
+    private static final long DEFAULT_TENANT_ID = 1;
+
+    public static final String SECURITY_CONFIG_PROPERTIES = "security-config.properties";
 
     private static BOSEngineManager INSTANCE;
 
@@ -118,7 +133,8 @@ public class BOSEngineManager {
     }
 
     protected static BOSEngineManager createInstance(final IProgressMonitor monitor) {
-        for (final IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(ENGINESERVERMANAGER_EXTENSION_D)) {
+        for (final IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(ENGINESERVERMANAGER_EXTENSION_D)) {
             try {
                 return (BOSEngineManager) element.createExecutableExtension("class");
             } catch (final CoreException e) {
@@ -337,6 +353,20 @@ public class BOSEngineManager {
         return TenantAPIAccessor.getTenantAdministrationAPI(session);
     }
 
+    public PlatformSession loginPlatform()
+            throws InvalidPlatformCredentialsException, PlatformLoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+        return PlatformAPIAccessor.getPlatformLoginAPI().login(PLATFORM_USER, PLATFORM_PASSWORD);
+    }
+
+    public void logoutPlatform(PlatformSession session)
+            throws PlatformLogoutException, SessionNotFoundException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+        PlatformAPIAccessor.getPlatformLoginAPI().logout(session);
+    }
+
+    public PlatformAPI getPlatformAPI(PlatformSession session) throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+        return PlatformAPIAccessor.getPlatformAPI(session);
+    }
+
     public APISession createSession(final AbstractProcess process, final String configurationId, final IProgressMonitor monitor) throws Exception {
         final Configuration configuration = BarExporter.getInstance().getConfiguration(process, configurationId);
         APISession session;
@@ -351,4 +381,37 @@ public class BOSEngineManager {
         return session;
     }
 
+    public byte[] getTenantConfigResourceContent(String resourceName) throws InvalidPlatformCredentialsException, PlatformLoginException,
+            BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformLogoutException, SessionNotFoundException, FileNotFoundException {
+        PlatformSession loginPlatform = null;
+        try {
+            loginPlatform = loginPlatform();
+            final PlatformAPI platformAPI = getPlatformAPI(loginPlatform);
+            final Map<Long, Map<String, byte[]>> clientTenantConfigurations = platformAPI.getClientTenantConfigurations();
+            final Map<String, byte[]> resources = clientTenantConfigurations.get(DEFAULT_TENANT_ID);
+            if (!resources.containsKey(resourceName)) {
+                throw new FileNotFoundException(String.format("Resource %s does not esists in database.", resourceName));
+            }
+            return resources.get(resourceName);
+        } finally {
+            if (loginPlatform != null) {
+                logoutPlatform(loginPlatform);
+            }
+        }
+    }
+
+    public void updateTenantConfigResourceContent(String resourceName, byte[] content)
+            throws InvalidPlatformCredentialsException, PlatformLoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException,
+            UpdateException, PlatformLogoutException, SessionNotFoundException {
+        PlatformSession loginPlatform = null;
+        try {
+            loginPlatform = loginPlatform();
+            final PlatformAPI platformAPI = getPlatformAPI(loginPlatform);
+            platformAPI.updateClientTenantConfigurationFile(DEFAULT_TENANT_ID, resourceName, content);
+        } finally {
+            if (loginPlatform != null) {
+                logoutPlatform(loginPlatform);
+            }
+        }
+    }
 }

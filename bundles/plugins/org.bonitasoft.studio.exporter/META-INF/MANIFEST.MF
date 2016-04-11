@@ -54,11 +54,13 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.core.di;bundle-version="1.4.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.bonitasoft.studio.exporter.Activator
-Import-Package: org.bonitasoft.engine.bpm,
+Import-Package: org.bonitasoft.engine.api,
+ org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.process,
  org.bonitasoft.engine.expression,
  org.bonitasoft.engine.operation,
+ org.bonitasoft.engine.session,
  org.bonitasoft.forms.client.model,
  org.bonitasoft.forms.server.accessor,
  org.bonitasoft.forms.server.builder,
