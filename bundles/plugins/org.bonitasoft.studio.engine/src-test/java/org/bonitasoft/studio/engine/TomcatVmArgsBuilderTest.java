@@ -20,6 +20,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
+import java.io.File;
+
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +35,7 @@ public class TomcatVmArgsBuilderTest {
     @Mock
     protected RepositoryAccessor repositoryAccessor;
     protected TomcatVmArgsBuilder tomcatVmArgsBuilder;
+    private final File dbLocation = new File("dbLocation");
 
     @Before
     public void setUp() throws Exception {
@@ -41,6 +44,7 @@ public class TomcatVmArgsBuilderTest {
         doNothing().when(tomcatVmArgsBuilder).addWatchDogProperties(any(StringBuilder.class));
         doReturn("test.bonita.product.application.id").when(tomcatVmArgsBuilder).getProductApplicationId();
         doReturn("bonita.home.root").when(tomcatVmArgsBuilder).getBonitaHomeRoot();
+        doReturn(dbLocation).when(tomcatVmArgsBuilder).getDBLocation();
     }
 
     @Test

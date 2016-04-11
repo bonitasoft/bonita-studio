@@ -63,7 +63,7 @@ public class TomcatVmArgsBuilder {
         addSystemProperty(args, "eclipse.product", getProductApplicationId());
         addSystemProperty(args, BONITA_WEB_REGISTER, System.getProperty(BONITA_WEB_REGISTER, "1"));
         addSystemProperty(args, BonitaHomeHandler.DB_LOCATION_PROPERTY,
-                repositoryAccessor.getCurrentRepository().getBonitaHomeHandler().getDBLocation().getAbsolutePath());
+                getDBLocation().getAbsolutePath());
 
         addUIDesignerOptions(args);
         final String res = args.toString();
@@ -71,6 +71,10 @@ public class TomcatVmArgsBuilder {
             BonitaStudioLog.info(res, EnginePlugin.PLUGIN_ID);
         }
         return res;
+    }
+
+    protected File getDBLocation() {
+        return repositoryAccessor.getCurrentRepository().getBonitaHomeHandler().getDBLocation();
     }
 
     /**
