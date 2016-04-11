@@ -23,7 +23,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.eclipse.core.resources.ResourcesPlugin;
 
 /**
  * @author Romain Bioteau
@@ -41,8 +41,17 @@ public class LocaleUtil {
 
     };
 
+    public static File getPortalI18NFolder() {
+        return new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(), "tomcat"
+                + File.separator + "webapps"
+                + File.separator + "bonita"
+                + File.separator + "WEB-INF"
+                + File.separator + "classes"
+                + File.separator + "i18n");
+    }
+
     public static Locale[] getProtalLocales() {
-        final File portalI18NFolder = RepositoryManager.getInstance().getCurrentRepository().getBonitaHomeHandler().getPortalI18NFolder();
+        final File portalI18NFolder = getPortalI18NFolder();
         final String[] poFiles = portalI18NFolder.list(new FilenameFilter() {
 
             @Override

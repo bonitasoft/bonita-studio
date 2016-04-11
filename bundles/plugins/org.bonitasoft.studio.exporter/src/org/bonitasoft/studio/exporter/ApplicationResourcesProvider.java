@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.exporter;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -41,11 +41,11 @@ import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.BonitaHomeHandler;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
 import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
+import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.exporter.application.FormsXMLExporter;
 import org.bonitasoft.studio.exporter.application.ResourcesExporter;
 import org.bonitasoft.studio.exporter.application.TemplatesExporter;
@@ -69,7 +69,6 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
     public static final String AUTO_LOGIN_PASSWORD_PROPERTY = "forms.application.login.auto.password";
 
     protected static final String CSS_BONITA_FORM_DEFAULT = "css/bonita_form_default.css";
-    private static final long TENANT_ID = 1;
     private final File tmpDir = ProjectUtil.getBonitaStudioWorkFolder();
     private final String[] urlThatWontBeReplaced = new String[] { "scripts/bonita.js", "scripts/changeCSS.js", "console.nocache.js", "pictures/favicon2.ico",
             "javascript:''", "application.nocache.js" };
@@ -329,32 +328,23 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 
     protected void addAutologin(final List<BarResource> res, final AbstractProcess process, final Configuration conf) throws Exception {
         if (process.isAutoLogin()) {
-            final BonitaHomeHandler bonitaHomeHandler = RepositoryManager.getInstance().getCurrentRepository().getBonitaHomeHandler();
-            File securityConfig = bonitaHomeHandler.getDefaultTenantSecurityConfigFile(TENANT_ID);
-            if (!securityConfig.exists()) {
-                securityConfig = bonitaHomeHandler.getDefaultTenantSecurityConfigStudioFile();
+            final byte[] content = BOSEngineManager.getInstance().getTenantConfigResourceContent(BOSEngineManager.SECURITY_CONFIG_PROPERTIES);
+            final ByteArrayInputStream is = new ByteArrayInputStream(content);
+            final Properties properties = new Properties();
+            properties.load(is);
+            properties.setProperty(AUTO_LOGIN_PROPERTY, Boolean.TRUE.toString());
+            final String autoLoginUserName = conf.getAnonymousUserName();
+            final String autoLoginPassword = conf.getAnonymousPassword();
+            if (autoLoginUserName != null && !autoLoginUserName.isEmpty()) {
+                properties.setProperty(AUTO_LOGIN_USERNAME_PROPERTY, autoLoginUserName);
+                properties.setProperty(AUTO_LOGIN_PASSWORD_PROPERTY, autoLoginPassword != null && !autoLoginPassword.isEmpty() ? autoLoginPassword : "");
             }
-            if (securityConfig.exists()) {
-                final Properties properties = new Properties();
-                final FileInputStream is = new FileInputStream(securityConfig);
-                properties.load(is);
-                properties.setProperty(AUTO_LOGIN_PROPERTY, Boolean.TRUE.toString());
-                final String autoLoginUserName = conf.getAnonymousUserName();
-                final String autoLoginPassword = conf.getAnonymousPassword();
-                if (autoLoginUserName != null && !autoLoginUserName.isEmpty()) {
-                    properties.setProperty(AUTO_LOGIN_USERNAME_PROPERTY, autoLoginUserName);
-                    properties.setProperty(AUTO_LOGIN_PASSWORD_PROPERTY, autoLoginPassword != null && !autoLoginPassword.isEmpty() ? autoLoginPassword : "");
-                }
 
-                final ByteArrayOutputStream os = new ByteArrayOutputStream();
-                properties.store(os, null);
-                res.add(new BarResource(FORMS_FOLDER_IN_BAR + securityConfig.getName(), os.toByteArray()));
-                is.close();
-                os.close();
-            } else {
-
-                throw new FileNotFoundException(securityConfig.getAbsolutePath());
-            }
+            final ByteArrayOutputStream os = new ByteArrayOutputStream();
+            properties.store(os, null);
+            res.add(new BarResource(FORMS_FOLDER_IN_BAR + BOSEngineManager.SECURITY_CONFIG_PROPERTIES, os.toByteArray()));
+            is.close();
+            os.close();
         }
     }
 
