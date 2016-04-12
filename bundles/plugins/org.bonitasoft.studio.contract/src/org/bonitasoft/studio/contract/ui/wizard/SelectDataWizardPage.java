@@ -152,10 +152,13 @@ public class SelectDataWizardPage extends WizardPage {
         selectionTypeObservable = new SelectObservableValue(Boolean.class);
         selectionTypeObservable.addOption(Boolean.TRUE, SWTObservables.observeSelection(businessVariableButton));
         selectionTypeObservable.addOption(Boolean.FALSE, SWTObservables.observeSelection(documentButton));
+
         if (availableBusinessData.isEmpty()) {
+            setBusinessDataTypeSelected(false);
             businessVariableButton.setEnabled(false);
         }
         if (availableDocuments.isEmpty()) {
+            setBusinessDataTypeSelected(true);
             documentButton.setEnabled(false);
         }
     }
