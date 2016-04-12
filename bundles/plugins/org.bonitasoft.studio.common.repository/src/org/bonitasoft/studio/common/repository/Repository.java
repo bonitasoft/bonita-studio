@@ -228,7 +228,6 @@ public class Repository implements IRepository, IJavaContainer {
         }
         try {
             projectManifestFactory.createProjectManifest(project, monitor);
-            initBonitaHome(monitor);
             initRepositoryStores(monitor);
             enableBuild();
             bonitaBPMProjectClasspath.create(this, monitor);
@@ -238,10 +237,6 @@ public class Repository implements IRepository, IJavaContainer {
         return this;
     }
 
-    protected void initBonitaHome(final IProgressMonitor monitor) throws CoreException {
-        final BonitaHomeHandler bonitaHomeHandler = getBonitaHomeHandler();
-        bonitaHomeHandler.initBonitaHome(monitor);
-    }
 
     protected void updateStudioShellText() {
         Display.getDefault().asyncExec(new Runnable() {

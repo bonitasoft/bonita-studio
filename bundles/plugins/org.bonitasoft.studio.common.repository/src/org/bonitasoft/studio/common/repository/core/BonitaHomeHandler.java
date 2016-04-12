@@ -15,18 +15,11 @@
 package org.bonitasoft.studio.common.repository.core;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BonitaHomeHandler {
 
@@ -71,22 +64,6 @@ public class BonitaHomeHandler {
 
     public String getRoot() {
         return project.getFile(BONITA_HOME).getLocation().toFile().getAbsolutePath();
-    }
-
-    public void initBonitaHome(final IProgressMonitor monitor) throws CoreException {
-        final File bonitaHome = new File(getRoot());
-        if (!bonitaHome.exists()) {
-            final URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat/bonita");
-            try {
-                final File originalBonitaHome = new File(FileLocator.toFileURL(url).getFile());
-                PlatformUtil.copyResource(bonitaHome, originalBonitaHome, monitor);
-                project.getFile("bonita").getLocation().toFile().renameTo(bonitaHome);
-                BonitaStudioLog.info("Bonita Home initialized successfuly.", CommonRepositoryPlugin.PLUGIN_ID);
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
-            project.getFile(BONITA_HOME).refreshLocal(IResource.DEPTH_INFINITE, monitor);
-        }
     }
 
     public File getDBLocation() {
