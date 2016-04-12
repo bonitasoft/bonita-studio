@@ -74,16 +74,16 @@ public class Connector5Descriptor {
 	
 	private static final String CONNECTOR_CONFIGURATION = "configuration";
 
-	private String uuid;
-	private String name;
-	private String connectorId;
-	private String documentation;
-	private String event;
-	private boolean ignoreErrors;
-	private Map<String, Object> inputs = new HashMap<String,Object>();
-	private Map<String, Object> outputs = new HashMap<String,Object>();
-	private IConnectorDefinitionMapper definitionMapper;
-	private EClass containerType;
+	private final String uuid;
+	private final String name;
+	private final String connectorId;
+	private final String documentation;
+	private final String event;
+	private final boolean ignoreErrors;
+	private final Map<String, Object> inputs = new HashMap<String,Object>();
+	private final Map<String, Object> outputs = new HashMap<String,Object>();
+	private final IConnectorDefinitionMapper definitionMapper;
+	private final EClass containerType;
 
 	public Connector5Descriptor(Instance connectorInstance) {
 		this.uuid = connectorInstance.getUuid();
@@ -93,26 +93,26 @@ public class Connector5Descriptor {
 		this.event = connectorInstance.get(EVENT);
 		this.ignoreErrors = connectorInstance.get(ERROR_HANDLE);
 		final List<Instance> parameters =  connectorInstance.get(PARAMETERS);
-		for(Instance parameter : parameters){
-			String key = parameter.get(PARAMETER_KEY);
-			Object value = parameter.get(PARAMETER_VALUE);
+		for(final Instance parameter : parameters){
+			final String key = parameter.get(PARAMETER_KEY);
+			final Object value = parameter.get(PARAMETER_VALUE);
 			inputs.put(key, value);
 		}
 		final List<Instance> outputMapping =  connectorInstance.get(OUTPUTS);
-		for(Instance output : outputMapping){
+		for(final Instance output : outputMapping){
 			try{
-				Instance data = output.get(OUTPUT_DATA);
-				String value = output.get(OUTPUT_EXPRESSION);
+				final Instance data = output.get(OUTPUT_DATA);
+				final String value = output.get(OUTPUT_EXPRESSION);
 				if(data != null){
 					outputs.put((String) data.get("name"), value);
 				}else{
-					Instance container = connectorInstance.getContainer();
-					if(container.instanceOf("form.Widget")){
-						String id = WidgetHelper.FIELD_PREFIX+container.get("name");
+                    final Instance widget = getParentWidget(connectorInstance);
+                    if (widget != null) {
+                        final String id = WidgetHelper.FIELD_PREFIX + widget.get("name");
 						outputs.put(id, value);
 					}
 				}
-			} catch(IllegalArgumentException e){
+			} catch(final IllegalArgumentException e){
 				BonitaStudioLog.warning("The connector "+ connectorId+"/"+name+" doesn't provide the expected feature for outputs.", BarImporterPlugin.PLUGIN_ID);
 			}
 		}
@@ -121,6 +121,14 @@ public class Connector5Descriptor {
 		this.containerType = connectorInstance.getContainer().getType().getEClass();
 	}
 	
+    private Instance getParentWidget(final Instance instance) {
+        Instance current = instance.getContainer();
+        while (current != null && !current.instanceOf("form.Widget")) {
+            current = current.getContainer();
+        }
+        return current;
+    }
+
 	public String getLegacyConnectorID(){
 		return connectorId;
 	}
@@ -148,7 +156,7 @@ public class Connector5Descriptor {
 		if(activityEclassName.equals(containerType.getName())){
 			return true;
 		}
-		for(EClass superType : containerType.getEAllSuperTypes()){
+		for(final EClass superType : containerType.getEAllSuperTypes()){
 			if(activityEclassName.equals(superType.getName())){
 				return true;
 			}
@@ -187,7 +195,7 @@ public class Connector5Descriptor {
 			createOperation(model, connectorInstance, converter, variableToSet,	varValue);			
 		} else if("SetVariables".equals(connectorId)){
 			final List<List<String>> inputToParse = (List<List<String>>) inputs.get("setVariables");
-			for (List<String> line : inputToParse) {
+			for (final List<String> line : inputToParse) {
 				final String variableToSet = line.get(0);
 				final String varValue = line.get(1);
 				createOperation(model, connectorInstance, converter, variableToSet,	varValue);
@@ -200,8 +208,8 @@ public class Connector5Descriptor {
 	private void createOperation(Model model, Instance connectorInstance,
 			StringToExpressionConverter converter, final String variableToSet,
 			final String varValue) {
-		Instance operationContainerInstance = connectorInstance.getContainer();
-		Instance originalVariable = getOriginalVariable(model, variableToSet);
+		final Instance operationContainerInstance = connectorInstance.getContainer();
+		final Instance originalVariable = getOriginalVariable(model, variableToSet);
 		
 		// set variable dependency of left operand
 		String returnType=Object.class.getName();
@@ -212,10 +220,10 @@ public class Connector5Descriptor {
 		}else{
 			leftOperand = StringToExpressionConverter.createExpressionInstance(model, variableToSet, variableToSet, returnType, ExpressionConstants.VARIABLE_TYPE, true);
 		}
-		Instance rightOperand = converter.parse(varValue, returnType, false);
-		Instance operatorInstance = model.newInstance("expression.Operator");
+		final Instance rightOperand = converter.parse(varValue, returnType, false);
+		final Instance operatorInstance = model.newInstance("expression.Operator");
 		operatorInstance.set("type", ExpressionConstants.ASSIGNMENT_OPERATOR);
-		Instance operationInstance = model.newInstance("expression.Operation");
+		final Instance operationInstance = model.newInstance("expression.Operation");
 		operationInstance.set("leftOperand", leftOperand);
 		operationInstance.set("rightOperand", rightOperand);
 		operationInstance.set("operator", operatorInstance);
@@ -223,8 +231,8 @@ public class Connector5Descriptor {
 	}
 	
 	private Instance getOriginalVariable(final Model model, final String variableToSet) {
-		for(Instance variable : model.getAllInstances("process.Data")){
-			String varName = (String) variable.get("name");
+		for(final Instance variable : model.getAllInstances("process.Data")){
+			final String varName = (String) variable.get("name");
 			if(varName!=null && varName.equals(variableToSet)){
 				return variable;
 			}
@@ -237,7 +245,7 @@ public class Connector5Descriptor {
 	}
 
 	private void addOutputs(Model model, Instance connectorInstance, StringToExpressionConverter converter) {
-		for(Entry<String, Object> output : outputs.entrySet()){
+		for(final Entry<String, Object> output : outputs.entrySet()){
 			
 			final String outputValue = output.getValue().toString();
 			final String outputType = isAnOutputConnector(outputValue)? ExpressionConstants.CONNECTOR_OUTPUT_TYPE : ExpressionConstants.SCRIPT_TYPE;
@@ -270,7 +278,7 @@ public class Connector5Descriptor {
 		final Map<String,Object> additionalInputs = definitionMapper.getAdditionalInputs(inputs);
 		final Map<String,Object> allInput = new HashMap<String, Object>(inputs);
 		allInput.putAll(additionalInputs);
-		for(Entry<String, Object> input : allInput.entrySet()){
+		for(final Entry<String, Object> input : allInput.entrySet()){
 			final String parameterKeyFor = getParameterKeyFor(input.getKey());
 			if(parameterKeyFor != null){
 				final Instance parameter = model.newInstance("connectorconfiguration.ConnectorParameter");
@@ -294,14 +302,14 @@ public class Connector5Descriptor {
 
 	private Instance getParameterExpressionFor(Model model,String input,StringToExpressionConverter converter, Object value, String returnType) {
 		if(value instanceof String || value instanceof Boolean || value instanceof Number){
-			String type = definitionMapper.getExpectedExpresstionType(input,value);
+			final String type = definitionMapper.getExpectedExpresstionType(input,value);
 			if(type == null){
 				return converter.parse(value.toString(), returnType, true);
 			}else{
 				return converter.parse(value.toString(), returnType, true,type);
 			}
 		}else if(value instanceof List){
-			List<Object> listValue = (List<Object>) value;
+			final List<Object> listValue = (List<Object>) value;
 			if(!listValue.isEmpty()){
 				Instance expression = null;
 				Object row = listValue.get(0);
@@ -315,7 +323,7 @@ public class Connector5Descriptor {
 				}else{
 					expression = model.newInstance("expression.ListExpression");
 					for(int i= 0 ; i<listValue.size();i++){
-						Object v = listValue.get(i);
+						final Object v = listValue.get(i);
 						expression.add("expressions", converter.parse(v.toString(), String.class.getName(), false));
 					}
 				}
@@ -335,8 +343,8 @@ public class Connector5Descriptor {
 
 	protected void addRow(Model model, StringToExpressionConverter converter,
 			Instance expression, Object row) {
-		Instance listExpression = model.newInstance("expression.ListExpression");
-		for(Object v : (List<Object>) row){
+		final Instance listExpression = model.newInstance("expression.ListExpression");
+		for(final Object v : (List<Object>) row){
 			listExpression.add("expressions", converter.parse(v.toString(), String.class.getName(), false));
 		}
 		expression.add("expressions", listExpression);

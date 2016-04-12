@@ -628,12 +628,14 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
     @Override
     public void addSelectionChangedListener(final ISelectionChangedListener listener) {
-        selectionProvider.addSelectionChangedListener(listener);
+        if (selectionProvider != null) {
+            selectionProvider.addSelectionChangedListener(listener);
+        }
     }
 
     @Override
     public ISelection getSelection() {
-        return selectionProvider.getSelection();
+        return selectionProvider != null ? selectionProvider.getSelection() : new StructuredSelection();
     }
 
     @Override
