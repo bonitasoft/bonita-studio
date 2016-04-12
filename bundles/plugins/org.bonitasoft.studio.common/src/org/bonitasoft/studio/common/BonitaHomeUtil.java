@@ -60,7 +60,7 @@ public class BonitaHomeUtil {
             final int bonitaClientDefaultPortValue = Integer.parseInt(System.getProperty(BONITA_CLIENT_PORT_DEFAULT, "8080"));
             configureBonitaClient(HTTP, bonitaHostDefaultPortValue, bonitaClientDefaultPortValue);
             //TODO to be removed
-            System.setProperty(BonitaConstants.HOME, System.getProperty("java.io.tmpdir"));
+            //System.setProperty(BonitaConstants.HOME, System.getProperty("java.io.tmpdir"));
         }catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
