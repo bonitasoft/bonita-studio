@@ -17,8 +17,11 @@ package org.bonitasoft.studio.validation.constraints.form;
 import java.util.Collection;
 import java.util.Map;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.MultipleValuatedFormField;
+import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
@@ -41,7 +44,15 @@ public class AvailableValuesReturnTypeConstraint extends AbstractLiveValidationM
             if (availableValues == null) {
                 return ctx.createSuccessStatus();
             }
-            final String returnType = availableValues.getReturnType();
+            String returnType = availableValues.getReturnType();
+            if (ExpressionConstants.CONNECTOR_TYPE.equals(availableValues.getType()) && !availableValues.getConnectors().isEmpty()) {
+                final Connector connector = availableValues.getConnectors().get(0);
+                if (!connector.getOutputs().isEmpty()) {
+                    final Operation op = connector.getOutputs().get(0);
+                    returnType = op.getRightOperand().getReturnType();
+                }
+
+            }
             Class<?> returnTypeClass;
             try {
                 returnTypeClass = Class.forName(returnType);
