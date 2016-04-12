@@ -16,6 +16,7 @@ package org.bonitasoft.studio.repository.themes;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -285,6 +286,7 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
                 root.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e1) {
                 BonitaStudioLog.error(e1);
+                return null;
             }
             final IFile descriptor = root.getFile(ThemeDescriptorManager.THEME_DESCRIPTOR_NAME);
             if (descriptor.exists()) {
@@ -297,6 +299,7 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
                     }
                 } catch (final ThemeDescriptorNotFoundException e) {
                     BonitaStudioLog.error(e);
+                    return null;
                 }
             } else {
                 try {
@@ -305,31 +308,33 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
                     return new ApplicationLookNFeelFileStore(fileName, this);
                 } catch (final IOException e) {
                     BonitaStudioLog.error(e);
+                    return null;
                 }
             }
         } else {
             try {
                 final URL url = new URL(fileName);
-                if (url != null) {
-                    final String path = FileLocator.toFileURL(url).getFile();
-                    final File descriptor = new File(path, ThemeDescriptorManager.THEME_DESCRIPTOR_NAME);
-                    if (descriptor.exists()) {
-                        try {
-                            final ThemeDescriptor themeDescriptor = getThemeDescriptorManager().getThemeDescriptor(descriptor);
-                            if (themeDescriptor.getType() == ThemeType.application) {
-                                return new URLApplicationLookNFeelFileStore(url, this);
-                            } else if (themeDescriptor.getType() == ThemeType.userXP) {
-                                return new URLUserXPFileStore(url, this);
-                            }
-                        } catch (final ThemeDescriptorNotFoundException e) {
-                            BonitaStudioLog.error(e);
+                final String path = FileLocator.toFileURL(url).getFile();
+                final File descriptor = new File(path, ThemeDescriptorManager.THEME_DESCRIPTOR_NAME);
+                if (descriptor.exists()) {
+                    try {
+                        final ThemeDescriptor themeDescriptor = getThemeDescriptorManager().getThemeDescriptor(descriptor);
+                        if (themeDescriptor.getType() == ThemeType.application) {
+                            return new URLApplicationLookNFeelFileStore(url, this);
+                        } else if (themeDescriptor.getType() == ThemeType.userXP) {
+                            return new URLUserXPFileStore(url, this);
                         }
+                    } catch (final ThemeDescriptorNotFoundException e) {
+                        BonitaStudioLog.error(e);
+                        return null;
                     }
+                } else {
+                    BonitaStudioLog.error(new FileNotFoundException(descriptor.getAbsolutePath()));
+                    return null;
                 }
             } catch (final MalformedURLException e) {
                 //            	ApplicationLookNFeelFileStore fileStore =  new ApplicationLookNFeelFileStore(fileName, this) ;
                 //            	fileStore.save(null);
-                //BonitaStudioLog.error(e) ;
                 return null;
             } catch (final Exception e1) {
                 BonitaStudioLog.error("Exception when searching for file with name: " + fileName, "org.bonitasoft.studio.repository.themes");
@@ -338,6 +343,7 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
             }
         }
         return null;
+
     }
 
     public List<ApplicationLookNFeelFileStore> getApplicationLookNFeels() {
