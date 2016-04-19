@@ -595,7 +595,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
         iteratorComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).extendedMargins(0, 10, 0, 0).create());
 
         final IteratorNameEditor iteratorNameEditor = new IteratorNameEditor(iteratorComposite, widgetFactory);
-        iteratorNameEditor.getControl().setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).hint(150, 2).create());
+        iteratorNameEditor.getControl().setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).hint(150, 25).create());
         iteratorNameEditor.bindControl(context, selectionProvider, progressService, getMessageManager());
 
         final IObservableValue iteratorObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
