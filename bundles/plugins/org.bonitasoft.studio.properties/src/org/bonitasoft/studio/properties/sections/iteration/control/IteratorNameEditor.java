@@ -47,7 +47,7 @@ public class IteratorNameEditor extends TableViewer {
     private final TableViewerColumn tableViewerColumn;
 
     public IteratorNameEditor(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory) {
-        super(parent, SWT.BORDER | SWT.SINGLE);
+        super(parent, SWT.BORDER | SWT.SINGLE | SWT.NO_SCROLL);
         getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_ITERATOR_TABLE);
         final ObservableListContentProvider provider = new ObservableListContentProvider();
         setContentProvider(provider);
