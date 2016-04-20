@@ -51,6 +51,7 @@ public class TomcatVmArgsBuilder {
         addSystemProperty(args, "java.endorsed.dirs", "\"" + tomcatInstanceLocation + File.separatorChar + "endorsed\"");
         addSystemProperty(args, "bonita.home", "\"" + getBonitaHomeRoot() + "\"");
         addSystemProperty(args, "sysprop.bonita.db.vendor", "h2");
+        addSystemProperty(args, "org.bonitasoft.platform.setup.folder", "\"" + tomcatInstanceLocation + File.separatorChar + "platform-setup\"");
         addSystemProperty(args, "bitronix.tm.configuration",
                 "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar + "bitronix-config.properties\"");
         addSystemProperty(args, "java.util.logging.manager", "org.apache.juli.ClassLoaderLogManager");
