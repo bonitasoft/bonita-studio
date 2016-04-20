@@ -5,7 +5,7 @@
   <parent>
     <artifactId>it</artifactId>
     <groupId>org.bonitasoft.studio.translations</groupId>
-<version>7.3.0-SNAPSHOT</version>
+<version>7.3.0.alpha-02</version>
   </parent>
   <groupId>org.bonitasoft.studio.translations.it</groupId>
   <artifactId>org.omg.schema.spec.bpmn.nl_it</artifactId>
