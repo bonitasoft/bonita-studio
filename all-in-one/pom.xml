@@ -170,9 +170,6 @@
         <profile>
             <id>buildInstaller</id>
             <activation>
-                <file>
-                    <exists>${project.build.directory}/products/${productId}/</exists>
-                </file>
                 <property>
                     <name>BITROCK_HOME</name>
                 </property>
