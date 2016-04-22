@@ -28,7 +28,7 @@
                             <fontSize>35</fontSize>
                             <color>55738c</color>
                             <bold>false</bold>
-                            <versionLabel>${project.version}</versionLabel>
+                            <versionLabel>7.3.0</versionLabel>
                         </configuration>
                         <goals>
                             <goal>create-image</goal>
