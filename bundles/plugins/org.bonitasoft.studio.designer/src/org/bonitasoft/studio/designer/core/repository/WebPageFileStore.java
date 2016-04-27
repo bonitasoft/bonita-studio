@@ -23,6 +23,8 @@ import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.bar.BarResourceCreationException;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
@@ -30,6 +32,7 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
+import org.json.JSONException;
 
 /**
  * @author Romain Bioteau
@@ -37,6 +40,8 @@ import org.eclipse.ui.IWorkbenchPart;
 public class WebPageFileStore extends InFolderJSONFileStore {
 
     private WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider;
+
+    private static final String ID_TYPE = "type";
 
     public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
@@ -79,5 +84,14 @@ public class WebPageFileStore extends InFolderJSONFileStore {
             }
         }
         return super.getRelatedFileStore();
+    }
+
+    public String getType() {
+        try {
+            return getStringAttribute(ID_TYPE);
+        } catch (final JSONException | ReadFileStoreException e) {
+            BonitaStudioLog.error(String.format("Failed to retrieve id in JSON file %s.json, with key %s.", getName(), ID_TYPE), UIDesignerPlugin.PLUGIN_ID);
+            return "page";
+        }
     }
 }
