@@ -59,7 +59,8 @@ public class DependencyRepositoryStoreTest {
                 entry("catalina", ""),
                 entry("asm", "3.1"),
                 entry("bonita-common-sp", "6.2.0-SNAPSHOT"),
-                entry("bonita-font-signika", ""));
+                entry("bonita-font-signika", ""),
+                entry("bdm-client-pojo", ""));
 
     }
 

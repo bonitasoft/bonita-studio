@@ -35,7 +35,8 @@ import org.eclipse.swt.graphics.Image;
  */
 public class DependencyRepositoryStore extends AbstractRepositoryStore<DependencyFileStore> {
 
-    public static final String STORE_NAME = "lib";
+    private static final String BDM_CLIENT_POJO_JAR = "bdm-client-pojo.jar";
+	public static final String STORE_NAME = "lib";
     public static final String JAR_EXT = "jar";
     private static final Set<String> extensions = new HashSet<String>();
     static {
@@ -109,6 +110,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
             runtimeDependencies = new HashMap<String, String>();
             final File tomcatRoot = getTomcatRootFile();
             final Set<String> allJarFiles = retriveAllJarFilesFrom(new File(tomcatRoot, "lib"));
+            allJarFiles.add(BDM_CLIENT_POJO_JAR);
             allJarFiles.addAll(retriveAllJarFilesFrom(new File(tomcatRoot, "webapps")));
             for (final String jarName : allJarFiles) {
                 runtimeDependencies.put(getLibName(jarName), getLibVersion(jarName));
