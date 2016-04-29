@@ -5,7 +5,7 @@
   <parent>
     <artifactId>es</artifactId>
     <groupId>org.bonitasoft.studio.translations</groupId>
-<version>7.2.3-SNAPSHOT</version>
+<version>7.2.3</version>
   </parent>
   <groupId>org.bonitasoft.studio.translations.es</groupId>
   <artifactId>org.bonitasoft.studio.engine.nl_es</artifactId>
