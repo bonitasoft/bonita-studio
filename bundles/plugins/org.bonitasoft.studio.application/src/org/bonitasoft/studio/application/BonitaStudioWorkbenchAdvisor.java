@@ -32,7 +32,6 @@ import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
 import org.bonitasoft.studio.application.contribution.IPreStartupContribution;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.job.StartEngineJob;
-import org.bonitasoft.studio.application.registration.BonitaRegistration;
 import org.bonitasoft.studio.application.splash.BOSSplashHandler;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.FileUtil;
@@ -53,7 +52,6 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
 import org.codehaus.groovy.eclipse.dsl.GroovyDSLCoreActivator;
@@ -603,22 +601,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         job.schedule();
     }
 
-    private void openStartupDialog() {
-        final String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$
-        if (noRegister == null || !noRegister.equals("1")) { //$NON-NLS-1$
-            final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                    "org.bonitasoft.studio.common.startupDialog"); //$NON-NLS-1$
-            IPostStartupContribution contrib = null;
-            for (final IConfigurationElement elem : elements) {
-                try {
-                    contrib = (IPostStartupContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-                } catch (final CoreException e) {
-                    BonitaStudioLog.error(e);
-                }
-                contrib.execute();
-            }
-        }
-    }
 
     @Override
     public void postShutdown() {
@@ -646,10 +628,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             }
         }
         return returnValue;
-    }
-
-    private void sendUserInfo() {
-        new BonitaRegistration(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()).sendUserInfoIfNotSent();;
     }
 
     @Override
@@ -708,10 +686,5 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         } catch (final OperationCanceledException | InterruptedException e) {
             BonitaStudioLog.error(e);
         }
-        if (PlatformUI.isWorkbenchRunning()) {
-            sendUserInfo();
-            openStartupDialog();
-        }
     }
-
 }
