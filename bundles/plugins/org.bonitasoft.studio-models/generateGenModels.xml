@@ -17,36 +17,36 @@
  -->
 <project name="org.bonitasoft.studio-build" default="generate" xmlns:gmfAnt="http://ecliptical.ca/gmf/ant">
 
-	<taskdef classpath="antTasks/bonita_antTasks.jar" name="refreshWorkspace" classname="org.bonitasoft.studio.antTasks.RefreshWorkspaceTask"/>
+	<taskdef classpath="antTasks/bonita_antTasks.jar" name="refreshWorkspace" classname="org.bonitasoft.studio.antTasks.RefreshWorkspaceTask" />
 
 	<target name="generate">
-	<copydir dest="${workspacePath}/org.bonitasoft.studio-models" src="${basedir}"></copydir>
-	<refreshWorkspace project="org.bonitasoft.studio-models"/>
-	<emf.Ecore2Java
-			modelpluginid="org.bonitasoft.studio.model"
-			modelproject="org.bonitasoft.studio.model"
-			model="process.ecore"
-			genmodel="process.genmodel"
-			modelprojectfragmentpath="src"
-			reconcilegenmodel="keep"
-			generatejavacode="true"
-			generatemodelproject="true"
-			generateeditproject="true"
-			generateeditorproject="false"
-			generatetestsproject="false"
-			templatepath="EMFTemplates/"
-			autobuild="true"
-			jdklevel="6.0" >
+		<copy todir="${workspacePath}/org.bonitasoft.studio-models">
+			<fileset dir="${basedir}" />
+		</copy>
+		<refreshWorkspace project="org.bonitasoft.studio-models" />
+		<emf.Ecore2Java modelpluginid="org.bonitasoft.studio.model" modelproject="org.bonitasoft.studio.model" model="process.ecore" genmodel="process.genmodel" modelprojectfragmentpath="src" reconcilegenmodel="keep" generatejavacode="true" generatemodelproject="true" generateeditproject="true" generateeditorproject="false" generatetestsproject="false" templatepath="EMFTemplates/" autobuild="false" jdklevel="7.0">
 		</emf.Ecore2Java>
 		<gmfAnt:GenerateDiagramCode gmfgenPath="org.bonitasoft.studio-models/process.gmfgen" />
 		<gmfAnt:GenerateDiagramCode gmfgenPath="org.bonitasoft.studio-models/form/form.gmfgen" />
-		<delete dir="${workspacePath}/org.bonitasoft.studio.model.edit/icons/full/obj16"></delete>
-		<delete dir="${workspacePath}/org.bonitasoft.studio.diagram/icons/obj16"></delete>
-		<delete dir="${workspacePath}/org.bonitasoft.studio.diagram.form/icons/obj16"></delete>
-		<delete file="${workspacePath}/org.bonitasoft.studio.model.edit/plugin.xml"></delete>
-		<copydir dest="${workspacePath}/../org.bonitasoft.studio.model" src="${workspacePath}/org.bonitasoft.studio.model" forceoverwrite="false" />
-		<copydir dest="${workspacePath}/../org.bonitasoft.studio.model.edit" src="${workspacePath}/org.bonitasoft.studio.model.edit" forceoverwrite="false" />
-		<copydir dest="${workspacePath}/../org.bonitasoft.studio.diagram" src="${workspacePath}/org.bonitasoft.studio.diagram" forceoverwrite="false" />
-		<copydir dest="${workspacePath}/../org.bonitasoft.studio.diagram.form" src="${workspacePath}/org.bonitasoft.studio.diagram.form" forceoverwrite="false" />
+		<delete dir="${workspacePath}/org.bonitasoft.studio.model.edit/icons/full/obj16">
+		</delete>
+		<delete dir="${workspacePath}/org.bonitasoft.studio.diagram/icons/obj16">
+		</delete>
+		<delete dir="${workspacePath}/org.bonitasoft.studio.diagram.form/icons/obj16">
+		</delete>
+		<delete file="${workspacePath}/org.bonitasoft.studio.model.edit/plugin.xml">
+		</delete>
+		<copy todir="${basedir}/../org.bonitasoft.studio.model">
+			<fileset dir="${workspacePath}/org.bonitasoft.studio.model" />
+		</copy>
+		<copy todir="${basedir}/../org.bonitasoft.studio.model.edit">
+			<fileset dir="${workspacePath}/org.bonitasoft.studio.model.edit" />
+		</copy>
+		<copy todir="${basedir}/../org.bonitasoft.studio.diagram">
+			<fileset dir="${workspacePath}/org.bonitasoft.studio.diagram" />
+		</copy>
+		<copy todir="${basedir}/../org.bonitasoft.studio.diagram.form">
+			<fileset dir="${workspacePath}/org.bonitasoft.studio.diagram.form" />
+		</copy>
 	</target>
 </project>

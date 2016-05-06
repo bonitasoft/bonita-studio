@@ -11,10 +11,10 @@
     <artifactId>org.bonitasoft.studio-models</artifactId>
     <packaging>eclipse-plugin</packaging>
 
-
     <properties>
-        <workspacePath>${project.parent.basedir}/generationWorkspace</workspacePath>
+        <workspacePath>${project.build.directory}/generationWorkspace</workspacePath>
     </properties>
+
     <profiles>
         <profile>
             <id>generate</id>
@@ -32,7 +32,7 @@
                                     <layout>p2</layout>
                                     <url>${p2MirrorUrl}</url>
                                 </repository>
-                                  <repository>
+                                <repository>
                                     <id>Additional Build Dependencies P2 Repository</id>
                                     <layout>p2</layout>
                                     <url>${project.baseUri}/repository/</url>
@@ -86,6 +86,7 @@
                                 <goals>
                                     <goal>eclipse-run</goal>
                                 </goals>
+                                 <phase>generate-sources</phase> 
                             </execution>
                         </executions>
                     </plugin>
@@ -99,7 +100,7 @@
                                     <followSymlinks>false</followSymlinks>
                                 </fileset>
                                 <fileset>
-                                    <directory>${workspacePath}/../org.bonitasoft.studio.model</directory>
+                                    <directory>${basedir}/../org.bonitasoft.studio.model</directory>
                                     <includes>
                                         <include>META-INF/MANIFEST.MF</include>
                                         <include>src</include>
@@ -109,7 +110,7 @@
                                     <followSymlinks>false</followSymlinks>
                                 </fileset>
                                 <fileset>
-                                    <directory>${workspacePath}/../org.bonitasoft.studio.model.edit</directory>
+                                    <directory>${basedir}/../org.bonitasoft.studio.model.edit</directory>
                                     <includes>
                                         <include>META-INF/MANIFEST.MF</include>
                                         <include>src</include>
@@ -118,7 +119,7 @@
                                     <followSymlinks>false</followSymlinks>
                                 </fileset>
                                 <fileset>
-                                    <directory>${workspacePath}/../org.bonitasoft.studio.diagram</directory>
+                                    <directory>${basedir}/../org.bonitasoft.studio.diagram</directory>
                                     <includes>
                                         <include>META-INF/MANIFEST.MF</include>
                                         <include>src</include>
@@ -128,7 +129,7 @@
                                     <followSymlinks>false</followSymlinks>
                                 </fileset>
                                 <fileset>
-                                    <directory>${workspacePath}/../org.bonitasoft.studio.diagram.form</directory>
+                                    <directory>${basedir}/../org.bonitasoft.studio.diagram.form</directory>
                                     <includes>
                                         <include>META-INF/MANIFEST.MF</include>
                                         <include>src</include>

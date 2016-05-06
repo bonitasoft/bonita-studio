@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.bonitasoft.studio</groupId>
-		<artifactId>studio</artifactId>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.bonitasoft.studio</groupId>
+        <artifactId>studio</artifactId>
         <version>7.3.0-SNAPSHOT</version>
     </parent>
 
@@ -32,8 +31,61 @@
     </properties>
 
 
-
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.eclipse.tycho</groupId>
+                    <artifactId>target-platform-configuration</artifactId>
+                    <version>${tychoVersion}</version>
+                    <executions>
+                        <execution>
+                            <id>default-target-platform</id>
+                            <phase>none</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.eclipse.tycho</groupId>
+                    <artifactId>tycho-p2-publisher-plugin</artifactId>
+                    <version>${tychoVersion}</version>
+                    <executions>
+                        <execution>
+                            <id>default-publish-products</id>
+                            <phase>none</phase>
+                        </execution>
+                        <execution>
+                            <id>default-publish-categories</id>
+                            <phase>none</phase>
+                        </execution>
+                        <execution>
+                            <id>default-attach-artifacts</id>
+                            <phase>none</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.eclipse.tycho</groupId>
+                    <artifactId>tycho-p2-repository-plugin</artifactId>
+                    <version>${tychoVersion}</version>
+                    <executions>
+                        <execution>
+                            <id>default-publish-products</id>
+                            <phase>none</phase>
+                        </execution>
+                        <execution>
+                            <id>default-assemble-repository</id>
+                            <phase>none</phase>
+                        </execution>
+                        <execution>
+                            <id>default-archive-repository</id>
+                            <phase>none</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.bonitasoft.maven</groupId>
@@ -59,12 +111,48 @@
             </plugin>
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
+                <artifactId>target-platform-configuration</artifactId>
+                <executions>
+                    <execution>
+                        <id>target-platform</id>
+                        <goals>
+                            <goal>target-platform</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-p2-publisher-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>publish</id>
+                        <goals>
+                            <goal>publish-products</goal>
+                            <goal>publish-categories</goal>
+                            <goal>attach-artifacts</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-p2-repository-plugin</artifactId>
-                <version>${tychoVersion}</version>
                 <configuration>
                     <includeAllDependencies>true</includeAllDependencies>
                     <finalName>${repositoryId}-${project.version}</finalName>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>build-repository</id>
+                        <goals>
+                            <goal>assemble-repository</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
@@ -83,7 +171,7 @@
                         <goals>
                             <goal>materialize-products</goal>
                         </goals>
-                        <phase>package</phase>
+                        <phase>prepare-package</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -95,7 +183,7 @@
                 <executions>
                     <execution>
                         <id>make-directory-assembly</id>
-                        <phase>package</phase>
+                        <phase>prepare-package</phase>
                         <configuration>
                             <appendAssemblyId>false</appendAssemblyId>
                             <descriptor>${basedir}/assembly-descriptor.xml</descriptor>
@@ -107,7 +195,7 @@
                     </execution>
                     <execution>
                         <id>make-zip-assembly</id>
-                        <phase>install</phase>
+                        <phase>package</phase>
                         <configuration>
                             <appendAssemblyId>false</appendAssemblyId>
                             <descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
@@ -119,6 +207,7 @@
                     </execution>
                 </executions>
             </plugin>
+
 
             <!-- Create a proper bundles.info for all-in-one -->
             <plugin>
@@ -156,13 +245,14 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>eclipse-run</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 
@@ -192,7 +282,7 @@
                         <executions>
                             <execution>
                                 <id>linux-x86</id>
-                                <phase>install</phase>
+                                <phase>package</phase>
                                 <configuration>
                                     <arguments>
                                         <argument>build</argument>
@@ -206,7 +296,7 @@
                             </execution>
                             <execution>
                                 <id>linux-x86_64</id>
-                                <phase>install</phase>
+                                <phase>package</phase>
                                 <configuration>
                                     <arguments>
                                         <argument>build</argument>
@@ -220,7 +310,7 @@
                             </execution>
                             <execution>
                                 <id>macosx-x86_64</id>
-                                <phase>install</phase>
+                                <phase>package</phase>
                                 <configuration>
                                     <arguments>
                                         <argument>build</argument>
@@ -234,7 +324,7 @@
                             </execution>
                             <execution>
                                 <id>win-x86</id>
-                                <phase>install</phase>
+                                <phase>package</phase>
                                 <configuration>
                                     <arguments>
                                         <argument>build</argument>
@@ -248,7 +338,7 @@
                             </execution>
                             <execution>
                                 <id>win-x86_64</id>
-                                <phase>install</phase>
+                                <phase>package</phase>
                                 <configuration>
                                     <arguments>
                                         <argument>build</argument>
@@ -271,7 +361,7 @@
                         <executions>
                             <execution>
                                 <id>linux x86 installer file</id>
-                                <phase>prepare-package</phase>
+                                <phase>generate-resources</phase>
                                 <configuration>
                                     <target>
                                         <property name="studio.dir" value="${project.build.directory}/products/${productId}/linux/gtk/x86" />
@@ -289,7 +379,7 @@
                             </execution>
                             <execution>
                                 <id>linux x86_64 installer file</id>
-                                <phase>prepare-package</phase>
+                                <phase>generate-resources</phase>
                                 <configuration>
                                     <target>
                                         <property name="studio.dir" value="${project.build.directory}/products/${productId}/linux/gtk/x86_64" />
@@ -307,7 +397,7 @@
                             </execution>
                             <execution>
                                 <id>macosx x86_64 installer file</id>
-                                <phase>prepare-package</phase>
+                                <phase>generate-resources</phase>
                                 <configuration>
                                     <target>
                                         <property name="studio.dir" value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64" />
@@ -325,7 +415,7 @@
                             </execution>
                             <execution>
                                 <id>windows x86 installer file</id>
-                                <phase>prepare-package</phase>
+                                <phase>generate-resources</phase>
                                 <configuration>
                                     <target>
                                         <property name="studio.dir" value="${project.build.directory}/products/${productId}/win32/win32/x86" />
@@ -343,7 +433,7 @@
                             </execution>
                             <execution>
                                 <id>windows x86_64 installer file</id>
-                                <phase>prepare-package</phase>
+                                <phase>generate-resources</phase>
                                 <configuration>
                                     <target>
                                         <property name="studio.dir" value="${project.build.directory}/products/${productId}/win32/win32/x86_64" />
@@ -361,7 +451,7 @@
                             </execution>
                             <execution>
                                 <id>jre-win-x86</id>
-                                <phase>package</phase>
+                                <phase>prepare-package</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
@@ -388,7 +478,7 @@
                             </execution>
                             <execution>
                                 <id>jre-win-x86-x64</id>
-                                <phase>package</phase>
+                                <phase>prepare-package</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
@@ -415,7 +505,7 @@
                             </execution>
                             <execution>
                                 <id>jre-linux-x86</id>
-                                <phase>package</phase>
+                                <phase>prepare-package</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
@@ -442,7 +532,7 @@
                             </execution>
                             <execution>
                                 <id>jre-linux-x86-64</id>
-                                <phase>package</phase>
+                                <phase>prepare-package</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
@@ -469,13 +559,13 @@
                             </execution>
                             <execution>
                                 <id>jre-osx-x86-x64</id>
-                                <phase>package</phase>
+                                <phase>prepare-package</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                       <get src="${jre.url}/${jre.osx.url}.gz" dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${jre.osx.url}.gz" />
+                                        <get src="${jre.url}/${jre.osx.url}.gz" dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${jre.osx.url}.gz" />
                                     </tasks>
                                 </configuration>
                             </execution>
