@@ -748,15 +748,4 @@ public class Repository implements IRepository, IJavaContainer {
         return new BonitaHomeHandler(getProject());
     }
 
-    public List<IProject> getProjects() {
-        final List<IProject> result = new ArrayList<>();
-        final IProject parentProject = getProject();
-        for (final IProject project : parentProject.getWorkspace().getRoot().getProjects()) {
-            if (parentProject.getLocation().isPrefixOf(project.getLocation())) {
-                result.add(project);
-            }
-        }
-        return result;
-    }
-
 }
