@@ -6,7 +6,7 @@ Bundle-Version: 7.3.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.bonitasoft.studio.model.actormapping,
  org.bonitasoft.studio.model.actormapping.impl,
  org.bonitasoft.studio.model.actormapping.util,
@@ -42,5 +42,6 @@ Export-Package: org.bonitasoft.studio.model.actormapping,
  org.bonitasoft.studio.model.simulation.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
- org.eclipse.emf.ecore.xmi;visibility:=reexport
+ org.eclipse.emf.ecore.xmi;visibility:=reexport,
+ org.bonitasoft.studio-models;bundle-version="7.3.0"
 Bundle-ActivationPolicy: lazy
