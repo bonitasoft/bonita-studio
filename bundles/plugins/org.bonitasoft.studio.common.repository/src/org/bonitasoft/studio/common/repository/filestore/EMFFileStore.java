@@ -126,6 +126,11 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
     protected void doDelete() {
         final Resource eResource = getEMFResource();
     	doClose();
+    	try {
+            getResource().delete(true, Repository.NULL_PROGRESS_MONITOR);
+		} catch (final CoreException e) {
+			BonitaStudioLog.error(e);
+		}
     	if(eResource != null){
     	    final Runnable deleteRunnable = new Runnable() {
 
@@ -149,13 +154,7 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
     		}else{
                 deleteRunnable.run();
     		}
-    	} else {
-    		try {
-                getResource().delete(true, Repository.NULL_PROGRESS_MONITOR);
-			} catch (final CoreException e) {
-				BonitaStudioLog.error(e);
-			}
-    	}
+    	} 
     }
 
     @Override
