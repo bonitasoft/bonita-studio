@@ -101,35 +101,37 @@ public class CoolbarToolControl implements INullSelectionListener, IActivityMana
             initCoolBarPreferredSize();
             final Composite parentShell = parent.getParent();
             final TrimmedPartLayout layout = (TrimmedPartLayout) parentShell.getLayout();
-            toolbarContainer = new Composite(parentShell, SWT.INHERIT_FORCE);
-            toolbarContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
-            toolbarContainer.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 0).margins(0, 0).create());
-            layout.top = toolbarContainer;
-            final Composite leftTrim = layout.left;
-            if (leftTrim != null) {
-                leftTrim.setVisible(false);
-                leftTrim.setSize(0, 0);
-                leftTrim.getLayoutData();
-            }
-            final Composite rightTrim = layout.right;
-            if (rightTrim != null) {
-                rightTrim.setVisible(false);
-                rightTrim.setSize(0, 0);
-            }
-            createToolbar(toolbarContainer);
-            activitySupport.getActivityManager().addActivityManagerListener(this);
-            final IEventBroker eventBroker = context.get(IEventBroker.class);
-            eventBroker.subscribe(UIElement.TOPIC_ALL, new EventHandler() {
-
-                @Override
-                public void handleEvent(final Event arg0) {
-                    final IWorkbenchWindow window = context.get(IWorkbenchWindow.class);
-                    final IWorkbenchPage page = context.get(IWorkbenchPage.class);
-                    if (window != null) {
-                        registerHandlers((WorkbenchWindow) window, page);
-                    }
+            if (layout != null) {
+                toolbarContainer = new Composite(parentShell, SWT.INHERIT_FORCE);
+                toolbarContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
+                toolbarContainer.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 0).margins(0, 0).create());
+                layout.top = toolbarContainer;
+                final Composite leftTrim = layout.left;
+                if (leftTrim != null) {
+                    leftTrim.setVisible(false);
+                    leftTrim.setSize(0, 0);
+                    leftTrim.getLayoutData();
                 }
-            });
+                final Composite rightTrim = layout.right;
+                if (rightTrim != null) {
+                    rightTrim.setVisible(false);
+                    rightTrim.setSize(0, 0);
+                }
+                createToolbar(toolbarContainer);
+                activitySupport.getActivityManager().addActivityManagerListener(this);
+                final IEventBroker eventBroker = context.get(IEventBroker.class);
+                eventBroker.subscribe(UIElement.TOPIC_ALL, new EventHandler() {
+
+                    @Override
+                    public void handleEvent(final Event arg0) {
+                        final IWorkbenchWindow window = context.get(IWorkbenchWindow.class);
+                        final IWorkbenchPage page = context.get(IWorkbenchPage.class);
+                        if (window != null) {
+                            registerHandlers((WorkbenchWindow) window, page);
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -196,10 +198,10 @@ public class CoolbarToolControl implements INullSelectionListener, IActivityMana
         }
 
         if (size == CoolbarSize.SMALL) {
-            image = new Image(Display.getDefault(), Pics.getImage(COOLBAR_PNG).getImageData().scaledTo(Display.getDefault().getBounds().width, 30));
+            image = new Image(Display.getDefault(), Pics.getImage(COOLBAR_PNG).getImageData().scaledTo(Display.getDefault().getBounds().width, 40));
 
         } else {
-            image = new Image(Display.getDefault(), Pics.getImage(COOLBAR_PNG).getImageData().scaledTo(Display.getDefault().getBounds().width, 75));
+            image = new Image(Display.getDefault(), Pics.getImage(COOLBAR_PNG).getImageData().scaledTo(Display.getDefault().getBounds().width, 85));
 
         }
         toolbarContainer.setBackgroundImage(image);
