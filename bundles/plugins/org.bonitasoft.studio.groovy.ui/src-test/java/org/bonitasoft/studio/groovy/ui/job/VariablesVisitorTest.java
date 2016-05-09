@@ -63,12 +63,10 @@ public class VariablesVisitorTest {
     public void should_add_decalred_expression_with_position() throws Exception {
         final VariablesVisitor variablesVisitor = new VariablesVisitor(new VariableScope());
 
-        final DeclarationExpression declarationExpression = new DeclarationExpression(new VariableExpression("myVar"),
-                Token.NULL,
+        final DeclarationExpression declarationExpression = new DeclarationExpression(new VariableExpression("myVar"), Token.NULL,
                 new VariableExpression("anotherVar"));
         declarationExpression.setStart(42);
-        variablesVisitor
-                .visitDeclarationExpression(declarationExpression);
+        variablesVisitor.visitDeclarationExpression(declarationExpression);
 
         assertThat(variablesVisitor.getDeclaredExpressions()).containsExactly(entry("myVar", new Position(42)));
     }

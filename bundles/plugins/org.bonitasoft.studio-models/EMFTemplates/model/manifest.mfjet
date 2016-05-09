@@ -29,15 +29,16 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 <%if (genModel.getComplianceLevel() == GenJDKLevel.JDK50_LITERAL) {%>
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-<%} else if (genModel.getComplianceLevel() == GenJDKLevel.JDK60_LITERAL) {%>
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+<%} else if (genModel.getComplianceLevel() == GenJDKLevel.JDK70_LITERAL) {%>
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 <%}%>
 <%Iterator<String> packagesIterator = genModel.getModelQualifiedPackageNames().iterator(); if (packagesIterator.hasNext()) { String pack = packagesIterator.next();%>
 Export-Package: <%=pack%><%while(packagesIterator.hasNext()) { pack = packagesIterator.next();%>,
  <%=pack%><%}%>
 <%}%>
 <%Iterator<String> requiredPluginIterator = genModel.getModelRequiredPlugins().iterator(); if (requiredPluginIterator.hasNext()) { String pluginID = requiredPluginIterator.next();%>
-Require-Bundle: <%=pluginID%><%if (!pluginID.startsWith("org.eclipse.core.runtime")){%>;visibility:=reexport<%} while(requiredPluginIterator.hasNext()) { pluginID = requiredPluginIterator.next();%>,
+Require-Bundle: org.bonitasoft.studio-models,
+ <%=pluginID%><%if (!pluginID.startsWith("org.eclipse.core.runtime")){%>;visibility:=reexport<%} while(requiredPluginIterator.hasNext()) { pluginID = requiredPluginIterator.next();%>,
  <%=pluginID%><%if (!pluginID.startsWith("org.eclipse.core.runtime")){%>;visibility:=reexport<%}}%>
 <%}%>
 <%if (genModel.getRuntimeVersion() == GenRuntimeVersion.EMF22 || genModel.getRuntimeVersion() == GenRuntimeVersion.EMF23) {%>
