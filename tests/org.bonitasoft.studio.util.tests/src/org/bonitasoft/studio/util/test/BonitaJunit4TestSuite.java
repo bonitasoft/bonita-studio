@@ -19,10 +19,6 @@ package org.bonitasoft.studio.util.test;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunListener;
@@ -94,12 +90,6 @@ public final class BonitaJunit4TestSuite extends BonitaTestSuite {
                  */
                 @Override
                 public void testFinished(Description description) throws Exception {
-                    final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                    if(activePage != null){
-                        for(IEditorPart part : activePage.getDirtyEditors()){
-                            BonitaStudioLog.log("| Editor with input : "+ part.getEditorInput().getName()+" is dirty after test "+ description.getMethodName());
-                        }
-                    }
                     printAfterTest(description);
                 }
             };
