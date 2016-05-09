@@ -16,7 +16,7 @@
 
 
 	<modules>
-        <module>apache-xerces</module>
+<!--         <module>apache-xerces</module> -->
         <module>org.codehaus.groovy24</module>
         <module>org.eclipse.emf.edapt.common</module>
 		<module>org.eclipse.emf.edapt.migration</module>
