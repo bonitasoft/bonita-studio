@@ -43,8 +43,6 @@ public interface IRepositoryFileStore extends IDisplayable {
 
     void setReadOnly(boolean readOnly);
 
-    IWorkbenchPart openUI();
-
     IWorkbenchPart open();
 
     void close();

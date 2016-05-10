@@ -227,13 +227,4 @@ public class URLFileStore implements IRepositoryFileStore {
             return ByteStreams.toByteArray(inputStream);
         }
     }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#openUI()
-     */
-    @Override
-    public IWorkbenchPart openUI() {
-        return null;
-    }
 }
