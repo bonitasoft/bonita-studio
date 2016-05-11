@@ -25,14 +25,13 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.operations.IUndoContext;
-import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -60,19 +59,22 @@ public class NewDiagramCommandHandler extends AbstractHandler {
             BonitaStudioLog.error(e);
         }
         final DiagramFileStore diagramFileStore = diagramFactory.getNewDiagramFileStore();
-        final IEditorPart editor = (IEditorPart) diagramFileStore.open();
-        if (editor instanceof DiagramEditor) {
-            final String author = System.getProperty("user.name", "unknown");
-            final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(diagramFileStore.getEMFResource());
-            editingDomain.getCommandStack().execute(
-                    SetCommand.create(editingDomain,
-                            ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement(),
-                            ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, author));
-            //clear the OperationHistory because it implies otherwise and that we don't need undo/redo for the basic creation.
-            OperationHistoryFactory.getOperationHistory().dispose((IUndoContext) editor.getAdapter(IUndoContext.class), true, true, true);
-            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(editor);
-        }
+        Display.getDefault().asyncExec(new Runnable() {
 
+            @Override
+            public void run() {
+                final IEditorPart editor = (IEditorPart) diagramFileStore.openUI();
+                if (editor instanceof DiagramEditor) {
+                    final String author = System.getProperty("user.name", "unknown");
+                    final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(diagramFileStore.getEMFResource());
+                    editingDomain.getCommandStack().execute(
+                            SetCommand.create(editingDomain,
+                                    ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement(),
+                                    ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, author));
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(editor);
+                }
+            }
+        });
         return diagramFileStore;
     }
 
