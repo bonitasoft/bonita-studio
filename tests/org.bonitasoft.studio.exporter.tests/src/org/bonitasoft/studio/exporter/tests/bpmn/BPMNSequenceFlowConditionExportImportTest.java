@@ -20,8 +20,6 @@ package org.bonitasoft.studio.exporter.tests.bpmn;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import junit.framework.TestCase;
-
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
@@ -44,6 +42,8 @@ import org.omg.spec.bpmn.model.TFlowElement;
 import org.omg.spec.bpmn.model.TProcess;
 import org.omg.spec.bpmn.model.TRootElement;
 import org.omg.spec.bpmn.model.TSequenceFlow;
+
+import junit.framework.TestCase;
 
 /**
  * @author Aurelien Pupier
@@ -121,8 +121,8 @@ public class BPMNSequenceFlowConditionExportImportTest extends TestCase {
 
     protected DocumentRoot exportToBPMNProcessWithCondition(final Expression condition) throws ExecutionException, IOException {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
-        final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.execute(null);
-
+        final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
+        newDiagramFileStore.open();
         final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
         final EditingDomain domain = TransactionUtil.getEditingDomain(abstractProcess);
         final SequenceFlow sequenceFlow = (SequenceFlow)abstractProcess.getConnections().get(0);

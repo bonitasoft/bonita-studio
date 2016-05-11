@@ -363,8 +363,8 @@ public class TestThemeRepository {
         final InputStream stream = this.getClass().getResourceAsStream("themewithpreview.zip");
         final LookNFeelFileStore artifactToApply = repository.importInputStream("themewithpreview.zip", stream);
 
-        final NewDiagramCommandHandler newProcessCommandHandler = new NewDiagramCommandHandler();
-        final DiagramFileStore artifact = newProcessCommandHandler.execute(null);
+        final DiagramFileStore artifact = new NewDiagramCommandHandler().newDiagram();
+        artifact.open();
 
         final AbstractProcess process = ModelHelper.getAllProcesses(artifact.getContent()).get(0);
         final TransactionalEditingDomain editingDomain = (TransactionalEditingDomain) AdapterFactoryEditingDomain.getEditingDomainFor(process);
@@ -391,14 +391,16 @@ public class TestThemeRepository {
         final IFile file = tmpFolder.getFile("previewImage.png");
         file.create(resourceIS, false, new NullProgressMonitor());
         assertTrue(file.exists());
-        final NewDiagramCommandHandler newProcessCommandHandler = new NewDiagramCommandHandler();
-        final DiagramFileStore artifact = newProcessCommandHandler.execute(null);
+
+        final DiagramFileStore artifact = new NewDiagramCommandHandler().newDiagram();
+        artifact.open();
+
         final AbstractProcess process = ModelHelper.getAllProcesses(artifact.getContent()).get(0);
 
         final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
         store.refresh();
 
-        final ApplicationResourceFileStore webTemplateArtifact = (ApplicationResourceFileStore) store.getChild(ModelHelper.getEObjectID(process));
+        final ApplicationResourceFileStore webTemplateArtifact = store.getChild(ModelHelper.getEObjectID(process));
         final ApplicationLookNFeelFileStore theme = WebTemplatesUtil.convertWebTemplateToTheme(webTemplateArtifact, "test Theme", file.getLocation().toFile().getAbsolutePath(), new NullProgressMonitor());
         assertNotNull(theme);
         assertEquals("test Theme", theme.getName());

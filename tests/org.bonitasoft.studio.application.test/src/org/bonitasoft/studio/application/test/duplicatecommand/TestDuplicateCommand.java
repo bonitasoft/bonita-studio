@@ -20,8 +20,6 @@ package org.bonitasoft.studio.application.test.duplicatecommand;
 import java.io.File;
 import java.net.URL;
 
-import junit.framework.TestCase;
-
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -40,6 +38,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.ui.PlatformUI;
 import org.junit.Test;
 
+import junit.framework.TestCase;
+
 /**
  * @author Aurelien Pupier
  */
@@ -57,9 +57,8 @@ public class TestDuplicateCommand extends TestCase {
      */
     @Test
     public void testDuplicateCommandChangeName() throws Exception {
-
-        final NewDiagramCommandHandler npch = new NewDiagramCommandHandler();
-        final DiagramFileStore pa = npch.execute(null);
+        final DiagramFileStore pa = new NewDiagramCommandHandler().newDiagram();
+        pa.open();
         pa.save(pa.getOpenedEditor());
         final String newProcessLabel = pa.getContent().getName() + "duplicatedInTest";
 
@@ -77,9 +76,8 @@ public class TestDuplicateCommand extends TestCase {
 
     @Test
     public void testDuplicateCommandChangeVersion() throws Exception {
-
-        final NewDiagramCommandHandler npch = new NewDiagramCommandHandler();
-        final DiagramFileStore pa = npch.execute(null);
+        final DiagramFileStore pa = new NewDiagramCommandHandler().newDiagram();
+        pa.open();
 
         final String newProcessVersion = pa.getContent().getVersion() + ".2";
 

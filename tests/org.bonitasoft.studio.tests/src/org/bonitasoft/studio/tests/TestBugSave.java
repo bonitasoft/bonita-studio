@@ -19,8 +19,6 @@ package org.bonitasoft.studio.tests;
 
 import java.util.Collections;
 
-import junit.framework.TestCase;
-
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.form.custom.commands.CreateFormCommand;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
@@ -34,6 +32,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.ui.PlatformUI;
 
+import junit.framework.TestCase;
+
 /**
  * @author Mickael Istria
  *
@@ -41,7 +41,7 @@ import org.eclipse.ui.PlatformUI;
 public class TestBugSave extends TestCase {
 
     public void testCrashingSave() throws Exception {
-        new NewDiagramCommandHandler().execute(null);
+        new NewDiagramCommandHandler().newDiagram().open();
         ProcessDiagramEditor processEditor = (ProcessDiagramEditor)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         MainProcess mainProcess = (MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
         final CreateFormCommand formCommand = new CreateFormCommand(mainProcess,ProcessPackage.Literals.PAGE_FLOW__FORM,"form", "", Collections.<WidgetMapping>emptyList(), processEditor.getEditingDomain());

@@ -17,13 +17,13 @@
  */
 package org.bonitasoft.studio.tests.bug;
 
-import junit.framework.TestCase;
-
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramActionBarContributor;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.TestCase;
 
 /**
  * @author Baptiste Mesta
@@ -32,16 +32,13 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TestBugs extends TestCase  {
 	
-	/**
-	 * 
-	 */
 	public void testBug1644() throws Exception {
-		new NewDiagramCommandHandler().execute(null);
+        new NewDiagramCommandHandler().newDiagram().open();
 
-		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		ProcessDiagramActionBarContributor actionBarContributor = (ProcessDiagramActionBarContributor) editor.getEditorSite().getActionBarContributor();
-		IContributionItem[] items = actionBarContributor.getActionBars().getToolBarManager().getItems();
-		for (IContributionItem iContributionItem : items) {
+		final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		final ProcessDiagramActionBarContributor actionBarContributor = (ProcessDiagramActionBarContributor) editor.getEditorSite().getActionBarContributor();
+		final IContributionItem[] items = actionBarContributor.getActionBars().getToolBarManager().getItems();
+		for (final IContributionItem iContributionItem : items) {
 			assertFalse("zoom contribution is still present",iContributionItem.getId().equals("zoomContributionItem"));
 		}
 	}
