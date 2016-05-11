@@ -20,8 +20,6 @@ package org.bonitasoft.studio.tests.perspectives;
 import java.util.Collections;
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.form.custom.commands.CreateFormCommand;
@@ -44,21 +42,20 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 
+import junit.framework.TestCase;
+
 /**
  * @author Baptiste Mesta
  *
  */
 public class TestAutomaticSwitchPerspective extends TestCase {
 
-    //	private static final String TextPerspective = "org.bonitasoft.studio.perspective.textEditor";
     private static final String ProcessPerspective = "org.bonitasoft.studio.perspective.process";
     private static final String FormPerspective = "org.bonitasoft.studio.common.perspective.form";
-    //	private static final String JavaPerspective = "org.bonitasoft.studio.perspective.java";
-    //	private static final String BirtPerspective = "org.bonitasoft.studio.birt.ui.perspective.birt";
 
     public void testSwitchPerspectiveToForms() throws Exception {
-        final NewDiagramCommandHandler cmd = new NewDiagramCommandHandler();
-        final DiagramFileStore fileStore = cmd.execute(null);
+        final DiagramFileStore fileStore = new NewDiagramCommandHandler().newDiagram();
+        fileStore.open();
         final MainProcess process = fileStore.getContent();
 
         assertTrue("Wrong perspective when opening the form",new TestAsyncThread(10, 500) {

@@ -18,17 +18,16 @@
 
 package org.bonitasoft.studio.exporter.tests.api;
 
-import junit.framework.TestCase;
-
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.TestCase;
 
 /**
  * @author Romain Bioteau
@@ -45,8 +44,9 @@ public class TestBonitaExportModel extends TestCase {
     }
 
     public void testExportNewProcess() throws Exception {
-        final NewDiagramCommandHandler newCmd = new NewDiagramCommandHandler() ;
-        final DiagramFileStore artifact = newCmd.execute(new ExecutionEvent());
+        final DiagramFileStore artifact = new NewDiagramCommandHandler().newDiagram();
+        artifact.open();
+
         final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
         editor.doSave(new NullProgressMonitor());
         final String editorName = editor.getTitle().replaceFirst("(.*)\\s\\((.*)\\)", "$1");

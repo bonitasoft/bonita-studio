@@ -56,8 +56,8 @@ public class TestProcessParameters {
     @Before
     public void setUp() throws Exception {
         if (pool == null) {
-            final NewDiagramCommandHandler newDiagram = new NewDiagramCommandHandler();
-            final DiagramFileStore diagramFileStore = newDiagram.execute(null);
+            final DiagramFileStore diagramFileStore = new NewDiagramCommandHandler().newDiagram();
+            diagramFileStore.open();
             pool = (AbstractProcess) EcoreUtil.copy(diagramFileStore.getContent()).getElements().get(0);
             final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
 

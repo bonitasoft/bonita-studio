@@ -40,6 +40,27 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 
     @Override
     public DiagramFileStore execute(final ExecutionEvent event) throws ExecutionException {
+        final DiagramFileStore diagramFileStore = newDiagram();
+        Display.getDefault().asyncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                final IEditorPart editor = (IEditorPart) diagramFileStore.openUI();
+                if (editor instanceof DiagramEditor) {
+                    final String author = System.getProperty("user.name", "unknown");
+                    final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(diagramFileStore.getEMFResource());
+                    editingDomain.getCommandStack().execute(
+                            SetCommand.create(editingDomain,
+                                    ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement(),
+                                    ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, author));
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(editor);
+                }
+            }
+        });
+        return diagramFileStore;
+    }
+
+    public DiagramFileStore newDiagram() {
         final NewDiagramFactory diagramFactory = new NewDiagramFactory(RepositoryManager.getInstance().getCurrentRepository(),
                 BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
         diagramFactory.setDefaultPoolWidth(getDefaultWidth());
@@ -59,22 +80,6 @@ public class NewDiagramCommandHandler extends AbstractHandler {
             BonitaStudioLog.error(e);
         }
         final DiagramFileStore diagramFileStore = diagramFactory.getNewDiagramFileStore();
-        Display.getDefault().asyncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                final IEditorPart editor = (IEditorPart) diagramFileStore.openUI();
-                if (editor instanceof DiagramEditor) {
-                    final String author = System.getProperty("user.name", "unknown");
-                    final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(diagramFileStore.getEMFResource());
-                    editingDomain.getCommandStack().execute(
-                            SetCommand.create(editingDomain,
-                                    ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement(),
-                                    ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, author));
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(editor);
-                }
-            }
-        });
         return diagramFileStore;
     }
 

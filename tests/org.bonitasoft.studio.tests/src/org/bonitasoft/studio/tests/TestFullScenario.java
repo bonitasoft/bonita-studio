@@ -20,8 +20,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collections;
 
-import junit.framework.TestCase;
-
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -53,6 +51,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 
+import junit.framework.TestCase;
+
 /**
  * @author Mickael Istria
  */
@@ -80,9 +80,6 @@ public class TestFullScenario extends TestCase {
 
     }
 
-    /**
-     *
-     */
     private static final String TESTNAME = "TESTNAME";
     private static ProcessDiagramEditor processEditor;
     private static IEditorInput input;
@@ -91,10 +88,6 @@ public class TestFullScenario extends TestCase {
     private static int nbProcBefore;
     private static String webPurchaseVersion = "1.5";
 
-    /**
-     * @return
-     * @throws ExecutionException
-     */
     public void testNewProcess() throws Exception {
         final CountProcessesResourceVisitor visitor = new CountProcessesResourceVisitor();
         RepositoryManager.getInstance().getCurrentRepository().getProject().accept(visitor);
@@ -104,12 +97,12 @@ public class TestFullScenario extends TestCase {
         editAndSave();
         reopenEditedProcess();
         reopenEditedProcess();
-        //importAndOverride();
         execute();
     }
 
     protected void createProcess() throws ExecutionException {
-        new NewDiagramCommandHandler().execute(null);
+        final DiagramFileStore newDiagram = new NewDiagramCommandHandler().newDiagram();
+        newDiagram.open();
         processEditor = getTheOnlyOneEditor();
         input = processEditor.getEditorInput();
 

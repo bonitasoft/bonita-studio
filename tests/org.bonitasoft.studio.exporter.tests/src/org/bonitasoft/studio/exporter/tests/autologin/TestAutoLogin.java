@@ -51,7 +51,8 @@ public class TestAutoLogin {
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
         if (pool == null) {
             final NewDiagramCommandHandler newDiagram = new NewDiagramCommandHandler();
-            final DiagramFileStore diagramFileStore = newDiagram.execute(null);
+            final DiagramFileStore diagramFileStore = newDiagram.newDiagram();
+            diagramFileStore.open();
             pool = (AbstractProcess) EcoreUtil.copy(diagramFileStore.getContent()).getElements().get(0);
             final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
 

@@ -17,13 +17,13 @@
  */
 package org.bonitasoft.studio.tests.stress;
 
-import junit.framework.TestCase;
-
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mickael Istria
@@ -36,16 +36,16 @@ public class TestDesignStress extends TestCase {
 	public void testDesignStress() throws Exception {
 		//fail("Diagram stress test is currently KO on Linux");
 		System.gc();
-		DiagramRepositoryStore drs = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-		int start = drs.getChildren().size() ;
+		final DiagramRepositoryStore drs = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+		final int start = drs.getChildren().size() ;
 		//create new proces to have 50 processes open at the end
 		for (int minor = 0; minor + start < PROCESS_COUNT; minor++) {
-			new NewDiagramCommandHandler().execute(null);
+            new NewDiagramCommandHandler().newDiagram().open();
 		}
 		System.gc();
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 		
-		for(DiagramFileStore p : drs.getChildren()){
+		for(final DiagramFileStore p : drs.getChildren()){
 				p.open() ;
 		}
 	}

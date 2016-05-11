@@ -19,8 +19,6 @@ package org.bonitasoft.studio.exporter.tests.bpmn;
 
 import java.io.IOException;
 
-import junit.framework.TestCase;
-
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
@@ -55,6 +53,8 @@ import org.omg.spec.bpmn.model.TItemDefinition;
 import org.omg.spec.bpmn.model.TProcess;
 import org.omg.spec.bpmn.model.TProperty;
 import org.omg.spec.bpmn.model.TRootElement;
+
+import junit.framework.TestCase;
 
 /**
  * @author Aurelien Pupier
@@ -484,7 +484,8 @@ public class BPMNDataExportImportTest extends TestCase {
 
     private DocumentRoot exportToBPMNProcessWithStepData(final Data data, String dataType) throws ExecutionException, IOException {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
-        final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.execute(null);
+        final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
+        newDiagramFileStore.open();
         final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
         for(final Element element : abstractProcess.getElements()){
             if(element instanceof Lane){
@@ -511,7 +512,8 @@ public class BPMNDataExportImportTest extends TestCase {
 
     protected DocumentRoot exportToBPMNProcessWithData(final Data data, String dataType) throws ExecutionException, IOException {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
-        final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.execute(null);
+        final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
+        newDiagramFileStore.open();
         final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
         final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(abstractProcess);
         editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, abstractProcess, ProcessPackage.Literals.DATA_AWARE__DATA, data));
