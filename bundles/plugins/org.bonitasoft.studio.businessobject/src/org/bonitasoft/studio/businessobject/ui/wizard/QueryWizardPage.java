@@ -25,6 +25,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.Query;
+import org.bonitasoft.engine.bdm.model.QueryParameter;
+import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.QueryParameterNameEditingSupport;
@@ -50,10 +55,14 @@ import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -74,12 +83,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.TableColumn;
-
-import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.Query;
-import org.bonitasoft.engine.bdm.model.QueryParameter;
-import org.bonitasoft.engine.bdm.model.field.Field;
-import org.bonitasoft.engine.bdm.model.field.SimpleField;
 
 /**
  * @author Romain Bioteau
@@ -178,11 +181,16 @@ public class QueryWizardPage extends WizardPage {
         queryResultTypeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).indent(0, 5).create());
         queryResultTypeLabel.setText(Messages.queryResultType);
 
+        ControlDecoration typeWarning = new ControlDecoration(queryResultTypeLabel,SWT.RIGHT);
+        typeWarning.setImage(JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_WARNING));
+        typeWarning.setDescriptionText(Messages.queryReturnTypeWarning);
+        typeWarning.setMarginWidth(5);
+        
         final ComboViewer resultTypeViewer = createReturnTypeComboViewer(composite);
         resultTypeViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         resultTypeViewer.setContentProvider(ArrayContentProvider.getInstance());
         resultTypeViewer.setLabelProvider(new LabelProvider() {
-
+        
             @Override
             public String getText(final Object element) {
                 final String className = element.toString();
@@ -208,6 +216,7 @@ public class QueryWizardPage extends WizardPage {
                 queryBinding.validateTargetToModel();
             }
         });
+        
         WizardPageSupport.create(this, ctx);
         setControl(composite);
     }

@@ -320,6 +320,8 @@ public class Messages extends NLS {
 
     public static String missingCountQuery;
 
+	public static String queryReturnTypeWarning;
+
     private Messages() {
     }
 
