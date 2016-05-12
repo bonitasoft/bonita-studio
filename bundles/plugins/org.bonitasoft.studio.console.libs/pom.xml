@@ -18,7 +18,7 @@
 		<javadoc.dir>${basedir}/javadoc</javadoc.dir>
 		<lib.dir>lib</lib.dir>
 		<tomcat.version>7.0.67</tomcat.version>
-		<security.config.file>${basedir}/tomcat/platform-setup/tenant_template_portal/security-config.properties</security.config.file>
+		<security.config.file>${basedir}/tomcat/setup/platform_conf/initial/tenant_template_portal/security-config.properties</security.config.file>
 	</properties>
 
 	<dependencies>
