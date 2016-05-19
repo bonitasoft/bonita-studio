@@ -43,131 +43,127 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 
-
 /**
  * @author Romain Bioteau
  *
  */
 public class ExportBosArchiveOperation {
 
-    public static final String VERSION = "version";
-    private static final String BOS_MANIFEST_COMMENT = "Generated with BOS";
-    public static final String BOS_ARCHIVE_MANIFEST = "MANIFEST";
-    public static final String TO_OPEN = "toOpen";
-    public static final String NONE = "<NONE>";
+	public static final String VERSION = "version";
+	private static final String BOS_MANIFEST_COMMENT = "Generated with BOS";
+	public static final String BOS_ARCHIVE_MANIFEST = "MANIFEST";
+	public static final String TO_OPEN = "toOpen";
+	public static final String NONE = "<NONE>";
 
-    private Set<IResource> resources;
-    private IStatus status;
-    private String destPath;
-    private IFile manifestFile;
-    private Set<IResource> resourcesToReOpen;
+	private Set<IResource> resources;
+	private IStatus status;
+	private String destPath;
+	private IFile manifestFile;
+	private Set<IResource> resourcesToReOpen;
 
-    public IStatus run(final IProgressMonitor monitor){
-        status = Status.OK_STATUS ;
+	public IStatus run(final IProgressMonitor monitor) {
+		status = Status.OK_STATUS;
 
-        Assert.isNotNull(destPath) ;
-        Assert.isNotNull(resources) ;
+		Assert.isNotNull(destPath);
+		Assert.isNotNull(resources);
 
-        final File destFile = new File(destPath);
-        if(destFile.exists()){
-            if(FileActionDialog.overwriteQuestion(destFile.getName())){
-                PlatformUtil.delete(destFile, monitor) ;
-            }else{
-                status = Status.CANCEL_STATUS ;
-                return status ;
-            }
-        }
+		final File destFile = new File(destPath);
+		if (destFile.exists()) {
+			if (FileActionDialog.overwriteQuestion(destFile.getName())) {
+				PlatformUtil.delete(destFile, monitor);
+			} else {
+				status = Status.CANCEL_STATUS;
+				return status;
+			}
+		}
 
-        if(!destFile.getParentFile().exists()){
-            destFile.getParentFile().mkdirs() ;
-        }
+		if (!destFile.getParentFile().exists()) {
+			destFile.getParentFile().mkdirs();
+		}
 
+		status = addManifest();
+		if (!status.isOK()) {
+			return status;
+		}
 
-        status = addManifest();
-        if(!status.isOK()){
-            return status;
-        }
+		final ArchiveFileExportOperation op = new ArchiveFileExportOperation(null, new ArrayList<IResource>(resources),
+				destPath);
+		op.setCreateLeadupStructure(true);
+		op.setUseCompression(true);
+		op.setUseTarFormat(false);
+		try {
+			op.run(monitor);
+			if (manifestFile != null && manifestFile.exists()) {
+				manifestFile.delete(true, Repository.NULL_PROGRESS_MONITOR);
+			}
+		} catch (final CoreException | InterruptedException | InvocationTargetException e) {
+			status = new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, e.getMessage(), e);
+			return status;
+		}
 
-        final ArchiveFileExportOperation op = new ArchiveFileExportOperation(null, new ArrayList<IResource>(resources),destPath) ;
-        op.setCreateLeadupStructure(true);
-        op.setUseCompression(true);
-        op.setUseTarFormat(false);
-        try {
-            op.run(monitor) ;
-            if(manifestFile != null && manifestFile.exists()){
-                manifestFile.delete(true, Repository.NULL_PROGRESS_MONITOR);
-            }
-        } catch (final InvocationTargetException e) {
-            BonitaStudioLog.error(e) ;
-        } catch (final InterruptedException e) {
-            BonitaStudioLog.error(e) ;
-        } catch (final CoreException e) {
-            status = new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID,  e.getMessage(),e);
-            return status;
-        }
+		status = op.getStatus();
+		return status;
+	}
 
-        status = op.getStatus();
-        return  status;
-    }
+	protected IStatus addManifest() {
+		manifestFile = RepositoryManager.getInstance().getCurrentRepository().getProject()
+				.getFile(BOS_ARCHIVE_MANIFEST);
+		if (manifestFile.exists()) {
+			try {
+				manifestFile.delete(true, Repository.NULL_PROGRESS_MONITOR);
+			} catch (final CoreException e) {
+				BonitaStudioLog.error(e);
+				return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, e.getMessage(), e);
+			}
+		}
+		final Properties prop = new Properties();
+		prop.put(VERSION, ProductVersion.CURRENT_VERSION);
 
-    protected IStatus addManifest() {
-        manifestFile = RepositoryManager.getInstance().getCurrentRepository().getProject().getFile(BOS_ARCHIVE_MANIFEST);
-        if(manifestFile.exists()){
-            try {
-                manifestFile.delete(true,  Repository.NULL_PROGRESS_MONITOR);
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e);
-                return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID,  e.getMessage(),e);
-            }
-        }
-        final Properties prop = new Properties();
-        prop.put(VERSION, ProductVersion.CURRENT_VERSION);
+		if (resourcesToReOpen != null && !resourcesToReOpen.isEmpty()) {
+			final StringBuilder sb = new StringBuilder();
+			for (final IResource r : resourcesToReOpen) {
+				sb.append(r.getName());
+				sb.append(",");
+			}
+			if (sb.length() > 0) {
+				sb.delete(sb.length() - 1, sb.length());
+			}
+			prop.put(TO_OPEN, sb.toString());
+		} else {
+			prop.put(TO_OPEN, NONE);
+		}
 
-        if(resourcesToReOpen != null &&!resourcesToReOpen.isEmpty()){
-            final StringBuilder sb = new StringBuilder();
-            for(final IResource r : resourcesToReOpen){
-                sb.append(r.getName());
-                sb.append(",");
-            }
-            if(sb.length() > 0){
-                sb.delete(sb.length()-1, sb.length());
-            }
-            prop.put(TO_OPEN, sb.toString());
-        }else{
-            prop.put(TO_OPEN, NONE);
-        }
+		final Writer w = new CharArrayWriter();
+		try {
+			prop.store(w, BOS_MANIFEST_COMMENT);
+		} catch (final IOException e) {
+			BonitaStudioLog.error(e);
+			return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, e.getMessage(), e);
+		}
 
-        final Writer w = new CharArrayWriter();
-        try {
-            prop.store(w, BOS_MANIFEST_COMMENT);
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e);
-            return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID,  e.getMessage(),e);
-        }
+		final InputStream source = new ByteArrayInputStream(w.toString().getBytes());
+		try {
+			manifestFile.create(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+		} catch (final CoreException e1) {
+			return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, e1.getMessage(), e1);
+		}
+		resources.add(manifestFile);
+		return Status.OK_STATUS;
+	}
 
-        final InputStream source = new ByteArrayInputStream(w.toString().getBytes());
-        try {
-            manifestFile.create(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
-        } catch (final CoreException e1) {
-            return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID,  e1.getMessage(),e1);
-        }
-        resources.add(manifestFile);
-        return Status.OK_STATUS ;
-    }
+	public IStatus getStatus() {
+		return status;
+	}
 
-    public IStatus getStatus(){
-        return status ;
-    }
+	public void setResources(final Set<IResource> resourcesToExport) {
+		resources = resourcesToExport;
+	}
 
-    public void setResources(final Set<IResource> resourcesToExport){
-        resources = resourcesToExport ;
-    }
+	public void setResourcesToOpen(final Set<IResource> resourcesToReopenAtImport) {
+		resourcesToReOpen = resourcesToReopenAtImport;
+	}
 
-    public void setResourcesToOpen(final Set<IResource> resourcesToReopenAtImport){
-        resourcesToReOpen = resourcesToReopenAtImport ;
-    }
-
-    public void setDestinationPath(final String destPath){
-        this.destPath = destPath ;
-    }
+	public void setDestinationPath(final String destPath) {
+		this.destPath = destPath;
+	}
 }
