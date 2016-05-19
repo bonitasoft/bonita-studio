@@ -532,7 +532,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
         //create graphic process
         final BPMNShape processShape = createBPMNShape(childPart);
-        processShape.setBpmnElement(QName.valueOf(bpmnProcess.getId()));
+        processShape.setBpmnElement(QName.valueOf(participant.getId()));
         final IFigure bonitaPoolFigure = childPart.getFigure();
         final Rectangle bounds = getAbsoluteLabelBounds(bonitaPoolFigure);
         final Bounds laneBounds = DcFactory.eINSTANCE.createBounds();
