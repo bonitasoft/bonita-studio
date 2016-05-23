@@ -216,7 +216,7 @@ public class BPMNToProc extends ToProcProcessor {
             "structureRef",
             "errorRef",
             "escalationRef",
-            "definition",// check that it collapsed not with other
+            "definition", // check that it collapsed not with other
             "categoryValueRef", "incoming", "outgoing",
             "evaluatesToTypeRef", "initiatingParticipantRef",
             "implementationRef", "operationRef", "partitionElementRef",
@@ -672,12 +672,16 @@ public class BPMNToProc extends ToProcProcessor {
                     location.translate(0, -10);
                 }
                 final QName source = retrieveQNameOfSource(artifacts, textAnnotation);
-                sourceRefs.add(source.getLocalPart());
+                String localPart = null;
+                if (source != null) {
+                    localPart = source.getLocalPart();
+                    sourceRefs.add(localPart);
+                }
                 builder.addAnnotation(theText, location, size,
-                        source.getLocalPart());
-
+                        localPart);
             }
         }
+
         for (final TArtifact tArtifact : artifacts) {
             if (!(tArtifact instanceof TTextAnnotation)) {
                 if (!(tArtifact instanceof TAssociation && sourceRefs.contains(((TAssociation) tArtifact).getSourceRef().getLocalPart()))) {
@@ -994,12 +998,12 @@ public class BPMNToProc extends ToProcProcessor {
                 // bpmnProcessDiagrams.add((TProcess)dt);
                 // }
                 // }
-            }/*
-              * else { //noob guys don't specify to which bpmn element the bpmn
-              * plane is related, // in this case put them all in the stack and
-              * we will hope that there was not several bpmnplanes
-              * bpmnProcessDiagrams.add(bpmnPlane); }
-              */
+            } /*
+               * else { //noob guys don't specify to which bpmn element the bpmn
+               * plane is related, // in this case put them all in the stack and
+               * we will hope that there was not several bpmnplanes
+               * bpmnProcessDiagrams.add(bpmnPlane); }
+               */
         }
 
         if (bpmnProcessDiagrams.isEmpty()) {// add all bpmn plane that have no
@@ -1328,7 +1332,8 @@ public class BPMNToProc extends ToProcProcessor {
     private void processSubProcess(final TSubProcess bpmnSubProcess) throws ProcBuilderException {
         builder.addCallActivityTargetProcess(
                 "subProc_" + NamingUtils.convertToId(bpmnSubProcess
-                        .getId()), "1.0");
+                        .getId()),
+                "1.0");
 
         for (final TDataInputAssociation input : bpmnSubProcess
                 .getDataInputAssociation()) {
@@ -1382,14 +1387,14 @@ public class BPMNToProc extends ToProcProcessor {
                 final String assignmentFromValue = getAssignmentFromValue(assignment);
                 final String fromDataName = dataNameByItemDefinition
                         .get(assignmentFromValue) != null ? dataNameByItemDefinition
-                        .get(assignmentFromValue)
-                        : assignmentFromValue;
+                                .get(assignmentFromValue)
+                                : assignmentFromValue;
 
                 final String assignmentToValue = getAssignmentToValue(assignment);
                 final String toDataName = dataNameByItemDefinition
                         .get(assignmentToValue) != null ? dataNameByItemDefinition
-                        .get(assignmentToValue)
-                        : assignmentToValue;
+                                .get(assignmentToValue)
+                                : assignmentToValue;
 
                 builder.addCallActivityOutParameter(
                         fromDataName, toDataName);
@@ -1407,14 +1412,14 @@ public class BPMNToProc extends ToProcProcessor {
                 final String assignmentFromValue = getAssignmentFromValue(assignment);
                 final String fromDataName = dataNameByItemDefinition
                         .get(assignmentFromValue) != null ? dataNameByItemDefinition
-                        .get(assignmentFromValue)
-                        : assignmentFromValue;
+                                .get(assignmentFromValue)
+                                : assignmentFromValue;
 
                 final String assignmentToValue = getAssignmentToValue(assignment);
                 final String toDataName = dataNameByItemDefinition
                         .get(assignmentToValue) != null ? dataNameByItemDefinition
-                        .get(assignmentToValue)
-                        : assignmentToValue;
+                                .get(assignmentToValue)
+                                : assignmentToValue;
                 builder.addCallActivityInParameter(
                         fromDataName, toDataName);
             }
@@ -1454,7 +1459,7 @@ public class BPMNToProc extends ToProcProcessor {
 
     protected void processBonitaConnector(final String name, final String id,
             final TServiceTask tServiceTask, final String operationRefName)
-            throws ProcBuilderException {
+                    throws ProcBuilderException {
         final String connectorId = operationRefName.replaceFirst("Exec", "");
         final String version = "1.0.0";// FIXME where is stored version now??
         // Need to parse the filename of xsd
@@ -1913,7 +1918,7 @@ public class BPMNToProc extends ToProcProcessor {
 
     protected void createBonitaData(final TFlowElement flowElement,
             final boolean isMultiple, final QName itemDef, final boolean isTransient)
-            throws ProcBuilderException {
+                    throws ProcBuilderException {
         final TItemDefinition itemDefinition = getItemDefinition(itemDef);
         String id = null;
         DataType dataType = null;
