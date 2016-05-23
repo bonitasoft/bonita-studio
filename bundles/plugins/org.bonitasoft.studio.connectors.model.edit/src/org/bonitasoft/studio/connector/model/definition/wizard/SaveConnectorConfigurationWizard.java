@@ -54,8 +54,8 @@ public class SaveConnectorConfigurationWizard extends Wizard  {
      */
     @Override
     public boolean performFinish() {
-        IRepositoryFileStore fileStore =  configurationStore.createRepositoryFileStore(page.getConfName()+".connectorconfig") ;
-        ConnectorConfiguration savedConf = EcoreUtil.copy(currentConfiguraiton) ;
+        final IRepositoryFileStore fileStore =  configurationStore.createRepositoryFileStore(page.getConfName()+".connectorconfig") ;
+        final ConnectorConfiguration savedConf = EcoreUtil.copy(currentConfiguraiton) ;
         savedConf.setName(page.getConfName()) ;
         fileStore.save(savedConf) ;
         return true;

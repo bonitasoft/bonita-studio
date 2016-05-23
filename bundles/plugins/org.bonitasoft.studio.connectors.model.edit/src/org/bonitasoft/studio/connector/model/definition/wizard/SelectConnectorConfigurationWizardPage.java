@@ -85,7 +85,7 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
      */
     @Override
     public void createControl(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
+        final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 
         context = new EMFDataBindingContext() ;
@@ -102,7 +102,7 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
 
 
     protected void bindTree() {
-        IValidator selectionValidator = new IValidator() {
+        final IValidator selectionValidator = new IValidator() {
             @Override
             public IStatus validate(Object value) {
                 if(value == null || value instanceof ConnectorParameter){
@@ -111,7 +111,7 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
                 return Status.OK_STATUS;
             }
         } ;
-        UpdateValueStrategy selectionStrategy = new UpdateValueStrategy() ;
+        final UpdateValueStrategy selectionStrategy = new UpdateValueStrategy() ;
         selectionStrategy.setBeforeSetValidator(selectionValidator) ;
         context.bindValue(ViewersObservables.observeSingleSelection(configurationsTree.getViewer()), PojoProperties.value(SelectConnectorConfigurationWizardPage.class, "selectedConfiguration").observe(this),selectionStrategy,null)  ;
     }
@@ -125,10 +125,10 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
 
             @Override
             public void doubleClick(DoubleClickEvent event) {
-                ITreeSelection selection = (ITreeSelection) event.getSelection();
-                Object item = selection.getFirstElement();
+                final ITreeSelection selection = (ITreeSelection) event.getSelection();
+                final Object item = selection.getFirstElement();
                 if (configurationsTree.getViewer().isExpandable(item)) {
-                    boolean currentState = configurationsTree.getViewer().getExpandedState(item);
+                    final boolean currentState = configurationsTree.getViewer().getExpandedState(item);
                     configurationsTree.getViewer().setExpandedState(item, !currentState);
                 } else {
                     if (canFlipToNextPage()) {
@@ -151,11 +151,13 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
         });
 
         configurationsTree.getViewer().setInput(new Object()) ;
-        configurationsTree.setFocus() ;
+
         //Avoid bug with filtered tree on linux
         if(configurationsTree.getViewer().getTree().getItemCount() > 0){
         	selectedConfiguration = (ConnectorConfiguration)configurationsTree.getViewer().getTree().getItem(0).getData();
+            configurationsTree.getViewer().setSelection(new StructuredSelection(selectedConfiguration));
         }
+        configurationsTree.setFocus();
         createRemoveButton(composite);
 
     }
@@ -179,11 +181,11 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if(!configurationsTree.getViewer().getSelection().isEmpty()){
-                    Object selection = ((StructuredSelection)configurationsTree.getViewer().getSelection()).getFirstElement() ;
+                    final Object selection = ((StructuredSelection)configurationsTree.getViewer().getSelection()).getFirstElement() ;
                     if(selection instanceof ConnectorConfiguration){
-                        Resource r = ((ConnectorConfiguration)selection).eResource() ;
-                        String fileName =  URI.decode(r.getURI().lastSegment()) ;
-                        IRepositoryFileStore artifact = configurationStore.getChild(fileName) ;
+                        final Resource r = ((ConnectorConfiguration)selection).eResource() ;
+                        final String fileName =  URI.decode(r.getURI().lastSegment()) ;
+                        final IRepositoryFileStore artifact = configurationStore.getChild(fileName) ;
                         if(artifact != null){
                             if(FileActionDialog.confirmDeletionQuestion(fileName)){
                                 artifact.delete();
@@ -202,7 +204,7 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
     protected void updateButton() {
         if(removeButton != null && !removeButton.isDisposed()){
             if(!configurationsTree.getViewer().getSelection().isEmpty()){
-                Object selection = ((StructuredSelection)configurationsTree.getViewer().getSelection()).getFirstElement() ;
+                final Object selection = ((StructuredSelection)configurationsTree.getViewer().getSelection()).getFirstElement() ;
                 removeButton.setEnabled(selection instanceof ConnectorConfiguration);
             }else{
                 removeButton.setEnabled(false);

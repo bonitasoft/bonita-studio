@@ -146,6 +146,10 @@ public class Messages extends NLS {
 	public static String confirmConnectorDefEditionTitle;
 	public static String confirmConnectorDefEditionMsg;
 	public static String doNotDisplayAgain;
+    public static String loadConfigurationWarningMsg;
+    public static String loadConfigurationWarningTitle;
+    public static String loadConfigurationSuccessMsg;
+    public static String missingDependency;
 
     /**
      * @param event
