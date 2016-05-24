@@ -19,56 +19,60 @@ package org.bonitasoft.studio.connector.model.definition.wizard;
 
 import static org.bonitasoft.studio.common.jface.SWTBotConstants.SELECTION_CONNECTOR_CONFIGURATION_TREE_ID;
 import static org.bonitasoft.studio.common.jface.SWTBotConstants.SWTBOT_WIDGET_ID_KEY;
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.jface.wizard.WizardSelectionPage;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.dialogs.FilteredTree;
-import org.eclipse.ui.dialogs.PatternFilter;
 /**
  * @author Romain Bioteau
  *
  */
-public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage {
+public class SelectConnectorConfigurationWizardPage extends WizardPage {
 
-    protected FilteredTree configurationsTree;
+    protected TreeViewer configurationViewers;
     protected Button removeButton;
     protected final ConnectorConfiguration configuration;
     private ConnectorConfiguration selectedConfiguration ;
     protected EMFDataBindingContext context;
     private WizardPageSupport pageSupport;
     protected final IRepositoryStore<? extends IRepositoryFileStore> configurationStore;
+    private final IDefinitionRepositoryStore defStore;
 
-    public SelectConnectorConfigurationWizardPage(ConnectorConfiguration configuration, IRepositoryStore<? extends IRepositoryFileStore> configurationStore) {
+    public SelectConnectorConfigurationWizardPage(ConnectorConfiguration configuration, IRepositoryStore<? extends IRepositoryFileStore> configurationStore,
+            IDefinitionRepositoryStore defStore) {
         super(SelectConnectorConfigurationWizardPage.class.getName());
+        this.defStore = defStore;
         setTitle(Messages.selectConfigurationPageName);
         setDescription(Messages.selectConfigurationPageDesc);
         this.configuration = configuration ;
@@ -87,49 +91,30 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
     public void createControl(Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
-
         context = new EMFDataBindingContext() ;
-
         doCreateControl(composite) ;
-
-
-        bindTree();
-
         pageSupport = WizardPageSupport.create(this,context) ;
-
         setControl(composite);
     }
 
 
-    protected void bindTree() {
-        final IValidator selectionValidator = new IValidator() {
-            @Override
-            public IStatus validate(Object value) {
-                if(value == null || value instanceof ConnectorParameter){
-                    return ValidationStatus.error(Messages.selectAConnectorConfDefWarning);
-                }
-                return Status.OK_STATUS;
-            }
-        } ;
-        final UpdateValueStrategy selectionStrategy = new UpdateValueStrategy() ;
-        selectionStrategy.setBeforeSetValidator(selectionValidator) ;
-        context.bindValue(ViewersObservables.observeSingleSelection(configurationsTree.getViewer()), PojoProperties.value(SelectConnectorConfigurationWizardPage.class, "selectedConfiguration").observe(this),selectionStrategy,null)  ;
-    }
 
     protected void doCreateControl(Composite composite) {
-        configurationsTree = new FilteredTree(composite, SWT.SINGLE | SWT.BORDER, new PatternFilter(), true);
-        configurationsTree.getViewer().getTree().setData(SWTBOT_WIDGET_ID_KEY, SELECTION_CONNECTOR_CONFIGURATION_TREE_ID);
-        configurationsTree.getViewer().setContentProvider(new ConfigurationsContentProvider(configuration.getDefinitionId(),configuration.getVersion(),configurationStore));
-        configurationsTree.getViewer().setLabelProvider(new ConnectorConfiguraitonLabelProvider()) ;
-        configurationsTree.getViewer().addDoubleClickListener(new IDoubleClickListener() {
+        configurationViewers = new TreeViewer(composite, SWT.SINGLE | SWT.BORDER);
+        configurationViewers.getTree().setData(SWTBOT_WIDGET_ID_KEY, SELECTION_CONNECTOR_CONFIGURATION_TREE_ID);
+        configurationViewers
+                .setContentProvider(new ConfigurationsContentProvider(configuration.getDefinitionId(), configuration.getVersion(), configurationStore));
+        configurationViewers.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        configurationViewers.setLabelProvider(new ConnectorConfiguraitonLabelProvider(defStore));
+        configurationViewers.addDoubleClickListener(new IDoubleClickListener() {
 
             @Override
             public void doubleClick(DoubleClickEvent event) {
                 final ITreeSelection selection = (ITreeSelection) event.getSelection();
                 final Object item = selection.getFirstElement();
-                if (configurationsTree.getViewer().isExpandable(item)) {
-                    final boolean currentState = configurationsTree.getViewer().getExpandedState(item);
-                    configurationsTree.getViewer().setExpandedState(item, !currentState);
+                if (configurationViewers.isExpandable(item)) {
+                    final boolean currentState = configurationViewers.getExpandedState(item);
+                    configurationViewers.setExpandedState(item, !currentState);
                 } else {
                     if (canFlipToNextPage()) {
                         getContainer().showPage(getNextPage());
@@ -142,22 +127,38 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
             }
         });
 
-        configurationsTree.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+        configurationViewers.setInput(new Object());
+
+        final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(configurationViewers);
+        context.bindValue(observeSingleSelection,
+                PojoProperties.value(SelectConnectorConfigurationWizardPage.class, "selectedConfiguration").observe(this),
+                updateValueStrategy().withValidator(new IValidator() {
+
+                    @Override
+                    public IStatus validate(Object value) {
+                        if (value == null || value instanceof ConnectorParameter) {
+                            return ValidationStatus.error(Messages.selectAConnectorConfDefWarning);
+                        }
+                        return ValidationStatus.ok();
+                    }
+                }).create(), null);
+
+        observeSingleSelection.addValueChangeListener(new IValueChangeListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void handleValueChange(ValueChangeEvent event) {
                 updateButton();
             }
         });
 
-        configurationsTree.getViewer().setInput(new Object()) ;
 
-        //Avoid bug with filtered tree on linux
-        if(configurationsTree.getViewer().getTree().getItemCount() > 0){
-        	selectedConfiguration = (ConnectorConfiguration)configurationsTree.getViewer().getTree().getItem(0).getData();
-            configurationsTree.getViewer().setSelection(new StructuredSelection(selectedConfiguration));
-        }
-        configurationsTree.setFocus();
+
+        //        //Avoid bug with filtered tree on linux
+        //        if(configurationsTree.getViewer().getTree().getItemCount() > 0){
+        //        	selectedConfiguration = (ConnectorConfiguration)configurationsTree.getViewer().getTree().getItem(0).getData();
+        //            configurationsTree.getViewer().setSelection(new StructuredSelection(selectedConfiguration));
+        //        }
+
         createRemoveButton(composite);
 
     }
@@ -180,8 +181,8 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if(!configurationsTree.getViewer().getSelection().isEmpty()){
-                    final Object selection = ((StructuredSelection)configurationsTree.getViewer().getSelection()).getFirstElement() ;
+                if (!configurationViewers.getSelection().isEmpty()) {
+                    final Object selection = ((StructuredSelection) configurationViewers.getSelection()).getFirstElement();
                     if(selection instanceof ConnectorConfiguration){
                         final Resource r = ((ConnectorConfiguration)selection).eResource() ;
                         final String fileName =  URI.decode(r.getURI().lastSegment()) ;
@@ -191,8 +192,7 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
                                 artifact.delete();
                             }
                         }
-
-                        configurationsTree.getViewer().setInput(new Object());
+                        configurationViewers.setInput(new Object());
                     }
                 }
 
@@ -203,8 +203,8 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
 
     protected void updateButton() {
         if(removeButton != null && !removeButton.isDisposed()){
-            if(!configurationsTree.getViewer().getSelection().isEmpty()){
-                final Object selection = ((StructuredSelection)configurationsTree.getViewer().getSelection()).getFirstElement() ;
+            if (!configurationViewers.getSelection().isEmpty()) {
+                final Object selection = ((StructuredSelection) configurationViewers.getSelection()).getFirstElement();
                 removeButton.setEnabled(selection instanceof ConnectorConfiguration);
             }else{
                 removeButton.setEnabled(false);

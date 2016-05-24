@@ -16,11 +16,10 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
+import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
@@ -33,16 +32,22 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ConnectorConfiguraitonLabelProvider extends LabelProvider {
 
+    private final IDefinitionRepositoryStore store;
+
+    public ConnectorConfiguraitonLabelProvider(IDefinitionRepositoryStore store) {
+        this.store = store;
+    }
+
     @Override
     public String getText(Object selection) {
         if (selection instanceof ConnectorConfiguration) {
-            ConnectorConfiguration config = (ConnectorConfiguration) selection;
+            final ConnectorConfiguration config = (ConnectorConfiguration) selection;
             return config.getName();
         }
         if (selection instanceof ConnectorParameter) {
-            ConnectorParameter param = (ConnectorParameter) selection;
+            final ConnectorParameter param = (ConnectorParameter) selection;
             if(param.getExpression() instanceof Expression){
-                String value = ((Expression)param.getExpression()).getContent() ;
+                final String value = ((Expression)param.getExpression()).getContent() ;
                 return param.getKey() + "=" + value;
             }else{
                 return param.getKey() ;
@@ -57,8 +62,9 @@ public class ConnectorConfiguraitonLabelProvider extends LabelProvider {
      */
     @Override
     public Image getImage(Object element) {
-        if(element instanceof ConnectorParameter){
-            return Pics.getImage(PicsConstants.dot);
+        if (element instanceof ConnectorConfiguration) {
+            return store.getResourceProvider().getDefinitionIcon(
+                    store.getDefinition(((ConnectorConfiguration) element).getDefinitionId(), ((ConnectorConfiguration) element).getVersion()));
         }
         if(element instanceof ConnectorParameter) {
             return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);

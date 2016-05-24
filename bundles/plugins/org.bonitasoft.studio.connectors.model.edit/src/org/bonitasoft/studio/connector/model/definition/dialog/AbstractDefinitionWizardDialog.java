@@ -168,7 +168,8 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
             if (saveConfigurationListener != null) {
                 saveItem.removeListener(SWT.Selection, saveConfigurationListener);
             }
-            saveConfigurationListener = new SaveConfigurationListener(this, connectorConfPage.getConfiguration(), configurationStore);
+            saveConfigurationListener = new SaveConfigurationListener(this, connectorConfPage.getConfiguration(), configurationStore,
+                    definitionRepositoryStore);
             saveItem.addListener(SWT.Selection, saveConfigurationListener);
 
             if (implStore != null && testItem != null) {

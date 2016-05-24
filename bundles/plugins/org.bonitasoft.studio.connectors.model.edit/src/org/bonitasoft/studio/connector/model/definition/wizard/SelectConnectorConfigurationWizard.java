@@ -70,7 +70,7 @@ public class SelectConnectorConfigurationWizard extends Wizard {
 
     @Override
     public void addPages() {
-        page = new SelectConnectorConfigurationWizardPage(currentConfiguraiton, configurationStore);
+        page = new SelectConnectorConfigurationWizardPage(currentConfiguraiton, configurationStore, definitionRepositoryStore);
         addPage(page);
     }
 

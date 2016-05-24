@@ -18,6 +18,7 @@ package org.bonitasoft.studio.connector.model.definition.dialog;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.wizard.SaveConnectorConfigurationWizard;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.eclipse.jface.dialogs.Dialog;
@@ -36,9 +37,13 @@ public class SaveConfigurationListener implements Listener {
     private final IRepositoryStore<? extends IRepositoryFileStore> store;
     private final ConnectorConfiguration configuration;
     private final WizardDialog dialog;
-    public SaveConfigurationListener(WizardDialog dialog,ConnectorConfiguration configuration,IRepositoryStore<? extends IRepositoryFileStore> configurationStore) {
+    private final IDefinitionRepositoryStore definitionRepositoryStore;
+
+    public SaveConfigurationListener(WizardDialog dialog, ConnectorConfiguration configuration,
+            IRepositoryStore<? extends IRepositoryFileStore> configurationStore, IDefinitionRepositoryStore definitionRepositoryStore) {
         store = configurationStore ;
         this.configuration = configuration ;
+        this.definitionRepositoryStore = definitionRepositoryStore;
         this.dialog = dialog ;
     }
 
@@ -47,7 +52,8 @@ public class SaveConfigurationListener implements Listener {
      */
     @Override
     public void handleEvent(Event event) {
-        WizardDialog saveDialog = new WizardDialog(Display.getDefault().getActiveShell(), new SaveConnectorConfigurationWizard(configuration,store)) ;
+        final WizardDialog saveDialog = new WizardDialog(Display.getDefault().getActiveShell(),
+                new SaveConnectorConfigurationWizard(configuration, store, definitionRepositoryStore));
         if(saveDialog.open() == Dialog.OK){
             dialog.updateButtons() ;
         }
