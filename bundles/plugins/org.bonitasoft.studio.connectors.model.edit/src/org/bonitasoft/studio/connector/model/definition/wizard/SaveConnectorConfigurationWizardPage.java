@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connector.model.definition.wizard;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -43,8 +44,9 @@ public class SaveConnectorConfigurationWizardPage extends SelectConnectorConfigu
 
     private String confName;
 
-    public SaveConnectorConfigurationWizardPage(ConnectorConfiguration configuration, IRepositoryStore<? extends IRepositoryFileStore> configurationStore) {
-        super(configuration,configurationStore);
+    public SaveConnectorConfigurationWizardPage(ConnectorConfiguration configuration, IRepositoryStore<? extends IRepositoryFileStore> configurationStore,
+            IDefinitionRepositoryStore defStore) {
+        super(configuration, configurationStore, defStore);
         setTitle(Messages.saveConfigurationWizardPageTitle);
         setDescription(Messages.bind(Messages.saveConfigurationWizardPageDesc,configuration.getDefinitionId()+ " ("+configuration.getVersion()+")"));
     }
@@ -64,7 +66,7 @@ public class SaveConnectorConfigurationWizardPage extends SelectConnectorConfigu
         final Text nameText = new Text(saveComposite, SWT.BORDER) ;
         nameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
-        UpdateValueStrategy targetToModel = new UpdateValueStrategy() ;
+        final UpdateValueStrategy targetToModel = new UpdateValueStrategy() ;
         targetToModel.setBeforeSetValidator(new IValidator() {
 
             @Override
@@ -83,9 +85,13 @@ public class SaveConnectorConfigurationWizardPage extends SelectConnectorConfigu
 
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connector.model.definition.wizard.SelectConnectorConfigurationWizardPage#targetUpdateValueStrategy()
+     */
     @Override
-    protected void bindTree() {
-
+    protected UpdateValueStrategy targetUpdateValueStrategy() {
+        return null;
     }
 
 

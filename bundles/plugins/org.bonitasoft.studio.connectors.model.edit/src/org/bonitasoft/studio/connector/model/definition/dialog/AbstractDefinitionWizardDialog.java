@@ -120,7 +120,8 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
                 if (page instanceof AbstractConnectorConfigurationWizardPage) {
                     final AbstractConnectorConfigurationWizardPage connectorConfPage = (AbstractConnectorConfigurationWizardPage) page;
                     final ConnectorConfiguration connectorConfigurationToLoad = connectorConfPage.getConfiguration();
-                    final SelectConnectorConfigurationWizard wizard = new SelectConnectorConfigurationWizard(connectorConfigurationToLoad, configurationStore);
+                    final SelectConnectorConfigurationWizard wizard = new SelectConnectorConfigurationWizard(connectorConfigurationToLoad, configurationStore,
+                            definitionRepositoryStore);
                     final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), wizard);
                     if (dialog.open() == Dialog.OK) {
                         final IConnectorDefinitionContainer connectorWizard = (IConnectorDefinitionContainer) getWizard();
@@ -167,7 +168,8 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
             if (saveConfigurationListener != null) {
                 saveItem.removeListener(SWT.Selection, saveConfigurationListener);
             }
-            saveConfigurationListener = new SaveConfigurationListener(this, connectorConfPage.getConfiguration(), configurationStore);
+            saveConfigurationListener = new SaveConfigurationListener(this, connectorConfPage.getConfiguration(), configurationStore,
+                    definitionRepositoryStore);
             saveItem.addListener(SWT.Selection, saveConfigurationListener);
 
             if (implStore != null && testItem != null) {

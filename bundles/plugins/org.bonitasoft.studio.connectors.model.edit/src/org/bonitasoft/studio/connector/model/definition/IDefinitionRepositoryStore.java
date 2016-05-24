@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connector.model.definition;
 import java.util.Collection;
 import java.util.List;
 
+import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 
 /**
  * @author Romain Bioteau
@@ -31,5 +32,7 @@ public interface IDefinitionRepositoryStore {
     ConnectorDefinition getDefinition(String id, String version) ;
 
     ConnectorDefinition getDefinition(String id, String version, Collection<ConnectorDefinition> existingDefinitions);
+
+    DefinitionResourceProvider getResourceProvider();
 
 }

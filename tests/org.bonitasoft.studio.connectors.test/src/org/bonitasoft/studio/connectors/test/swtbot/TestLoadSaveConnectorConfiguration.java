@@ -135,6 +135,9 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.OK_LABEL)));
+        bot.button(IDialogConstants.OK_LABEL).click();
+
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)));
         bot.button(IDialogConstants.NEXT_LABEL).click();
         assertEquals("text field should be completed with hello world", bot.textWithLabel("text").getText(), "hello world");

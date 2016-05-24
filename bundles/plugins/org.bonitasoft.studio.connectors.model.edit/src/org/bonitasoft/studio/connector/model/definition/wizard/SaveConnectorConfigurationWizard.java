@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connector.model.definition.wizard;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -34,17 +35,20 @@ public class SaveConnectorConfigurationWizard extends Wizard  {
     private final ConnectorConfiguration currentConfiguraiton;
     private SaveConnectorConfigurationWizardPage page;
     private final IRepositoryStore<? extends IRepositoryFileStore> configurationStore;
+    private final IDefinitionRepositoryStore definitionRepositoryStore;
 
-    public SaveConnectorConfigurationWizard(ConnectorConfiguration currentConfiguraiton,IRepositoryStore<? extends IRepositoryFileStore> configurationStore) {
+    public SaveConnectorConfigurationWizard(ConnectorConfiguration currentConfiguraiton, IRepositoryStore<? extends IRepositoryFileStore> configurationStore,
+            IDefinitionRepositoryStore definitionRepositoryStore) {
         setDefaultPageImageDescriptor(Pics.getWizban()) ;
         this.currentConfiguraiton = currentConfiguraiton ;
         this.configurationStore = configurationStore ;
+        this.definitionRepositoryStore = definitionRepositoryStore;
     }
 
 
     @Override
     public void addPages() {
-        page = new SaveConnectorConfigurationWizardPage(currentConfiguraiton,configurationStore);
+        page = new SaveConnectorConfigurationWizardPage(currentConfiguraiton, configurationStore, definitionRepositoryStore);
         addPage(page);
     }
 
@@ -54,8 +58,8 @@ public class SaveConnectorConfigurationWizard extends Wizard  {
      */
     @Override
     public boolean performFinish() {
-        IRepositoryFileStore fileStore =  configurationStore.createRepositoryFileStore(page.getConfName()+".connectorconfig") ;
-        ConnectorConfiguration savedConf = EcoreUtil.copy(currentConfiguraiton) ;
+        final IRepositoryFileStore fileStore =  configurationStore.createRepositoryFileStore(page.getConfName()+".connectorconfig") ;
+        final ConnectorConfiguration savedConf = EcoreUtil.copy(currentConfiguraiton) ;
         savedConf.setName(page.getConfName()) ;
         fileStore.save(savedConf) ;
         return true;
