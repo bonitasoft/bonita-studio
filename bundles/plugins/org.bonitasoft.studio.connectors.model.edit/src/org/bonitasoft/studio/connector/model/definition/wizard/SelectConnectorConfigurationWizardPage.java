@@ -28,6 +28,7 @@ import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositorySto
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -132,16 +133,7 @@ public class SelectConnectorConfigurationWizardPage extends WizardPage {
         final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(configurationViewers);
         context.bindValue(observeSingleSelection,
                 PojoProperties.value(SelectConnectorConfigurationWizardPage.class, "selectedConfiguration").observe(this),
-                updateValueStrategy().withValidator(new IValidator() {
-
-                    @Override
-                    public IStatus validate(Object value) {
-                        if (value == null || value instanceof ConnectorParameter) {
-                            return ValidationStatus.error(Messages.selectAConnectorConfDefWarning);
-                        }
-                        return ValidationStatus.ok();
-                    }
-                }).create(), null);
+                targetUpdateValueStrategy(), null);
 
         observeSingleSelection.addValueChangeListener(new IValueChangeListener() {
 
@@ -161,6 +153,20 @@ public class SelectConnectorConfigurationWizardPage extends WizardPage {
 
         createRemoveButton(composite);
 
+    }
+
+
+    protected UpdateValueStrategy targetUpdateValueStrategy() {
+        return updateValueStrategy().withValidator(new IValidator() {
+
+            @Override
+            public IStatus validate(Object value) {
+                if (value == null || value instanceof ConnectorParameter) {
+                    return ValidationStatus.error(Messages.selectAConnectorConfDefWarning);
+                }
+                return ValidationStatus.ok();
+            }
+        }).create();
     }
 
 

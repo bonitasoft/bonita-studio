@@ -85,6 +85,15 @@ public class SaveConnectorConfigurationWizardPage extends SelectConnectorConfigu
 
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connector.model.definition.wizard.SelectConnectorConfigurationWizardPage#targetUpdateValueStrategy()
+     */
+    @Override
+    protected UpdateValueStrategy targetUpdateValueStrategy() {
+        return null;
+    }
+
 
     public String getConfName() {
         return confName;
