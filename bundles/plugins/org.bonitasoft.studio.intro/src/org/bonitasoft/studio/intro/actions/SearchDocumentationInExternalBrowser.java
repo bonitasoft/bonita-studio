@@ -24,6 +24,8 @@ import java.net.URLEncoder;
 import java.util.Properties;
 
 import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
+import org.bonitasoft.studio.common.ModelVersion;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
@@ -34,7 +36,7 @@ import org.eclipse.ui.intro.config.IIntroAction;
  */
 public class SearchDocumentationInExternalBrowser implements IIntroAction {
 
-	private final static String SEARCH_DOC_URL = "http://documentation.bonitasoft.com/search/site/";
+	private final static String SEARCH_DOC_URL = String.format("http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=668&amp;bos_redirect_product=bos&amp;bos_redirect_major_version=%s&amp;bos_redirect_minor_version=0",ProductVersion.CURRENT_VERSION);
 
 	@Override
 	public void run(final IIntroSite arg0, final Properties params) {
@@ -58,7 +60,7 @@ public class SearchDocumentationInExternalBrowser implements IIntroAction {
 		} catch (final UnsupportedEncodingException e) {
 			BonitaStudioLog.error(e);
 		}
-		return SEARCH_DOC_URL + searchField;
+		return SEARCH_DOC_URL + "?start=0&pageSize=10&searchRequest="+searchField;
 	}
 
 }
