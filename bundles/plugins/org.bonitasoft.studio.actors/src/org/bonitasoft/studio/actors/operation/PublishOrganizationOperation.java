@@ -117,6 +117,7 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
         final Map<String, Object> options = new HashMap<String, Object>();
         options.put(XMLResource.OPTION_ENCODING, "UTF-8");
         options.put(XMLResource.OPTION_XML_VERSION, "1.0");
+        options.put(XMLResource.OPTION_KEEP_DEFAULT_CONTENT, Boolean.TRUE);
         return processor.saveToString(resource, options);
     }
 
