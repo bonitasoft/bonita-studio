@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.test.suite;
 
@@ -51,6 +48,7 @@ import org.bonitasoft.studio.repository.test.TestRepositoryLocation;
 import org.bonitasoft.studio.simulation.tests.TestSimulationExporter;
 import org.bonitasoft.studio.simulation.tests.TestSimulationLoadProfileRepository;
 import org.bonitasoft.studio.tests.CloseAllEditors;
+import org.bonitasoft.studio.tests.EngineConfigurationIT;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.TestBugSave;
 import org.bonitasoft.studio.tests.TestFullScenario;
@@ -84,7 +82,6 @@ import org.junit.runners.Suite;
 
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(BonitaJunit4TestSuite.class)
 @Suite.SuiteClasses({
@@ -92,6 +89,7 @@ import org.junit.runners.Suite;
         TestMenus.class,
         TestExtensionProject.class,
         TestFunctionRepository.class,
+        EngineConfigurationIT.class,
         TestFullScenario.class,
         TestSubprocess.class,
         TestConditions.class,
@@ -106,51 +104,53 @@ import org.junit.runners.Suite;
         TestSimulationLoadProfileRepository.class,
         TestSimulationExporter.class,
         TestFileWidgetMigration.class,
-    TestBugSave.class,
-    TestImportExtensionPoint.class,
-    ProcBuilderTests.class,
-    TestImportXPDL.class,
-    TestImportRepository.class,
-    TestImportBPMN2.class,
-    TestJBPMImport.class,
-    TestAddJar.class,
-    TestJavaDoc.class,
-    TestOperationHistory.class,
-    TestDecisionTableToGroovy.class,
-    TestSubprocessEventExport.class,
-    TestBonitaExportModel.class,
-    TestRepositoryLocation.class,
-    TestShowEngineLog.class,
-    TestAutoLogin.class,
+        TestBugSave.class,
+        TestImportExtensionPoint.class,
+        ProcBuilderTests.class,
+        TestImportXPDL.class,
+        TestImportRepository.class,
+        TestImportBPMN2.class,
+        TestJBPMImport.class,
+        TestAddJar.class,
+        TestJavaDoc.class,
+        TestOperationHistory.class,
+        TestDecisionTableToGroovy.class,
+        TestSubprocessEventExport.class,
+        TestBonitaExportModel.class,
+        TestRepositoryLocation.class,
+        TestShowEngineLog.class,
+        TestAutoLogin.class,
         DriverAssociationContributionIT.class,
-    CloseAllEditors.class
+        CloseAllEditors.class
 })
 public class AllTests {
 
     @BeforeClass
     public static void setUp() {
-        BonitaStudioLog.info("AllTests","org.bonitasoft.studio.tests");
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
+        BonitaStudioLog.info("AllTests", "org.bonitasoft.studio.tests");
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE,
+                BonitaPreferenceConstants.INTERNAL_BROWSER);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
-        WebBrowserUIPlugin.getInstance().getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
+        WebBrowserUIPlugin.getInstance().getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE,
+                BonitaPreferenceConstants.INTERNAL_BROWSER);
         FileActionDialog.setDisablePopup(true);
-        ProfilePlugin.getDefault().getPreferenceStore().setValue(BonitaProfilesManager.SHOW_SELECT_PROFILE,false) ;
+        ProfilePlugin.getDefault().getPreferenceStore().setValue(BonitaProfilesManager.SHOW_SELECT_PROFILE, false);
     }
 
-    private static Object [] oldObjects = new Object [0];
-    private static Error [] oldErrors = new Error [0];
-    private static Object [] objects = new Object [0];
-    private static Error [] errors = new Error [0];
+    private static Object[] oldObjects = new Object[0];
+    private static Error[] oldErrors = new Error[0];
+    private static Object[] objects = new Object[0];
+    private static Error[] errors = new Error[0];
 
-    public static void refreshAll () {
-        oldObjects = new Object [0];
-        oldErrors = new Error [0];
+    public static void refreshAll() {
+        oldObjects = new Object[0];
+        oldErrors = new Error[0];
         resourceSnaphot();
         oldObjects = objects;
         oldErrors = errors;
     }
 
-    public static String refreshLabel () {
+    public static String refreshLabel() {
         int colors = 0, cursors = 0, fonts = 0, gcs = 0, images = 0;
         int paths = 0, patterns = 0, regions = 0, textLayouts = 0, transforms = 0;
         for (int i = 0; i < objects.length; i++) {
@@ -217,46 +217,47 @@ public class AllTests {
         if (transforms != 0) {
             string += transforms + " Transform(s)\n";
         }
-        if (string.length () != 0) {
-            string = string.substring (0, string.length () - 1);
+        if (string.length() != 0) {
+            string = string.substring(0, string.length() - 1);
         }
         return string;
     }
 
     public static void resourceSnaphot() {
         final Display display = Display.getDefault();
-        final DeviceData info = display.getDeviceData ();
+        final DeviceData info = display.getDeviceData();
         if (!info.tracking) {
-            BonitaStudioLog.warning("Device is not tracking resource allocation","org.bonitasoft.studio.test.suite");
+            BonitaStudioLog.warning("Device is not tracking resource allocation", "org.bonitasoft.studio.test.suite");
         }
-        final Object [] newObjects = info.objects;
-        final Error [] newErrors = info.errors;
-        final Object [] diffObjects = new Object [newObjects.length];
-        final Error [] diffErrors = new Error [newErrors.length];
+        final Object[] newObjects = info.objects;
+        final Error[] newErrors = info.errors;
+        final Object[] diffObjects = new Object[newObjects.length];
+        final Error[] diffErrors = new Error[newErrors.length];
         int count = 0;
         for (int i = 0; i < newObjects.length; i++) {
             int index = 0;
             while (index < oldObjects.length) {
-                if (newObjects [i] == oldObjects [index]) {
+                if (newObjects[i] == oldObjects[index]) {
                     break;
                 }
                 index++;
             }
             if (index == oldObjects.length) {
-                diffObjects [count] = newObjects [i];
-                diffErrors [count] = newErrors [i];
+                diffObjects[count] = newObjects[i];
+                diffErrors[count] = newErrors[i];
                 count++;
             }
         }
-        objects = new Object [count];
-        errors = new Error [count];
-        System.arraycopy (diffObjects, 0, objects, 0, count);
-        System.arraycopy (diffErrors, 0, errors, 0, count);
+        objects = new Object[count];
+        errors = new Error[count];
+        System.arraycopy(diffObjects, 0, objects, 0, count);
+        System.arraycopy(diffErrors, 0, errors, 0, count);
     }
 
     @AfterClass
     public static void tearDown() {
-        for(final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.tests.heapdump")){
+        for (final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements("org.bonitasoft.studio.tests.heapdump")) {
             IHeapDumper dumper;
             try {
                 dumper = (IHeapDumper) elem.createExecutableExtension("class");
