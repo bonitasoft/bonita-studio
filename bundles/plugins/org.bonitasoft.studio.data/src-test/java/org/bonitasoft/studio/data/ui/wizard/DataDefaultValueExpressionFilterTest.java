@@ -38,7 +38,7 @@ public class DataDefaultValueExpressionFilterTest {
         doReturn(ExpressionConstants.CONTRACT_INPUT_TYPE).when(contractExpressionProvider).getExpressionType();
 
         final DataDefaultValueExpressionFilter dataDefaultValueExpressionFilter = new DataDefaultValueExpressionFilter(mock(DataWizardPage.class),
-                aPool().build(), false);
+                aPool().build(), false, false);
 
         assertThat(dataDefaultValueExpressionFilter.select(null, null, contractExpressionProvider)).isTrue();
     }
@@ -48,7 +48,7 @@ public class DataDefaultValueExpressionFilterTest {
         doReturn(ExpressionConstants.CONTRACT_INPUT_TYPE).when(contractExpressionProvider).getExpressionType();
 
         final DataDefaultValueExpressionFilter dataDefaultValueExpressionFilter = new DataDefaultValueExpressionFilter(mock(DataWizardPage.class),
-                aTask().build(), false);
+                aTask().build(), false, false);
 
         assertThat(dataDefaultValueExpressionFilter.select(null, null, contractExpressionProvider)).isFalse();
     }
@@ -58,9 +58,19 @@ public class DataDefaultValueExpressionFilterTest {
         doReturn(ExpressionConstants.QUERY_TYPE).when(contractExpressionProvider).getExpressionType();
 
         final DataDefaultValueExpressionFilter dataDefaultValueExpressionFilter = new DataDefaultValueExpressionFilter(mock(DataWizardPage.class),
-                aTask().build(), false);
+                aTask().build(), false, false);
 
         assertThat(dataDefaultValueExpressionFilter.select(null, null, contractExpressionProvider)).isFalse();
+    }
+
+    @Test
+    public void should_allow_query_expression_type_in_pageflow_context() throws Exception {
+        doReturn(ExpressionConstants.QUERY_TYPE).when(contractExpressionProvider).getExpressionType();
+
+        final DataDefaultValueExpressionFilter dataDefaultValueExpressionFilter = new DataDefaultValueExpressionFilter(mock(DataWizardPage.class),
+                aTask().build(), false, true);
+
+        assertThat(dataDefaultValueExpressionFilter.select(null, null, contractExpressionProvider)).isTrue();
     }
 
 }

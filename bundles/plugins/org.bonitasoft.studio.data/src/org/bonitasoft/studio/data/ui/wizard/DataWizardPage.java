@@ -857,7 +857,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
         refreshDataNames();
 
-        defaultValueViewer.addFilter(new DataDefaultValueExpressionFilter(this, container, isOverViewContext()));
+        defaultValueViewer.addFilter(new DataDefaultValueExpressionFilter(this, container, isOverViewContext(), isPageFlowContext()));
         defaultValueViewer.setInput(data);
 
         updateBrowseXMLButton(data.getDataType());
