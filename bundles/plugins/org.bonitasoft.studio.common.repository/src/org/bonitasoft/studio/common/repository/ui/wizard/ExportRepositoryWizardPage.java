@@ -37,7 +37,9 @@ import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -309,15 +311,30 @@ public class ExportRepositoryWizardPage extends WizardPage {
     protected Set<IResource> computeResourcesToExport() {
         final Set<IResource> resourcesToExport = new HashSet<IResource>();
         for (final IRepositoryFileStore file : getSelectedFileStores()) {
-            if (file.getResource() != null && file.getResource().exists()) {
-                resourcesToExport.add(file.getResource());
+            IResource resource = file.getResource();
+			if (resource != null && resource.exists()) {
+            	try {
+					addChildrenFile(resource,resourcesToExport);
+				} catch (CoreException e) {
+				BonitaStudioLog.error(e);
+				}
                 resourcesToExport.addAll(file.getRelatedResources());
             }
         }
         return resourcesToExport;
     }
 
-    protected void createDestination(final Composite group) {
+    private void addChildrenFile(IResource resource, Set<IResource> resourcesToExport) throws CoreException {
+    	if(resource instanceof IFile){
+    		resourcesToExport.add(resource);
+    	}else if(resource instanceof IFolder){
+    		for(IResource r : ((IFolder) resource).members()){
+    			addChildrenFile(r,resourcesToExport);
+    		}
+    	}
+	}
+
+	protected void createDestination(final Composite group) {
         final Label destPath = new Label(group, SWT.NONE);
         destPath.setText(Messages.destinationPath + " *");
         destPath.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
