@@ -42,6 +42,8 @@ import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
+import com.google.common.io.Files;
+
 /**
  * @author Romain Bioteau
  *
@@ -52,16 +54,22 @@ public class OrganizationFileStore extends EMFFileStore {
 		super(fileName, store);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getDisplayName()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#
+	 * getDisplayName()
 	 */
 	@Override
 	public String getDisplayName() {
 		return getContent().getName();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#
+	 * getIcon()
 	 */
 	@Override
 	public Image getIcon() {
@@ -71,30 +79,30 @@ public class OrganizationFileStore extends EMFFileStore {
 	@Override
 	public Organization getContent() {
 		final DocumentRoot root = (DocumentRoot) super.getContent();
-		if(root != null){
-			return root.getOrganization() ;
+		if (root != null) {
+			return root.getOrganization();
 		}
 		return null;
 	}
 
 	@Override
 	protected void doSave(final Object content) {
-		if(content instanceof Organization){
-			final Resource emfResource = getEMFResource() ;
-			emfResource.getContents().clear() ;
-			final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
-			root.setOrganization((Organization) EcoreUtil.copy((EObject) content)) ;
-			emfResource.getContents().add(root) ;
+		if (content instanceof Organization) {
+			final Resource emfResource = getEMFResource();
+			emfResource.getContents().clear();
+			final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot();
+			root.setOrganization((Organization) EcoreUtil.copy((EObject) content));
+			emfResource.getContents().add(root);
 			try {
-                final Map<Object, Object> options = new HashMap<Object, Object>();
+				final Map<Object, Object> options = new HashMap<Object, Object>();
 				options.put(XMLResource.OPTION_ENCODING, "UTF-8");
 				options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-                if (emfResource instanceof XMLResourceImpl) {
-                    options.putAll(((XMLResourceImpl) emfResource).getDefaultSaveOptions());
-                }
-				emfResource.save(options) ;
+				if (emfResource instanceof XMLResourceImpl) {
+					options.putAll(((XMLResourceImpl) emfResource).getDefaultSaveOptions());
+				}
+				emfResource.save(options);
 			} catch (final IOException e) {
-				BonitaStudioLog.error(e) ;
+				BonitaStudioLog.error(e);
 			}
 		}
 	}
@@ -102,46 +110,44 @@ public class OrganizationFileStore extends EMFFileStore {
 	@Override
 	public void export(final String targetAbsoluteFilePath) throws IOException {
 		checkWritePermission(new File(targetAbsoluteFilePath));
-		final Organization organization = getContent() ;
-		final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
-		final Organization exportedCopy = EcoreUtil.copy(organization)  ;
-		exportedCopy.setName(null) ;
-		exportedCopy.setDescription(null) ;
-		root.setOrganization(exportedCopy) ;
-		try{
-			final File to = new File(targetAbsoluteFilePath) ;
-			if(targetAbsoluteFilePath.endsWith(".xml")){
-				to.getParentFile().mkdirs() ;
-			}else{
-				to.mkdirs() ;
+		final Organization organization = getContent();
+		final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot();
+		final Organization exportedCopy = EcoreUtil.copy(organization);
+		exportedCopy.setName(null);
+		exportedCopy.setDescription(null);
+		root.setOrganization(exportedCopy);
+		try {
+			final File to = new File(targetAbsoluteFilePath);
+			if (targetAbsoluteFilePath.endsWith(".xml")) {
+				to.getParentFile().mkdirs();
+			} else {
+				to.mkdirs();
 			}
-            final XMLProcessor processor = new OrganizationXMLProcessor();
 
 			File target = null;
-			if(to.isDirectory()){
-				final String targetFilename = organization.getName()+".xml";
-				target = new File(to,targetFilename) ;
-			}else{
-				target = to ;
+			if (to.isDirectory()) {
+				final String targetFilename = organization.getName() + ".xml";
+				target = new File(to, targetFilename);
+			} else {
+				target = to;
 			}
-			if(target.exists()){
-				if(FileActionDialog.overwriteQuestion(target.getName())){
-					PlatformUtil.delete(target,  Repository.NULL_PROGRESS_MONITOR) ;
-				}else{
-					return ;
+			if (target.exists()) {
+				if (FileActionDialog.overwriteQuestion(target.getName())) {
+					PlatformUtil.delete(target, Repository.NULL_PROGRESS_MONITOR);
+				} else {
+					return;
 				}
 			}
 
-			final Resource resource = new XMLResourceImpl(URI.createFileURI(target.getAbsolutePath())) ;
-			resource.getContents().add(root) ;
-			final Map<String, String> options = new HashMap<String, String>() ;
+			final Resource resource = new XMLResourceImpl(URI.createFileURI(target.getAbsolutePath()));
+			resource.getContents().add(root);
+			final Map<String, Object> options = new HashMap<String, Object>();
 			options.put(XMLResource.OPTION_ENCODING, "UTF-8");
 			options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-
-			final FileOutputStream fos = new FileOutputStream(target)  ;
-			processor.save(fos, resource, options)  ;
-			fos.close() ;
-		}catch (final Exception e) {
+			options.put(XMLResource.OPTION_KEEP_DEFAULT_CONTENT, Boolean.TRUE);
+			final XMLProcessor processor = new OrganizationXMLProcessor();
+			Files.write(processor.saveToString(resource, options).getBytes("UTF-8"), target);
+		} catch (final Exception e) {
 			BonitaStudioLog.error(e);
 		}
 
@@ -152,14 +158,13 @@ public class OrganizationFileStore extends EMFFileStore {
 		return null;
 	}
 
-
 	@Override
 	public IFile getResource() {
 		return getParentStore().getResource().getFile(getName());
 	}
 
-	public boolean isCorrectlySyntaxed(){
-		if (getContent()==null){
+	public boolean isCorrectlySyntaxed() {
+		if (getContent() == null) {
 			return false;
 		} else {
 			return true;
