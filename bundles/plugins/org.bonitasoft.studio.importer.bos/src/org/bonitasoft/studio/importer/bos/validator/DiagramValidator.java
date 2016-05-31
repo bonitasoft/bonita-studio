@@ -45,7 +45,9 @@ public class DiagramValidator implements BosImporterValidator {
                                 new ValidationMarkerProvider()));
                 validationAction.addProcess(process);
                 validationAction.run(monitor);
-                statusBuilder.addStatus(process, validationAction.getStatus());
+                if(!validationAction.getStatus().isOK()){
+                    statusBuilder.addStatus(process, validationAction.getStatus());
+                }
             } catch (final ReadFileStoreException | InvocationTargetException | InterruptedException e) {
                 throw new ValidationException(e, "Failed to validate diagram content");
             }

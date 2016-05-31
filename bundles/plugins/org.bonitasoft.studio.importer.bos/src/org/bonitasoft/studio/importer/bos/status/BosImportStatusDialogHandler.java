@@ -16,15 +16,12 @@ package org.bonitasoft.studio.importer.bos.status;
 
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.handler.DefaultImportStatusDialogHandler;
-import org.bonitasoft.studio.importer.handler.ImportErrorMessageDialog;
+import org.bonitasoft.studio.importer.handler.ImportStatusDialog;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -41,8 +38,8 @@ public class BosImportStatusDialogHandler extends DefaultImportStatusDialogHandl
 
     @Override
     protected void openError(final Shell parentShell) {
-        final ImportErrorMessageDialog messageDialog = new ImportErrorMessageDialog(parentShell, getDialogMessage(importStatus),
-                importStatus instanceof BosArchiveImportStatus);
+        final ImportStatusDialog messageDialog = new ImportStatusDialog(parentShell, importStatus,
+                importStatus instanceof BosArchiveImportStatus && !((BosArchiveImportStatus) importStatus).getProcessesWithErrors().isEmpty());
         final int result = messageDialog.open();
         if (importStatus instanceof BosArchiveImportStatus && result == IDialogConstants.OPEN_ID) {
             openDiagrams((BosArchiveImportStatus) importStatus);
@@ -57,25 +54,6 @@ public class BosImportStatusDialogHandler extends DefaultImportStatusDialogHandl
             }
         }
         RunProcessesValidationOperation.showValidationPart();
-    }
-
-    @Override
-    protected String createMessageForMultiStatus(final MultiStatus status) {
-        final StringBuilder sb = new StringBuilder();
-        if (status instanceof BosArchiveImportStatus) {
-            sb.append(Messages.processesWithErrorAfterImport);
-            sb.append(SWT.CR);
-        }
-        for (final IStatus childStatus : status.getChildren()) {
-            if (!childStatus.isOK()) {
-                sb.append(childStatus.getMessage());
-                sb.append(SWT.CR);
-            }
-        }
-        if (status instanceof BosArchiveImportStatus) {
-            sb.append(Messages.openDiagramWithErrors);
-        }
-        return sb.toString();
     }
 
 }

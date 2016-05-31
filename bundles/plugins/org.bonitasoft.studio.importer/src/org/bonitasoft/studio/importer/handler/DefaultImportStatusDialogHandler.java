@@ -16,9 +16,7 @@ package org.bonitasoft.studio.importer.handler;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -37,7 +35,8 @@ public class DefaultImportStatusDialogHandler implements ImportStatusDialogHandl
         //Dot not display during tests
         if (!FileActionDialog.getDisablePopup()) {
             if (importStatus.isOK()) {
-                MessageDialog.openInformation(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle, getDialogMessage(importStatus));
+                MessageDialog.openInformation(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle,
+                        org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage);
             } else {
                 openError(parentShell);
             }
@@ -45,29 +44,9 @@ public class DefaultImportStatusDialogHandler implements ImportStatusDialogHandl
     }
 
     protected void openError(final Shell parentShell) {
-        new ImportErrorMessageDialog(parentShell, getDialogMessage(importStatus),
+        new ImportStatusDialog(parentShell, importStatus,
                 false).open();
     }
 
-    protected String getDialogMessage(final IStatus status) {
-        if (status.isOK()) {
-            return org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage;
-        }
-        if (status instanceof MultiStatus) {
-            return createMessageForMultiStatus((MultiStatus) status);
-        }
-        return status.getMessage();
-    }
-
-    protected String createMessageForMultiStatus(final MultiStatus status) {
-        final StringBuilder sb = new StringBuilder();
-        for (final IStatus childStatus : status.getChildren()) {
-            if (!childStatus.isOK()) {
-                sb.append(childStatus.getMessage());
-                sb.append(SWT.CR);
-            }
-        }
-        return sb.toString();
-    }
 
 }

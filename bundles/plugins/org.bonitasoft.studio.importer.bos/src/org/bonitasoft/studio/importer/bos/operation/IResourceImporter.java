@@ -47,6 +47,7 @@ public class IResourceImporter {
     private Set<String> resourcesToOpen;
     private final List<IRepositoryFileStore> fileStoresToOpen = new ArrayList<IRepositoryFileStore>();
     private final List<IRepositoryFileStore> importedProcesses = new ArrayList<IRepositoryFileStore>();
+    private final List<IRepositoryFileStore> importedFileStore = new ArrayList<IRepositoryFileStore>();
     private final List<String> failedProcesses = new ArrayList<String>();
 
     public void run(final IContainer rootContainer, final IRepository repository, final IProgressMonitor monitor) throws ResourceImportException {
@@ -148,6 +149,7 @@ public class IResourceImporter {
                     || resourcesToOpen == null;
             monitor.subTask(String.format("Importing %s in %s", filename, storeFolder.getName()));
             final IRepositoryFileStore fileStore = store.importIResource(filename, child);
+            importedFileStore.add(fileStore);
             if (filename.endsWith(".proc") && fileStore != null) {
                 importedProcesses.add(fileStore);
             }
@@ -165,5 +167,9 @@ public class IResourceImporter {
 
     public void setResourcesToOpen(final Set<String> resourcesToOpen) {
         this.resourcesToOpen = resourcesToOpen;
+    }
+
+    public List<IRepositoryFileStore> getImportedFileStore() {
+        return importedFileStore;
     }
 }
