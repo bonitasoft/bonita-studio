@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 
@@ -40,6 +41,7 @@ public class ImportBosArchiveOperationTest {
     public void setUp() throws Exception {
         archiveFile = new File(ImportBosArchiveOperationTest.class.getResource("/customer_support_2.0.bos").getFile());
         doNothing().when(operationUnserTest).cleanTmpProject();
+        doReturn(Collections.emptyList()).when(operationUnserTest).getValidators();
         doReturn(container).when(operationUnserTest).createTempProject(archiveFile, monitor);
         doReturn(container).when(operationUnserTest).getRootContainer(Mockito.any(IContainer.class), Mockito.any(Map.class));
         doReturn(new Properties()).when(operationUnserTest).getManifestInfo(container);
