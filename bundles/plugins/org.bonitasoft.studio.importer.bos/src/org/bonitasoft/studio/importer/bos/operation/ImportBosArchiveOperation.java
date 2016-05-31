@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.importer.bos.operation;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.bonitasoft.studio.common.Messages.bosProductName;
 import static org.bonitasoft.studio.common.jface.FileActionDialog.activateYesNoToAll;
 import static org.bonitasoft.studio.common.jface.FileActionDialog.deactivateYesNoToAll;
@@ -32,6 +33,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
@@ -41,15 +43,12 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
+import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
+import org.bonitasoft.studio.importer.bos.validator.BosImporterValidator;
+import org.bonitasoft.studio.importer.bos.validator.ValidationException;
 import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
-import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
-import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
-import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -60,6 +59,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -175,25 +175,31 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         }
         final ImportBosArchiveStatusBuilder statusBuilder = new ImportBosArchiveStatusBuilder();
         if (validate) {
-            for (final IRepositoryFileStore diagramFileStore : iResourceImporter.getImportedProcesses()) {
+            final List<BosImporterValidator> validators = getValidators();
+            for (final BosImporterValidator validator : validators) {
                 try {
-                    final AbstractProcess process = (AbstractProcess) diagramFileStore.getContent();
-                    final RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(
-                            new BatchValidationOperation(
-                                    new OffscreenEditPartFactory(org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
-                                    new ValidationMarkerProvider()));
-                    validationAction.addProcess(process);
-                    validationAction.run(monitor);
-                    statusBuilder.addStatus(process, validationAction.getStatus());
-                } catch (final ReadFileStoreException e) {
-                    throw new InvocationTargetException(e, "Failed to retrieve diagram content");
+                    validator.validate(iResourceImporter, statusBuilder, monitor);
+                } catch (final ValidationException e) {
+                    statusBuilder.addStatus(new Status(IStatus.ERROR, BosArchiveImporterPlugin.PLUGIN_ID, "Validation error", e));
                 }
-
             }
         }
         validationStatus = monitor.isCanceled() ? ValidationStatus.warning(org.bonitasoft.studio.importer.bos.i18n.Messages.skippedValidationMessage)
                 : statusBuilder
                         .done();
+    }
+
+    protected List<BosImporterValidator> getValidators() {
+        final List<BosImporterValidator> validators = newArrayList();
+        for (final IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements("org.bonitasoft.studio.importer.bos.validator")) {
+            try {
+                validators.add((BosImporterValidator) element.createExecutableExtension("class"));
+            } catch (final CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        return validators;
     }
 
     public void setCurrentRepository(final Repository currentRepository) {
