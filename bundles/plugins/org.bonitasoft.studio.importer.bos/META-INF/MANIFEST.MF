@@ -29,4 +29,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar
 Export-Package: org.bonitasoft.studio.importer.bos.factory,
- org.bonitasoft.studio.importer.bos.operation
+ org.bonitasoft.studio.importer.bos.operation,
+ org.bonitasoft.studio.importer.bos.status,
+ org.bonitasoft.studio.importer.bos.validator
