@@ -60,6 +60,16 @@ public class ProcessValidationStatus extends Status {
         return getSeverity() == IStatus.OK || getSeverity() == IStatus.INFO || getSeverity() == IStatus.WARNING;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.core.runtime.Status#getSeverity()
+     */
+    @Override
+    public int getSeverity() {
+        final int severity = super.getSeverity();
+        return severity == INFO ? OK : severity;
+    }
+
     public AbstractProcess getProcess() {
         return process;
     }

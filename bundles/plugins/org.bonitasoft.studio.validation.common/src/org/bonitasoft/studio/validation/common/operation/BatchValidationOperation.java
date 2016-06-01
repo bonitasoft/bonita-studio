@@ -79,18 +79,14 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
     @Override
     protected void execute(final IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
         Assert.isLegal(!diagramsToDiagramEditPart.isEmpty());
-        monitor.beginTask(Messages.validating, diagramsToDiagramEditPart.size());
-
         buildEditPart();
         validationMarkerProvider.clearMarkers(diagramsToDiagramEditPart);
-
-     
         for (final Entry<Diagram, DiagramEditPart> entry : diagramsToDiagramEditPart.entrySet()) {
             final DiagramEditPart diagramEp = entry.getValue();
             final Diagram diagram = entry.getKey();
             if (diagramEp != null) {
                 if (!monitor.isCanceled()) {
-                    monitor.subTask(subTaskName(diagramEp.resolveSemanticElement()));
+                    monitor.setTaskName(subTaskName(diagramEp.resolveSemanticElement()));
                     final TransactionalEditingDomain txDomain = TransactionUtil.getEditingDomain(diagram);
                     runWithConstraints(txDomain, new Runnable() {
 
@@ -99,6 +95,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
                             validate(diagramEp, diagram, monitor);
                         }
                     });
+                    monitor.worked(1);
                 }
             }
         }
