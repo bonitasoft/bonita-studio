@@ -50,7 +50,4 @@ public class BosArchiveImportStatus extends MultiStatus {
         return super.isOK() || getSeverity() == INFO || getSeverity() == WARNING;
     }
 
-    public boolean haveDiagramsIssue() {
-        return !getProcessesWithErrors().isEmpty();
-    }
 }
