@@ -57,7 +57,7 @@ public class ProcessValidationStatus extends Status {
 
     @Override
     public boolean isOK() {
-        return getSeverity() == IStatus.OK || getSeverity() == IStatus.INFO || getSeverity() == IStatus.WARNING;
+        return getSeverity() != IStatus.ERROR;
     }
 
     /*
@@ -67,7 +67,7 @@ public class ProcessValidationStatus extends Status {
     @Override
     public int getSeverity() {
         final int severity = super.getSeverity();
-        return severity == INFO ? OK : severity;
+        return severity != ERROR ? OK : severity;
     }
 
     public AbstractProcess getProcess() {

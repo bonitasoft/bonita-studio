@@ -45,9 +45,4 @@ public class BosArchiveImportStatus extends MultiStatus {
         return processes;
     }
 
-    @Override
-    public boolean isOK() {
-        return super.isOK() || getSeverity() == INFO || getSeverity() == WARNING;
-    }
-
 }
