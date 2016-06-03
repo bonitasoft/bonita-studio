@@ -18,7 +18,6 @@
 package org.bonitasoft.studio.common;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +25,6 @@ import org.bonitasoft.engine.api.ApiAccessType;
 import org.bonitasoft.engine.util.APITypeManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.FileLocator;
 
 /**
  * @author Romain Bioteau
@@ -46,21 +44,12 @@ public class BonitaHomeUtil {
                 .toString(), "bonita");
     }
 
-
-    public static File getReferenceBonitaHome() throws IOException {
-        return new File(FileLocator.toFileURL(
-                ProjectUtil.getConsoleLibsBundle().getEntry("bonita-home"))
-                .getFile());
-    }
-
     public synchronized static File initBonitaHome()  {
         final File destBonitaHome = null;
         try{
             final String bonitaHostDefaultPortValue = System.getProperty(BONITA_CLIENT_HOST_DEFAULT, "localhost");
             final int bonitaClientDefaultPortValue = Integer.parseInt(System.getProperty(BONITA_CLIENT_PORT_DEFAULT, "8080"));
             configureBonitaClient(HTTP, bonitaHostDefaultPortValue, bonitaClientDefaultPortValue);
-            //TODO to be removed
-            //System.setProperty(BonitaConstants.HOME, System.getProperty("java.io.tmpdir"));
         }catch (final Exception e) {
             BonitaStudioLog.error(e);
         }

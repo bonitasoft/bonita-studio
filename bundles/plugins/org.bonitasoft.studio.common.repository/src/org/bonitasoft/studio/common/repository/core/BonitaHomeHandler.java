@@ -23,8 +23,7 @@ import org.eclipse.core.resources.IProject;
 
 public class BonitaHomeHandler {
 
-    private static final String H2_DATABASE_FOLDER_NAME = "h2_database";
-    public static final String BONITA_HOME = "bonita_home";
+    public static final String H2_DATABASE_FOLDER_NAME = "h2_database";
     public static final String DB_LOCATION_PROPERTY = "org.bonitasoft.h2.database.dir";
 
     private final IProject project;
@@ -62,12 +61,8 @@ public class BonitaHomeHandler {
         }
     }
 
-    public String getRoot() {
-        return project.getFile(BONITA_HOME).getLocation().toFile().getAbsolutePath();
-    }
-
     public File getDBLocation() {
-        return new File(getRoot(), H2_DATABASE_FOLDER_NAME);
+        return new File(project.getLocation().toFile(), H2_DATABASE_FOLDER_NAME);
     }
 
 

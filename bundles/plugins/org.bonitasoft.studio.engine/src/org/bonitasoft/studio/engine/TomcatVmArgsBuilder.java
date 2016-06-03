@@ -49,7 +49,6 @@ public class TomcatVmArgsBuilder {
         addSystemProperty(args, "btm.root", "\"" + tomcatInstanceLocation + "\"");
         addSystemProperty(args, "wtp.deploy", "\"" + tomcatInstanceLocation + File.separatorChar + "webapps\"");
         addSystemProperty(args, "java.endorsed.dirs", "\"" + tomcatInstanceLocation + File.separatorChar + "endorsed\"");
-        addSystemProperty(args, "bonita.home", "\"" + getBonitaHomeRoot() + "\"");
         addSystemProperty(args, "sysprop.bonita.db.vendor", "h2");
         addSystemProperty(args, "org.bonitasoft.platform.setup.folder", "\"" + tomcatInstanceLocation + File.separatorChar + "setup\"");
         addSystemProperty(args, "bitronix.tm.configuration",
@@ -78,14 +77,6 @@ public class TomcatVmArgsBuilder {
         return repositoryAccessor.getCurrentRepository().getBonitaHomeHandler().getDBLocation();
     }
 
-    /**
-     * /!\ Public for test purpose only
-     * 
-     * @return
-     */
-    public String getBonitaHomeRoot() {
-        return repositoryAccessor.getCurrentRepository().getBonitaHomeHandler().getRoot();
-    }
 
     public String getProductApplicationId() {
         return Platform.getProduct() != null ? Platform.getProduct().getApplication() : null;

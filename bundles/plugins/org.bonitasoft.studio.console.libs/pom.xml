@@ -14,7 +14,6 @@
 
 	<properties>
 		<tomcat.bundle.dir>${basedir}/tomcat</tomcat.bundle.dir>
-		<bonita.home.dir>${basedir}/bonita-home</bonita.home.dir>
 		<javadoc.dir>${basedir}/javadoc</javadoc.dir>
 		<lib.dir>lib</lib.dir>
 		<tomcat.version>7.0.67</tomcat.version>
@@ -174,27 +173,6 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>Retrieve Bonita Home</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.bonitasoft.console</groupId>
-									<artifactId>bonita-home</artifactId>
-									<classifier>full</classifier>
-									<version>${bundle.version}</version>
-									<type>zip</type>
-								</artifactItem>
-							</artifactItems>
-							<outputDirectory>${basedir}</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-						</configuration>
-					</execution>
-					<execution>
 						<id>Retrieve Javadoc</id>
 						<phase>generate-resources</phase>
 						<goals>
@@ -256,7 +234,6 @@
 						<configuration>
 							<target>
 								<delete dir="${tomcat.bundle.dir}" />
-								<delete dir="${bonita.home.dir}" />
 								<delete file="javadoc.zip" />
 								<mkdir dir="${project.build.directory}/classes" />
 							</target>
@@ -285,9 +262,7 @@
 									value="org.bonitasoft.level = INFO"
 									failOnNoReplacements="true"/>
 								<delete dir="${tomcat.bundle.dir}/webapps/examples" />
-								<!-- Clean bonita-home server part -->
-								<delete dir="${bonita.home.dir}/engine-server" />
-
+								
 								<!-- Package javadoc -->
 								<zip destfile="${basedir}/javadoc.zip" basedir="${javadoc.dir}"
 									encoding="UTF-8" />
@@ -341,7 +316,7 @@
 						<Eclipse-BundleShape>dir</Eclipse-BundleShape>
 						<Include-Resource>
 							{maven-resources}, {maven-dependencies},
-							javadoc.zip,bonita=bonita-home,plugin.xml,tomcat=tomcat
+							javadoc.zip,plugin.xml,tomcat=tomcat
 						</Include-Resource>
 						<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
 						<Import-Package>!*</Import-Package>
