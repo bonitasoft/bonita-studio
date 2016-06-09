@@ -545,24 +545,6 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.bonitasoft.studio.application.actions.UndoCommandHandler"
-            commandId="org.eclipse.ui.edit.undo">
-         <enabledWhen>
-            <reference
-                  definitionId="isActiveEditorAnInstanceOfBonitaEditor">
-            </reference>
-         </enabledWhen>
-      </handler>
-      <handler
-            class="org.bonitasoft.studio.application.actions.RedoCommandHandler"
-            commandId="org.eclipse.ui.edit.redo">
-         <enabledWhen>
-            <reference
-                  definitionId="isActiveEditorAnInstanceOfBonitaEditor">
-            </reference>
-         </enabledWhen>
-      </handler>
-      <handler
             class="org.bonitasoft.studio.application.actions.SaveCommandHandler"
             commandId="org.eclipse.ui.file.save">
          <activeWhen>

@@ -18,6 +18,7 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -45,14 +46,14 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.codehaus.groovy.eclipse.GroovyPlugin;
 import org.codehaus.groovy.eclipse.core.preferences.PreferenceConstants;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.bindings.EBindingService;
+import org.eclipse.e4.ui.bindings.internal.BindingServiceImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
@@ -62,27 +63,31 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
-import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
+
+import com.google.common.collect.Sets;
 
 /**
  * @author Romain Bioteau
  */
 public class GroovyViewer implements IDocumentListener {
 
+	private static final String ECLIPSE_CONTEXT_SHELL_CONTEXT = "org.eclipse.e4.ui.shellContext"; //$NON-NLS-1$
+	
     public static final String CONTEXT_DATA_KEY = "context";
 
     public static final String BONITA_KEYWORDS_DATA_KEY = "bonita.keywords";
@@ -137,31 +142,36 @@ public class GroovyViewer implements IDocumentListener {
         }
         editor = groovyEditor;
         if (editor == null) {
-            editor = new BonitaGroovyEditor(GroovyPlugin.getDefault().getPreferenceStore());
+            editor = new GroovyEditor();
         }
         try {
             editor.getDocumentProvider().connect(input);
-            editor.init(new DummyEditorSite(mainComposite.getShell(), editor), this.input);
+            DummyEditorSite site = new DummyEditorSite(null, editor);
+			editor.init(site, this.input);
             editor.createPartControl(mainComposite);
-            editor.createJavaSourceViewerConfiguration();
+         
+            
+//			BindingServiceImpl bindingService = (BindingServiceImpl) context.get(EBindingService.class.getName());
+//            IContextService contextService =  (IContextService)editor.getSite().getService(IContextService.class);        
+//            Collection activeContextIds = contextService.getActiveContextIds();
+//            HashSet<String> set = Sets.newHashSet(activeContextIds);
+//            set.add("org.eclipse.ui.textEditorScope");
+//            bindingService.setContextIds(set);
+//            Object object = context.get("org.bonitasoft.studio.perspective.process");
+//            IEclipseContext editorContext = context.createChild("org.codehaus.groovy.eclipse.editor.groovyEditorScope");
+//            editorContext.activate();
+//            mainComposite.getShell().setData(ECLIPSE_CONTEXT_SHELL_CONTEXT,editorContext);
+//        	org.eclipse.e4.ui.services.EContextService e4ContextService = context.get(org.eclipse.e4.ui.services.EContextService.class);
+//        	e4ContextService.activateContext("org.eclipse.ui.textEditorScope");
+     
+           
+         ///   contextService.getDefinedContextIds();
+           // contextService.activateContext("org.codehaus.groovy.eclipse.editor.groovyEditorScope");
         } catch (final Exception e1) {
             BonitaStudioLog.error(e1);
         }
 
-        //        final GroovyCompilationUnit groovyCompilationUnit = editor.getGroovyCompilationUnit();
-        //        groovyCompilationUnit.getNewModuleInfo().module.getContext().getConfiguration()
-        //                .addCompilationCustomizers(new CompilationCustomizer(null) {
-        //
-        //                    @Override
-        //                    public void call(final SourceUnit source, final GeneratorContext context, final ClassNode classNode) throws CompilationFailedException {
-        //                        final VariableScope variableScope = classNode.getModule().getStatementBlock().getVariableScope();
-        //                        System.out.println(source);
-        //                        System.out.println(context);
-        //                        System.out.println(classNode);
-        //                    }
-        //                });
-
-        final GroovyEditorActionFactory actionFactory = new GroovyEditorActionFactory(editor);
+       // final GroovyEditorActionFactory actionFactory = new GroovyEditorActionFactory(editor);
         getSourceViewer().getTextWidget().setTextLimit(MAX_SCRIPT_LENGTH);
         getSourceViewer().addTextListener(new ITextListener() {
 
@@ -170,56 +180,56 @@ public class GroovyViewer implements IDocumentListener {
             @Override
             public void textChanged(final TextEvent event) {
                 if (!isReconciling) {
-                    isReconciling = true;
-                    try {
-                        JavaModelUtil.reconcile(editor.getGroovyCompilationUnit());
-                    } catch (final JavaModelException e) {
-
-                    } finally {
-                        isReconciling = false;
-                    }
+            //        isReconciling = true;
+//                    try {
+//                     //   JavaModelUtil.reconcile(editor.getGroovyCompilationUnit());
+//                    } catch (final JavaModelException e) {
+//
+//                    } finally {
+//                        isReconciling = false;
+//                    }
                 }
             }
         });
+//
+//        // Set up content assist in the viewer
+//        triggerAssistantHandler = new AbstractHandler() {
+//
+//            @Override
+//            public Object execute(final ExecutionEvent event) throws ExecutionException {
+//                if (getSourceViewer().canDoOperation(ISourceViewer.CONTENTASSIST_PROPOSALS)) {
+//                    getSourceViewer().doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
+//                }
+//                return null;
+//            }
+//        };
 
-        // Set up content assist in the viewer
-        triggerAssistantHandler = new AbstractHandler() {
-
-            @Override
-            public Object execute(final ExecutionEvent event) throws ExecutionException {
-                if (getSourceViewer().canDoOperation(ISourceViewer.CONTENTASSIST_PROPOSALS)) {
-                    getSourceViewer().doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
-                }
-                return null;
-            }
-        };
-
-        getSourceViewer().getTextWidget().addKeyListener(new KeyListener() {
-
-            @Override
-            public void keyReleased(final KeyEvent e) {
-                if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'z') {
-                    actionFactory.getUndoAction().run();
-                } else if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'y') {
-                    actionFactory.getRedoAction().run();
-                } else if (e.stateMask == (SWT.CTRL | SWT.SHIFT) && e.keyCode == 'o') {
-                    actionFactory.getOrganizeImportAction().run();
-                }
-
-            }
-
-            @Override
-            public void keyPressed(final KeyEvent e) {
-                if (e.keyCode == SWT.DEL) {
-                    actionFactory.getDeleteAction().run();
-                } else
-                    if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'i') {
-                    actionFactory.getFormatAction().run();
-                }
-            }
-
-        });
-        enableContextAssitShortcut();
+//        getSourceViewer().getTextWidget().addKeyListener(new KeyListener() {
+//
+//            @Override
+//            public void keyReleased(final KeyEvent e) {
+//                if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'z') {
+//                    actionFactory.getUndoAction().run();
+//                } else if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'y') {
+//                    actionFactory.getRedoAction().run();
+//                } else if (e.stateMask == (SWT.CTRL | SWT.SHIFT) && e.keyCode == 'o') {
+//                    actionFactory.getOrganizeImportAction().run();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void keyPressed(final KeyEvent e) {
+//                if (e.keyCode == SWT.DEL) {
+//                    actionFactory.getDeleteAction().run();
+//                } else
+//                    if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'i') {
+//                    actionFactory.getFormatAction().run();
+//                }
+//            }
+//
+//        });
+//        enableContextAssitShortcut();
 
         getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, getProvidedVariables(null, null));
         mainComposite.getShell().addDisposeListener(new DisposeListener() {

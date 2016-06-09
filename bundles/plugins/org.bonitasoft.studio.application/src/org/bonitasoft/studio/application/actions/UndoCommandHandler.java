@@ -74,5 +74,10 @@ public class UndoCommandHandler  extends AbstractHandler implements IHandler  {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean isHandled() {
+		return false;
+	}
 
 }

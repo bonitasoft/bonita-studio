@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -85,6 +86,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -132,8 +134,12 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Romain Bioteau
@@ -495,6 +501,14 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
     protected void openEditDialog(final EditExpressionDialog dialog) {
         dialog.setIsPageFlowContext(isPageFlowContext);
+        dialog.create();
+        IEclipseContext context = ((Workbench) PlatformUI.getWorkbench()).getContext();
+      //  IEclipseContext child = context.createChild("expressionViewerDialogContext");
+      //  child.set("localContexts", Lists.newLinkedList(Lists.newArrayList("org.eclipse.ui.contexts.window", "org.eclipse.ui.contexts.dialogAndWindow", "org.eclipse.ui.textEditorScope", "org.eclipse.jdt.ui.javaEditorScope", "org.codehaus.groovy.eclipse.editor.groovyEditorScope")));
+        while (!Objects.equals(context.getActiveLeaf(),context)) {
+        	context.getActiveLeaf().deactivate();
+		}
+        dialog.getShell().setData("org.eclipse.e4.ui.shellContext",context);
         if (dialog.open() == Dialog.OK) {
             final Expression newExpression = dialog.getExpression();
             executeOperation(newExpression.getName());

@@ -56,6 +56,8 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainerElement;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
@@ -394,7 +396,6 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
     }
 
     protected void createGroovyEditor(final Composite parent) {
-
         groovyViewer = new GroovyViewer(mainComposite, isPageFlowContext);
         groovyViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         sourceViewer = groovyViewer.getSourceViewer();
