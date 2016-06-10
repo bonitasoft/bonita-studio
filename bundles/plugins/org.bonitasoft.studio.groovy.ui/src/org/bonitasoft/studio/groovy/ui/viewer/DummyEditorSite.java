@@ -20,17 +20,9 @@ import org.bonitasoft.studio.groovy.ui.Activator;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.eclipse.e4.core.contexts.ContextFunction;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.StatusLineManager;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -38,19 +30,16 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IKeyBindingService;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.SubActionBars;
 import org.eclipse.ui.internal.EditorActionBars;
 import org.eclipse.ui.internal.KeyBindingService;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.WorkbenchWindow;
-import org.eclipse.ui.internal.services.ServiceLocator;
-import org.eclipse.ui.part.WorkbenchPart;
 import org.eclipse.ui.services.IServiceLocator;
 
 /**
@@ -59,20 +48,32 @@ import org.eclipse.ui.services.IServiceLocator;
  */
 public class DummyEditorSite implements IEditorSite {
 
-	private GroovyEditor editor;
+	private final GroovyEditor editor;
 	private ISelectionProvider selectionProvider;
 	private IKeyBindingService keyBindingService;
+    private final Shell parentShell;
 
 	public DummyEditorSite(Shell parentShell, GroovyEditor editor) {
 		this.editor = editor;
+        this.parentShell = parentShell;
 	}
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.ui.IWorkbenchPartSite#getId()
 	 */
-	public String getId() {
+	@Override
+    public String getId() {
 		return "org.bonitasoft.studio.DummyEditorSite";
 	}
 
@@ -81,9 +82,11 @@ public class DummyEditorSite implements IEditorSite {
 	 * 
 	 * @see org.eclipse.ui.IWorkbenchPartSite#getKeyBindingService()
 	 */
-	public IKeyBindingService getKeyBindingService() {
-		IEclipseContext context = (IEclipseContext) Display.getDefault().getActiveShell().getData("org.eclipse.e4.ui.shellContext");
-		context.set(IKeyBindingService.class.getName(), new ContextFunction() {
+	@Override
+    public IKeyBindingService getKeyBindingService() {
+        final IEclipseContext context = (IEclipseContext) parentShell.getData("org.eclipse.e4.ui.shellContext");
+        final IEclipseContext activeLeaf = context.getActiveLeaf();
+        activeLeaf.set(IKeyBindingService.class.getName(), new ContextFunction() {
 
 			@Override
 			public Object compute(IEclipseContext context, String contextKey) {
@@ -94,7 +97,7 @@ public class DummyEditorSite implements IEditorSite {
 				return keyBindingService;
 			}
 		});
-		return (IKeyBindingService) context.get(IKeyBindingService.class.getName());
+        return (IKeyBindingService) activeLeaf.get(IKeyBindingService.class.getName());
 	}
 
 	/*
@@ -102,7 +105,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * 
 	 * @see org.eclipse.ui.IWorkbenchPartSite#getPart()
 	 */
-	public IWorkbenchPart getPart() {
+	@Override
+    public IWorkbenchPart getPart() {
 		return null;
 	}
 
@@ -111,7 +115,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * 
 	 * @see org.eclipse.ui.IWorkbenchPartSite#getPluginId()
 	 */
-	public String getPluginId() {
+	@Override
+    public String getPluginId() {
 		return Activator.PLUGIN_ID;
 	}
 
@@ -120,7 +125,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * 
 	 * @see org.eclipse.ui.IWorkbenchPartSite#getRegisteredName()
 	 */
-	public String getRegisteredName() {
+	@Override
+    public String getRegisteredName() {
 		return null;
 	}
 
@@ -131,7 +137,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * org.eclipse.ui.IWorkbenchPartSite#registerContextMenu(org.eclipse.jface.
 	 * action.MenuManager, org.eclipse.jface.viewers.ISelectionProvider)
 	 */
-	public void registerContextMenu(MenuManager arg0, ISelectionProvider arg1) {
+	@Override
+    public void registerContextMenu(MenuManager arg0, ISelectionProvider arg1) {
 		// TODO Auto-generated method stub
 
 	}
@@ -144,7 +151,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * org.eclipse.jface.action.MenuManager,
 	 * org.eclipse.jface.viewers.ISelectionProvider)
 	 */
-	public void registerContextMenu(String arg0, MenuManager arg1, ISelectionProvider arg2) {
+	@Override
+    public void registerContextMenu(String arg0, MenuManager arg1, ISelectionProvider arg2) {
 		// TODO Auto-generated method stub
 
 	}
@@ -154,7 +162,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * 
 	 * @see org.eclipse.ui.IWorkbenchSite#getPage()
 	 */
-	public IWorkbenchPage getPage() {
+	@Override
+    public IWorkbenchPage getPage() {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 	}
 
@@ -163,7 +172,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * 
 	 * @see org.eclipse.ui.IWorkbenchSite#getSelectionProvider()
 	 */
-	public ISelectionProvider getSelectionProvider() {
+	@Override
+    public ISelectionProvider getSelectionProvider() {
 		return editor.getSelectionProvider();
 	}
 
@@ -172,14 +182,15 @@ public class DummyEditorSite implements IEditorSite {
 	 * 
 	 * @see org.eclipse.ui.IWorkbenchSite#getShell()
 	 */
-	public Shell getShell() {
+	@Override
+    public Shell getShell() {
 
 		// Compatibility: This method should not be used outside the UI
 		// thread... but since this condition
 		// was not always in the JavaDoc, we still try to return our best guess
 		// about the shell if it is
 		// called from the wrong thread.
-		Display currentDisplay = Display.getCurrent();
+		final Display currentDisplay = Display.getCurrent();
 		if (currentDisplay == null) {
 			// Uncomment this to locate places that try to access the shell from
 			// a background thread
@@ -187,10 +198,14 @@ public class DummyEditorSite implements IEditorSite {
 			// IWorkbenchSite.getShell() was called outside the UI thread. Fix
 			// this code.")); //$NON-NLS-1$
 
-			return getWorkbenchWindow().getShell();
+            final IWorkbenchWindow workbenchWindow = getWorkbenchWindow();
+            if (workbenchWindow != null) {
+                return workbenchWindow.getShell();
+            }
+            return null;
 		}
-		MWindow window = ((WorkbenchWindow) PlatformUI.getWorkbench().getActiveWorkbenchWindow()).getModel();
-		Control control = (Control) window.getWidget();
+		final MWindow window = ((WorkbenchWindow) PlatformUI.getWorkbench().getActiveWorkbenchWindow()).getModel();
+		final Control control = (Control) window.getWidget();
 		if (control != null && !control.isDisposed()) {
 			return control.getShell();
 		}
@@ -205,8 +220,10 @@ public class DummyEditorSite implements IEditorSite {
 	 * 
 	 * @see org.eclipse.ui.IWorkbenchSite#getWorkbenchWindow()
 	 */
-	public IWorkbenchWindow getWorkbenchWindow() {
-		return PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+	@Override
+    public IWorkbenchWindow getWorkbenchWindow() {
+        final IEclipseContext context = ((Workbench) PlatformUI.getWorkbench()).getContext();
+        return (IWorkbenchWindow) context.get(ISources.ACTIVE_WORKBENCH_WINDOW_NAME);
 	}
 
 	/*
@@ -216,7 +233,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * org.eclipse.ui.IWorkbenchSite#setSelectionProvider(org.eclipse.jface.
 	 * viewers.ISelectionProvider)
 	 */
-	public void setSelectionProvider(ISelectionProvider selectionProvider) {
+	@Override
+    public void setSelectionProvider(ISelectionProvider selectionProvider) {
 		this.selectionProvider = selectionProvider;
 	}
 
@@ -225,7 +243,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * 
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
-	public Object getAdapter(Class arg0) {
+	@Override
+    public Object getAdapter(Class arg0) {
 		return null;
 	}
 
@@ -234,7 +253,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * 
 	 * @see org.eclipse.ui.services.IServiceLocator#getService(java.lang.Class)
 	 */
-	public Object getService(Class api) {
+	@Override
+    public Object getService(Class api) {
 		return PlatformUI.getWorkbench().getService(api);
 	}
 
@@ -243,7 +263,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * 
 	 * @see org.eclipse.ui.services.IServiceLocator#hasService(java.lang.Class)
 	 */
-	public boolean hasService(Class api) {
+	@Override
+    public boolean hasService(Class api) {
 		return PlatformUI.getWorkbench().hasService(api);
 	}
 
@@ -252,7 +273,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * 
 	 * @see org.eclipse.ui.IEditorSite#getActionBarContributor()
 	 */
-	public IEditorActionBarContributor getActionBarContributor() {
+	@Override
+    public IEditorActionBarContributor getActionBarContributor() {
 		return null;
 	}
 
@@ -261,7 +283,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * 
 	 * @see org.eclipse.ui.IEditorSite#getActionBars()
 	 */
-	public IActionBars getActionBars() {
+	@Override
+    public IActionBars getActionBars() {
 		return new EditorActionBars((WorkbenchPage) getPage(),
 				(IServiceLocator) PlatformUI.getWorkbench().getService(IServiceLocator.class), GroovyEditor.EDITOR_ID);
 	}
@@ -273,7 +296,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * org.eclipse.ui.IEditorSite#registerContextMenu(org.eclipse.jface.action.
 	 * MenuManager, org.eclipse.jface.viewers.ISelectionProvider, boolean)
 	 */
-	public void registerContextMenu(MenuManager arg0, ISelectionProvider arg1, boolean arg2) {
+	@Override
+    public void registerContextMenu(MenuManager arg0, ISelectionProvider arg1, boolean arg2) {
 
 	}
 
@@ -284,7 +308,8 @@ public class DummyEditorSite implements IEditorSite {
 	 * org.eclipse.jface.action.MenuManager,
 	 * org.eclipse.jface.viewers.ISelectionProvider, boolean)
 	 */
-	public void registerContextMenu(String arg0, MenuManager arg1, ISelectionProvider arg2, boolean arg3) {
+	@Override
+    public void registerContextMenu(String arg0, MenuManager arg1, ISelectionProvider arg2, boolean arg3) {
 
 	}
 
