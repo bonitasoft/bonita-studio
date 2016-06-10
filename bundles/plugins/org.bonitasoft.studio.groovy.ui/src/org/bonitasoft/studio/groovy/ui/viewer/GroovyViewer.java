@@ -61,6 +61,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
+import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.events.DisposeEvent;
@@ -279,10 +280,14 @@ public class GroovyViewer implements IDocumentListener {
     }
 
     public void dispose() {
-        editor.dispose();
         if (tmpGroovyFileStore != null) {
             tmpGroovyFileStore.delete();
         }
+        final IVerticalRulerInfo adapter = (IVerticalRulerInfo) editor.getAdapter(IVerticalRulerInfo.class);
+        if (adapter != null && adapter.getControl() != null) {
+            adapter.getControl().dispose();
+        }
+        editor.dispose();
     }
 
     public GroovyCompilationUnit getGroovyCompilationUnit() {
