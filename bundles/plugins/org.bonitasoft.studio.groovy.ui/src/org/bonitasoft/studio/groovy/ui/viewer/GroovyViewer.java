@@ -61,6 +61,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
+import org.eclipse.jface.text.source.CompositeRuler;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -72,6 +73,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.texteditor.rulers.IColumnSupport;
 
 import com.google.common.collect.Lists;
 
@@ -283,9 +285,13 @@ public class GroovyViewer implements IDocumentListener {
         if (tmpGroovyFileStore != null) {
             tmpGroovyFileStore.delete();
         }
-        final IVerticalRulerInfo adapter = (IVerticalRulerInfo) editor.getAdapter(IVerticalRulerInfo.class);
-        if (adapter != null && adapter.getControl() != null) {
-            adapter.getControl().dispose();
+        final IColumnSupport columSupport = (IColumnSupport) editor.getAdapter(IColumnSupport.class);
+        if (columSupport != null) {
+            columSupport.dispose();
+        }
+        final CompositeRuler verticalRuler = (CompositeRuler) editor.getAdapter(IVerticalRulerInfo.class);
+        if (verticalRuler != null && verticalRuler.getControl() != null) {
+            verticalRuler.getControl().dispose();
         }
         editor.dispose();
     }
