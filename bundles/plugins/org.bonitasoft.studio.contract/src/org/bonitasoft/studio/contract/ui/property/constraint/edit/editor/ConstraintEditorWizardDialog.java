@@ -16,6 +16,9 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
+import java.util.Objects;
+
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -33,6 +36,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 
 
 /**
@@ -51,6 +56,25 @@ public class ConstraintEditorWizardDialog extends WizardDialog {
         return createHelpImageButton(parent, getHelpImage());
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.wizard.WizardDialog#createContents(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected Control createContents(Composite parent) {
+        configureContext();
+        return super.createContents(parent);
+    }
+
+    private void configureContext() {
+        final IEclipseContext e4Context = ((Workbench) PlatformUI.getWorkbench()).getContext();
+        while (!Objects.equals(e4Context.getActiveLeaf(), e4Context)) {
+            e4Context.getActiveLeaf().deactivate();
+        }
+        final IEclipseContext expressionDialogContext = e4Context.createChild("expressionDialogContext");
+        expressionDialogContext.activate();
+        getShell().setData("org.eclipse.e4.ui.shellContext", expressionDialogContext);
+    }
 
     protected Image getHelpImage() {
         return JFaceResources.getImage(DLG_IMG_HELP);
