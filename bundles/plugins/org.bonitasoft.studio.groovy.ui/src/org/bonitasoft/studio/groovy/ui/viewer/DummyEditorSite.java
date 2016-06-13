@@ -58,15 +58,6 @@ public class DummyEditorSite implements IEditorSite {
         this.parentShell = parentShell;
 	}
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
 	/*
 	 * (non-Javadoc)
 	 * 

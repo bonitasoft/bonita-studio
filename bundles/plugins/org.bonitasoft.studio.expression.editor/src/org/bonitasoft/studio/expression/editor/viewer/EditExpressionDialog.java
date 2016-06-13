@@ -161,7 +161,17 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
     @Override
     public void create() {
         super.create();
+        getShell().layout(true, true);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected Control createContents(Composite parent) {
         configureContext();
+        final Control content = super.createContents(parent);
         String expressionType = inputExpression.getType();
         if (ExpressionConstants.CONSTANT_TYPE.equals(expressionType)) {
             if (!isSupportedConstantType(inputExpression.getReturnType())) {
@@ -172,8 +182,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         if (currentProvider != null && expressionTypeViewer != null) {
             expressionTypeViewer.setSelection(new StructuredSelection(currentProvider));
         }
-
-        getShell().layout(true, true);
+        return content;
     }
 
     private void configureContext() {

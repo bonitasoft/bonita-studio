@@ -56,8 +56,6 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
-import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainerElement;
-import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
@@ -94,6 +92,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.Section;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Romain Bioteau
@@ -413,7 +413,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 final Map<String, Serializable> variables = TestGroovyScriptUtil.createVariablesMap(
-                        groovyViewer.getGroovyCompilationUnit(), nodes);
+                        groovyViewer.getGroovyCompilationUnit(), nodes == null ? Lists.<ScriptVariable> newArrayList() : nodes);
 
                 if (variables.isEmpty()) {
                     final ManageConnectorJarDialog mcjd = new ManageConnectorJarDialog(Display.getDefault().getActiveShell());
