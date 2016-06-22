@@ -38,6 +38,7 @@ public class ProjectManifestFactory {
 
     private static final String MANIFEST_MF_FILE_NAME = "MANIFEST.MF";
     private static final String META_INF_FOLDER_NAME = "META-INF";
+    private static final String DEFAULT_SYMBOLIC_NAME = "org.bonitasoft.studio.myextensions";
 
     public void createProjectManifest(final IProject project, final IProgressMonitor monitor) throws CoreException {
         final IFolder metaInf = project.getFolder(META_INF_FOLDER_NAME);
@@ -64,7 +65,11 @@ public class ProjectManifestFactory {
         headers.put(ManifestUtils.MANIFEST_VERSION, "1.0");
         headers.put(org.osgi.framework.Constants.BUNDLE_MANIFESTVERSION, "2");
         headers.put(org.osgi.framework.Constants.BUNDLE_NAME, projectName);
-        headers.put(org.osgi.framework.Constants.BUNDLE_SYMBOLICNAME, toJavaIdentifier(projectName, false));
+        String symbolicName = toJavaIdentifier(projectName, false);
+        if (symbolicName == null || symbolicName.isEmpty()) {
+            symbolicName = DEFAULT_SYMBOLIC_NAME;
+        }
+        headers.put(org.osgi.framework.Constants.BUNDLE_SYMBOLICNAME, symbolicName);
         headers.put(org.osgi.framework.Constants.BUNDLE_VERSION, "1.0.0.qualifier");
         headers.put(org.osgi.framework.Constants.BUNDLE_VENDOR, "Bonitasoft S.A.");
         headers.put(org.osgi.framework.Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, "JavaSE-1.7");
