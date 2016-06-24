@@ -153,6 +153,10 @@ public class Messages extends NLS {
     public static String contractButNoFormTitle;
     public static String contractButNoFormMessage;
 
+    public static String resetingEngineFailed;
+    public static String resetEngine;
+    public static String resetEngineSuccess;
+
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$
     }
