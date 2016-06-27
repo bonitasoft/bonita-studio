@@ -30,4 +30,12 @@ public class ObservableListContentProviderWithProposalListenersForActivity exten
         super(ProcessFactory.eINSTANCE.createActivity());
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.properties.sections.iteration.ObservableListContentProviderWithProposalListeners#isMultipleData()
+     */
+    @Override
+    protected boolean isMultipleData() {
+        return false;
+    }
 }
