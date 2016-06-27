@@ -51,7 +51,7 @@ public abstract class ObservableListContentProviderWithProposalListeners extends
                 try {
                     extension = (IDataProposalListener) configElement.createExecutableExtension("providerClass");
                     if (extension.isRelevant(context) && !proposalListeners.contains(extension)) {
-                        extension.setMultipleData(true);
+                        extension.setMultipleData(isMultipleData());
                         proposalListeners.add(extension);
                     }
                 } catch (final CoreException e) {
@@ -71,6 +71,10 @@ public abstract class ObservableListContentProviderWithProposalListeners extends
         }
         result.addAll(proposalListeners);
         return result.toArray();
+    }
+
+    protected boolean isMultipleData() {
+        return true;
     }
 
 }
