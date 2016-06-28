@@ -34,7 +34,10 @@ public class DataDefaultValueExpressionFilter extends AvailableExpressionTypeFil
     private final EObject container;
     private final boolean isOverviewContext;
 
-    public DataDefaultValueExpressionFilter(final DataWizardPage wizardPage, final EObject container, final boolean isOverviewContext) {
+    public DataDefaultValueExpressionFilter(final DataWizardPage wizardPage,
+            final EObject container,
+            final boolean isOverviewContext,
+            final boolean isPageflowContext) {
         super(new String[] {
                 ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.CONSTANT_TYPE,
@@ -44,6 +47,10 @@ public class DataDefaultValueExpressionFilter extends AvailableExpressionTypeFil
         this.wizardPage = wizardPage;
         this.container = container;
         this.isOverviewContext = isOverviewContext;
+        if (isPageflowContext) {
+            getContentTypes().add(ExpressionConstants.QUERY_TYPE);
+        }
+
     }
 
     @Override
