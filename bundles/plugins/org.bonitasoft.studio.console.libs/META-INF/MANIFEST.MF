@@ -13,7 +13,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Console embedded in Studio
 Bundle-SymbolicName: org.bonitasoft.studio.console.libs;singleton:=true
 Bundle-Vendor: BonitaSoft S.A.
-Bundle-Version: 7.2.3.qualifier
+Bundle-Version: 7.2.4.qualifier
 Created-By: Apache Maven Bundle Plugin
 Eclipse-BundleShape: dir
 Embed-Dependency: *;scope=compile|runtime
