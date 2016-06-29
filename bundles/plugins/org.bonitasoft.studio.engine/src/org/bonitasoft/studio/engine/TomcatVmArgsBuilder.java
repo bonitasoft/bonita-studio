@@ -46,6 +46,8 @@ public class TomcatVmArgsBuilder {
         }
         addSystemProperty(args, "catalina.home", "\"" + tomcatInstanceLocation + "\"");
         addSystemProperty(args, "CATALINA_HOME", "\"" + tomcatInstanceLocation + "\"");
+        addSystemProperty(args, "CATALINA_TMPDIR", "\"" + tomcatInstanceLocation + File.separatorChar + "temp\"");
+        addSystemProperty(args, "java.io.tmpdir", "\"" + tomcatInstanceLocation + File.separatorChar + "temp\"");
         addSystemProperty(args, "btm.root", "\"" + tomcatInstanceLocation + "\"");
         addSystemProperty(args, "wtp.deploy", "\"" + tomcatInstanceLocation + File.separatorChar + "webapps\"");
         addSystemProperty(args, "java.endorsed.dirs", "\"" + tomcatInstanceLocation + File.separatorChar + "endorsed\"");
