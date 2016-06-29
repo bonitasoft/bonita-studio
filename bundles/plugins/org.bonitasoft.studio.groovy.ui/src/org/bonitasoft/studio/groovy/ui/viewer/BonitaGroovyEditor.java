@@ -36,11 +36,6 @@ public class BonitaGroovyEditor extends GroovyEditor {
     }
 
     @Override
-    protected void createUndoRedoActions() {
-
-    }
-
-    @Override
     public JavaSourceViewerConfiguration createJavaSourceViewerConfiguration() {
         return new BonitaGroovyConfiguration(new GroovyColorManager(), getPreferenceStore(), this);
     }

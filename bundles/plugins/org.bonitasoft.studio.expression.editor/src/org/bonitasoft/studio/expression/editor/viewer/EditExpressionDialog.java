@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.expression.editor.viewer;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -34,6 +35,7 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
@@ -66,6 +68,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Romain Bioteau
@@ -157,6 +161,17 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
     @Override
     public void create() {
         super.create();
+        getShell().layout(true, true);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected Control createContents(Composite parent) {
+        configureContext();
+        final Control content = super.createContents(parent);
         String expressionType = inputExpression.getType();
         if (ExpressionConstants.CONSTANT_TYPE.equals(expressionType)) {
             if (!isSupportedConstantType(inputExpression.getReturnType())) {
@@ -167,9 +182,19 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         if (currentProvider != null && expressionTypeViewer != null) {
             expressionTypeViewer.setSelection(new StructuredSelection(currentProvider));
         }
-
-        getShell().layout(true, true);
+        return content;
     }
+
+    private void configureContext() {
+        final IEclipseContext e4Context = ((Workbench) PlatformUI.getWorkbench()).getContext();
+        while (!Objects.equals(e4Context.getActiveLeaf(), e4Context)) {
+            e4Context.getActiveLeaf().deactivate();
+        }
+        final IEclipseContext expressionDialogContext = e4Context.createChild("expressionDialogContext");
+        expressionDialogContext.activate();
+        getShell().setData("org.eclipse.e4.ui.shellContext", expressionDialogContext);
+    }
+
 
     private boolean isSupportedConstantType(final String returnType) {
         return returnType.equals(String.class.getName()) ||

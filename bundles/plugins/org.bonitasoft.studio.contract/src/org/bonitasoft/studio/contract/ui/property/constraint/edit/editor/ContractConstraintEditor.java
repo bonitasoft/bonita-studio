@@ -35,11 +35,6 @@ public class ContractConstraintEditor extends GroovyEditor {
     }
 
     @Override
-    protected void createUndoRedoActions() {
-        //Nothing to do
-    }
-
-    @Override
     public void editorContextMenuAboutToShow(final IMenuManager menu) {
         menu.dispose();
     }

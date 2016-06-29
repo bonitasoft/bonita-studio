@@ -16,25 +16,30 @@
  */
 package org.bonitasoft.studio.groovy.ui.viewer;
 
+import org.bonitasoft.studio.groovy.ui.Activator;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.e4.core.contexts.ContextFunction;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.StatusLineManager;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IKeyBindingService;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.services.ServiceLocator;
+import org.eclipse.ui.internal.EditorActionBars;
+import org.eclipse.ui.internal.KeyBindingService;
+import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.internal.WorkbenchPage;
+import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.services.IServiceLocator;
 
 /**
@@ -43,204 +48,259 @@ import org.eclipse.ui.services.IServiceLocator;
  */
 public class DummyEditorSite implements IEditorSite {
 
-	private Shell shell;
-	private GroovyEditor editor;
+	private final GroovyEditor editor;
+	private ISelectionProvider selectionProvider;
+	private IKeyBindingService keyBindingService;
+    private final Shell parentShell;
 
-	public DummyEditorSite(Shell parentShell,GroovyEditor editor ){
-		this.shell = parentShell ;
-		this.editor = editor ;
+	public DummyEditorSite(Shell parentShell, GroovyEditor editor) {
+		this.editor = editor;
+        this.parentShell = parentShell;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchPartSite#getId()
 	 */
-	public String getId() {
+	@Override
+    public String getId() {
 		return "org.bonitasoft.studio.DummyEditorSite";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchPartSite#getKeyBindingService()
 	 */
-	public IKeyBindingService getKeyBindingService() {
-		return new IKeyBindingService() {
-			
-			public void unregisterAction(IAction arg0) {
-				// TODO Auto-generated method stub
-				
+	@Override
+    public IKeyBindingService getKeyBindingService() {
+        final IEclipseContext context = (IEclipseContext) parentShell.getData("org.eclipse.e4.ui.shellContext");
+        final IEclipseContext activeLeaf = context.getActiveLeaf();
+        activeLeaf.set(IKeyBindingService.class.getName(), new ContextFunction() {
+
+			@Override
+			public Object compute(IEclipseContext context, String contextKey) {
+				if (keyBindingService == null) {
+					keyBindingService = new KeyBindingService(DummyEditorSite.this);
+				}
+
+				return keyBindingService;
 			}
-			
-			public void setScopes(String[] arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			public void registerAction(IAction arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			public String[] getScopes() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
+		});
+        return (IKeyBindingService) activeLeaf.get(IKeyBindingService.class.getName());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchPartSite#getPart()
 	 */
-	public IWorkbenchPart getPart() {
-		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+	@Override
+    public IWorkbenchPart getPart() {
+		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchPartSite#getPluginId()
 	 */
-	public String getPluginId() {
-		return null;
+	@Override
+    public String getPluginId() {
+		return Activator.PLUGIN_ID;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchPartSite#getRegisteredName()
 	 */
-	public String getRegisteredName() {
-		// TODO Auto-generated method stub
+	@Override
+    public String getRegisteredName() {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPartSite#registerContextMenu(org.eclipse.jface.action.MenuManager, org.eclipse.jface.viewers.ISelectionProvider)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPartSite#registerContextMenu(org.eclipse.jface.
+	 * action.MenuManager, org.eclipse.jface.viewers.ISelectionProvider)
 	 */
-	public void registerContextMenu(MenuManager arg0, ISelectionProvider arg1) {
+	@Override
+    public void registerContextMenu(MenuManager arg0, ISelectionProvider arg1) {
 		// TODO Auto-generated method stub
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPartSite#registerContextMenu(java.lang.String, org.eclipse.jface.action.MenuManager, org.eclipse.jface.viewers.ISelectionProvider)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPartSite#registerContextMenu(java.lang.String,
+	 * org.eclipse.jface.action.MenuManager,
+	 * org.eclipse.jface.viewers.ISelectionProvider)
 	 */
-	public void registerContextMenu(String arg0, MenuManager arg1,
-			ISelectionProvider arg2) {
+	@Override
+    public void registerContextMenu(String arg0, MenuManager arg1, ISelectionProvider arg2) {
 		// TODO Auto-generated method stub
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchSite#getPage()
 	 */
-	public IWorkbenchPage getPage() {
+	@Override
+    public IWorkbenchPage getPage() {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchSite#getSelectionProvider()
 	 */
-	public ISelectionProvider getSelectionProvider() {
-		return editor.getSelectionProvider() ;
+	@Override
+    public ISelectionProvider getSelectionProvider() {
+		return editor.getSelectionProvider();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchSite#getShell()
 	 */
-	public Shell getShell() {
-		return shell;
+	@Override
+    public Shell getShell() {
+
+		// Compatibility: This method should not be used outside the UI
+		// thread... but since this condition
+		// was not always in the JavaDoc, we still try to return our best guess
+		// about the shell if it is
+		// called from the wrong thread.
+		final Display currentDisplay = Display.getCurrent();
+		if (currentDisplay == null) {
+			// Uncomment this to locate places that try to access the shell from
+			// a background thread
+			// WorkbenchPlugin.log(new Exception("Error:
+			// IWorkbenchSite.getShell() was called outside the UI thread. Fix
+			// this code.")); //$NON-NLS-1$
+
+            final IWorkbenchWindow workbenchWindow = getWorkbenchWindow();
+            if (workbenchWindow != null) {
+                return workbenchWindow.getShell();
+            }
+            return null;
+		}
+		final MWindow window = ((WorkbenchWindow) PlatformUI.getWorkbench().getActiveWorkbenchWindow()).getModel();
+		final Control control = (Control) window.getWidget();
+		if (control != null && !control.isDisposed()) {
+			return control.getShell();
+		}
+		// likely means the part has been destroyed, return the parent window's
+		// shell, we don't just arbitrarily return the workbench window's shell
+		// because we may be in a detached window
+		return window == null ? getWorkbenchWindow().getShell() : (Shell) window.getWidget();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchSite#getWorkbenchWindow()
 	 */
-	public IWorkbenchWindow getWorkbenchWindow() {
-		return PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+	@Override
+    public IWorkbenchWindow getWorkbenchWindow() {
+        final IEclipseContext context = ((Workbench) PlatformUI.getWorkbench()).getContext();
+        return (IWorkbenchWindow) context.get(ISources.ACTIVE_WORKBENCH_WINDOW_NAME);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchSite#setSelectionProvider(org.eclipse.jface.viewers.ISelectionProvider)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IWorkbenchSite#setSelectionProvider(org.eclipse.jface.
+	 * viewers.ISelectionProvider)
 	 */
-	public void setSelectionProvider(ISelectionProvider selectionProvider) {
-	
+	@Override
+    public void setSelectionProvider(ISelectionProvider selectionProvider) {
+		this.selectionProvider = selectionProvider;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
-	public Object getAdapter(Class arg0) {
-		// TODO Auto-generated method stub
+	@Override
+    public Object getAdapter(Class arg0) {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.services.IServiceLocator#getService(java.lang.Class)
 	 */
-	public Object getService(Class arg0) {
-		return null;
+	@Override
+    public Object getService(Class api) {
+		return PlatformUI.getWorkbench().getService(api);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.services.IServiceLocator#hasService(java.lang.Class)
 	 */
-	public boolean hasService(Class arg0) {
-		return false;
+	@Override
+    public boolean hasService(Class api) {
+		return PlatformUI.getWorkbench().hasService(api);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IEditorSite#getActionBarContributor()
 	 */
-	public IEditorActionBarContributor getActionBarContributor() {
+	@Override
+    public IEditorActionBarContributor getActionBarContributor() {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IEditorSite#getActionBars()
 	 */
-	public IActionBars getActionBars() {
-		return new IActionBars() {
-			
-			public void updateActionBars() {
-				
-			}
-			
-			public void setGlobalActionHandler(String arg0, IAction arg1) {
-	
-			}
-			
-			public IToolBarManager getToolBarManager() {
-				return new ToolBarManager();
-			}
-			
-			public IStatusLineManager getStatusLineManager() {
-				return new StatusLineManager();
-			}
-			
-			public IServiceLocator getServiceLocator() {
-				return new ServiceLocator();
-			}
-			
-			public IMenuManager getMenuManager() {
-				return new MenuManager();
-			}
-			
-			public IAction getGlobalActionHandler(String arg0) {
-				return null;
-			}
-			
-			public void clearGlobalActionHandlers() {
-				// TODO Auto-generated method stub
-				
-			}
-		};
+	@Override
+    public IActionBars getActionBars() {
+		return new EditorActionBars((WorkbenchPage) getPage(),
+				(IServiceLocator) PlatformUI.getWorkbench().getService(IServiceLocator.class), GroovyEditor.EDITOR_ID);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IEditorSite#registerContextMenu(org.eclipse.jface.action.MenuManager, org.eclipse.jface.viewers.ISelectionProvider, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IEditorSite#registerContextMenu(org.eclipse.jface.action.
+	 * MenuManager, org.eclipse.jface.viewers.ISelectionProvider, boolean)
 	 */
-	public void registerContextMenu(MenuManager arg0, ISelectionProvider arg1,boolean arg2) {
+	@Override
+    public void registerContextMenu(MenuManager arg0, ISelectionProvider arg1, boolean arg2) {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IEditorSite#registerContextMenu(java.lang.String, org.eclipse.jface.action.MenuManager, org.eclipse.jface.viewers.ISelectionProvider, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.IEditorSite#registerContextMenu(java.lang.String,
+	 * org.eclipse.jface.action.MenuManager,
+	 * org.eclipse.jface.viewers.ISelectionProvider, boolean)
 	 */
-	public void registerContextMenu(String arg0, MenuManager arg1,ISelectionProvider arg2, boolean arg3) {
+	@Override
+    public void registerContextMenu(String arg0, MenuManager arg1, ISelectionProvider arg2, boolean arg3) {
 
 	}
 

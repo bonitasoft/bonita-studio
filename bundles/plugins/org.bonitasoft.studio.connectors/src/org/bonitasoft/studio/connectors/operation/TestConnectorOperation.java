@@ -61,6 +61,7 @@ import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
+import org.bonitasoft.studio.engine.export.builder.GroovyConnectorConfigurationConverter;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
@@ -393,9 +394,14 @@ public class TestConnectorOperation implements IRunnableWithProgress {
     }
 
     public void setConnectorConfiguration(final ConnectorConfiguration configuration) {
+        final GroovyConnectorConfigurationConverter groovyConnectorConfigurationConverter = new GroovyConnectorConfigurationConverter();
         connectorConfiguration = configuration;
+        ConnectorConfiguration convertedConfiguration = configuration;
+        if (groovyConnectorConfigurationConverter.appliesTo(configuration)) {
+            convertedConfiguration = groovyConnectorConfigurationConverter.convert(configuration);
+        }
         invalidExpressionForTest.clear();
-        for (final ConnectorParameter parameter : configuration.getParameters()) {
+        for (final ConnectorParameter parameter : convertedConfiguration.getParameters()) {
             detectInvalidExpressions(parameter);
             addInputParameters(parameter.getKey(), parameter.getExpression());
         }

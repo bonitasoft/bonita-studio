@@ -93,6 +93,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.Section;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author Romain Bioteau
  */
@@ -394,7 +396,6 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
     }
 
     protected void createGroovyEditor(final Composite parent) {
-
         groovyViewer = new GroovyViewer(mainComposite, isPageFlowContext);
         groovyViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         sourceViewer = groovyViewer.getSourceViewer();
@@ -412,7 +413,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 final Map<String, Serializable> variables = TestGroovyScriptUtil.createVariablesMap(
-                        groovyViewer.getGroovyCompilationUnit(), nodes);
+                        groovyViewer.getGroovyCompilationUnit(), nodes == null ? Lists.<ScriptVariable> newArrayList() : nodes);
 
                 if (variables.isEmpty()) {
                     final ManageConnectorJarDialog mcjd = new ManageConnectorJarDialog(Display.getDefault().getActiveShell());
