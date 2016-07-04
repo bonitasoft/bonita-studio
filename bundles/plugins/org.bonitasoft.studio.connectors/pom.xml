@@ -530,14 +530,6 @@
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
-								<!--REST CONNECTORS-->
-								<artifactItem>
-									<groupId>org.bonitasoft.connectors</groupId>
-									<artifactId>bonita-connector-rest-impl</artifactId>
-									<version>2.0.0</version>
-									<classifier>connector</classifier>
-									<type>zip</type>
-								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${connectors.tmp.dir}</outputDirectory>
 							<overWriteReleases>true</overWriteReleases>
