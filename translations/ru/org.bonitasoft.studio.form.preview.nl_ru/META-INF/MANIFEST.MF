@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: studio form preview nl_ru
-Bundle-SymbolicName: org.bonitasoft.studio.form.preview.nl_ru
-Bundle-Version: 7.2.0.qualifier
-Bundle-Vendor: BonitaSoft S.A.
-Fragment-Host: org.bonitasoft.studio.form.preview;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5

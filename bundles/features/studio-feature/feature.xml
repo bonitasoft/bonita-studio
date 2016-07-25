@@ -461,13 +461,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          version="2.4.300.xx-201509250011-e44"/>
 
    <plugin
-         id="org.eclipse.ui.views.properties.tabbed"
-         download-size="0"
-         install-size="0"
-         version="3.6.100.v20140519-0906"
-         unpack="false"/>
-
-   <plugin
          id="org.objectweb.asm"
          download-size="0"
          install-size="0"
@@ -583,6 +576,13 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <plugin
          id="org.bonitasoft.studio.legacy6x"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.views.properties.tabbed"
          download-size="0"
          install-size="0"
          version="0.0.0"

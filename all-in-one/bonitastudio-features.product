@@ -71,7 +71,9 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <feature id="studio-bos-specific-feature"/>
       <feature id="bos-branding-feature"/>
       <feature id="rootfiles-feature"/>
-      <feature id="org.bonitasoft.studio.translations"/>
+      <feature id="org.eclipse.babel.nls_eclipse_es" version="4.4.0.v20141223043836"/>
+      <feature id="org.eclipse.babel.nls_eclipse_fr" version="4.4.0.v20141223043836"/>
+      <feature id="org.eclipse.babel.nls_eclipse_ja" version="4.4.0.v20141223043836"/>
    </features>
 
    <configurations>

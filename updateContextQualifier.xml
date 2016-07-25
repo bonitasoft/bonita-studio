@@ -19,10 +19,10 @@
 	
 	<target name="set-qualifier">
 		<echo>${basedir}/pom.xml</echo>
-		<replace file="${basedir}/pom.xml" token="&lt;!--forceContextQualifier-->" value="&lt;forceContextQualifier>${tag.qualifier}&lt;/forceContextQualifier>"  />
+		<replace file="${basedir}/pom.xml" token="&lt;!--forceContextQualifier -->" value="&lt;forceContextQualifier>${tag.qualifier}&lt;/forceContextQualifier>"  />
     </target>
 	
 	<target name="unset-qualifier">
-			<replace file="${basedir}/pom.xml" value="&lt;!--forceContextQualifier-->" token="&lt;forceContextQualifier>${tag.qualifier}&lt;/forceContextQualifier>" />
+			<replace file="${basedir}/pom.xml" value="&lt;!--forceContextQualifier -->" token="&lt;forceContextQualifier>${tag.qualifier}&lt;/forceContextQualifier>" />
 	 </target>
 </project>
