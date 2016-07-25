@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.bonitasoft.studio.exporter.tests
 Bundle-SymbolicName: org.bonitasoft.studio.exporter.tests
-Bundle-Version: 7.3.3.qualifier
+Bundle-Version: 7.4.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.exporter.tests.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.exporter;bundle-version="1.0.0",
