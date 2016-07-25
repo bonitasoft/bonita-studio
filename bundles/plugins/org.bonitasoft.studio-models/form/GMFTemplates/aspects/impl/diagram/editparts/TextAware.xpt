@@ -1,0 +1,93 @@
+/*
+ * Copyright (C) 2009 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+
+«EXTENSION xpt::diagram::editparts::Utils»
+
+
+«AROUND setLabelTextHelper FOR gmfgen::GenCommonBase-»
+	/**
+	 * @generated using BonitaSoft aspects
+	 * 
+	 */
+	protected void setLabelTextHelper(org.eclipse.draw2d.IFigure figure, String text) {
+	/*	org.eclipse.emf.ecore.EObject obj = resolveSemanticElement();
+		if (obj != null && (obj instanceof org.bonitasoft.studio.model.form.Info 
+							|| obj instanceof org.bonitasoft.studio.model.form.FormField 
+							|| obj instanceof org.bonitasoft.studio.model.form.FileWidget 
+							|| obj instanceof org.bonitasoft.studio.model.form.ImageWidget
+							|| obj instanceof org.bonitasoft.studio.model.form.FormButton
+							|| obj instanceof org.bonitasoft.studio.model.form.AbstractTable ))
+		{
+			org.bonitasoft.studio.model.form.Widget wid = (org.bonitasoft.studio.model.form.Widget) obj;
+			if(wid.getShowDisplayLabel()==null ||wid.getShowDisplayLabel().booleanValue() ){
+				if(wid.getDisplayLabel()!=null 
+						&& wid.getDisplayLabel().getContent() != null) {
+					text = wid.getDisplayLabel().getContent();
+				}else{
+					text= "";
+				}
+			}else{
+				text = "";
+			}
+		}*/
+		if (figure instanceof org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) {
+			((org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) figure).setText(text);
+		} else {
+			((org.eclipse.draw2d.Label) figure).setText(text);
+		}
+	}
+
+«ENDAROUND»
+
+«AROUND getParserElement FOR gmfgen::LabelModelFacet-»
+		final org.eclipse.emf.ecore.EObject element = resolveSemanticElement();
+		if(element instanceof org.bonitasoft.studio.model.form.Widget 
+		&& !(element instanceof org.bonitasoft.studio.model.form.MessageInfo)
+		&& !(element instanceof org.bonitasoft.studio.model.form.HiddenWidget)
+		&& !(element instanceof org.bonitasoft.studio.model.form.HtmlWidget)
+		&& !(element instanceof org.bonitasoft.studio.model.form.IFrameWidget)){
+			return ((org.bonitasoft.studio.model.form.Widget)element).getDisplayLabel();
+		}else{
+			return element;
+		}
+«ENDAROUND»
+
+
+«AROUND setLabelTextHelper FOR gmfgen::GenCommonBase-»
+
+«ENDAROUND»
+
+«AROUND getManager(diagram : gmfgen::GenDiagram) FOR gmfgen::GenCommonBase-»
+	/**
+	*@generated using BonitaSoft aspects
+	*Create custom text director which use wrap label editor
+	*/
+	protected org.eclipse.gef.tools.DirectEditManager getManager() {
+		if (manager == null) {
+			/*Create custom text director which use wrap label editor*/
+			setManager(new org.bonitasoft.studio.common.diagram.tools.CustomTextDirectEditManager(this, org.bonitasoft.studio.common.diagram.tools.CustomTextDirectEditManager
+					.getTextCellEditorClass(this), «diagram.getEditPartFactoryQualifiedClassName()»
+					.getTextCellEditorLocator(this)));
+		}
+		return manager;
+	}
+«ENDAROUND»
+
+

@@ -1,0 +1,7 @@
+Once you get this plugin, you can integrate the console from latest sources simply by typing
+  > ant -lib antDeps
+         -f getSimulationLibs.xml
+        -Dmaven.repo=/path/to/a/maven/repo/containing/bos/simulation/artifacts
+        -DartifactVersion=5.5-SNAPSHOT
+        
+It retrieves the BOS Simulation artifacts from the maven.repo and install them into the plugin.

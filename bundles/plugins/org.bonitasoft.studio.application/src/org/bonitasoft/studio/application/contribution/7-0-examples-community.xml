@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" ?>
+<rss version="2.0">
+  <channel>
+    <pubDate>2015-05-13</pubDate>
+    <author>Bonitasoft</author>
+    <category>Examples</category>
+    <title>Bonitasoft examples: Community</title>
+    <link>http://community.bonitasoft.com/project?field_project_category_tid=360&amp;title=&amp;term_node_tid_depth=2241</link>
+    <description>Bonitasoft Examples</description>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Examples</category>
+       <title>Expense report</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://community.bonitasoft.com/project/expense-report-example</link>
+       <description></description>
+    </item>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Examples</category>
+       <title>Vacation management</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://community.bonitasoft.com/project/vacation-management-example</link>
+       <description></description>
+    </item>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Examples</category>
+       <title>Procurement</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://community.bonitasoft.com/project/procurement</link>
+       <description></description>
+    </item>
+   </channel>
+</rss>
+
+

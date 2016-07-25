@@ -1,0 +1,345 @@
+/* default process template style */
+
+html {
+	height: 100%;
+}
+
+div {
+	text-align: center;
+}
+
+a:link {
+	color: #C8071D;
+}
+
+a:visited {
+	color: #C8071D;
+}
+
+.waves_bottom {
+	background: #c1c4cc url(../images/waves-merged.png) no-repeat scroll bottom right;
+}
+
+.waves_top {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 121px;
+	width: 352px;
+	background-image: url(../images/waves-top.png);
+}
+
+#bonita_logout_box {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+/** User ID Card */
+div.identification {
+	background-image: url(../images/bloc-identification.png);
+	float: right;
+	height: 98px;
+	margin-right: 15px;
+	margin-top: 5px;
+	width: 230px;
+}
+
+img.avatar {
+	width: 60px;
+	height: 60px;
+	display: block;
+	float: left;
+	border: 0px solid #FFFFFF;
+}
+
+div.identified-right {
+	float: left;
+	text-align: left;
+	margin-left: 8px;
+	margin-top: 5px;
+	width: 130px;
+}
+
+div.identified-left {
+	float: left;
+	margin-left: 16px;
+	margin-top: 18px;
+}
+
+.identif-1 {
+	color: #FFFFFF;
+	font-size: 17px;
+	margin-bottom: 10px;
+}
+
+.identif-2 {
+	color: #DBDBDB;
+	font-size: 12px;
+	padding-right: 3px;
+	cursor: pointer;
+	cursor: hand;
+}
+/** End of User ID Card */
+
+#bonita_user_xp_link {
+	position: absolute;
+	top: 103px;
+	right: 0;
+	width: 230px;
+	margin-right: 15px;
+	margin-top: 5px;
+}
+
+.bonita_user_xp_label {
+	margin-left: 35px;
+	color: #5F5F5F;
+	float: left;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.bonita_user_xp_icon {
+	float:	left;
+	background: transparent url(../images/sprite.png) no-repeat scroll -584px 0px;
+	height: 16px;
+	width: 20px;
+	cursor: pointer;
+}
+
+div#containerheader {
+	width: 100%;
+	height: 121px;
+}
+
+div#logo {
+	top: 14px;
+	left: 10px;
+	position: absolute;
+}
+
+div#logo_content {
+	width: 198px;
+	height: 66px;
+}
+
+.logo_image {
+	border: 0;
+	width: 198px;
+	height: 65px;
+}
+
+.bonita_process_label {
+	color: black;
+	font-family: verdana;
+	font-weight: bold;
+	text-align: center;
+	font-size: 20px;
+	position: absolute;
+	top: 50px;
+	left: 50%;
+	margin-left: -300px;
+	width: 600px;
+}
+
+div#headeralttop {
+	width: 100%;
+	height: 3px;
+	background-color: #de1c18;
+}
+
+.rounded_corners_top_left {
+	margin-top: 0;
+	margin-bottom:0;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 11px;
+	border: 0;
+	width: 55%;
+	min-width: 700px;
+	background: transparent url(../images/rounded/white-shadow-top-left.png) no-repeat scroll top left;
+}
+
+.rounded_corners_top_right {
+	margin: 0;
+	padding-right: 11px;
+	background: transparent url(../images/rounded/white-shadow-top-right.png) no-repeat scroll top right;
+}
+
+.rounded_corners_top_center {
+	margin 0;
+	height: 11px;
+	background: transparent url(../images/rounded/white-shadow-top.png) repeat-x scroll 0 0;
+}
+
+.rounded_corners_middle_left {
+	margin-top: 0;
+	margin-bottom:0;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 11px;
+	width: 55%;
+	min-width: 700px;
+	background: transparent url(../images/rounded/white-shadow-left.png) repeat-y scroll center left;
+}
+
+.rounded_corners_middle_right {
+	padding-right: 11px;
+	background: transparent url(../images/rounded/white-shadow-right.png) repeat-y scroll center right;
+}
+
+.rounded_corners_bottom_left {
+	margin-top: 0;
+	margin-bottom:0;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0;
+	border: 0;
+	padding-left: 11px;
+	width: 55%;
+	min-width: 700px;
+	background: transparent url(../images/rounded/white-shadow-bottom-left.png) no-repeat scroll top left;
+}
+
+.rounded_corners_bottom_right {
+	padding-right: 11px;
+	background: transparent url(../images/rounded/white-shadow-bottom-right.png) no-repeat scroll top right;
+}
+
+.rounded_corners_bottom_center {
+	margin: 0;
+	height: 11px;
+	background: transparent url(../images/rounded/white-shadow-bottom.png) repeat-x scroll 0 0;
+}
+
+div#bonita_form {
+	background-color: #FFFFFF;
+	border: 0px solid #FFFFFF;
+	margin: 0;
+	padding-left: 0;
+	padding-right: 0;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	width: 100%;
+	min-height: 200px;
+}
+
+iframe#bonita_form {
+	background-color: #FFFFFF;
+	border: 0px solid #FFFFFF;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	min-height: 200px;
+}
+
+#bonita_refresh_button {
+	margin: 0;
+	padding-top: 10px;
+	background-color:#FFFFFF;
+}
+
+#bonita_refresh_button div {
+	width: 60px;
+	overflow: visible;
+	text-align: center;
+	margin-top: 0;
+	margin-bottom:0;
+	margin-left: auto;
+	margin-right: auto;
+	text-decoration: underline;
+	font-size: 12px;
+	font-weight: bold;
+	color:#5F5F5F;
+	cursor: pointer;
+}
+
+
+div#footer {
+	width: 80%;
+	height: 38px;
+	margin-left: auto;
+	margin-right: auto;
+	clear: both;
+}
+
+.footer {
+	color: #333333;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 20px;
+	text-align: justify;
+}
+
+div#footertop {
+	width: 80%;
+	height: 19px;
+}
+
+div#footertop_left {
+	width: 60%;
+	height: 19px;
+	float: left;
+}
+
+hr#footerline {
+	margin: 0px;
+	height: 1px;
+	color: #333333;
+}
+
+div#footerbottom {
+	width: 80%;
+	height: 19px;
+	text-align:center;
+}
+
+/* default page template style */
+
+.bonita_form_page_label {
+	color: #5F5F5F;
+	font-weight: bold;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	font-size: 16px;
+}
+
+.bonita_form_container {
+	margin-left: auto;
+	margin-right: auto;
+	clear: both;
+	max-width: 900px;
+}
+
+.bonita_form_confirm_message {
+	color: #5F5F5F;
+	font-weight: bold;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 30px;
+	padding-bottom: 20px;
+	font-size: 14px;
+}
+
+.bonita_form_error_message {
+	color: #5F5F5F;
+	font-weight: bold;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 30px;
+	padding-bottom: 20px;
+	font-size: 14px;
+}
+
+.bonita_form_cause_message {
+	color: black;
+	font-weight: normal;
+	text-align: left;
+	padding: 30px;
+	font-size: 12px;
+}

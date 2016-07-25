@@ -1,0 +1,117 @@
+/*
+ * Copyright (C) 2009 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+
+«EXTENSION xpt::diagram::editparts::Utils»
+
+«AROUND additions FOR gmfgen::GenNode-»
+	
+	«EXPAND refreshBounds-»
+	
+
+«ENDAROUND»
+
+«DEFINE refreshBounds FOR gmfgen::GenNode-»
+	/**
+	 * Generated using BonitaSoft aspects
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart#refreshBounds()
+	 */
+	@Override
+	protected void refreshBounds() {
+		/*Sometimes return a FormImpl : it seems to be an inconsistent state during command execution/composition*/
+		if (!(resolveSemanticElement() instanceof org.bonitasoft.studio.model.form.Widget))
+			return;
+		org.bonitasoft.studio.model.form.Widget widget = (org.bonitasoft.studio.model.form.Widget) resolveSemanticElement();
+		int x;
+		int y;
+		int width;
+		int height;
+		if (widget.getWidgetLayoutInfo() != null) {
+			x = widget.getWidgetLayoutInfo().getColumn();
+			y = widget.getWidgetLayoutInfo().getLine();
+			height = widget.getWidgetLayoutInfo().getVerticalSpan();
+			width = widget.getWidgetLayoutInfo().getHorizontalSpan();
+		} else {
+			return;
+		}
+		org.eclipse.draw2d.geometry.Dimension size = new org.eclipse.draw2d.geometry.Dimension(width, height);
+		org.eclipse.draw2d.geometry.Point loc = new org.eclipse.draw2d.geometry.Point(x, y);
+		((org.eclipse.gef.GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), new org.eclipse.draw2d.geometry.Rectangle(loc, size));
+	}
+«ENDDEFINE»
+
+«DEFINE getDragTracker FOR gmfgen::GenNode-»
+	/** 
+	 * Generated using BonitaSoft aspects
+	 * Override DragTracker to keep the move on the grid (by now only limited with the left)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart#getDragTracker(org.eclipse.gef.Request)
+	 */
+	public org.eclipse.gef.DragTracker getDragTracker(org.eclipse.gef.Request req) {
+		return new org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx(this){
+			
+			/**distance from mouse location to the left of the feedback*/
+			int leftDiff = -1;
+			/**distance from mouse location to the top of the feedback*/
+			int topDiff = -1;
+						
+			/**
+			 * Don't move on the side.
+			 * @see org.eclipse.gef.tools.AbstractTool#getLocation()
+			 */
+			protected org.eclipse.draw2d.geometry.Point getLocation() {				
+				org.eclipse.draw2d.geometry.Point p = super.getLocation();
+				org.eclipse.draw2d.IFigure feedbackLayer = getLayer(org.eclipse.gef.LayerConstants.FEEDBACK_LAYER);
+				
+				if (feedbackLayer.getChildren() != null && feedbackLayer.getChildren().size() != 0) {								
+					/*init value if not yet initialized*/
+					if(leftDiff == -1){						
+						if(feedbackLayer.getChildren().size() > 1){
+							/*Get and set the left distance of the figure feedbackLayer */
+							org.eclipse.draw2d.IFigure figure = (org.eclipse.draw2d.IFigure) feedbackLayer.getChildren().get(1);
+							int left = figure.getBounds().getLeft().x;
+							leftDiff = p.x -left;
+							int top = figure.getBounds().getTop().y;
+							topDiff = p.y - top;
+							}
+						}
+						
+					/*get the margins of the GridFreeFromLayer*/
+					org.eclipse.draw2d.Border border = ((org.eclipse.gef.editparts.AbstractGraphicalEditPart) getSourceEditPart().getParent()).getFigure().getBorder();
+					int leftMargin = 0;
+					int topMargin = 0;
+					if(border != null){
+					 leftMargin = border.getInsets(null).left;
+					 topMargin = border.getInsets(null).top;
+					}
+					
+					/*if we are completely on the left*/
+					if (p.x-leftDiff < leftMargin) {
+						p.x = leftMargin + leftDiff;
+					}
+					/*if we are completely on the top*/
+					if (p.y - topDiff < topMargin){
+						p.y = topMargin + topDiff;
+					}
+				}
+				return p;
+			}
+			};
+		}
+«ENDDEFINE»

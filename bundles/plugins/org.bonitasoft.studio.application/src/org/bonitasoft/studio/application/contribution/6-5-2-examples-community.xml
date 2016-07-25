@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" ?>
+<rss version="2.0">
+  <channel>
+    <pubDate>2014-04-24</pubDate>
+    <author>BonitaSoft</author>
+    <category>Examples</category>
+    <title>Bonitasoft Examples: Community</title>
+    <link>http://www.bonitasoft.com/for-you-to-read/process-library?type=&amp;resource=community_example</link>
+    <description>Bonitasoft Examples</description>
+	<item>
+       <author>Julien Espitallier</author>
+       <category>Examples</category>
+       <title>Help Desk</title>
+       <link>http://www.bonitasoft.com/system/files/process_library/community/os_it_help_desk-3.0.bos</link>
+       <description></description>
+    </item>
+	<item>
+       <author>Julien Espitallier</author>
+       <category>Examples</category>
+       <title>Procurement</title>
+       <link>http://www.bonitasoft.com/system/files/process_library/community/os_procurement-3.0.bos</link>
+       <description></description>
+    </item>
+   	<item>
+       <author>Julien Espitallier</author>
+       <category>Examples</category>
+       <title>Employee Onboarding</title>
+       <link>http://www.bonitasoft.com/system/files/process_library/community/os_onboarding-3.0.bos</link>
+       <description></description>
+    </item>
+    <item>
+       <author>Julien Espitallier</author>
+       <category>Examples</category>
+       <title>Travel Request</title>
+       <link>http://www.bonitasoft.com/system/files/process_library/community/os_travel_request-3.0.bos</link>
+       <description></description>
+    </item>
+   </channel>
+</rss>
+
+

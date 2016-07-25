@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<antlib>
+  	<!-- Tasks that can only be run in Eclipse antRunner -->
+  	<taskdef name="refreshWorkspace" classname="org.bonitasoft.studio.antTasks.RefreshWorkspaceTask"/>
+  	<taskdef name="osgi-bundle" classname="org.bonitasoft.studio.antTasks.OSGIBundlePropertyTask"/>
+	<taskdef name="osgi-bundle-merge" classname="org.bonitasoft.studio.antTasks.OSGIBundleMergeTask"/>
+</antlib>

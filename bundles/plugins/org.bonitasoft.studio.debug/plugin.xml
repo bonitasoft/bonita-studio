@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.bonitasoft.studio.debug.command.DebugProcessCommand"
+            id="org.bonitasoft.studio.debug.debugProcess"
+            name="%debugLabel">
+         <commandParameter
+               id="configuration"
+               name="configuration"
+               optional="true">
+         </commandParameter>
+      </command>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.coolbarContributionItem">
+      <coolbarItem
+            class="org.bonitasoft.studio.debug.coolbar.DebugCoolbarItem"
+            priority="0"
+            toolbarPosition="12">
+      </coolbarItem>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.bonitasoft.studio.menu.run?after=org.bonitasoft.studio.engine.runCommand">
+         <command
+               commandId="org.bonitasoft.studio.debug.debugProcess"
+               icon="icons/debug.png"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+
+</plugin>

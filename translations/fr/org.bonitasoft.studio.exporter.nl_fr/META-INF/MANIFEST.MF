@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: studio application nl_fr
+Bundle-SymbolicName: org.bonitasoft.studio.exporter.nl_fr
+Bundle-Version: 7.3.1.qualifier
+Bundle-Vendor: BonitaSoft S.A.
+Fragment-Host: org.bonitasoft.studio.exporter;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

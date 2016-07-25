@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<history:History xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:history="http://www.eclipse.org/emf/edapt/history/0.3">
+  <releases date="2012-12-10T10:30:27.317+0100" label="6.0">
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Create" element="validator.ecore#/">
+        <changes xsi:type="history:Set" element="validator.ecore#/" featureName="name"
+            dataValue="validator"/>
+        <changes xsi:type="history:Set" element="validator.ecore#/" featureName="nsURI"
+            dataValue="http://www.bonitasoft.org/ns/studio/validator"/>
+        <changes xsi:type="history:Set" element="validator.ecore#/" featureName="nsPrefix"
+            dataValue="validator"/>
+      </changes>
+      <changes xsi:type="history:Create" target="validator.ecore#/" referenceName="eClassifiers"
+          element="validator.ecore#//ValidatorDescriptor">
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor"
+            featureName="name" dataValue="ValidatorDescriptor"/>
+      </changes>
+      <changes xsi:type="history:Create" target="validator.ecore#//ValidatorDescriptor"
+          referenceName="eStructuralFeatures" element="validator.ecore#//ValidatorDescriptor/name">
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/name"
+            featureName="name" dataValue="name"/>
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/name"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <changes xsi:type="history:Create" target="validator.ecore#//ValidatorDescriptor"
+          referenceName="eStructuralFeatures" element="validator.ecore#//ValidatorDescriptor/description">
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/description"
+            featureName="name" dataValue="description"/>
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/description"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <changes xsi:type="history:Create" target="validator.ecore#//ValidatorDescriptor"
+          referenceName="eStructuralFeatures" element="validator.ecore#//ValidatorDescriptor/className">
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/className"
+            featureName="name" dataValue="className"/>
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/className"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <changes xsi:type="history:Create" target="validator.ecore#//ValidatorDescriptor"
+          referenceName="eStructuralFeatures" element="validator.ecore#//ValidatorDescriptor/hasParameter">
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/hasParameter"
+            featureName="name" dataValue="hasParameter"/>
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/hasParameter"
+            featureName="defaultValueLiteral" dataValue="false"/>
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/hasParameter"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
+      </changes>
+      <changes xsi:type="history:Create" target="validator.ecore#//ValidatorDescriptor"
+          referenceName="eStructuralFeatures" element="validator.ecore#//ValidatorDescriptor/dependencies">
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/dependencies"
+            featureName="name" dataValue="dependencies"/>
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/dependencies"
+            featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/dependencies"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <changes xsi:type="history:Create" target="validator.ecore#/" referenceName="eClassifiers"
+          element="validator.ecore#//ValidatorType">
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorType"
+            featureName="name" dataValue="ValidatorType"/>
+      </changes>
+      <changes xsi:type="history:Create" target="validator.ecore#//ValidatorDescriptor"
+          referenceName="eStructuralFeatures" element="validator.ecore#//ValidatorDescriptor/type">
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/type"
+            featureName="name" dataValue="type"/>
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/type"
+            featureName="defaultValueLiteral" dataValue="0"/>
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorDescriptor/type"
+            featureName="eType" referenceValue="validator.ecore#//ValidatorType"/>
+      </changes>
+      <changes xsi:type="history:Create" target="validator.ecore#//ValidatorType"
+          referenceName="eLiterals" element="validator.ecore#//ValidatorType/FiledValidator">
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorType/FiledValidator"
+            featureName="name" dataValue="FiledValidator"/>
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorType/FiledValidator"
+            featureName="literal" dataValue="FiledValidator"/>
+      </changes>
+      <changes xsi:type="history:Create" target="validator.ecore#//ValidatorType"
+          referenceName="eLiterals" element="validator.ecore#//ValidatorType/PageValidator">
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorType/PageValidator"
+            featureName="name" dataValue="PageValidator"/>
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorType/PageValidator"
+            featureName="value" dataValue="1" oldDataValue="0"/>
+        <changes xsi:type="history:Set" element="validator.ecore#//ValidatorType/PageValidator"
+            featureName="literal" dataValue="PageValidator"/>
+      </changes>
+    </changes>
+  </releases>
+  <releases/>
+</history:History>

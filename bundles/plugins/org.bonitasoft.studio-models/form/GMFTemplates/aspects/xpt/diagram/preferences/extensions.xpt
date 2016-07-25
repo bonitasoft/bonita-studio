@@ -1,0 +1,42 @@
+/*
+ * Copyright (C) 2009 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+
+«EXTENSION xpt::editor::Utils»
+
+«AROUND extensions FOR gmfgen::GenDiagram-»
+
+   <extension point="org.eclipse.core.runtime.preferences" id="prefs">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <initializer class="«EXPAND xpt::diagram::preferences::PreferenceInitializer::qualifiedClassName»"/>
+   </extension>
+«REM»Remove Preference pages «ENDREM»
+«REM»
+«IF preferencePages->size() > 0-»
+   <extension point="org.eclipse.ui.preferencePages" id="prefpages">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+«EXPAND preferencePage FOREACH allPreferencePages(self)-»
+   </extension>
+«ENDIF-»
+«ENDREM»
+«ENDAROUND»
+
+«AROUND preferencePage FOR gmfgen::GenPreferencePage-»
+      «REM»Do nothing, remove all preferences pages«ENDREM»
+«ENDAROUND»

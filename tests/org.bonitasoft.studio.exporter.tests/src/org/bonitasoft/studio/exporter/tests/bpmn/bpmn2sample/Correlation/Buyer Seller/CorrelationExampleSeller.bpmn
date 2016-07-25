@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="def"
+	targetNamespace="http://www.example.org/Processes/sellerProcess" 	
+	typeLanguage="http://www.w3.org/2001/XMLSchema" 	
+	expressionLanguage="http://www.w3.org/1999/XPath" 	
+	xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 	
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:myData="http://www.example.org/Messages" 
+	xmlns:tns="http://www.example.org/Processes/sellerProcess" >
+
+   <!--    Structures and Messages -->
+   <import importType="http://www.w3.org/2001/XMLSchema" 	
+	location="DataDefinitions.xsd" 
+	namespace="http://www.example.org/Messages"/>
+   <import importType="http://schemas.xmlsoap.org/wsdl/" 	
+	location="Interfaces.wsdl" 
+	namespace="http://www.example.org/Messages"/>
+
+   <itemDefinition id="itemRFQMessage" structureRef="myData:rfqRequest">
+      <!-- Single part message -->
+   </itemDefinition>
+   <itemDefinition id="itemQuoteMessage" structureRef="myData:rfqResponse">
+      <!-- Single part message -->
+   </itemDefinition>
+   <itemDefinition id="itemFaultMessage" structureRef="myData:rfqFault">
+      <!-- Single part message -->
+   </itemDefinition>
+   <itemDefinition id="itemOrderRequest" structureRef="myData:orderRequest">
+      <!-- Multi part message -->
+   </itemDefinition>
+   <itemDefinition id="itemOrderResponse" structureRef="myData:orderResponse">
+      <!-- Multi part message -->
+   </itemDefinition>
+   
+   <itemDefinition id="itemShippingRequest" structureRef="myData:shippingRequest">
+      <!-- Multi part message -->
+   </itemDefinition>
+   
+   <itemDefinition id="itemShippingResponse" structureRef="myData:shippingResponse">
+      <!-- Multi part message -->
+   </itemDefinition>
+
+   <message id="msgRFQ" name="RFQ Message" itemRef="tns:itemRFQMessage"/>
+   <message id="msgQuote" name="Quote Message" itemRef="tns:itemQuoteMessage"/>
+   <message id="msgFault" name="Fault Message" itemRef="tns:itemFaultMessage"/>
+   <message id="msgOrderData" name="Order Data Message" itemRef="tns:itemOrderRequest"/>
+   <message id="msgOrderConfirmation" name="Order Confirmation Message" itemRef="tns:itemOrderResponse"/>
+   <message id="msgShippingData" name="Shipping Data Message" itemRef="tns:itemShippingRequest"/>
+   <message id="msgShippingConfirmation" name="Shipping Confirmation Message" itemRef="tns:itemShippingResponse"/>
+
+   <partnerEntity id="theSeller" name="The Seller">
+   	 <participantRef>tns:seller</participantRef>
+   </partnerEntity>
+   <partnerRole id="aBuyer" name="A Buyer">
+	   <participantRef>tns:buyer</participantRef>
+   </partnerRole>
+   <partnerRole id="aShipper" name="A Shipper">
+	   <participantRef>tns:shipper</participantRef>
+   </partnerRole>
+     
+   <correlationProperty id="propQuoteID" name="Property Quote ID" type="xsd:string">
+      <correlationPropertyRetrievalExpression messageRef="tns:msgRFQ">
+         <messagePath>/request/quoteID</messagePath>
+      </correlationPropertyRetrievalExpression>
+      <correlationPropertyRetrievalExpression messageRef="tns:msgQuote">
+         <messagePath>/response/quoteID</messagePath>
+      </correlationPropertyRetrievalExpression>
+      <correlationPropertyRetrievalExpression messageRef="tns:msgFault">
+         <messagePath>/fault/quoteID</messagePath>
+      </correlationPropertyRetrievalExpression>
+      <correlationPropertyRetrievalExpression messageRef="tns:msgOrderData">
+         <messagePath>/priceQuotationRef</messagePath>
+      </correlationPropertyRetrievalExpression>
+   </correlationProperty>
+   <correlationProperty id="propCustomerID" name="Property Customer ID" type="xsd:string">
+      <correlationPropertyRetrievalExpression messageRef="tns:msgOrderData">
+         <messagePath>/customer/id</messagePath>
+      </correlationPropertyRetrievalExpression>
+      <correlationPropertyRetrievalExpression messageRef="tns:msgOrderConfirmation">
+         <messagePath>/customerID</messagePath>
+      </correlationPropertyRetrievalExpression>
+   </correlationProperty>
+   <correlationProperty id="propOrderID" name="Property Order ID" type="xsd:string">
+      <correlationPropertyRetrievalExpression messageRef="tns:msgOrderData">
+         <messagePath>/order/orderID</messagePath>
+      </correlationPropertyRetrievalExpression>
+      <correlationPropertyRetrievalExpression messageRef="tns:msgOrderConfirmation">
+         <messagePath>/order/orderID</messagePath>
+      </correlationPropertyRetrievalExpression>
+      <correlationPropertyRetrievalExpression messageRef="tns:msgShippingData">
+         <messagePath>/order/orderID</messagePath>
+      </correlationPropertyRetrievalExpression>
+      <correlationPropertyRetrievalExpression messageRef="tns:msgShippingConfirmation">
+         <messagePath>/order/orderID</messagePath>
+      </correlationPropertyRetrievalExpression>
+   </correlationProperty>
+   
+   <collaboration id="sellerCollab">
+      <participant id="seller" name="Seller" processRef="tns:sellerProcess">
+         <interfaceRef>tns:sellerServiceInterface</interfaceRef>
+      </participant>
+      <participant id="buyer" name="Buyer"/>
+      <participant id="shipper" name="Shipper">
+         <interfaceRef>tns:shipperServiceInterface</interfaceRef>
+      </participant>
+      <messageFlow id="mf1" messageRef="tns:msgRFQ" sourceRef="tns:buyer" targetRef="tns:receiveQuoteRequest"/>
+      <messageFlow id="mf2" messageRef="tns:msgQuote" sourceRef="tns:sendQuote" targetRef="tns:buyer"/>
+      <messageFlow id="mf3" messageRef="tns:msgFault" sourceRef="tns:sendFault" targetRef="tns:buyer"/>
+      <messageFlow id="mf4" messageRef="tns:msgOrderData" sourceRef="tns:buyer"
+	targetRef="tns:receiveOrderRequest"/>
+      <messageFlow id="mf5" messageRef="tns:msgOrderConfirmation" sourceRef="tns:sendOrderResponse"
+	targetRef="tns:buyer"/>
+      <messageFlow id="mf6" messageRef="tns:msgShippingData" sourceRef="tns:sendShippingRequest"
+	targetRef="tns:shipper"/>
+      <messageFlow id="mf7" messageRef="tns:msgShippingConfirmation"	sourceRef="tns:shipper"
+	targetRef="tns:receiveShippingConfirmation"/>
+
+      <!--   Conversations -->
+      <conversation id="conversationQuoteRequest">
+         <messageFlowRef>tns:mf1</messageFlowRef>
+         <messageFlowRef>tns:mf2</messageFlowRef>
+         <messageFlowRef>tns:mf3</messageFlowRef>
+         <messageFlowRef>tns:mf4</messageFlowRef>
+         <correlationKey id="correlQuote" name="Quote Correlation Key">
+            <correlationPropertyRef>tns:propQuoteID</correlationPropertyRef>
+         </correlationKey>
+      </conversation>
+      <conversation id="conversationOrderHandling">
+         <messageFlowRef>tns:mf4</messageFlowRef>
+         <messageFlowRef>tns:mf5</messageFlowRef>
+         <correlationKey id="correlOrder" name="Order Correlation Key">
+            <correlationPropertyRef>tns:propCustomerID</correlationPropertyRef>
+            <correlationPropertyRef>tns:propOrderID</correlationPropertyRef>
+         </correlationKey>
+      </conversation>
+      <conversation id="conversationShipmentRequest">
+         <messageFlowRef>tns:mf6</messageFlowRef>
+         <messageFlowRef>tns:mf7</messageFlowRef>
+         <correlationKey id="correlShipment" name="Shipment Correlation Key">
+            <correlationPropertyRef>tns:propOrderID</correlationPropertyRef>
+         </correlationKey>
+      </conversation>
+   </collaboration>
+
+   <!--    Interfaces -->
+   <!-- The interface of the Seller Process -->
+   <interface id="sellerServiceInterface" name="Seller Service Interface">
+      <operation id="requestQuoteOp" name="Request Quote Operation">
+         <inMessageRef>tns:msgRFQ</inMessageRef>
+         <outMessageRef>tns:msgQuote</outMessageRef>
+         <errorRef>tns:msgFault</errorRef>
+      </operation>
+      <operation id="orderOp" name="Order Operation">
+         <inMessageRef>tns:msgOrderData</inMessageRef>
+         <outMessageRef>tns:msgOrderConfirmation</outMessageRef>
+      </operation>
+   </interface>
+   <interface id="shipperServiceInterface" name="Shipper Service Interface">
+      <operation id="requestShippingOp" name="Request Shipping Operation">
+         <inMessageRef>tns:msgShippingData</inMessageRef>
+         <outMessageRef>tns:msgShippingConfirmation</outMessageRef>
+      </operation>
+   </interface>
+  
+   <!--    Process Definition -->
+
+   <process id="sellerProcess" name="Seller process" 
+	definitionalCollaborationRef="tns:sellerCollab">
+ 
+      <!--Receive quote request message from caller.-->
+      <receiveTask id="receiveQuoteRequest" name="Receive Quote Request"
+		instantiate="true" 
+		messageRef="tns:msgRFQ" 
+		operationRef="tns:requestQuoteOp"/>
+      
+      <sequenceFlow targetRef="decision1" sourceRef="receiveQuoteRequest"/>
+      <!--Decide whether quote is available and can be returned, or not.
+		The actual processing logic is omitted from the example. -->
+
+      <exclusiveGateway id="decision1" gatewayDirection="Mixed"
+		default="noQuote"/>
+      <sequenceFlow id="quote" targetRef="sendQuote" sourceRef="decision1">
+         <conditionExpression>Quote available and okay.</conditionExpression>
+      </sequenceFlow>
+      <sequenceFlow id="noQuote" targetRef="sendFault" sourceRef="decision1"/>
+
+      <!-- Respond successful quote back to caller. -->
+      <sendTask id="sendQuote" name="Send Quote" 
+      	messageRef="tns:msgQuote"
+		operationRef="tns:requestQuoteOp"/>
+      
+      <sequenceFlow targetRef="eventWait" sourceRef="sendQuote"/>
+      
+      <!-- This is a reply, so use same service reference and operation as in associated receive. -->
+      <sendTask id="sendFault" name="Send Fault" 
+      	messageRef="tns:msgFault"
+		operationRef="tns:requestQuoteOp"/>
+		
+	  <receiveTask id="receiveNewQuoteRequest" name="Receive New Quote" 
+		messageRef="tns:msgRFQ" 
+		operationRef="tns:requestQuoteOp"/>
+      <sequenceFlow targetRef="decision1" sourceRef="receiveNewQuoteRequest"/>
+      
+      <!-- Respond error back to caller -->
+      
+      <sequenceFlow targetRef="eventWait" sourceRef="sendFault"/>
+
+      <!-- Wait for another quote request, an order, or a timeout -->
+      <eventBasedGateway id="eventWait" gatewayDirection="Mixed"/>
+      <sequenceFlow targetRef="receiveNewQuoteRequest" sourceRef="eventWait"/>
+      <sequenceFlow targetRef="receiveOrderRequest" sourceRef="eventWait"/>
+      <sequenceFlow targetRef="timeout" sourceRef="eventWait"/>
+      <!-- Timeout and end -->
+      <intermediateCatchEvent id="timeout">
+         <timerEventDefinition>
+            <timeDate>PD4h</timeDate>
+         </timerEventDefinition>
+      </intermediateCatchEvent>
+      <sequenceFlow targetRef="end1" sourceRef="timeout"/>
+      <endEvent id="end1"/>
+
+      <!-- Receive an order message-->
+      <receiveTask id="receiveOrderRequest" name="Receive Order Request" 
+       messageRef="tns:msgOrderData"
+       operationRef="tns:orderOp" />
+      
+      <sequenceFlow targetRef="fork" sourceRef="receiveOrderRequest"/>
+      <parallelGateway id="fork" gatewayDirection="Diverging"/>
+      <sequenceFlow targetRef="sendOrderResponse" sourceRef="fork"/>
+      <sequenceFlow targetRef="sendShippingRequest" sourceRef="fork"/>
+
+      <!-- Send order confirmation -->
+      <sendTask id="sendOrderResponse" name="Send Order Response" 	
+      	messageRef="tns:msgOrderConfirmation"
+      	operationRef="tns:orderOp" />
+      
+      <sequenceFlow targetRef="join" sourceRef="sendOrderResponse"/>
+      
+      <!-- Trigger Shipping -->
+      <sendTask id="sendShippingRequest" name="Send Shipping Request" 
+      	messageRef="tns:msgShippingData"
+       	operationRef="tns:requestShippingOp"/>
+      
+      <sequenceFlow targetRef="receiveShippingConfirmation" 
+      	sourceRef="sendShippingRequest"/>
+      <!-- Receive Shipment Notification -->
+      
+      <receiveTask id="receiveShippingConfirmation"	name="Receive Shipping Confirmation"
+		messageRef="tns:msgShippingConfirmation"
+		operationRef="tns:requestShippingOp" />
+      
+      <sequenceFlow targetRef="join" sourceRef="receiveShippingConfirmation"/>
+      <parallelGateway id="join" gatewayDirection="Converging"/>
+      <sequenceFlow targetRef="end2" sourceRef="join"/>
+      <endEvent id="end2"/>
+   </process>
+</definitions>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://www.wfmc.org/2002/XPDL1.0" xmlns:xpdl="http://www.wfmc.org/2002/XPDL1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.wfmc.org/2002/XPDL1.0 http://wfmc.org/standards/docs/TC-1025_schema_10_xpdl.xsd" Id="subflow_proed_Project" Name="subflow_proed">
+  <PackageHeader>
+    <XPDLVersion>1.0</XPDLVersion>
+    <Vendor>Bonita Project Team</Vendor>
+    <Created>28 février 2008 11:59:38</Created>
+  </PackageHeader>
+  <RedefinableHeader>
+    <Version>1.0</Version>
+  </RedefinableHeader>
+  <ConformanceClass GraphConformance="NON_BLOCKED" />
+  <WorkflowProcesses>
+    <WorkflowProcess AccessLevel="PUBLIC" Name="subflow_proed" Id="subflow_proed">
+      <ProcessHeader />
+      <RedefinableHeader>
+        <Version>1.0</Version>
+      </RedefinableHeader>
+      <Participants />
+      <Activities>
+        <Activity Id="a1" Name="a1">
+          <Route />
+          <StartMode>
+            <Automatic />
+          </StartMode>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="AND" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="27" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="2" />
+            <ExtendedAttribute Name="XOffset" Value="131" />
+            <ExtendedAttribute Name="YOffset" Value="110" />
+            <ExtendedAttribute Name="CellHeight" Value="30" />
+            <ExtendedAttribute Name="CellWidth" Value="80" />
+          </ExtendedAttributes>
+        </Activity>
+        <Activity Id="a2" Name="a2">
+          <Implementation>
+            <SubFlow Execution="SYNCHR" Id="subflow" />
+          </Implementation>
+          <StartMode>
+            <Automatic />
+          </StartMode>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="AND" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="109" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="34" />
+            <ExtendedAttribute Name="XOffset" Value="264" />
+            <ExtendedAttribute Name="YOffset" Value="106" />
+            <ExtendedAttribute Name="CellHeight" Value="40" />
+            <ExtendedAttribute Name="CellWidth" Value="100" />
+            <ExtendedAttribute Name="File" Value="/home/porcherg/workspace/bonitaPVM/test/org/ow2/bonita/activity/subflow/automaticProcess.xpdl" />
+            <ExtendedAttribute Name="SubFlowVersion" Value="1.0" />
+            <ExtendedAttribute Name="SubFlowName" Value="subflow" />
+          </ExtendedAttributes>
+        </Activity>
+        <Activity Id="a3" Name="a3">
+          <Route />
+          <StartMode>
+            <Automatic />
+          </StartMode>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="AND" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="211" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="76" />
+            <ExtendedAttribute Name="XOffset" Value="413" />
+            <ExtendedAttribute Name="YOffset" Value="113" />
+            <ExtendedAttribute Name="CellHeight" Value="30" />
+            <ExtendedAttribute Name="CellWidth" Value="80" />
+          </ExtendedAttributes>
+        </Activity>
+      </Activities>
+      <Transitions>
+        <Transition Id="a2_a3" Name="a2_a3" From="a2" To="a3" />
+        <Transition Id="a1_a2" Name="a1_a2" From="a1" To="a2" />
+      </Transitions>
+    </WorkflowProcess>
+  </WorkflowProcesses>
+  <ExtendedAttributes>
+    <ExtendedAttribute Name="MadeBy" Value="ProEd" />
+    <ExtendedAttribute Name="View" Value="Activity" />
+  </ExtendedAttributes>
+</Package>
+

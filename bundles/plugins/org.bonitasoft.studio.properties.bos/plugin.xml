@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertySections">
+      <propertySections
+            contributorId="org.bonitasoft.studio.diagram">
+         <!-- FORMS TAB -->
+        <propertySection
+              afterSection="tab.poolData"
+              class="org.bonitasoft.studio.properties.bos.sections.data.DataSectionBOS.DataSectionBOS"
+              enablesFor="1"
+              filter="org.bonitasoft.studio.properties.filters.LocalDataFilter"
+              id="DataSection"
+              tab="tab.data"
+              viewID="org.bonitasoft.studio.views.properties.process.data">
+        </propertySection>
+        <propertySection
+              class="org.bonitasoft.studio.properties.sections.forms.EntryPageFlowTabbedSection"
+              enablesFor="1"
+              filter="org.bonitasoft.studio.properties.filters.PageFlowAndLaneFilter"
+              id="section.forms.entry"
+              tab="tab.forms.entry"
+              viewID="org.bonitasoft.studio.views.properties.application">
+        </propertySection>
+        <propertySection
+              class="org.bonitasoft.studio.properties.sections.forms.OverViewPageFlowTabbedSection"
+              enablesFor="1"
+              filter="org.bonitasoft.studio.properties.sections.forms.filters.OverviewFormsSectionFilter"
+              id="section.forms.overview"
+              tab="tab.forms.overview"
+              viewID="org.bonitasoft.studio.views.properties.application">
+        </propertySection>
+        <propertySection
+              class="org.bonitasoft.studio.properties.bos.message.ThrowEventSectionBOS"
+              enablesFor="1"
+              filter="org.bonitasoft.studio.properties.filters.ThrowMessageEventFilter"
+              id="ThrowMessageSection"
+              tab="tab.throwMessage"
+              viewID="org.bonitasoft.studio.views.properties.process.general">
+        </propertySection>
+        <propertySection
+              class="org.bonitasoft.studio.properties.sections.forms.ProcessEntryPageFlowTabbedSection"
+              enablesFor="1"
+              filter="org.bonitasoft.studio.properties.filters.ProcessPageFlowAndLaneFilter"
+              id="section.forms.entry.process"
+              tab="tab.forms.entry"
+              viewID="org.bonitasoft.studio.views.properties.application">
+        </propertySection>
+        <propertySection
+              class="org.bonitasoft.studio.properties.bos.sections.data.DataSectionBOS.PoolDataSectionBOS"
+              filter="org.bonitasoft.studio.properties.filters.HasDataFilter"
+              id="PoolDataSection"
+              tab="tab.poolData"
+              viewID="org.bonitasoft.studio.views.properties.process.data">
+        </propertySection>
+      </propertySections>
+   </extension>
+
+</plugin>

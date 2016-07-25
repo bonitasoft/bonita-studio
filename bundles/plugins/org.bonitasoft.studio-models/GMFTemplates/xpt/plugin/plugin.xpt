@@ -1,0 +1,158 @@
+﻿/*
+ * Copyright (c) 2007, 2009 Borland Software Corporation
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Dmitry Stadnik (Borland) - initial API and implementation
+ */
+
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+«EXTENSION xpt::GenEditorGenerator»
+
+«DEFINE plugin FOR gmfgen::GenPlugin-»
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+«EXPAND xpt::Common::xcopyright FOR editorGen-»
+<plugin>
+«EXPAND fileTypes-»
+«EXPAND extension_parser-»
+«EXPAND xpt::editor::extensions::extensions FOR editorGen-»
+«EXPAND menu-»
+«EXPAND validation FOR editorGen.diagram-»
+«EXPAND metrics FOR editorGen.metrics-»
+«EXPAND xpt::diagram::preferences::extensions::extensions FOR editorGen.diagram-»
+«EXPAND xpt::propsheet::extensions::extensions FOR editorGen.propertySheet-»
+«EXPAND xpt::providers::extensions::extensions FOR editorGen.diagram-»
+«EXPAND xpt::navigator::extensions::extensions FOR editorGen.navigator-»
+«EXPAND xpt::application::extensions::extensions FOR editorGen.application-»
+«EXPAND xpt::ConstraintProviders::extensions FOR editorGen-»
+«EXPAND xpt::diagram::updater::extensions::extensions FOR editorGen.diagramUpdater-»
+«EXPAND impl::actions::extensions::Main FOR editorGen-»
+«EXPAND additions-»
+</plugin>
+«ENDDEFINE»
+
+«DEFINE fileTypes FOR gmfgen::GenPlugin»
+   <extension point="org.eclipse.team.core.fileTypes" id="repo-ftype">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <fileTypes type="text" extension="«editorGen.diagramFileExtension»"/>
+   </extension>
+«ENDDEFINE»
+
+«DEFINE extension_parser FOR gmfgen::GenPlugin»
+   <extension point="org.eclipse.emf.ecore.extension_parser" id="resource-factory">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <parser
+         type="«editorGen.diagramFileExtension»"
+         class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory">
+      </parser>
+   </extension>
+«ENDDEFINE»
+
+«DEFINE menu FOR gmfgen::GenPlugin»
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.action.globalActionHandlerProviders" id="global-actions">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <GlobalActionHandlerProvider
+         class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandlerProvider"
+         id="«editorGen.modelID»Presentation">
+         <Priority name="Lowest"/>
+         <ViewId id="«editorGen.editor.iD»">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="delete"/>
+            </ElementType>
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
+               <GlobalActionId actionId="save"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+«IF printingEnabled-»
+      <GlobalActionHandlerProvider
+         class="org.eclipse.gmf.runtime.diagram.ui.printing.render.providers.DiagramWithPrintGlobalActionHandlerProvider"
+         id="«editorGen.modelID»PresentationPrint">
+         <Priority name="Lowest"/>
+         <ViewId id="«editorGen.editor.iD»">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="print"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+«ENDIF-»
+«IF null = editorGen.application-»
+      <GlobalActionHandlerProvider
+         class="org.eclipse.gmf.runtime.diagram.ui.providers.ide.providers.DiagramIDEGlobalActionHandlerProvider"
+         id="«editorGen.modelID»PresentationIDE">
+         <Priority name="Lowest"/>
+         <ViewId id="«editorGen.editor.iD»">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="bookmark"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+«ENDIF-»
+«REM»
+      <GlobalActionHandlerProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.render.providers.DiagramUIRenderGlobalActionHandlerProvider"
+            id="«editorGen.modelID»Render">
+         <Priority name="Lowest"/>
+         <ViewId id="«editorGen.editor.iD»">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="cut"/>
+               <GlobalActionId actionId="copy"/>
+               <GlobalActionId actionId="paste"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+«ENDREM»
+   </extension>
+
+«ENDDEFINE»
+
+«DEFINE metrics FOR gmfgen::GenMetricContainer-»
+«IF metrics->size() > 0»
+   <extension id="metrics-view" point="org.eclipse.ui.views">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+   	  <view class="«editorGen.diagram.getMetricProviderQualifiedClassName()»$ResultView"
+			id="«editorGen.diagram.getMetricViewID()»"
+			name="«editorGen.modelID» Diagram Metrics"/>
+   </extension>
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE validation FOR gmfgen::GenDiagram-»
+«IF validationEnabled or hasAudits(editorGen)-»
+«IF null = editorGen.application-»
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.markerNavigationProviders" id="markers-navigation">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <MarkerNavigationProvider class="«getMarkerNavigationProviderQualifiedClassName()»">
+         <MarkerType name="«editorGen.plugin.iD + '.' + getValidationDiagnosticMarkerType()»"/>
+         <Priority name="«markerNavigationProviderPriority»"/>
+      </MarkerNavigationProvider>
+   </extension>
+
+   <extension id="«getValidationDiagnosticMarkerType()»" name="«editorGen.plugin.name» problems" point="org.eclipse.core.resources.markers">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <super type="org.eclipse.core.resources.problemmarker"/>
+      <super type="org.eclipse.gmf.runtime.common.ui.services.marker"/>
+      <persistent value="true"/>
+   </extension>   
+«ENDIF-»
+«IF validationDecorators-»
+
+   <extension id="validationDecoratorProvider" name="ValidationDecorations" point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <decoratorProvider class="«getValidationDecoratorProviderQualifiedClassName()»">
+         <Priority name="«validationDecoratorProviderPriority»"/>
+         <object class="org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart(org.eclipse.gmf.runtime.diagram.ui)" id="PRIMARY_VIEW"/>
+         <context decoratorTargets="PRIMARY_VIEW"/>
+      </decoratorProvider>
+   </extension>
+«ENDIF-»
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE additions FOR gmfgen::GenPlugin»«ENDDEFINE»

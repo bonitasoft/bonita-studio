@@ -1,0 +1,62 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Properties for the form editor
+Bundle-SymbolicName: org.bonitasoft.studio.diagram.form.properties;singleton:=true
+Bundle-Version: 7.3.1.qualifier
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.views.properties.tabbed,
+ org.eclipse.gmf.runtime.diagram.ui.properties;bundle-version="1.2.0",
+ org.bonitasoft.studio.model;bundle-version="1.0.0",
+ org.bonitasoft.studio.common;bundle-version="1.0.0",
+ org.bonitasoft.studio.diagram.form.custom;bundle-version="1.0.0",
+ org.bonitasoft.studio.diagram.form;bundle-version="1.0.0",
+ org.bonitasoft.studio.properties;bundle-version="1.0.0",
+ org.eclipse.jdt.ui,
+ org.eclipse.jdt.core,
+ org.eclipse.ui.browser;bundle-version="3.2.300",
+ org.bonitasoft.studio.exporter;bundle-version="1.0.0",
+ org.bonitasoft.studio.pics;bundle-version="1.0.0",
+ org.bonitasoft.studio.application;bundle-version="1.0.0",
+ org.eclipse.ui.ide,
+ org.bonitasoft.studio.common.diagram;bundle-version="1.0.0",
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor;bundle-version="1.2.0",
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide;bundle-version="1.2.0",
+ org.eclipse.core.databinding;bundle-version="1.2.0",
+ org.eclipse.emf.databinding;bundle-version="1.1.0",
+ org.eclipse.jface.databinding;bundle-version="1.3.1",
+ org.eclipse.emf.databinding.edit;bundle-version="1.1.0",
+ org.bonitasoft.studio.preferences,
+ org.bonitasoft.studio.groovy;bundle-version="1.0.0",
+ org.bonitasoft.studio.data;bundle-version="1.0.0",
+ org.eclipse.core.databinding.property;bundle-version="1.3.0",
+ org.bonitasoft.studio.common.repository;bundle-version="1.0.0",
+ org.bonitasoft.studio.groovy.ui;bundle-version="1.0.0",
+ org.bonitasoft.studio.profiles,
+ org.bonitasoft.studio.repository.themes,
+ org.bonitasoft.studio.expression.editor,
+ org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
+ org.junit;bundle-version="4.11.0";resolution:=optional,
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
+ org.bonitasoft.studio.tests-utils;bundle-version="6.3.0";resolution:=optional,
+ org.bonitasoft.studio.refactoring;bundle-version="6.3.0",
+ org.bonitasoft.studio.document,
+ org.mockito;bundle-version="1.9.5",
+ org.eclipse.jdt.groovy.core;bundle-version="2.9.1"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Localization: plugin
+Bundle-Vendor: BonitaSoft S.A.
+Export-Package: org.bonitasoft.studio.form.properties.i18n; x-friends:
+ ="org.bonitasoft.studio.configuration.test,  org.bonitasoft.studio.di
+ agram.test,  org.bonitasoft.studio.properties.test,  org.bonitasoft.s
+ tudio.tests.ex,  org.bonitasoft.studio.tests,  org.bonitasoft.studio.
+ swtbot.framework.ex",org.bonitasoft.studio.properties.form.filters,or
+ g.bonitasoft.studio.properties.form.provider,org.bonitasoft.studio.pr
+ operties.form.sections.actions,org.bonitasoft.studio.properties.form.
+ sections.actions.contributions;x-friends:="org.bonitasoft.studio.swtb
+ ot.framework",org.bonitasoft.studio.properties.form.sections.appearan
+ ce,org.bonitasoft.studio.properties.form.sections.appearance.contribu
+ tions,org.bonitasoft.studio.properties.form.sections.general.contribu
+ tions
+Import-Package: org.bonitasoft.engine.bpm.document

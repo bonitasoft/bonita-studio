@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- Generator: Adobe Illustrator 13.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 14948)  -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Calque_1" x="0px" y="0px" width="43.416px" height="43.416px" viewBox="0 0 43.416 43.416" enable-background="new 0 0 43.416 43.416" xml:space="preserve" preserveAspectRatio="xMidYMid meet" zoomAndPan="magnify" contentScriptType="text/ecmascript" contentStyleType="text/css">
+
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="35.6035" y1="29.7305" x2="9.1135" y2="14.4376" xlink:type="simple" xlink:show="other" xlink:actuate="onLoad">
+	<stop offset="0" style="stop-color:#E9ECB1"/>
+	<stop offset="1" style="stop-color:#FBFBEE"/>
+</linearGradient>
+<polygon fill="url(#SVGID_1_)" stroke="#96A826" stroke-width="1.7" points="21.708,42.214 1.202,21.708 21.708,1.202   42.214,21.708 "/>
+<circle fill="none" stroke="#A39F5F" cx="21.708" cy="21.708" r="11.021"/>
+<circle fill="none" stroke="#A39F5F" cx="21.708" cy="21.708" r="8.984"/>
+<polygon fill="#96A826" points="21.709,29.122 19.553,25.442 15.288,25.415 17.397,21.709 15.288,18.001 19.553,17.976   21.709,14.295 23.864,17.976 28.129,18.001 26.02,21.709 28.129,25.415 23.864,25.442 "/>
+</svg>

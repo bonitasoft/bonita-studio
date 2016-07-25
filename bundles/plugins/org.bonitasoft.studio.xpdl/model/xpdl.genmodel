@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.bonitasoft.studio.xpdl/src"
+    modelPluginID="org.bonitasoft.studio.xpdl" modelName="Xpdl" importerID="org.eclipse.xsd.ecore.importer"
+    complianceLevel="5.0" copyrightFields="false">
+  <foreignModel>../../org.bonitasoft.studio.importer/src/org/bonitasoft/studio/importer/bonita4/model/xpdl.xsd</foreignModel>
+  <genPackages prefix="Xpdl1" basePackage="org.wfmc._2002" resource="XML" disposableProviderFactory="true"
+      ecorePackage="xpdl1.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//AccessLevelType">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//AccessLevelType/PUBLIC"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//AccessLevelType/PRIVATE"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//DurationUnitType">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//DurationUnitType/Y"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//DurationUnitType/M"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//DurationUnitType/D"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//DurationUnitType/h"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//DurationUnitType/m1"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//DurationUnitType/s"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//ExecutionType">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//ExecutionType/ASYNCHR"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//ExecutionType/SYNCHR"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//ExecutionType1">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//ExecutionType1/ASYNCHR"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//ExecutionType1/SYNCHR"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//GraphConformanceType">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//GraphConformanceType/FULLBLOCKED"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//GraphConformanceType/LOOPBLOCKED"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//GraphConformanceType/NONBLOCKED"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//InstantiationType">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//InstantiationType/ONCE"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//InstantiationType/MULTIPLE"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//IsArrayType">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//IsArrayType/TRUE"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//IsArrayType/FALSE"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//ModeType">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//ModeType/IN"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//ModeType/OUT"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//ModeType/INOUT"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//PublicationStatusType">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//PublicationStatusType/UNDERREVISION"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//PublicationStatusType/RELEASED"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//PublicationStatusType/UNDERTEST"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//TypeType">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType/AND"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType/XOR"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//TypeType1">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType1/RESOURCESET"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType1/RESOURCE"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType1/ROLE"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType1/ORGANIZATIONALUNIT"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType1/HUMAN"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType1/SYSTEM"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//TypeType2">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType2/CONDITION"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType2/OTHERWISE"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType2/EXCEPTION"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType2/DEFAULTEXCEPTION"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//TypeType3">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType3/STRING"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType3/FLOAT"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType3/INTEGER"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType3/REFERENCE"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType3/DATETIME"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType3/BOOLEAN"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType3/PERFORMER"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//TypeType4">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType4/AND"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType4/XOR"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xpdl1.ecore#//TypeType5">
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType5/APPLICATION"/>
+      <genEnumLiterals ecoreEnumLiteral="xpdl1.ecore#//TypeType5/PROCEDURE"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//AccessLevelTypeObject"/>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//DurationUnitTypeObject"/>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//ExecutionTypeObject"/>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//ExecutionTypeObject1"/>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//GraphConformanceTypeObject"/>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//InstantiationTypeObject"/>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//IsArrayTypeObject"/>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//ModeTypeObject"/>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//PublicationStatusTypeObject"/>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//TypeTypeObject"/>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//TypeTypeObject1"/>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//TypeTypeObject2"/>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//TypeTypeObject3"/>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//TypeTypeObject4"/>
+    <genDataTypes ecoreDataType="xpdl1.ecore#//TypeTypeObject5"/>
+    <genClasses ecoreClass="xpdl1.ecore#//ActivitiesType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ActivitiesType/activity"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ActivitySetsType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ActivitySetsType/activitySet"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ActivitySetType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ActivitySetType/activities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ActivitySetType/transitions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ActivitySetType/id"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ActivityType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ActivityType/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ActivityType/limit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ActivityType/route"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ActivityType/implementation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ActivityType/blockActivity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ActivityType/performer"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ActivityType/startMode"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ActivityType/finishMode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ActivityType/priority"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ActivityType/deadline"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ActivityType/simulationInformation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ActivityType/icon"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ActivityType/documentation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ActivityType/transitionRestrictions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ActivityType/extendedAttributes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ActivityType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ActivityType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ActualParametersType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ActualParametersType/actualParameter"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ApplicationsType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ApplicationsType/application"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ApplicationType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ApplicationType/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ApplicationType/formalParameters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ApplicationType/externalReference"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ApplicationType/extendedAttributes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ApplicationType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ApplicationType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ArrayTypeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ArrayTypeType/basicType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ArrayTypeType/declaredType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ArrayTypeType/schemaType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ArrayTypeType/externalReference"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ArrayTypeType/recordType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ArrayTypeType/unionType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ArrayTypeType/enumerationType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ArrayTypeType/arrayType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ArrayTypeType/listType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ArrayTypeType/lowerIndex"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ArrayTypeType/upperIndex"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//AutomaticType"/>
+    <genClasses ecoreClass="xpdl1.ecore#//BasicTypeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//BasicTypeType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//BlockActivityType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//BlockActivityType/blockId"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ConditionType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ConditionType/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ConditionType/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xpdl1.ecore#//ConditionType/xpression"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ConditionType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ConformanceClassType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ConformanceClassType/graphConformance"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//DataFieldsType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DataFieldsType/dataField"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//DataFieldType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DataFieldType/dataType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DataFieldType/initialValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DataFieldType/length"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DataFieldType/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DataFieldType/extendedAttributes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DataFieldType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DataFieldType/isArray"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DataFieldType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//DataTypeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DataTypeType/basicType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DataTypeType/declaredType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DataTypeType/schemaType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DataTypeType/externalReference"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DataTypeType/recordType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DataTypeType/unionType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DataTypeType/enumerationType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DataTypeType/arrayType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DataTypeType/listType"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//DeadlineType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DeadlineType/deadlineCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DeadlineType/exceptionName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DeadlineType/execution"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//DeclaredTypeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DeclaredTypeType/id"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//DocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/activities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/activity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/activitySet"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/activitySets"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/actualParameter"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/actualParameters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/application"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/applications"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/arrayType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/author"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/automatic"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/basicType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/blockActivity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/codepage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/condition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/conformanceClass"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/cost"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/costUnit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/countrykey"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/created"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/dataField"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/dataFields"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/dataType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/deadline"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/declaredType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/documentation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/duration"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/enumerationType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/enumerationValue"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/extendedAttribute"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/extendedAttributes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/externalPackage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/externalPackages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/externalReference"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/finishMode"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/formalParameter"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/formalParameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/icon"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/implementation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/initialValue"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/join"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/length"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/limit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/listType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/manual"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/member"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/no"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/package"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/packageHeader"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/participant"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/participants"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/participantType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/performer"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/priority"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/priorityUnit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/processHeader"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/recordType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/redefinableHeader"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/responsible"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/responsibles"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/route"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/schemaType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/script"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/simulationInformation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/split"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/startMode"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/subFlow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/timeEstimation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/tool"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/transition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/transitionRef"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/transitionRefs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/transitionRestriction"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/transitionRestrictions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/transitions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/typeDeclaration"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/typeDeclarations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/unionType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/validFrom"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/validTo"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/vendor"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/waitingTime"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/workflowProcess"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/workflowProcesses"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/workingTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//DocumentRoot/xPDLVersion"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//DocumentRoot/xpression"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//EnumerationTypeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//EnumerationTypeType/enumerationValue"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//EnumerationValueType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//EnumerationValueType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ExtendedAttributesType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ExtendedAttributesType/extendedAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ExtendedAttributeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ExtendedAttributeType/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ExtendedAttributeType/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ExtendedAttributeType/any"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ExtendedAttributeType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ExtendedAttributeType/value"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ExternalPackagesType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ExternalPackagesType/externalPackage"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ExternalPackageType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ExternalPackageType/extendedAttributes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ExternalPackageType/href"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ExternalReferenceType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ExternalReferenceType/location"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ExternalReferenceType/namespace"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ExternalReferenceType/xref"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//FinishModeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//FinishModeType/automatic"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//FinishModeType/manual"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//FormalParametersType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//FormalParametersType/formalParameter"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//FormalParameterType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//FormalParameterType/dataType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//FormalParameterType/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//FormalParameterType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//FormalParameterType/index"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//FormalParameterType/mode"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ImplementationType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ImplementationType/no"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ImplementationType/tool"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ImplementationType/subFlow"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//JoinType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//JoinType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ListTypeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ListTypeType/basicType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ListTypeType/declaredType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ListTypeType/schemaType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ListTypeType/externalReference"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ListTypeType/recordType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ListTypeType/unionType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ListTypeType/enumerationType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ListTypeType/arrayType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ListTypeType/listType"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ManualType"/>
+    <genClasses ecoreClass="xpdl1.ecore#//MemberType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//MemberType/basicType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//MemberType/declaredType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//MemberType/schemaType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//MemberType/externalReference"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//MemberType/recordType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//MemberType/unionType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//MemberType/enumerationType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//MemberType/arrayType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//MemberType/listType"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//NoType"/>
+    <genClasses ecoreClass="xpdl1.ecore#//PackageHeaderType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//PackageHeaderType/xPDLVersion"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//PackageHeaderType/vendor"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//PackageHeaderType/created"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//PackageHeaderType/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//PackageHeaderType/documentation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//PackageHeaderType/priorityUnit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//PackageHeaderType/costUnit"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//PackageType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//PackageType/packageHeader"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//PackageType/redefinableHeader"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//PackageType/conformanceClass"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//PackageType/script"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//PackageType/externalPackages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//PackageType/typeDeclarations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//PackageType/participants"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//PackageType/applications"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//PackageType/dataFields"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//PackageType/workflowProcesses"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//PackageType/extendedAttributes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//PackageType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//PackageType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ParticipantsType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ParticipantsType/participant"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ParticipantType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ParticipantType/participantType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ParticipantType/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ParticipantType/externalReference"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ParticipantType/extendedAttributes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ParticipantType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ParticipantType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ParticipantTypeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ParticipantTypeType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ProcessHeaderType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ProcessHeaderType/created"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ProcessHeaderType/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ProcessHeaderType/priority"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ProcessHeaderType/limit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ProcessHeaderType/validFrom"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ProcessHeaderType/validTo"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ProcessHeaderType/timeEstimation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ProcessHeaderType/durationUnit"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//RecordTypeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//RecordTypeType/member"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//RedefinableHeaderType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//RedefinableHeaderType/author"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//RedefinableHeaderType/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//RedefinableHeaderType/codepage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//RedefinableHeaderType/countrykey"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//RedefinableHeaderType/responsibles"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//RedefinableHeaderType/publicationStatus"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ResponsiblesType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ResponsiblesType/responsible"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//RouteType"/>
+    <genClasses ecoreClass="xpdl1.ecore#//SchemaTypeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute xpdl1.ecore#//SchemaTypeType/any"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ScriptType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ScriptType/grammar"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ScriptType/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ScriptType/version"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//SimulationInformationType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//SimulationInformationType/cost"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//SimulationInformationType/timeEstimation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//SimulationInformationType/instantiation"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//SplitType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//SplitType/transitionRefs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//SplitType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//StartModeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//StartModeType/automatic"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//StartModeType/manual"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//SubFlowType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//SubFlowType/actualParameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//SubFlowType/execution"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//SubFlowType/id"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//TimeEstimationType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//TimeEstimationType/waitingTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//TimeEstimationType/workingTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//TimeEstimationType/duration"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//ToolType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ToolType/actualParameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ToolType/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//ToolType/extendedAttributes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ToolType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//ToolType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//TransitionRefsType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TransitionRefsType/transitionRef"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//TransitionRefType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//TransitionRefType/id"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//TransitionRestrictionsType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TransitionRestrictionsType/transitionRestriction"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//TransitionRestrictionType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TransitionRestrictionType/join"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TransitionRestrictionType/split"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//TransitionsType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TransitionsType/transition"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//TransitionType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TransitionType/condition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//TransitionType/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TransitionType/extendedAttributes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//TransitionType/from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//TransitionType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//TransitionType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//TransitionType/to"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//TypeDeclarationsType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TypeDeclarationsType/typeDeclaration"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//TypeDeclarationType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TypeDeclarationType/basicType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TypeDeclarationType/declaredType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TypeDeclarationType/schemaType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TypeDeclarationType/externalReference"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TypeDeclarationType/recordType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TypeDeclarationType/unionType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TypeDeclarationType/enumerationType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TypeDeclarationType/arrayType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TypeDeclarationType/listType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//TypeDeclarationType/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//TypeDeclarationType/extendedAttributes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//TypeDeclarationType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//TypeDeclarationType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//UnionTypeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//UnionTypeType/member"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//WorkflowProcessesType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//WorkflowProcessesType/workflowProcess"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//WorkflowProcessType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//WorkflowProcessType/processHeader"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//WorkflowProcessType/redefinableHeader"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//WorkflowProcessType/formalParameters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//WorkflowProcessType/dataFields"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//WorkflowProcessType/participants"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//WorkflowProcessType/applications"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//WorkflowProcessType/activitySets"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//WorkflowProcessType/activities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//WorkflowProcessType/transitions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xpdl1.ecore#//WorkflowProcessType/extendedAttributes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//WorkflowProcessType/accessLevel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//WorkflowProcessType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//WorkflowProcessType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xpdl1.ecore#//XpressionType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute xpdl1.ecore#//XpressionType/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//XpressionType/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute xpdl1.ecore#//XpressionType/any"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

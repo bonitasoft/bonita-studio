@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Bonita Studio models
+Bundle-SymbolicName: org.bonitasoft.studio-models;singleton:=true
+Bundle-Version: 7.3.1.qualifier
+Bundle-Vendor: BonitaSoft S.A.
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy

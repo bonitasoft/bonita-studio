@@ -1,0 +1,313 @@
+﻿/*
+ * Copyright (c) 2007, 2010 Borland Software Corporation and others
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Dmitry Stadnik (Borland) - initial API and implementation
+ *    Artem Tikhomirov (Borland) - introduced GenAuditContext entity
+ *                                 straightforward and simple #validate() implementation
+ */
+
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+
+«EXTENSION xpt::GenAuditRoot»
+
+«DEFINE ValidationProvider FOR gmfgen::GenDiagram-»
+«EXPAND xpt::Common::copyright FOR editorGen-»
+package «providersPackageName»;
+
+«EXPAND xpt::Common::generatedClassComment»
+public class «validationProviderClassName» {
+
+	«EXPAND constraintsActive-»
+
+	«EXPAND shouldConstraintsBePrivate-»
+
+	«EXPAND runWithActiveConstraints-»
+
+	«EXPAND isInDefaultEditorContext-»
+
+«EXPAND selectors FOR editorGen.audits-»
+
+«EXPAND strategy_support»
+
+«EXPAND constraintAdapters(self) FOR editorGen.audits-»
+
+«EXPAND additions-»
+}
+«ENDDEFINE»
+
+«DEFINE constraintsActive FOR gmfgen::GenDiagram-»
+«EXPAND xpt::Common::generatedMemberComment»
+private static boolean constraintsActive = false;	
+
+public static boolean DISABLE_VALIDATION = false ;
+
+«ENDDEFINE»
+
+«DEFINE shouldConstraintsBePrivate FOR gmfgen::GenDiagram-»
+«EXPAND xpt::Common::generatedMemberComment»
+public static boolean shouldConstraintsBePrivate() {
+	return false;
+}
+«ENDDEFINE»
+
+«DEFINE runWithActiveConstraints FOR gmfgen::GenDiagram-»
+«EXPAND xpt::Common::generatedMemberComment»
+public static void runWithConstraints(org.eclipse.emf.transaction.TransactionalEditingDomain editingDomain, Runnable operation) {
+	if(!DISABLE_VALIDATION){
+	final Runnable op = operation;
+	Runnable task = new Runnable() {
+		public void run() {
+			try {
+				constraintsActive = true;
+				op.run();
+			} finally {
+				constraintsActive = false;
+			}
+		}
+	};
+	if(editingDomain != null) {
+		try {
+			editingDomain.runExclusive(task);
+		} catch (Exception e) {
+			«editorGen.plugin.getActivatorQualifiedClassName()».getInstance().logError("Validation failed", e); «EXPAND xpt::Common::nonNLS»
+		}
+	} else {
+		task.run();
+	}
+	}
+}
+«ENDDEFINE»
+
+
+«DEFINE additions FOR gmfgen::GenDiagram»«ENDDEFINE»
+
+«DEFINE selectors FOR gmfgen::GenAuditRoot-»
+«FOREACH clientContexts->asSequence() AS ctx»
+	«EXPAND xpt::Common::generatedMemberComment»
+	public static class «ctx.className» implements org.eclipse.emf.validation.model.IClientSelector {
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		public boolean selects(Object object) {
+«IF (ctx.ruleTargets)[gmfgen::GenDiagramElementTarget]->size() > 0 -»
+			if (isInDefaultEditorContext(object) && object instanceof org.eclipse.gmf.runtime.notation.View) {
+				final int id = «EXPAND xpt::editor::VisualIDRegistry::getVisualIDMethodCall FOR editorGen.diagram»((org.eclipse.gmf.runtime.notation.View) object);
+				boolean result = false;
+«FOREACH getTargetDiagramElements(ctx) AS e-»
+				result = result || id == «EXPAND xpt::editor::VisualIDRegistry::visualID FOR e»;
+«ENDFOREACH-»
+				return result;
+			}
+			return false;
+«ELSE-»
+			return isInDefaultEditorContext(object);
+«ENDIF-»
+		}
+	}
+«ENDFOREACH-»
+«ENDDEFINE»
+
+«DEFINE isInDefaultEditorContext FOR gmfgen::GenDiagram-»
+«EXPAND xpt::Common::generatedMemberComment»
+static boolean isInDefaultEditorContext(Object object) {
+	if(shouldConstraintsBePrivate() && !constraintsActive) {
+		return false;
+	}
+	if (object instanceof org.eclipse.gmf.runtime.notation.View) {
+		return constraintsActive && «EXPAND xpt::editor::VisualIDRegistry::modelID».equals(«EXPAND xpt::editor::VisualIDRegistry::getModelIDMethodCall»((org.eclipse.gmf.runtime.notation.View) object));
+	}
+	return true;
+}
+«ENDDEFINE»
+
+
+«DEFINE strategy_support FOR gmfgen::GenDiagram-»
+«IF hasDiagramElementTargetRule(editorGen.audits)-»
+	«EXPAND xpt::Common::generatedMemberComment»
+	public static org.eclipse.emf.validation.service.ITraversalStrategy getNotationTraversalStrategy(
+			org.eclipse.emf.validation.service.IBatchValidator validator) {
+		return new CtxSwitchStrategy(validator);
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	private static class CtxSwitchStrategy implements org.eclipse.emf.validation.service.ITraversalStrategy {
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private org.eclipse.emf.validation.service.ITraversalStrategy defaultStrategy;
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private int currentSemanticCtxId = -1;
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private boolean ctxChanged = true;
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private org.eclipse.emf.ecore.EObject currentTarget;
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private org.eclipse.emf.ecore.EObject preFetchedNextTarget;
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private final int[] contextSwitchingIdentifiers;
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		CtxSwitchStrategy(org.eclipse.emf.validation.service.IBatchValidator validator) {
+			this.defaultStrategy = validator.getDefaultTraversalStrategy();
+			this.contextSwitchingIdentifiers = new int[] {
+				«EXPAND xpt::editor::VisualIDRegistry::visualID FOREACH getAllTargetDiagramElements(editorGen.audits) SEPARATOR ','»
+			};
+			java.util.Arrays.sort(this.contextSwitchingIdentifiers);
+		}
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		public void elementValidated(org.eclipse.emf.ecore.EObject element,
+				org.eclipse.core.runtime.IStatus status) {
+			defaultStrategy.elementValidated(element, status);
+		}
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		public boolean hasNext() {
+			return defaultStrategy.hasNext();
+		}
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		public boolean isClientContextChanged() {
+			if (preFetchedNextTarget == null) {
+				preFetchedNextTarget = next();
+				prepareNextClientContext(preFetchedNextTarget);
+			}
+			return ctxChanged;
+		}
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		public org.eclipse.emf.ecore.EObject next() {
+			org.eclipse.emf.ecore.EObject nextTarget = preFetchedNextTarget;
+			if (nextTarget == null) {
+				nextTarget = defaultStrategy.next();
+			}
+			this.preFetchedNextTarget = null;
+			return this.currentTarget = nextTarget;
+		}
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		public void startTraversal(java.util.Collection traversalRoots,	org.eclipse.core.runtime.IProgressMonitor monitor) {
+			defaultStrategy.startTraversal(traversalRoots, monitor);
+		}
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private void prepareNextClientContext(org.eclipse.emf.ecore.EObject nextTarget) { 
+			if (nextTarget != null && currentTarget != null) {
+				if (nextTarget instanceof org.eclipse.gmf.runtime.notation.View) {
+					final int id = «EXPAND xpt::editor::VisualIDRegistry::getVisualIDMethodCall FOR editorGen.diagram»((org.eclipse.gmf.runtime.notation.View) nextTarget);
+					int nextSemanticId = (id != -1 && java.util.Arrays.binarySearch(contextSwitchingIdentifiers, id) >= 0) ? id : -1;
+					if ((currentSemanticCtxId != -1 && currentSemanticCtxId != nextSemanticId)
+							|| (nextSemanticId != -1 && nextSemanticId != currentSemanticCtxId)) {
+						this.ctxChanged = true;
+					}«/*[artem] not sure why not ctxChanged = <expr>, is it intentional not to reset ctxChanged if condition did not match? I doubt. FIXME?*/»
+					currentSemanticCtxId = nextSemanticId;
+				} else {
+					// context of domain model
+					this.ctxChanged = currentSemanticCtxId != -1;
+					currentSemanticCtxId = -1;
+				}
+			} else {
+				this.ctxChanged = false;
+			}
+		}
+	}
+«ENDIF-»
+«ENDDEFINE»
+
+
+«DEFINE constraintAdapters(diagram : gmfgen::GenDiagram) FOR gmfgen::GenAuditRoot-»
+«IF diagram.editorGen.expressionProviders <> null-»
+«EXPAND constraintAdapter(diagram.editorGen.expressionProviders) FOREACH rules->select(a | a.requiresConstraintAdapter)-»
+«IF not rules->select(a | a.requiresConstraintAdapter)->isEmpty()»
+«EXPAND constraintAdapters_formatMethod»
+«ENDIF»
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE constraintAdapter(container : gmfgen::GenExpressionProviderContainer) FOR gmfgen::GenAuditRule-»
+«IF target <> null and target.getContext() <> null-»
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	public static class «getConstraintAdapterLocalClassName()» extends org.eclipse.emf.validation.AbstractModelConstraint {
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		public org.eclipse.core.runtime.IStatus validate(org.eclipse.emf.validation.IValidationContext ctx) {
+			«EXPAND constraintAdapter_initContext(self) FOR target-»
+			«EXPAND constraintAdapter_validateMethod(self) FOR rule.provider-»
+		}
+	}
+«ENDIF-»
+«ENDDEFINE»
+
+
+«DEFINE constraintAdapters_formatMethod FOR gmfgen::GenAuditRoot-»
+	«EXPAND xpt::Common::generatedMemberComment»
+	static String formatElement(org.eclipse.emf.ecore.EObject object) {
+		return org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil.getQualifiedName(object, true);
+	}
+«ENDDEFINE»
+ 
+/*
+ * Expects 'context' variable to be initialized
+ */
+«DEFINE constraintAdapter_validateMethod(audit : gmfgen::GenAuditRule) FOR gmfgen::GenExpressionProviderBase»«ERROR 'No idea how to evaluate an audit rule for ' + self.repr()»«ENDDEFINE»
+
+«DEFINE constraintAdapter_validateMethod(audit : gmfgen::GenAuditRule) FOR gmfgen::GenExpressionInterpreter-»
+			Object result = «EXPAND xpt::expressions::getExpression::getExpression(audit.rule, audit.target.getContext())».evaluate(context);
+			if (result instanceof Boolean && ((Boolean) result).booleanValue()) {
+				return org.eclipse.core.runtime.Status.OK_STATUS;«REM»XXX why not ctx.createSuccessStatus()???«ENDREM»
+			}
+			return ctx.createFailureStatus(new Object[] { formatElement(ctx.getTarget()) });
+«ENDDEFINE»
+
+«DEFINE constraintAdapter_validateMethod(audit : gmfgen::GenAuditRule) FOR gmfgen::GenJavaExpressionProvider-»
+«IF injectExpressionBody and (audit.rule.body <> null and audit.rule.body.size() <> 0)-»
+			«audit.rule.body»
+«ELSEIF throwException or (injectExpressionBody and (audit.rule.body = null or audit.rule.body.size() = 0))-»
+			// TODO: put validation code here
+			// Ensure that you remove @generated tag or use @generated NOT
+			//
+			// To construct approprate return value, use ctx.createSuccessStatus()
+			// or ctx.createFailureStatus(...)
+			throw new java.lang.UnsupportedOperationException("No user java implementation provided for #validate(IValidationContext) operation");«EXPAND xpt::Common::nonNLS»
+«ELSE-»
+			return ctx.createFailureStatus(new Object[] { "No user java implementation provided for #validate(IValidationContext) operation" });«EXPAND xpt::Common::nonNLS»
+«ENDIF-»
+«ENDDEFINE»
+
+/*
+ *	Contract: declare variable with the name 'context' of appropriate type
+ */
+«DEFINE constraintAdapter_initContext(audit : gmfgen::GenAuditRule) FOR gmfgen::GenAuditable-»
+«EXPAND MetaModel::DeclareAndAssign('context', 'ctx.getTarget()', false) FOR getContext()»
+«ENDDEFINE»
+
+«DEFINE constraintAdapter_initContext(audit : gmfgen::GenAuditRule) FOR gmfgen::GenDomainAttributeTarget-»
+	final Object«REM»Actual context type is genDomainAttributeTarget.getContext()«ENDREM» context = ctx.getTarget().eGet(«EXPAND MetaModel::MetaFeature FOR attribute»);
+«REM»
+	For now, leave reflective access that gives Object-compatible result.
+	
+	FIXME: introduce MetaModel::DeclareAndAssignAttributeValueAsObject, that would 
+		check if attibute type is primitive and wrap accordingly, but access attribute directly!
+«ENDREM-»
+	if (context == null) {
+«IF nullAsError-»
+		return ctx.createFailureStatus(new Object[] { formatElement(ctx.getTarget()) });
+«ELSE-»
+		return org.eclipse.core.runtime.Status.OK_STATUS;
+«ENDIF-»
+	}
+«ENDDEFINE»
+
+«DEFINE constraintAdapter_initContext(audit : gmfgen::GenAuditRule) FOR gmfgen::GenAuditedMetricTarget-»
+final Number context = «IF metric = null /*though metamodel constraint should not allow this*/»null /*FIXME: metric target was not correctly specified in the model*/«ELSE»«EXPAND MetricProvider::invokeCalcMethod('ctx.getTarget()', false) FOR metric»«ENDIF»;
+«ENDDEFINE»

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" ?>
+<rss version="2.0">
+  <channel>
+    <pubDate>2015-12-07</pubDate>
+    <author>Bonitasoft</author>
+    <category>Community</category>
+    <title>Bonitasoft community</title>
+    <link>http://community.bonitasoft.com/</link>
+    <description>Bonitasoft Community</description>
+	<item>
+       <author>Antoine Mottier</author>
+       <category>Community</category>
+       <title>Forums</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://community.bonitasoft.com/questions-and-answers</link>
+       <description></description>
+    </item>
+	<item>
+       <author>Antoine Mottier</author>
+       <category>Community</category>
+       <title>Shared projects</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://community.bonitasoft.com/project</link>
+       <description></description>
+    </item>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Community</category>
+       <title>Translate in your language</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://translate.bonitasoft.org/</link>
+       <description></description>
+    </item>
+     <item>
+       <author>Antoine Mottier</author>
+       <category>Community</category>
+       <title>Report an issue</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=https://bonita.atlassian.net/</link>
+       <description></description>
+    </item>
+   </channel>
+</rss>

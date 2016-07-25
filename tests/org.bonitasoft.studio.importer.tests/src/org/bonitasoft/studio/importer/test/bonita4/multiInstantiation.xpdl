@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://www.wfmc.org/2002/XPDL1.0" xmlns:xpdl="http://www.wfmc.org/2002/XPDL1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.wfmc.org/2002/XPDL1.0 http://wfmc.org/standards/docs/TC-1025_schema_10_xpdl.xsd" Id="multiInstantiation_package" Name="multiInstantiation_packager">
+  <PackageHeader>
+    <XPDLVersion>1.0</XPDLVersion>
+    <Vendor>Bonita Project Team</Vendor>
+    <Created>24 January 2008 09:58:55</Created>
+  </PackageHeader>
+  <RedefinableHeader>
+    <Version>1.0</Version>
+  </RedefinableHeader>
+  <ConformanceClass GraphConformance="NON_BLOCKED" />
+  <WorkflowProcesses>
+    <WorkflowProcess AccessLevel="PUBLIC" Name="multiInstantiation" Id="multiInstantiation">
+      <ProcessHeader />
+      <RedefinableHeader>
+        <Version>1.0</Version>
+      </RedefinableHeader>
+      <DataFields>
+       <DataField Id="testVar" Name="testVar">
+         <DataType>
+           <BasicType Type="STRING" />
+         </DataType>
+         <InitialValue>initial value</InitialValue>
+         <ExtendedAttributes>
+           <ExtendedAttribute Name="PropertyActivity" />
+         </ExtendedAttributes>
+       </DataField>
+      </DataFields>
+      <Participants />
+      <Activities>
+        <Activity Id="r1" Name="r1">
+          <Implementation>
+            <No />
+          </Implementation>
+          <StartMode>
+            <Automatic />
+          </StartMode>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Split Type="AND" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="0" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="0" />
+            <ExtendedAttribute Name="XOffset" Value="191" />
+            <ExtendedAttribute Name="YOffset" Value="136" />
+            <ExtendedAttribute Name="property" Value="testVar">
+              <Propagated>No</Propagated>
+            </ExtendedAttribute>
+            <ExtendedAttribute Name="MultiInstantiation">
+              <Variable>testVar</Variable>
+              <MultiInstantiator>org.ow2.bonita.activity.instantiation.instantiator.TestActivityInstantiator</MultiInstantiator>
+            </ExtendedAttribute>
+          </ExtendedAttributes>
+        </Activity>
+      </Activities>
+    </WorkflowProcess>
+  </WorkflowProcesses>
+  <ExtendedAttributes>
+    <ExtendedAttribute Name="MadeBy" Value="ProEd" />
+    <ExtendedAttribute Name="View" Value="Activity" />
+  </ExtendedAttributes>
+</Package>
+

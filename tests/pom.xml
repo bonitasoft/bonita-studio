@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.bonitasoft.studio</groupId>
+		<artifactId>studio</artifactId>
+        <version>7.3.1-SNAPSHOT</version>
+	</parent>
+
+	<groupId>org.bonitasoft.studio.tests</groupId>
+	<artifactId>tests</artifactId>
+	<packaging>pom</packaging>
+
+	<modules>
+        <module>org.bonitasoft.studio.swtbot.framework</module>
+		<module>org.bonitasoft.studio.jre.extension</module>
+		<module>org.bonitasoft.studio.actors.tests</module>
+		<module>org.bonitasoft.studio.application.test</module>
+		<module>org.bonitasoft.studio.common.diagram.test</module>
+		<module>org.bonitasoft.studio.configuration.test</module>
+		<module>org.bonitasoft.studio.connectors.test</module>
+		<module>org.bonitasoft.studio.decision.core.test</module>
+		<module>org.bonitasoft.studio.diagram.test</module>
+		<module>org.bonitasoft.studio.engine.test</module>
+		<module>org.bonitasoft.studio.exporter.tests</module>
+		<module>org.bonitasoft.studio.expressions.test</module>
+		<module>org.bonitasoft.studio.importer.jpdl.tests</module>
+		<module>org.bonitasoft.studio.importer.tests</module>
+		<module>org.bonitasoft.studio.importer.bar.tests</module>
+		<module>org.bonitasoft.studio.migration.tests</module>
+		<module>org.bonitasoft.studio.profiles.tests</module>
+		<module>org.bonitasoft.studio.properties.test</module>
+		<module>org.bonitasoft.studio.repository.test</module>
+		<module>org.bonitasoft.studio.repository.themes.test</module>
+		<module>org.bonitasoft.studio.simulation.tests</module>
+		<module>org.bonitasoft.studio.test.swtbot.util</module>
+		<module>org.bonitasoft.studio.tests.hotspot</module>
+		<module>org.bonitasoft.studio.util.tests</module>
+		<module>org.bonitasoft.studio.validators.test</module>
+		<module>org.bonitasoft.studio.validation.test</module>
+		<module>org.bonitasoft.studio.workspace.test</module>
+		<module>org.bonitasoft.studio.xml.tests</module>
+		<module>org.bonitasoft.studio.tests</module>
+		<module>tests-feature</module>
+		<module>tests-common-feature</module>
+		<module>org.bonitasoft.studio.test.suite</module>
+        <module>org.bonitasoft.studio.test.suite2</module>
+		<module>org.bonitasoft.studio.test.swtbot.suite</module>
+		<module>org.bonitasoft.studio.test.swtbot.suite2</module>
+		<module>bos-tests-p2</module>
+	</modules>
+
+	<build>
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+        <!-- The destination file for the code coverage report has to be set to the same value
+             in the parent pom and in each module pom. Then JaCoCo will add up information in
+             the same report, so that, it will give the cross-module code coverage. -->
+          <destFile>${project.basedir}/../../target/jacoco-it.exec</destFile>
+        </configuration>
+        <executions>
+          <execution>
+            <id>post-test</id>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+	
+</project>

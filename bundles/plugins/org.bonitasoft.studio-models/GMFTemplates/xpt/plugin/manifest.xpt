@@ -1,0 +1,82 @@
+﻿/*
+ * Copyright (c) 2007, 2010 Borland Software Corporation and others
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Dmitry Stadnik (Borland) - initial API and implementation
+ */
+
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+
+«EXTENSION xpt::GenEditorGenerator»
+
+«DEFINE manifest FOR gmfgen::GenPlugin-»
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: «iD»; singleton:=true
+Bundle-Version: «version»
+Bundle-ClassPath: .
+Bundle-Activator: «getActivatorQualifiedClassName()»
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Export-Package: «editorGen.diagram.editPartsPackageName», 
+ «editorGen.editor.packageName»,
+ «editorGen.diagram.providersPackageName»,
+ org.bonitasoft.studio.model.process.diagram.edit.commands,
+ org.bonitasoft.studio.model.process.diagram.edit.policies
+Require-Bundle: org.eclipse.core.runtime,
+«IF editorGen.application = null-»
+ org.eclipse.core.resources,
+«ENDIF-»
+«IF editorGen.diagram.generateShortcutIcon() or (editorGen.navigator <> null and editorGen.navigator.generateDomainModelNavigator)-»
+ org.eclipse.core.expressions,
+«ENDIF-»
+ org.eclipse.jface,
+«IF editorGen.application = null-»
+ org.eclipse.ui.ide,
+«ENDIF-»
+ org.eclipse.ui.views,
+«IF editorGen.navigator <> null-»
+ org.eclipse.ui.navigator,
+ org.eclipse.ui.navigator.resources,
+«ENDIF-»
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.emf.edit.ui,
+ org.eclipse.gmf.runtime.emf.core,
+ org.eclipse.gmf.runtime.emf.commands.core,
+ org.eclipse.gmf.runtime.emf.ui.properties,
+ org.eclipse.gmf.runtime.diagram.ui,
+«IF printingEnabled-»
+ org.eclipse.gmf.runtime.diagram.ui.printing,
+ org.eclipse.gmf.runtime.diagram.ui.printing.render,
+«ENDIF-»
+«IF editorGen.propertySheet <> null-»
+ org.eclipse.gmf.runtime.diagram.ui.properties,
+«ENDIF-»
+ org.eclipse.gmf.runtime.diagram.ui.providers,
+«IF editorGen.application = null-»
+ org.eclipse.gmf.runtime.diagram.ui.providers.ide,
+«ENDIF-»
+ org.eclipse.gmf.runtime.diagram.ui.render,
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor,
+«IF editorGen.application = null-»
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide,
+«ENDIF-»
+«FOREACH getAllRequiredPlugins()->asSequence() AS id-»
+ «id»;visibility:=reexport,
+«ENDFOREACH-»
+ org.eclipse.gef;visibility:=reexport
+Bundle-ActivationPolicy: lazy
+Import-Package: org.bonitasoft.studio.common
+«EXPAND executionEnvironment-»
+«ENDDEFINE»
+
+«DEFINE executionEnvironment FOR gmfgen::GenPlugin-»
+Bundle-RequiredExecutionEnvironment: «IF editorGen.jdkComplianceLevel() > 5»JavaSE-1.6«ELSE»J2SE-1.«editorGen.jdkComplianceLevel()»«ENDIF»
+«ENDDEFINE»

@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SWTBot Test Suite
+Bundle-SymbolicName: org.bonitasoft.studio.test.swtbot.suite2
+Bundle-Version: 7.3.1.qualifier
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.bonitasoft.studio.tests;bundle-version="1.0.0",
+ org.bonitasoft.studio.actors.tests;bundle-version="1.0.0",
+ org.bonitasoft.studio.common;bundle-version="1.0.0",
+ org.bonitasoft.studio.configuration.test;bundle-version="1.0.0",
+ org.bonitasoft.studio.engine.test;bundle-version="1.0.0",
+ org.bonitasoft.studio.exporter.tests,
+ org.bonitasoft.studio.diagram.test;bundle-version="1.0.0",
+ org.bonitasoft.studio.properties.test;bundle-version="1.0.0",
+ org.bonitasoft.studio.repository.test;bundle-version="1.0.0",
+ org.bonitasoft.studio.preferences;bundle-version="1.0.0",
+ org.bonitasoft.studio.util.tests;bundle-version="1.0.0",
+ org.eclipse.ui;bundle-version="3.7.0",
+ org.eclipse.ui.browser;bundle-version="3.3.101",
+ org.bonitasoft.studio.validators.test;bundle-version="1.0.0",
+ org.bonitasoft.studio.expressions.test;bundle-version="1.0.0",
+ org.bonitasoft.studio.migration.tests;bundle-version="1.0.0",
+ org.junit;bundle-version="4.11.0",
+ org.bonitasoft.studio.connectors.test
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+

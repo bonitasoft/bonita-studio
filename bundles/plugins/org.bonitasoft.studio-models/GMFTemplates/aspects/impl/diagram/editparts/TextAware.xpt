@@ -1,0 +1,52 @@
+/*
+ * Copyright (C) 2010 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+
+«DEFINE setLabelTextHelper FOR gmfgen::GenExternalNodeLabel-»
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected void setLabelTextHelper(org.eclipse.draw2d.IFigure figure, String text) {
+		org.eclipse.emf.ecore.EObject obj = resolveSemanticElement();
+		if (obj != null && obj instanceof org.bonitasoft.studio.model.process.ThrowLinkEvent) {
+			if (((org.bonitasoft.studio.model.process.ThrowLinkEvent) obj).getTo() != null) {
+				text = ((org.bonitasoft.studio.model.process.ThrowLinkEvent) obj).getTo().getName();
+				if (text == null) {
+					text = "";
+				}
+			} else {
+				text = "";
+			}
+		}
+		if (figure instanceof org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) {
+			((org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) figure).setText(text);
+		} else {
+			((org.eclipse.draw2d.Label) figure).setText(text);
+		}
+	}
+«ENDDEFINE»
+
+«DEFINE setLabelTextHelper FOR gmfgen::GenCommonBase-»
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected void setLabelTextHelper(org.eclipse.draw2d.IFigure figure, String text) {
+		if (figure instanceof org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) {
+			((org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) figure).setText(text);
+		} else {
+			((org.eclipse.draw2d.Label) figure).setText(text);
+		}
+	}
+«ENDDEFINE»

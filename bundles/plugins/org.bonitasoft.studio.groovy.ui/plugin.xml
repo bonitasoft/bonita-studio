@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="comboElementProvider" name="Provider for the Text or Data or Enum or... Widget" schema="schema/comboElementProvider.exsd"/>
+   <extension-point id="textordataFactory" name="TextOrData Factory" schema="schema/textordataFactory.exsd"/>
+   <extension
+         point="org.codehaus.groovy.eclipse.ui.syntaxHighlightingExtension">
+      <highlightingExtender
+            extender="org.bonitasoft.studio.groovy.ui.contentassist.BonitaSyntaxHighlighting"
+            natureID="org.bonitasoft.studio.common.repository.bonitaNature">
+      </highlightingExtender>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.groovy.ui.comboElementProvider">
+      <comboElementsProvider
+            priority="9"
+            providerClass="org.bonitasoft.studio.groovy.ui.widgets.GroovyComboProvider">
+      </comboElementsProvider>
+      <comboElementsProvider
+            priority="0"
+            providerClass="org.bonitasoft.studio.groovy.ui.widgets.pojo.JavaObjectComboProvider">
+      </comboElementsProvider>
+      <comboElementsProvider
+            priority="0"
+            providerClass="org.bonitasoft.studio.groovy.ui.widgets.multiple.MultipleDataComboProvider">
+      </comboElementsProvider>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.validator.menu">
+         <command
+               commandId="org.bonitasoft.studio.groovy.ui.editscripts"
+               icon="icons/manage_groovy_scripts.png"
+               label="%editGroovyScript_Label"
+               style="push">
+         </command>
+         <visibleWhen
+               checkEnabled="true">
+            <reference
+                  definitionId="isBonitaPerspectiveActive">
+            </reference>
+         </visibleWhen>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.bonitasoft.studio.groovy.ui.handler.EditGroovyScriptHandler"
+            id="org.bonitasoft.studio.groovy.ui.editscripts"
+            name="%editGroovyScript_Label">
+      </command>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.scripting.scriptLanguageProvider">
+      <scriptLanguage
+            languageProviderClass="org.bonitasoft.studio.groovy.ui.providers.GroovyScriptLanguageProvider">
+      </scriptLanguage>
+   </extension>
+   <extension
+         point="org.codehaus.groovy.eclipse.codeassist.completion.completionProposalFilter">
+      <proposalFilter
+            proposalFilter="org.bonitasoft.studio.groovy.ui.contentassist.BonitaProposalFilter">
+         <appliesTo
+               projectNature="org.bonitasoft.studio.common.repository.bonitaNature">
+         </appliesTo>
+      </proposalFilter>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.configuration.synchronizer">
+      <synchronier
+            class="org.bonitasoft.studio.groovy.ui.providers.ProcessGroovyScriptConfigurationSynchronizer">
+      </synchronier>
+      <synchronier
+            class="org.bonitasoft.studio.groovy.ui.providers.ApplicationGroovyScriptConfigurationSynchronizer">
+      </synchronier>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.configuration.exportConfigurationAction">
+      <exportConfigurationAction
+            class="org.bonitasoft.studio.groovy.ui.providers.ExportGroovyScriptAction">
+      </exportConfigurationAction>
+   </extension>
+   <extension point="org.eclipse.jdt.groovy.core.typeLookup">
+    	<lookup lookup="org.bonitasoft.studio.groovy.ui.contentassist.BonitaConstantsTypeLookup">
+      		<appliesTo projectNature="org.bonitasoft.studio.common.repository.bonitaNature"/>
+    	</lookup>
+	</extension>
+
+
+</plugin>

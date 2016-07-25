@@ -1,0 +1,39 @@
+﻿/*
+ * Copyright (c) 2007, 2009 Borland Software Corporation
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Dmitry Stadnik (Borland) - initial implementation
+ *    Artem Tikhomirov (Borland) - [235113] alternative parser access
+ *                                 [244419] custom parsers
+ *                                 initial API
+ */
+
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+
+
+«DEFINE parser_getPrintStringMethod FOR gmfgen::PredefinedParser-»
+	«EXPAND xpt::Common::generatedMemberComment»
+	public String getPrintString(org.eclipse.core.runtime.IAdaptable adapter, int flags) {
+«IF viewMethod = gmfgen::LabelTextAccessMethod::MESSAGE_FORMAT-»
+		org.eclipse.emf.ecore.EObject element = (org.eclipse.emf.ecore.EObject) adapter.getAdapter(org.eclipse.emf.ecore.EObject.class);
+		if (element instanceof org.bonitasoft.studio.model.process.AbstractTimerEvent || element instanceof org.bonitasoft.studio.model.process.StartTimerEvent) {
+			return org.bonitasoft.studio.common.TimerEventLabelProvider.getText(element) ;
+		}
+		return getViewProcessor().format(getValues(element), new StringBuffer(), new java.text.FieldPosition(0)).toString();
+«ELSEIF viewMethod = gmfgen::LabelTextAccessMethod::PRINTF-»
+		org.eclipse.emf.ecore.EObject element = (org.eclipse.emf.ecore.EObject) adapter.getAdapter(org.eclipse.emf.ecore.EObject.class);
+		return String.format(getViewPattern() == null ? getDefaultPattern() : getViewPattern(), getValues(element));
+«ELSEIF viewMethod = gmfgen::LabelTextAccessMethod::REGEXP-»
+		return "";«EXPAND xpt::Common::nonNLS»
+«ELSEIF viewMethod = gmfgen::LabelTextAccessMethod::NATIVE-»
+		org.eclipse.emf.ecore.EObject element = (org.eclipse.emf.ecore.EObject) adapter.getAdapter(org.eclipse.emf.ecore.EObject.class);
+		String s = org.eclipse.emf.ecore.util.EcoreUtil.convertToString(features[0].getEAttributeType(), element.eGet(features[0]));
+		return s != null ? s : "";«EXPAND xpt::Common::nonNLS»
+«ENDIF-»
+	}
+«ENDDEFINE»

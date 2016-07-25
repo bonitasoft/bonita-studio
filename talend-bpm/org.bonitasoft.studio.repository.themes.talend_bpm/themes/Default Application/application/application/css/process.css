@@ -1,0 +1,112 @@
+@charset "utf-8";
+* {
+	font-size: 14px;
+	margin: 0;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	padding: 0;
+}
+
+body {
+	background-image: url(../images/background-gradient.png);
+	background-position: 0px 72px;
+	background-color: #EEEEEE;
+	background-repeat: repeat-x;
+}
+
+#logInZone>* {
+	float: right;
+}
+
+.bonita_user_xp_label {
+	float: left;
+}
+
+#bonita_username div {
+	padding: 5px 10px 0 0;
+	line-height: 20px;
+	color: #481bdc;
+}
+
+.logInZoneText {
+	padding: 5px 10px 0 0;
+	line-height: 20px;
+	color: #481bdc;
+}
+
+.logInZoneText a {
+	font-weight: bold;
+	text-decoration: none;
+	color: #481bdc;
+}
+
+.logInZoneText a:hover {
+	font-weight: bold;
+	text-decoration: none;
+	color: #006699;
+}
+
+#blueTopLine {
+	height: 5px;
+	width: 100%;
+	background-color: #481bdc;
+}
+
+#header {
+	height: 70px;
+	border-width: 2px;
+	background-image: url(../images/logo-talend-bpm.png);
+	background-position: 30px 10px;
+	width: 100%;
+	background-color: #FFF;
+	background-repeat: no-repeat;
+	border-style: solid;
+	border-color: #999999;
+}
+
+#bonita_process_label div {
+	font-weight: bold;
+	margin: 0 auto 0 auto;
+	width: 600px;
+	text-align: center;
+	font-size: 24px;
+	padding-top: 20px;
+	color: #481bdc;
+}
+
+#degradeSeparator {
+	height: 8px;
+	width: 100%;
+	background-image: url(../images/degradeSeparator.png);
+}
+
+#footer {
+	padding: 3px 0px 3px 0px;
+	height: 20px;
+	margin: 0 auto 0 auto;
+	border-width: 1px;
+	width: 680px;
+	background-color: #a5cc07;
+	text-align: center;
+	border-style: solid;
+	font-size: 14px;
+	border-color: #999999;
+	color: #FFFFFF;
+}
+
+.bonita_user_xp_icon {
+	cursor: pointer;
+	float: left;
+	height: 16px;
+	background-image: url(../images/bonitaUserExperienceConnectivity.png);
+	background-position: 0px 0px;
+	width: 20px;
+	background-color: transparent;
+	background-attachment: scroll;
+	margin-left: 5px;
+	background-repeat: no-repeat;
+}
+
+.bonita_form_confirm_message {
+	background-color: white;
+}
+

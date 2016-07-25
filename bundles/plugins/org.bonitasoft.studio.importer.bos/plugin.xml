@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.bonitasoft.studio.importer.bos.validator" name="org.bonitasoft.studio.importer.bos.validator" schema="schema/org.bonitasoft.studio.importer.bos.validator.exsd"/>
+   <extension
+         point="org.bonitasoft.studio.importer.import">
+      <importFactory
+            description="%import_BOS_desc"
+            filterExtensions="*.bos"
+            importerFactoryClass="org.bonitasoft.studio.importer.bos.factory.BosArchiveImporterFactory"
+            inputName="%import_BOS_Name"
+            menuIcon="icons/bos-desc.png"
+            priorityDisplay="1">
+      </importFactory>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.importer.bos.validator">
+      <bosImporterValidator
+            class="org.bonitasoft.studio.importer.bos.validator.DiagramValidator">
+      </bosImporterValidator>
+   </extension>
+
+</plugin>

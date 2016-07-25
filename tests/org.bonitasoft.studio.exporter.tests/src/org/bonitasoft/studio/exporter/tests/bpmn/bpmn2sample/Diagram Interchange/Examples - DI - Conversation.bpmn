@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<semantic:definitions id="_1275488496196" targetNamespace="http://www.trisotech.com/definitions/_1275488496196" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:semantic="http://www.omg.org/spec/BPMN/20100524/MODEL">
+    <semantic:collaboration id="C1275488496696">
+        <semantic:participant name="Participant 1" id="Pool_Participant1"/>
+        <semantic:participant name="Participant 2" id="Pool_Participant2"/>
+        <semantic:participant name="Participant 3" id="Pool_Participant3"/>
+        <semantic:messageFlow name="e" sourceRef="Pool_Participant1" targetRef="Pool_Participant3" id="MessageFlow_E"/>
+        <semantic:textAnnotation id="Annotation_MessageAnnotation">
+            <semantic:text>Message annotation</semantic:text>
+        </semantic:textAnnotation>
+        <semantic:association associationDirection="None" sourceRef="MessageFlow_E" targetRef="Annotation_MessageAnnotation" id="Association_F"/>
+        <semantic:conversation name="Conversation 1" id="Conversation_Conversation1"/>
+        <semantic:conversation name="Conversation 2" id="Conversation_Conversation2"/>
+        <semantic:conversationLink name="a" sourceRef="Pool_Participant1" targetRef="Conversation_Conversation1" id="ConversationLink_A"/>
+        <semantic:conversationLink name="b" sourceRef="Conversation_Conversation1" targetRef="Pool_Participant2" id="ConversationLink_B"/>
+        <semantic:conversationLink name="c" sourceRef="Conversation_Conversation2" targetRef="Pool_Participant2" id="ConversationLink_C"/>
+        <semantic:conversationLink name="d" sourceRef="Conversation_Conversation2" targetRef="Pool_Participant3" id="ConversationLink_D"/>
+    </semantic:collaboration>
+    <bpmndi:BPMNDiagram documentation="" id="Trisotech.Visio-_6" name="Conversation" resolution="96.00000267028808">
+        <bpmndi:BPMNPlane bpmnElement="C1275488496696">
+            <bpmndi:BPMNShape bpmnElement="Pool_Participant1" isHorizontal="false" id="Trisotech.Visio_Pool_Participant1">
+                <dc:Bounds height="144.0" width="132.0" x="97.0" y="108.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Pool_Participant2" isHorizontal="false" id="Trisotech.Visio_Pool_Participant2">
+                <dc:Bounds height="144.0" width="120.0" x="360.0" y="108.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Pool_Participant3" isHorizontal="true" id="Trisotech.Visio_Pool_Participant3">
+                <dc:Bounds height="108.0" width="384.0" x="96.0" y="396.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Annotation_MessageAnnotation" id="Trisotech.Visio__6_Annotation_MessageAnnotation">
+                <dc:Bounds height="23.0" width="108.0" x="210.0" y="313.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Conversation_Conversation1" id="Trisotech.Visio__6_Conversation_Conversation1">
+                <dc:Bounds height="38.0" width="38.0" x="274.0" y="168.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Conversation_Conversation2" id="Trisotech.Visio__6_Conversation_Conversation2">
+                <dc:Bounds height="38.0" width="38.0" x="406.0" y="305.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="ConversationLink_B" id="Trisotech.Visio__6_ConversationLink_B">
+                <di:waypoint x="312.0" y="187.0"/>
+                <di:waypoint x="360.0" y="187.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="ConversationLink_C" id="Trisotech.Visio__6_ConversationLink_C">
+                <di:waypoint x="425.0" y="305.0"/>
+                <di:waypoint x="425.0" y="252.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="ConversationLink_D" id="Trisotech.Visio__6_ConversationLink_D">
+                <di:waypoint x="425.0" y="343.0"/>
+                <di:waypoint x="425.0" y="396.0"/>
+                <di:waypoint x="424.0" y="396.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="MessageFlow_E" id="Trisotech.Visio__6_MessageFlow_E">
+                <di:waypoint x="164.0" y="252.0"/>
+                <di:waypoint x="164.0" y="396.0"/>
+                <di:waypoint x="163.0" y="396.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="ConversationLink_A" id="Trisotech.Visio__6_ConversationLink_A">
+                <di:waypoint x="229.0" y="188.0"/>
+                <di:waypoint x="229.0" y="186.0"/>
+                <di:waypoint x="274.0" y="187.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="Association_F" id="Trisotech.Visio__6_Association_F">
+                <di:waypoint x="188.0" y="297.0"/>
+                <di:waypoint x="196.0" y="297.0"/>
+                <di:waypoint x="196.0" y="324.0"/>
+                <di:waypoint x="210.0" y="324.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</semantic:definitions>
+

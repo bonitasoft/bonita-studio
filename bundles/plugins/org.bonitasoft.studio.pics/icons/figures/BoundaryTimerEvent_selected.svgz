@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!-- Generator: Adobe Illustrator 13.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 14948)  -->
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" id="Calque_1" x="0px" y="0px" width="32.366px" height="32.366px" viewBox="0 0 32.366 32.366" enable-background="new 0 0 32.366 32.366" xml:space="preserve" inkscape:version="0.47 r22583" sodipodi:docname="BoundaryTimerEvent_selected.svgz"><metadata id="metadata277"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/></cc:Work></rdf:RDF></metadata><defs id="defs275"><inkscape:perspective sodipodi:type="inkscape:persp3d" inkscape:vp_x="0 : 16.183001 : 1" inkscape:vp_y="0 : 1000 : 0" inkscape:vp_z="32.366001 : 16.183001 : 1" inkscape:persp3d-origin="16.183001 : 10.788667 : 1" id="perspective279"/>
+	<linearGradient y2="6.1322" x2="6.6928" y1="25.9854" x1="25.438" gradientUnits="userSpaceOnUse" id="SVGID_1_">
+		<stop id="stop239" style="stop-color:#B8B9DA" offset="0"/>
+		<stop id="stop241" style="stop-color:#FBFBEE" offset="1"/>
+	</linearGradient>
+	
+	
+	
+</defs><sodipodi:namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-width="640" inkscape:window-height="480" id="namedview273" showgrid="false" inkscape:zoom="7.291602" inkscape:cx="16.183001" inkscape:cy="16.183001" inkscape:current-layer="Calque_1"/>
+
+<g id="g3739"><circle cx="16.183001" cy="16.183001" r="15.333" id="circle243" style="opacity:0.50000000000000000;fill:#ffffff;stroke:#2c6da3;stroke-width:1.70000005000000010;fill-opacity:1" sodipodi:cx="16.183001" sodipodi:cy="16.183001" sodipodi:rx="15.333" sodipodi:ry="15.333"/><g id="g245" style="opacity:0.5">
+		<g id="g247">
+			<g id="g249">
+				<defs id="defs251">
+					<circle id="SVGID_2_" cx="16.184" cy="16.183001" r="9.1859999" sodipodi:cx="16.184" sodipodi:cy="16.183001" sodipodi:rx="9.1859999" sodipodi:ry="9.1859999"/>
+				</defs>
+				<clipPath id="SVGID_3_">
+					<use xlink:href="#SVGID_2_" overflow="visible" id="use255" style="overflow:visible" x="0" y="0" width="32.366001" height="32.366001"/>
+				</clipPath>
+			</g>
+			<path d="m 6.424,16.183 c 10e-4,-5.39 4.37,-9.758 9.76,-9.758 l 0,0 c 5.39,0 9.758,4.369 9.758,9.758 l 0,0 c 0,5.39 -4.368,9.758 -9.758,9.758 l 0,0 c -5.39,0 -9.758,-4.368 -9.76,-9.758 l 0,0 z m 1.149,0 c 0.008,4.754 3.854,8.603 8.611,8.611 l 0,0 c 4.754,-0.008 8.602,-3.856 8.609,-8.611 l 0,0 C 24.785,11.429 20.938,7.581 16.184,7.572 l 0,0 c -4.757,0.01 -8.603,3.857 -8.611,8.611 l 0,0 z" id="path257" style="fill:#2c6da3"/>
+		</g>
+		<g id="g259">
+			<path d="m 16.826,16.092 c -0.166,0.399 -0.515,0.633 -0.783,0.522 l 0,0 C 15.776,16.505 15.694,16.092 15.858,15.691 L 18.339,9.688 C 18.504,9.289 18.855,9.054 19.12,9.164 l 0,0 c 0.268,0.11 0.35,0.524 0.186,0.922 l -2.48,6.006 z" id="path261" style="fill:#2c6da3"/>
+		</g>
+		<g id="g263">
+			<path d="m 16.438,17.017 c -0.435,0 -0.654,-0.277 -0.654,-0.619 l 0,0 c 0,-0.342 0.219,-0.619 0.654,-0.619 h 4.793 c 0.435,0 0.787,0.277 0.787,0.619 l 0,0 c 0,0.342 -0.353,0.619 -0.787,0.619 h -4.793 z" id="path265" style="fill:#2c6da3"/>
+		</g>
+		<g id="g267">
+			<path d="m 11.623,8.877 0.719,1.246 c 0.154,-0.098 0.311,-0.192 0.474,-0.279 L 12.098,8.602 11.623,8.877 z m 12.165,3.261 -0.273,-0.476 -1.246,0.719 c 0.098,0.155 0.193,0.312 0.278,0.474 l 1.241,-0.717 z M 8.973,16.215 c 0,-0.093 0.009,-0.182 0.013,-0.274 h -1.44 v 0.549 h 1.44 C 8.982,16.397 8.973,16.308 8.973,16.215 z m 6.928,-7.19 c 0.093,-0.004 0.182,-0.015 0.275,-0.015 0.093,0 0.183,0.011 0.276,0.015 v -1.44 h -0.551 v 1.44 z m 3.637,0.82 c 0.162,0.086 0.318,0.182 0.474,0.279 L 20.731,8.878 20.256,8.604 19.538,9.845 z m -10.974,2.293 1.242,0.717 c 0.086,-0.162 0.181,-0.318 0.279,-0.474 L 8.839,11.662 8.564,12.138 z m 10.974,10.447 0.718,1.242 0.475,-0.275 -0.719,-1.244 c -0.156,0.097 -0.312,0.193 -0.474,0.277 z m 2.73,-2.536 1.246,0.72 0.273,-0.476 -1.241,-0.716 c -0.085,0.161 -0.18,0.319 -0.278,0.472 z m -13.704,0.244 0.275,0.476 1.246,-0.72 C 9.988,19.896 9.893,19.738 9.806,19.577 L 8.564,20.293 z M 23.368,15.94 c 0.004,0.093 0.014,0.182 0.014,0.274 0,0.092 -0.01,0.183 -0.014,0.274 h 1.44 V 15.94 h -1.44 z m -11.745,7.612 0.475,0.275 0.718,-1.24 c -0.163,-0.086 -0.32,-0.182 -0.474,-0.279 l -0.719,1.244 z m 4.278,-0.146 v 1.44 h 0.551 v -1.44 c -0.093,0.004 -0.183,0.013 -0.276,0.013 -0.093,0 -0.182,-0.009 -0.275,-0.013 z" id="path269" style="fill:#2c6da3"/>
+		</g>
+	</g><circle cx="16.183001" cy="16.183001" r="12.5" id="circle271" sodipodi:cx="16.183001" sodipodi:cy="16.183001" sodipodi:rx="12.5" sodipodi:ry="12.5" style="opacity:0.5;fill:none;stroke:#2c6da3;stroke-width:1.70000005"/></g>
+</svg>

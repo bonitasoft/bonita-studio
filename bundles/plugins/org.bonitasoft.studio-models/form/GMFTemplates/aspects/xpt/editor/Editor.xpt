@@ -1,0 +1,505 @@
+/*
+ * Copyright (C) 2009 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+ «IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+«EXTENSION xpt::editor::Utils»
+
+«AROUND attributes FOR gmfgen::GenEditorView-»
+«EXPAND xpt::Common::generatedMemberComment»
+public static final String ID = "«iD»"; «EXPAND xpt::Common::nonNLS»
+	
+	«EXPAND xpt::Common::generatedMemberComment»
+public static final String CONTEXT_ID = "«contextID»"; «EXPAND xpt::Common::nonNLS»
+
+	private DiagramOutlinePage outlinePage ;
+«ENDAROUND»
+
+«AROUND getAdapter FOR gmfgen::GenEditorView-»
+«REM» 
+	Use a customize OutlineView
+«ENDREM»
+«EXPAND createDiagramOutlinePageInternalClass-»
+ 
+	/**
+	 * @generated BonitaSoft
+	 */
+	public Object getAdapter(Class type) {
+		if (type == org.eclipse.ui.part.IShowInTargetList.class) {
+			return new org.eclipse.ui.part.IShowInTargetList() {
+				public String[] getShowInTargetIds() {
+					return new String[] { org.eclipse.ui.navigator.resources.ProjectExplorer.VIEW_ID };
+				}
+			};
+		}
+
+
+		if (type == org.eclipse.ui.views.contentoutline.IContentOutlinePage.class) {
+			
+			 org.eclipse.gef.ui.parts.TreeViewer viewer = new org.eclipse.gef.ui.parts.TreeViewer();
+	            viewer.setRootEditPart(new org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DiagramRootTreeEditPart());
+	            outlinePage = new DiagramOutlinePage(viewer) ;
+				return outlinePage;
+		}
+	
+
+		return super.getAdapter(type);
+	}
+
+	public org.eclipse.jface.action.IAction getShowOverivewAction(){
+		return outlinePage.getShowOverivewAction() ;
+	}
+	
+	public org.eclipse.jface.action.IAction getShowOutlineAction(){
+		return outlinePage.getShowOutlineAction() ;
+	}
+	
+	@Override
+	protected int getDefaultOutlineViewMode() {
+		return getPreferenceStore().getInt(org.bonitasoft.studio.common.preferences.CommonDiagramPreferencesConstants.DEFAULT_OUTLINE_TYPE);
+	}
+
+«ENDAROUND»
+
+«AROUND configureGraphicalViewer FOR gmfgen::GenEditorView-»
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected void configureGraphicalViewer() {
+		super.configureGraphicalViewer();
+		«EXPAND xpt::editor::DiagramEditorContextMenuProvider::qualifiedClassName FOR editorGen.diagram» provider =
+				new «EXPAND xpt::editor::DiagramEditorContextMenuProvider::qualifiedClassName FOR editorGen.diagram»(this, getDiagramGraphicalViewer());
+		getDiagramGraphicalViewer().setContextMenu(provider);
+		getSite().registerContextMenu(org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds.DIAGRAM_EDITOR_CONTEXT_MENU, provider, getDiagramGraphicalViewer());
+		«REM»Disable multiple selection for PREVIEW «ENDREM»
+		getDiagramGraphicalViewer().setSelectionManager(new org.bonitasoft.studio.common.diagram.tools.BonitaDiagramSelectionManager());
+		
+		org.eclipse.gef.KeyHandler viewerKeyHandler = new org.bonitasoft.studio.common.diagram.tools.CustomDiagramGraphicalViewerKeyHandler(getDiagramGraphicalViewer())
+        .setParent(getKeyHandler());
+		getDiagramGraphicalViewer().setKeyHandler(new org.eclipse.gmf.runtime.diagram.ui.internal.parts.DirectEditKeyHandler(getDiagramGraphicalViewer()).setParent(viewerKeyHandler));
+	}
+«ENDAROUND»
+
+«AROUND initializeGraphicalViewer FOR gmfgen::GenEditorView-»
+	«EXPAND xpt::Common::generatedMemberComment»
+	/**
+	 * @generated BonitaSoft
+	 * Disable Zoom on CTRL+MOUSE WHEEL
+	 */
+protected void initializeGraphicalViewer() {
+	getDiagramGraphicalViewer().addDropTargetListener(new org.bonitasoft.studio.common.gmf.tools.PaletteToolTransferDropTargetListenerWithSelection(getGraphicalViewer()));
+	super.initializeGraphicalViewer();
+	«EXPAND xpt::editor::Editor::addDropTargetListener('org.eclipse.jface.util.LocalSelectionTransfer.getTransfer()')-»
+	«EXPAND xpt::editor::Editor::addDropTargetListener('org.eclipse.emf.edit.ui.dnd.LocalTransfer.getInstance()')-»
+	getGraphicalViewer().setProperty(org.eclipse.gef.MouseWheelHandler.KeyGenerator.getKey(SWT.CTRL),null);
+}
+«ENDAROUND»
+
+«AROUND additions FOR gmfgen::GenEditorView-»
+/**
+ * @generated BonitaSoft
+ */
+protected org.eclipse.emf.transaction.TransactionalEditingDomain createEditingDomain() {
+	// Use shared editing domain with id depending on the input
+	return org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil.getSharedEditingDomain("«editorGen.diagram.editingDomainID»");
+}
+
+	//React to drop requests even if shortcuts are disabled
+	«IF editorGen.diagram.generateCreateShortcutAction() = false -»
+	
+		«EXPAND xpt::editor::Editor::initializeGraphicalViewer-»
+		
+		«EXPAND xpt::editor::Editor::DropTargetListener-»
+	«ENDIF-»
+	«REM»Set a friendly tooltip on the title.«ENDREM»
+	«EXPAND getTitleTooltip-»
+	
+	«REM»Set method public«ENDREM»
+	«EXPAND setPartName-»
+	
+	«REM» 
+		Open the intro if all editors are closed,
+		Reopen process diagram if needed.
+	«ENDREM»
+	«EXPAND dispose-»
+	
+	«REM»default size for palette«ENDREM»
+	«EXPAND defaultPaletteSize-»
+	
+	«REM»Prompt for save only if no other editors use the same resource set«ENDREM»
+	«EXPAND isSaveOnCloseNeeded-»
+	
+	«EXPAND setReadOnly»
+	
+«ENDAROUND»
+
+«DEFINE getTitleTooltip FOR gmfgen::GenEditorView-»
+
+	/**
+	 * @generated BonitaSoft
+	 * Set a friendly tooltip on the title. 
+	 */
+	@Override
+	public String getTitleToolTip() {
+		try{
+			String tooltip = "";
+			
+			org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart diagramEditPart = this.getDiagramEditPart();
+			if(diagramEditPart == null){
+				return super.getTitleToolTip();//diagramEditPart not yet exists
+			}
+			org.bonitasoft.studio.model.form.Form form = (org.bonitasoft.studio.model.form.Form) diagramEditPart.resolveSemanticElement();
+			org.bonitasoft.studio.model.process.Element element = (org.bonitasoft.studio.model.process.Element) form.eContainer();
+			if(element != null){
+				tooltip += element.getName() + "/";
+			}	
+			return tooltip += form.getName();
+		} catch (Exception e){
+			org.bonitasoft.studio.common.log.BonitaStudioLog.error(e);
+		}
+		//if there was a problem set the default titleToolTip
+		return super.getTitleToolTip();
+	}
+«ENDDEFINE»
+
+«DEFINE setPartName FOR gmfgen::GenEditorView-»
+«REM» 
+	Allow to update the part name when the name of the diagram change.
+«ENDREM»
+	/**
+	 * @generated BonitaSoft
+	 * Allow to update the part name when the name of the diagram change 
+	 */
+	@Override
+	public void setPartName(String partName) {
+		super.setPartName(partName);
+	}
+«ENDDEFINE»
+
+«DEFINE dispose FOR gmfgen::GenEditorView-»
+	
+	@Override
+	public void dispose() {
+		if(this.getEditorInput() instanceof org.eclipse.emf.common.ui.URIEditorInput 
+				|| this.getEditorInput() instanceof org.eclipse.ui.part.FileEditorInput)
+		super.dispose();
+		
+		//avoid Memory leak
+		if(getDiagramGraphicalViewer() != null){
+			getDiagramGraphicalViewer().deselectAll();
+			if(getDiagramGraphicalViewer().getVisualPartMap() != null){
+				getDiagramGraphicalViewer().getVisualPartMap().clear() ;
+			}
+			if(getDiagramGraphicalViewer().getEditPartRegistry() != null){
+				getDiagramGraphicalViewer().getEditPartRegistry().clear() ;
+			}			
+		}
+		
+		//GMF bug, avoid memory leak
+		final org.eclipse.gef.ui.rulers.RulerComposite rulerComposite = getRulerComposite();
+		if(rulerComposite!= null){
+			rulerComposite.dispose();
+		}
+		
+	}
+«ENDDEFINE»
+
+«REM»Copy-paste class instead of subclassing it because of "package" visibiliy on 
+org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor.DiagramOutlinePage.
+TODO: get it fixed in GMF-Runtime«ENDREM»
+«DEFINE createDiagramOutlinePageInternalClass FOR gmfgen::GenEditorView-»
+	/**
+     * A diagram outline page
+     */
+    class DiagramOutlinePage
+        extends org.eclipse.gef.ui.parts.ContentOutlinePage
+        implements org.eclipse.core.runtime.IAdaptable {
+
+		private org.eclipse.gef.EditPartViewer viewer ;
+
+        private org.eclipse.ui.part.PageBook pageBook;
+
+        private org.eclipse.swt.widgets.Control outline;
+
+        private org.eclipse.swt.widgets.Canvas overview;
+
+        private org.eclipse.jface.action.IAction showOutlineAction, showOverviewAction;
+
+        private boolean overviewInitialized;
+
+        private org.eclipse.gmf.runtime.draw2d.ui.internal.parts.ThumbnailEx thumbnail;
+
+        private org.eclipse.swt.events.DisposeListener disposeListener;
+
+        /**
+         * @param viewer
+         */
+        public DiagramOutlinePage(org.eclipse.gef.EditPartViewer viewer) {
+            super(viewer);
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.eclipse.ui.part.Page#init(org.eclipse.ui.part.IPageSite)
+         */
+        public void init(org.eclipse.ui.part.IPageSite pageSite) {
+            super.init(pageSite);
+            org.eclipse.gef.ui.actions.ActionRegistry registry = getActionRegistry();
+            org.eclipse.ui.IActionBars bars = pageSite.getActionBars();
+            String id =  org.eclipse.ui.actions.ActionFactory.UNDO.getId();
+            bars.setGlobalActionHandler(id, registry.getAction(id));
+            id = org.eclipse.ui.actions.ActionFactory.REDO.getId();
+            bars.setGlobalActionHandler(id, registry.getAction(id));
+            id = org.eclipse.ui.actions.ActionFactory.DELETE.getId();
+            bars.setGlobalActionHandler(id, registry.getAction(id));
+            bars.updateActionBars();
+
+            // Toolbar refresh to solve linux defect RATLC525198
+            bars.getToolBarManager().markDirty();
+        }
+
+        /**
+         * configures the outline viewer
+         */
+        protected void configureOutlineViewer() {
+            getViewer().setEditDomain(getEditDomain());
+            getViewer().setEditPartFactory(getOutlineViewEditPartFactory());
+            
+            org.eclipse.jface.action.MenuManager outlineContextMenuProvider = getOutlineContextMenuProvider(getViewer());
+            if (outlineContextMenuProvider != null) {
+            	getViewer().setContextMenu(outlineContextMenuProvider);
+            }
+
+            getViewer().setKeyHandler(getKeyHandler());
+            org.eclipse.jface.action.IToolBarManager tbm = this.getSite().getActionBars()
+                .getToolBarManager();
+            showOutlineAction = new org.eclipse.jface.action.Action() {
+
+				public void run() {
+					showPage(ID_OUTLINE);
+				}
+			};
+			showOutlineAction.setImageDescriptor(org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages.DESC_OUTLINE);
+			showOutlineAction.setToolTipText(org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages.OutlineView_OutlineTipText);
+		  //   tbm.add(showOutlineAction);
+			showOverviewAction = new org.eclipse.jface.action.Action() {
+
+				public void run() {
+					showPage(ID_OVERVIEW);
+				}
+			};
+			showOverviewAction.setImageDescriptor(org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages.DESC_OVERVIEW);
+			showOverviewAction.setToolTipText(org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages.OutlineView_OverviewTipText);
+       
+         //   tbm.add(showOverviewAction);
+            showPage(ID_OVERVIEW);
+        }
+
+        public void createControl(org.eclipse.swt.widgets.Composite parent) {
+            pageBook = new org.eclipse.ui.part.PageBook(parent, org.eclipse.swt.SWT.NONE);
+            outline = getViewer().createControl(pageBook);
+            overview = new org.eclipse.swt.widgets.Canvas(pageBook, org.eclipse.swt.SWT.NONE);
+            pageBook.showPage(outline);
+            configureOutlineViewer();
+            hookOutlineViewer();
+            initializeOutlineViewer();
+        }
+
+        public void dispose() {
+            unhookOutlineViewer();
+            if (thumbnail != null) {
+                thumbnail.deactivate();
+            }
+            this.overviewInitialized = false;
+            super.dispose();
+        }
+
+        public Object getAdapter(Class type) {
+            return null;
+        }
+
+        public org.eclipse.swt.widgets.Control getControl() {
+            return pageBook;
+        }
+
+        /**
+         * hook the outline viewer
+         */
+        protected void hookOutlineViewer() {
+            getSelectionSynchronizer().addViewer(getViewer());
+        }
+
+		public org.eclipse.jface.action.IAction getShowOverivewAction() {
+			return showOverviewAction;
+		}
+
+		public org.eclipse.jface.action.IAction getShowOutlineAction() {
+			return showOutlineAction;
+		}
+
+        /**
+         * initialize the outline viewer
+         */
+        protected void initializeOutlineViewer() {
+            try {
+                org.eclipse.emf.transaction.util.TransactionUtil.getEditingDomain(getDiagram()).runExclusive(
+                    new Runnable() {
+
+                        public void run() {
+                            getViewer().setContents(getDiagram());
+                        }
+                    });
+            } catch (InterruptedException e) {
+                org.eclipse.gmf.runtime.common.core.util.Trace.catching(org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin.getInstance(),
+                   org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIDebugOptions.EXCEPTIONS_CATCHING, getClass(),
+                    "initializeOutlineViewer", e); //$NON-NLS-1$
+                org.eclipse.gmf.runtime.common.core.util.Log.error(org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIPlugin.getInstance(),
+                    org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes.IGNORED_EXCEPTION_WARNING,
+                    "initializeOutlineViewer", e); //$NON-NLS-1$
+            }
+            ((org.bonitasoft.studio.common.gmf.tools.tree.BonitaTreeViewer)getViewer()).setDiagramEditPart(getDiagramEditPart()) ;
+        }
+
+
+		@Override
+		protected org.eclipse.gef.EditPartViewer getViewer() {
+			if(viewer == null){
+				viewer = new org.bonitasoft.studio.common.gmf.tools.tree.BonitaTreeViewer() ;
+			}
+			return viewer;
+		}
+
+        /**
+         * initialize the overview
+         */
+        protected void initializeOverview() {
+            org.eclipse.draw2d.LightweightSystem lws = new org.eclipse.draw2d.LightweightSystem(overview);
+            org.eclipse.gef.RootEditPart rep = getGraphicalViewer().getRootEditPart();
+            org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart root = (org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart) rep;
+            thumbnail = new org.eclipse.gmf.runtime.draw2d.ui.internal.parts.ScrollableThumbnailEx((org.eclipse.draw2d.Viewport) root.getFigure());
+            // thumbnail.setSource(root.getLayer(org.eclipse.gef.LayerConstants.PRINTABLE_LAYERS));
+            thumbnail.setSource(root.getLayer(org.eclipse.gef.LayerConstants.SCALABLE_LAYERS));
+
+            lws.setContents(thumbnail);
+            disposeListener = new org.eclipse.swt.events.DisposeListener() {
+
+                public void widgetDisposed(org.eclipse.swt.events.DisposeEvent e) {
+                    if (thumbnail != null) {
+                        thumbnail.deactivate();
+                        thumbnail = null;
+                    }
+                }
+            };
+            getEditor().addDisposeListener(disposeListener);
+            this.overviewInitialized = true;
+        }
+
+        /**
+         * show page with a specific ID, possibel values are ID_OUTLINE and
+         * ID_OVERVIEW
+         * 
+         * @param id
+         */
+        protected void showPage(int id) {
+            if (id == ID_OUTLINE) {
+                pageBook.showPage(outline);
+                getPreferenceStore().setValue(org.bonitasoft.studio.common.preferences.CommonDiagramPreferencesConstants.DEFAULT_OUTLINE_TYPE, org.bonitasoft.studio.common.preferences.CommonDiagramPreferencesConstants.TREE_OUTLINE_TYPE) ;
+                if (thumbnail != null)
+                    thumbnail.setVisible(false);
+            } else if (id == ID_OVERVIEW) {
+                if (!overviewInitialized)
+                    initializeOverview();
+                pageBook.showPage(overview);
+                 getPreferenceStore().setValue(org.bonitasoft.studio.common.preferences.CommonDiagramPreferencesConstants.DEFAULT_OUTLINE_TYPE, org.bonitasoft.studio.common.preferences.CommonDiagramPreferencesConstants.OVERVIEW_OUTLINE_TYPE) ;
+                thumbnail.setVisible(true);
+            }
+        }
+
+        /**
+         * unhook the outline viewer
+         */
+        protected void unhookOutlineViewer() {
+            getSelectionSynchronizer().removeViewer(getViewer());
+            if (disposeListener != null && getEditor() != null
+                && !getEditor().isDisposed())
+                getEditor().removeDisposeListener(disposeListener);
+        }
+
+        /**
+         * getter for the editor conrolo
+         * 
+         * @return <code>Control</code>
+         */
+        protected  org.eclipse.swt.widgets.Control getEditor() {
+            return getGraphicalViewer().getControl();
+        }
+
+    }
+«ENDDEFINE»
+«DEFINE defaultPaletteSize FOR gmfgen::GenEditorView-»
+
+	/**
+	 *  @generated BonitaSoft
+	 */
+	protected int getInitialPaletteSize() {
+		return 166;
+	}
+«ENDDEFINE»
+«DEFINE isSaveOnCloseNeeded FOR gmfgen::GenEditorView-»
+
+	
+
+	/**
+	 *  @generated BonitaSoft
+	 *  Save needed only if resource set is not in use in an other editor
+	 */
+	@Override
+	public boolean isSaveOnCloseNeeded() {
+		return isDirty()  && getDiagramEditPart().resolveSemanticElement().eResource() != null 
+				&& !org.bonitasoft.studio.common.editingdomain.EditingDomainResourcesDisposer.isResourceUsedElseWhere(
+				getDiagramEditPart().resolveSemanticElement().eResource().getResourceSet(),
+				getEditorInput());
+	}
+«ENDDEFINE»
+
+«DEFINE setReadOnly FOR gmfgen::GenEditorView-»
+	/**
+	 *  @generated Bonitasoft
+	 */
+	public void setReadOnly(final boolean isReadOnly) {
+      	  enableSanityChecking(!isReadOnly);
+    }
+«ENDDEFINE»
+
+«AROUND getEditingDomain FOR gmfgen::GenEditorView»
+    /**
+	 *  @generated BonitaSoft
+	 */
+	 @Override
+	 public org.eclipse.emf.transaction.TransactionalEditingDomain getEditingDomain() {
+		if( getDocumentProvider() == null){
+			return super.getEditingDomain();
+		}
+		org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument document = getEditorInput() != null ? getDocumentProvider()
+				.getDocument(getEditorInput()) : null;
+				if (document instanceof org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument) {
+					return ((org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument) document).getEditingDomain();
+				}
+
+		return super.getEditingDomain();
+	}
+«ENDAROUND»
+

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions
+	xmi:version="2.0"
+	xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xmi="http://www.omg.org/XMI"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:ns2="http://www.omg.com/di/1.0.0"
+	targetNamespace="http://www.ibm.com/xmlns/bpm/document/EE-1279923112489-1087407229"
+	id="EE-1279923112489-1087407229">
+  <bpmn:process processType="None" id="PR-1279923112489-2046251104" name="TestProcess" isClosed="false" >
+    <bpmn:startEvent id="SE-1279923112491-1443451994" >
+    </bpmn:startEvent>
+    <bpmn:task id="TK-1279923112491-320331222" name="TradingSystem" >
+    </bpmn:task>
+    <bpmn:task id="TK-1279923112491-288852477" name="ValidationService" >
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="EG-1279923112491-614927558" >
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="TK-1279923112491-612193870" name="ExceptionManager" >
+    </bpmn:task>
+    <bpmn:task id="TK-1279923112491-1129832176" name="TradeStore" >
+    </bpmn:task>
+    <bpmn:parallelGateway id="AG-1279923112491-1155083250" >
+    </bpmn:parallelGateway>
+    <bpmn:task id="TK-1279923112491-1409120486" name="BooksAndRecords" >
+    </bpmn:task>
+    <bpmn:task id="TK-1279923112491-1900910951" name="DocumentGeneration" >
+    </bpmn:task>
+    <bpmn:endEvent id="EE-1279923112491-1853848851" >
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SF-1279923112491-553718614" name="start" targetRef="TK-1279923112491-320331222" sourceRef="SE-1279923112491-1443451994" >
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SF-1279923112491-1100482546" name="validateTrade" targetRef="TK-1279923112491-288852477" sourceRef="TK-1279923112491-320331222" >
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SF-1279923112491-358049421" name="--" targetRef="EG-1279923112491-614927558" sourceRef="TK-1279923112491-288852477" >
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SF-1279923112491-1290069116" name="exceedsCreditLimit" targetRef="TK-1279923112491-612193870" sourceRef="EG-1279923112491-614927558" >
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SF-1279923112491-434728979" name="storeTrade" targetRef="TK-1279923112491-1129832176" sourceRef="EG-1279923112491-614927558" >
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SF-1279923112491-416608304" name="--" targetRef="AG-1279923112491-1155083250" sourceRef="TK-1279923112491-1129832176" >
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SF-1279923112491-1447488149" name="updateRecords" targetRef="TK-1279923112491-1409120486" sourceRef="AG-1279923112491-1155083250" >
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SF-1279923112491-1089016069" name="generateDocuments" targetRef="TK-1279923112491-1900910951" sourceRef="AG-1279923112491-1155083250" >
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SF-1279923112491-247809547" name="end" targetRef="EE-1279923112491-1853848851" sourceRef="TK-1279923112491-1409120486" >
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SF-1279923112491-1470341907" name="end" targetRef="EE-1279923112491-1853848851" sourceRef="TK-1279923112491-1900910951" >
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SF-1279923112491-1671942544" name="end" targetRef="EE-1279923112491-1853848851" sourceRef="TK-1279923112491-612193870" >
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+</bpmn:definitions>
+

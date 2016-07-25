@@ -1,0 +1,122 @@
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+«EXTENSION xpt::editor::Utils»
+
+«AROUND createEditingDomain FOR gmfgen::GenDiagram-»
+/**
+ * @param id 
+ * @generated BonitaSoft
+ */
+private org.eclipse.emf.transaction.TransactionalEditingDomain createEditingDomain(String id) {
+	// Bonitasoft: use a shared editing domain
+	org.eclipse.emf.transaction.TransactionalEditingDomain editingDomain = org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil.getSharedEditingDomain("«editingDomainID»"+(id != null? "."+id:""));
+	/*	
+	org.eclipse.emf.transaction.TransactionalEditingDomain editingDomain = org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory.getInstance().createEditingDomain();
+	editingDomain.setID("«editingDomainID»");«EXPAND xpt::Common::nonNLS»
+	final org.eclipse.emf.transaction.NotificationFilter diagramResourceModifiedFilter = org.eclipse.emf.transaction.NotificationFilter.createNotifierFilter(editingDomain.getResourceSet()).and(org.eclipse.emf.transaction.NotificationFilter.createEventTypeFilter(org.eclipse.emf.common.notify.Notification.ADD)).and(org.eclipse.emf.transaction.NotificationFilter.createFeatureFilter(org.eclipse.emf.ecore.resource.ResourceSet.class, org.eclipse.emf.ecore.resource.ResourceSet.RESOURCE_SET__RESOURCES));
+
+		private org.eclipse.emf.common.notify.Notifier myTarger;
+
+		public org.eclipse.emf.common.notify.Notifier getTarget() {
+			return myTarger;
+		}
+
+		public boolean isAdapterForType(Object type) {
+			return false;
+		}
+
+		public void notifyChanged(org.eclipse.emf.common.notify.Notification notification) {
+			if (diagramResourceModifiedFilter.matches(notification)) {
+				Object value = notification.getNewValue();
+				if (value instanceof org.eclipse.emf.ecore.resource.Resource) {
+					((org.eclipse.emf.ecore.resource.Resource) value).setTrackingModification(true);
+				}
+			}
+		}
+
+		public void setTarget(org.eclipse.emf.common.notify.Notifier newTarget) {
+			myTarger = newTarget;
+		}
+			
+	});	
+	*/
+	return editingDomain;
+}
+«ENDAROUND»
+
+«AROUND createEmptyDocument FOR gmfgen::GenDiagram-»
+/**
+ * @param id 
+ * @generated BonitaSoft
+ */
+protected org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument createEmptyDocument(String id) {
+	org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DiagramDocument document = new org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.DiagramDocument();
+	document.setEditingDomain(createEditingDomain(id));
+	return document;
+}
+
+/**
+ * @generated BonitaSoft
+ */
+protected org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument createEmptyDocument() {
+	return createEmptyDocument(null);
+}
+«ENDAROUND»
+
+
+«AROUND createDocument FOR gmfgen::GenDiagram-»
+/**
+ * @generated BonitaSoft
+ */
+protected org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument createDocument(Object element) throws org.eclipse.core.runtime.CoreException {
+	«EXPAND xpt::editor::DocumentProvider::checkEditorInputInstance-»
+	String id = null;
+	if (element instanceof org.eclipse.ui.part.FileEditorInput) {
+		org.eclipse.ui.part.FileEditorInput fInput = (org.eclipse.ui.part.FileEditorInput) element;
+		id= fInput.getName();
+	} else if (element instanceof org.eclipse.emf.common.ui.URIEditorInput){
+		id = org.eclipse.emf.common.util.URI.decode(((org.eclipse.emf.common.ui.URIEditorInput) element).getURI().lastSegment());
+	}
+	org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDocument document = createEmptyDocument(id);
+	setDocumentContent(document, (org.eclipse.ui.IEditorInput) element);
+	setupDocument(element, document);
+	return document;
+}
+«ENDAROUND»
+«AROUND handleElementChanged FOR gmfgen::GenDiagram-»
+
+/**
+ * @generated BonitaSoft
+ */
+protected void handleElementChanged(ResourceSetInfo info, org.eclipse.emf.ecore.resource.Resource changedResource, org.eclipse.core.runtime.IProgressMonitor monitor) {
+	//Using the shared editing domain, we reload externally
+	// changed resources centrally
+	/*
+	«IF null = editorGen.application-»
+	org.eclipse.core.resources.IFile file = org.eclipse.emf.workspace.util.WorkspaceSynchronizer.getFile(changedResource);
+	if (file != null) {
+		try {
+			file.refreshLocal(org.eclipse.core.resources.IResource.DEPTH_INFINITE, monitor);
+		} catch (org.eclipse.core.runtime.CoreException ex) {
+			«editorGen.plugin.getActivatorQualifiedClassName()».getInstance().logError(«EXPAND xpt::Externalizer::accessorCall(i18nKeyForDocumentProviderHandleElementContentChanged(self)) FOR editorGen», ex);
+			// Error message to log was initially taken from org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.internal.l10n.EditorMessages.FileDocumentProvider_handleElementContentChanged
+		}
+	}
+	«ENDIF-»
+	changedResource.unload();
+	*/
+	fireElementContentAboutToBeReplaced(info.getEditorInput());
+	removeUnchangedElementListeners(info.getEditorInput(), info);
+	info.fStatus = null;
+	try {
+		setDocumentContent(info.fDocument, info.getEditorInput());
+	} catch (org.eclipse.core.runtime.CoreException e) {
+		info.fStatus = e.getStatus();
+	}
+«REM»TODO: Remove this if and call setModificationStamp only from doSaveDocument method«ENDREM»«-»
+	if (!info.fCanBeSaved) {
+		info.setModificationStamp(computeModificationStamp(info));
+	}
+	addUnchangedElementListeners(info.getEditorInput(), info);
+	fireElementContentReplaced(info.getEditorInput());
+}
+«ENDAROUND»

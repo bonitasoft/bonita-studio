@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<theme author="bonitasoft" creationDate="1312979182074" description="My theme" imagePreview="preview.jpg" name="default" provided="true" type="userXP" updateDate="1313660940312">
+  <bindings>
+	<binding description="You can set the background of the whole userXP" name="body_backgroud">
+      <css-rule>.body_backgroud</css-rule>
+      <css-file>css/bonita-console.css</css-file>
+    </binding>
+  </bindings>
+</theme>

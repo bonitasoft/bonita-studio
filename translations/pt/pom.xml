@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.bonitasoft.studio.translations</groupId>
+	<artifactId>pt</artifactId>
+<packaging>pom</packaging>
+
+	<parent>
+		<groupId>org.bonitasoft.studio</groupId>
+		<artifactId>translations</artifactId>
+<version>7.2.0-SNAPSHOT</version>
+	</parent>
+
+	<modules>
+		<module>org.bonitasoft.studio.actors.nl_pt</module>
+		<module>org.bonitasoft.studio.application.nl_pt</module>
+        <module>org.bonitasoft.studio.browser.nl_pt</module>
+        <module>org.bonitasoft.studio.businessobject.nl_pt</module>
+		<module>org.bonitasoft.studio.common.nl_pt</module>
+		<module>org.bonitasoft.studio.common.repository.nl_pt</module>
+		<module>org.bonitasoft.studio.condition.nl_pt</module>
+		<module>org.bonitasoft.studio.condition.ui.nl_pt</module>
+		<module>org.bonitasoft.studio.configuration.nl_pt</module>
+		<module>org.bonitasoft.studio.connectors.model.edit.nl_pt</module>
+		<module>org.bonitasoft.studio.connectors.model.nl_pt</module>
+		<module>org.bonitasoft.studio.connectors.nl_pt</module>
+        <module>org.bonitasoft.studio.contract.nl_pt</module>
+		<module>org.bonitasoft.studio.data.nl_pt</module>
+		<module>org.bonitasoft.studio.debug.nl_pt</module>
+		<module>org.bonitasoft.studio.decision.core.nl_pt</module>
+		<module>org.bonitasoft.studio.decision.ui.nl_pt</module>
+		<module>org.bonitasoft.studio.dependencies.nl_pt</module>
+		<module>org.bonitasoft.studio.diagram.custom.nl_pt</module>
+		<module>org.bonitasoft.studio.diagram.form.custom.nl_pt</module>
+		<module>org.bonitasoft.studio.diagram.form.properties.nl_pt</module>
+		<module>org.bonitasoft.studio.document.nl_pt</module>
+		<module>org.bonitasoft.studio.engine.nl_pt</module>
+		<module>org.bonitasoft.studio.exporter.nl_pt</module>
+		<module>org.bonitasoft.studio.expression.editor.nl_pt</module>
+		<module>org.bonitasoft.studio.form.preview.nl_pt</module>
+		<module>org.bonitasoft.studio.groovy.nl_pt</module>
+		<module>org.bonitasoft.studio.groovy.ui.nl_pt</module>
+		<module>org.bonitasoft.studio.importer.bar.nl_pt</module>
+		<module>org.bonitasoft.studio.importer.bos.nl_pt</module>
+		<module>org.bonitasoft.studio.importer.nl_pt</module>
+		<module>org.bonitasoft.studio.intro.nl_pt</module>
+		<module>org.bonitasoft.studio.jpdl.nl_pt</module>
+		<module>org.bonitasoft.studio.migration.nl_pt</module>
+		<module>org.bonitasoft.studio.model.edit.custom.nl_pt</module>
+        <module>org.bonitasoft.studio.designer.nl_pt</module>
+        <module>org.bonitasoft.studio.parameters.nl_pt</module>
+		<module>org.bonitasoft.studio.preferences.nl_pt</module>
+		<module>org.bonitasoft.studio.profiles.nl_pt</module>
+		<module>org.bonitasoft.studio.properties.nl_pt</module>
+		<module>org.bonitasoft.studio.repository.themes.nl_pt</module>
+		<module>org.bonitasoft.studio.scripting.nl_pt</module>
+		<module>org.bonitasoft.studio.simulation.nl_pt</module>
+		<module>org.bonitasoft.studio.validation.nl_pt</module>
+        <module>org.bonitasoft.studio.validation.common.nl_pt</module>
+		<module>org.bonitasoft.studio.validators.nl_pt</module>
+		<module>org.bonitasoft.studio.xml.nl_pt</module>
+		<module>org.omg.schema.spec.bpmn.nl_pt</module>
+	</modules>
+
+</project>

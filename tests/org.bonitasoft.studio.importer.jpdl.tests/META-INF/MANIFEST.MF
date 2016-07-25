@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests for jPDL import
+Bundle-SymbolicName: org.bonitasoft.studio.importer.jpdl.tests
+Bundle-Version: 7.3.1.qualifier
+Bundle-Vendor: BonitaSoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.junit,
+ org.bonitasoft.studio.importer;bundle-version="1.0.0",
+ org.bonitasoft.studio.jpdl;bundle-version="1.0.0",
+ org.bonitasoft.studio.model;bundle-version="1.0.0",
+ org.bonitasoft.studio.application;bundle-version="1.0.0",
+ org.bonitasoft.studio.common;bundle-version="1.0.0",
+ org.bonitasoft.studio.diagram;bundle-version="1.0.0",
+ org.eclipse.ui.ide;bundle-version="3.5.1",
+ org.eclipse.gmf.runtime.diagram.core;bundle-version="1.2.1",
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor;bundle-version="1.2.0",
+ org.eclipse.gmf.runtime.diagram.ui;bundle-version="1.2.1",
+ org.bonitasoft.studio.properties;bundle-version="1.0.0",
+ org.bonitasoft.studio.diagram.form;bundle-version="1.0.0",
+ org.bonitasoft.studio.common.repository;bundle-version="1.0.0",
+ org.bonitasoft.studio.engine;bundle-version="1.0.0",
+ org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
+ org.bonitasoft.studio.configuration;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.importer.jpdl.tests

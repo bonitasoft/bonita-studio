@@ -1,0 +1,484 @@
+/**
+ * Copyright (C) 2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.businessobject.ui.wizard;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
+import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.businessobject.ui.wizard.control.AttributesTabItemControl;
+import org.bonitasoft.studio.businessobject.ui.wizard.control.IndexesTabItemControl;
+import org.bonitasoft.studio.businessobject.ui.wizard.control.QueriesTabItemControl;
+import org.bonitasoft.studio.businessobject.ui.wizard.control.UniqueConstraintTabItemControl;
+import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.BusinessObjectNameEditingSupport;
+import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.jface.TableColumnSorter;
+import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jdt.core.JavaConventions;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
+import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
+import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TableLayout;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
+
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.Query;
+
+/**
+ * @author Romain Bioteau
+ */
+public class BusinessDataModelWizardPage extends WizardPage {
+
+    private static final String ORG_BONITASOFT_PREFIX = "org.bonitasoft";
+
+    private static final String COM_BONITASOFT_PREFIX = "com.bonitasoft";
+
+    private static final String DEFAULT_PACKAGE_NAME = "com.company.model";
+
+    private final BusinessObjectModel businessObjectModel;
+
+    private String packageName;
+
+    private IObservableList fieldsList;
+
+    private Group businessObjectDescriptionGroup;
+
+    private Label helpLabel;
+
+    protected BusinessDataModelWizardPage(final BusinessObjectModel businessObjectModel) {
+        super(BusinessDataModelWizardPage.class.getName());
+        this.businessObjectModel = businessObjectModel;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void createControl(final Composite parent) {
+        final DataBindingContext ctx = new DataBindingContext();
+        final Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).extendedMargins(10, 10, 10, 0).spacing(1, 5).create());
+
+        final IViewerObservableValue viewerObservableValue = createListOfBusinessObjects(mainComposite, ctx);
+        createSeparator(mainComposite);
+        createBusinessObjectDescription(mainComposite, ctx, viewerObservableValue);
+        createPackageName(ctx, mainComposite);
+        if (!businessObjectModel.getBusinessObjects().isEmpty()) {
+            viewerObservableValue.setValue(businessObjectModel.getBusinessObjects().get(0));
+        }
+        createHelpControl(mainComposite);
+
+        WizardPageSupport.create(this, ctx);
+        setControl(mainComposite);
+    }
+
+    protected void createHelpControl(final Composite mainComposite) {
+        helpLabel = new Label(mainComposite, SWT.WRAP);
+        helpLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(400, SWT.DEFAULT).span(3, 1).indent(0, 10).create());
+        helpLabel.setVisible(false);
+        helpLabel.setText(Messages.howToUseBusinessObjectsContent);
+    }
+
+    protected void createBusinessObjectDescription(final Composite mainComposite, final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
+        businessObjectDescriptionGroup = new Group(mainComposite, SWT.NONE);
+        businessObjectDescriptionGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(1, 2).create());
+        businessObjectDescriptionGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
+        businessObjectDescriptionGroup.setText(Messages.selectABusinessObjectToEdit);
+        viewerObservableValue.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                final Object newValue = event.diff.getNewValue();
+                if (newValue != null) {
+                    businessObjectDescriptionGroup.setText(NamingUtils.getSimpleName(((BusinessObject) newValue).getQualifiedName()));
+                } else {
+                    businessObjectDescriptionGroup.setText(Messages.selectABusinessObjectToEdit);
+                }
+            }
+        });
+
+        createDescription(ctx, viewerObservableValue, businessObjectDescriptionGroup);
+
+        final TabFolder tabFolder = new TabFolder(businessObjectDescriptionGroup, SWT.NONE);
+        tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
+        fieldsList = PojoObservables.observeDetailList(viewerObservableValue, "fields", null);
+        createAttributeTabItem(ctx, viewerObservableValue, tabFolder);
+        createConstraintsTabItem(ctx, viewerObservableValue, tabFolder);
+        createQueriesTabItem(ctx, viewerObservableValue, tabFolder);
+        createIndexesTabItem(ctx, viewerObservableValue, tabFolder);
+    }
+
+    protected void createQueriesTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue, final TabFolder tabFolder) {
+        final TabItem queriesItem = new TabItem(tabFolder, SWT.BORDER);
+        queriesItem.setText(Messages.queries);
+
+        queriesItem.setControl(new QueriesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList));
+    }
+
+    protected void createAttributeTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue, final TabFolder tabFolder) {
+        final TabItem attributeItem = new TabItem(tabFolder, SWT.BORDER);
+        attributeItem.setText(Messages.attributes);
+        attributeItem.setControl(new AttributesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel));
+    }
+
+    protected void createConstraintsTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue, final TabFolder tabFolder) {
+        final TabItem constraintsTabItem = new TabItem(tabFolder, SWT.BORDER);
+        constraintsTabItem.setText(Messages.constraints);
+        constraintsTabItem.setControl(new UniqueConstraintTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel));
+    }
+
+    protected void createIndexesTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue, final TabFolder tabFolder) {
+        final TabItem indexTabItem = new TabItem(tabFolder, SWT.BORDER);
+        indexTabItem.setText(Messages.indexes);
+        indexTabItem.setControl(new IndexesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel));
+    }
+
+    protected Button createDeleteButton(final Composite buttonsComposite) {
+        final Button deleteButton = new Button(buttonsComposite, SWT.FLAT);
+        deleteButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        deleteButton.setText(Messages.delete);
+        deleteButton.setEnabled(false);
+        return deleteButton;
+    }
+
+    protected Button createAddButton(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue, final Composite buttonsComposite) {
+        final Button addButton = new Button(buttonsComposite, SWT.FLAT);
+        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        addButton.setText(Messages.add);
+        addButton.setEnabled(false);
+        return addButton;
+    }
+
+    protected void createDescription(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue, final Group descriptionGroup) {
+        final Label descriptionLabel = new Label(descriptionGroup, SWT.NONE);
+        descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).create());
+        descriptionLabel.setText(Messages.description);
+
+        final Text descriptionText = new Text(descriptionGroup, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI | SWT.WRAP);
+        descriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 50).create());
+        descriptionText.setEnabled(viewerObservableValue.getValue() != null);
+
+        final IObservableValue observeDetailValue = PojoObservables.observeDetailValue(viewerObservableValue, "description", String.class);
+        ctx.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify), observeDetailValue);
+
+        final UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
+        enableStrategy.setConverter(new Converter(Object.class, Boolean.class) {
+
+            @Override
+            public Object convert(final Object fromObject) {
+                return fromObject != null;
+            }
+        });
+        ctx.bindValue(SWTObservables.observeEnabled(descriptionText), viewerObservableValue, null, enableStrategy);
+    }
+
+    protected void createSeparator(final Composite mainComposite) {
+        final Label separator = new Label(mainComposite, SWT.NONE);
+        separator.setImage(Pics.getImage("arrow.png", BusinessObjectPlugin.getDefault()));
+        separator.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.CENTER, SWT.CENTER).span(1, 2).create());
+    }
+
+    protected IViewerObservableValue createListOfBusinessObjects(final Composite mainComposite, final DataBindingContext ctx) {
+        final Group group = new Group(mainComposite, SWT.NONE);
+        group.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+        group.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(5, 0).create());
+        group.setText(Messages.listOfBusinessObjects);
+
+        final Composite buttonsComposite = new Composite(group, SWT.NONE);
+        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).indent(0, 20).create());
+        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
+
+        final Button addButton = new Button(buttonsComposite, SWT.FLAT);
+        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        addButton.setText(Messages.add);
+
+        final Button deleteButton = new Button(buttonsComposite, SWT.FLAT);
+        deleteButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        deleteButton.setText(Messages.delete);
+        deleteButton.setEnabled(false);
+
+        final TableViewer boTableViewer = new TableViewer(group, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+        boTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, SWT.DEFAULT).create());
+        boTableViewer.getTable().setLinesVisible(true);
+        boTableViewer.getTable().setHeaderVisible(true);
+        final TableLayout tableLayout = new TableLayout();
+        tableLayout.addColumnData(new ColumnWeightData(1));
+        boTableViewer.getTable().setLayout(tableLayout);
+        boTableViewer.setContentProvider(new ObservableListContentProvider());
+
+        final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(boTableViewer);
+        boTableViewer.getColumnViewerEditor().addEditorActivationListener(new ColumnViewerEditorActivationListener() {
+
+            @Override
+            public void beforeEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) {
+
+            }
+
+            @Override
+            public void beforeEditorActivated(final ColumnViewerEditorActivationEvent event) {
+
+            }
+
+            @Override
+            public void afterEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) {
+                final ISelection selection = boTableViewer.getSelection();
+                if (selection != null && ((IStructuredSelection) selection).getFirstElement() != null) {
+                    businessObjectDescriptionGroup.setText(NamingUtils.getSimpleName(((BusinessObject) ((IStructuredSelection) selection).getFirstElement())
+                            .getQualifiedName()));
+                    boTableViewer.refresh();
+                } else {
+                    businessObjectDescriptionGroup.setText(Messages.selectABusinessObjectToEdit);
+                }
+
+            }
+
+            @Override
+            public void afterEditorActivated(final ColumnViewerEditorActivationEvent event) {
+
+            }
+        });
+
+        createBusinessObjectNameColumn(ctx, observeSingleSelection, boTableViewer);
+
+        final UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
+        enableStrategy.setConverter(new Converter(Object.class, Boolean.class) {
+
+            @Override
+            public Object convert(final Object fromObject) {
+                return fromObject != null;
+            }
+        });
+
+        ctx.bindValue(SWTObservables.observeEnabled(deleteButton), observeSingleSelection, new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
+                enableStrategy);
+
+        final IObservableList businessObjectObserveList = PojoObservables.observeList(businessObjectModel, "businessObjects");
+        boTableViewer.setInput(businessObjectObserveList);
+        addButton.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                addBusinessObject(boTableViewer, businessObjectObserveList);
+            }
+
+        });
+
+        deleteButton.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                deleteBusinessObject(boTableViewer, observeSingleSelection, businessObjectObserveList);
+            }
+
+        });
+        return observeSingleSelection;
+    }
+
+    protected void createPackageName(final DataBindingContext ctx, final Composite parent) {
+        final Composite packageComposite = new Composite(parent, SWT.NONE);
+        packageComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        packageComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
+
+        final Label packageNameLabel = new Label(packageComposite, SWT.NONE);
+        packageNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).create());
+        packageNameLabel.setText(Messages.packageName);
+
+        final Text packageNameText = new Text(packageComposite, SWT.BORDER);
+        packageNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+        targetToModel.setAfterGetValidator(new IValidator() {
+
+            @Override
+            public IStatus validate(final Object value) {
+                return validatePackageName(value);
+            }
+
+        });
+        final IObservableValue packageNameObserveValue = PojoObservables.observeValue(this, "packageName");
+        final ISWTObservableValue packageNameObserveText = SWTObservables.observeText(packageNameText, SWT.Modify);
+        ctx.bindValue(packageNameObserveText, packageNameObserveValue, targetToModel, null);
+        packageNameObserveText.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                String newPackageName = (String) event.diff.getNewValue();
+                if (newPackageName.isEmpty()) {
+                    newPackageName = DEFAULT_PACKAGE_NAME;
+                }
+                if (newPackageName.endsWith(".")) {
+                    newPackageName.substring(0, newPackageName.length() - 1);
+                }
+                for (final BusinessObject bo : businessObjectModel.getBusinessObjects()) {
+                    final String previousName = bo.getQualifiedName();
+                    final String qualifiedName = newPackageName + "." + NamingUtils.getSimpleName(bo.getQualifiedName());
+                    bo.setQualifiedName(qualifiedName);
+                    for (final Query q : bo.getQueries()) {
+                        if (previousName.equals(q.getReturnType())) {
+                            q.setReturnType(qualifiedName);
+                        }
+                    }
+                }
+
+            }
+        });
+        if (businessObjectModel.getBusinessObjects().isEmpty()) {
+            packageNameObserveText.setValue(DEFAULT_PACKAGE_NAME);
+        } else {
+            packageNameObserveText.setValue(NamingUtils.getPackageName(businessObjectModel.getBusinessObjects().get(0).getQualifiedName()));
+        }
+    }
+
+    protected void addBusinessObject(final TableViewer boTableViewer, final IObservableList businessObjectsObserveList) {
+        final BusinessObject businessObject = new BusinessObject();
+        businessObject.setQualifiedName(generateObjectName());
+        businessObjectsObserveList.add(businessObject);
+        boTableViewer.editElement(businessObject, 0);
+    }
+
+    protected IStatus validatePackageName(final Object value) {
+        if (value == null || value.toString().isEmpty()) {
+            return ValidationStatus.error(Messages.error_emptyPackageName);
+        }
+        final IStatus status = javaPackageValidation(value);
+        if (status.isOK()) {
+            if (value.toString().startsWith(COM_BONITASOFT_PREFIX + ".") || value.toString().equals(COM_BONITASOFT_PREFIX)) {
+                return ValidationStatus.error(Messages.bind(Messages.error_reservedPackagePrefix, value.toString()));
+            }
+            if (value.toString().startsWith(ORG_BONITASOFT_PREFIX + ".") || value.toString().equals(ORG_BONITASOFT_PREFIX)) {
+                return ValidationStatus.error(Messages.bind(Messages.error_reservedPackagePrefix, value.toString()));
+            }
+        }
+        return status;
+    }
+
+    protected IStatus javaPackageValidation(final Object value) {
+        return JavaConventions.validatePackageName(value.toString(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
+    }
+
+    protected void deleteBusinessObject(final TableViewer boTableViewer, final IViewerObservableValue observeSingleSelection,
+            final IObservableList businessObjectsObserveList) {
+        final IStructuredSelection selection = (IStructuredSelection) boTableViewer.getSelection();
+        final BusinessObject bo = (BusinessObject) selection.getFirstElement();
+        if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteBOConfirmTitle,
+                Messages.bind(Messages.deleteBOConfirmMessage, NamingUtils.getSimpleName(bo.getQualifiedName())))) {
+            for (final Object selected : selection.toList()) {
+                businessObjectsObserveList.remove(selected);
+            }
+            if (businessObjectsObserveList.isEmpty()) {
+                observeSingleSelection.setValue(null);
+            }
+        }
+    }
+
+    protected void createBusinessObjectNameColumn(final DataBindingContext ctx, final IViewerObservableValue businessObjectSingleSelection,
+            final TableViewer boTableViewer) {
+        final TableViewerColumn columnViewer = new TableViewerColumn(boTableViewer, SWT.FILL);
+        final TableColumn column = columnViewer.getColumn();
+        column.setText(Messages.name);
+        columnViewer.setLabelProvider(new ColumnLabelProvider() {
+
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+             */
+            @Override
+            public String getText(final Object element) {
+                if (element instanceof BusinessObject) {
+                    return NamingUtils.getSimpleName(((BusinessObject) element).getQualifiedName());
+                }
+                return super.getText(element);
+            }
+        });
+        columnViewer.setEditingSupport(new BusinessObjectNameEditingSupport(businessObjectModel, businessObjectSingleSelection, PojoObservables.observeValue(
+                this, "packageName"), columnViewer.getViewer(), ctx));
+
+        final TableColumnSorter sorter = new TableColumnSorter(boTableViewer);
+        sorter.setColumn(column);
+    }
+
+    protected String generateObjectName() {
+        final Set<String> existingNames = new HashSet<String>();
+        for (final BusinessObject businessObject : businessObjectModel.getBusinessObjects()) {
+            existingNames.add(businessObject.getQualifiedName());
+        }
+        return NamingUtils.generateNewName(existingNames, getPackageName() + ".BusinessObject", 1);
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(final String packageName) {
+        this.packageName = packageName;
+    }
+
+    @Override
+    public void performHelp() {
+        helpLabel.setVisible(!helpLabel.isVisible());
+    }
+
+}

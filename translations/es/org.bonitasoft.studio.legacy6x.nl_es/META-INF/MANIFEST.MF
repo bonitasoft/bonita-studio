@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: studio legacy 6x nl_es
+Bundle-SymbolicName: org.bonitasoft.studio.legacy6x.nl_es
+Bundle-Version: 7.3.1.qualifier
+Bundle-Vendor: BonitaSoft S.A.
+Fragment-Host: org.bonitasoft.studio.legacy6x;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

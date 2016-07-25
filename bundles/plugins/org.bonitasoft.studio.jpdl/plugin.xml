@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="urn:jbpm.org:jpdl-3.2"
+            class="org.jbpm.jpdl32.jpdl32Package"
+            genModel="model/jpdl-3.2.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="xml"
+            class="org.jbpm.jpdl32.util.jpdl32ResourceFactoryImpl"/>
+   </extension>
+   
+        <extension
+         point="org.bonitasoft.studio.importer.import">
+      <importFactory
+            description="%import_desc"
+            filterExtensions="*.xml"
+            importerFactoryClass="org.bonitasoft.studio.importer.jpdl.JBPM3ImportFactory"
+            inputName="jBPM 3.2"
+            menuIcon="icon/jbpm-desc.png"
+            priorityDisplay="20">
+      </importFactory>
+   </extension>
+   
+
+</plugin>

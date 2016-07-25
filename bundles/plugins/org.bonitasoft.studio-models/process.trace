@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trace:TraceModel
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:trace="http://www.eclipse.org/gmf/2006/Trace">
+  <nodeTraces
+      visualID="2002"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'StartEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5021"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2003"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'EndEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5022"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2004"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Task') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5001"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2006"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5003"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2007"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Pool') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5008"
+        queryText="true"/>
+    <compartmentTraces
+        visualID="7001"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2008"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'XORGateway') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5023"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2009"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'ANDGateway') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5019"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2010"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'StartMessageEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5039"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2011"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'EndMessageEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5040"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2013"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateCatchMessageEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5041"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2014"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateThrowMessageEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5042"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2015"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'TextAnnotation') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5009"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2016"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'StartTimerEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5044"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2017"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateCatchTimerEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5043"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2018"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'CatchLinkEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5045"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2019"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'ThrowLinkEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5046"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2020"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateThrowSignalEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5047"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2021"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateCatchSignalEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5048"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2022"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'StartSignalEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5049"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2023"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'EndSignalEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5050"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2024"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Event') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')"/>
+  <nodeTraces
+      visualID="2025"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'ReceiveTask') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5013"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2026"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'SendTask') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5014"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2027"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'ServiceTask') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5015"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2028"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'ScriptTask') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5016"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2029"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'EndErrorEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5051"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2030"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'InclusiveGateway') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5074"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2031"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'SubProcessEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5081"
+        queryText="true"/>
+    <compartmentTraces
+        visualID="7005"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2033"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'StartErrorEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5087"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2035"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'EndTerminatedEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5091"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2036"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'CallActivity') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5092"
+        queryText="true"/>
+  </nodeTraces>
+  <childNodeTraces
+      visualID="3002"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'StartEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5024"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3003"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'EndEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5025"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3005"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Task') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5005"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3006"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5006"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3007"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Lane') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5007"
+        queryText="true"/>
+    <compartmentTraces
+        visualID="7002"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3008"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'XORGateway') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5026"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3009"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'ANDGateway') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5020"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3011"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'EndMessageEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5028"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3012"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'StartMessageEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5029"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3013"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateCatchMessageEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5027"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3014"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateThrowMessageEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5030"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3015"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'TextAnnotation') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5010"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3016"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'StartTimerEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5031"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3017"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateCatchTimerEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5032"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3018"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'ThrowLinkEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5033"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3019"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'CatchLinkEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5034"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3020"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'EndSignalEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5035"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3021"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateCatchSignalEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5036"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3022"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateThrowSignalEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5037"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3023"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'StartSignalEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5038"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3024"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Event') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')"/>
+  <childNodeTraces
+      visualID="3025"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'SendTask') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5011"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3026"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'ReceiveTask') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5012"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3027"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'ServiceTask') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5017"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3028"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'ScriptTask') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5018"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3029"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateErrorCatchEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and _containmentMF_.name = 'BoundaryIntermediateEvents')">
+    <nodeLabelTraces
+        visualID="5053"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3030"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateErrorCatchEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and _containmentMF_.name = 'BoundaryIntermediateEvents')">
+    <nodeLabelTraces
+        visualID="5056"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3031"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateErrorCatchEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and _containmentMF_.name = 'BoundaryIntermediateEvents')">
+    <nodeLabelTraces
+        visualID="5059"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3032"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateErrorCatchEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and _containmentMF_.name = 'BoundaryIntermediateEvents')">
+    <nodeLabelTraces
+        visualID="5062"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3033"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateErrorCatchEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and _containmentMF_.name = 'BoundaryIntermediateEvents')">
+    <nodeLabelTraces
+        visualID="5065"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3034"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'IntermediateErrorCatchEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and _containmentMF_.name = 'BoundaryIntermediateEvents')">
+    <nodeLabelTraces
+        visualID="5068"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3035"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'BoundaryMessageEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and _containmentMF_.name = 'BoundaryIntermediateEvents')">
+    <nodeLabelTraces
+        visualID="5054"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3036"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'BoundaryMessageEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and _containmentMF_.name = 'BoundaryIntermediateEvents')">
+    <nodeLabelTraces
+        visualID="5057"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3043"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'BoundaryTimerEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and _containmentMF_.name = 'BoundaryIntermediateEvents')">
+    <nodeLabelTraces
+        visualID="5055"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3044"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'BoundaryTimerEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and _containmentMF_.name = 'BoundaryIntermediateEvents')">
+    <nodeLabelTraces
+        visualID="5058"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3050"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'EndErrorEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5052"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3051"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'InclusiveGateway') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5075"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3052"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'BoundarySignalEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and _containmentMF_.name = 'BoundaryIntermediateEvents')">
+    <nodeLabelTraces
+        visualID="5076"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3053"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'BoundarySignalEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and _containmentMF_.name = 'BoundaryIntermediateEvents')">
+    <nodeLabelTraces
+        visualID="5077"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3058"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'SubProcessEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5083"
+        queryText="true"/>
+    <compartmentTraces
+        visualID="7006"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3060"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'StartErrorEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5086"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3062"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'EndTerminatedEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5090"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3063"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'CallActivity') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
+    <nodeLabelTraces
+        visualID="5093"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3064"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'NonInterruptingBoundaryTimerEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and _containmentMF_.name = 'BoundaryIntermediateEvents')">
+    <nodeLabelTraces
+        visualID="5094"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3065"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'NonInterruptingBoundaryTimerEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Activity') and _containmentMF_.name = 'BoundaryIntermediateEvents')">
+    <nodeLabelTraces
+        visualID="5095"
+        queryText="true"/>
+  </childNodeTraces>
+  <linkTraces
+      visualID="4001"
+      queryText="modelFacet.oclIsKindOf(gmfgen::TypeLinkModelFacet) and (let _eClass_:ecore::EClass = modelFacet.oclAsType(gmfgen::TypeLinkModelFacet).metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'SequenceFlow')">
+    <linkLabelTraces
+        visualID="6001"
+        queryText="true"/>
+  </linkTraces>
+  <linkTraces
+      visualID="4002"
+      queryText="modelFacet.oclIsKindOf(gmfgen::TypeLinkModelFacet) and (let _eClass_:ecore::EClass = modelFacet.oclAsType(gmfgen::TypeLinkModelFacet).metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'MessageFlow')">
+    <linkLabelTraces
+        visualID="6003"
+        queryText="true"/>
+  </linkTraces>
+  <linkTraces
+      visualID="4003"
+      queryText="modelFacet.oclIsKindOf(gmfgen::TypeLinkModelFacet) and (let _eClass_:ecore::EClass = modelFacet.oclAsType(gmfgen::TypeLinkModelFacet).metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'TextAnnotationAttachment')"/>
+</trace:TraceModel>

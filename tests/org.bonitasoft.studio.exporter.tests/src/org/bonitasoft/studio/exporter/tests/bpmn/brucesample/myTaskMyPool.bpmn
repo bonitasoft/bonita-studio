@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Created by Process Modeler 5 SR5 for Microsoft Visio (http://www.itp-commerce.com)-->
+<definitions targetNamespace="http://www.itp-commerce.com" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:itp="http://www.itp-commerce.com/BPMN2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL schemas/BPMN20.xsd" exporter="Process Modeler 5 for Microsoft Visio" exporterVersion="5.2605.13173 SR5" itp:name="My Diagram" itp:version="1.0" itp:author="Bruce" itp:creationDate="3/18/2011 1:59:07 PM" itp:modificationDate="3/18/2011 2:07:30 PM" itp:createdWithVersion="5.2605.13173 SR5">
+  <process id="_cefc2e2d-e006-4256-9eb7-02e2122cfcf0" name="myProc" processType="None">
+    <extensionElements>
+      <itp:systemDefinedAttributes>
+        <attribute name="Hyperlinks" type="String" value="0 Hyperlinks" />
+        <attribute name="ExternalId" type="String" />
+        <attribute name="KPICost" type="Float" value="1" format="Currency;$;;KPI;2" />
+        <attribute name="KPIDuration" type="Float" value="1" format="Duration;;;KPI;3">
+          <attribute name="KPIActiveTime" type="Float" value="1" format="Duration;;;KPI;3" />
+          <attribute name="KPIWaitTime" type="Float" value="0" format="Duration;;;KPI;3" />
+        </attribute>
+      </itp:systemDefinedAttributes>
+    </extensionElements>
+    <startEvent id="_91f1e3cf-3268-4fd5-8df9-d51575a0d2b6">
+      <extensionElements>
+        <itp:systemDefinedAttributes>
+          <attribute name="Hyperlinks" type="String" value="0 Hyperlinks" />
+          <attribute name="ExternalId" type="String" />
+        </itp:systemDefinedAttributes>
+      </extensionElements>
+    </startEvent>
+    <task id="_8ea4a64a-27e5-4aba-9965-9fc238103138" name="myTask">
+      <extensionElements>
+        <itp:systemDefinedAttributes>
+          <attribute name="Hyperlinks" type="String" value="0 Hyperlinks" />
+          <attribute name="ExternalId" type="String" />
+          <attribute name="KPICost" type="Float" value="1" format="Currency;$;;KPI;2" />
+          <attribute name="KPIDuration" type="Float" value="1" format="Duration;;;KPI;3">
+            <attribute name="KPIActiveTime" type="Float" value="1" format="Duration;;;KPI;3" />
+            <attribute name="KPIWaitTime" type="Float" value="0" format="Duration;;;KPI;3" />
+          </attribute>
+        </itp:systemDefinedAttributes>
+      </extensionElements>
+    </task>
+    <endEvent id="_4db0434b-62d9-47dc-9f1d-954dd53881ec">
+      <extensionElements>
+        <itp:systemDefinedAttributes>
+          <attribute name="Hyperlinks" type="String" value="0 Hyperlinks" />
+          <attribute name="ExternalId" type="String" />
+        </itp:systemDefinedAttributes>
+      </extensionElements>
+    </endEvent>
+    <sequenceFlow id="_93f30ed5-1cb0-4cf0-9223-5466bd325043" sourceRef="_91f1e3cf-3268-4fd5-8df9-d51575a0d2b6" targetRef="_8ea4a64a-27e5-4aba-9965-9fc238103138">
+      <extensionElements>
+        <itp:systemDefinedAttributes>
+          <attribute name="Hyperlinks" type="String" value="0 Hyperlinks" />
+          <attribute name="ExternalId" type="String" />
+        </itp:systemDefinedAttributes>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="_14768a19-2da2-473f-9c80-927b2d9d1ea2" sourceRef="_8ea4a64a-27e5-4aba-9965-9fc238103138" targetRef="_4db0434b-62d9-47dc-9f1d-954dd53881ec">
+      <extensionElements>
+        <itp:systemDefinedAttributes>
+          <attribute name="Hyperlinks" type="String" value="0 Hyperlinks" />
+          <attribute name="ExternalId" type="String" />
+        </itp:systemDefinedAttributes>
+      </extensionElements>
+    </sequenceFlow>
+  </process>
+  <collaboration id="_7ebf4233-2115-4d55-82bf-d30f227ee47a">
+    <participant id="_ddccd99a-1191-4229-8b30-a135c2a573ef" name="myProc" processRef="_cefc2e2d-e006-4256-9eb7-02e2122cfcf0" />
+  </collaboration>
+  <bpmndi:BPMNDiagram name="My Diagram (1)" resolution="72" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI">
+    <bpmndi:BPMNPlane id="_1">
+      <bpmndi:BPMNShape id="_F03F5F31-1879-4C1F-B9F2-2A43A1815EC5" bpmnElement="_91f1e3cf-3268-4fd5-8df9-d51575a0d2b6" itp:label="(unnamed)" itp:elementType="startEvent">
+        <dc:Bounds x="212.59842519685" y="238.110236220472" width="17.007874015748" height="17.007874015748" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_6697D57A-C3A4-4BC9-85A0-0D2128C4D7FF" bpmnElement="_8ea4a64a-27e5-4aba-9965-9fc238103138" itp:label="myTask" itp:elementType="task">
+        <dc:Bounds x="263.622047244095" y="225.354330708661" width="85.0393700787402" height="42.5196850393701" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_21B92E11-8480-421C-A6C9-43554DD7D15F" bpmnElement="_4db0434b-62d9-47dc-9f1d-954dd53881ec" itp:label="(unnamed)" itp:elementType="endEvent">
+        <dc:Bounds x="382.677165354331" y="238.110236220472" width="17.007874015748" height="17.007874015748" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_F8F464F4-7F42-48AA-8739-2E68F7ED678B" bpmnElement="_93f30ed5-1cb0-4cf0-9223-5466bd325043" itp:label="(unnamed)" itp:elementType="sequenceFlow" sourceElement="_91f1e3cf-3268-4fd5-8df9-d51575a0d2b6" targetElement="_8ea4a64a-27e5-4aba-9965-9fc238103138">
+        <di:waypoint x="229.606299212598" y="239.527559055118" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" />
+        <di:waypoint x="263.622047244095" y="239.527559055118" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_509D1E22-DD01-4DEA-9B2D-074A428F7B73" bpmnElement="_14768a19-2da2-473f-9c80-927b2d9d1ea2" itp:label="(unnamed)" itp:elementType="sequenceFlow" sourceElement="_8ea4a64a-27e5-4aba-9965-9fc238103138" targetElement="_4db0434b-62d9-47dc-9f1d-954dd53881ec">
+        <di:waypoint x="348.661417322835" y="239.527559055118" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" />
+        <di:waypoint x="382.677165354331" y="239.527559055118" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_1BA2A8F9-A6AD-4235-B3FB-25B0DBA6AAC2" bpmnElement="_cefc2e2d-e006-4256-9eb7-02e2122cfcf0" itp:label="myProc" itp:elementType="process">
+        <dc:Bounds x="73.9275426188792" y="148.818897637795" width="680.088183785987" height="212.59842519685" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

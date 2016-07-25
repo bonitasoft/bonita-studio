@@ -1,0 +1,98 @@
+/**
+ * Copyright (C) 2009-2012 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.importer.handler;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+
+import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
+import org.bonitasoft.studio.common.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.importer.ImporterPlugin;
+import org.bonitasoft.studio.importer.i18n.Messages;
+import org.bonitasoft.studio.importer.processors.ImportFileOperation;
+import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
+import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.swt.widgets.Display;
+
+/**
+ * @author Romain Bioteau
+ */
+public class ImportHandler extends AbstractHandler {
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+     * ExecutionEvent)
+     */
+    @Override
+    public Object execute(final ExecutionEvent event) throws ExecutionException {
+        execute();
+        return null;
+    }
+
+    private Runnable openStatusDialog(final ImportFileOperation operation) {
+        return new Runnable() {
+
+            @Override
+            public void run() {
+                operation.getImportStatusDialogHandler(operation.getStatus()).open(Display.getDefault().getActiveShell());
+            }
+        };
+    }
+
+    protected DiagramRepositoryStore getDiagramRepositoryStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+    }
+
+    public void execute() {
+        final ImportFileWizard importFileWizard = new ImportFileWizard();
+        new CustomWizardDialog(Display.getDefault().getActiveShell(), importFileWizard, Messages.importButtonLabel).open();
+        final String absoluteFilePath = importFileWizard.getSelectedFilePath();
+        if (absoluteFilePath == null) {
+            return;
+        }
+        final File selectedFile = new File(absoluteFilePath);
+        final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(Display.getDefault().getActiveShell());
+        final ImportFileOperation operation = new ImportFileOperation(importFileWizard.getSelectedTransfo(), selectedFile, progressManager);
+        try {
+            progressManager.run(true, false, operation);
+        } catch (final InvocationTargetException | InterruptedException e) {
+            final Throwable t = e instanceof InvocationTargetException ? ((InvocationTargetException) e).getTargetException() : e;
+            BonitaStudioLog.error("Import has failed for file " + selectedFile.getName(), ImporterPlugin.PLUGIN_ID);
+            BonitaStudioLog.error(e, ImporterPlugin.PLUGIN_ID);
+            String message = Messages.errorWhileImporting_message;
+            if (t != null && !isNullOrEmpty(t.getMessage())) {
+                message = t.getMessage();
+            }
+            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title, message, e).open();
+        }
+        for (final DiagramFileStore fileStore : operation.getFileStoresToOpen()) {
+            fileStore.open();
+        }
+        PlatformUtil.openIntroIfNoOtherEditorOpen();
+        Display.getDefault().asyncExec(openStatusDialog(operation));
+    }
+}

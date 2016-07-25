@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Talend BPM Look'n'Feel
+Bundle-SymbolicName: org.bonitasoft.studio.repository.themes.talend_bpm
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: BonitaSoft S.A.
+Fragment-Host: org.bonitasoft.studio.repository.themes;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

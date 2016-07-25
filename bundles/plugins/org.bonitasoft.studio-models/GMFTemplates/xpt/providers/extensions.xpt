@@ -1,0 +1,192 @@
+﻿/*
+ * Copyright (c) 2007, 2010 Borland Software Corporation and others
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Dmitry Stadnik (Borland) - initial API and implementation
+ */
+
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+«EXTENSION xpt::diagram::Utils»
+
+«DEFINE extensions FOR gmfgen::GenDiagram-»
+
+   <extension point="org.eclipse.gmf.runtime.diagram.core.viewProviders" id="view-provider">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <viewProvider class="«getNotationViewProviderQualifiedClassName()»">
+         <Priority name="«notationViewProviderPriority»"/>
+«IF shortcutsProvidedFor->notEmpty() /*allow provider activation when another diagram tries to create a node, perhaps ours*/-»
+         <object id="referencing-diagrams" class="org.eclipse.gmf.runtime.notation.Diagram">
+            <method name="getType()" value="«FOREACH shortcutsProvidedFor AS s SEPARATOR ','»«s»«ENDFOREACH»"/>
+         </object>
+         <context viewClass="org.eclipse.gmf.runtime.notation.Node" containerViews="referencing-diagrams"/>
+«ENDIF-»
+         <context viewClass="org.eclipse.gmf.runtime.notation.Diagram" semanticHints="«editorGen.modelID»"/>
+         <context viewClass="org.eclipse.gmf.runtime.notation.Node" semanticHints="«FOREACH getAllNodes() /*XXX can further improve selection using containerViews attribute, however, when top-node is created, provider is activated and this xml is not consulted any longer*/ AS n SEPARATOR ','»«n.visualID»«ENDFOREACH»"/>
+«IF links->notEmpty() /*it is unlikely there would be a diagram without a node, but a diagram without links deemed possible */-»
+         <context viewClass="org.eclipse.gmf.runtime.notation.Edge" semanticHints="«FOREACH links AS l SEPARATOR ','»«l.visualID»«ENDFOREACH»"/>
+«ENDIF-»
+      </viewProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.diagram.ui.editpartProviders" id="ep-provider">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <editpartProvider class="«getEditPartProviderQualifiedClassName()»">
+         <Priority name="«editPartProviderPriority»"/>
+         <object class="org.eclipse.gmf.runtime.notation.Diagram" id="generated-diagram">
+            <method name="getType()" value="«editorGen.modelID»"/>
+         </object>
+         <object class="org.eclipse.gmf.runtime.notation.Node" id="generated-nodes">
+            <method name="getType()" value="«FOREACH getAllNodes() AS n SEPARATOR ','»«n.visualID»«ENDFOREACH»"/>
+         </object>
+         <object class="org.eclipse.gmf.runtime.notation.Edge" id="generated-links">
+            <method name="getType()" value="«FOREACH links AS l SEPARATOR ','»«l.visualID»«ENDFOREACH»"/>
+         </object>
+         <object class="org.eclipse.gmf.runtime.notation.Node" id="generated-labels">
+            <method name="getType()" value="«FOREACH getAllNodes().labels AS lb SEPARATOR ','»«lb.visualID»«ENDFOREACH»"/>
+         </object>
+         <object class="org.eclipse.gmf.runtime.notation.Node" id="generated-compartments">
+            <method name="getType()" value="«FOREACH compartments AS c SEPARATOR ','»«c.visualID»«ENDFOREACH»"/>
+         </object>
+         <context views="generated-diagram,generated-nodes,generated-links,generated-labels,generated-compartments"/>
+      </editpartProvider>
+   </extension>
+
+«REM» Remove Modeling Assistant
+   <extension point="org.eclipse.gmf.runtime.emf.ui.modelingAssistantProviders" id="modelassist-provider">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <modelingAssistantProvider class="«getModelingAssistantProviderQualifiedClassName()»">
+         <Priority name="«modelingAssistantProviderPriority»"/>
+         <object class="«getEditPartQualifiedClassName()»" id="«getUniqueIdentifier()»"/>
+«FOREACH topLevelNodes AS n-»
+         <object class="«n.getEditPartQualifiedClassName()»" id="«n.getUniqueIdentifier()»"/>
+«ENDFOREACH-»
+         <context elements="«getUniqueIdentifier()»,«FOREACH topLevelNodes AS n SEPARATOR ','»«n.getUniqueIdentifier()»«ENDFOREACH»"/>
+      </modelingAssistantProvider>
+   </extension>
+«ENDREM»
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.iconProviders" id="icon-provider">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <IconProvider class="«getIconProviderQualifiedClassName()»">
+         <Priority name="«iconProviderPriority»"/>
+      </IconProvider>
+   </extension>
+«IF editorGen.labelParsers <> null and editorGen.labelParsers.extensibleViaService»
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.parserProviders" id="parser-provider">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <ParserProvider class="«editorGen.labelParsers.getQualifiedClassName()»">
+         <Priority name="«editorGen.labelParsers.providerPriority»"/>
+      </ParserProvider>
+   </extension>
+«ENDIF-»
+«IF generateShortcutIcon()»
+   <extension point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders" id="decorator-provider">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <decoratorProvider class="«getShortcutsDecoratorProviderQualifiedClassName()»">
+         <Priority name="«shortcutsDecoratorProviderPriority»"/>
+         <object class="org.eclipse.gmf.runtime.notation.Node(org.eclipse.gmf.runtime.notation)" id="generated-top-nodes">
+            <method name="getType()" value="«FOREACH topLevelNodes->asSequence() /*generated code supports shortcuts only to top-level nodes*/ AS n SEPARATOR ','»«n.visualID»«ENDFOREACH»"/>
+         </object>
+         <context decoratorTargets="generated-top-nodes"/>
+      </decoratorProvider>
+   </extension>
+«ENDIF-»
+
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypes" id="element-types">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+«FOREACH getAllTypedElements() AS e-»
+«EXPAND elementTypeSafe FOR e.elementType-»
+«ENDFOREACH-»
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings" id="element-types-bindings">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <clientContext id="«editorGen.plugin.iD».TypeContext">
+         <enablement>
+            <test
+               property="org.eclipse.gmf.runtime.emf.core.editingDomain"
+               value="«editingDomainID»"/>
+         </enablement>
+      </clientContext> 
+      <binding context="«editorGen.plugin.iD».TypeContext">
+«FOREACH getAllTypedElements() AS e-»
+         <elementType ref="«e.elementType.uniqueIdentifier»"/>
+«ENDFOREACH-»
+         <advice ref="org.eclipse.gmf.runtime.diagram.core.advice.notationDepdendents"/>
+      </binding>
+   </extension>
+«ENDDEFINE»
+
+«DEFINE elementTypeSafe FOR gmfgen::ElementType-»
+«IF not definedExternally-»
+«EXPAND elementType-»
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE elementType FOR gmfgen::ElementType»
+«ERROR 'Unknown element type: ' + self.repr()»
+«ENDDEFINE»
+
+«DEFINE elementType FOR gmfgen::MetamodelType-»
+      <metamodel nsURI="«getMetaClass().genPackage.ecorePackage.nsURI»">
+         <metamodelType
+               id="«uniqueIdentifier»"
+«IF null <> displayName-»
+               name="%metatype.name.«diagramElement.getUniqueIdentifier()»"
+«ENDIF-»
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="«getMetaClass().ecoreClass.name»"
+               edithelper="«getEditHelperQualifiedClassName()»">
+            <param name="semanticHint" value="«diagramElement.visualID»"/>
+         </metamodelType>
+      </metamodel>
+«ENDDEFINE»
+
+«DEFINE elementType FOR gmfgen::SpecializationType-»
+«IF null = getMetamodelClass()-»
+«EXPAND specializationType-»
+«ELSE-»
+      <metamodel nsURI="«getMetamodelClass().genPackage.ecorePackage.nsURI»">
+«EXPAND specializationType-»
+      </metamodel>
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE specializationType FOR gmfgen::SpecializationType-»
+         <specializationType
+               id="«uniqueIdentifier»"
+«IF null <> displayName-»
+               name="%metatype.name.«diagramElement.getUniqueIdentifier()»"
+«ENDIF-»
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"«IF editHelperAdviceClassName <> null»
+               edithelperadvice="«getEditHelperAdviceQualifiedClassName()»"«ENDIF»>
+            <specializes id="«(if null = metamodelType then 'org.eclipse.gmf.runtime.emf.type.core.null' else metamodelType.uniqueIdentifier endif)»"/>
+            <param name="semanticHint" value="«diagramElement.visualID»"/>
+         </specializationType>
+«ENDDEFINE»
+
+«DEFINE elementType FOR gmfgen::NotationType-»
+      <specializationType
+            id="«uniqueIdentifier»"
+«IF null <> displayName-»
+            name="%metatype.name.«diagramElement.getUniqueIdentifier()»"
+«ENDIF-»
+            kind="org.eclipse.gmf.runtime.diagram.ui.util.INotationType">
+         <specializes id="org.eclipse.gmf.runtime.emf.type.core.null"/>
+         <param name="semanticHint" value="«diagramElement.visualID»"/>
+      </specializationType>
+«ENDDEFINE»
+
+«DEFINE i18n FOR gmfgen::GenDiagram-»
+
+# Providers
+«EXPAND internal_i18n FOREACH getAllTypedElements().elementType»
+«ENDDEFINE»
+
+«DEFINE internal_i18n FOR gmfgen::ElementType-»
+«IF null <> displayName and not definedExternally»metatype.name.«diagramElement.getUniqueIdentifier()»=«displayName»«ENDIF»
+«ENDDEFINE»

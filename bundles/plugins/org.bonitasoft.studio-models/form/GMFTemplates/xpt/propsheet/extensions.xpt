@@ -1,0 +1,145 @@
+﻿/*
+ * Copyright (c) 2007, 2009 Borland Software Corporation
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Dmitry Stadnik (Borland) - initial API and implementation
+ */
+
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+
+«DEFINE extensions FOR gmfgen::GenPropertySheet-»
+
+«REM» This extension is replaced by one from diagram.custom 
+   <extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor" id="prop-contrib">
+      «EXPAND xpt::Common::xmlGeneratedTag»
+      <propertyContributor
+            contributorId="«editorGen.plugin.iD»"«IF needsCaption»
+            labelProvider="«getLabelProviderQualifiedClassName()»"«ENDIF»>
+         <propertyCategory category="domain"/>
+         <propertyCategory category="visual"/>
+         <propertyCategory category="extra"/>
+      </propertyContributor>
+   </extension>
+
+   <extension point="org.eclipse.ui.views.properties.tabbed.propertyTabs" id="proptabs">
+      «EXPAND xpt::Common::xmlGeneratedTag»   
+      <propertyTabs contributorId="«editorGen.plugin.iD»">
+«EXPAND tab FOREACH tabs-»
+      </propertyTabs>
+   </extension>
+
+   <extension point="org.eclipse.ui.views.properties.tabbed.propertySections" id="propsections">
+      «EXPAND xpt::Common::xmlGeneratedTag»   
+      <propertySections contributorId="«editorGen.plugin.iD»">
+«EXPAND section FOREACH tabs-»
+      </propertySections>
+   </extension>
+«ENDDEFINE»
+
+«DEFINE tab FOR gmfgen::GenPropertyTab-»
+«ERROR 'Unknown property tab: ' + self.repr()»
+«ENDDEFINE»
+
+«DEFINE tab FOR gmfgen::GenStandardPropertyTab-»
+«IF iD = 'appearance'-»
+         <propertyTab
+             category="visual"
+             id="property.tab.AppearancePropertySection"
+             label="%tab.appearance"/>
+«ELSEIF iD = 'diagram'-»
+          <propertyTab
+             category="visual"
+             id="property.tab.DiagramPropertySection"
+             label="%tab.diagram"/>
+«ELSEIF iD = 'advanced'-»
+          <propertyTab
+             category="extra"
+             id="property.tab.AdvancedPropertySection"
+             label="%tab.advanced"/>           
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE tab FOR gmfgen::GenCustomPropertyTab-»
+          <propertyTab
+«IF iD = 'domain'-»
+             category="domain"
+«ELSE-»
+             category="extra"
+«ENDIF-»
+             id="property.tab.«iD»"
+             label="%tab.«iD»"/>
+«ENDDEFINE»
+
+«DEFINE section FOR gmfgen::GenPropertyTab-»
+«ERROR 'Unknown property tab: ' + self.repr()»
+«ENDDEFINE»
+
+«DEFINE section FOR gmfgen::GenStandardPropertyTab-»
+«IF iD = 'appearance'-»
+         <propertySection id="property.section.ConnectorAppearancePropertySection" 
+            filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.ConnectionEditPartPropertySectionFilter" 
+            class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.ConnectionAppearancePropertySection" 
+            tab="property.tab.AppearancePropertySection">
+         </propertySection>
+         <propertySection id="property.section.ShapeColorAndFontPropertySection" 
+            filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.ShapeEditPartPropertySectionFilter" 
+            class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.ShapeColorsAndFontsPropertySection" 
+            tab="property.tab.AppearancePropertySection">
+         </propertySection> 
+         <propertySection id="property.section.DiagramColorsAndFontsPropertySection" 
+            filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.DiagramEditPartPropertySectionFilter" 
+            class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.DiagramColorsAndFontsPropertySection" 
+            tab="property.tab.AppearancePropertySection">
+         </propertySection>     
+«ELSEIF iD = 'diagram'-»
+         <propertySection id="property.section.RulerGridPropertySection" 
+            filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.DiagramEditPartPropertySectionFilter" 
+            class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.grid.RulerGridPropertySection" 
+            tab="property.tab.DiagramPropertySection">
+         </propertySection>     
+«ELSEIF iD = 'advanced'-»
+         <propertySection id="property.section.AdvancedPropertySection"
+            class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.AdvancedPropertySection"
+            filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.EditPartPropertySectionFilter"
+            tab="property.tab.AdvancedPropertySection">
+         </propertySection>            
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE section FOR gmfgen::GenCustomPropertyTab-»
+         <propertySection
+            id="property.section.«iD»" 
+            tab="property.tab.«iD»"
+«EXPAND filter FOR filter-»
+            class="«getQualifiedClassName()»">
+«EXPAND input FOR filter-»
+         </propertySection>
+«ENDDEFINE»
+
+«DEFINE filter FOR gmfgen::GenPropertyTabFilter»«ENDDEFINE»
+
+«DEFINE filter FOR gmfgen::CustomTabFilter-»
+            filter="«getQualifiedClassName()»"
+«ENDDEFINE»
+
+«DEFINE input FOR gmfgen::GenPropertyTabFilter»«ENDDEFINE»
+
+«DEFINE input FOR gmfgen::TypeTabFilter-»
+«FOREACH getAllTypes()->asSequence() AS type-»
+            <input type="«type»"/>
+«ENDFOREACH-»
+«ENDDEFINE»
+
+«DEFINE i18n FOR gmfgen::GenPropertySheet-»
+
+# Property Sheet
+«FOREACH tabs->asSequence() AS tab-»
+tab.«tab.iD»=«tab.label»
+«ENDFOREACH-»
+«ENDREM»
+«ENDDEFINE»

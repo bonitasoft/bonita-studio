@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:process="http://www.bonitasoft.org/ns/studio/process">
+  <process:MainProcess xmi:id="_NB71oUbqEd-dZYRV1E3l7Q" name="DiagramForTestImportExportRepository" label="DiagramForTestImportExportRepository" bonitaVersion="5.2" bonitaModelVersion="5.2">
+    <elements xmi:type="process:Pool" xmi:id="_Nv02YEbqEd-dZYRV1E3l7Q" name="ProcessDiagramForTestImportExportRepository" label="ProcessDiagramForTestImportExportRepository">
+      <elements xmi:type="process:Task" xmi:id="_N_NWMEbqEd-dZYRV1E3l7Q" name="Step1" label="Step1" incoming="_Ozw_oEbqEd-dZYRV1E3l7Q" groups="_OJON0EbqEd-dZYRV1E3l7Q"/>
+      <elements xmi:type="process:StartEvent" xmi:id="_OIFlYEbqEd-dZYRV1E3l7Q" name="Start1" label="Start1" outgoing="_Ozw_oEbqEd-dZYRV1E3l7Q"/>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_Ozw_oEbqEd-dZYRV1E3l7Q" source="_OIFlYEbqEd-dZYRV1E3l7Q" target="_N_NWMEbqEd-dZYRV1E3l7Q"/>
+    </elements>
+    <groups xmi:type="process:Group" xmi:id="_OJON0EbqEd-dZYRV1E3l7Q" documentation="Person who takes the first action to start the process" name="Initiator" label="Initiator" connectorId="ProcessInitiatior"/>
+    <datatypes xmi:type="process:BooleanType" xmi:id="_NB8csEbqEd-dZYRV1E3l7Q" name="Boolean" label="Boolean"/>
+    <datatypes xmi:type="process:DateType" xmi:id="_NB8csUbqEd-dZYRV1E3l7Q" name="Date" label="Date"/>
+    <datatypes xmi:type="process:IntegerType" xmi:id="_NB8cskbqEd-dZYRV1E3l7Q" name="Integer" label="Integer"/>
+    <datatypes xmi:type="process:FloatType" xmi:id="_NB8cs0bqEd-dZYRV1E3l7Q" name="Decimal" label="Decimal"/>
+    <datatypes xmi:type="process:StringType" xmi:id="_NB8ctEbqEd-dZYRV1E3l7Q" name="Text" label="Text"/>
+    <datatypes xmi:type="process:AttachmentType" xmi:id="_NB8ctUbqEd-dZYRV1E3l7Q" name="Attachment" label="Attachment"/>
+    <datatypes xmi:type="process:JavaType" xmi:id="_NB8ctkbqEd-dZYRV1E3l7Q" name="Java_object" label="Java object"/>
+    <includedEntries>bonita/bonita-5.2-SNAPSHOT.jar</includedEntries>
+  </process:MainProcess>
+  <notation:Diagram xmi:id="_NDsJIEbqEd-dZYRV1E3l7Q" type="Process" element="_NB71oUbqEd-dZYRV1E3l7Q" name="DiagramForTestImportExportRepository_1.0.proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_N4nmAEbqEd-dZYRV1E3l7Q" type="2007" element="_Nv02YEbqEd-dZYRV1E3l7Q">
+      <children xmi:type="notation:DecorationNode" xmi:id="_N4qCQEbqEd-dZYRV1E3l7Q" type="5008"/>
+      <children xmi:type="notation:DecorationNode" xmi:id="_N4qpUEbqEd-dZYRV1E3l7Q" type="7001">
+        <children xmi:type="notation:Shape" xmi:id="_OAHVIEbqEd-dZYRV1E3l7Q" type="3005" element="_N_NWMEbqEd-dZYRV1E3l7Q" fontName="Segoe UI">
+          <children xmi:type="notation:DecorationNode" xmi:id="_OAH8MEbqEd-dZYRV1E3l7Q" type="5005"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_OAHVIUbqEd-dZYRV1E3l7Q" x="110" y="55"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_OIMTEEbqEd-dZYRV1E3l7Q" type="3002" element="_OIFlYEbqEd-dZYRV1E3l7Q" fontName="Segoe UI">
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_OIMTEUbqEd-dZYRV1E3l7Q" x="25" y="65"/>
+        </children>
+      </children>
+      <styles xmi:type="notation:DescriptionStyle" xmi:id="_N4nmAUbqEd-dZYRV1E3l7Q"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_N4nmAkbqEd-dZYRV1E3l7Q" fontName="Segoe UI"/>
+      <styles xmi:type="notation:LineStyle" xmi:id="_N4nmA0bqEd-dZYRV1E3l7Q"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_N4nmBEbqEd-dZYRV1E3l7Q"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_NDsJIUbqEd-dZYRV1E3l7Q"/>
+    <edges xmi:type="notation:Connector" xmi:id="_Oz6JkEbqEd-dZYRV1E3l7Q" type="4001" element="_Ozw_oEbqEd-dZYRV1E3l7Q" source="_OIMTEEbqEd-dZYRV1E3l7Q" target="_OAHVIEbqEd-dZYRV1E3l7Q" routing="Rectilinear" roundedBendpointsRadius="10">
+      <children xmi:type="notation:DecorationNode" xmi:id="_Oz6Jk0bqEd-dZYRV1E3l7Q" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Oz6woEbqEd-dZYRV1E3l7Q" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_Oz6woUbqEd-dZYRV1E3l7Q" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Oz6wokbqEd-dZYRV1E3l7Q" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_Oz6JkUbqEd-dZYRV1E3l7Q" fontName="Segoe UI"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Oz6JkkbqEd-dZYRV1E3l7Q" points="[0, 0, -110, -55]$[110, 55, 0, 0]"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>

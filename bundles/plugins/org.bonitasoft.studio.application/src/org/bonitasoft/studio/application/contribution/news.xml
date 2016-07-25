@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" ?>
+<rss version="2.0">
+  <channel>
+    <pubDate>2014-04-24</pubDate>
+    <author>BonitaSoft</author>
+    <category>News</category>
+    <title>Bonitasoft Latest blog posts</title>
+    <link>http://www.bonitasoft.com/blog</link>
+    <description>Latest posts from the Bonitasoft blog</description>
+	<item>
+       <pubDate>2014-04-04</pubDate>
+       <author>Julien Espitallier</author>
+       <category>News</category>
+       <title>Bonita BPM 6.2.6 now available!</title>
+       <link>http://www.bonitasoft.com/for-you-to-read/blog/bonita-bpm-6.2.6-now-available</link>
+       <description></description>
+    </item>
+	<item>
+       <pubDate>2014-04-23</pubDate>
+       <author>Julien Espitallier</author>
+       <category>News</category>
+       <title>Bonita BPM Documentation Makeover</title>
+       <link>http://www.bonitasoft.com/for-you-to-read/blog/bonita-bpm-documentation-makeover</link>
+       <description></description>
+    </item>	
+    <item>
+       <pubDate>2014-02-04</pubDate>
+       <author>Julien Espitallier</author>
+       <category>News</category>
+       <title>Bonita BPM tool for upgrade is now...</title>
+       <link>http://www.bonitasoft.com/for-you-to-read/news-blog/bonita-bpm-tool-upgrade-now-available</link>
+       <description></description>
+    </item>	
+    <item>
+       <pubDate>2014-03-28</pubDate>
+       <author>Julien Espitallier</author>
+       <category>News</category>
+       <title>How to add custom Javascript in your...</title>
+       <link>http://community.bonitasoft.com/blog/how-add-custom-javascript-your-bonita-bpm-forms</link>
+       <description></description>
+    </item>	
+    <item>
+       <pubDate>2014-03-10</pubDate>
+       <author>Julien Espitallier</author>
+       <category>News</category>
+       <title>Demo of the v6 Migration Tool</title>
+       <link>http://community.bonitasoft.com/blog/demo-of-the-v6-migration-tool</link>
+       <description></description>
+    </item>	
+   </channel>
+</rss>
+
+

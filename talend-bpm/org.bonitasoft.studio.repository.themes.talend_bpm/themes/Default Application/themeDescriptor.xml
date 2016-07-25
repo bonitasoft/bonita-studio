@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<theme author="Talend BPM" creationDate="1323704025528" description="The Default application look'n'feel for Talend BPM" imagePreview="preview.png" name="Default Application" provided="true" type="application" updateDate="1323705066960">
+  <bindings>
+    <binding description="The bar at the top" name="top bar">
+      <css-rule>#blueTopLine</css-rule>
+      <css-file>application/application/css/process.css</css-file>
+    </binding>
+    <binding description="default style of buttons" name="Buttons">
+      <css-rule>.bonita_form_button</css-rule>
+      <css-file>application/application/css/page.css</css-file>
+    </binding>
+    <binding description="Icone for the link of the user xp" name="User xp link icon">
+      <css-rule>.bonita_user_xp_icon</css-rule>
+      <css-file>application/application/css/process.css</css-file>
+    </binding>
+    <binding description="" name="Login zone username">
+      <css-rule>#bonita_username div</css-rule>
+      <css-file>application/application/css/process.css</css-file>
+    </binding>
+    <binding description="" name="Background">
+      <css-rule>body</css-rule>
+      <css-file>application/application/css/process.css</css-file>
+    </binding>
+    <binding description="properties of the text in the step header" name="Step header text">
+      <css-rule>#requestHeaderText</css-rule>
+      <css-file>application/application/css/page.css</css-file>
+    </binding>
+    <binding description="style on labels of form" name="Form label">
+      <css-rule>.bonita_form_label</css-rule>
+      <css-file>application/application/css/page.css</css-file>
+    </binding>
+    <binding description="" name="Footer">
+      <css-rule>#footer</css-rule>
+      <css-file>application/application/css/process.css</css-file>
+    </binding>
+    <binding description="" name="Step candidates">
+      <css-rule>#requestSender</css-rule>
+      <css-file>application/application/css/page.css</css-file>
+    </binding>
+    <binding description="" name="User xp link label">
+      <css-rule>.bonita_user_xp_label</css-rule>
+      <css-file>application/application/css/process.css</css-file>
+    </binding>
+    <binding description="" name="Form page label">
+      <css-rule>#bonita_form_page_label</css-rule>
+      <css-file>application/application/css/page.css</css-file>
+    </binding>
+    <binding description="Links in the top right zone" name="Login zone link">
+      <css-rule>.logInZoneText a</css-rule>
+      <css-file>application/application/css/process.css</css-file>
+    </binding>
+    <binding description="The header of the page, containing the logo" name="header">
+      <css-rule>#header</css-rule>
+      <css-file>application/application/css/process.css</css-file>
+    </binding>
+    <binding description="The main title on top of the page" name="process title">
+      <css-rule>#bonita_process_label div</css-rule>
+      <css-file>application/application/css/process.css</css-file>
+    </binding>
+    <binding description="" name="Step header value">
+      <css-rule>#requestHeaderText strong</css-rule>
+      <css-file>application/application/css/page.css</css-file>
+    </binding>
+    <binding description="header of the step, containing information on the step" name="Step header">
+      <css-rule>#requestHeader</css-rule>
+      <css-file>application/application/css/page.css</css-file>
+    </binding>
+    <binding description="hover style of buttons" name="Buttons hover">
+      <css-rule>.bonita_form_button:hover</css-rule>
+      <css-file>application/application/css/page.css</css-file>
+    </binding>
+    <binding description="properties of the text of the top right zone" name="Login zone text">
+      <css-rule>.logInZoneText</css-rule>
+      <css-file>application/application/css/process.css</css-file>
+    </binding>
+    <binding description="hover of login zone link" name="Login zone link hover">
+      <css-rule>.logInZoneText a:hover</css-rule>
+      <css-file>application/application/css/process.css</css-file>
+    </binding>
+    <binding description="" name="main container">
+      <css-rule>#mainContainer</css-rule>
+      <css-file>application/application/css/page.css</css-file>
+    </binding>
+    <binding description="" name="Step description">
+      <css-rule>#requestMessage</css-rule>
+      <css-file>application/application/css/page.css</css-file>
+    </binding>
+  </bindings>
+</theme>

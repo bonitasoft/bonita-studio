@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://www.wfmc.org/2002/XPDL1.0" xmlns:xpdl="http://www.wfmc.org/2002/XPDL1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.wfmc.org/2002/XPDL1.0 http://wfmc.org/standards/docs/TC-1025_schema_10_xpdl.xsd" Id="carpool" Name="carpool">
+  <PackageHeader>
+    <XPDLVersion>1.0</XPDLVersion>
+    <Vendor>Bonita Project Team</Vendor>
+    <Created>2008-09-24 19:51:04</Created>
+    <Description>Carpool offer process</Description>
+  </PackageHeader>
+  <RedefinableHeader>
+    <Version>1.0</Version>
+  </RedefinableHeader>
+  <ConformanceClass GraphConformance="NON_BLOCKED" />
+  <WorkflowProcesses>
+    <WorkflowProcess AccessLevel="PUBLIC" Name="carpool" Id="carpool">
+      <ProcessHeader />
+      <RedefinableHeader>
+        <Version>1.0</Version>
+      </RedefinableHeader>
+      <DataFields>
+        <DataField Id="requestFound" Name="requestFound">
+          <DataType>
+            <BasicType Type="STRING" />
+          </DataType>
+          <InitialValue>no</InitialValue>
+        </DataField>
+        <DataField Id="answerFound" Name="answerFound">
+          <DataType>
+            <BasicType Type="STRING" />
+          </DataType>
+          <InitialValue>no</InitialValue>
+        </DataField>
+        <DataField Id="offerTimeout" Name="offerTimeout">
+          <DataType>
+            <BasicType Type="STRING" />
+          </DataType>
+          <InitialValue>no</InitialValue>
+        </DataField>
+        <DataField Id="answerTimeout" Name="answerTimeout">
+          <DataType>
+            <BasicType Type="STRING" />
+          </DataType>
+          <InitialValue>no</InitialValue>
+        </DataField>
+      </DataFields>
+      <Participants>
+        <Participant Id="admin" Name="admin">
+          <ParticipantType Type="HUMAN" />
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="NewParticipant" Value="true" />
+            <ExtendedAttribute Name="XOffset" Value="0" />
+            <ExtendedAttribute Name="YOffset" Value="150" />
+          </ExtendedAttributes>
+        </Participant>
+      </Participants>
+      <Activities>
+        <Activity Id="BonitaEnd" Name="BonitaEnd">
+          <Implementation>
+            <No />
+          </Implementation>
+          <StartMode>
+            <Automatic />
+          </StartMode>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="XOR" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="621" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="56" />
+            <ExtendedAttribute Name="XOffset" Value="311" />
+            <ExtendedAttribute Name="YOffset" Value="340" />
+            <ExtendedAttribute Name="CellHeight" Value="40" />
+            <ExtendedAttribute Name="CellWidth" Value="40" />
+          </ExtendedAttributes>
+        </Activity>
+        <Activity Id="BonitaStart" Name="BonitaStart">
+          <Implementation>
+            <No />
+          </Implementation>
+          <StartMode>
+            <Automatic />
+          </StartMode>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="AND" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="63" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="56" />
+            <ExtendedAttribute Name="XOffset" Value="59" />
+            <ExtendedAttribute Name="YOffset" Value="154" />
+            <ExtendedAttribute Name="CellHeight" Value="40" />
+            <ExtendedAttribute Name="CellWidth" Value="40" />
+          </ExtendedAttributes>
+        </Activity>
+        <Activity Id="InitRequest" Name="InitRequest">
+          <Implementation>
+            <No />
+          </Implementation>
+          <StartMode>
+            <Automatic />
+          </StartMode>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="AND" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="225" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="14" />
+            <ExtendedAttribute Name="XOffset" Value="494" />
+            <ExtendedAttribute Name="YOffset" Value="60" />
+            <ExtendedAttribute Name="CellHeight" Value="43" />
+            <ExtendedAttribute Name="CellWidth" Value="107" />
+            <ExtendedAttribute Name="hook" Value="org.ow2.bonita.example.carpool.hook.UpdateRequest">
+              <HookEventName>automatic:onEnter</HookEventName>
+              <Rollback>true</Rollback>
+            </ExtendedAttribute>
+            <ExtendedAttribute Name="hook" Value="org.ow2.bonita.example.carpool.hook.SendMessage">
+              <HookEventName>automatic:onEnter</HookEventName>
+              <Rollback>true</Rollback>
+            </ExtendedAttribute>
+          </ExtendedAttributes>
+        </Activity>
+        <Activity Id="CancelRequest" Name="CancelRequest">
+          <Implementation>
+            <No />
+          </Implementation>
+          <Performer>admin</Performer>
+          <StartMode>
+            <Manual />
+          </StartMode>
+          <Deadline Execution="ASYNCHR">
+            <DeadlineCondition>5000</DeadlineCondition>
+            <ExceptionName>org.ow2.bonita.example.carpool.hook.CancelRequestDL</ExceptionName>
+          </Deadline>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="AND" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="507" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="224" />
+            <ExtendedAttribute Name="XOffset" Value="506" />
+            <ExtendedAttribute Name="YOffset" Value="334" />
+            <ExtendedAttribute Name="CellHeight" Value="45" />
+            <ExtendedAttribute Name="CellWidth" Value="101" />
+          </ExtendedAttributes>
+        </Activity>
+        <Activity Id="Association" Name="Association">
+          <Implementation>
+            <No />
+          </Implementation>
+          <StartMode>
+            <Automatic />
+          </StartMode>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="AND" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="525" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="92" />
+            <ExtendedAttribute Name="XOffset" Value="320" />
+            <ExtendedAttribute Name="YOffset" Value="204" />
+            <ExtendedAttribute Name="CellHeight" Value="44" />
+            <ExtendedAttribute Name="CellWidth" Value="89" />
+            <ExtendedAttribute Name="hook" Value="org.ow2.bonita.example.carpool.hook.Association">
+              <HookEventName>automatic:onEnter</HookEventName>
+              <Rollback>true</Rollback>
+            </ExtendedAttribute>
+          </ExtendedAttributes>
+        </Activity>
+        <Activity Id="WaitRequestDL" Name="WaitRequestDL">
+          <Implementation>
+            <No />
+          </Implementation>
+          <Performer>admin</Performer>
+          <StartMode>
+            <Manual />
+          </StartMode>
+          <Deadline Execution="ASYNCHR">
+            <DeadlineCondition>5000</DeadlineCondition>
+            <ExceptionName>org.ow2.bonita.example.carpool.hook.WaitRequestDL</ExceptionName>
+          </Deadline>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="AND" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="335" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="212" />
+            <ExtendedAttribute Name="XOffset" Value="212" />
+            <ExtendedAttribute Name="YOffset" Value="174" />
+            <ExtendedAttribute Name="CellHeight" Value="49" />
+            <ExtendedAttribute Name="CellWidth" Value="101" />
+          </ExtendedAttributes>
+        </Activity>
+        <Activity Id="WaitAnswerDL" Name="WaitAnswerDL">
+          <Implementation>
+            <No />
+          </Implementation>
+          <Performer>admin</Performer>
+          <StartMode>
+            <Manual />
+          </StartMode>
+          <Deadline Execution="ASYNCHR">
+            <DeadlineCondition>5000</DeadlineCondition>
+            <ExceptionName>org.ow2.bonita.example.carpool.hook.WaitAnswerDL</ExceptionName>
+          </Deadline>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="AND" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="639" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="228" />
+            <ExtendedAttribute Name="XOffset" Value="680" />
+            <ExtendedAttribute Name="YOffset" Value="202" />
+            <ExtendedAttribute Name="CellHeight" Value="39" />
+            <ExtendedAttribute Name="CellWidth" Value="95" />
+          </ExtendedAttributes>
+        </Activity>
+        <Activity Id="CancelPlace" Name="CancelPlace">
+          <Implementation>
+            <No />
+          </Implementation>
+          <StartMode>
+            <Automatic />
+          </StartMode>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="AND" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="345" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="80" />
+            <ExtendedAttribute Name="XOffset" Value="86" />
+            <ExtendedAttribute Name="YOffset" Value="254" />
+            <ExtendedAttribute Name="CellHeight" Value="53" />
+            <ExtendedAttribute Name="CellWidth" Value="95" />
+            <ExtendedAttribute Name="hook" Value="org.ow2.bonita.example.carpool.hook.CancelPlace">
+              <HookEventName>automatic:onEnter</HookEventName>
+              <Rollback>true</Rollback>
+            </ExtendedAttribute>
+          </ExtendedAttributes>
+        </Activity>
+        <Activity Id="Initial" Name="Initial">
+          <Implementation>
+            <No />
+          </Implementation>
+          <StartMode>
+            <Automatic />
+          </StartMode>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="AND" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="36" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="92" />
+            <ExtendedAttribute Name="XOffset" Value="32" />
+            <ExtendedAttribute Name="YOffset" Value="60" />
+            <ExtendedAttribute Name="CellHeight" Value="43" />
+            <ExtendedAttribute Name="CellWidth" Value="95" />
+            <ExtendedAttribute Name="hook" Value="org.ow2.bonita.example.carpool.hook.Initial">
+              <HookEventName>automatic:onEnter</HookEventName>
+              <Rollback>true</Rollback>
+            </ExtendedAttribute>
+          </ExtendedAttributes>
+        </Activity>
+        <Activity Id="WaitRequest" Name="WaitRequest">
+          <Implementation>
+            <No />
+          </Implementation>
+          <StartMode>
+            <Automatic />
+          </StartMode>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="XOR" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="159" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="86" />
+            <ExtendedAttribute Name="XOffset" Value="206" />
+            <ExtendedAttribute Name="YOffset" Value="60" />
+            <ExtendedAttribute Name="CellHeight" Value="46" />
+            <ExtendedAttribute Name="CellWidth" Value="107" />
+            <ExtendedAttribute Name="hook" Value="org.ow2.bonita.example.carpool.hook.WaitRequest">
+              <HookEventName>automatic:onEnter</HookEventName>
+              <Rollback>true</Rollback>
+            </ExtendedAttribute>
+          </ExtendedAttributes>
+        </Activity>
+        <Activity Id="WaitAnswer" Name="WaitAnswer">
+          <Implementation>
+            <No />
+          </Implementation>
+          <StartMode>
+            <Automatic />
+          </StartMode>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="XOR" />
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="XOffsetParticipantView" Value="621" />
+            <ExtendedAttribute Name="YOffsetParticipantView" Value="2" />
+            <ExtendedAttribute Name="XOffset" Value="500" />
+            <ExtendedAttribute Name="YOffset" Value="200" />
+            <ExtendedAttribute Name="CellHeight" Value="47" />
+            <ExtendedAttribute Name="CellWidth" Value="101" />
+            <ExtendedAttribute Name="hook" Value="org.ow2.bonita.example.carpool.hook.WaitAnswer">
+              <HookEventName>automatic:onEnter</HookEventName>
+              <Rollback>true</Rollback>
+            </ExtendedAttribute>
+          </ExtendedAttributes>
+        </Activity>
+      </Activities>
+      <Transitions>
+        <Transition Id="CancelRequest_End" Name="CancelRequest_End" From="CancelRequest" To="BonitaEnd" />
+        <Transition Id="Initilal_WaitRequest" Name="Initilal_WaitRequest" From="Initial" To="WaitRequest" />
+        <Transition Id="WaitRequest_InitRequest" Name="WaitRequest_InitRequest" From="WaitRequest" To="InitRequest">
+          <Condition Type="CONDITION">requestFound.compareTo("yes") == 0</Condition>
+        </Transition>
+        <Transition Id="WaitRequest_cancelPlace" Name="WaitRequest_cancelPlace" From="WaitRequest" To="CancelPlace">
+          <Condition Type="CONDITION">offerTimeout.compareTo("yes") == 0</Condition>
+        </Transition>
+        <Transition Id="WaitAnswer_Association" Name="WaitAnswer_Association" From="WaitAnswer" To="Association">
+          <Condition Type="CONDITION">answerFound.compareTo("yes") == 0</Condition>
+        </Transition>
+        <Transition Id="WaitAnswer_CancelRequest" Name="WaitAnswer_CancelRequest" From="WaitAnswer" To="CancelRequest">
+          <Condition Type="CONDITION">answerTimeout.compareTo("yes") == 0</Condition>
+        </Transition>
+        <Transition Id="InitRequest_WaitAnswer" Name="InitRequest_WaitAnswer" From="InitRequest" To="WaitAnswer" />
+        <Transition Id="WaitRequestDL_WaitRequest" Name="WaitRequestDL_WaitRequest" From="WaitRequestDL" To="WaitRequest">
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="BreakPoint" Value="264.0-156.0" />
+          </ExtendedAttributes>
+        </Transition>
+        <Transition Id="WaitRequest_WaitRequestDL" Name="WaitRequest_WaitRequestDL" From="WaitRequest" To="WaitRequestDL">
+          <Condition Type="CONDITION">requestFound.compareTo("no") == 0 &amp;&amp; offerTimeout.compareTo("no") == 0</Condition>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="BreakPoint" Value="288.0-156.0" />
+          </ExtendedAttributes>
+        </Transition>
+        <Transition Id="WaitAnswerDL_WaitAnswer" Name="WaitAnswerDL_WaitAnswer" From="WaitAnswerDL" To="WaitAnswer" />
+        <Transition Id="WaitAnswer_WaitAnswerDL" Name="WaitAnswer_WaitAnswerDL" From="WaitAnswer" To="WaitAnswerDL">
+          <Condition Type="CONDITION">answerFound.compareTo("no") == 0 &amp;&amp; answerTimeout.compareTo("no") == 0</Condition>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="BreakPoint" Value="660.0-210.0" />
+          </ExtendedAttributes>
+        </Transition>
+        <Transition Id="Start_Initial" Name="Start_Initial" From="BonitaStart" To="Initial" />
+        <Transition Id="CancelPlace_End" Name="CancelPlace_End" From="CancelPlace" To="BonitaEnd" />
+        <Transition Id="Association_End" Name="Association_End" From="Association" To="BonitaEnd" />
+      </Transitions>
+    </WorkflowProcess>
+  </WorkflowProcesses>
+  <ExtendedAttributes>
+    <ExtendedAttribute Name="MadeBy" Value="ProEd" />
+    <ExtendedAttribute Name="View" Value="Activity" />
+  </ExtendedAttributes>
+</Package>
+

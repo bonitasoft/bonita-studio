@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<organization:Organization xmlns:organization="http://www.bonitasoft.org/ns/organization/6.0.0-beta-016">
+  <users>
+    <user userName="user1">
+	  <password>bpm</password>
+      <firstName>Aurore</firstName>
+      <lastName>Richard</lastName>
+      <personalData/>
+      <professionalData/>
+    </user>
+    <user userName="user2">
+ 	  <password>bpm</password>
+      <firstName>Beltane</firstName>
+      <lastName>Petrie</lastName>
+      <personalData/>
+      <professionalData/>
+    </user>
+  </users>
+  <roles>
+    <role name="Role1">
+      <displayName>Role1</displayName>
+    </role>
+    <role name="Role2">
+      <displayName>Role2</displayName>
+    </role>
+    <role name="Role3">
+      <displayName>Role3</displayName>
+    </role>
+  </roles>
+  <groups>
+    <group name="Group1">
+      <displayName>Group1</displayName>
+    </group>
+    <group name="Group2" parentPath="/Group1">
+      <displayName>Group2</displayName>
+    </group>
+    <group name="Group3">
+      <displayName>Group3</displayName>
+    </group>
+    <group name="Group4" parentPath="/Group1/Group2">
+      <displayName>Group4</displayName>
+    </group>
+    <group name="Group5">
+      <displayName>Group5</displayName>
+    </group>
+  </groups>
+  <memberships>
+    <membership>
+      <userName>user1</userName>
+      <roleName>Role1</roleName>
+      <groupName>Group2</groupName>
+      <groupParentPath>/Group1</groupParentPath>
+    </membership>
+    <membership>
+      <userName>user2</userName>
+      <roleName>Role2</roleName>
+      <groupName>Group3</groupName>
+    </membership>
+    <membership>
+      <userName>user2</userName>
+      <roleName>Role3</roleName>
+      <groupName>Group4</groupName>
+      <groupParentPath>/Group1/Group2</groupParentPath>
+    </membership>
+  </memberships>
+</organization:Organization>

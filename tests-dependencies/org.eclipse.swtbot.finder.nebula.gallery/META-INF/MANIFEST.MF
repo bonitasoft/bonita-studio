@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Nebula Gallery - SWTBot
+Bundle-SymbolicName: org.eclipse.swtbot.finder.nebula.gallery
+Bundle-Version: 0.1.0.qualifier
+Require-Bundle: org.eclipse.swtbot.swt.finder;bundle-version="2.0.0",
+ org.eclipse.nebula.widgets.gallery;bundle-version="0.5.2",
+ org.eclipse.swtbot.eclipse.finder;bundle-version="2.0.3",
+ org.junit;bundle-version="4.0.0",
+ org.eclipse.ui;bundle-version="3.7.0",
+ org.eclipse.swtbot.eclipse.gef.finder
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.swtbot.finder.nebula.widgets
+Bundle-Vendor: BonitaSoft S.A.
+Import-Package: org.apache.log4j;version="1.2.15"

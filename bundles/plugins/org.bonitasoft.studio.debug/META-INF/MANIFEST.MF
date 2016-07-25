@@ -1,0 +1,32 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Debug Plugin
+Bundle-Localization: plugin
+Bundle-SymbolicName: org.bonitasoft.studio.debug;singleton:=true
+Bundle-Version: 7.3.1.qualifier
+Bundle-Activator: org.bonitasoft.studio.debug.DebugPlugin
+Bundle-Vendor: BonitaSoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.bonitasoft.studio.model;bundle-version="1.0.0",
+ org.bonitasoft.studio.common;bundle-version="1.0.0",
+ org.bonitasoft.studio.pics;bundle-version="1.0.0",
+ org.bonitasoft.studio.common.repository;bundle-version="1.0.0",
+ org.eclipse.emf.databinding,
+ org.bonitasoft.studio.model.edit,
+ org.eclipse.emf.edit.ui,
+ org.bonitasoft.studio.diagram;bundle-version="1.0.0",
+ org.bonitasoft.studio.diagram.form;bundle-version="1.0.0",
+ org.eclipse.gmf.runtime.diagram.ui,
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor,
+ org.eclipse.ui.ide,
+ org.bonitasoft.studio.engine;bundle-version="1.0.0",
+ org.bonitasoft.studio.profiles;bundle-version="1.0.0",
+ org.bonitasoft.studio.connectors;bundle-version="1.0.0",
+ org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.bonitasoft.studio.debug,org.bonitasoft.studio.debu
+ g.command,org.bonitasoft.studio.debug.i18n;x-friends:="org.bonitasoft
+ .studio.tests"
+Bundle-ActivationPolicy: lazy
+

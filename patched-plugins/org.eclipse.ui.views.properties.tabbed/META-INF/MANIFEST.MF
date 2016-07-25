@@ -1,0 +1,314 @@
+Manifest-Version: 1.0
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Built-By: e4Build
+Bundle-SymbolicName: org.eclipse.ui.views.properties.tabbed;singleton:
+ =true
+Eclipse-SourceReferences: scm:git:git://git.eclipse.org/gitroot/platfo
+ rm/eclipse.platform.ui.git;path="bundles/org.eclipse.ui.views.propert
+ ies.tabbed";tag="I20140519-2000";commitId=28dafd29c7307b8c6393bc98768
+ 4784c187c4062
+Bundle-Activator: org.eclipse.ui.internal.views.properties.tabbed.Tabb
+ edPropertyViewPlugin
+Require-Bundle: org.eclipse.ui.forms;bundle-version="[3.3.0,4.0.0)";visibility:=reexport,
+ org.eclipse.ui.views;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
+ org.eclipse.ui;bundle-version="[3.3.0,4.0.0)";visibility:=reexport,
+ org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.e4.core.contexts;bundle-version="1.3.100",
+ org.eclipse.e4.ui.workbench;bundle-version="1.2.1",
+ org.eclipse.e4.core.di;bundle-version="1.4.0"
+Export-Package: org.eclipse.ui.internal.views.properties.tabbed;x-inte
+ rnal:=true,org.eclipse.ui.internal.views.properties.tabbed.l10n;x-int
+ ernal:=true,org.eclipse.ui.internal.views.properties.tabbed.view;x-in
+ ternal:=true,org.eclipse.ui.views.properties.tabbed
+Bundle-Version: 3.6.100.v20140519-0906
+Build-Jdk: 1.7.0_51
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: %Plugin.providerName
+Bundle-Name: %Plugin.name
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Import-Package: com.ibm.icu.text
+Bundle-ManifestVersion: 2
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyRegistry.class
+SHA1-Digest: aHKCto9yMv6Nu4NM1aVphc1ckN4=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyRegistryClassSectionFilter.class
+SHA1-Digest: T/00vIzhnK3PDp6LR7gWn4TXYIE=
+
+Name: org/eclipse/ui/views/properties/tabbed/TabbedPropertySheetPage.c
+ lass
+SHA1-Digest: X+2Qlopc9VaecThr2kZJm3UJKLQ=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyTitle.class
+SHA1-Digest: 1e3UWSAh3CgBblEK0U8Wc+YLqvc=
+
+Name: org/eclipse/ui/views/properties/tabbed/TabContents.class
+SHA1-Digest: K3J0z8bV5ctYMWZHjSNf1COWfw0=
+
+Name: org/eclipse/ui/views/properties/tabbed/IActionProvider.class
+SHA1-Digest: ASL3r5GCPb9U0Spp7hrblrKaAC4=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyRegistry$2.class
+SHA1-Digest: 3HEbrVi9TV4PY3mJnS+10OHnkIk=
+
+Name: org/eclipse/ui/views/properties/tabbed/TabbedPropertySheetPage$1
+ .class
+SHA1-Digest: UgSuopK1rHWedcHBSkaeDD42rlE=
+
+Name: org/eclipse/ui/views/properties/tabbed/AdvancedPropertySection$1
+ .class
+SHA1-Digest: oCKp1Boz6OxOawD9D+kfNc14gGk=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabDescript
+ or.class
+SHA1-Digest: yoOGbUIkLvg6JY+cypOOqyNsuUs=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyTitle$1.class
+SHA1-Digest: rV4LAkmuaH9hX5lIwQIaFJQowL4=
+
+Name: org/eclipse/ui/views/properties/tabbed/TabContents$1.class
+SHA1-Digest: b07Ccu41EHGz0Arp3hvxM/tL1YE=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$10.class
+SHA1-Digest: cM0K7xkAS2G6VDXP5cZPvU+gwJM=
+
+Name: org/eclipse/ui/views/properties/tabbed/TabbedPropertySheetPage$T
+ abbedPropertySheetPageContributorFromSelection.class
+SHA1-Digest: AoiXhTODfqtY//W5Xuoj2sO7n0c=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$12.class
+SHA1-Digest: KazqCKR9PvlzNC9VJWpc6WNjPuo=
+
+Name: org/eclipse/ui/views/properties/tabbed/TabContents$3.class
+SHA1-Digest: EAc0icFEFCBqGMZy1rggq3cle0Q=
+
+Name: org/eclipse/ui/views/properties/tabbed/TabContents$5.class
+SHA1-Digest: i7P0y/DPsm2llRbLHMsYRCIclBg=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$14.class
+SHA1-Digest: 5elgDxLVqzAsKToSZSo0v7DXl2k=
+
+Name: org/eclipse/ui/views/properties/tabbed/IOverridableTabListConten
+ tProvider.class
+SHA1-Digest: cd7Q3mS9U2OoxZW3935PUX3Fm8I=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList.class
+SHA1-Digest: DzYaiqRmaxh6Cu4nlgb1VTL9yOY=
+
+Name: org/eclipse/ui/views/properties/tabbed/ISectionDescriptor.class
+SHA1-Digest: DtxdlnBYbMNTy4z4GkdpFP1QKKI=
+
+Name: org/eclipse/ui/views/properties/tabbed/ITabDescriptorProvider.cl
+ ass
+SHA1-Digest: +Tg76Dn3SbXWKLn1hnnAfIh1DA0=
+
+Name: org/eclipse/ui/views/properties/tabbed/TabbedPropertySheetPage$T
+ abbedPropertySheetPageLabelProvider.class
+SHA1-Digest: ol7MdIGn9CU52TPikxcjqU3FW8A=
+
+Name: org/eclipse/ui/views/properties/tabbed/AbstractSectionDescriptor
+ .class
+SHA1-Digest: UoxKr/xTFk8LZUSuBvv6qIbjNsA=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$1.class
+SHA1-Digest: k89hu7jPQAXJNXn+tfz3PHyPvOE=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$3.class
+SHA1-Digest: Lb8i6cfTN4elbi/b21XpJhbjW8A=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$5.class
+SHA1-Digest: W5bTrwAHqbUOKN6TfZzoOCyIqeA=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$7.class
+SHA1-Digest: xp8Ib2zlreaIfqzmX4XvYJVDzPU=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$9.class
+SHA1-Digest: 0oa6yyiyruKhV/mK2jEirA483wU=
+
+Name: org/eclipse/ui/views/properties/tabbed/AbstractTypeMapper.class
+SHA1-Digest: jFyCOzUkIJ1EtBvIEbJ+cewwx3Y=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyRegistryFactory.class
+SHA1-Digest: HAfiSoSrPZX3VvuKmTB50edssc8=
+
+Name: org/eclipse/ui/views/properties/tabbed/ITabbedPropertyConstants.
+ class
+SHA1-Digest: KkpVjVT7CKTnm6Tn8Iy+ObMWu4c=
+
+Name: org/eclipse/ui/views/properties/tabbed/TabbedPropertySheetWidget
+ Factory.class
+SHA1-Digest: Kn3KaJf1UE4pmRxECipKqxCikVQ=
+
+Name: org/eclipse/ui/views/properties/tabbed/IOverridableTabList.class
+SHA1-Digest: on/LI9wpUGSMwGSjVxXMtvT4NlE=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyRegistryFactory$CacheData.class
+SHA1-Digest: aP0G5/08TeMCTNh7IQw76DQl0H8=
+
+Name: org/eclipse/ui/views/properties/tabbed/AdvancedPropertySection.c
+ lass
+SHA1-Digest: +daZBP1bUo1TzbfYNf/C8tOkpdY=
+
+Name: org/eclipse/ui/views/properties/tabbed/AbstractPropertySection.c
+ lass
+SHA1-Digest: jl4OIcgpJdwWrGGE2soKN6fh3yw=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$TopNavigationElement.class
+SHA1-Digest: LiTWAxAnNPAIsSiTUN6mhrijUO0=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyRegistry$1.class
+SHA1-Digest: yKJEdh7BmSfN4ETIZCMWHHl4YO0=
+
+Name: org/eclipse/ui/views/properties/tabbed/TabbedPropertySheetPage$S
+ electionChangedListener.class
+SHA1-Digest: XMwGnDixN06jxJe+h5qTTMmaKx4=
+
+Name: plugin.properties
+SHA1-Digest: 1+uz+7fIj+tANos73bnM2Zk6pAc=
+
+Name: org/eclipse/ui/views/properties/tabbed/ITabSelectionListener.cla
+ ss
+SHA1-Digest: rgs3cz+omlFSdWiY2wY+e8KPYRU=
+
+Name: org/eclipse/ui/views/properties/tabbed/ITabbedPropertySheetPageC
+ ontributor.class
+SHA1-Digest: up3bZ+fN8RECDBWuIcGlbfxCu9s=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyViewer.class
+SHA1-Digest: xW6oF/hbqde7D17PgFnFMsstwnc=
+
+Name: org/eclipse/ui/views/properties/tabbed/ITabDescriptor.class
+SHA1-Digest: /Z7ePI7W1DEkZPIA7I0sAc8Y1a0=
+
+Name: org/eclipse/ui/views/properties/tabbed/TabbedPropertySheetPage$2
+ .class
+SHA1-Digest: fu04jyri6vXVDfxORR/ewESdcJg=
+
+Name: org/eclipse/ui/views/properties/tabbed/ISection.class
+SHA1-Digest: gm1Oo6N/iGJL/SZ5N1JsMgN8oTw=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$11.class
+SHA1-Digest: N2pMOpcr6bIEYScV+u1riYzAK/I=
+
+Name: org/eclipse/ui/views/properties/tabbed/TabContents$2.class
+SHA1-Digest: xeLqqEgT1VoR06o937xQdUTkGTw=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabListCont
+ entProvider.class
+SHA1-Digest: pR2ItqPH052BX/BNQjYxBSMKT54=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$13.class
+SHA1-Digest: VSRg8J9buo+YqysV7rhz/jgLRuw=
+
+Name: org/eclipse/ui/views/properties/tabbed/TabContents$4.class
+SHA1-Digest: TrCD5/3HjOM4WzPT3iHRhjRJ14c=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/l10n/TabbedPrope
+ rtyMessages.properties
+SHA1-Digest: 3MH/mf40PIpXPseRYSYJaQdZsbY=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$ListElement.class
+SHA1-Digest: Mv9rzVEEcCmiKMzmeri4XCmKWgA=
+
+Name: org/eclipse/ui/views/properties/tabbed/TabContents$6.class
+SHA1-Digest: 9Z5INz8fLnjGP7DcB5xQaYXGeyw=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$15.class
+SHA1-Digest: eBdhkrg4Q0AS6QPXLnGBntcYbxs=
+
+Name: plugin.xml
+SHA1-Digest: MDlqD0by1n5M0v5SP0+lm/QaHTY=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/Overridable
+ TabListContentProvider.class
+SHA1-Digest: EvvZrAgFWqj6IYIi7PIKudlNgFM=
+
+Name: org/eclipse/ui/views/properties/tabbed/AbstractTabDescriptor.cla
+ ss
+SHA1-Digest: 0YkxDW0sdiAus4J4gD9m7GwEQWE=
+
+Name: org/eclipse/ui/views/properties/tabbed/ITypeMapper.class
+SHA1-Digest: 8+yu3OQALmb4a2kAw2/TwTtqaQs=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/SectionDesc
+ riptor.class
+SHA1-Digest: CHjiAGxBR3llea1hQlK1IQp9hjA=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/TabbedPropertyVi
+ ewStatusCodes.class
+SHA1-Digest: LCYusFDn0OxO3fl+BUkXdH5KEiE=
+
+Name: org/eclipse/ui/views/properties/tabbed/AbstractOverridableTabLis
+ tPropertySection.class
+SHA1-Digest: /mtZEiijdgTHPGKqvG73B2ohXnA=
+
+Name: .api_description
+SHA1-Digest: MOSVt3pnhR7hMDOZQTfXVr6zXwg=
+
+Name: about.html
+SHA1-Digest: ejOZra0kypGLQQ2bJtGTX+LI8tU=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$2.class
+SHA1-Digest: XcihtUeZV8ypp0YDjnqwfSuBCC8=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$4.class
+SHA1-Digest: Ivn9m1EZhO3BVpn6omSi71zIeAo=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/l10n/TabbedPrope
+ rtyMessages.class
+SHA1-Digest: iFIozRdMHASx5TE1hSVICLQZ4QI=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$6.class
+SHA1-Digest: bGZICRlstDpQsJPKrNjjdsoj1/Y=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/TabbedPropertyVi
+ ewPlugin.class
+SHA1-Digest: 41TQCWg01ytlNmHILFh++IV6Mao=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$8.class
+SHA1-Digest: UdchDSCFy5xxpsIcxDrLtYrm4JI=
+
+Name: org/eclipse/ui/views/properties/tabbed/ISectionDescriptorProvide
+ r.class
+SHA1-Digest: PiNjVRKH4aPdgSda5p4UrXbI2OY=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyComposite.class
+SHA1-Digest: HYHuRw4ZTAX2No4oKsrdyCTi1WE=
+
+Name: org/eclipse/ui/views/properties/tabbed/ITabItem.class
+SHA1-Digest: mq541gNaGD1LpbbHR5rnSh4jSGo=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
+ rtyList$BottomNavigationElement.class
+SHA1-Digest: zmMKevuB50fAhvTPmLdbvg9Q2w0=
+

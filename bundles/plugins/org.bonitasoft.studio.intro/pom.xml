@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.bonitasoft.studio.bundles</groupId>
+        <artifactId>plugins</artifactId>
+        <version>7.3.1-SNAPSHOT</version>
+    </parent>
+    <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
+    <artifactId>org.bonitasoft.studio.intro</artifactId>
+    <packaging>eclipse-plugin</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.bonitasoft.maven</groupId>
+                <artifactId>image-overlay-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>welcome-community</id>
+                        <configuration>
+                            <baseImgPath>${basedir}/content/images/Logo-Welcome-Community-Without-Version.png</baseImgPath>
+                            <outputImagePath>${basedir}/content/images/logo-community.png</outputImagePath>
+                            <outputImageFormat>png</outputImageFormat>
+                            <xLocation>70</xLocation>
+                            <yLocation>116</yLocation>
+                            <fontSize>35</fontSize>
+                            <color>55738c</color>
+                            <bold>false</bold>
+                            <versionLabel>7.3.0</versionLabel>
+                        </configuration>
+                        <goals>
+                            <goal>create-image</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

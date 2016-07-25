@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.bonitasoft.studio.repositoryStore">
+      <repositoryStore
+            class="org.bonitasoft.studio.xml.repository.XSDRepositoryStore">
+      </repositoryStore>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.repository.fileContribution">
+      <fileContribution
+            class="org.bonitasoft.studio.xml.repository.DefaultXSDFileStore">
+      </fileContribution>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.expression.operatorEditor">
+      <operatorEditor
+            class="org.bonitasoft.studio.xml.ui.XPathOperatorEditor">
+      </operatorEditor>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.bosArchiveProvider">
+      <bosArchiveProvider
+            providerClass="org.bonitasoft.studio.xml.export.XSDResourceProvider">
+      </bosArchiveProvider>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.expression.expressionProvider">
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.xml.ui.XPathExpressionProvider"></expressionProvider>
+   </extension>
+
+</plugin>

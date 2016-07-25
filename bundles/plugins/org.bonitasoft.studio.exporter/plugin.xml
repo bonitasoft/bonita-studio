@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+   <extension-point id="exporterExtension" name="ExporterExtension" schema="schema/exporterExtension.exsd"/>
+   <extension-point id="cssGenerator" name="Css Generator" schema="schema/cssGenerator.exsd"/>
+   <extension-point id="barApplicationResourceProvider" name="Extension Point to add Application Resources to BAR at export" schema="schema/barApplicationResourcesProvider.exsd"/>
+   <extension-point id="exporterFactory" name="exporterFactory" schema="schema/exporterFactory.exsd"/>
+   <extension-point id="formsExporter" name="Forms Exporter" schema="schema/org.bonitasoft.studio.exporter.formsExporter.exsd"/>
+ 
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.w3.org/1999/xhtml"
+            class="org.w3._1999.xhtml.XhtmlPackage"
+            genModel="model/xhtml.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="xhtml"
+            class="org.w3._1999.xhtml.util.XhtmlResourceFactoryImpl"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.m2m.qvt.oml.runtime.qvtTransformation">
+      <transformation
+            file="transforms/Form2Xhtml.qvto"
+            id="org.bonitasoft.studio.exporter.form2xhtml">
+         <input
+               metaclass="form/Form"
+               metamodel="http://www.bonitasoft.org/ns/studio/form">
+         </input>
+         <output
+               metaclass="xhtml/DocumentRoot"
+               metamodel="http://www.w3.org/1999/xhtml">
+         </output>
+      </transformation>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.exporter.cssGenerator">
+      <formsExporterExtension
+            class="org.bonitasoft.studio.exporter.application.CssGenerator">
+         <Priority
+               name="Low">
+         </Priority>
+      </formsExporterExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.bonitasoft.studio.exporter.exportAsBPMN"
+            name="%Export_As_BPMN">
+      </command>
+      <command
+            defaultHandler="org.bonitasoft.studio.exporter.handler.ExportBosArchiveHandler"
+            id="org.bonitasoft.studio.exportBosArchive"
+            name="%export">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.bonitasoft.studio.processusMenu?after=org.bonitasoft.studio.application.separator5">
+         <menu
+               id="org.bonitasoft.studio.exporter.exportAs"
+               label="%exportAs">
+            <dynamic
+                  class="org.bonitasoft.studio.exporter.extension.ExporterFactoryContributions"
+                  id="org.bonitasoft.studio.exporter.dynamicExporter">
+            </dynamic>
+         </menu>
+         <separator
+               name="org.bonitasoft.studio.exporter.separator"
+               visible="true">
+         </separator>
+        
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.bonitasoft.studio.processusMenu?after=org.bonitasoft.studio.menu.import">
+         <command
+               commandId="org.bonitasoft.studio.exportBosArchive"
+               icon="icons/export.png"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.exporter.exporterFactory">
+      <exporterFactory
+            class="org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN"
+            menuIcon="icons/bpmn.png"
+            menuLabel="BPMN 2.0"
+            priority="0"
+            targetExtension="bpmn">
+      </exporterFactory>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.exporter.formsExporter">
+      <formsExporterExtension
+            class="org.bonitasoft.studio.exporter.form.FormsExporter">
+         <Priority
+               name="Low">
+         </Priority>
+      </formsExporterExtension>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.coolbarContributionItem">
+      <coolbarItem
+            class="org.bonitasoft.studio.exporter.coolbar.ExportBarCoolbarItem"
+            priority="0"
+            toolbarPosition="5">
+      </coolbarItem>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.exporter.barApplicationResourceProvider">
+      <barResourceProvider
+            priority="0"
+            providerClass="org.bonitasoft.studio.exporter.ApplicationResourcesProvider">
+      </barResourceProvider>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.common.barResourcesProvider">
+      <barResourceProvider
+            providerClass="org.bonitasoft.studio.exporter.bpmn.BPMNBarResourceProvider">
+      </barResourceProvider>
+   </extension>
+</plugin>

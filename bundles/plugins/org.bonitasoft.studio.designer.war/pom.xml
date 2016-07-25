@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.bonitasoft.studio.bundles</groupId>
+        <artifactId>plugins</artifactId>
+        <version>7.3.1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
+    <artifactId>org.bonitasoft.studio.designer.war</artifactId>
+    <packaging>eclipse-plugin</packaging>
+
+    <properties>
+        <webapp.dir>${basedir}/webapp</webapp.dir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.bonitasoft.web</groupId>
+            <artifactId>ui-designer-backend-webapp</artifactId>
+            <version>${ui.designer.version}</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <overlays>
+                        <overlay>
+                            <groupId>org.bonitasoft.web</groupId>
+                            <artifactId>ui-designer-backend-webapp</artifactId>
+                            <excludes>
+                                <exclude>WEB-INF/lib/slf4j-api-*.jar</exclude>
+                            </excludes>
+                        </overlay>
+                    </overlays>
+                    <workDirectory>target/overlay-war-folder</workDirectory>
+                    <warName>designer</warName>
+                    <outputDirectory>${webapp.dir}</outputDirectory>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>war</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Clean generated resources</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <target>
+                                <delete dir="${webapp.dir}" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

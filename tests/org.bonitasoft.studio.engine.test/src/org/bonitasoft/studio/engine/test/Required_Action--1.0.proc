@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:decision="http://www.bonitasoft.org/ns/studio/process/decision" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:process="http://www.bonitasoft.org/ns/studio/process" xsi:schemaLocation="http://www.bonitasoft.org/ns/studio/process/decision http://www.bonitasoft.org/ns/studio/process#//decision">
+  <process:MainProcess xmi:id="_AqczINWvEeC3uo-WsXA0JQ" name="Required_Action" label="Required Action" bonitaVersion="5.5" bonitaModelVersion="5.5">
+    <elements xmi:type="process:Pool" xmi:id="_AqczIdWvEeC3uo-WsXA0JQ" documentation="Notifies the agency of actions taken on a policy, or actions that need to be taken on the part of the agency." name="Required_Action" label="Required Action">
+      <elements xmi:type="process:StartEvent" xmi:id="_AqczItWvEeC3uo-WsXA0JQ" name="Start" label="Start" outgoing="_Aqczx9WvEeC3uo-WsXA0JQ"/>
+      <elements xmi:type="process:EndEvent" xmi:id="_AqczI9WvEeC3uo-WsXA0JQ" name="End" label="End" incoming="_Aqczz9WvEeC3uo-WsXA0JQ"/>
+      <elements xmi:type="process:Task" xmi:id="_AqczJNWvEeC3uo-WsXA0JQ" documentation="Agency Reviews the Information received." name="Agency_Review" label="Agency Review" outgoing="_Y5g2UN5OEeCjn_mlPxR1Cg" incoming="_Aqczv9WvEeC3uo-WsXA0JQ _AqczwdWvEeC3uo-WsXA0JQ" user="" groups="_Aqcz6dWvEeC3uo-WsXA0JQ">
+        <connectors xmi:type="process:Connector" xmi:id="_AqczJdWvEeC3uo-WsXA0JQ" documentation="Sets the hiostory strings." name="ParseHistory_AgencyReview" label="ParseHistory_AgencyReview" connectorId="GroovyConnector" event="taskOnReady" ignoreErrors="false">
+          <parameters xmi:type="process:Parameter" xmi:id="_ytF8oNsuEeCkb9Atyfv24A" key="setScript" value="ACED0005740234537472696E67206167656E63794D65737361676573203D2022220D0A0D0A6966286167656E6379526573706F6E73654C697374203D3D206E756C6C297B0D0A090D0A096167656E6379526573706F6E73654C697374203D206E65772041727261794C6973743C537472696E673E28290D0A7D0D0A0D0A666F7228537472696E6720726573706F6E7365203A206167656E6379526573706F6E73654C697374297B0D0A090D0A096167656E63794D65737361676573203D20726573706F6E7365202B20225C6E22202B206167656E63794D657373616765730D0A7D0D0A0D0A6167656E6379526573706F6E7365486973746F7279203D206167656E63794D657373616765730D0A0D0A537472696E6720756E6465727772697465724D65737361676573203D2022220D0A0D0A696628756E646572777269746572526573706F6E73654C697374203D3D206E756C6C297B0D0A090D0A09756E646572777269746572526573706F6E73654C697374203D206E65772041727261794C6973743C537472696E673E28290D0A7D0D0A0D0A666F7228537472696E6720726573706F6E7365203A20756E646572777269746572526573706F6E73654C697374297B0D0A090D0A09756E6465727772697465724D65737361676573203D20726573706F6E7365202B20225C6E22202B20756E6465727772697465724D657373616765730D0A7D0D0A0D0A756E646572777269746572526573706F6E7365486973746F7279203D20756E6465727772697465724D65737361676573"/>
+          <outputs xmi:type="process:OutputParameterMapping" xmi:id="_ytF8odsuEeCkb9Atyfv24A" valueExpression="result"/>
+        </connectors>
+        <connectors xmi:type="process:Connector" xmi:id="_AqczKNWvEeC3uo-WsXA0JQ" documentation="Adds the response to the agency's respones list." name="TimedAgencyResponseSetter" label="TimedAgencyResponseSetter" connectorId="SetVariable" event="taskOnFinish" ignoreErrors="false">
+          <parameters xmi:type="process:Parameter" xmi:id="_AqczKdWvEeC3uo-WsXA0JQ" key="setVariableName" value="ACED00057400296167656E6379526573706F6E73654C697374236167656E6379526573706F6E73654C69737423616464"/>
+          <parameters xmi:type="process:Parameter" xmi:id="_AqczKtWvEeC3uo-WsXA0JQ" key="setValue" value="ACED0005740160247B696D706F7274206A6176612E746578742E53696D706C6544617465466F726D61743B0D0A0D0A0D0A53696D706C6544617465466F726D617420736466203D206E65772053696D706C6544617465466F726D617428224D4D2F64642F7979797920276174272068683A6D6D206122290D0A0D0A6966286167656E6379526573706F6E7365203D3D206E756C6C207C7C2022222E657175616C73286167656E6379526573706F6E73652E7472696D282929297B0D0A090D0A096167656E6379526573706F6E7365203D20224167656E637920726573706F6E6465642C2062757420646964206E6F7420656E74657220612074657874206D6573736167652E223B0D0A7D0D0A0D0A6167656E6379526573706F6E7365203D20225C6E22202B207364662E666F726D6174286E65772044617465282929202B20225C6E22202B206167656E6379526573706F6E73650D0A0D0A6167656E6379526573706F6E73657D"/>
+        </connectors>
+        <data xmi:type="process:Data" xmi:id="_AqczMdWvEeC3uo-WsXA0JQ" name="agencyResponse" label="agencyResponse" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ" transient="true"/>
+        <data xmi:type="process:Data" xmi:id="_AqczMtWvEeC3uo-WsXA0JQ" name="agencyResponseHistory" label="agencyResponseHistory" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ" defaultValue="" transient="true"/>
+        <data xmi:type="process:Data" xmi:id="_AqczM9WvEeC3uo-WsXA0JQ" name="underwriterResponseHistory" label="underwriterResponseHistory" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ" transient="true"/>
+      </elements>
+      <elements xmi:type="process:ServiceTask" xmi:id="_AqczNdWvEeC3uo-WsXA0JQ" documentation="Adds a message indicating that the Agency did not respond before the given deadline." name="Failure_to_Respond" label="Failure to Respond" outgoing="_dYs-cN5OEeCjn_mlPxR1Cg" incoming="_wapPUNsiEeCxUY_hKI60lg">
+        <connectors xmi:type="process:Connector" xmi:id="_AqczNtWvEeC3uo-WsXA0JQ" documentation="Records a message in the agency response stating that the agency did not responded by the given due date." name="RecordFailure" label="RecordFailure" connectorId="SetVariable" event="automaticOnExit" ignoreErrors="false">
+          <parameters xmi:type="process:Parameter" xmi:id="_AqczN9WvEeC3uo-WsXA0JQ" key="setVariableName" value="ACED00057400296167656E6379526573706F6E73654C697374236167656E6379526573706F6E73654C69737423616464"/>
+          <parameters xmi:type="process:Parameter" xmi:id="_AqczONWvEeC3uo-WsXA0JQ" key="setValue" value="ACED000574016F247B696D706F7274206A6176612E746578742E53696D706C6544617465466F726D61740D0A0D0A6966286167656E6379526573706F6E73654C697374203D3D206E756C6C297B0D0A090D0A096167656E6379526573706F6E73654C697374203D206E65772041727261794C6973743C537472696E673E28290D0A7D0D0A0D0A53696D706C6544617465466F726D617420736466203D206E65772053696D706C6544617465466F726D617428224D4D2F64642F7979797920276174272068683A6D6D206122290D0A0D0A537472696E67206D657373616765203D20225C6E22202B207364662E666F726D6174286E65772044617465282929202B20225C6E22202B20224167656E637920646964206E6F7420726573706F6E642062792074686520676976656E206475652064617465206F66202722202B207364662E666F726D617428286475654461746520617320446174652929202B2022272020220D0A0D0A72657475726E206D6573736167657D"/>
+        </connectors>
+      </elements>
+      <elements xmi:type="process:Task" xmi:id="_AqczOdWvEeC3uo-WsXA0JQ" name="Underwriter_Review" label="Underwriter Review" outgoing="_AqczwdWvEeC3uo-WsXA0JQ _Aqczw9WvEeC3uo-WsXA0JQ" incoming="_Y5g2UN5OEeCjn_mlPxR1Cg" user="" groups="_Aqcz69WvEeC3uo-WsXA0JQ">
+        <connectors xmi:type="process:Connector" xmi:id="_AqczOtWvEeC3uo-WsXA0JQ" name="ParseHistory_ResponseReview" label="ParseHistory_ResponseReview" connectorId="GroovyConnector" event="taskOnReady" ignoreErrors="false">
+          <parameters xmi:type="process:Parameter" xmi:id="_AqczO9WvEeC3uo-WsXA0JQ" key="setScript" value="ACED0005740234537472696E67206167656E63794D65737361676573203D2022220D0A0D0A6966286167656E6379526573706F6E73654C697374203D3D206E756C6C297B0D0A090D0A096167656E6379526573706F6E73654C697374203D206E65772041727261794C6973743C537472696E673E28290D0A7D0D0A0D0A666F7228537472696E6720726573706F6E7365203A206167656E6379526573706F6E73654C697374297B0D0A090D0A096167656E63794D65737361676573203D20726573706F6E7365202B20225C6E22202B206167656E63794D657373616765730D0A7D0D0A0D0A6167656E6379526573706F6E7365486973746F7279203D206167656E63794D657373616765730D0A0D0A537472696E6720756E6465727772697465724D65737361676573203D2022220D0A0D0A696628756E646572777269746572526573706F6E73654C697374203D3D206E756C6C297B0D0A090D0A09756E646572777269746572526573706F6E73654C697374203D206E65772041727261794C6973743C537472696E673E28290D0A7D0D0A0D0A666F7228537472696E6720726573706F6E7365203A20756E646572777269746572526573706F6E73654C697374297B0D0A090D0A09756E6465727772697465724D65737361676573203D20726573706F6E7365202B20225C6E22202B20756E6465727772697465724D657373616765730D0A7D0D0A0D0A756E646572777269746572526573706F6E7365486973746F7279203D20756E6465727772697465724D65737361676573"/>
+          <outputs xmi:type="process:OutputParameterMapping" xmi:id="_AqczPNWvEeC3uo-WsXA0JQ" valueExpression="result"/>
+        </connectors>
+        <connectors xmi:type="process:Connector" xmi:id="_AqczPdWvEeC3uo-WsXA0JQ" name="RecordUnderwriterResponse" label="RecordUnderwriterResponse" connectorId="SetVariable" event="taskOnFinish" ignoreErrors="false">
+          <parameters xmi:type="process:Parameter" xmi:id="_AqczPtWvEeC3uo-WsXA0JQ" key="setVariableName" value="ACED0005740033756E646572777269746572526573706F6E73654C69737423756E646572777269746572526573706F6E73654C69737423616464"/>
+          <parameters xmi:type="process:Parameter" xmi:id="_AqczP9WvEeC3uo-WsXA0JQ" key="setValue" value="ACED0005740249247B696D706F7274206A6176612E746578742E53696D706C6544617465466F726D61743B0D0A0D0A696628756E646572777269746572526573706F6E7365203D3D206E756C6C207C7C2022222E657175616C7328756E646572777269746572526573706F6E73652E7472696D282929297B0D0A090D0A09696628216E6565644D6F7265496E666F726D6174696F6E297B0D0A09090D0A0909756E646572777269746572526573706F6E7365203D202254686520726576696577206F6620746865206167656E637920726573706F6E73652077617320636F6D706C657465642E223B0D0A097D0D0A09656C73657B0D0A0D0A0909756E646572777269746572526573706F6E7365203D20224D6F726520696E666F726D6174696F6E206973206E65656465642E20506C6561736520636F6E7461637420746865204265617220526976657220756E64657277726974696E67206465706172746D656E742E223B0D0A097D0D0A7D0D0A0D0A53696D706C6544617465466F726D617420736466203D206E65772053696D706C6544617465466F726D617428224D4D2F64642F7979797920276174272068683A6D6D206122290D0A537472696E6720726573706F6E736554696D65537472696E67203D207364662E666F726D6174286E657720446174652829290D0A756E646572777269746572526573706F6E7365203D20225C6E22202B20726573706F6E736554696D65537472696E67202B20225C6E22202B20756E646572777269746572526573706F6E73650D0A0D0A756E646572777269746572526573706F6E73657D"/>
+        </connectors>
+        <connectors xmi:type="process:Connector" xmi:id="_AqczQ9WvEeC3uo-WsXA0JQ" documentation="Validates the due date, to be sure it is some time in the future." name="dueDateValidation" label="dueDateValidation" connectorId="GroovyConnector" event="taskOnFinish" ignoreErrors="false" namedError="DueDateValidationError">
+          <parameters xmi:type="process:Parameter" xmi:id="_AqczRNWvEeC3uo-WsXA0JQ" key="setScript" value="ACED0005740126696628206E6565644D6F7265496E666F726D6174696F6E202626202864756544617465203D3D206E756C6C207C7C2028647565446174652061732044617465292E67657454696D652829203C3D20286E6577204461746528292061732044617465292E67657454696D65282929297B0D0A090D0A097468726F77206E657720457863657074696F6E2822496E76616C696420706172616D657465722076616C75653A20647565446174652063616E6E6F74206265206E756C6C2C20616E64206974206D75737420626520657175616C20746F2061206461746520696E207468652066757475726520746F207768656E207468697320274E6F74696669636174696F6E206F6620416374696F6E272070726F6365737320697320637265617465642E22290D0A7D"/>
+          <outputs xmi:type="process:OutputParameterMapping" xmi:id="_AqczRdWvEeC3uo-WsXA0JQ" valueExpression="result"/>
+        </connectors>
+        <data xmi:type="process:Data" xmi:id="_AqczRtWvEeC3uo-WsXA0JQ" name="agencyResponseHistory" label="agencyResponseHistory" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ"/>
+        <data xmi:type="process:Data" xmi:id="_AqczR9WvEeC3uo-WsXA0JQ" documentation="If true, the underwriter needs more information from the agency, or is granting the agency a chance to give more information or action. If false, the underwriter has determined the outcome." name="needMoreInformation" label="needMoreInformation" dataType="_Aqcz7dWvEeC3uo-WsXA0JQ" defaultValue="false"/>
+        <data xmi:type="process:Data" xmi:id="_AqczSNWvEeC3uo-WsXA0JQ" name="underwriterResponse" label="underwriterResponse" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ"/>
+        <data xmi:type="process:Data" xmi:id="_AqczSdWvEeC3uo-WsXA0JQ" documentation="A history of the underwriter responses and messages to the agency. This is a string representation of the process variable, underwriterResponseList, that is used for ease of display." name="underwriterResponseHistory" label="underwriterResponseHistory" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ"/>
+      </elements>
+      <elements xmi:type="process:ServiceTask" xmi:id="_AqczStWvEeC3uo-WsXA0JQ" documentation="Gives the system the oportunity to set default values for process variables." name="Setup" label="Setup" outgoing="_Aqczv9WvEeC3uo-WsXA0JQ _Aqcz39WvEeC3uo-WsXA0JQ" incoming="_Aqczx9WvEeC3uo-WsXA0JQ">
+        <connectors xmi:type="process:Connector" xmi:id="_AqczS9WvEeC3uo-WsXA0JQ" documentation="Sets the value of original due date to be the due date is setOriginalDueDate == true. If the date is set, then setOriginalDueDate is set to false." name="DateSetter" label="DateSetter" connectorId="SetVariable" event="automaticOnExit" ignoreErrors="false" namedError="Due date was invalid.">
+          <parameters xmi:type="process:Parameter" xmi:id="_AqczTNWvEeC3uo-WsXA0JQ" key="setVariableName" value="ACED000574000F6F726967696E616C44756544617465"/>
+          <parameters xmi:type="process:Parameter" xmi:id="_AqczTdWvEeC3uo-WsXA0JQ" key="setValue" value="ACED000574002F247B72657475726E206E657720446174652828647565446174652061732044617465292E67657454696D652829297D"/>
+        </connectors>
+        <connectors xmi:type="process:Connector" xmi:id="_KAGt4NlzEeC4ZJHt6KZ03w" documentation="Validates the due date, to be sure it is some time in the future." name="dueDateValidation" label="dueDateValidation" connectorId="GroovyConnector" event="automaticOnEnter" ignoreErrors="false" namedError="DueDateValidationError">
+          <parameters xmi:type="process:Parameter" xmi:id="_MxvIANlzEeC4ZJHt6KZ03w" key="setScript" value="ACED000574010E6966282864756544617465203D3D206E756C6C207C7C2028647565446174652061732044617465292E67657454696D652829203C3D20286E6577204461746528292061732044617465292E67657454696D65282929297B0D0A090D0A097468726F77206E657720457863657074696F6E2822496E76616C696420706172616D657465722076616C75653A20647565446174652063616E6E6F74206265206E756C6C2C20616E64206974206D75737420626520657175616C20746F2061206461746520696E207468652066757475726520746F207768656E207468697320274E6F74696669636174696F6E206F6620416374696F6E272070726F6365737320697320637265617465642E22290D0A7D"/>
+          <outputs xmi:type="process:OutputParameterMapping" xmi:id="_MxvIAdlzEeC4ZJHt6KZ03w" valueExpression="result"/>
+        </connectors>
+        <connectors xmi:type="process:Connector" xmi:id="_ubCZ4NlzEeC4ZJHt6KZ03w" documentation="Validates the vaue given for the increment value used in due date escalation." name="Escalation_Increment_Validater" label="Escalation Increment Validater" connectorId="GroovyConnector" event="automaticOnEnter" ignoreErrors="false">
+          <parameters xmi:type="process:Parameter" xmi:id="_ubCZ4dlzEeC4ZJHt6KZ03w" key="setScript" value="ACED00057400A06966282128657363616C6174696F6E496E6372656D656E74203E3D203129297B0D0A0D0A097468726F77206E657720457863657074696F6E2822496E76616C696420706172616D657465722076616C75653A205C22696E6372656D656E745C222063616E6E6F74206265206E756C6C2C20616E64206974206D75737420626520657175616C20746F206F722067726561746572207468616E20312E22290D0A7D"/>
+          <outputs xmi:type="process:OutputParameterMapping" xmi:id="_ubCZ4tlzEeC4ZJHt6KZ03w" valueExpression="result"/>
+        </connectors>
+      </elements>
+      <elements xmi:type="process:Task" xmi:id="_AqczX9WvEeC3uo-WsXA0JQ" documentation="Agency Reviews the Information received." name="Escalation_Timer" label="Escalation Timer" outgoing="_sXYkQN5OEeCjn_mlPxR1Cg" incoming="_Aqcz39WvEeC3uo-WsXA0JQ" user="" groups="_YTnvgNsjEeCxUY_hKI60lg">
+        <data xmi:type="process:Data" xmi:id="_AqczadWvEeC3uo-WsXA0JQ" name="agencyResponse" label="agencyResponse" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ" transient="true"/>
+        <data xmi:type="process:Data" xmi:id="_AqczatWvEeC3uo-WsXA0JQ" name="agencyResponseHistory" label="agencyResponseHistory" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ" defaultValue="" transient="true"/>
+        <data xmi:type="process:Data" xmi:id="_Aqcza9WvEeC3uo-WsXA0JQ" name="underwriterResponseHistory" label="underwriterResponseHistory" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ" transient="true"/>
+        <BoundaryIntermediateEvents xmi:type="process:BoundaryTimerEvent" xmi:id="_tYxZwNsiEeCxUY_hKI60lg" name="Timer2" label="Timer2" outgoing="_wapPUNsiEeCxUY_hKI60lg" condition="${dueDate}"/>
+      </elements>
+      <elements xmi:type="process:InclusiveGateway" xmi:id="_AqczbNWvEeC3uo-WsXA0JQ" name="Completion_Gate" label="Completion Gate" outgoing="_Aqczz9WvEeC3uo-WsXA0JQ" incoming="_Aqczw9WvEeC3uo-WsXA0JQ _7ag2EN8bEeCjn_mlPxR1Cg"/>
+      <elements xmi:type="process:Task" xmi:id="_AqczbdWvEeC3uo-WsXA0JQ" name="Underwriter_Overdue_Notice_" label="Underwriter Overdue Notice " outgoing="_7ag2EN8bEeCjn_mlPxR1Cg" incoming="_dYs-cN5OEeCjn_mlPxR1Cg _sXYkQN5OEeCjn_mlPxR1Cg" user="" groups="_Aqcz69WvEeC3uo-WsXA0JQ">
+        <connectors xmi:type="process:Connector" xmi:id="_AqczbtWvEeC3uo-WsXA0JQ" name="ParseHistory_ResponseReview" label="ParseHistory_ResponseReview" connectorId="GroovyConnector" event="taskOnReady" ignoreErrors="false">
+          <parameters xmi:type="process:Parameter" xmi:id="_Aqczb9WvEeC3uo-WsXA0JQ" key="setScript" value="ACED0005740234537472696E67206167656E63794D65737361676573203D2022220D0A0D0A6966286167656E6379526573706F6E73654C697374203D3D206E756C6C297B0D0A090D0A096167656E6379526573706F6E73654C697374203D206E65772041727261794C6973743C537472696E673E28290D0A7D0D0A0D0A666F7228537472696E6720726573706F6E7365203A206167656E6379526573706F6E73654C697374297B0D0A090D0A096167656E63794D65737361676573203D20726573706F6E7365202B20225C6E22202B206167656E63794D657373616765730D0A7D0D0A0D0A6167656E6379526573706F6E7365486973746F7279203D206167656E63794D657373616765730D0A0D0A537472696E6720756E6465727772697465724D65737361676573203D2022220D0A0D0A696628756E646572777269746572526573706F6E73654C697374203D3D206E756C6C297B0D0A090D0A09756E646572777269746572526573706F6E73654C697374203D206E65772041727261794C6973743C537472696E673E28290D0A7D0D0A0D0A666F7228537472696E6720726573706F6E7365203A20756E646572777269746572526573706F6E73654C697374297B0D0A090D0A09756E6465727772697465724D65737361676573203D20726573706F6E7365202B20225C6E22202B20756E6465727772697465724D657373616765730D0A7D0D0A0D0A756E646572777269746572526573706F6E7365486973746F7279203D20756E6465727772697465724D65737361676573"/>
+          <outputs xmi:type="process:OutputParameterMapping" xmi:id="_AqczcNWvEeC3uo-WsXA0JQ" valueExpression="result"/>
+        </connectors>
+        <connectors xmi:type="process:Connector" xmi:id="_AqczcdWvEeC3uo-WsXA0JQ" name="RecordUnderwriterResponse" label="RecordUnderwriterResponse" connectorId="SetVariable" event="taskOnFinish" ignoreErrors="false">
+          <parameters xmi:type="process:Parameter" xmi:id="_AqczctWvEeC3uo-WsXA0JQ" key="setVariableName" value="ACED0005740033756E646572777269746572526573706F6E73654C69737423756E646572777269746572526573706F6E73654C69737423616464"/>
+          <parameters xmi:type="process:Parameter" xmi:id="_Aqczc9WvEeC3uo-WsXA0JQ" key="setValue" value="ACED0005740249247B696D706F7274206A6176612E746578742E53696D706C6544617465466F726D61743B0D0A0D0A696628756E646572777269746572526573706F6E7365203D3D206E756C6C207C7C2022222E657175616C7328756E646572777269746572526573706F6E73652E7472696D282929297B0D0A090D0A09696628216E6565644D6F7265496E666F726D6174696F6E297B0D0A09090D0A0909756E646572777269746572526573706F6E7365203D202254686520726576696577206F6620746865206167656E637920726573706F6E73652077617320636F6D706C657465642E223B0D0A097D0D0A09656C73657B0D0A0D0A0909756E646572777269746572526573706F6E7365203D20224D6F726520696E666F726D6174696F6E206973206E65656465642E20506C6561736520636F6E7461637420746865204265617220526976657220756E64657277726974696E67206465706172746D656E742E223B0D0A097D0D0A7D0D0A0D0A53696D706C6544617465466F726D617420736466203D206E65772053696D706C6544617465466F726D617428224D4D2F64642F7979797920276174272068683A6D6D206122290D0A537472696E6720726573706F6E736554696D65537472696E67203D207364662E666F726D6174286E657720446174652829290D0A756E646572777269746572526573706F6E7365203D20225C6E22202B20726573706F6E736554696D65537472696E67202B20225C6E22202B20756E646572777269746572526573706F6E73650D0A0D0A756E646572777269746572526573706F6E73657D"/>
+        </connectors>
+        <connectors xmi:type="process:Connector" xmi:id="_AqczdNWvEeC3uo-WsXA0JQ" name="Set_Priority_to_Urgent" label="Set Priority to Urgent" connectorId="GroovyConnector" event="taskOnReady" ignoreErrors="false">
+          <parameters xmi:type="process:Parameter" xmi:id="_AqczddWvEeC3uo-WsXA0JQ" key="setScript" value="ACED0005740082696D706F7274206F72672E6F77322E626F6E6974612E7574696C2E4163636573736F725574696C3B0D0A4163636573736F725574696C2E67657452756E74696D6541504928292E7365744163746976697479496E7374616E63655072696F72697479286163746976697479496E7374616E63652E6765745555494428292C2032293B"/>
+          <outputs xmi:type="process:OutputParameterMapping" xmi:id="_AqczdtWvEeC3uo-WsXA0JQ" valueExpression="result"/>
+        </connectors>
+        <data xmi:type="process:Data" xmi:id="_Aqczd9WvEeC3uo-WsXA0JQ" name="agencyResponseHistory" label="agencyResponseHistory" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ"/>
+        <data xmi:type="process:Data" xmi:id="_AqczeNWvEeC3uo-WsXA0JQ" documentation="If true, the underwriter needs more information from the agency, or is granting the agency a chance to give more information or action. If false, the underwriter has determined the outcome." name="needMoreInformation" label="needMoreInformation" dataType="_Aqcz7dWvEeC3uo-WsXA0JQ" defaultValue="true"/>
+        <data xmi:type="process:Data" xmi:id="_AqczedWvEeC3uo-WsXA0JQ" name="underwriterResponse" label="underwriterResponse" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ"/>
+        <data xmi:type="process:Data" xmi:id="_AqczetWvEeC3uo-WsXA0JQ" documentation="A history of the underwriter responses and messages to the agency. This is a string representation of the process variable, underwriterResponseList, that is used for ease of display." name="underwriterResponseHistory" label="underwriterResponseHistory" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ"/>
+      </elements>
+      <data xmi:type="process:Data" xmi:id="_Aqczr9WvEeC3uo-WsXA0JQ" name="agency" label="agency" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ"/>
+      <data xmi:type="process:AttachmentData" xmi:id="_AqczsNWvEeC3uo-WsXA0JQ" documentation="All the files that the agency has attached to this process in response to this notification." name="agencyAttachments" label="agencyAttachments" dataType="_Aqcz8tWvEeC3uo-WsXA0JQ" defaultValue="${[]}" multiple="true"/>
+      <data xmi:type="process:Data" xmi:id="_AqczsdWvEeC3uo-WsXA0JQ" documentation="A list of the responses given by the agency." name="agencyResponseList" label="agencyResponseList" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ" defaultValue="${[]}" multiple="true"/>
+      <data xmi:type="process:Data" xmi:id="_AqczstWvEeC3uo-WsXA0JQ" documentation="true means the policy is bound, i.e. there is coverage at the moment. false means that the policy is unbound and the insured does not have coverage. The default value is false." name="bound" label="bound" dataType="_Aqcz7dWvEeC3uo-WsXA0JQ" defaultValue="false"/>
+      <data xmi:type="process:AttachmentData" xmi:id="_Aqczs9WvEeC3uo-WsXA0JQ" documentation="Attachments added to the process by a Bear River Mutual Insurance employee or process." name="brmiAttachments" label="brmiAttachments" dataType="_Aqcz8tWvEeC3uo-WsXA0JQ" defaultValue="${[]}" multiple="true"/>
+      <data xmi:type="process:Data" xmi:id="_AqcztNWvEeC3uo-WsXA0JQ" name="dueDate" label="dueDate" dataType="_Aqcz7tWvEeC3uo-WsXA0JQ" defaultValue="Now"/>
+      <data xmi:type="process:Data" xmi:id="_AqcztdWvEeC3uo-WsXA0JQ" name="escalationIncrement" label="escalationIncrement" dataType="_Aqcz79WvEeC3uo-WsXA0JQ" defaultValue="2"/>
+      <data xmi:type="process:Data" xmi:id="_AqczttWvEeC3uo-WsXA0JQ" documentation="The type of policy that this is related to." name="lineOfBusiness" label="lineOfBusiness" dataType="_Aqcz9dWvEeC3uo-WsXA0JQ" defaultValue="AUTO"/>
+      <data xmi:type="process:Data" xmi:id="_Aqczt9WvEeC3uo-WsXA0JQ" documentation="The original message and description of the actions required to be taken by the agency." name="message" label="message" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ"/>
+      <data xmi:type="process:Data" xmi:id="_AqczuNWvEeC3uo-WsXA0JQ" name="originalDueDate" label="originalDueDate" dataType="_Aqcz7tWvEeC3uo-WsXA0JQ" defaultValue=""/>
+      <data xmi:type="process:Data" xmi:id="_AqczudWvEeC3uo-WsXA0JQ" name="policyNumber" label="policyNumber" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ"/>
+      <data xmi:type="process:Data" xmi:id="_AqczutWvEeC3uo-WsXA0JQ" documentation="Represents the default priority of the process. This only overwrites the activity priority if it is less urgent. 0 == Normal, 1 == High, 2 == Urgent. All other values are ignored." name="priority" label="priority" dataType="_Aqcz79WvEeC3uo-WsXA0JQ" defaultValue="0"/>
+      <data xmi:type="process:Data" xmi:id="_Aqczu9WvEeC3uo-WsXA0JQ" name="producerNumber" label="producerNumber" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ"/>
+      <data xmi:type="process:Data" xmi:id="_AqczvNWvEeC3uo-WsXA0JQ" name="subject" label="subject" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ"/>
+      <data xmi:type="process:Data" xmi:id="_AqczvdWvEeC3uo-WsXA0JQ" name="underwriter" label="underwriter" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ"/>
+      <data xmi:type="process:Data" xmi:id="_AqczvtWvEeC3uo-WsXA0JQ" name="underwriterResponseList" label="underwriterResponseList" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ" defaultValue="${[]}" multiple="true"/>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_Aqczv9WvEeC3uo-WsXA0JQ" source="_AqczStWvEeC3uo-WsXA0JQ" target="_AqczJNWvEeC3uo-WsXA0JQ" condition="">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_AqczwNWvEeC3uo-WsXA0JQ"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_AqczwdWvEeC3uo-WsXA0JQ" source="_AqczOdWvEeC3uo-WsXA0JQ" target="_AqczJNWvEeC3uo-WsXA0JQ" condition="needMoreInformation">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_AqczwtWvEeC3uo-WsXA0JQ"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_Aqczw9WvEeC3uo-WsXA0JQ" source="_AqczOdWvEeC3uo-WsXA0JQ" target="_AqczbNWvEeC3uo-WsXA0JQ" condition="!needMoreInformation">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_AqczxNWvEeC3uo-WsXA0JQ"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_Aqczx9WvEeC3uo-WsXA0JQ" source="_AqczItWvEeC3uo-WsXA0JQ" target="_AqczStWvEeC3uo-WsXA0JQ">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_AqczyNWvEeC3uo-WsXA0JQ"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_Aqczz9WvEeC3uo-WsXA0JQ" source="_AqczbNWvEeC3uo-WsXA0JQ" target="_AqczI9WvEeC3uo-WsXA0JQ">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_Aqcz0NWvEeC3uo-WsXA0JQ"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_Aqcz29WvEeC3uo-WsXA0JQ">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_Aqcz3NWvEeC3uo-WsXA0JQ"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_Aqcz39WvEeC3uo-WsXA0JQ" source="_AqczStWvEeC3uo-WsXA0JQ" target="_AqczX9WvEeC3uo-WsXA0JQ">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_Aqcz4NWvEeC3uo-WsXA0JQ"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_wapPUNsiEeCxUY_hKI60lg" source="_tYxZwNsiEeCxUY_hKI60lg" target="_AqczNdWvEeC3uo-WsXA0JQ">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_wapPUdsiEeCxUY_hKI60lg"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_Y5g2UN5OEeCjn_mlPxR1Cg" source="_AqczJNWvEeC3uo-WsXA0JQ" target="_AqczOdWvEeC3uo-WsXA0JQ">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_Y5g2Ud5OEeCjn_mlPxR1Cg"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_dYs-cN5OEeCjn_mlPxR1Cg" source="_AqczNdWvEeC3uo-WsXA0JQ" target="_AqczbdWvEeC3uo-WsXA0JQ">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_dYs-cd5OEeCjn_mlPxR1Cg"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_sXYkQN5OEeCjn_mlPxR1Cg" source="_AqczX9WvEeC3uo-WsXA0JQ" target="_AqczbdWvEeC3uo-WsXA0JQ">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_sXYkQd5OEeCjn_mlPxR1Cg"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_7ag2EN8bEeCjn_mlPxR1Cg" source="_AqczbdWvEeC3uo-WsXA0JQ" target="_AqczbNWvEeC3uo-WsXA0JQ" condition="false">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_7ag2Ed8bEeCjn_mlPxR1Cg"/>
+      </connections>
+    </elements>
+    <data xmi:type="process:Data" xmi:id="_Aqcz59WvEeC3uo-WsXA0JQ" name="agency" label="agency" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ"/>
+    <data xmi:type="process:Data" xmi:id="_Aqcz6NWvEeC3uo-WsXA0JQ" name="underwriter" label="underwriter" dataType="_Aqcz8dWvEeC3uo-WsXA0JQ"/>
+    <groups xmi:type="process:Group" xmi:id="_Aqcz6dWvEeC3uo-WsXA0JQ" documentation="Selects the agency to review the task information." name="agency_selecter" label="agency selecter" connectorId="User List">
+      <parameters xmi:type="process:Parameter" xmi:id="_Aqcz6tWvEeC3uo-WsXA0JQ" key="setUsers" value="ACED0005740009247B6167656E63797D"/>
+    </groups>
+    <groups xmi:type="process:Group" xmi:id="_Aqcz69WvEeC3uo-WsXA0JQ" name="underwriter_selecter" label="underwriter selecter" connectorId="User List">
+      <parameters xmi:type="process:Parameter" xmi:id="_Aqcz7NWvEeC3uo-WsXA0JQ" key="setUsers" value="ACED000574000E247B756E6465727772697465727D"/>
+    </groups>
+    <groups xmi:type="process:Group" xmi:id="_YTnvgNsjEeCxUY_hKI60lg" documentation="Represents that this is being run by the bonita engine, or some outside system." name="System" label="System" connectorId="User List">
+      <parameters xmi:type="process:Parameter" xmi:id="_Bw_6UNsnEeCxUY_hKI60lg" key="setUsers" value="ACED000574000A247B2261646D696E227D"/>
+    </groups>
+    <datatypes xmi:type="process:BooleanType" xmi:id="_Aqcz7dWvEeC3uo-WsXA0JQ" name="Boolean" label="Boolean"/>
+    <datatypes xmi:type="process:DateType" xmi:id="_Aqcz7tWvEeC3uo-WsXA0JQ" name="Date" label="Date"/>
+    <datatypes xmi:type="process:IntegerType" xmi:id="_Aqcz79WvEeC3uo-WsXA0JQ" name="Integer" label="Integer"/>
+    <datatypes xmi:type="process:FloatType" xmi:id="_Aqcz8NWvEeC3uo-WsXA0JQ" name="Decimal" label="Decimal"/>
+    <datatypes xmi:type="process:StringType" xmi:id="_Aqcz8dWvEeC3uo-WsXA0JQ" name="Text" label="Text"/>
+    <datatypes xmi:type="process:AttachmentType" xmi:id="_Aqcz8tWvEeC3uo-WsXA0JQ" name="Attachment" label="Attachment"/>
+    <datatypes xmi:type="process:JavaType" xmi:id="_Aqcz89WvEeC3uo-WsXA0JQ" name="Java_object" label="Java object"/>
+    <datatypes xmi:type="process:XMLType" xmi:id="_Aqcz9NWvEeC3uo-WsXA0JQ" name="XML" label="XML"/>
+    <datatypes xmi:type="process:EnumType" xmi:id="_Aqcz9dWvEeC3uo-WsXA0JQ" documentation="The type of policy that this is related to." name="PolicyType" label="PolicyType">
+      <literals>AUTO</literals>
+      <literals>HOME</literals>
+      <literals>DWELLING</literals>
+      <literals>UMBRELLA</literals>
+    </datatypes>
+    <includedEntries>scripting/scripting</includedEntries>
+    <includedEntries>bonita/bonita</includedEntries>
+  </process:MainProcess>
+  <notation:Diagram xmi:id="_Aqcz9tWvEeC3uo-WsXA0JQ" type="Process" element="_AqczINWvEeC3uo-WsXA0JQ" name="Business_Use_Vehicle_1.0" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_Aqcz99WvEeC3uo-WsXA0JQ" type="2007" element="_AqczIdWvEeC3uo-WsXA0JQ">
+      <children xmi:type="notation:DecorationNode" xmi:id="_Aqcz-NWvEeC3uo-WsXA0JQ" type="5008"/>
+      <children xmi:type="notation:DecorationNode" xmi:id="_Aqcz-dWvEeC3uo-WsXA0JQ" type="7001">
+        <children xmi:type="notation:Shape" xmi:id="_Aqcz-tWvEeC3uo-WsXA0JQ" type="3002" element="_AqczItWvEeC3uo-WsXA0JQ">
+          <children xmi:type="notation:DecorationNode" xmi:id="_Aqcz-9WvEeC3uo-WsXA0JQ" type="5024">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqcz_NWvEeC3uo-WsXA0JQ" x="-29" y="-28"/>
+          </children>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Aqcz_dWvEeC3uo-WsXA0JQ" x="52" y="107"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_Aqcz_tWvEeC3uo-WsXA0JQ" type="3003" element="_AqczI9WvEeC3uo-WsXA0JQ">
+          <children xmi:type="notation:DecorationNode" xmi:id="_Aqcz_9WvEeC3uo-WsXA0JQ" type="5025">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqc0ANWvEeC3uo-WsXA0JQ" x="30" y="-25"/>
+          </children>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Aqc0AdWvEeC3uo-WsXA0JQ" x="918" y="107"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_Aqc0AtWvEeC3uo-WsXA0JQ" type="3005" element="_AqczJNWvEeC3uo-WsXA0JQ" fillColor="14334392" lineColor="10710316">
+          <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0A9WvEeC3uo-WsXA0JQ" type="5005"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Aqc0CNWvEeC3uo-WsXA0JQ" x="320" y="95" width="133" height="66"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_Aqc0CdWvEeC3uo-WsXA0JQ" type="3027" element="_AqczNdWvEeC3uo-WsXA0JQ" fillColor="14334392" lineColor="10710316">
+          <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0CtWvEeC3uo-WsXA0JQ" type="5017"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Aqc0C9WvEeC3uo-WsXA0JQ" x="312" y="330" width="150" height="75"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_Aqc0DNWvEeC3uo-WsXA0JQ" type="3005" element="_AqczOdWvEeC3uo-WsXA0JQ" fillColor="14334392" lineColor="10710316">
+          <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0DdWvEeC3uo-WsXA0JQ" type="5005"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Aqc0DtWvEeC3uo-WsXA0JQ" x="612" y="93" width="138" height="69"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_Aqc0D9WvEeC3uo-WsXA0JQ" type="3027" element="_AqczStWvEeC3uo-WsXA0JQ" fillColor="14334392" lineColor="10710316">
+          <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0ENWvEeC3uo-WsXA0JQ" type="5017"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Aqc0EdWvEeC3uo-WsXA0JQ" x="112" y="100" width="113" height="56"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_Aqc0FdWvEeC3uo-WsXA0JQ" type="3005" element="_AqczX9WvEeC3uo-WsXA0JQ" fillColor="14334392" lineColor="10710316">
+          <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0FtWvEeC3uo-WsXA0JQ" type="5005"/>
+          <children xmi:type="notation:Shape" xmi:id="_tYxZwdsiEeCxUY_hKI60lg" type="3043" element="_tYxZwNsiEeCxUY_hKI60lg">
+            <children xmi:type="notation:DecorationNode" xmi:id="_tYxZw9siEeCxUY_hKI60lg" type="5055">
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_tYxZxNsiEeCxUY_hKI60lg" x="-48" y="-7"/>
+            </children>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tYxZwtsiEeCxUY_hKI60lg" x="18" y="65"/>
+          </children>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Aqc0F9WvEeC3uo-WsXA0JQ" x="312" y="210" width="149" height="73"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_Aqc0GNWvEeC3uo-WsXA0JQ" type="3051" element="_AqczbNWvEeC3uo-WsXA0JQ">
+          <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0GdWvEeC3uo-WsXA0JQ" type="5075">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqc0GtWvEeC3uo-WsXA0JQ" x="-12" y="-58"/>
+          </children>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Aqc0G9WvEeC3uo-WsXA0JQ" x="810" y="102" width="43" height="43"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_Aqc0HNWvEeC3uo-WsXA0JQ" type="3005" element="_AqczbdWvEeC3uo-WsXA0JQ" fillColor="14334392" lineColor="10710316">
+          <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0HdWvEeC3uo-WsXA0JQ" type="5005"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Aqc0HtWvEeC3uo-WsXA0JQ" x="609" y="207" width="143" height="72"/>
+        </children>
+      </children>
+      <styles xmi:type="notation:DescriptionStyle" xmi:id="_Aqc0MtWvEeC3uo-WsXA0JQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_Aqc0M9WvEeC3uo-WsXA0JQ"/>
+      <styles xmi:type="notation:LineStyle" xmi:id="_Aqc0NNWvEeC3uo-WsXA0JQ"/>
+      <styles xmi:type="notation:FillStyle" xmi:id="_Aqc0NdWvEeC3uo-WsXA0JQ"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Aqc0NtWvEeC3uo-WsXA0JQ" width="1672" height="904"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_Aqc0N9WvEeC3uo-WsXA0JQ"/>
+    <edges xmi:type="notation:Connector" xmi:id="_Aqc0ONWvEeC3uo-WsXA0JQ" type="4001" element="_Aqczv9WvEeC3uo-WsXA0JQ" source="_Aqc0D9WvEeC3uo-WsXA0JQ" target="_Aqc0AtWvEeC3uo-WsXA0JQ" roundedBendpointsRadius="10" routing="Rectilinear" closestDistance="true">
+      <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0OdWvEeC3uo-WsXA0JQ" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqc0OtWvEeC3uo-WsXA0JQ" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0O9WvEeC3uo-WsXA0JQ" visible="false" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqc0PNWvEeC3uo-WsXA0JQ" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_Aqc0PdWvEeC3uo-WsXA0JQ"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Aqc0PtWvEeC3uo-WsXA0JQ" points="[0, 0, -356, 8]$[296, -8, -60, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Aqc0P9WvEeC3uo-WsXA0JQ" id="(0.96,0.5)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_Aqc0QNWvEeC3uo-WsXA0JQ" type="4001" element="_AqczwdWvEeC3uo-WsXA0JQ" source="_Aqc0DNWvEeC3uo-WsXA0JQ" target="_Aqc0AtWvEeC3uo-WsXA0JQ" roundedBendpointsRadius="10" routing="Rectilinear" closestDistance="true">
+      <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0QdWvEeC3uo-WsXA0JQ" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqc0QtWvEeC3uo-WsXA0JQ" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0Q9WvEeC3uo-WsXA0JQ" visible="false" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqc0RNWvEeC3uo-WsXA0JQ" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_Aqc0RdWvEeC3uo-WsXA0JQ"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Aqc0RtWvEeC3uo-WsXA0JQ" points="[-6, 12, 71, 10]$[-76, 12, 1, 10]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Aqc0R9WvEeC3uo-WsXA0JQ" id="(0.024193548387096774,0.22580645161290322)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Aqc0SNWvEeC3uo-WsXA0JQ" id="(0.9323308270676691,0.18181818181818182)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_Aqc0SdWvEeC3uo-WsXA0JQ" type="4001" element="_Aqczw9WvEeC3uo-WsXA0JQ" source="_Aqc0DNWvEeC3uo-WsXA0JQ" target="_Aqc0GNWvEeC3uo-WsXA0JQ" roundedBendpointsRadius="10" routing="Rectilinear" closestDistance="true">
+      <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0StWvEeC3uo-WsXA0JQ" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqc0S9WvEeC3uo-WsXA0JQ" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0TNWvEeC3uo-WsXA0JQ" visible="false" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqc0TdWvEeC3uo-WsXA0JQ" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_Aqc0TtWvEeC3uo-WsXA0JQ"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Aqc0T9WvEeC3uo-WsXA0JQ" points="[0, 0, -31, 171]$[30, -192, -1, -21]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Aqc0UNWvEeC3uo-WsXA0JQ" id="(0.967741935483871,0.45161290322580644)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_Aqc0WtWvEeC3uo-WsXA0JQ" type="4001" element="_Aqczx9WvEeC3uo-WsXA0JQ" source="_Aqcz-tWvEeC3uo-WsXA0JQ" target="_Aqc0D9WvEeC3uo-WsXA0JQ" roundedBendpointsRadius="10" routing="Rectilinear" closestDistance="true">
+      <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0W9WvEeC3uo-WsXA0JQ" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqc0XNWvEeC3uo-WsXA0JQ" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0XdWvEeC3uo-WsXA0JQ" visible="false" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqc0XtWvEeC3uo-WsXA0JQ" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_Aqc0X9WvEeC3uo-WsXA0JQ"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Aqc0YNWvEeC3uo-WsXA0JQ" points="[0, 0, -101, 12]$[39, -13, -62, -1]"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_Aqc0e9WvEeC3uo-WsXA0JQ" type="4001" element="_Aqczz9WvEeC3uo-WsXA0JQ" source="_Aqc0GNWvEeC3uo-WsXA0JQ" target="_Aqcz_tWvEeC3uo-WsXA0JQ" roundedBendpointsRadius="10" routing="Rectilinear" closestDistance="true">
+      <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0fNWvEeC3uo-WsXA0JQ" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqc0fdWvEeC3uo-WsXA0JQ" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0ftWvEeC3uo-WsXA0JQ" visible="false" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqc0f9WvEeC3uo-WsXA0JQ" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_Aqc0gNWvEeC3uo-WsXA0JQ"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Aqc0gdWvEeC3uo-WsXA0JQ" points="[-8, -1, -88, -5]$[80, -13, 0, -17]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Aqc0gtWvEeC3uo-WsXA0JQ" id="(0.8837209302325582,0.4418604651162791)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_Aqc0wNWvEeC3uo-WsXA0JQ" type="4001" element="_Aqcz39WvEeC3uo-WsXA0JQ" source="_Aqc0D9WvEeC3uo-WsXA0JQ" target="_Aqc0FdWvEeC3uo-WsXA0JQ" roundedBendpointsRadius="10" routing="Rectilinear" closestDistance="true">
+      <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0wdWvEeC3uo-WsXA0JQ" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqc0wtWvEeC3uo-WsXA0JQ" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_Aqc0w9WvEeC3uo-WsXA0JQ" visible="false" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Aqc0xNWvEeC3uo-WsXA0JQ" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_Aqc0xdWvEeC3uo-WsXA0JQ"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Aqc0xtWvEeC3uo-WsXA0JQ" points="[-12, 4, 130, -45]$[-77, 4, 65, -45]$[-77, 26, 65, -23]$[-82, 26, 60, -23]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Aqc0x9WvEeC3uo-WsXA0JQ" id="(0.49557522123893805,0.9464285714285714)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_wapPUtsiEeCxUY_hKI60lg" type="4001" element="_wapPUNsiEeCxUY_hKI60lg" source="_tYxZwdsiEeCxUY_hKI60lg" target="_Aqc0CdWvEeC3uo-WsXA0JQ" roundedBendpointsRadius="10" routing="Rectilinear" closestDistance="true">
+      <children xmi:type="notation:DecorationNode" xmi:id="_wapPVdsiEeCxUY_hKI60lg" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_wapPVtsiEeCxUY_hKI60lg" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_wapPV9siEeCxUY_hKI60lg" visible="false" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_wapPWNsiEeCxUY_hKI60lg" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_wapPU9siEeCxUY_hKI60lg"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_wapPVNsiEeCxUY_hKI60lg" points="[0, 0, 163, -75]$[-96, 75, 67, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_wapPWdsiEeCxUY_hKI60lg" id="(0.24,0.48)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_Y5qnUN5OEeCjn_mlPxR1Cg" type="4001" element="_Y5g2UN5OEeCjn_mlPxR1Cg" source="_Aqc0AtWvEeC3uo-WsXA0JQ" target="_Aqc0DNWvEeC3uo-WsXA0JQ" roundedBendpointsRadius="10" routing="Rectilinear" closestDistance="true">
+      <children xmi:type="notation:DecorationNode" xmi:id="_Y5qnU95OEeCjn_mlPxR1Cg" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Y5qnVN5OEeCjn_mlPxR1Cg" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_Y5qnVd5OEeCjn_mlPxR1Cg" visible="false" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Y5qnVt5OEeCjn_mlPxR1Cg" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_Y5qnUd5OEeCjn_mlPxR1Cg"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y5qnUt5OEeCjn_mlPxR1Cg" points="[0, 0, -176, -18]$[159, 21, -17, 3]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y5qnV95OEeCjn_mlPxR1Cg" id="(0.9624060150375939,0.6363636363636364)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y5qnWN5OEeCjn_mlPxR1Cg" id="(0.12318840579710146,0.6521739130434783)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_dYs-ct5OEeCjn_mlPxR1Cg" type="4001" element="_dYs-cN5OEeCjn_mlPxR1Cg" source="_Aqc0CdWvEeC3uo-WsXA0JQ" target="_Aqc0HNWvEeC3uo-WsXA0JQ" roundedBendpointsRadius="10" routing="Rectilinear" closestDistance="true">
+      <children xmi:type="notation:DecorationNode" xmi:id="_dYs-dd5OEeCjn_mlPxR1Cg" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_dYs-dt5OEeCjn_mlPxR1Cg" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_dYs-d95OEeCjn_mlPxR1Cg" visible="false" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_dYs-eN5OEeCjn_mlPxR1Cg" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_dYs-c95OEeCjn_mlPxR1Cg"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_dYs-dN5OEeCjn_mlPxR1Cg" points="[0, 0, -193, 72]$[174, -57, -19, 15]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_dYs-ed5OEeCjn_mlPxR1Cg" id="(1.0,0.4)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_dYs-et5OEeCjn_mlPxR1Cg" id="(0.03496503496503497,0.4166666666666667)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_sXYkQt5OEeCjn_mlPxR1Cg" type="4001" element="_sXYkQN5OEeCjn_mlPxR1Cg" source="_Aqc0FdWvEeC3uo-WsXA0JQ" target="_Aqc0HNWvEeC3uo-WsXA0JQ" roundedBendpointsRadius="10" routing="Rectilinear" closestDistance="true">
+      <children xmi:type="notation:DecorationNode" xmi:id="_sXYkRd5OEeCjn_mlPxR1Cg" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_sXYkRt5OEeCjn_mlPxR1Cg" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_sXYkR95OEeCjn_mlPxR1Cg" visible="false" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_sXYkSN5OEeCjn_mlPxR1Cg" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_sXYkQ95OEeCjn_mlPxR1Cg"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_sXYkRN5OEeCjn_mlPxR1Cg" points="[0, 0, -166, 12]$[148, -19, -18, -7]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_sXYkSd5OEeCjn_mlPxR1Cg" id="(1.0,0.3698630136986301)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_sXYkSt5OEeCjn_mlPxR1Cg" id="(0.1258741258741259,0.25)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_7aqAAN8bEeCjn_mlPxR1Cg" type="4001" element="_7ag2EN8bEeCjn_mlPxR1Cg" source="_Aqc0HNWvEeC3uo-WsXA0JQ" target="_Aqc0GNWvEeC3uo-WsXA0JQ" roundedBendpointsRadius="10" routing="Rectilinear" closestDistance="true">
+      <children xmi:type="notation:DecorationNode" xmi:id="_7aqAA98bEeCjn_mlPxR1Cg" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_7aqABN8bEeCjn_mlPxR1Cg" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_7aqABd8bEeCjn_mlPxR1Cg" visible="false" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_7aqABt8bEeCjn_mlPxR1Cg" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_7aqAAd8bEeCjn_mlPxR1Cg"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_7aqAAt8bEeCjn_mlPxR1Cg" points="[0, 0, -79, 114]$[98, -116, 19, -2]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_7aqAB98bEeCjn_mlPxR1Cg" id="(1.0,0.4166666666666667)"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>

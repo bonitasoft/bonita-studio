@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trace:TraceModel
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:trace="http://www.eclipse.org/gmf/2006/Trace">
+  <nodeTraces
+      visualID="2114"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'ComboFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5150"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2115"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'DateFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5151"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2116"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'ListFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5152"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2117"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'PasswordFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5153"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2118"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'RadioFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5154"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2119"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'SelectFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5155"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2120"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'TextFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5157"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2121"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'TextAreaFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5158"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2125"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')"/>
+  <nodeTraces
+      visualID="2126"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'SubmitFormButton') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5160"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2127"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'NextFormButton') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5161"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2128"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'PreviousFormButton') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5162"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2130"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'CheckBoxSingleFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5148"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2131"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'MessageInfo') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5135"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2132"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'TextInfo') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5188"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2133"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'FileWidget') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5189"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2134"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'CheckBoxMultipleFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5190"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2135"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'ImageWidget') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5191"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2136"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'HiddenWidget') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5141"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2137"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'DurationFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5192"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2138"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'FormButton') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5193"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2139"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Table') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5194"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2140"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'RichTextAreaFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5159"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2141"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'DynamicTable') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5195"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2142"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'IFrameWidget') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5196"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2143"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'HtmlWidget') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5197"
+        queryText="true"/>
+  </nodeTraces>
+  <nodeTraces
+      visualID="2144"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'SuggestBox') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Form') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5156"
+        queryText="true"/>
+  </nodeTraces>
+  <childNodeTraces
+      visualID="3103"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'ComboFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5164"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3105"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'DateFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5166"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3106"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')"/>
+  <childNodeTraces
+      visualID="3107"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'ListFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5167"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3109"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'PasswordFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5169"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3110"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'RadioFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5170"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3111"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'SelectFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5171"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3112"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'TextFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5172"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3113"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'TextAreaFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5173"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3114"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'PreviousFormButton') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5163"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3115"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'NextFormButton') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5165"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3116"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'SubmitFormButton') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5168"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3118"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'CheckBoxSingleFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5149"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3119"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'FileWidget') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5175"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3120"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'CheckBoxMultipleFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5176"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3121"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'DurationFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5177"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3122"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'HiddenWidget') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5145"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3123"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'ImageWidget') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5178"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3124"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'MessageInfo') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5147"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3125"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'TextInfo') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5179"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3126"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'FormButton') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5180"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3127"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Table') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5181"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3128"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'RichTextAreaFormField') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5174"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3129"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'DynamicTable') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5182"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3130"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'IFrameWidget') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5183"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3131"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'HtmlWidget') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5184"
+        queryText="true"/>
+  </childNodeTraces>
+  <childNodeTraces
+      visualID="3132"
+      queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'SuggestBox') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/form' and _eClass_.name = 'Group') and _containmentMF_.name = 'widgets')">
+    <nodeLabelTraces
+        visualID="5185"
+        queryText="true"/>
+  </childNodeTraces>
+</trace:TraceModel>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.bonitasoft.studio.tests</groupId>
+		<artifactId>tests</artifactId>
+        <version>7.3.1-SNAPSHOT</version>
+    </parent>
+    <groupId>org.bonitasoft.studio.tests</groupId>
+    <artifactId>org.bonitasoft.studio.test.swtbot.suite2</artifactId>
+    <packaging>eclipse-test-plugin</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>target-platform-configuration</artifactId>
+                <version>${tychoVersion}</version>
+                <configuration>
+                    <dependency-resolution>
+                        <extraRequirements>
+                            <requirement>
+                                <type>eclipse-feature</type>
+                                <id>tests-feature</id>
+                                <versionRange>0.0.0</versionRange>
+                            </requirement>
+                            <requirement>
+                                <type>eclipse-feature</type>
+                                <id>studio-feature</id>
+                                <versionRange>0.0.0</versionRange>
+                            </requirement>
+                        </extraRequirements>
+                    </dependency-resolution>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-surefire-plugin</artifactId>
+                <version>${tychoVersion}</version>
+                <configuration>
+                    <useUIThread>false</useUIThread>
+                    <useUIHarness>true</useUIHarness>
+                    <application>org.bonitasoft.studio.application.application</application>
+                    <product>org.bonitasoft.studio.product</product>
+                    <showEclipseLog>true</showEclipseLog>
+                    <includes>
+                        <include>**/AllSWTBotTests2.java</include>
+                    </includes>
+                    <argLine>${tycho.testArgLine} -Xms512m -Xmx1024m -XX:MaxPermSize=640m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=SWTBotTests.hprof -Dbonita.client.home=${license.dir} -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</argLine>
+                    <appArgLine>-nl en</appArgLine>
+                    <osgiDataDirectory>${project.parent.basedir}/lé test</osgiDataDirectory>
+                    <bundleStartLevel>
+                        <bundle>
+                            <id>org.eclipse.equinox.ds</id>
+                            <level>1</level>
+                            <autoStart>true</autoStart>
+                        </bundle>
+                    </bundleStartLevel>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>screenshots</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

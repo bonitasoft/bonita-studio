@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" ?>
+<rss version="2.0">
+  <channel>
+    <pubDate>2015-05-18</pubDate>
+    <author>Bonitasoft</author>
+    <category>Training</category>
+    <title>Bonitasoft training</title>
+    <link>http://www.bonitasoft.com/customer-success/training</link>
+    <description>Training feed from Bonitasoft</description>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Training</category>
+       <title>English</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/customer-success/training%3Flanguage%3DEnglish</link>
+       <description></description>
+    </item>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Training</category>
+       <title>Español</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/customer-success/training%3Flanguage%3DSpanish</link>
+       <description></description>
+    </item>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Training</category>
+       <title>Français</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/customer-success/training%3Flanguage%3DFrench</link>
+       <description></description>
+    </item>
+    <item>
+       <author>Antoine Mottier</author>
+       <category>Training</category>
+       <title>Private session: contact us</title>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/be-part-it/contact-us</link>
+       <description></description>
+    </item>
+  </channel>
+</rss>
