@@ -101,7 +101,7 @@
                             <yLocation>128</yLocation>
                             <fontSize>22</fontSize>
                             <color>#0B4361</color>
-                            <versionLabel>7.3.0</versionLabel>
+                            <versionLabel>${project.version}</versionLabel>
                         </configuration>
                         <goals>
                             <goal>create-image</goal>
