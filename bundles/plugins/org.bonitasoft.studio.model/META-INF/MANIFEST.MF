@@ -40,8 +40,8 @@ Export-Package: org.bonitasoft.studio.model.actormapping,
  org.bonitasoft.studio.model.simulation,
  org.bonitasoft.studio.model.simulation.impl,
  org.bonitasoft.studio.model.simulation.util
-Require-Bundle: org.eclipse.core.runtime,
+Require-Bundle: org.bonitasoft.studio-models,
+ org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
- org.eclipse.emf.ecore.xmi;visibility:=reexport,
- org.bonitasoft.studio-models;bundle-version="7.3.0"
+ org.eclipse.emf.ecore.xmi;visibility:=reexport
 Bundle-ActivationPolicy: lazy
