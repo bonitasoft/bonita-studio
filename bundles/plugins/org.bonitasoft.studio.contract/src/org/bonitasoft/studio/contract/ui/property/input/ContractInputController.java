@@ -52,8 +52,10 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.progress.IProgressService;
 
 import com.google.common.base.Function;
@@ -84,7 +86,11 @@ public class ContractInputController implements IViewerController {
         @Override
         public void run() {
             if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
-                viewer.editElement(input, NAME_COLUMN_INDEX);
+            	viewer.setSelection(new StructuredSelection(input), true);
+            	Widget item = viewer.testFindItem(input);
+            	if(item != null && !item.isDisposed()){
+            		viewer.editElement(input, NAME_COLUMN_INDEX);
+            	}
             }
         }
 
