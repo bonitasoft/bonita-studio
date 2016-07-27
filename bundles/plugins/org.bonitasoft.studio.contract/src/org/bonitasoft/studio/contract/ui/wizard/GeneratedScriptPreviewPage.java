@@ -139,6 +139,7 @@ public class GeneratedScriptPreviewPage extends WizardPage {
         final Composite previewComposite = new Composite(mainComposite, SWT.NONE);
         previewComposite.setLayout(new FillLayout(SWT.VERTICAL));
         previewComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 0).create());
+
         final GroovyViewer groovyViewer = sourceViewerFactory.createSourceViewer(previewComposite, true);
         groovyViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         final SourceViewer sourceViewer = groovyViewer.getSourceViewer();
@@ -188,7 +189,7 @@ public class GeneratedScriptPreviewPage extends WizardPage {
     }
 
     protected RootContractInputGenerator createRootContractInputGenerator() {
-        final List<FieldToContractInputMapping> mappings = new ArrayList<FieldToContractInputMapping>();
+        final List<FieldToContractInputMapping> mappings = new ArrayList<>();
         for (final Object mapping : fieldToContractInputMappingsObservable) {
             mappings.add((FieldToContractInputMapping) mapping);
         }

@@ -14,8 +14,14 @@
  */
 package org.bonitasoft.studio.groovy.ui.viewer;
 
+import java.util.Objects;
+
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Romain Bioteau
@@ -27,11 +33,29 @@ public class GroovySourceViewerFactory {
     }
 
     public GroovyViewer createSourceViewer(final Composite container, final GroovyEditor editor) {
+        final IEclipseContext context = (IEclipseContext) container.getShell().getData("org.eclipse.e4.ui.shellContext");
+        if (context == null) {
+            configureContext(container.getShell());
+        }
         return new GroovyViewer(container, null, editor);
     }
 
     public GroovyViewer createSourceViewer(final Composite container, final boolean isPageFlowContext) {
+        final IEclipseContext context = (IEclipseContext) container.getShell().getData("org.eclipse.e4.ui.shellContext");
+        if (context == null) {
+            configureContext(container.getShell());
+        }
         return new GroovyViewer(container, isPageFlowContext);
+    }
+
+    private void configureContext(Shell shell) {
+        final IEclipseContext e4Context = ((Workbench) PlatformUI.getWorkbench()).getContext();
+        while (!Objects.equals(e4Context.getActiveLeaf(), e4Context)) {
+            e4Context.getActiveLeaf().deactivate();
+        }
+        final IEclipseContext expressionDialogContext = e4Context.createChild("expressionDialogContext");
+        expressionDialogContext.activate();
+        shell.setData("org.eclipse.e4.ui.shellContext", expressionDialogContext);
     }
 
 }

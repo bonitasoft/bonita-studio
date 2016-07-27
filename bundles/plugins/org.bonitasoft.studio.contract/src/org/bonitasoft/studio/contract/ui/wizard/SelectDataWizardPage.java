@@ -40,7 +40,6 @@ import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
@@ -277,25 +276,35 @@ public class SelectDataWizardPage extends WizardPage {
                 updateValueStrategy().withConverter(documentToRootContractInputName())
                         .create());
         dbc.bindValue(SWTObservables.observeText(inputNameText, SWT.Modify),
-                prefixObservable, targetToModelConvertStrategy(), null);
+                prefixObservable, updateValueStrategy()
+                        .withValidator(inputNameValidator())
+                        .create(),
+                null);
         dbc.bindValue(rootNameObservable, prefixObservable);
         dbc.bindValue(SWTObservables.observeText(dataTypeLabel), selectionTypeObservable,
                 neverUpdateValueStrategy().create(),
                 updateValueStrategy().withConverter(createSelectionTypeToLabelTextConverter()).create());
+
+        dbc.addValidationStatusProvider(new MultiValidator() {
+
+            @Override
+            protected IStatus validate() {
+                final Object value = prefixObservable.getValue();
+                return inputNameValidator().validate(value);
+            }
+        });
     }
 
     protected Text createContractInputNameText(final Composite documentInputNameComposite) {
         return new Text(documentInputNameComposite, SWT.BORDER);
     }
 
-    protected UpdateValueStrategy targetToModelConvertStrategy() {
-        return updateValueStrategy()
-                .withValidator(
-                        multiValidator()
-                                .addValidator(mandatoryValidator(Messages.rootContractInputName))
-                                .addValidator(maxLengthValidator(Messages.rootContractInputName, INPUT_NAME_MAX_LENGTH))
-                                .addValidator(groovyReferenceValidator(Messages.rootContractInputName).startsWithLowerCase())
-                                .addValidator(uniqueValidator().onProperty("name").in(contract.getInputs()))).create();
+    protected IValidator inputNameValidator() {
+        return multiValidator()
+                .addValidator(mandatoryValidator(Messages.rootContractInputName))
+                .addValidator(maxLengthValidator(Messages.rootContractInputName, INPUT_NAME_MAX_LENGTH))
+                .addValidator(groovyReferenceValidator(Messages.rootContractInputName).startsWithLowerCase())
+                .addValidator(uniqueValidator().onProperty("name").in(contract.getInputs())).create();
     }
 
     protected IConverter createSelectionTypeToLabelTextConverter() {
