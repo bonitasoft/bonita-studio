@@ -36,25 +36,25 @@
         <language>
             <code>en</code>
             <file>i18n/messages.properties</file>
-            <encoding>utf-8</encoding>
+            <encoding>iso8859-1</encoding>
             <resolveUCN>1</resolveUCN>
         </language>
            <language>
             <code>fr</code>
             <file>i18n/messages_fr.properties</file>
-            <encoding>utf-8</encoding>
+            <encoding>iso8859-1</encoding>
             <resolveUCN>1</resolveUCN>
         </language>
          <language>
             <code>es</code>
             <file>i18n/messages_es.properties</file>
-            <encoding>utf-8</encoding>
+            <encoding>iso8859-1</encoding>
             <resolveUCN>1</resolveUCN>
         </language>
         <language>
             <code>ja</code>
             <file>i18n/messages_ja.properties</file>
-            <encoding>utf-8</encoding>
+            <encoding>iso8859-1</encoding>
             <resolveUCN>1</resolveUCN>
         </language>
     </customLanguageFileList>
