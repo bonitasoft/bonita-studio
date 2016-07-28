@@ -21,7 +21,7 @@ Export-Package: org.eclipse.ui.internal.views.properties.tabbed;x-inte
  rnal:=true,org.eclipse.ui.internal.views.properties.tabbed.l10n;x-int
  ernal:=true,org.eclipse.ui.internal.views.properties.tabbed.view;x-in
  ternal:=true,org.eclipse.ui.views.properties.tabbed
-Bundle-Version: 3.6.0.v20140519-0906
+Bundle-Version: 3.6.100.v20140519-0906
 Build-Jdk: 1.7.0_51
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %Plugin.providerName
