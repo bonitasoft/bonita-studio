@@ -52,7 +52,7 @@ public class UniqueFlowElementAndBoundaryIdConstraint extends AbstractLiveValida
                 }
                 final String elementName = el.getName();
                 for (final Element e : elements) {
-                    if (!e.equals(el) && e.getName().equals(elementName)) {
+                    if (!e.equals(el) && e.getName().equalsIgnoreCase(elementName)) {
                         return ctx.createFailureStatus(new Object[] { Messages.Validation_Element_SameName + ": " + elementName });
                     }
                 }
