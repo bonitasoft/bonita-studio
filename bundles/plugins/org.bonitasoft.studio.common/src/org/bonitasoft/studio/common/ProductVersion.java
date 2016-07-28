@@ -73,4 +73,9 @@ public class ProductVersion {
         return current.compareTo(productVersion) <= 0;
     }
 
+    public static String majorVersion() {
+        final Version productVersion = new Version(CURRENT_VERSION);
+        return String.format("%s.%s", productVersion.getMajor(), productVersion.getMinor());
+    }
+
 }
