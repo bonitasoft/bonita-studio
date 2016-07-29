@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 
-import static com.google.common.collect.Sets.newHashSet;
-
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -25,27 +23,22 @@ import org.bonitasoft.studio.model.form.Widget;
 
 public class AvailableValueExpressionTypeFilter extends AvailableExpressionTypeFilter {
 
-    private final Widget widget;
+	private final Widget widget;
 
-    public AvailableValueExpressionTypeFilter(final Widget widget) {
-        super(ExpressionConstants.CONSTANT_TYPE,
-                ExpressionConstants.PARAMETER_TYPE,
-                ExpressionConstants.VARIABLE_TYPE,
-                ExpressionConstants.SCRIPT_TYPE);
-        this.widget = widget;
-    }
+	public AvailableValueExpressionTypeFilter(final Widget widget) {
+		super(ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.VARIABLE_TYPE,
+				ExpressionConstants.SCRIPT_TYPE);
+		this.widget = widget;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter#isExpressionAllowed(java.lang.Object, java.util.Set)
-     */
-    @Override
-    protected boolean isExpressionAllowed(final Object element, final Set<String> allowedExpressionTypes) {
-        if (widget instanceof SuggestBox && ((SuggestBox) widget).isAsynchronous()) {
-            final Set<String> newAllowedExpressionTypes = newHashSet(allowedExpressionTypes);
-            newAllowedExpressionTypes.add(ExpressionConstants.FORM_FIELD_TYPE);
-            return super.isExpressionAllowed(element, newAllowedExpressionTypes);
-        }
-        return super.isExpressionAllowed(element, allowedExpressionTypes);
-    }
+
+	@Override
+	protected Set<String> allowedExpressionTypes() {
+		Set<String> allowedExpressionTypes = super.allowedExpressionTypes();
+		if (widget instanceof SuggestBox && ((SuggestBox) widget).isAsynchronous()) {
+			allowedExpressionTypes.add(ExpressionConstants.FORM_FIELD_TYPE);
+			return allowedExpressionTypes;
+		}
+		return allowedExpressionTypes;
+	}
 }

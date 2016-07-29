@@ -24,6 +24,8 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
+import com.google.common.collect.Sets;
+
 /**
  * @author Romain Bioteau
  */
@@ -41,11 +43,11 @@ public class AvailableExpressionTypeFilter extends ViewerFilter {
      */
     @Override
     public boolean select(final Viewer viewer, final Object context, final Object element) {
-        return isExpressionAllowed(element, getContentTypes());
+        return isExpressionAllowed(element);
     }
 
-    protected boolean isExpressionAllowed(final Object element, Set<String> allowedExpressionTypes) {
-        allowedExpressionTypes = variableRelativeTypes(allowedExpressionTypes);
+    protected boolean isExpressionAllowed(final Object element) {
+        Set<String> allowedExpressionTypes = allowedExpressionTypes();
         if (element instanceof Expression) {
             return allowedExpressionTypes.contains(((Expression) element).getType());
         } else if (element instanceof IExpressionProvider) {
@@ -54,8 +56,9 @@ public class AvailableExpressionTypeFilter extends ViewerFilter {
         return true;
     }
 
-    private Set<String> variableRelativeTypes(final Set<String> allowedExpressionTypes) {
-        if (allowedExpressionTypes.contains(ExpressionConstants.VARIABLE_TYPE)) {
+    protected Set<String> allowedExpressionTypes() {
+        Set<String> allowedExpressionTypes = Sets.newHashSet(getContentTypes());
+		if (allowedExpressionTypes .contains(ExpressionConstants.VARIABLE_TYPE)) {
             allowedExpressionTypes.add(ExpressionConstants.JAVA_TYPE);
             allowedExpressionTypes.add(ExpressionConstants.XPATH_TYPE);
             allowedExpressionTypes.add(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE);

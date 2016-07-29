@@ -20,6 +20,8 @@ import java.util.Set;
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Pool;
@@ -48,14 +50,17 @@ public class ConnectorAvailableExpressionTypeFilter extends
         if (viewer != null) {
             final Connector connector = getParentConnector(viewer.getInput());
             if (isSupportingContractInput(connector)) {
-                final Set<String> contentTypes = new HashSet<String>(
-                        getContentTypes());
+                final Set<String> contentTypes = allowedExpressionTypes();
                 contentTypes.add(ExpressionConstants.CONTRACT_INPUT_TYPE);
-                return isExpressionAllowed(element, contentTypes);
+                return isExpressionAllowed(element) ||
+                		((element instanceof Expression) && ExpressionConstants.CONTRACT_INPUT_TYPE.equals(((Expression) element).getType())) ||
+                		((element instanceof IExpressionProvider) && ExpressionConstants.CONTRACT_INPUT_TYPE.equals(((IExpressionProvider) element).getExpressionType())) ;
             }
         }
         return super.select(viewer, context, element);
     }
+    
+    
 
     /**
      * @param connector

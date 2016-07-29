@@ -49,7 +49,8 @@ Require-Bundle: org.bonitasoft.studio.diagram;bundle-version="1.0.0",
  org.junit;bundle-version="4.11.0";resolution:=optional,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
  assertj-core;bundle-version="1.5.0";resolution:=optional,
- org.bonitasoft.studio.tests-utils;bundle-version="7.1.0";resolution:=optional
+ org.bonitasoft.studio.tests-utils;bundle-version="7.1.0";resolution:=optional,
+ org.eclipse.jface
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.properties.filters,
