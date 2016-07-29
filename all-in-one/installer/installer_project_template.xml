@@ -1,51 +1,51 @@
 <project>
-	<shortName>@product.short.name@</shortName>
-	<fullName>@product.full.name@</fullName>
-	<version>@product.version@</version>
-	<outputDirectory>@bitrock.output@</outputDirectory>
-	<installerFilename>@installer.name@</installerFilename>
-	<licenseFile>@license@</licenseFile>
-	<licenseFileEncoding>utf-8</licenseFileEncoding>
-	<logoImage>@logo@</logoImage>
-	<leftImage>@leftImage@</leftImage>
-	<splashImage>@splash@</splashImage>
-	<allowLanguageSelection>1</allowLanguageSelection>
-	<wmImage>@titlebar.image@</wmImage>
-	<windowsExecutableIcon>@windows.ico@</windowsExecutableIcon>
-	<osxApplicationBundleIcon>@mac.installer.icns@</osxApplicationBundleIcon>
-	<slideShowLoop>1</slideShowLoop>
+    <shortName>@product.short.name@</shortName>
+    <fullName>@product.full.name@</fullName>
+    <version>@product.version@</version>
+    <outputDirectory>@bitrock.output@</outputDirectory>
+    <installerFilename>@installer.name@</installerFilename>
+    <licenseFile>@license@</licenseFile>
+    <licenseFileEncoding>utf-8</licenseFileEncoding>
+    <logoImage>@logo@</logoImage>
+    <leftImage>@leftImage@</leftImage>
+    <splashImage>@splash@</splashImage>
+    <allowLanguageSelection>1</allowLanguageSelection>
+    <wmImage>@titlebar.image@</wmImage>
+    <windowsExecutableIcon>@windows.ico@</windowsExecutableIcon>
+    <osxApplicationBundleIcon>@mac.installer.icns@</osxApplicationBundleIcon>
+    <slideShowLoop>1</slideShowLoop>
     <slideShowTiming>8</slideShowTiming>
     <slideShowImageList>
-       <slideShowImage>
-          <path>@slide1@</path>
-       </slideShowImage>
-       <slideShowImage>
-          <path>@slide2@</path>
-       </slideShowImage>
-       <slideShowImage>
-          <path>@slide3@</path>
-       </slideShowImage>
+        <slideShowImage>
+            <path>@slide1@</path>
+        </slideShowImage>
+        <slideShowImage>
+            <path>@slide2@</path>
+        </slideShowImage>
+        <slideShowImage>
+            <path>@slide3@</path>
+        </slideShowImage>
     </slideShowImageList>
-	<requestedExecutionLevel>asInvoker</requestedExecutionLevel>
-	<singleInstanceCheck>1</singleInstanceCheck>
+    <requestedExecutionLevel>asInvoker</requestedExecutionLevel>
+    <singleInstanceCheck>1</singleInstanceCheck>
     <overrideGtkButtonText>1</overrideGtkButtonText>
     <compressionAlgorithm>lzma-ultra</compressionAlgorithm>
     <lzmaUltraBlockSize>100</lzmaUltraBlockSize>
-	<allowedLanguages>en es fr ja</allowedLanguages>
-	<customLanguageFileList>
+    <allowedLanguages>en es fr ja</allowedLanguages>
+    <customLanguageFileList>
         <language>
             <code>en</code>
             <file>i18n/messages.properties</file>
             <encoding>iso8859-1</encoding>
             <resolveUCN>1</resolveUCN>
         </language>
-           <language>
+        <language>
             <code>fr</code>
             <file>i18n/messages_fr.properties</file>
             <encoding>iso8859-1</encoding>
             <resolveUCN>1</resolveUCN>
         </language>
-         <language>
+        <language>
             <code>es</code>
             <file>i18n/messages_es.properties</file>
             <encoding>iso8859-1</encoding>
@@ -58,166 +58,184 @@
             <resolveUCN>1</resolveUCN>
         </language>
     </customLanguageFileList>
-	<preShowHelpActionList>
-		<setInstallerVariable>
-			<!-- Set default path to C: on Windows -->
-			<name>installdir</name>
-			<value>${env(SYSTEMDRIVE)}/@product.short.name@-${product_version}</value>
-			<ruleList>
-				<platformTest type="windows" />
-			</ruleList>
-		</setInstallerVariable>
-	</preShowHelpActionList>
-	<preInstallationActionList>
-		<setInstallerVariable>
-			<name>continue</name>
-			<value>yes</value>
-		</setInstallerVariable>
-		<autodetectJava>
-			<promptUser>0</promptUser>
-			<selectionOrder>newest</selectionOrder>
-			<abortOnError>0</abortOnError>
-			<showMessageOnError>0</showMessageOnError>
-			<validVersionList>
-				<validVersion>
-					<bitness>@os_arch@</bitness>
-					<minVersion>1.6</minVersion>
+    <preBuildActionList>
+        <substitute>
+            <encoding>iso8859-1</encoding>
+            <files>${build_project_directory}/i18n/*.properties</files>
+            <type>regexp</type>
+            <substitutionList>
+                <substitution>
+                    <pattern>\\:</pattern>
+                    <value>:</value>
+                </substitution>
+                <substitution>
+                    <pattern>\\!</pattern>
+                    <value>!</value>
+                </substitution>
+            </substitutionList>
+        </substitute>
+    </preBuildActionList>
+    <preShowHelpActionList>
+        <setInstallerVariable>
+            <!-- Set default path to C: on Windows -->
+            <name>installdir</name>
+            <value>${env(SYSTEMDRIVE)}/@product.short.name@-${product_version}</value>
+            <ruleList>
+                <platformTest type="windows" />
+            </ruleList>
+        </setInstallerVariable>
+    </preShowHelpActionList>
+    <preInstallationActionList>
+        <setInstallerVariable>
+            <name>continue</name>
+            <value>yes</value>
+        </setInstallerVariable>
+        <autodetectJava>
+            <promptUser>0</promptUser>
+            <selectionOrder>newest</selectionOrder>
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>0</showMessageOnError>
+            <validVersionList>
+                <validVersion>
+                    <bitness>@os_arch@</bitness>
+                    <minVersion>1.6</minVersion>
                     <maxVersion>1.8</maxVersion>
-					<requireJDK>0</requireJDK>
-					<vendor></vendor>
-				</validVersion>
-			</validVersionList>
-		</autodetectJava>
-		<showQuestion>
-			<ruleList>
-				<isFalse value="${java_autodetected}" />
-			</ruleList>
-			<title>${msg(java.version.title)}</title>
-			<text>${msg(java.version.message)}</text>
-			<variable>continue</variable>
-		</showQuestion>
-		<exit>
-			<ruleList>	
-				<compareText>
-					<text>${continue}</text>
-					<logic>does_not_equal</logic>
-					<value>yes</value>
-				</compareText>
-			</ruleList>
-		</exit>
-		<setInstallerVariable>
-			<!-- Set default path to C: on Windows -->
-			<name>installdir</name>
-			<value>${env(SYSTEMDRIVE)}/@product.short.name@-${product_version}</value>
-			<ruleList>
-				<platformTest type="windows" />
-			</ruleList>
-		</setInstallerVariable>
-		<setInstallerVariable>
-			<!-- 32 bits -->
-			<name>windowsExecName</name>
-			<value>@windows.shortcut.name@</value>
-			<ruleList>
-				<platformTest type="windows" />
-			</ruleList>
-		</setInstallerVariable>
-	</preInstallationActionList>
-	<postInstallationActionList>
-		<setInstallerVariable name="ini_file" value="${installdir}/configuration/config.ini" persist="1"/>
-		<iniFileSet>
-			<file>${ini_file}</file>
-			<section>Language</section>
-			<key>osgi.nl</key>
-			<value>${installation_language_code}</value>
-		</iniFileSet>
-		<createSymLink>
-			<explanation>@shortcut.comment@</explanation>
-			<linkName>~/Desktop/@product.short.name@-${product_version}</linkName>
-			<target>${installdir}/@mac.shortcut.name@</target>
-			<ruleList>
-				<platformTest>
-					<type>osx</type>
-				</platformTest>
-			</ruleList>
-		</createSymLink>
-		<setInstallerVariableFromScriptOutput>
-			<exec>xdg-user-dir</exec>
-			<execArgs>DESKTOP</execArgs>
-			<name>desktop_path</name>
-			<abortOnError>0</abortOnError>
-			<showMessageOnError>0</showMessageOnError>
-			<ruleList>
-				<platformTest>
-					<type>linux</type>
-				</platformTest>
-				<programTest>
-					<condition>is_in_path</condition>
-					<name>xdg-user-dir</name>
-				</programTest>
-			</ruleList>
-		</setInstallerVariableFromScriptOutput>
-		<if>
-			<actionList>
-				<setInstallerVariableFromScriptOutput>
-					<exec>xdg-user-dir</exec>
-					<execArgs>DESKTOP</execArgs>
-					<name>desktop_path</name>
-					<abortOnError>0</abortOnError>
-					<showMessageOnError>0</showMessageOnError>
-				</setInstallerVariableFromScriptOutput>
-			</actionList>
-			<conditionRuleList>
-				<platformTest>
-					<type>linux</type>
-				</platformTest>
-				<programTest>
-					<condition>is_in_path</condition>
-					<name>xdg-user-dir</name>
-				</programTest>
-			</conditionRuleList>
-			<elseActionList>
-				<setInstallerVariable name="desktop_path" value="${installdir}" />
-			</elseActionList>
-		</if>
+                    <requireJDK>0</requireJDK>
+                    <vendor></vendor>
+                </validVersion>
+            </validVersionList>
+        </autodetectJava>
+        <showQuestion>
+            <ruleList>
+                <isFalse value="${java_autodetected}" />
+            </ruleList>
+            <title>${msg(java.version.title)}</title>
+            <text>${msg(java.version.message)}</text>
+            <variable>continue</variable>
+        </showQuestion>
+        <exit>
+            <ruleList>
+                <compareText>
+                    <text>${continue}</text>
+                    <logic>does_not_equal</logic>
+                    <value>yes</value>
+                </compareText>
+            </ruleList>
+        </exit>
+        <setInstallerVariable>
+            <!-- Set default path to C: on Windows -->
+            <name>installdir</name>
+            <value>${env(SYSTEMDRIVE)}/@product.short.name@-${product_version}</value>
+            <ruleList>
+                <platformTest type="windows" />
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable>
+            <!-- 32 bits -->
+            <name>windowsExecName</name>
+            <value>@windows.shortcut.name@</value>
+            <ruleList>
+                <platformTest type="windows" />
+            </ruleList>
+        </setInstallerVariable>
+    </preInstallationActionList>
+    <postInstallationActionList>
+        <setInstallerVariable name="ini_file" value="${installdir}/configuration/config.ini" persist="1" />
+        <iniFileSet>
+            <file>${ini_file}</file>
+            <section>Language</section>
+            <key>osgi.nl</key>
+            <value>${installation_language_code}</value>
+        </iniFileSet>
+        <createSymLink>
+            <explanation>@shortcut.comment@</explanation>
+            <linkName>~/Desktop/@product.short.name@-${product_version}</linkName>
+            <target>${installdir}/@mac.shortcut.name@</target>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+        </createSymLink>
+        <setInstallerVariableFromScriptOutput>
+            <exec>xdg-user-dir</exec>
+            <execArgs>DESKTOP</execArgs>
+            <name>desktop_path</name>
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>0</showMessageOnError>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+                <programTest>
+                    <condition>is_in_path</condition>
+                    <name>xdg-user-dir</name>
+                </programTest>
+            </ruleList>
+        </setInstallerVariableFromScriptOutput>
+        <if>
+            <actionList>
+                <setInstallerVariableFromScriptOutput>
+                    <exec>xdg-user-dir</exec>
+                    <execArgs>DESKTOP</execArgs>
+                    <name>desktop_path</name>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>0</showMessageOnError>
+                </setInstallerVariableFromScriptOutput>
+            </actionList>
+            <conditionRuleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+                <programTest>
+                    <condition>is_in_path</condition>
+                    <name>xdg-user-dir</name>
+                </programTest>
+            </conditionRuleList>
+            <elseActionList>
+                <setInstallerVariable name="desktop_path" value="${installdir}" />
+            </elseActionList>
+        </if>
 
-		<if>
-			<actionList>
-			<writeFile>
-				<path>${desktop_path}/@product.short.name@-${product_version}.desktop</path>
-				<encoding>utf-8</encoding>
-				<text>
-					[Desktop Entry]
-					Version=1.0
-					Encoding=UTF-8
-					Name=@product.short.name@-${product_version}
-					GenericName=@product.short.name@-${product_version}
-					Comment=@shortcut.comment@
-					Exec=${installdir}/@linux.shortcut.name@
-					Icon=${installdir}/bonitasoft-icon-128-128-transparent.png
-					Terminal=false
-					Type=Application
-				</text>
-			</writeFile>
-			<changePermissions permissions="0755" files="${desktop_path}/@product.short.name@-${product_version}.desktop"/>
-			</actionList>
-			<conditionRuleList>
-				<platformTest>
-					<type>linux</type>
-				</platformTest>
-			</conditionRuleList>
-		</if>
-		<if>
-			<actionList>
-				<changePermissions permissions="0755" files="${installdir}/jre/bin/java"/>
-			</actionList>
-			<conditionRuleList>
-				<platformTest>
-					<negate>1</negate>
-					<type>windows</type>
-				</platformTest>
-			</conditionRuleList>
-		</if>
-         <createDirectory>
+        <if>
+            <actionList>
+                <writeFile>
+                    <path>${desktop_path}/@product.short.name@-${product_version}.desktop</path>
+                    <encoding>utf-8</encoding>
+                    <text>
+                        [Desktop Entry]
+                        Version=1.0
+                        Encoding=UTF-8
+                        Name=@product.short.name@-${product_version}
+                        GenericName=@product.short.name@-${product_version}
+                        Comment=@shortcut.comment@
+                        Exec=${installdir}/@linux.shortcut.name@
+                        Icon=${installdir}/bonitasoft-icon-128-128-transparent.png
+                        Terminal=false
+                        Type=Application
+                    </text>
+                </writeFile>
+                <changePermissions permissions="0755" files="${desktop_path}/@product.short.name@-${product_version}.desktop" />
+                <addFilesToUninstaller files="${desktop_path}/@product.short.name@-${product_version}.desktop"/>
+            </actionList>
+            <conditionRuleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </conditionRuleList>
+        </if>
+        <if>
+            <actionList>
+                <changePermissions permissions="0755" files="${installdir}/jre/bin/java" />
+            </actionList>
+            <conditionRuleList>
+                <platformTest>
+                    <negate>1</negate>
+                    <type>windows</type>
+                </platformTest>
+            </conditionRuleList>
+        </if>
+        <createDirectory>
             <path>${installdir}/jre</path>
             <ruleList>
                 <platformTest>
@@ -244,7 +262,7 @@
                 </platformTest>
             </ruleList>
         </runProgram>
-          <runProgram>
+        <runProgram>
             <program>rm</program>
             <programArguments>-rf "${installdir}/jre-8u45-macosx-x64.gz"</programArguments>
             <ruleList>
@@ -261,193 +279,195 @@
                 <substitution>
                     <pattern>-clearPersistedState</pattern>
                     <value>-clearPersistedState
--vm
-../../../jre/Contents/Home/bin/java</value>
+                        -vm
+                        ../../../jre/Contents/Home/bin/java
+                    </value>
                 </substitution>
             </substitutionList>
-              <ruleList>
+            <ruleList>
                 <platformTest>
                     <type>osx</type>
                 </platformTest>
             </ruleList>
         </substitute>
-	</postInstallationActionList>
-		<postBuildActionList>
-	<actionGroup>
-		<actionList>
-			<createTimeStamp>
-				<format>%Y%m%d%H%M%S</format>
-				<variable>timestamp</variable>
-			</createTimeStamp>
-			<setInstallerVariable>
-				<name>tempDir</name>
-				<value>@bitrock.output@/.tmpDir${timestamp}</value>
-			</setInstallerVariable>
-			<setInstallerVariable>
-				<name>dmgName</name>
-				<value>@installer.name@.dmg</value>
-			</setInstallerVariable>
-			<deleteFile>
-				<path>@bitrock.output@/${dmgName}</path>
-			</deleteFile>
-			<deleteFile>
-				<path>${tempDir}</path>
-			</deleteFile>
-			<createDirectory>
-				<path>${tempDir}/output/${installerFilename}.app</path>
-			</createDirectory>
-			<copyFile>
-				<destination>${tempDir}/output/${installerFilename}.app/</destination>
-				<origin>@bitrock.output@/${installerFilename}/Contents</origin>
-			</copyFile>
-			<runProgram>
-				<program>genisoimage</program>
-				<programArguments>-D -V Setup -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output
-				</programArguments>
-			</runProgram>
-			<deleteFile>
-				<path>${tempDir}</path>
-			</deleteFile>
-		</actionList>
-		<ruleList>
-			<compareValues>
-				<logic>equals</logic>
-				<value1>${platform_name}</value1>
-				<value2>osx</value2>
-			</compareValues>
-			<programTest>
-          		  <condition>is_in_path</condition>
-         	   	  <name>genisoimage</name>
-       	   </programTest>
-		</ruleList>
-	</actionGroup>
-	<showWarning>
-    <text>'genisoimage' not found in path, dmg file cannot be generated</text>
-    <ruleList>
-        <programTest>
-          		  <condition>is_not_in_path</condition>
-         	   	  <name>genisoimage</name>
-       	   </programTest>
-    </ruleList>
-</showWarning>
-</postBuildActionList>
-	<finalPageActionList>
-		<runProgram>
-			<ruleList>
-				<platformTest>
-					<type>osx</type>
-				</platformTest>
-			</ruleList>
-			<program>open</program>
-			<programArguments>"${installdir}/@mac.shortcut.name@" &amp;</programArguments>
-			<progressText>${msg(launch)} ${product_fullname}</progressText>
-		</runProgram>
-		<runProgram>
-			<ruleList>
-				<platformTest>
-					<type>linux</type>
-				</platformTest>
-			</ruleList>
-			<program>"${installdir}/@linux.shortcut.name@"</program>
-			<programArguments>&amp;</programArguments>
-			<progressText>${msg(launch)} ${product_fullname}</progressText>
-		</runProgram>
-		<runProgram>
-			<ruleList>
-				<platformTest>
-					<type>windows</type>
-				</platformTest>
-			</ruleList>
-			<program>${installdir}\${windowsExecName}</program>
-			<programArguments>&amp;</programArguments>
-			<progressText>${msg(launch)} ${product_fullname}</progressText>
-		</runProgram>
-		<launchBrowser>
-			<show>0</show>
-            <url>http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=126&amp;bos_redirect_product=bos&amp;bos_version=${product_version}&amp;os=${platform_name}&amp;arch=@os_arch@&amp;edition=community</url>
+    </postInstallationActionList>
+    <postBuildActionList>
+        <actionGroup>
+            <actionList>
+                <createTimeStamp>
+                    <format>%Y%m%d%H%M%S</format>
+                    <variable>timestamp</variable>
+                </createTimeStamp>
+                <setInstallerVariable>
+                    <name>tempDir</name>
+                    <value>@bitrock.output@/.tmpDir${timestamp}</value>
+                </setInstallerVariable>
+                <setInstallerVariable>
+                    <name>dmgName</name>
+                    <value>@installer.name@.dmg</value>
+                </setInstallerVariable>
+                <deleteFile>
+                    <path>@bitrock.output@/${dmgName}</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${tempDir}</path>
+                </deleteFile>
+                <createDirectory>
+                    <path>${tempDir}/output/${installerFilename}.app</path>
+                </createDirectory>
+                <copyFile>
+                    <destination>${tempDir}/output/${installerFilename}.app/</destination>
+                    <origin>@bitrock.output@/${installerFilename}/Contents</origin>
+                </copyFile>
+                <runProgram>
+                    <program>genisoimage</program>
+                    <programArguments>-D -V Setup -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output
+                    </programArguments>
+                </runProgram>
+                <deleteFile>
+                    <path>${tempDir}</path>
+                </deleteFile>
+            </actionList>
+            <ruleList>
+                <compareValues>
+                    <logic>equals</logic>
+                    <value1>${platform_name}</value1>
+                    <value2>osx</value2>
+                </compareValues>
+                <programTest>
+                    <condition>is_in_path</condition>
+                    <name>genisoimage</name>
+                </programTest>
+            </ruleList>
+        </actionGroup>
+        <showWarning>
+            <text>'genisoimage' not found in path, dmg file cannot be generated</text>
+            <ruleList>
+                <programTest>
+                    <condition>is_not_in_path</condition>
+                    <name>genisoimage</name>
+                </programTest>
+            </ruleList>
+        </showWarning>
+    </postBuildActionList>
+    <finalPageActionList>
+        <runProgram>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+            <program>open</program>
+            <programArguments>"${installdir}/@mac.shortcut.name@" &amp;</programArguments>
+            <progressText>${msg(launch)} ${product_fullname}</progressText>
+        </runProgram>
+        <runProgram>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </ruleList>
+            <program>"${installdir}/@linux.shortcut.name@"</program>
+            <programArguments>&amp;</programArguments>
+            <progressText>${msg(launch)} ${product_fullname}</progressText>
+        </runProgram>
+        <runProgram>
+            <ruleList>
+                <platformTest>
+                    <type>windows</type>
+                </platformTest>
+            </ruleList>
+            <program>${installdir}\${windowsExecName}</program>
+            <programArguments>&amp;</programArguments>
+            <progressText>${msg(launch)} ${product_fullname}</progressText>
+        </runProgram>
+        <launchBrowser>
+            <show>0</show>
+            <url>http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=126&amp;bos_redirect_product=bos&amp;bos_version=${product_version}&amp;os=${platform_name}&amp;arch=@os_arch@&amp;edition=community
+            </url>
         </launchBrowser>
-	</finalPageActionList>
+    </finalPageActionList>
 
-	<enableRollback>0</enableRollback>
-	<enableTimestamp>1</enableTimestamp>
-	<vendor>@vendor@</vendor>
-	<componentList>
-		<component>
-			<name>install</name>
-			<description>Install distribution component</description>
-			<canBeEdited>1</canBeEdited>
-			<selected>1</selected>
-			<show>1</show>
-			<desktopShortcutList>
-				<shortcut>
-					<comment>@shortcut.comment@</comment>
-					<exec></exec>
-					<icon></icon>
-					<name>@shortcut.name@</name>
-					<path></path>
-					<platforms>windows</platforms>
-					<runInTerminal>0</runInTerminal>
-					<windowsExec>"${installdir}/${windowsExecName}"</windowsExec>
-					<windowsExecArgs></windowsExecArgs>
-					<windowsIcon></windowsIcon>
-					<windowsPath>${installdir}/</windowsPath>
-				</shortcut>
-				<shortcut>
-					<comment>@shortcut.comment@</comment>
-					<exec>${installdir}/@linux.shortcut.name@</exec>
-					<icon>${installdir}/@linux.icon@</icon>
-					<name>@shortcut.name@</name>
-					<path>${installdir}</path>
-					<platforms>linux</platforms>
-					<runInTerminal>0</runInTerminal>
-					<windowsExec></windowsExec>
-					<windowsExecArgs></windowsExecArgs>
-					<windowsIcon></windowsIcon>
-					<windowsPath></windowsPath>
-				</shortcut>
-			</desktopShortcutList>
-			<folderList>
-				<folder>
-					<description>Program Files</description>
-					<destination>${installdir}</destination>
-					<name>programfiles</name>
-					<platforms>all</platforms>
-					<distributionFileList>
-						<distributionDirectory allowWildcards="1">
-							<origin>@studio.dir@/**</origin>
-						</distributionDirectory>
-					</distributionFileList>
-				</folder>
-			</folderList> 
-			<startMenuShortcutList>
-				<startMenuShortcut>
-					<comment>@shortcut.comment@</comment>
-					<name>@shortcut.name@</name>
-					<runInTerminal>0</runInTerminal>
-					<windowsExec>${installdir}/${windowsExecName}</windowsExec>
-					<windowsExecArgs></windowsExecArgs>
-					<windowsIcon></windowsIcon>
-					<windowsPath>${installdir}/</windowsPath>
-				</startMenuShortcut>
-				<startMenuShortcut>
-					<comment>Uninstall ${product_fullname}</comment>
-					<name>Uninstall ${product_fullname}</name>
-					<runInTerminal>0</runInTerminal>
-					<windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
-					<windowsExecArgs></windowsExecArgs>
-					<windowsIcon></windowsIcon>
-					<windowsPath>${installdir}/</windowsPath>
-				</startMenuShortcut>
-			</startMenuShortcutList>
-		</component>
-	</componentList>
-	<parameterList>
-	<choiceParameter>
+    <enableRollback>0</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+    <vendor>@vendor@</vendor>
+    <componentList>
+        <component>
+            <name>install</name>
+            <description>Install distribution component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>1</show>
+            <desktopShortcutList>
+                <shortcut>
+                    <comment>@shortcut.comment@</comment>
+                    <exec></exec>
+                    <icon></icon>
+                    <name>@shortcut.name@</name>
+                    <path></path>
+                    <platforms>windows</platforms>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>"${installdir}/${windowsExecName}"</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon></windowsIcon>
+                    <windowsPath>${installdir}/</windowsPath>
+                </shortcut>
+                <shortcut>
+                    <comment>@shortcut.comment@</comment>
+                    <exec>${installdir}/@linux.shortcut.name@</exec>
+                    <icon>${installdir}/@linux.icon@</icon>
+                    <name>@shortcut.name@</name>
+                    <path>${installdir}</path>
+                    <platforms>linux</platforms>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec></windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon></windowsIcon>
+                    <windowsPath></windowsPath>
+                </shortcut>
+            </desktopShortcutList>
+            <folderList>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfiles</name>
+                    <platforms>all</platforms>
+                    <distributionFileList>
+                        <distributionDirectory allowWildcards="1">
+                            <origin>@studio.dir@/**</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <startMenuShortcutList>
+                <startMenuShortcut>
+                    <comment>@shortcut.comment@</comment>
+                    <name>@shortcut.name@</name>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/${windowsExecName}</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon></windowsIcon>
+                    <windowsPath>${installdir}/</windowsPath>
+                </startMenuShortcut>
+                <startMenuShortcut>
+                    <comment>Uninstall ${product_fullname}</comment>
+                    <name>Uninstall ${product_fullname}</name>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon></windowsIcon>
+                    <windowsPath>${installdir}/</windowsPath>
+                </startMenuShortcut>
+            </startMenuShortcutList>
+        </component>
+    </componentList>
+    <parameterList>
+        <choiceParameter>
             <name>retrieveWorksapce</name>
             <title>${msg(retrieve.workspace.title)}</title>
             <explanation>${msg(retrieve.workspace.message)}
 
-${msg(retrieve.workspace.message.warning)}
+                ${msg(retrieve.workspace.message.warning)}
             </explanation>
             <value></value>
             <default>false</default>
@@ -470,27 +490,27 @@ ${msg(retrieve.workspace.message.warning)}
                     <value>true</value>
                 </option>
             </optionList>
-			<postShowPageActionList>
-				<setInstallerVariable>
-					<name>java_executable</name>
-					<value>${installdir}/jre/bin/java.exe</value>
-					<ruleList>
-						<isFalse value="${java_autodetected}" />
-						<platformTest>
-							<type>windows</type>
-						</platformTest>
-					</ruleList>
-				</setInstallerVariable>
-				<setInstallerVariable>
-					<name>java_executable</name>
-					<value>${installdir}/jre/bin/java</value>
-					<ruleList>
-						<isFalse value="${java_autodetected}" />
-						<platformTest>
-							<type>linux</type>
-						</platformTest>
-					</ruleList>
-				</setInstallerVariable>
+            <postShowPageActionList>
+                <setInstallerVariable>
+                    <name>java_executable</name>
+                    <value>${installdir}/jre/bin/java.exe</value>
+                    <ruleList>
+                        <isFalse value="${java_autodetected}" />
+                        <platformTest>
+                            <type>windows</type>
+                        </platformTest>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable>
+                    <name>java_executable</name>
+                    <value>${installdir}/jre/bin/java</value>
+                    <ruleList>
+                        <isFalse value="${java_autodetected}" />
+                        <platformTest>
+                            <type>linux</type>
+                        </platformTest>
+                    </ruleList>
+                </setInstallerVariable>
                 <setInstallerVariable>
                     <name>java_executable</name>
                     <value>${installdir}/jre/Contents/Home/bin/java</value>
@@ -508,7 +528,9 @@ ${msg(retrieve.workspace.message.warning)}
                     <actionList>
                         <runProgram>
                             <program>${java_executable}</program>
-                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
+                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar"
+                                -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data
+                                "${installdir}/workspace" -noSplash</programArguments>
                             <progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
                             <ruleList>
                                 <isFalse>
@@ -522,7 +544,10 @@ ${msg(retrieve.workspace.message.warning)}
                         </runProgram>
                         <runProgram>
                             <program>${java_executable}</program>
-                            <programArguments>-Xmx512m -XX:MaxPermSize=512m  -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
+                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar
+                                "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer
+                                -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash
+                            </programArguments>
                             <progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
                             <ruleList>
                                 <isFalse>
@@ -542,113 +567,124 @@ ${msg(retrieve.workspace.message.warning)}
                 </showProgressDialog>
             </postShowPageActionList>
         </choiceParameter>
-		<directoryParameter>
-			<name>Oldworkspace</name>
-			<title>${msg(workspace.location.title)}</title>
-			<description>${msg(workspace.location.description)}</description>
-			<explanation>${msg(workspace.location.explanation)}
-${msg(workspace.location.explanation.choice1)}
-${msg(workspace.location.explanation.choice2)}
-			
-${msg(workspace.location.explanation.end)}</explanation>
-			<value></value>
-			<default>${platform_install_prefix}/</default>
-			<allowEmptyValue>0</allowEmptyValue>
-			<insertAfter>retrieveWorksapce</insertAfter>
-			<mustBeWritable>1</mustBeWritable>
-			<mustExist>1</mustExist>
-			<ruleList>
-<!-- 					 <isFalse>-->
-<!--                             <value>true</value>-->
-<!--                         </isFalse>-->
- 				<compareValues>
-                     <logic>equals</logic>
-                     <value1>${retrieveWorksapce}</value1>
-                     <value2>true</value2>
-                 </compareValues>
+        <directoryParameter>
+            <name>Oldworkspace</name>
+            <title>${msg(workspace.location.title)}</title>
+            <description>${msg(workspace.location.description)}</description>
+            <explanation>${msg(workspace.location.explanation)}
+                ${msg(workspace.location.explanation.choice1)}
+                ${msg(workspace.location.explanation.choice2)}
+
+                ${msg(workspace.location.explanation.end)}
+            </explanation>
+            <value></value>
+            <default>${platform_install_prefix}/</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <insertAfter>retrieveWorksapce</insertAfter>
+            <mustBeWritable>1</mustBeWritable>
+            <mustExist>1</mustExist>
+            <ruleList>
+                <!-- <isFalse> -->
+                <!-- <value>true</value> -->
+                <!-- </isFalse> -->
+                <compareValues>
+                    <logic>equals</logic>
+                    <value1>${retrieveWorksapce}</value1>
+                    <value2>true</value2>
+                </compareValues>
             </ruleList>
-			<validationActionList>
-				<findFile>
-					<baseDirectory>${Oldworkspace}</baseDirectory>
-					<showMessageOnError>1</showMessageOnError>
-					<customErrorMessage>${msg(workspace.location.validation.error)}</customErrorMessage>
-					<pattern>workspace</pattern>
-					<variable>workspaceFound</variable>
-				</findFile>
-			</validationActionList>
-			<postShowPageActionList>
-			<showProgressDialog>
+            <validationActionList>
+                <findFile>
+                    <baseDirectory>${Oldworkspace}</baseDirectory>
+                    <showMessageOnError>1</showMessageOnError>
+                    <customErrorMessage>${msg(workspace.location.validation.error)}</customErrorMessage>
+                    <pattern>workspace</pattern>
+                    <variable>workspaceFound</variable>
+                </findFile>
+            </validationActionList>
+            <postShowPageActionList>
+                <showProgressDialog>
                     <title>${msg(workspace.setup)}</title>
                     <height>100</height>
                     <width>400</width>
                     <actionList>
-		               <runProgram>
-							<program>${java_executable}</program>
-							<programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.workspaceRecovery -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace" -noSplash</programArguments>
-							<progressText>${msg(workspace.recovery.progressMessage)}</progressText>
-							<ruleList>
-								<platformTest>
-										<negate>1</negate>
-		                  			  <type>osx</type>
-		           				</platformTest>
-								<isTrue>
-									<value>${retrieveWorksapce}</value>
-								</isTrue>
-							</ruleList>
-						</runProgram>
-						<runProgram>
-							<program>${java_executable}</program>
-							<programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
-							<progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
-							<ruleList>
-								<platformTest>
-										<negate>1</negate>
-		                  			  <type>osx</type>
-		           				</platformTest>
-							</ruleList>
-						</runProgram>
-						<runProgram>
-							<program>${java_executable}</program>
-							<programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.workspaceRecovery -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace" -noSplash</programArguments>
-							<progressText>${msg(workspace.recovery.progressMessage)}</progressText>
-							<ruleList>
-								<platformTest>
-		                  			  <type>osx</type>
-		           				</platformTest>
-								<isTrue>
-									<value>${retrieveWorksapce}</value>
-								</isTrue>
-							</ruleList>
-						</runProgram>
-						<runProgram>
-							<program>${java_executable}</program>
-							<!-- Change bundle version when Equinox version change -->
-							<programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
-							<progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
-							<ruleList>
-								<platformTest>
-		                  			  <type>osx</type>
-		           				</platformTest>
-							</ruleList>
-						</runProgram>
-				 	</actionList>
-				 </showProgressDialog>
+                        <runProgram>
+                            <program>${java_executable}</program>
+                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar"
+                                -product org.bonitasoft.studio.workspaceRecovery -application org.bonitasoft.studio.application.WorkspaceRecovery -data
+                                "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace" -noSplash</programArguments>
+                            <progressText>${msg(workspace.recovery.progressMessage)}</progressText>
+                            <ruleList>
+                                <platformTest>
+                                    <negate>1</negate>
+                                    <type>osx</type>
+                                </platformTest>
+                                <isTrue>
+                                    <value>${retrieveWorksapce}</value>
+                                </isTrue>
+                            </ruleList>
+                        </runProgram>
+                        <runProgram>
+                            <program>${java_executable}</program>
+                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar"
+                                -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data
+                                "${installdir}/workspace" -noSplash</programArguments>
+                            <progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
+                            <ruleList>
+                                <platformTest>
+                                    <negate>1</negate>
+                                    <type>osx</type>
+                                </platformTest>
+                            </ruleList>
+                        </runProgram>
+                        <runProgram>
+                            <program>${java_executable}</program>
+                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar
+                                "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.workspaceRecovery
+                                -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation
+                                "${installdir}/workspace" -noSplash</programArguments>
+                            <progressText>${msg(workspace.recovery.progressMessage)}</progressText>
+                            <ruleList>
+                                <platformTest>
+                                    <type>osx</type>
+                                </platformTest>
+                                <isTrue>
+                                    <value>${retrieveWorksapce}</value>
+                                </isTrue>
+                            </ruleList>
+                        </runProgram>
+                        <runProgram>
+                            <program>${java_executable}</program>
+                            <!-- Change bundle version when Equinox version change -->
+                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar
+                                "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer
+                                -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash
+                            </programArguments>
+                            <progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
+                            <ruleList>
+                                <platformTest>
+                                    <type>osx</type>
+                                </platformTest>
+                            </ruleList>
+                        </runProgram>
+                    </actionList>
+                </showProgressDialog>
             </postShowPageActionList>
-		</directoryParameter>
-		<directoryParameter>
-			<name>installdir</name>
-			<description>Installer.Parameter.installdir.description</description>
-			<explanation>Installer.Parameter.installdir.explanation</explanation>
-			<value></value>
-			<default>${platform_install_prefix}/@product.short.name@-${product_version}</default>
-			<allowEmptyValue>0</allowEmptyValue>
-			<ask>yes</ask>
-			<cliOptionName>prefix</cliOptionName>
-			<mustBeWritable>yes</mustBeWritable>
-			<mustExist>0</mustExist>
-		</directoryParameter>
-		
-		 <parameterGroup>
+        </directoryParameter>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value></value>
+            <default>${platform_install_prefix}/@product.short.name@-${product_version}</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <ask>yes</ask>
+            <cliOptionName>prefix</cliOptionName>
+            <mustBeWritable>yes</mustBeWritable>
+            <mustExist>0</mustExist>
+        </directoryParameter>
+
+        <parameterGroup>
             <name>licensePage</name>
             <title>${msg(install.license.title)}</title>
             <explanation></explanation>
@@ -679,8 +715,9 @@ ${msg(workspace.location.explanation.end)}</explanation>
                         </findFile>
                         <runProgram>
                             <program>${java_executable}</program>
-                            <programArguments>-cp "${generateKeyjar}" org.bonitasoft.security.generateKey.GenerateKeyDev -noPrompt -output=${installDir}/license/requestKey.txt</programArguments>
-                    		<progressText>Generate request key</progressText>
+                            <programArguments>-cp "${generateKeyjar}" org.bonitasoft.security.generateKey.GenerateKeyDev -noPrompt
+                                -output=${installDir}/license/requestKey.txt</programArguments>
+                            <progressText>Generate request key</progressText>
                         </runProgram>
                         <readFile>
                             <name>keyContent</name>
@@ -710,7 +747,7 @@ ${msg(workspace.location.explanation.end)}</explanation>
                                 <fileExists>
                                     <path>${installLicense}</path>
                                 </fileExists>
-								<regExMatch logic="does_not_match" pattern=".*\.(lic)$" text="${installLicense}"/>
+                                <regExMatch logic="does_not_match" pattern=".*\.(lic)$" text="${installLicense}" />
                             </ruleList>
                         </throwError>
                         <copyFile>
@@ -738,16 +775,19 @@ ${msg(workspace.location.explanation.end)}</explanation>
                 </fileExists>
             </ruleList>
         </parameterGroup>
-	</parameterList>
-	<preUninstallationActionList>
-		 <showQuestion>
+    </parameterList>
+    <preUninstallationActionList>
+        <deleteFile>
+            <path>${desktop_path}/@product.short.name@-${product_version}.desktop</path>
+        </deleteFile>
+        <showQuestion>
             <default>yes</default>
             <text>${msg(keep.workspace.msg)}</text>
             <title>${msg(keep.workspace.title)}</title>
             <variable>saveWorkspace</variable>
         </showQuestion>
-	</preUninstallationActionList>
-	<postUninstallationActionList>
+    </preUninstallationActionList>
+    <postUninstallationActionList>
         <deleteFile>
             <path>${installdir}</path>
             <ruleList>
