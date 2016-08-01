@@ -277,7 +277,7 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-email-impl</artifactId>
-									<version>1.0.14</version>
+									<version>1.0.15</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
