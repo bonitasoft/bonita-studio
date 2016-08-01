@@ -321,8 +321,7 @@
                 </copyFile>
                 <runProgram>
                     <program>genisoimage</program>
-                    <programArguments>-D -V Setup -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output
-                    </programArguments>
+                    <programArguments>-D -V Setup -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output</programArguments>
                 </runProgram>
                 <deleteFile>
                     <path>${tempDir}</path>
@@ -528,9 +527,7 @@
                     <actionList>
                         <runProgram>
                             <program>${java_executable}</program>
-                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar"
-                                -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data
-                                "${installdir}/workspace" -noSplash</programArguments>
+                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
                             <progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
                             <ruleList>
                                 <isFalse>
@@ -544,10 +541,7 @@
                         </runProgram>
                         <runProgram>
                             <program>${java_executable}</program>
-                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar
-                                "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer
-                                -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash
-                            </programArguments>
+                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
                             <progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
                             <ruleList>
                                 <isFalse>
@@ -610,9 +604,7 @@
                     <actionList>
                         <runProgram>
                             <program>${java_executable}</program>
-                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar"
-                                -product org.bonitasoft.studio.workspaceRecovery -application org.bonitasoft.studio.application.WorkspaceRecovery -data
-                                "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace" -noSplash</programArguments>
+                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.workspaceRecovery -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace" -noSplash</programArguments>
                             <progressText>${msg(workspace.recovery.progressMessage)}</progressText>
                             <ruleList>
                                 <platformTest>
@@ -626,9 +618,7 @@
                         </runProgram>
                         <runProgram>
                             <program>${java_executable}</program>
-                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar"
-                                -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data
-                                "${installdir}/workspace" -noSplash</programArguments>
+                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
                             <progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
                             <ruleList>
                                 <platformTest>
@@ -639,10 +629,7 @@
                         </runProgram>
                         <runProgram>
                             <program>${java_executable}</program>
-                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar
-                                "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.workspaceRecovery
-                                -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation
-                                "${installdir}/workspace" -noSplash</programArguments>
+                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.workspaceRecovery -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace" -noSplash</programArguments>
                             <progressText>${msg(workspace.recovery.progressMessage)}</progressText>
                             <ruleList>
                                 <platformTest>
@@ -656,10 +643,7 @@
                         <runProgram>
                             <program>${java_executable}</program>
                             <!-- Change bundle version when Equinox version change -->
-                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar
-                                "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer
-                                -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash
-                            </programArguments>
+                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
                             <progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
                             <ruleList>
                                 <platformTest>
@@ -715,8 +699,7 @@
                         </findFile>
                         <runProgram>
                             <program>${java_executable}</program>
-                            <programArguments>-cp "${generateKeyjar}" org.bonitasoft.security.generateKey.GenerateKeyDev -noPrompt
-                                -output=${installDir}/license/requestKey.txt</programArguments>
+                            <programArguments>-cp "${generateKeyjar}" org.bonitasoft.security.generateKey.GenerateKeyDev -noPrompt -output=${installDir}/license/requestKey.txt</programArguments>
                             <progressText>Generate request key</progressText>
                         </runProgram>
                         <readFile>
