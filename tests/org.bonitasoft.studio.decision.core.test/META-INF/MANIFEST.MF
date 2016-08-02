@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test for decision core
 Bundle-SymbolicName: org.bonitasoft.studio.decision.core.test
-Bundle-Version: 7.3.1.qualifier
+Bundle-Version: 7.3.2.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit,
