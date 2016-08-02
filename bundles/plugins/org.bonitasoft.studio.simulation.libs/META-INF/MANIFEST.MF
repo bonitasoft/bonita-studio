@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Simulation Engine Libs
 Bundle-SymbolicName: org.bonitasoft.studio.simulation.libs;singleton:=true
-Bundle-Version: 7.3.1.qualifier
+Bundle-Version: 7.3.2.qualifier
 Bundle-ClassPath: .,
  lib/bcmail-jdk14-1.38.jar,
  lib/bcmail-jdk14-138.jar,
