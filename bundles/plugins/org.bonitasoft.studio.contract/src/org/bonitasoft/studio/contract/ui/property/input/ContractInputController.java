@@ -86,9 +86,10 @@ public class ContractInputController implements IViewerController {
         @Override
         public void run() {
             if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
-            	viewer.setSelection(new StructuredSelection(input), true);
-            	Widget item = viewer.testFindItem(input);
+                viewer.setSelection(new StructuredSelection(input), false);
+                final Widget item = viewer.testFindItem(input);
             	if(item != null && !item.isDisposed()){
+                    viewer.reveal(input);
             		viewer.editElement(input, NAME_COLUMN_INDEX);
             	}
             }
