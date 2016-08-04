@@ -67,7 +67,9 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.codehaus.groovy.eclipse.ui,
  org.eclipse.debug.ui,
  org.eclipse.core.databinding.beans,
- org.codehaus.groovy.eclipse.dsl;bundle-version="2.9.2"
+ org.codehaus.groovy.eclipse.dsl;bundle-version="2.9.2",
+ org.eclipse.core.net,
+ org.eclipse.osgi
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.inject;version="1.0.0",

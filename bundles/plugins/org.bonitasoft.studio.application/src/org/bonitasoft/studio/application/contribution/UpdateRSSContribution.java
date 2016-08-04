@@ -19,7 +19,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Authenticator;
 import java.net.ConnectException;
+import java.net.PasswordAuthentication;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -28,8 +31,12 @@ import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.eclipse.core.net.proxy.IProxyData;
+import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.osgi.framework.Version;
 
 /**
@@ -76,8 +83,12 @@ public class UpdateRSSContribution implements IPreStartupContribution {
                     InputStream stream = null;
                     FileOutputStream out = null;
                     try {
+                        final URL targetURL = new URL(url);
+                        configureProxySettings(targetURL);
+
                         BonitaStudioLog.debug("Updating RSS feed:" + xmlFile.getName(), ApplicationPlugin.PLUGIN_ID);
-                        final URLConnection connection = new URL(url).openConnection();
+
+                        final URLConnection connection = targetURL.openConnection();
                         connection.setConnectTimeout(4000);
                         stream = connection.getInputStream();
                         out = copyStream(xmlFile, stream, out);
@@ -92,6 +103,31 @@ public class UpdateRSSContribution implements IPreStartupContribution {
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);
             }
+        }
+
+        private void configureProxySettings(final URL url) throws URISyntaxException {
+            IProxyService proxyService = getProxyService();
+            final IProxyData[] proxyDataForHost = proxyService.select(url.toURI());
+            for (final IProxyData data : proxyDataForHost) {
+                final String protocol = data.getType().toLowerCase();
+                if (protocol.startsWith("http") && data.getHost() != null) {
+                    System.setProperty(protocol + ".proxySet", "true");
+                    System.setProperty(protocol + ".proxyHost", data.getHost());
+                    System.setProperty(protocol + ".proxyPort", String.valueOf(data
+                            .getPort()));
+                }
+                if (data.isRequiresAuthentication()) {
+                    Authenticator.setDefault(new Authenticator() {
+
+                        @Override
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(data.getUserId(), data.getPassword().toCharArray());
+                        }
+                    });
+                }
+            }
+            // Close the service and close the service tracker
+            proxyService = null;
         }
 
         private void closeStreams(final InputStream stream, final FileOutputStream out) {
@@ -128,6 +164,13 @@ public class UpdateRSSContribution implements IPreStartupContribution {
         public URL getRss() {
             return rssUrl;
         }
+    }
+
+    public static IProxyService getProxyService() {
+        final BundleContext bc = ApplicationPlugin.getDefault().getBundle().getBundleContext();
+        final ServiceReference serviceReference = bc.getServiceReference(IProxyService.class.getName());
+        final IProxyService service = (IProxyService) bc.getService(serviceReference);
+        return service;
     }
 
     /*
