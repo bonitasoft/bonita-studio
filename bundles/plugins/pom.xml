@@ -17,7 +17,6 @@
         <module>org.bonitasoft.studio-models</module>
         <module>org.bonitasoft.studio.application</module>
         <module>org.bonitasoft.studio.console.libs</module>
-        <module>org.bonitasoft.studio.simulation.libs</module>
         <module>org.bonitasoft.studio.model</module>
         <module>org.bonitasoft.studio.model.edit</module>
         <module>org.bonitasoft.studio.tests-utils</module>
@@ -75,7 +74,6 @@
         <module>org.bonitasoft.studio.repository.themes</module>
         <module>org.bonitasoft.studio.repository.themes.bonitasoft</module>
         <module>org.bonitasoft.studio.scripting</module>
-        <module>org.bonitasoft.studio.simulation</module>
         <module>org.bonitasoft.studio.validation</module>
         <module>org.bonitasoft.studio.validation.common</module>
         <module>org.bonitasoft.studio.validators</module>
