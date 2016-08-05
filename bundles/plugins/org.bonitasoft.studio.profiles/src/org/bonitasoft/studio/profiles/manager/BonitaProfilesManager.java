@@ -65,13 +65,13 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
     private final IMutableActivityManager workingCopy ;
 
     private BonitaProfilesManager(){
-        profiles = new HashMap<String, Set<String>>();
-        featuresByFamily = new HashMap<String, List<String>>() ;
+        profiles = new HashMap<>();
+        featuresByFamily = new HashMap<>() ;
         workingCopy = PlatformUI.getWorkbench().getActivitySupport().createWorkingCopy() ;
 
-        final List<String> modelingFeatures = new ArrayList<String>();
-        final List<String> extensionFeatures = new ArrayList<String>();
-        final List<String> applicationFeatures = new ArrayList<String>();
+        final List<String> modelingFeatures = new ArrayList<>();
+        final List<String> extensionFeatures = new ArrayList<>();
+        final List<String> applicationFeatures = new ArrayList<>();
         for(final Object category : workingCopy.getDefinedCategoryIds()){
             final String categoryId = (String) category ;
             if(isIncludedInModelingFeature(categoryId)){
@@ -109,8 +109,7 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
     protected boolean isIncludedInModelingFeature(final String categoryId) {
         return categoryId.equals(PROCESS_MODELING) ||
                 categoryId.equals(APPEARANCE_CUSTOMIZATION) ||
-                categoryId.equals(VALIDATION) ||
-                categoryId.equals(SIMULATION);
+                categoryId.equals(VALIDATION);
     }
 
     public static BonitaProfilesManager getInstance(){
@@ -232,7 +231,7 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
     }
 
     private Set<String> getAllFeature() {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
         result.addAll(getFeatureByFamily(MODELING_FAMILY)) ;
         result.addAll(getFeatureByFamily(APPLICATION_FAMILY)) ;
         result.addAll(getFeatureByFamily(EXTENSIONS_FAMILY)) ;

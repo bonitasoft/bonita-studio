@@ -190,6 +190,7 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
         treeViewer.addFilter(new EmptyOperationViewFilter());
         treeViewer.addFilter(new EmptyContractInputMappingViewerFilter());
         treeViewer.addFilter(new MainProcessFormMappingViewerFilter());
+        treeViewer.addFilter(new SimulationViewerFilter());
     }
 
     public void setDiagramEditPart(final DiagramEditPart diagramEditPart) {
