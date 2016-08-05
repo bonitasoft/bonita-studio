@@ -35,7 +35,6 @@
 		<module>org.bonitasoft.studio.properties.test</module>
 		<module>org.bonitasoft.studio.repository.test</module>
 		<module>org.bonitasoft.studio.repository.themes.test</module>
-		<module>org.bonitasoft.studio.simulation.tests</module>
 		<module>org.bonitasoft.studio.test.swtbot.util</module>
 		<module>org.bonitasoft.studio.tests.hotspot</module>
 		<module>org.bonitasoft.studio.util.tests</module>

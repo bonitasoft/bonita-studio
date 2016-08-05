@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.test.suite2;
 
-import junit.framework.TestSuite;
-
 import org.bonitasoft.studio.actors.tests.TestProvidedActorFilterDefinitionAndImplementation;
 import org.bonitasoft.studio.application.test.TestExportProcessBar;
 import org.bonitasoft.studio.application.test.deploycommand.TestDeployCommand;
@@ -38,7 +36,6 @@ import org.bonitasoft.studio.migration.tests.document.DocumentMigrationIT;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.test.TestLookAndFeel;
-import org.bonitasoft.studio.simulation.tests.TestSimulationResourceRepository;
 import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.api.TestBonitaAPI;
@@ -72,6 +69,8 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import junit.framework.TestSuite;
+
 /**
  * @author Romain Bioteau
  */
@@ -87,7 +86,6 @@ import org.junit.runners.Suite;
         TestDatabaseConnectorResulset.class,
         TestAutomaticSwitchPerspective.class,
         TestBOSArchiveImport.class,
-        TestSimulationResourceRepository.class,
         TestLookAndFeel.class,
         TestGroovyScriptExpressionEditor.class,
         TestExportProcessBar.class,
