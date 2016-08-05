@@ -309,18 +309,6 @@
                </target>
             </constraint>
             <constraint
-                  class="org.bonitasoft.studio.validation.constraints.process.SimulationConstraint"
-                  id="org.bonitasoft.studio.validation.constraints.SimulationConstraint"
-                  lang="Java"
-                  mode="Batch"
-                  name="%SimulationConstraint"
-                  severity="ERROR"
-                  statusCode="1">
-               <message>
-                  {0}
-               </message>
-            </constraint>
-            <constraint
                   class="org.bonitasoft.studio.validation.constraints.process.SubprocessEventConstraint"
                   id="org.bonitasoft.studio.validation.constraint.subProcessEvent"
                   lang="Java"
