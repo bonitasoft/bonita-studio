@@ -45,8 +45,6 @@ import org.bonitasoft.studio.repository.test.TestExtensionProject;
 import org.bonitasoft.studio.repository.test.TestImportExportAndDeleteRepository;
 import org.bonitasoft.studio.repository.test.TestImportRepository;
 import org.bonitasoft.studio.repository.test.TestRepositoryLocation;
-import org.bonitasoft.studio.simulation.tests.TestSimulationExporter;
-import org.bonitasoft.studio.simulation.tests.TestSimulationLoadProfileRepository;
 import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.EngineConfigurationIT;
 import org.bonitasoft.studio.tests.IHeapDumper;
@@ -86,7 +84,6 @@ import org.junit.runners.Suite;
 @RunWith(BonitaJunit4TestSuite.class)
 @Suite.SuiteClasses({
         TestInitialWorkspace.class,
-        TestMenus.class,
         TestExtensionProject.class,
         TestFunctionRepository.class,
         EngineConfigurationIT.class,
@@ -101,8 +98,6 @@ import org.junit.runners.Suite;
         TestDocumentRefactoring.class,
         TestConfigurationSynhronizer.class,
         TestImportExportAndDeleteRepository.class,
-        TestSimulationLoadProfileRepository.class,
-        TestSimulationExporter.class,
         TestFileWidgetMigration.class,
         TestBugSave.class,
         TestImportExtensionPoint.class,
@@ -121,6 +116,7 @@ import org.junit.runners.Suite;
         TestShowEngineLog.class,
         TestAutoLogin.class,
         DriverAssociationContributionIT.class,
+        TestMenus.class,
         CloseAllEditors.class
 })
 public class AllTests {

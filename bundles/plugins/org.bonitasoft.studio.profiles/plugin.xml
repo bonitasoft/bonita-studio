@@ -42,10 +42,6 @@
             name="Look&apos;n&apos;Feels">
       </category>
       <category
-            id="org.bonitasoft.studio.profiles.simulation"
-            name="Simulation">
-      </category>
-      <category
             id="org.bonitasoft.studio.profiles.validators"
             name="Validators">
       </category>
@@ -114,24 +110,6 @@
             activityId="org.bonitasoft.studio.profiles.dependencies.menu"
             isEqualityPattern="false"
             pattern="org.bonitasoft.studio.groovy.ui/org.bonitasoft.studio.groovy.ui.*">
-      </activityPatternBinding>
-      <activity
-            id="org.bonitasoft.studio.profiles.simulation.view"
-            name="Simulation View">
-      </activity>
-      <activityPatternBinding
-            activityId="org.bonitasoft.studio.profiles.simulation.view"
-            isEqualityPattern="true"
-            pattern="org.bonitasoft.studio.simulation/org.bonitasoft.studio.views.properties.simulation">
-      </activityPatternBinding>
-      <activity
-            id="org.bonitasoft.studio.profiles.simulation.menu"
-            name="Simulation Menu">
-      </activity>
-      <activityPatternBinding
-            activityId="org.bonitasoft.studio.profiles.simulation.menu"
-            isEqualityPattern="false"
-            pattern="org.bonitasoft.studio.simulation/org.bonitasoft.studio.simulation.*">
       </activityPatternBinding>
       <activity
             id="org.bonitasoft.studio.profiles.run.menu"
@@ -234,10 +212,6 @@
             categoryId="org.bonitasoft.studio.profiles.appearance">
       </categoryActivityBinding>
       <categoryActivityBinding
-            activityId="org.bonitasoft.studio.profiles.simulation.view"
-            categoryId="org.bonitasoft.studio.profiles.simulation">
-      </categoryActivityBinding>
-      <categoryActivityBinding
             activityId="org.bonitasoft.studio.profiles.run.menu"
             categoryId="org.bonitasoft.studio.profiles.execution">
       </categoryActivityBinding>
@@ -260,10 +234,6 @@
       <categoryActivityBinding
             activityId="org.bonitasoft.studio.profiles.validators.menu"
             categoryId="org.bonitasoft.studio.profiles.validators">
-      </categoryActivityBinding>
-      <categoryActivityBinding
-            activityId="org.bonitasoft.studio.profiles.simulation.menu"
-            categoryId="org.bonitasoft.studio.profiles.simulation">
       </categoryActivityBinding>
       <categoryActivityBinding
             activityId="org.bonitasoft.studio.profiles.looknfeel.tab"

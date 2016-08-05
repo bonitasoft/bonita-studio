@@ -17,12 +17,12 @@
  */
 package org.bonitasoft.studio.application.test;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.TestCase;
 
 /**
  * @author Romain Bioteau
@@ -30,10 +30,10 @@ import org.eclipse.ui.PlatformUI;
 public class TestMenus extends TestCase {
 
     public void testNbMenus() {
-        Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+        final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         String menus = "";
         int nbRunMenus = 0;
-        for (MenuItem item : shell.getMenuBar().getItems()) {
+        for (final MenuItem item : shell.getMenuBar().getItems()) {
             menus += "\n"+item.getText();
             if (item.getText().toLowerCase().trim().equals("run")) {
                 nbRunMenus++;
@@ -41,9 +41,9 @@ public class TestMenus extends TestCase {
         }
         assertEquals("Run menu should not appears", 0, nbRunMenus);
         if(Platform.getProduct().getId().equals("org.bonitasoft.studioEx.product")){
-            assertEquals("Menu bar polluted by third-party menus.\n available menu:"+menus,12, shell.getMenuBar().getItemCount());
+            assertEquals("Menu bar polluted by third-party menus.\n available menu:" + menus, 11, shell.getMenuBar().getItemCount());
         } else if(Platform.getProduct().getId().equals("org.bonitasoft.studio.product")){
-            assertEquals("Menu bar polluted by third-party menus.\n available menu:"+menus, 8, shell.getMenuBar().getItemCount());
+            assertEquals("Menu bar polluted by third-party menus.\n available menu:" + menus, 7, shell.getMenuBar().getItemCount());
         }
     }
 

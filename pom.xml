@@ -16,7 +16,6 @@
 		<bundle.version>7.4.0-SNAPSHOT</bundle.version>
 		<ui.designer.version>1.4.1</ui.designer.version>
 		<engine.version>7.4.0-SNAPSHOT</engine.version>
-		<simulation.version>6.1.0</simulation.version>
 		<filters.version>7.4.0-SNAPSHOT</filters.version>
 		<theme.builder.version>1.1.0</theme.builder.version>
 		<watchdog.version>7.2.0</watchdog.version>
