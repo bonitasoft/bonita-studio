@@ -19,6 +19,11 @@
             id="org.bonitasoft.studio.businessobject.exportCommand"
             name="%Export">
       </command>
+      <command
+            defaultHandler="org.bonitasoft.studio.businessobject.ui.handler.OpenH2ConsoleHandler"
+            id="org.bonitasoft.studio.businessobject.openH2Console"
+            name="%openH2Console">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -32,6 +37,10 @@
                     commandId="org.bonitasoft.studio.businessobject.manage"
                     icon="icons/manage-bdm.png"
                     id="org.bonitasoft.studio.businessobject.manage.menu"
+                    style="push">
+              </command>
+              <command
+                    commandId="org.bonitasoft.studio.businessobject.openH2Console"
                     style="push">
               </command>
               <separator
