@@ -23,6 +23,7 @@ import org.bonitasoft.studio.actors.tests.SWTbot.ActorFilterEditionTest;
 import org.bonitasoft.studio.actors.tests.SWTbot.ActorFilterImplementationTest;
 import org.bonitasoft.studio.actors.tests.exporter.SWTBotActorFilterExportTests;
 import org.bonitasoft.studio.actors.tests.organization.OrganizationCreationTest;
+import org.bonitasoft.studio.application.test.TestMenus;
 import org.bonitasoft.studio.common.diagram.test.OpenNameAndVersionDiagramForDiagramTest;
 import org.bonitasoft.studio.common.diagram.test.OpenNameAndVersionDiagramTest;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -70,6 +71,7 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaTestSuite.class)
 @Suite.SuiteClasses({
+        TestMenus.class,
         OpenNameAndVersionForDiagramDialogTest.class,
         TestBugsSWTBot.class,
         DiagramTests.class,

@@ -18,6 +18,9 @@ import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterators.forArray;
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
@@ -26,8 +29,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.bind.JAXBException;
+
+import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.dao.BusinessObjectDAO;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
@@ -37,7 +44,10 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -47,9 +57,13 @@ import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.graphics.Image;
+import org.xml.sax.SAXException;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
+import com.google.common.io.InputSupplier;
 
 /**
  * @author Romain Bioteau
@@ -58,9 +72,9 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
 
     private static final String STORE_NAME = "bdm";
 
-    public static final String BDM_TYPE_EXTENSION = "zip";
+    public static final String BDM_TYPE_EXTENSION = "xml";
 
-    private static final Set<String> extensions = new HashSet<String>();
+    private static final Set<String> extensions = new HashSet<>();
 
     private static final String BDM_CLIENT_POJO_JAR_NAME = "bdm-client-pojo.jar";
 
@@ -136,11 +150,42 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
 
     @Override
     protected BusinessObjectModelFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
-        final BusinessObjectModelFileStore fileStore = superDoImportInputStream(fileName, inputStream);
+        BusinessObjectModelFileStore fileStore = null;
+        if (BusinessObjectModelFileStore.ZIP_FILENAME.equals(fileName)) {
+            try {
+                final BusinessObjectModelConverter converter = new BusinessObjectModelConverter();
+                final BusinessObjectModel businessObjectModel = converter.unzip(ByteStreams.toByteArray(inputStream));
+                final InputSupplier<ByteArrayInputStream> inputSupplier = ByteStreams.newInputStreamSupplier(converter.marshall(businessObjectModel));
+                fileStore = superDoImportInputStream(BusinessObjectModelFileStore.BOM_FILENAME, inputSupplier.getInput());
+            } catch (IOException | JAXBException | SAXException e) {
+                BonitaStudioLog.error("Failed to import Business data model", e);
+            }
+        } else {
+            fileStore = superDoImportInputStream(fileName, inputStream);
+        }
+
         if (isDeployable()) {
             deploy(fileStore);
         }
         return fileStore;
+    }
+    
+    @Override
+    public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
+        super.migrate(monitor);
+        final BusinessObjectModelFileStore fStore = getChild(BusinessObjectModelFileStore.ZIP_FILENAME);
+        if(fStore != null){
+            final File legacyBDM = fStore.getResource().getLocation().toFile();
+            try {
+                final BusinessObjectModelConverter converter = new BusinessObjectModelConverter();
+                final BusinessObjectModel businessObjectModel = converter.unzip( Files.toByteArray(legacyBDM) );
+                final InputSupplier<ByteArrayInputStream> inputSupplier = ByteStreams.newInputStreamSupplier(converter.marshall(businessObjectModel));
+                doImportInputStream(BusinessObjectModelFileStore.BOM_FILENAME, inputSupplier.getInput());
+            } catch (IOException | JAXBException | SAXException e) {
+                throw new MigrationException("Failed to migrate Business data model", e);
+            }
+            fStore.getResource().delete(true, monitor);
+        }
     }
 
     protected BusinessObjectModelFileStore superDoImportInputStream(final String fileName, final InputStream inputStream) {

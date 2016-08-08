@@ -63,7 +63,7 @@ public class CreateDeployExportBusinessObjectIT extends SWTBotGefTestCase {
         tmpFile = new File(System.getProperty("java.io.tmpdir"), "bdm.zip");
 
         bdmStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        final BusinessObjectModelFileStore businessObjectModelFileStore = bdmStore.getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+        final BusinessObjectModelFileStore businessObjectModelFileStore = bdmStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
         if (businessObjectModelFileStore != null) {
             businessObjectModelFileStore.delete();
         }
@@ -153,7 +153,7 @@ public class CreateDeployExportBusinessObjectIT extends SWTBotGefTestCase {
     }
 
     protected void validateBDMContent() {
-        final BusinessObjectModelFileStore fStore = bdmStore.getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+        final BusinessObjectModelFileStore fStore = bdmStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
         assertThat(fStore).isNotNull();
         final BusinessObjectModel businessObjectModel = fStore.getContent();
         assertThat(businessObjectModel).isNotNull();
