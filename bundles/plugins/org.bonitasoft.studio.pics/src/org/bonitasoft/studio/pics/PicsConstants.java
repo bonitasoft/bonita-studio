@@ -370,5 +370,7 @@ public class PicsConstants {
     public static String processDiagrammeWithRedLock = "editor/processDiagrammeWithRedLock.png";
     public static String formDiagramWithGreyLock = "editor/formDiagramWithGreyLock.png";
     public static String formDiagramWithRedLock = "editor/formDiagramWithRedLock.png";
-
+    
+    public static String arrowDownOrder = "arrow-down-sm.png"; //$NON-NLS-1$
+    public static String arrowUpOrder = "arrow-up-sm.png"; //$NON-NLS-1$
 }
