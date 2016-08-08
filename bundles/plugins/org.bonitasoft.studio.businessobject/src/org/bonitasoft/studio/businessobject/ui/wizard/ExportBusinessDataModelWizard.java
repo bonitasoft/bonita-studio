@@ -118,11 +118,11 @@ public class ExportBusinessDataModelWizard extends Wizard {
         if (!destinationPath.endsWith(File.separator)) {
             destinationPath = destinationPath + File.separatorChar;
         }
-        return destinationPath + getDefaultArtifact().getName();
+        return destinationPath + BusinessObjectModelFileStore.ZIP_FILENAME;
     }
 
     protected BusinessObjectModelFileStore getDefaultArtifact() {
-        return getStore().getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+        return getStore().getChild(BusinessObjectModelFileStore.BOM_FILENAME);
     }
 
     protected void runExportOperationInWizard(final String destinationPath) throws InvocationTargetException,
