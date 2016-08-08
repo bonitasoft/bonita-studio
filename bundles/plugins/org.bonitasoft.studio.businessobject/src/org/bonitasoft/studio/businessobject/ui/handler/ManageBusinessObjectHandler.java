@@ -65,9 +65,9 @@ public class ManageBusinessObjectHandler extends AbstractBusinessObjectHandler {
     }
 
     protected ManageBusinessDataModelWizard createWizard() {
-        BusinessObjectModelFileStore fileStore = getStore().getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+        BusinessObjectModelFileStore fileStore = getStore().getChild(BusinessObjectModelFileStore.BOM_FILENAME);
         if (fileStore == null) {
-            fileStore = getStore().createRepositoryFileStore(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+            fileStore = getStore().createRepositoryFileStore(BusinessObjectModelFileStore.BOM_FILENAME);
         }
         return new ManageBusinessDataModelWizard(fileStore);
     }
