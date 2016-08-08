@@ -42,6 +42,11 @@ public class OpenH2ConsoleHandler extends AbstractHandler {
     private static final String URL = "jdbc:h2:tcp://localhost:9091/business_data.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;";
     private static final String DRIVER = "org.h2.Driver";
     private static final String USER = "sa";
+    private static final int PORT = SocketUtil.findFreePort();
+
+
+
+
     /*
      * (non-Javadoc)
      * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -51,12 +56,26 @@ public class OpenH2ConsoleHandler extends AbstractHandler {
         try {
             final String h2JarPath = locateH2jar(
                     rootFile());
-            getRuntime().exec(String.format("java -jar %s -browser -webPort %s -tcp -user %s -url %s -driver %s", h2JarPath, SocketUtil.findFreePort(),
-                    USER, URL, DRIVER));
+            final Process process = getRuntime()
+                    .exec(String.format("java -jar %s -browser -webPort %s -tcp -user %s -url %s -driver %s", h2JarPath, PORT,
+                            USER, URL, DRIVER));
+            getRuntime().addShutdownHook(exitProcessHook(process));
         } catch (final IOException e) {
             throw new ExecutionException("Failed to locate h2 jar", e);
         }
         return IStatus.OK;
+    }
+
+    private Thread exitProcessHook(final Process process) {
+        return new Thread() {
+
+            @Override
+            public void run() {
+                if (process != null && process.isAlive()) {
+                    process.destroy();
+                }
+            }
+        };
     }
 
     protected File rootFile() {
