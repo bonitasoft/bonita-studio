@@ -16,6 +16,8 @@ package org.bonitasoft.studio.businessobject.ui.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -41,6 +43,8 @@ public class OpenH2ConsoleHandlerTest {
     public ExpectedException expectedException = ExpectedException.none();
     @Mock
     private Runtime runtime;
+    @Mock
+    private Process process;
 
     @Test
     public void should_locate_h2_jar_from_tomcat_folder() throws Exception {
@@ -62,6 +66,19 @@ public class OpenH2ConsoleHandlerTest {
         expectedException.expect(FileNotFoundException.class);
 
         openH2ConsoleHandler.locateH2jar(new File(OpenH2ConsoleHandlerTest.class.getResource("/workspaceWithoutH2").toURI().toURL().getFile()));
+    }
+
+    @Test
+    public void should_destroy_processes_on_shutdown() throws Exception {
+        final OpenH2ConsoleHandler openH2ConsoleHandler = spy(new OpenH2ConsoleHandler());
+        doReturn(runtime).when(openH2ConsoleHandler).getRuntime();
+        doReturn(process).when(runtime).exec(anyString());
+        doReturn(rootFile()).when(openH2ConsoleHandler).rootFile();
+        doReturn("h2.jar").when(openH2ConsoleHandler).locateH2jar(any(File.class));
+
+        openH2ConsoleHandler.execute(null);
+
+        verify(runtime).addShutdownHook(notNull(Thread.class));
     }
 
     @Test
