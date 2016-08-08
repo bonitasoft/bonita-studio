@@ -17,7 +17,6 @@ package org.bonitasoft.studio.test.suite;
 import org.bonitasoft.studio.actors.tests.importer.TestImportActorFilter;
 import org.bonitasoft.studio.actors.tests.organization.TestExportOrganization;
 import org.bonitasoft.studio.actors.tests.organization.TestImportOrganization;
-import org.bonitasoft.studio.application.test.TestMenus;
 import org.bonitasoft.studio.application.test.TestOperationHistory;
 import org.bonitasoft.studio.application.test.TestShowEngineLog;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -116,7 +115,6 @@ import org.junit.runners.Suite;
         TestShowEngineLog.class,
         TestAutoLogin.class,
         DriverAssociationContributionIT.class,
-        TestMenus.class,
         CloseAllEditors.class
 })
 public class AllTests {

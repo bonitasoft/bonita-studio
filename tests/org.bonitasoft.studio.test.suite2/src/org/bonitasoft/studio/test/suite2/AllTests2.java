@@ -42,6 +42,7 @@ import org.bonitasoft.studio.tests.api.TestBonitaAPI;
 import org.bonitasoft.studio.tests.bar.ExportBarIT;
 import org.bonitasoft.studio.tests.bug.TestBugs;
 import org.bonitasoft.studio.tests.businessobject.DeployBDROperationIT;
+import org.bonitasoft.studio.tests.businessobject.ImportLegacyBDMIT;
 import org.bonitasoft.studio.tests.connectors.GroovyConnectorIT;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorResulset;
 import org.bonitasoft.studio.tests.data.DataRefactorIT;
@@ -112,6 +113,7 @@ import junit.framework.TestSuite;
         DocumentMigrationIT.class,
         GroovyConnectorIT.class,
         DeployBDROperationIT.class,
+        ImportLegacyBDMIT.class,
         TestProcessParameters.class,
         TestParametersRefactoring.class,
         ExportBarIT.class,
