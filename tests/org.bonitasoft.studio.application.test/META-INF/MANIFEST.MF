@@ -27,7 +27,9 @@ Require-Bundle: org.junit,
  org.bonitasoft.studio.common.repository;bundle-version="1.0.0",
  org.bonitasoft.studio.repository.themes;bundle-version="1.0.0",
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
- org.bonitasoft.studio.importer.bos
+ org.bonitasoft.studio.importer.bos,
+ org.bonitasoft.studio.swtbot.framework,
+ org.bonitasoft.studio.test.swtbot.util
 Export-Package: org.bonitasoft.studio.application.test,org.bonitasoft.
  studio.application.test.deploycommand,org.bonitasoft.studio.applicati
  on.test.duplicatecommand

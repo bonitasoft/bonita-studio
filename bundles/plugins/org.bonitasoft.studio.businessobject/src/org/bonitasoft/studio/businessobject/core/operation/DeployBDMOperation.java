@@ -179,7 +179,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
     protected void removeDependency() {
         final DependencyRepositoryStore dependencyRepositoryStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DependencyRepositoryStore.class);
-        final DependencyFileStore bdmFileStore = dependencyRepositoryStore.getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+        final DependencyFileStore bdmFileStore = dependencyRepositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
         if (bdmFileStore != null) {
             bdmFileStore.delete();
         }

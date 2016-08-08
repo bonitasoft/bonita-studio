@@ -56,7 +56,7 @@ public class ExportBusinessDataModelHandler extends AbstractBusinessObjectHandle
     @Override
     public boolean isEnabled() {
         if (!PlatformUtil.isHeadless() && RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
-            final BusinessObjectModelFileStore fileStore = getStore().getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+            final BusinessObjectModelFileStore fileStore = getStore().getChild(BusinessObjectModelFileStore.BOM_FILENAME);
             return fileStore != null && fileStore.getContent() != null && !fileStore.getContent().getBusinessObjects().isEmpty();
         }
         return false;
