@@ -17,35 +17,52 @@
  */
 package org.bonitasoft.studio.application.test;
 
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.swtbot.framework.rule.LegacySWTGefBotRule;
+import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import junit.framework.TestCase;
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class TestMenus extends SWTBotGefTestCase {
 
-/**
- * @author Romain Bioteau
- */
-public class TestMenus extends TestCase {
+    @Rule
+    public LegacySWTGefBotRule rule = new LegacySWTGefBotRule(bot);
 
-    public void testNbMenus() {
-        final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-        String menus = "";
-        int nbRunMenus = 0;
-        for (final MenuItem item : shell.getMenuBar().getItems()) {
-            menus += "\n"+item.getText();
-            if (item.getText().toLowerCase().trim().equals("run")) {
-                nbRunMenus++;
+    @Test
+    public void should_have_only_valid_menus() {
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot, RepositoryManager.getInstance().getCurrentRepository().getName());
+        final SWTBotMenu mainMenu = bot.menu("Diagram");
+        Display.getDefault().syncExec(new Runnable() {
+
+            public void run() {
+                final Menu parent = mainMenu.widget.getParent();
+                String menus = "";
+                int nbRunMenus = 0;
+                for (final MenuItem item : parent.getItems()) {
+                    menus += "\n" + item.getText();
+                    if (item.getText().toLowerCase().trim().equals("run")) {
+                        nbRunMenus++;
+                    }
+                }
+                assertEquals("Run menu should not appears", 0, nbRunMenus);
+                if (Platform.getProduct().getId().equals("org.bonitasoft.studioEx.product")) {
+                    assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menus), 11,
+                            parent.getItemCount());
+                } else if (Platform.getProduct().getId().equals("org.bonitasoft.studio.product")) {
+                    assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menus), 7,
+                            parent.getItemCount());
+                }
             }
-        }
-        assertEquals("Run menu should not appears", 0, nbRunMenus);
-        if(Platform.getProduct().getId().equals("org.bonitasoft.studioEx.product")){
-            assertEquals("Menu bar polluted by third-party menus.\n available menu:" + menus, 11, shell.getMenuBar().getItemCount());
-        } else if(Platform.getProduct().getId().equals("org.bonitasoft.studio.product")){
-            assertEquals("Menu bar polluted by third-party menus.\n available menu:" + menus, 7, shell.getMenuBar().getItemCount());
-        }
+        });
     }
-
 
 }

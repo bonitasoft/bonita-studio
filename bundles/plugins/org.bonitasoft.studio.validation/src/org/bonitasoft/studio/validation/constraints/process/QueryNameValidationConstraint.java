@@ -57,7 +57,7 @@ public class QueryNameValidationConstraint extends AbstractLiveValidationMarkerC
 
     protected BusinessObjectModelFileStore getCurrentBDM() {
         final BusinessObjectModelRepositoryStore businessObjectModelRepositoryStore = getBusinessObjectDefinitionStore();
-        return businessObjectModelRepositoryStore.getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+        return businessObjectModelRepositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
     }
 
     protected BusinessObjectModelRepositoryStore getBusinessObjectDefinitionStore() {
