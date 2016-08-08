@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.businessobject.core.repository;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +27,9 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
@@ -40,17 +44,20 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
 import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
  */
 public class BusinessObjectModelFileStore extends AbstractFileStore {
 
-    public static final String DEFAULT_BDM_FILENAME = "bdm.zip";
+    public static final String BDM_JAR_NAME = "bdm-client-pojo.jar";
+    public static final String ZIP_FILENAME = "bdm.zip";
+    public static final String BOM_FILENAME = "bom.xml";
 
     private final BusinessObjectModelConverter converter;
 
-    private final Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<Long, BusinessObjectModel>();
+    private final Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<>();
 
     public BusinessObjectModelFileStore(final String fileName, final IRepositoryStore<BusinessObjectModelFileStore> store) {
         super(fileName, store);
@@ -69,7 +76,7 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
             return cachedBusinessObjectModel.get(modificationStamp);
         }
         try (InputStream contents = resource.getContents()) {
-            final BusinessObjectModel bom = converter.unzip(ByteStreams.toByteArray(contents));
+            final BusinessObjectModel bom = converter.unmarshall(ByteStreams.toByteArray(contents));
             cachedBusinessObjectModel.clear();
             cachedBusinessObjectModel.put(modificationStamp, bom);
             return bom;
@@ -89,8 +96,8 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
         Assert.isNotNull(content);
         Assert.isLegal(content instanceof BusinessObjectModel);
         try {
-            final byte[] zip = converter.zip((BusinessObjectModel) content);
-            final ByteArrayInputStream source = new ByteArrayInputStream(zip);
+            final byte[] xml = converter.marshall((BusinessObjectModel) content);
+            final ByteArrayInputStream source = new ByteArrayInputStream(xml);
             final IFile resource = getResource();
             if (resource.exists()) {
                 resource.setContents(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
@@ -158,6 +165,25 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
     }
 
     @Override
+    public void export(String targetAbsoluteFilePath) throws IOException {
+        checkWritePermission(new File(targetAbsoluteFilePath));
+        final IResource file = getResource();
+        if (file != null) {
+            final File to = new File(targetAbsoluteFilePath);
+            to.mkdirs();
+            final File target = new File(to,ZIP_FILENAME);
+            if (target.exists()) {
+                if (FileActionDialog.overwriteQuestion(file.getName())) {
+                    PlatformUtil.delete(target, Repository.NULL_PROGRESS_MONITOR);
+                } else {
+                    return;
+                }
+            }
+            Files.copy(ByteStreams.newInputStreamSupplier(toByteArray()), target);
+        }
+    }
+
+    @Override
     public byte[] toByteArray() {
         try {
             return converter.zip(getContent());
@@ -177,7 +203,7 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
     }
 
     public String getDependencyName() {
-        return getName().replace(".zip", "") + "-client-pojo.jar";
+        return BDM_JAR_NAME;
     }
 
     public boolean sameContentAs(final BusinessObjectModel businessObjectModel) {
