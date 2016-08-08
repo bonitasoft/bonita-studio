@@ -71,7 +71,7 @@ public class OpenH2ConsoleHandler extends AbstractHandler {
 
             @Override
             public void run() {
-                if (process != null && process.isAlive()) {
+                if (process != null) {
                     process.destroy();
                 }
             }
