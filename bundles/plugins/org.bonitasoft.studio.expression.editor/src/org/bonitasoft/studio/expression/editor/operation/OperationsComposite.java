@@ -34,7 +34,9 @@ import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.OperationContainer;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.Binding;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -51,6 +53,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -62,11 +67,12 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 public abstract class OperationsComposite extends Composite implements IBonitaVariableContext {
 
     public static final String SWTBOT_ID_REMOVE_LINE = "actionLinesCompositeRemoveButton";
-    protected List<OperationViewer> operationViewers = new ArrayList<OperationViewer>();
-    protected ArrayList<Button> removes = new ArrayList<Button>();
+    protected List<OperationViewer> operationViewers = new ArrayList<>();
+    protected List<Button> removes = new ArrayList<>();
+    protected List<ToolBar> moveToolbars = new ArrayList<>();
     protected TabbedPropertySheetPage tabbedPropertySheetPage;
     protected EMFDataBindingContext context;
-    protected ArrayList<List<Binding>> bindings = new ArrayList<List<Binding>>();
+    protected ArrayList<List<Binding>> bindings = new ArrayList<>();
     private TabbedPropertySheetWidgetFactory widgetFactory;
     private EObject eObject;
     protected final Composite parent;
@@ -75,7 +81,7 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
     private final ViewerFilter actionExpressionFilter;
     private IExpressionNatureProvider storageExpressionNatureProvider;
     private IExpressionNatureProvider actionExpressionNatureProvider;
-    private final List<IExpressionValidator> validators = new ArrayList<IExpressionValidator>();
+    private final List<IExpressionValidator> validators = new ArrayList<>();
     private EObject eObjectContext;
     private boolean isPageFlowContext = false;
     private final Composite operationComposite;
@@ -87,11 +93,11 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
         parent = mainComposite;
         setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(0, 20, 0, 0).create());
         operationComposite = new Composite(this, SWT.NONE);
-        operationComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+        operationComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).spacing(0, 5).create());
         operationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         final Composite buttonComposite = new Composite(this, SWT.NONE);
         buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
-        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
         this.isPageFlowContext = isPageFlowContext;
         if (tabbedPropertySheetPage != null) {
             widgetFactory = tabbedPropertySheetPage.getWidgetFactory();
@@ -180,13 +186,10 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
         } else {
             getActions().remove(i);
         }
+        updateOrderButtons();
         refresh();
     }
 
-    /**
-     * @param i
-     * @return
-     */
     protected int removeLineUI(final int i) {
         final int lineNumber = i;
         removes.get(lineNumber).dispose();
@@ -194,19 +197,75 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
         final OperationViewer operationViewer = operationViewers.get(lineNumber);
         operationViewer.dispose();
         operationViewers.remove(lineNumber);
+        final ToolBar toolBar = moveToolbars.remove(lineNumber);
+        toolBar.dispose();
         return lineNumber;
     }
 
     public void addLineUI(final Operation action) {
+        moveToolbars.add(createMoveToolbar(action));
         final OperationViewer opViewer = createOperationViewer(action);
         operationViewers.add(opViewer);
         removes.add(createRemoveButton(opViewer));
+        updateOrderButtons();
+    }
+
+    private ToolBar createMoveToolbar(final Operation action) {
+        final ToolBar moveTB = new ToolBar(operationComposite, SWT.FLAT | SWT.NO_FOCUS | SWT.VERTICAL);
+        moveTB.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).create());
+        if(widgetFactory != null){
+            widgetFactory.adapt(moveTB);
+        }
+        final ToolItem moveTop = new ToolItem(moveTB, SWT.FLAT | SWT.NO_FOCUS);
+        moveTop.setImage(Pics.getImage(PicsConstants.arrowUpOrder));
+        moveTop.setToolTipText(Messages.upRowSort);
+        moveTop.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                final EList<Operation> actions = (EList<Operation>) getActions();
+                actions.move(actions.indexOf(action) - 1, action);
+                org.eclipse.swt.custom.BusyIndicator.showWhile(Display.getDefault(),new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                        removeLinesUI();
+                        fillTable();
+                        refresh();
+                    }
+                });
+
+            }
+        });
+        final ToolItem moveDown = new ToolItem(moveTB, SWT.FLAT | SWT.NO_FOCUS);
+        moveDown.setImage(Pics.getImage(PicsConstants.arrowDownOrder));
+        moveDown.setToolTipText(Messages.downRowSort);
+        moveDown.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                final EList<Operation> actions = (EList<Operation>) getActions();
+                actions.move(actions.indexOf(action) + 1, action);
+                org.eclipse.swt.custom.BusyIndicator.showWhile(Display.getDefault(),new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                        removeLinesUI();
+                        fillTable();
+                        refresh();
+                    }
+                });
+
+            }
+        });
+
+        return moveTB;
     }
 
     protected OperationViewer createOperationViewer(final Operation action) {
         final OperationViewer viewer = new OperationViewer(operationComposite, widgetFactory, getEditingDomain(), actionExpressionFilter,
                 storageExpressionFilter, isPageFlowContext);
-        viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        viewer.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
         if (context != null) {
             viewer.setContext(context);
         }
@@ -268,6 +327,25 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
     public void fillTable() {
         for (final Operation action : getActions()) {
             addLineUI(action);
+        }
+        updateOrderButtons();
+    }
+
+    private void updateOrderButtons() {
+        for (final ToolBar tb : moveToolbars) {
+            if (moveToolbars.indexOf(tb) == getActions().size() - 1 && moveToolbars.indexOf(tb) == 0) {
+                tb.getItem(0).setEnabled(false);
+                tb.getItem(1).setEnabled(false);
+            }else  if (moveToolbars.indexOf(tb) == 0) {
+                tb.getItem(1).setEnabled(true);
+                tb.getItem(0).setEnabled(false);
+            } else if (moveToolbars.indexOf(tb) == getActions().size() - 1) {
+                tb.getItem(1).setEnabled(false);
+                tb.getItem(0).setEnabled(true);
+            }else {
+                tb.getItem(0).setEnabled(true);
+                tb.getItem(1).setEnabled(true);
+            }
         }
     }
 
