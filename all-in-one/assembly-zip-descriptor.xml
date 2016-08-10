@@ -15,5 +15,14 @@
 			</includes>
 			<outputDirectory>/</outputDirectory>
 		</fileSet>
+		<fileSet>
+            		<outputDirectory>/</outputDirectory>
+            		<directory>**/**</directory>
+            		<includes>
+                		<include>*.sh</include>
+                		<include>*.bat</include>
+            		</includes>
+        		<fileMode>740</fileMode>
+        	</fileSet>
 	</fileSets>
 </assembly>
