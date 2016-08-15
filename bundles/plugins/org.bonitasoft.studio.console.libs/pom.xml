@@ -18,6 +18,7 @@
 		<lib.dir>lib</lib.dir>
 		<tomcat.version>7.0.67</tomcat.version>
 		<security.config.file>${basedir}/tomcat/setup/platform_conf/initial/tenant_template_portal/security-config.properties</security.config.file>
+        <console.config.file>${basedir}/tomcat/setup/platform_conf/initial/tenant_template_portal/console-config.properties</console.config.file>
 	</properties>
 
 	<dependencies>
@@ -344,18 +345,35 @@
                         <goals>
                             <goal>replace</goal>
                         </goals>
+                        <configuration>
+                            <file>${security.config.file}</file>
+                            <replacements>
+                                <replacement>
+                                    <token>security.rest.api.authorizations.check.debug   false</token>
+                                    <value>#Debug mode enabled by default in Studio environment
+        security.rest.api.authorizations.check.debug   true</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Enable web debug mode</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <file>${console.config.file}</file>
+                            <replacements>
+                                <replacement>
+                                    <token>custom.page.debug                       false</token>
+                                    <value>#Debug mode enabled by default in Studio environment
+custom.page.debug                       true</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <file>${security.config.file}</file>
-                    <replacements>
-                        <replacement>
-                            <token>security.rest.api.authorizations.check.debug   false</token>
-                            <value>#Debug mode enabled by default in Studio environment
-security.rest.api.authorizations.check.debug   true</value>
-                        </replacement>
-                    </replacements>
-                </configuration>
             </plugin>
 		</plugins>
 	</build>
