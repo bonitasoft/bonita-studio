@@ -21,43 +21,45 @@ import org.bonitasoft.studio.importer.ImporterFactory;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.eclipse.jface.wizard.Wizard;
 
-/**
- * @author Mickael Istria
- *
- */
 public class ImportFileWizard extends Wizard {
 
-	private ImportFileWizardPage page;
-	private String filePath;
-	private ImporterFactory selectedTransfo;
-	
+    private ImportFileData importFileData;
+    
 	@Override
 	public String getWindowTitle() {
 		return Messages.importTitle ;
 	}
 		
-	public void addPages() {
-		page = new ImportFileWizardPage();
-		addPage(page);
+	@Override
+    public void addPages() {
+		addPage(createPage());
 	}
 
-	@Override
+    protected ImportFileWizardPage createPage() {
+        return new ImportFileWizardPage(getImportFileData());
+    }
+
+    protected ImportFileData getImportFileData() {
+        if (importFileData == null) {
+            importFileData = createImportFileData();
+        }
+        return importFileData;
+    }
+
+    protected ImportFileData createImportFileData() {
+        return new ImportFileData();
+    }
+
+    @Override
 	public boolean performFinish() {
-		this.filePath = page.getSelectedFilePath();
-		this.selectedTransfo = page.getSelectedTransfo();
 		return true;
-	}
-	
-	@Override
-	public boolean canFinish() {
-		return page.isPageComplete();
 	}
 
 	public String getSelectedFilePath() {
-		return this.filePath;
+        return importFileData.getFilePath();
 	}
 
 	public ImporterFactory getSelectedTransfo() {
-		return this.selectedTransfo;
+        return importFileData.getImporterFactory();
 	}
 }
