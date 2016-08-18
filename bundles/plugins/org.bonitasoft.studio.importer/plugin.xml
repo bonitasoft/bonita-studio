@@ -36,7 +36,6 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="org.bonitasoft.studio.importer.handler.ImportHandler"
             id="org.bonitasoft.studio.application.importCommand"
             name="%importLabel">
       </command>
@@ -48,6 +47,18 @@
             priority="0"
             toolbarPosition="4">
       </coolbarItem>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.bonitasoft.studio.importer.handler.ImportHandler"
+            commandId="org.bonitasoft.studio.application.importCommand">
+         <activeWhen>
+            <reference
+                  definitionId="isABonitaProduct">
+            </reference>
+         </activeWhen>
+      </handler>
    </extension>
 
 </plugin>
