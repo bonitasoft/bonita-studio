@@ -52,7 +52,7 @@ public class BosArchiveProcessor extends ToProcProcessor {
         operation = new ImportBosArchiveOperation();
         operation.setProgressDialog(progressDialog);
         operation.setArchiveFile(archiveFile.getAbsolutePath());
-        operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        operation.setCurrentRepository(RepositoryManager.getInstance().getRepository(getRepository()));
         return operation;
     }
 

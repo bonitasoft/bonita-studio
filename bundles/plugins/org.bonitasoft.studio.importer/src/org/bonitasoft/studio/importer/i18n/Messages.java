@@ -30,7 +30,7 @@ public class Messages extends NLS {
     public static String importTitle;
     public static String importFileTitle;
     public static String importFileDescription;
-    public static String selectImportLabel;
+    public static String fileFormat;
     public static String importDescriptionLabel;
     public static String selectFileToImport;
     public static String browseButton_label;
@@ -46,5 +46,6 @@ public class Messages extends NLS {
     public static String skipValidation;
     public static String importStatusMsg;
     public static String copyToClipboard;
+    public static String invalidFilePath;
 
 }

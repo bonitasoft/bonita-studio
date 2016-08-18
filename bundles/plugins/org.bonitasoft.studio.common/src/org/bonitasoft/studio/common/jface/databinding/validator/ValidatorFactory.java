@@ -50,7 +50,7 @@ public class ValidatorFactory {
         return new FileNameValidator(inputName);
     }
 
-    public static IValidator pathValidator(final String inputName) {
+    public static PathValidator pathValidator(final String inputName) {
         return new PathValidator(inputName);
     }
 

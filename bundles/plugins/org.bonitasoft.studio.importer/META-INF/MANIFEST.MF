@@ -29,7 +29,9 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.connectors.model;bundle-version="6.5.0",
  com.google.guava;bundle-version="11.0.1",
  org.junit;resolution:=optional,
- org.mockito;bundle-version="1.9.5";resolution:=optional
+ org.mockito;bundle-version="1.9.5";resolution:=optional,
+ org.eclipse.jface.databinding,
+ org.eclipse.core.databinding.beans
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.importer,
@@ -38,7 +40,8 @@ Export-Package: org.bonitasoft.studio.importer,
  org.bonitasoft.studio.importer.builder,
  org.bonitasoft.studio.importer.handler,
  org.bonitasoft.studio.importer.processors,
- org.bonitasoft.studio.importer.ui.dialog
+ org.bonitasoft.studio.importer.ui.dialog,
+ org.bonitasoft.studio.importer.ui.wizard
 Bundle-ClassPath: .
 Bundle-Localization: plugin
 Import-Package: org.bonitasoft.engine.bpm.connector

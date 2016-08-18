@@ -68,7 +68,7 @@ public class ImportHandler extends AbstractHandler {
     }
 
     public void execute() {
-        final ImportFileWizard importFileWizard = new ImportFileWizard();
+        final ImportFileWizard importFileWizard = createImportWizard();
         new CustomWizardDialog(Display.getDefault().getActiveShell(), importFileWizard, Messages.importButtonLabel).open();
         final String absoluteFilePath = importFileWizard.getSelectedFilePath();
         if (absoluteFilePath == null) {
@@ -76,7 +76,7 @@ public class ImportHandler extends AbstractHandler {
         }
         final File selectedFile = new File(absoluteFilePath);
         final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(Display.getDefault().getActiveShell());
-        final ImportFileOperation operation = new ImportFileOperation(importFileWizard.getSelectedTransfo(), selectedFile, progressManager);
+        final ImportFileOperation operation = createImportFileOperation(importFileWizard, selectedFile, progressManager);
         try {
             progressManager.run(true, false, operation);
         } catch (final InvocationTargetException | InterruptedException e) {
@@ -94,5 +94,14 @@ public class ImportHandler extends AbstractHandler {
         }
         PlatformUtil.openIntroIfNoOtherEditorOpen();
         Display.getDefault().asyncExec(openStatusDialog(operation));
+    }
+
+    protected ImportFileOperation createImportFileOperation(final ImportFileWizard importFileWizard, final File selectedFile,
+            final SkippableProgressMonitorJobsDialog progressManager) {
+        return new ImportFileOperation(importFileWizard.getSelectedTransfo(), selectedFile, progressManager);
+    }
+
+    protected ImportFileWizard createImportWizard() {
+        return new ImportFileWizard();
     }
 }
