@@ -27,6 +27,7 @@ import com.google.common.base.Strings;
 public class PathValidator extends TypedValidator<String, IStatus> {
 
     private final String inputName;
+    private String message;
 
     public PathValidator(final String inputName) {
         this.inputName = inputName;
@@ -35,14 +36,19 @@ public class PathValidator extends TypedValidator<String, IStatus> {
     @Override
     public IStatus doValidate(final String value) {
         if (Strings.isNullOrEmpty(value)) {
-            return ValidationStatus.error(NLS.bind(Messages.invalidPath, inputName));
+            return ValidationStatus.error(message == null ? NLS.bind(Messages.invalidPath, inputName) : message);
         }
         final String path = value.toString();
         final File file = Paths.get(new File(path).toURI()).toFile();
         if (!file.exists()) {
-            return ValidationStatus.error(NLS.bind(Messages.pathDoesNotExist, inputName));
+            return ValidationStatus.error(message == null ? NLS.bind(Messages.pathDoesNotExist, inputName) : message);
         }
         return ValidationStatus.ok();
+    }
+
+    public PathValidator overrideMessage(String message) {
+        this.message = message;
+        return this;
     }
 
 }

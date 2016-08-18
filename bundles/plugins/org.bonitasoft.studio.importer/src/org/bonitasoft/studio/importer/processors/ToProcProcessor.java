@@ -33,12 +33,21 @@ import org.eclipse.core.runtime.Status;
 public abstract class ToProcProcessor {
 
     protected String resourceName;
+    protected String repository;
     protected SkippableProgressMonitorJobsDialog progressDialog;
 
     public abstract File createDiagram(URL sourceFileURL, IProgressMonitor progressMonitor) throws Exception;
 
     public void setResourceName(final String resourceName) {
         this.resourceName = resourceName;
+    }
+
+    public String getRepository() {
+        return repository;
+    }
+
+    public void setRepository(String repository) {
+        this.repository = repository;
     }
 
     /**
