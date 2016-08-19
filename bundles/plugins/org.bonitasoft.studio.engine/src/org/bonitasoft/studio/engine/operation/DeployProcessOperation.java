@@ -43,6 +43,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.export.BarCreationException;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.ui.dialog.ProcessEnablementProblemsDialog;
@@ -167,9 +168,18 @@ public class DeployProcessOperation {
         return Status.OK_STATUS;
     }
 
-    private IStatus deployProcess(final AbstractProcess process, final IProgressMonitor monitor) throws Exception {
+    private IStatus deployProcess(final AbstractProcess process, final IProgressMonitor monitor) {
         monitor.subTask(Messages.bind(Messages.deployingProcess, getProcessLabel(process)));
-        final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(addDefaultFormMapping(process), configurationId, excludedObject);
+        BusinessArchive bar;
+        try {
+            bar = BarExporter.getInstance().createBusinessArchive(addDefaultFormMapping(process), configurationId, excludedObject);
+        } catch (BarCreationException bce) {
+            if (process != null) {
+                BonitaStudioLog.log(String.format("Error when trying to create bar for process %s (%s)",process.getName(),process.getVersion()));
+                BonitaStudioLog.error(bce, EnginePlugin.PLUGIN_ID);
+            }
+            return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, bce.getDetails(), bce);
+        }
         ProcessDefinition def = null;
         APISession session = null;
         try {
@@ -178,7 +188,7 @@ public class DeployProcessOperation {
             def = processApi.deploy(bar);
         } catch (final ProcessDeployException e) {
             if (process != null) {
-                BonitaStudioLog.log("Error when trying to deploy the process named: " + process.getName());
+                BonitaStudioLog.log(String.format("Error when trying to deploy process %s (%s)",process.getName(),process.getVersion()));
                 BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             }
             return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);

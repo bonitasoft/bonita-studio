@@ -39,6 +39,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  */
 public class GroovyConnectorConfigurationConverter {
 
+    private static final String SCRIPTING_GROOVY_SCRIPT_DEF_ID = "scripting-groovy-script";
     private static final String VARIABLES_INPUT = "variables";
     private static final String SCRIPT_INPUT = "script";
     private static final String FAKE_SCRIPT_EXPRESSION = "fakeScriptExpression";
@@ -63,7 +64,7 @@ public class GroovyConnectorConfigurationConverter {
 
     private void checkConnectorConfiguration(final ConnectorConfiguration connectorConfig) {
         checkArgument(connectorConfig != null);
-        checkArgument(connectorConfig.getDefinitionId().equals("scripting-groovy-script"));
+        checkArgument(connectorConfig.getDefinitionId().equals(SCRIPTING_GROOVY_SCRIPT_DEF_ID));
         final Set<String> keys = new HashSet<String>();
         for (final ConnectorParameter connectorParameter : connectorConfig.getParameters()) {
             keys.add(connectorParameter.getKey());
@@ -101,7 +102,7 @@ public class GroovyConnectorConfigurationConverter {
     }
 
     public boolean appliesTo(final ConnectorConfiguration configuration) {
-        return "scripting-groovy-script".equals(configuration.getDefinitionId());
+        return configuration != null && SCRIPTING_GROOVY_SCRIPT_DEF_ID.equals(configuration.getDefinitionId());
     }
 
 }
