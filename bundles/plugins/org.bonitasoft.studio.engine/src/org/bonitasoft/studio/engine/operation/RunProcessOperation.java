@@ -91,8 +91,11 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
 
                     @Override
                     public void run() {
+                        StringBuilder sb = new StringBuilder(Messages.deploymentFailedMessage);
+                        sb.append(":\n");
+                        sb.append(status.getMessage());
                         new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage,
-                                Messages.deploymentFailedMessage, status, IStatus.ERROR | IStatus.WARNING).open();
+                                sb.toString(), status, IStatus.ERROR | IStatus.WARNING).open();
                     }
                 });
             }

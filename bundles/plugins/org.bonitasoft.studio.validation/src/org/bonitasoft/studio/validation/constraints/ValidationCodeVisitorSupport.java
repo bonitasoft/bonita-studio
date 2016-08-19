@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -28,9 +26,9 @@ import org.bonitasoft.studio.validation.i18n.Messages;
 import org.codehaus.groovy.ast.CodeVisitorSupport;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.ModuleNode;
-import org.codehaus.groovy.ast.expr.ArgumentListExpression;
 import org.codehaus.groovy.ast.expr.BinaryExpression;
 import org.codehaus.groovy.ast.expr.MethodCallExpression;
+import org.codehaus.groovy.ast.expr.TupleExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codehaus.groovy.syntax.Types;
@@ -38,10 +36,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.validation.IValidationContext;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class ValidationCodeVisitorSupport extends CodeVisitorSupport {
 
@@ -52,8 +48,7 @@ public class ValidationCodeVisitorSupport extends CodeVisitorSupport {
     private final Set<MethodSignature> declaredMethodsSignature = new HashSet<MethodSignature>();
     private static Set<MethodSignature> defaultGroovyMethodsSignature;
 
-
-    static{
+    static {
         defaultGroovyMethodsSignature = new HashSet<MethodSignature>();
         for (final Method m : DefaultGroovyMethods.class.getMethods()) {
             if (m.getModifiers() == (Modifier.PUBLIC | Modifier.STATIC)) {
@@ -61,7 +56,6 @@ public class ValidationCodeVisitorSupport extends CodeVisitorSupport {
             }
         }
     }
-
 
     public ValidationCodeVisitorSupport(final IValidationContext context, final Expression expression, final ModuleNode node) {
         dependenciesName = retrieveDependenciesList(expression);
@@ -73,24 +67,25 @@ public class ValidationCodeVisitorSupport extends CodeVisitorSupport {
         }
     }
 
-
     @Override
     public void visitMethodCallExpression(final MethodCallExpression call) {
         final String methodName = call.getMethodAsString();
-        final ArgumentListExpression ale = (ArgumentListExpression) call.getArguments();
-        final MethodSignature methodSignature = new MethodSignature(methodName, ale.getExpressions().size());
-        if (defaultGroovyMethodsSignature.contains(methodSignature)) {
-            final org.codehaus.groovy.ast.expr.Expression objectExpression = call.getObjectExpression();
-            if (objectExpression instanceof VariableExpression && ((VariableExpression) objectExpression).isThisExpression()) {
-                if (!declaredMethodsSignature.contains(methodSignature)) {
-                    errorStatus
-                    .add(context
-                            .createFailureStatus(Messages.bind(
-                                    Messages.defaultGroovyMethodImportMissing, methodName)));
+        org.codehaus.groovy.ast.expr.Expression arguments = call.getArguments();
+        if (arguments instanceof TupleExpression) {
+            final TupleExpression tuple = (TupleExpression) arguments;
+            final MethodSignature methodSignature = new MethodSignature(methodName, tuple.getExpressions().size());
+            if (defaultGroovyMethodsSignature.contains(methodSignature)) {
+                final org.codehaus.groovy.ast.expr.Expression objectExpression = call.getObjectExpression();
+                if (objectExpression instanceof VariableExpression && ((VariableExpression) objectExpression).isThisExpression()) {
+                    if (!declaredMethodsSignature.contains(methodSignature)) {
+                        errorStatus
+                                .add(context
+                                        .createFailureStatus(Messages.bind(
+                                                Messages.defaultGroovyMethodImportMissing, methodName)));
+                    }
                 }
             }
         }
-
         super.visitMethodCallExpression(call);
     }
 
@@ -99,9 +94,8 @@ public class ValidationCodeVisitorSupport extends CodeVisitorSupport {
         if (expression.getOperation() != null && expression.getOperation().isA(Types.ASSIGNMENT_OPERATOR)) {
             final org.codehaus.groovy.ast.expr.Expression leftExpression = expression.getLeftExpression();
             if (dependenciesName.contains(leftExpression.getText())) {
-                errorStatus.add(context.
-                        createFailureStatus(Messages.bind(
-                                Messages.invalidDependencyAssignement, leftExpression.getText())));
+                errorStatus.add(context.createFailureStatus(Messages.bind(
+                        Messages.invalidDependencyAssignement, leftExpression.getText())));
 
             }
         }

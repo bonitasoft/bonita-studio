@@ -54,9 +54,12 @@ import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
+
+import com.google.common.base.Strings;
 
 /**
  * @author Romain Bioteau
@@ -326,10 +329,13 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
     }
 
     protected void addAutologin(final List<BarResource> res, final AbstractProcess process, final Configuration conf) throws Exception {
-        if (process.isAutoLogin()) {
+        if (process.isAutoLogin() && process.getFormMapping().getType() == FormMappingType.LEGACY) {
             final Properties properties = new Properties();
             properties.setProperty(AUTO_LOGIN_PROPERTY, Boolean.TRUE.toString());
             final String autoLoginUserName = conf.getAnonymousUserName();
+            if(Strings.isNullOrEmpty( autoLoginUserName)){
+                throw new Exception(String.format("Username for autologin is not defined for process configuration '%s'",conf.getName()));
+            }
             final String autoLoginPassword = conf.getAnonymousPassword();
             properties.setProperty(AUTO_LOGIN_USERNAME_PROPERTY, autoLoginUserName);
             properties.setProperty(AUTO_LOGIN_PASSWORD_PROPERTY, autoLoginPassword != null && !autoLoginPassword.isEmpty() ? autoLoginPassword : "");

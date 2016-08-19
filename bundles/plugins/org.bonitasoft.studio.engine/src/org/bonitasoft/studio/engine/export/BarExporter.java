@@ -26,7 +26,9 @@ import java.util.Set;
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
+import org.bonitasoft.engine.bpm.bar.InvalidBusinessArchiveFormatException;
 import org.bonitasoft.engine.bpm.process.DesignProcessDefinition;
+import org.bonitasoft.engine.bpm.process.InvalidProcessDefinitionException;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -87,40 +89,58 @@ public class BarExporter {
     }
 
     public BusinessArchive createBusinessArchive(final AbstractProcess process, final Configuration configuration, final Set<EObject> excludedObject)
-            throws Exception {
+            throws BarCreationException {
         return createBusinessArchive(process, configuration, excludedObject, true);
     }
 
     public BusinessArchive createBusinessArchive(final AbstractProcess process, final Configuration configuration, final Set<EObject> excludedObject,
-            final boolean addProcessImage) throws Exception {
+            final boolean addProcessImage) throws BarCreationException {
 
         checkArgument(configuration != null);
         BonitaStudioLog.info("Building bar for process " + process.getName() + " (" + process.getVersion() + " )...", EnginePlugin.PLUGIN_ID);
         final DesignProcessDefinitionBuilder procBuilder = getProcessDefinitionBuilder();
         procBuilder.seteObjectNotExported(excludedObject);
-        final DesignProcessDefinition def = procBuilder.createDefinition(process);
+        DesignProcessDefinition def;
+        try {
+            def = procBuilder.createDefinition(process);
+        } catch (InvalidProcessDefinitionException e1) {
+            throw new BarCreationException(String.format("Failed to create process definition for %s (%s)", process.getName(), process.getVersion()), e1);
+        }
 
         if (def == null) {
-            throw new Exception(Messages.cantDeployEmptyPool);
+            throw new BarCreationException(Messages.cantDeployEmptyPool);
         }
 
         final BusinessArchiveBuilder builder = new BusinessArchiveBuilder().createNewBusinessArchive();
         builder.setProcessDefinition(def);
 
         builder.setParameters(getParameterMapFromConfiguration(configuration));
-        final byte[] content = new ActorMappingExporter().toByteArray(configuration);
-        if (content != null) {
-            builder.setActorMapping(content);
+        byte[] content;
+        try {
+            content = new ActorMappingExporter().toByteArray(configuration);
+            if (content != null) {
+                builder.setActorMapping(content);
+            }
+        } catch (ActorMappingExportException | IOException e1) {
+            throw new BarCreationException("Failed to add Actor mapping.", e1);
         }
 
         for (final BARResourcesProvider resourceProvider : getBARResourcesProvider()) {
-            resourceProvider.addResourcesForConfiguration(builder, process, configuration, excludedObject);
+            try {
+                resourceProvider.addResourcesForConfiguration(builder, process, configuration, excludedObject);
+            } catch (Exception e) {
+                throw new BarCreationException("Failed to add Process resources from configuration.", e);
+            }
         }
 
         //Add forms resources
         final BARResourcesProvider provider = getBARApplicationResourcesProvider();
         if (provider != null) {
-            provider.addResourcesForConfiguration(builder, process, configuration, excludedObject);
+            try {
+                provider.addResourcesForConfiguration(builder, process, configuration, excludedObject);
+            } catch (Exception e) {
+                throw new BarCreationException("Failed to add Application resources from configuration.", e);
+            }
         }
 
         if (!(process instanceof SubProcessEvent)) {
@@ -139,13 +159,18 @@ public class BarExporter {
             }
         }
 
-        final BusinessArchive archive = builder.done();
-        BonitaStudioLog.info("Build complete for process " + process.getName() + " (" + process.getVersion() + " ).", EnginePlugin.PLUGIN_ID);
-        return archive;
+        try {
+            final BusinessArchive archive = builder.done();
+            BonitaStudioLog.info("Build complete for process " + process.getName() + " (" + process.getVersion() + " ).", EnginePlugin.PLUGIN_ID);
+            return archive;
+        }catch (InvalidBusinessArchiveFormatException e) {
+            throw new BarCreationException("Failed to create Business Archive.", e);
+        }
     }
 
     public DesignProcessDefinitionBuilder getProcessDefinitionBuilder() {
-        for (final IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(PROCESS_DEFINITION_EXPORTER_ID)) {
+        for (final IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(PROCESS_DEFINITION_EXPORTER_ID)) {
             try {
                 return (DesignProcessDefinitionBuilder) element.createExecutableExtension("class");
             } catch (final CoreException e) {
@@ -161,7 +186,7 @@ public class BarExporter {
      * @param excludedObject elements of the process not exported in process definition
      */
     public BusinessArchive createBusinessArchive(final AbstractProcess process, final String configurationId, final Set<EObject> excludedObject)
-            throws Exception {
+            throws BarCreationException {
         return createBusinessArchive(process, getConfiguration(process, configurationId), excludedObject);
     }
 

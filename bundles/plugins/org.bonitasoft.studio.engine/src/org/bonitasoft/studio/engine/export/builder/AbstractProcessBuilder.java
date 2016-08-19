@@ -146,6 +146,9 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
             if (!eObjectNotExported.contains(connector)) {
                 final GroovyConnectorConfigurationConverter groovyConnectorConfigurationConverter = new GroovyConnectorConfigurationConverter();
                 ConnectorConfiguration configuration = connector.getConfiguration();
+                if(configuration == null){
+                    throw new MissingConnectorConfigurationException(connector,element);
+                }
                 if (groovyConnectorConfigurationConverter.appliesTo(configuration)) {
                     configuration = groovyConnectorConfigurationConverter.convert(connector.getConfiguration());
                 }
