@@ -15,36 +15,38 @@
 package org.bonitasoft.studio.common.repository.core;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.eclipse.core.resources.IProject;
 
-public class BonitaHomeHandler {
+import com.google.common.io.Files;
 
+public class DatabaseHandler {
+
+    private static final String BITRONIX_RESOURCES_PROPERTIES = "bitronix-resources.properties";
     public static final String H2_DATABASE_FOLDER_NAME = "h2_database";
     public static final String DB_LOCATION_PROPERTY = "org.bonitasoft.h2.database.dir";
+    public static final String BITRONIX_ROOT = "btm.root";
 
     private final IProject project;
 
-    public BonitaHomeHandler(final IProject project) {
+    public DatabaseHandler(final IProject project) {
         this.project = project;
     }
 
-    public void cleanTenant() {
-        deleteBonitaDbFiles();
+    public void removeEngineDatabase() {
+        deleteH2DbFiles("bonita");
     }
 
-    public void deleteBusinessDataDBFiles() {
-        deleteDbFiles("business");
+    public void removeBusinessDataDatabase() {
+        deleteH2DbFiles("business");
     }
 
-    protected void deleteBonitaDbFiles() {
-        deleteDbFiles("bonita");
-    }
-
-    protected void deleteDbFiles(final String fileStartName) {
+    protected void deleteH2DbFiles(final String fileStartName) {
         final File workDir = getDBLocation();
         if (workDir != null && workDir.exists()) {
             for (final File file : workDir.listFiles()) {
@@ -65,5 +67,26 @@ public class BonitaHomeHandler {
         return new File(project.getLocation().toFile(), H2_DATABASE_FOLDER_NAME);
     }
 
+    public File createBitronixConfFile() throws IOException {
+        final File confFile = new File(getDBLocation(), "conf" + File.separator + BITRONIX_RESOURCES_PROPERTIES);
+        confFile.delete();
+        confFile.getParentFile().mkdirs();
+
+        final Properties bitronixResources = new Properties();
+        bitronixResources.put("allowLocalTransactions", Boolean.TRUE.toString());
+        final BitronixDatasourceConfiguration engineDS = new BitronixDatasourceConfiguration("jdbc/bonitaDSXA");
+        engineDS.setDatabaseFile(getDBLocation().getAbsolutePath() + File.separatorChar + "bonita_journal.db");
+        bitronixResources.putAll(engineDS.toMap("ds1"));
+
+        final BitronixDatasourceConfiguration businessDataDS = new BitronixDatasourceConfiguration("jdbc/BusinessDataDSXA");
+        businessDataDS.setDatabaseFile(getDBLocation().getAbsolutePath() + File.separatorChar + "business_data.db");
+        businessDataDS.setMinPoolSize(0);
+        businessDataDS.setMaxPoolSize(5);
+        bitronixResources.putAll(businessDataDS.toMap("ds2"));
+
+        bitronixResources.store(Files.newOutputStreamSupplier(confFile).getOutput(), null);
+
+        return confFile;
+    }
 
 }

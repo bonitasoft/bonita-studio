@@ -22,7 +22,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
-import org.bonitasoft.studio.common.repository.core.BonitaHomeHandler;
+import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
 import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
@@ -52,7 +52,7 @@ public class RepositoryTest {
     @Mock
     private ProjectClasspathFactory bonitaBPMProjectClasspath;
     @Mock
-    private BonitaHomeHandler bonitaHomeHandler;
+    private DatabaseHandler bonitaHomeHandler;
 
     @Test
     public void should_open_trigger_project_manifest_factory() throws Exception {
@@ -95,7 +95,7 @@ public class RepositoryTest {
     private Repository newRepository() {
         final Repository repo = spy(new Repository(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager, projectManifestFactory,
                 bonitaBPMProjectClasspath, true));
-        doReturn(bonitaHomeHandler).when(repo).getBonitaHomeHandler();
+        doReturn(bonitaHomeHandler).when(repo).getDatabaseHandler();
         return repo;
     }
 
