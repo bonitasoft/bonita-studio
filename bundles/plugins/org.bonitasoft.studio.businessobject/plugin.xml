@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.4"?>
 <plugin>
+
    <extension
          point="org.bonitasoft.studio.repositoryStore">
       <repositoryStore
@@ -11,48 +11,43 @@
          point="org.eclipse.ui.commands">
       <command
             defaultHandler="org.bonitasoft.studio.businessobject.ui.handler.ManageBusinessObjectHandler"
-            id="org.bonitasoft.studio.businessobject.manage"
-            name="%manageBusinessObjects">
+            name="%manageBusinessObjects"
+            id="org.bonitasoft.studio.businessobject.manage">
       </command>
       <command
             defaultHandler="org.bonitasoft.studio.businessobject.ui.handler.ExportBusinessDataModelHandler"
-            id="org.bonitasoft.studio.businessobject.exportCommand"
-            name="%Export">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.businessobject.ui.handler.OpenH2ConsoleHandler"
-            id="org.bonitasoft.studio.businessobject.openH2Console"
-            name="%openH2Console">
+            name="%Export"
+            id="org.bonitasoft.studio.businessobject.exportCommand">
       </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.menu.filter">
-           <menu
-                 icon="icons/bdm.png"
-                 id="org.bonitasoft.studio.businessobject.menu"
-                 label="%BusinessDataModel">
-              <command
-                    commandId="org.bonitasoft.studio.businessobject.manage"
-                    icon="icons/manage-bdm.png"
-                    id="org.bonitasoft.studio.businessobject.manage.menu"
-                    style="push">
-              </command>
-              <command
-                    commandId="org.bonitasoft.studio.businessobject.openH2Console"
-                    style="push">
-              </command>
-              <separator
-                    name="org.bonitasoft.studio.businessobject.separator"
-                    visible="true">
-              </separator>
-              <command
-                    commandId="org.bonitasoft.studio.businessobject.exportCommand"
-                    icon="icons/export-bdm.png"
-                    style="push">
-              </command>
-           </menu>
+         <menu
+               label="%BusinessDataModel"
+               icon="icons/bdm.png"
+               id="org.bonitasoft.studio.businessobject.menu">
+            <command
+                  commandId="org.bonitasoft.studio.businessobject.manage"
+                  icon="icons/manage-bdm.png"
+                  style="push"
+                  id="org.bonitasoft.studio.businessobject.manage.menu">
+            </command>
+            <command
+                  commandId="org.bonitasoft.studio.businessobject.openH2Console"
+                  style="push">
+            </command>
+            <separator
+                  name="org.bonitasoft.studio.businessobject.separator"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.bonitasoft.studio.businessobject.exportCommand"
+                  icon="icons/export-bdm.png"
+                  style="push">
+            </command>
+         </menu>
       </menuContribution>
    </extension>
    <extension
@@ -90,4 +85,12 @@
             type="TYPE_VARIABLE">
       </proposalListner>
    </extension>
+   <extension
+         id="org.bonitasoft.studio.businessobject.fragment"
+         point="org.eclipse.e4.workbench.model">
+      <fragment
+            uri="fragment.e4xmi">
+      </fragment>
+   </extension>
+
 </plugin>
