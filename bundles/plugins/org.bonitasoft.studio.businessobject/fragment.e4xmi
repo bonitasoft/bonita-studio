@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_QHAmsGhGEea_RMV0DBK5kg">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_Zz2fcGhGEea_RMV0DBK5kg" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_giWXwGhGEea_RMV0DBK5kg" elementId="org.bonitasoft.studio.businessobject.handler" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.ui.handler.OpenH2ConsoleHandler" command="_2hZB8GhGEea_RMV0DBK5kg"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_08KwkGhGEea_RMV0DBK5kg" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_2hZB8GhGEea_RMV0DBK5kg" elementId="org.bonitasoft.studio.businessobject.openH2Console" commandName="%openH2Console"/>
+  </fragments>
+</fragment:ModelFragments>

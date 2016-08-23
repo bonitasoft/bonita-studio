@@ -33,7 +33,7 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.BonitaHomeHandler;
+import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.WorkspaceResourceServerManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -473,12 +473,12 @@ public class BOSWebServerManager {
 
     public void cleanBeforeShutdown() {
         final Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-        final BonitaHomeHandler bonitaHomeHandler = currentRepository.getBonitaHomeHandler();
+        final DatabaseHandler bonitaHomeHandler = currentRepository.getDatabaseHandler();
         if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT)) {
-            bonitaHomeHandler.cleanTenant();
+            bonitaHomeHandler.removeEngineDatabase();
         }
         if (dropBusinessDataDBOnExit()) {
-            bonitaHomeHandler.deleteBusinessDataDBFiles();
+            bonitaHomeHandler.removeBusinessDataDatabase();
         }
     }
 

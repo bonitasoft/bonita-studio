@@ -41,6 +41,7 @@ public class TomcatVmArgsBuilderTest {
     public void setUp() throws Exception {
         tomcatVmArgsBuilder = spy(new TomcatVmArgsBuilder(repositoryAccessor));
         doNothing().when(tomcatVmArgsBuilder).addUIDesignerOptions(any(StringBuilder.class));
+        doNothing().when(tomcatVmArgsBuilder).createBitronixConfiguration();
         doNothing().when(tomcatVmArgsBuilder).addWatchDogProperties(any(StringBuilder.class));
         doReturn("test.bonita.product.application.id").when(tomcatVmArgsBuilder).getProductApplicationId();
         doReturn(dbLocation).when(tomcatVmArgsBuilder).getDBLocation();
