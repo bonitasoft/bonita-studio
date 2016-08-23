@@ -16,7 +16,6 @@ package org.bonitasoft.studio.engine.server;
 
 import static com.google.common.collect.Iterators.forArray;
 import static com.google.common.collect.Maps.uniqueIndex;
-import static java.lang.Integer.parseInt;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -154,7 +153,7 @@ public class PortConfigurator {
             final Field field = Tomcat70Configuration.class.getDeclaredField(SERVER_FIELD_NAME);
             field.setAccessible(true);
             final Server server = (Server) field.get(tomcatConfig);
-            return parseInt(findListenerWithClassName(server, H2_LISTENER_CLASSNAME).getAttributeValue(TCP_PORT));
+            return 9091; // parseInt(findListenerWithClassName(server, H2_LISTENER_CLASSNAME).getAttributeValue(TCP_PORT));
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
             throw new CoreException(new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e));
         }
