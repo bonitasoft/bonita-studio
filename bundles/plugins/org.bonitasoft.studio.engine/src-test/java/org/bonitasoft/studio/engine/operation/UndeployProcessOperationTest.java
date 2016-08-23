@@ -65,9 +65,9 @@ public class UndeployProcessOperationTest {
         inOrder.verify(processAPI, never()).deleteProcessDefinition(1L);
 
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        verify(operation, times(2)).openConnection(captor.capture());
+        verify(operation, times(3)).openConnection(captor.capture());
         assertThat(captor.getAllValues())
-                .contains("http://localhost:8080/bonita/bonita/API/bpm/process/1", "http://localhost:8080/bonita/bonita/logoutservice");
+                .contains("http://localhost:8080/bonita/bonita/API/system/session/1","http://localhost:8080/bonita/bonita/API/bpm/process/1", "http://localhost:8080/bonita/bonita/logoutservice");
     }
 
     private UndeployProcessOperation createFixture() throws Exception {
