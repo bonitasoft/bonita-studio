@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Bonitasoft S.A.
+ * Copyright (C) 2016 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,47 +23,39 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jdt.launching.SocketUtil;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
+import com.google.common.base.Predicate; 
 
-/**
- * @author Romain Bioteau
- *
- */
-public class OpenH2ConsoleHandler extends AbstractHandler {
+public class OpenH2ConsoleHandler{
 
-    private static final String URL = "jdbc:h2:tcp://localhost:9091/business_data.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;";
+    private static final String URL = "jdbc:h2:file:%s/business_data.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;AUTO_SERVER=TRUE;";
     private static final String DRIVER = "org.h2.Driver";
     private static final String USER = "sa";
     private static final int PORT = SocketUtil.findFreePort();
 
 
-
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
-    @Override
-    public Object execute(final ExecutionEvent event) throws ExecutionException {
+    @Execute
+    public void execute(final RepositoryAccessor repositoryAccessor) throws ExecutionException {
         try {
-            final String h2JarPath = locateH2jar(
-                    rootFile());
+            final String h2JarPath = locateH2jar(repositoryAccessor);
             final Process process = getRuntime()
                     .exec(String.format("java -jar %s -browser -webPort %s -tcp -user %s -url %s -driver %s", h2JarPath, PORT,
-                            USER, URL, DRIVER));
+                            USER,
+                            String.format(URL, pathToDBFolder(repositoryAccessor)),
+                            DRIVER));
             getRuntime().addShutdownHook(exitProcessHook(process));
         } catch (final IOException e) {
             throw new ExecutionException("Failed to locate h2 jar", e);
         }
-        return IStatus.OK;
+    }
+
+    protected String pathToDBFolder(final RepositoryAccessor repositoryAccessor) {
+        return repositoryAccessor.getCurrentRepository().getDatabaseHandler().getDBLocation().getAbsolutePath();
     }
 
     private Thread exitProcessHook(final Process process) {
@@ -78,21 +70,22 @@ public class OpenH2ConsoleHandler extends AbstractHandler {
         };
     }
 
-    protected File rootFile() {
-        return RepositoryManager.getInstance().getCurrentRepository().getProject().getWorkspace().getRoot().getLocation().toFile();
-    }
-
     protected Runtime getRuntime() {
         return Runtime.getRuntime();
     }
 
-    protected String locateH2jar(File root) throws IOException {
+    protected String locateH2jar(RepositoryAccessor repositoryAccessor) throws IOException {
+        final File root = rootFile(repositoryAccessor);
         final Path path = Paths.get(root.toURI()).resolve(Paths.get("tomcat", "lib", "bonita"));
         final Optional<File> candidate = tryFind(fileTreeTraverser().children(path.toFile()), h2Jar());
         if (!candidate.isPresent()) {
             throw new FileNotFoundException("Cannot find h2 jar file in tomcat/lib/bonita folder.");
         }
         return candidate.get().getAbsolutePath();
+    }
+
+    protected File rootFile(RepositoryAccessor repositoryAccessor) {
+        return repositoryAccessor.getWorkspace().getRoot().getLocation().toFile();
     }
 
     private Predicate<? super File> h2Jar() {
