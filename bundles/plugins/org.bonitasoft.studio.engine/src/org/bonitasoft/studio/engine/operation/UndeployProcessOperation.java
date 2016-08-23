@@ -54,7 +54,9 @@ import org.eclipse.core.runtime.Status;
  */
 public class UndeployProcessOperation {
 
+    private static final String BONITA_API_TOKEN_HEADER = "X-Bonita-API-Token";
     private static final String API_LOGOUT = "/bonita/logoutservice";
+    private static final String API_SESSION = "/bonita/API/system/session/1";
     private static final String API_PROCESS_RESOURCE = "/bonita/API/bpm/process/";
     private static final String HTTP_METHOD_DELETE = "DELETE";
     private static final String HTTP_METHOD_POST = "POST";
@@ -120,7 +122,7 @@ public class UndeployProcessOperation {
                 deleteProcessInstances(info.getDisplayName(), processApi, info.getProcessId(), monitor);
                 deleteArchivedProcessInstances(processApi, info.getProcessId());
                 deleteProcessDefinition(info.getDisplayName(), processApi, info.getProcessId(), monitor);
-               }
+            }
         } catch (final ProcessDefinitionNotFoundException e) {
             // Skip
         } finally {
@@ -157,18 +159,19 @@ public class UndeployProcessOperation {
             throws DeletionException, URISyntaxException, IOException {
         monitor.subTask(Messages.bind(Messages.deletingProcessDefinition, processLabel));
         CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
-        logToSession(monitor);
+        String apiToken = logToSession(monitor);
         try {
-            deleteProcessDefinition(processApi, processDefinitionId);
+            deleteProcessDefinition(processApi, processDefinitionId,apiToken);
         } finally {
-            logoutFromSession();
+            logoutFromSession(apiToken);
         }
     }
 
-    protected void deleteProcessDefinition(final ProcessAPI processApi, final long processDefinitionId) throws IOException, MalformedURLException,
+    protected void deleteProcessDefinition(final ProcessAPI processApi, final long processDefinitionId, String apiToken) throws IOException, MalformedURLException,
             ProtocolException, DeletionException {
         final HttpURLConnection deleteConnection = openConnection(getUrlBase() + API_PROCESS_RESOURCE + processDefinitionId);
         deleteConnection.setRequestMethod(HTTP_METHOD_DELETE);
+        deleteConnection.setRequestProperty(BONITA_API_TOKEN_HEADER, apiToken);
         if (HttpURLConnection.HTTP_OK != deleteConnection.getResponseCode()) {
             processApi.deleteProcessDefinition(processDefinitionId);
         }
@@ -183,20 +186,26 @@ public class UndeployProcessOperation {
         return BOSWebServerManager.getInstance().generateUrlBase();
     }
 
-    protected void logoutFromSession() throws IOException, MalformedURLException, ProtocolException {
+    protected void logoutFromSession(String apiToken) throws IOException, MalformedURLException, ProtocolException {
         final HttpURLConnection logoutConnection = openConnection(getUrlBase() + API_LOGOUT);
         logoutConnection.setRequestMethod(HTTP_METHOD_POST);
+        logoutConnection.setRequestProperty(BONITA_API_TOKEN_HEADER, apiToken);
         if (HttpURLConnection.HTTP_OK != logoutConnection.getResponseCode()) {
             BonitaStudioLog.error("Cannot unlog to session " + logoutConnection.getResponseCode(), EnginePlugin.PLUGIN_ID);
         }
     }
 
-    protected void logToSession(final IProgressMonitor monitor) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException, IOException {
-        final HttpURLConnection connection = openLoginConnection(monitor);
+    protected String logToSession(final IProgressMonitor monitor) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException, IOException {
+        HttpURLConnection connection = openLoginConnection(monitor);
         if (HttpURLConnection.HTTP_OK != connection.getResponseCode()) {
             BonitaStudioLog.error("Cannot log to session " + connection.getResponseCode(), EnginePlugin.PLUGIN_ID);
         }
         connection.disconnect();
+
+        connection = openConnection(getUrlBase() + API_SESSION);
+        String apiToken = connection.getHeaderField(BONITA_API_TOKEN_HEADER);
+        connection.disconnect();
+        return apiToken;
     }
 
     protected HttpURLConnection openLoginConnection(final IProgressMonitor monitor) throws MalformedURLException, UnsupportedEncodingException,
