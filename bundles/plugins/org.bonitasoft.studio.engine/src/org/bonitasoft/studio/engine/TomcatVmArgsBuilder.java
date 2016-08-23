@@ -15,10 +15,11 @@
 package org.bonitasoft.studio.engine;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.core.BonitaHomeHandler;
+import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.designer.core.WorkspaceResourceServerManager;
 import org.bonitasoft.studio.designer.core.WorkspaceSystemProperties;
 import org.bonitasoft.studio.engine.server.WatchdogManager;
@@ -64,9 +65,14 @@ public class TomcatVmArgsBuilder {
         addWatchDogProperties(args);
         addSystemProperty(args, "eclipse.product", getProductApplicationId());
         addSystemProperty(args, BONITA_WEB_REGISTER, System.getProperty(BONITA_WEB_REGISTER, "1"));
-        addSystemProperty(args, BonitaHomeHandler.DB_LOCATION_PROPERTY,
+        addSystemProperty(args, DatabaseHandler.DB_LOCATION_PROPERTY,
                 "\"" + getDBLocation().getAbsolutePath() + "\"");
-
+        addSystemProperty(args, DatabaseHandler.BITRONIX_ROOT, "\"" + getDBLocation().getAbsolutePath() + "\"");
+        try {
+            createBitronixConfiguration();
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
+        }
         addUIDesignerOptions(args);
         final String res = args.toString();
         if (System.getProperty("log.tomcat.vm.args") != null) {
@@ -76,7 +82,11 @@ public class TomcatVmArgsBuilder {
     }
 
     public File getDBLocation() {
-        return repositoryAccessor.getCurrentRepository().getBonitaHomeHandler().getDBLocation();
+        return repositoryAccessor.getCurrentRepository().getDatabaseHandler().getDBLocation();
+    }
+
+    public void createBitronixConfiguration() throws IOException {
+        repositoryAccessor.getCurrentRepository().getDatabaseHandler().createBitronixConfFile();
     }
 
 

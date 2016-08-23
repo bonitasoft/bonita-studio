@@ -40,8 +40,8 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
-import org.bonitasoft.studio.common.repository.core.BonitaHomeHandler;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaBPMProjectOperation;
+import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
 import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
@@ -289,7 +289,7 @@ public class Repository implements IRepository, IJavaContainer {
         isLoaded = false;
         if (stores == null || stores.isEmpty()) {
             disableBuild();
-            stores = new TreeMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>>(new Comparator<Class<?>>() {
+            stores = new TreeMap<>(new Comparator<Class<?>>() {
 
                 @Override
                 public int compare(final Class<?> o1, final Class<?> o2) {
@@ -469,14 +469,14 @@ public class Repository implements IRepository, IJavaContainer {
             initRepositoryStores(NULL_PROGRESS_MONITOR);
             enableBuild();
         }
-        final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>(stores.values());
+        final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<>(stores.values());
         Collections.sort(result, new RepositoryStoreComparator());
         return result;
     }
 
     @Override
     public List<IRepositoryStore<? extends IRepositoryFileStore>> getAllSharedStores() {
-        final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>();
+        final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<>();
         for (final IRepositoryStore<? extends IRepositoryFileStore> sotre : getAllStores()) {
             if (sotre.isShared()) {
                 result.add(sotre);
@@ -504,7 +504,7 @@ public class Repository implements IRepository, IJavaContainer {
     public void exportToArchive(final String fileName) {
         final ExportBosArchiveOperation operation = new ExportBosArchiveOperation();
         operation.setDestinationPath(fileName);
-        final Set<IResource> allResources = new HashSet<IResource>();
+        final Set<IResource> allResources = new HashSet<>();
         for (final IRepositoryStore<?> store : getAllExportableStores()) {
             allResources.add(store.getResource());
             allResources.addAll(allRelatedResources(store));
@@ -519,7 +519,7 @@ public class Repository implements IRepository, IJavaContainer {
     }
 
     private List<IResource> allRelatedResources(final IRepositoryStore<?> store) {
-        final List<IResource> relatedResources = new ArrayList<IResource>();
+        final List<IResource> relatedResources = new ArrayList<>();
         for (final IRepositoryFileStore fs : store.getChildren()) {
             for (final IRepositoryFileStore related : fs.getRelatedFileStore()) {
                 relatedResources.add(related.getResource());
@@ -578,7 +578,7 @@ public class Repository implements IRepository, IJavaContainer {
 
     @Override
     public List<IRepositoryStore<? extends IRepositoryFileStore>> getAllShareableStores() {
-        final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>();
+        final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<>();
         for (final IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()) {
             if (store.canBeShared()) {
                 result.add(store);
@@ -591,7 +591,7 @@ public class Repository implements IRepository, IJavaContainer {
 
     @Override
     public ClassLoader createProjectClassloader(final IProgressMonitor monitor) {
-        final List<URL> jars = new ArrayList<URL>();
+        final List<URL> jars = new ArrayList<>();
         try {
             final ProjectClasspathFactory bonitaBPMProjectClasspath = new ProjectClasspathFactory();
             if (!bonitaBPMProjectClasspath.classpathExists(this)) {
@@ -630,7 +630,7 @@ public class Repository implements IRepository, IJavaContainer {
 
     @Override
     public List<IRepositoryStore<? extends IRepositoryFileStore>> getAllExportableStores() {
-        final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>();
+        final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<>();
         for (final IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()) {
             if (store.canBeExported()) {
                 result.add(store);
@@ -744,8 +744,8 @@ public class Repository implements IRepository, IJavaContainer {
     }
 
     @Override
-    public BonitaHomeHandler getBonitaHomeHandler() {
-        return new BonitaHomeHandler(getProject());
+    public DatabaseHandler getDatabaseHandler() {
+        return new DatabaseHandler(getProject());
     }
 
 }
