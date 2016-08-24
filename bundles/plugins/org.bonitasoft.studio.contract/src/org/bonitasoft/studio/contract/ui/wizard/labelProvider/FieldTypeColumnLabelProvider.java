@@ -19,7 +19,11 @@ import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
+import org.bonitasoft.studio.contract.i18n.Messages;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author aurelie
@@ -34,6 +38,7 @@ public class FieldTypeColumnLabelProvider extends ColumnLabelProvider {
         }
         return super.getText(element);
     }
+    
 
     private String typeLabel(final Field field) {
         final StringBuilder sb = new StringBuilder();

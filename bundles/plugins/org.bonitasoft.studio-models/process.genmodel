@@ -444,6 +444,7 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/DATE"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/COMPLEX"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/FILE"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/LONG"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//DocumentType">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/NONE"/>
