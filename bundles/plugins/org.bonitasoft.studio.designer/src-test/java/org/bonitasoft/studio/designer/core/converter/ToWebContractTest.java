@@ -142,4 +142,14 @@ public class ToWebContractTest {
         assertThat(contract.getInput()).hasSize(1);
         assertThat(contract.getInput().get(0).getInput()).extracting("name").containsExactly("firstName");
     }
+
+    @Test
+    public void transform_an_emf_contract_into_a_designer_contract_with_LONG_input_with_input() throws Exception {
+        final ToWebContract contractConverter = new ToWebContract();
+
+        final Contract contract = contractConverter.apply(aContract()
+                .havingInput(aContractInput().withType(ContractInputType.LONG)).build());
+
+        assertThat(contract.getInput()).extracting("type").containsExactly(Long.class.getName());
+    }
 }
