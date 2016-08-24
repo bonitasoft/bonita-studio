@@ -14,12 +14,17 @@
  */
 package org.bonitasoft.studio.model.edit.custom.process;
 
+import java.util.Collection;
+
+import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.provider.ContractInputItemProvider;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
@@ -70,6 +75,30 @@ public class CustomContractInputItemProvider
                     }
 
                 };
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.emf.edit.provider.ItemPropertyDescriptor#getComboBoxObjects(java.lang.Object)
+             */
+            @Override
+            protected Collection<?> getComboBoxObjects(Object object) {
+                final Collection<?> comboBoxObjects = super.getComboBoxObjects(object);
+                if (getContractContainer((EObject) object) instanceof Task) {
+                    comboBoxObjects.remove(ContractInputType.LONG);
+                }
+                return comboBoxObjects;
+            }
+
+            private EObject getContractContainer(EObject object) {
+                EObject current = object;
+                while (!(current instanceof Contract)) {
+                    current = current.eContainer();
+                }
+                if (current != null) {
+                    current = current.eContainer();
+                }
+                return current;
             }
         });
     }

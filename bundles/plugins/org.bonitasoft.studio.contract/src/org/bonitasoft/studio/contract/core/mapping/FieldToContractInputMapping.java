@@ -31,13 +31,15 @@ public abstract class FieldToContractInputMapping {
 
     private final Field field;
 
-    private final List<FieldToContractInputMapping> children = new ArrayList<FieldToContractInputMapping>();
+    private final List<FieldToContractInputMapping> children = new ArrayList<>();
 
     private FieldToContractInputMapping parent;
 
     private boolean generated = true;
 
     private ContractInput contractInput;
+
+    private ContractInputType contractInputType;
 
     public FieldToContractInputMapping(final Field field) {
         this.field = field;
@@ -74,7 +76,7 @@ public abstract class FieldToContractInputMapping {
     public ContractInput toContractInput(final ContractInput parentInput) {
         contractInput = ProcessFactory.eINSTANCE.createContractInput();
         contractInput.setName(field.getName());
-        contractInput.setType(toContractInputType());
+        contractInput.setType(getContractInputType());
         contractInput.setMultiple(field != null && field.isCollection());
         if (parentInput != null) {
             parentInput.getInputs().add(contractInput);
@@ -101,6 +103,17 @@ public abstract class FieldToContractInputMapping {
 
     public void setGenerated(final boolean generated) {
         this.generated = generated;
+    }
+
+    public ContractInputType getContractInputType() {
+        if (contractInputType == null) {
+            contractInputType = toContractInputType();
+        }
+        return contractInputType;
+    }
+
+    public void setContractInputType(ContractInputType contractInputType) {
+        this.contractInputType = contractInputType;
     }
 
 }

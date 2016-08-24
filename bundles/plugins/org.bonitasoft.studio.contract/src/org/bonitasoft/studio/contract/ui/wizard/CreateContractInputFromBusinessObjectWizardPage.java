@@ -27,6 +27,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.wizard.edit.ContractInputTypeEditingSupport;
 import org.bonitasoft.studio.contract.ui.wizard.labelProvider.FieldNameColumnLabelProvider;
 import org.bonitasoft.studio.contract.ui.wizard.labelProvider.FieldTypeColumnLabelProvider;
 import org.bonitasoft.studio.contract.ui.wizard.labelProvider.InputTypeColumnLabelProvider;
@@ -58,6 +59,7 @@ import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -105,7 +107,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         this.generationOptions = generationOptions;
         this.businessObjectStore = businessObjectStore;
         this.fieldToContractInputMappingsObservable = fieldToContractInputMappingsObservable;
-        mappings = new ArrayList<FieldToContractInputMapping>();
+        mappings = new ArrayList<>();
     }
 
     public void setTitle() {
@@ -194,7 +196,8 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         final TreeViewerColumn inputTypeTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
         inputTypeTreeViewerColumn.getColumn().setText(Messages.inputType);
         inputTypeTreeViewerColumn.getColumn().setWidth(150);
-        inputTypeTreeViewerColumn.setLabelProvider(new InputTypeColumnLabelProvider());
+        inputTypeTreeViewerColumn.setLabelProvider(new InputTypeColumnLabelProvider(contract));
+        inputTypeTreeViewerColumn.setEditingSupport(new ContractInputTypeEditingSupport(treeViewer, contract));
 
         final TreeViewerColumn mandatoryTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
         mandatoryTreeViewerColumn.getColumn().setText(Messages.mandatory);
@@ -217,6 +220,8 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         dbc.bindValue(checkedObservableValue, observeInput,
                 updateValueStrategy().withConverter(createMappingsToCheckedElementsConverter(mappingsObservableValue)).create(), updateValueStrategy()
                         .withConverter(createCheckedElementsToMappingsConverter(checkedElements)).create());
+        
+        ColumnViewerToolTipSupport.enableFor(treeViewer);
     }
 
     protected Converter createMappingsToCheckedElementsConverter(final WritableValue mappingsObservableValue) {
