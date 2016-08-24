@@ -15,8 +15,12 @@
 package org.bonitasoft.studio.model.edit.custom.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 
+import java.util.Collection;
 import java.util.Map;
 
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -91,5 +95,27 @@ public class CustomContractInputItemProviderTest {
                 .getText(contractInput.getType());
 
         assertThat(label).contains(Map.class.getName());
+    }
+
+    @Test
+    public void should_remove_LONG_type_if_contract_is_on_a_Task() throws Exception {
+        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(new ProcessItemProviderAdapterFactory());
+
+        final Collection<ContractInputType> choiceOfValues = (Collection<ContractInputType>) itemProvider
+                .getPropertyDescriptor(aContractInput().build(), ProcessPackage.Literals.CONTRACT_INPUT__TYPE)
+                .getChoiceOfValues(aContract().in(aTask()).build());
+
+        assertThat(choiceOfValues).doesNotContain(ContractInputType.LONG);
+    }
+
+    @Test
+    public void should_haveLONG_type_if_contract_is_on_a_Pool() throws Exception {
+        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(new ProcessItemProviderAdapterFactory());
+
+        final Collection<ContractInputType> choiceOfValues = (Collection<ContractInputType>) itemProvider
+                .getPropertyDescriptor(aContractInput().build(), ProcessPackage.Literals.CONTRACT_INPUT__TYPE)
+                .getChoiceOfValues(aContract().in(aPool()).build());
+
+        assertThat(choiceOfValues).contains(ContractInputType.LONG);
     }
 }
