@@ -122,4 +122,5 @@ public class Messages extends NLS {
     public static String openUpdateDocumentOperationWarningMessages;
     public static String updateInitialDocumentContentWarningTitle;
     public static String updateInitialDocumentContentWarningMsg;
+    public static String longConversionWarning;
 }

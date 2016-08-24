@@ -46,6 +46,8 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
                         return createLeafContractInput(input, String.class);
                     case INTEGER:
                         return createLeafContractInput(input, Integer.class);
+                    case LONG:
+                        return createLeafContractInput(input, Long.class);
                     case DECIMAL:
                         return createLeafContractInput(input, Double.class);
                     case DATE:

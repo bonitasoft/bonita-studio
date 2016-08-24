@@ -15,12 +15,25 @@
 package org.bonitasoft.studio.contract.ui.wizard.labelProvider;
 
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
+import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
+import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author aurelie
  */
 public class InputTypeColumnLabelProvider extends ColumnLabelProvider {
+
+    private final Contract contract;
+
+    public InputTypeColumnLabelProvider(Contract contract) {
+        this.contract = contract;
+    }
 
     /*
      * (non-Javadoc)
@@ -30,10 +43,29 @@ public class InputTypeColumnLabelProvider extends ColumnLabelProvider {
     public String getText(final Object element) {
         if (element instanceof FieldToContractInputMapping) {
             final FieldToContractInputMapping mapping = (FieldToContractInputMapping) element;
-            return mapping.toContractInput(null).getType().name();
+            return mapping.getContractInputType().name();
         }
 
         return super.getText(element);
     }
 
+    @Override
+    public Image getImage(Object element) {
+        if (!(contract.eContainer() instanceof Task) && element instanceof SimpleFieldToContractInputMapping) {
+            if(Long.class.getName().equals(((SimpleFieldToContractInputMapping) element).getFieldType())){
+                return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
+            }
+        }
+         return null ;
+    }
+    
+    @Override
+    public String getToolTipText(Object element) {
+        if (!(contract.eContainer() instanceof Task) && element instanceof SimpleFieldToContractInputMapping) {
+            if(Long.class.getName().equals(((SimpleFieldToContractInputMapping) element).getFieldType())){
+                return Messages.longConversionWarning;
+            }
+        }
+        return null;
+    }
 }

@@ -1129,6 +1129,22 @@
            class="MainProcess:http://www.bonitasoft.org/ns/studio/process">
      </target>
   </constraint>
+  <constraint
+        class="org.bonitasoft.studio.validation.constraints.process.ContractLongTypeConstraint"
+        id="org.bonitasoft.studio.validation.constraints.contract.long"
+        isEnabledByDefault="true"
+        lang="java"
+        mode="Batch"
+        name="Contract input long type constraint"
+        severity="WARNING"
+        statusCode="1">
+     <message>
+        {0}
+     </message>
+     <target
+           class="ContractInput:http://www.bonitasoft.org/ns/studio/process">
+     </target>
+  </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">
