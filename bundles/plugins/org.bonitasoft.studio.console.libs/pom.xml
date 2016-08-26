@@ -1,340 +1,320 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.bonitasoft.studio.bundles</groupId>
-		<artifactId>plugins</artifactId>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.bonitasoft.studio.bundles</groupId>
+        <artifactId>plugins</artifactId>
         <version>7.4.0-SNAPSHOT</version>
-	</parent>
-	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
-	<artifactId>org.bonitasoft.studio.console.libs</artifactId>
-	<packaging>eclipse-plugin</packaging>
+    </parent>
+    <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
+    <artifactId>org.bonitasoft.studio.console.libs</artifactId>
+    <packaging>eclipse-plugin</packaging>
 
-	<properties>
-		<tomcat.bundle.dir>${basedir}/tomcat</tomcat.bundle.dir>
-		<javadoc.dir>${basedir}/javadoc</javadoc.dir>
-		<lib.dir>lib</lib.dir>
-		<tomcat.version>7.0.67</tomcat.version>
-		<security.config.file>${basedir}/tomcat/setup/platform_conf/initial/tenant_template_portal/security-config.properties</security.config.file>
+    <properties>
+        <tomcat.bundle.dir>${basedir}/tomcat</tomcat.bundle.dir>
+        <javadoc.dir>${basedir}/javadoc</javadoc.dir>
+        <lib.dir>lib</lib.dir>
+        <tomcat.version>7.0.67</tomcat.version>
+        <security.config.file>${basedir}/tomcat/setup/platform_conf/initial/tenant_template_portal/security-config.properties</security.config.file>
         <console.config.file>${basedir}/tomcat/setup/platform_conf/initial/tenant_template_portal/console-config.properties</console.config.file>
-	</properties>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.bonitasoft.engine</groupId>
-			<artifactId>bonita-client</artifactId>
-			<version>${engine.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.engine</groupId>
-			<artifactId>bonita-common</artifactId>
-			<version>${engine.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.engine</groupId>
-			<artifactId>bonita-server</artifactId>
-			<version>${engine.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.web</groupId>
-			<artifactId>theme-builder</artifactId>
-			<version>${theme.builder.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.forms</groupId>
-			<artifactId>forms-server</artifactId>
-			<version>${bundle.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.forms</groupId>
-			<artifactId>forms-model</artifactId>
-			<version>${bundle.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.forms</groupId>
-			<artifactId>forms-rpc</artifactId>
-			<version>${bundle.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.console</groupId>
-			<artifactId>console-server</artifactId>
-			<version>${bundle.version}</version>
-			<classifier>classes</classifier>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.console</groupId>
-			<artifactId>console-common</artifactId>
-			<version>${bundle.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-	</dependencies>
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.felix</groupId>
-					<artifactId>maven-bundle-plugin</artifactId>
-					<version>2.3.7</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.bonitasoft.engine</groupId>
+            <artifactId>bonita-client</artifactId>
+            <version>${engine.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bonitasoft.engine</groupId>
+            <artifactId>bonita-common</artifactId>
+            <version>${engine.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bonitasoft.web</groupId>
+            <artifactId>theme-builder</artifactId>
+            <version>${theme.builder.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.bonitasoft.forms</groupId>
+            <artifactId>forms-server</artifactId>
+            <version>${bundle.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.bonitasoft.forms</groupId>
+            <artifactId>forms-model</artifactId>
+            <version>${bundle.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.bonitasoft.forms</groupId>
+            <artifactId>forms-rpc</artifactId>
+            <version>${bundle.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.bonitasoft.console</groupId>
+            <artifactId>console-server</artifactId>
+            <version>${bundle.version}</version>
+            <classifier>classes</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.bonitasoft.console</groupId>
+            <artifactId>console-common</artifactId>
+            <version>${bundle.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>2.3.7</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
 
-		<plugins>
-				<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>Retrieve BOS Tomcat Bundle</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.bonitasoft.distrib</groupId>
-									<artifactId>bundle-tomcat</artifactId>
-									<version>${bundle.version}</version>
-									<type>zip</type>
-								</artifactItem>
-							</artifactItems>
-							<outputDirectory>${tomcat.bundle.dir}</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-						</configuration>
-					</execution>
-					<execution>
-						<id>Retrieve Studio specific war</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.bonitasoft.web.tooling</groupId>
-									<artifactId>studio-watchdog</artifactId>
-									<version>${watchdog.version}</version>
-									<type>war</type>
-								</artifactItem>
-							</artifactItems>
-							<outputDirectory>${tomcat.bundle.dir}/webapps</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-						</configuration>
-					</execution>
-					<execution>
-						<id>Retrieve Javadoc</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.bonitasoft.engine</groupId>
-									<artifactId>bonita-common</artifactId>
-									<version>${engine.version}</version>
-									<classifier>javadoc</classifier>
-									<type>jar</type>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.bonitasoft.engine</groupId>
-									<artifactId>bonita-client</artifactId>
-									<version>${engine.version}</version>
-									<classifier>javadoc</classifier>
-									<type>jar</type>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.bonitasoft.forms</groupId>
-									<artifactId>forms-server</artifactId>
-									<version>${bundle.version}</version>
-									<classifier>javadoc</classifier>
-									<type>jar</type>
-								</artifactItem>
-							</artifactItems>
-							<outputDirectory>${javadoc.dir}</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-						</configuration>
-					</execution>
-					<execution>
-						<id>Retrieve bonita-client dependencies</id>
-						<phase>process-sources</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<stripVersion>true</stripVersion>
-							<stripClassifier>true</stripClassifier>
-							<outputDirectory>${lib.dir}</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>Clean generated resources</id>
-						<phase>clean</phase>
-						<configuration>
-							<target>
-								<delete dir="${tomcat.bundle.dir}" />
-								<delete file="javadoc.zip" />
-								<mkdir dir="${project.build.directory}/classes" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>Resources generation add-on</id>
-						<phase>generate-resources</phase>
-						<configuration>
-							<target>
-							
-								<delete file="META-INF/MANIFEST.MF" />
-								<!-- Configure tomcat bundle resoruce -->
-								<move todir="${tomcat.bundle.dir}">
-									<fileset
-										dir="${tomcat.bundle.dir}/BonitaBPMCommunity-${bundle.version}-Tomcat-${tomcat.version}/" />
-								</move>
-								<concat append="true"
-									destfile="${tomcat.bundle.dir}/conf/catalina.properties">java.awt.headless=true</concat>
-								<replace
-									file="${tomcat.bundle.dir}/conf/logging.properties"
-									token="org.bonitasoft.level = WARNING"
-									value="org.bonitasoft.level = INFO"
-									failOnNoReplacements="true"/>
-								<delete dir="${tomcat.bundle.dir}/webapps/examples" />
-								
-								<!-- Package javadoc -->
-								<zip destfile="${basedir}/javadoc.zip" basedir="${javadoc.dir}"
-									encoding="UTF-8" />
-								<delete dir="${javadoc.dir}" failonerror="false" />
-								<delete dir="${lib.dir}/${project.artifactId}-${lib.dir}" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-	
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
-				<configuration>
-					<manifestLocation>META-INF/</manifestLocation>
-					<supportedProjectTypes>
-						<supportedProjectType>eclipse-plugin</supportedProjectType>
-					</supportedProjectTypes>
-					<instructions>
-						<_exportcontents>
-							 org.bonitasoft.console.common.server.preferences.constants;version="0.0.0",
-							 org.bonitasoft.console.common.server.preferences.properties;version="0.0.0",
-							 org.bonitasoft.console.common.server.sso;version="0.0.0",
-							 !org.bonitasoft.engine.*.impl.db;version="0.0.0",
-                             !org.bonitasoft.engine.*.impl.db.archive;version="0.0.0",
-							 org.bonitasoft.engine.*;version="0.0.0",
-							 org.bonitasoft.forms.client.model;version="0.0.0",
-							 org.bonitasoft.forms.server.accessor;version="0.0.0",
-							 org.bonitasoft.forms.server.accessor.impl.util;version="0.0.0",
-							 org.bonitasoft.forms.server.api;version="0.0.0",
-							 org.bonitasoft.forms.server.builder;version="0.0.0",
-							 org.bonitasoft.forms.server.builder.impl;version="0.0.0",
-							 org.bonitasoft.forms.server.exception;version="0.0.0",
-							 org.bonitasoft.forms.server.provider.impl.util;version="0.0.0",
-							 org.bonitasoft.forms.server.validator;version="0.0.0",
-							 org.bonitasoft.theme.*;version="0.0.0"
-						</_exportcontents>
-						<_nouses>true</_nouses>
-						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
-						<Bundle-Name>Bonita Console embedded in Studio</Bundle-Name>
-						<Bundle-Vendor>BonitaSoft S.A.</Bundle-Vendor>
-						<Bundle-Version>7.4.0.qualifier</Bundle-Version>
-						<Embed-Transitive>true</Embed-Transitive>
-						<Embed-Directory>${lib.dir}</Embed-Directory>
-						<Embed-StripVersion>true</Embed-StripVersion>
-						<Eclipse-BundleShape>dir</Eclipse-BundleShape>
-						<Include-Resource>
-							{maven-resources}, {maven-dependencies},
-							javadoc.zip,plugin.xml,tomcat=tomcat
-						</Include-Resource>
-						<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
-						<Import-Package>!*</Import-Package>
-						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
-					</instructions>
-				</configuration>
-				<executions>
-					<execution>
-						<id>Generate bundle MANIFEST.MF</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>manifest</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-             <plugin>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Retrieve BOS Tomcat Bundle</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.distrib</groupId>
+                                    <artifactId>bundle-tomcat</artifactId>
+                                    <version>${bundle.version}</version>
+                                    <type>zip</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${tomcat.bundle.dir}</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Retrieve Studio specific war</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.web.tooling</groupId>
+                                    <artifactId>studio-watchdog</artifactId>
+                                    <version>${watchdog.version}</version>
+                                    <type>war</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${tomcat.bundle.dir}/webapps</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Retrieve Javadoc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.engine</groupId>
+                                    <artifactId>bonita-common</artifactId>
+                                    <version>${engine.version}</version>
+                                    <classifier>javadoc</classifier>
+                                    <type>jar</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.engine</groupId>
+                                    <artifactId>bonita-client</artifactId>
+                                    <version>${engine.version}</version>
+                                    <classifier>javadoc</classifier>
+                                    <type>jar</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.forms</groupId>
+                                    <artifactId>forms-server</artifactId>
+                                    <version>${bundle.version}</version>
+                                    <classifier>javadoc</classifier>
+                                    <type>jar</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${javadoc.dir}</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Retrieve bonita-client dependencies</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <stripVersion>true</stripVersion>
+                            <stripClassifier>true</stripClassifier>
+                            <outputDirectory>${lib.dir}</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${lib.dir}</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>${tomcat.bundle.dir}</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>${basedir}</directory>
+                            <includes>
+                                <include>javadoc.zip</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Resources generation add-on</id>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <target>
+<!--                                 <delete file="META-INF/MANIFEST.MF" /> -->
+                                <!-- Configure tomcat bundle resoruce -->
+                                <move todir="${tomcat.bundle.dir}">
+                                    <fileset dir="${tomcat.bundle.dir}/BonitaBPMCommunity-${bundle.version}-Tomcat-${tomcat.version}/" />
+                                </move>
+                                <concat append="true" destfile="${tomcat.bundle.dir}/conf/catalina.properties">java.awt.headless=true</concat>
+                                <replace file="${tomcat.bundle.dir}/conf/logging.properties" token="org.bonitasoft.level = WARNING" value="org.bonitasoft.level = INFO"
+                                    failOnNoReplacements="true" />
+                                <delete dir="${tomcat.bundle.dir}/webapps/examples" />
+
+                                <!-- Package javadoc -->
+                                <zip destfile="${basedir}/javadoc.zip" basedir="${javadoc.dir}" encoding="UTF-8" />
+                                <delete dir="${javadoc.dir}" failonerror="false" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <manifestLocation>META-INF/</manifestLocation>
+                    <supportedProjectTypes>
+                        <supportedProjectType>eclipse-plugin</supportedProjectType>
+                    </supportedProjectTypes>
+                    <instructions>
+                        <_exportcontents>
+                            org.bonitasoft.console.common.server.preferences.constants;version="0.0.0",
+                            org.bonitasoft.console.common.server.preferences.properties;version="0.0.0",
+                            org.bonitasoft.console.common.server.sso;version="0.0.0",
+                            !org.bonitasoft.engine.*.impl.db;version="0.0.0",
+                            !org.bonitasoft.engine.*.impl.db.archive;version="0.0.0",
+                            org.bonitasoft.engine.*;version="0.0.0",
+                            org.bonitasoft.forms.client.model;version="0.0.0",
+                            org.bonitasoft.forms.server.accessor;version="0.0.0",
+                            org.bonitasoft.forms.server.accessor.impl.util;version="0.0.0",
+                            org.bonitasoft.forms.server.api;version="0.0.0",
+                            org.bonitasoft.forms.server.builder;version="0.0.0",
+                            org.bonitasoft.forms.server.builder.impl;version="0.0.0",
+                            org.bonitasoft.forms.server.exception;version="0.0.0",
+                            org.bonitasoft.forms.server.provider.impl.util;version="0.0.0",
+                            org.bonitasoft.forms.server.validator;version="0.0.0",
+                            org.bonitasoft.theme.*;version="0.0.0"
+                        </_exportcontents>
+                        <_nouses>true</_nouses>
+                        <Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
+                        <Bundle-Name>Bonita Console embedded in Studio</Bundle-Name>
+                        <Bundle-Vendor>BonitaSoft S.A.</Bundle-Vendor>
+                        <Bundle-Version>7.4.0.qualifier</Bundle-Version>
+                        <Embed-Transitive>true</Embed-Transitive>
+                        <Embed-Directory>${lib.dir}</Embed-Directory>
+                        <Embed-StripVersion>true</Embed-StripVersion>
+                        <Eclipse-BundleShape>dir</Eclipse-BundleShape>
+                        <Include-Resource>
+                            {maven-resources}, {maven-dependencies},
+                            javadoc.zip,plugin.xml,tomcat=tomcat
+                        </Include-Resource>
+                        <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
+                        <Import-Package>!*</Import-Package>
+                        <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
+                    </instructions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>Generate bundle MANIFEST.MF</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
                 <artifactId>replacer</artifactId>
                 <version>1.5.3</version>
@@ -350,8 +330,7 @@
                             <replacements>
                                 <replacement>
                                     <token>security.rest.api.authorizations.check.debug   false</token>
-                                    <value>#Debug mode enabled by default in Studio environment
-        security.rest.api.authorizations.check.debug   true</value>
+                                    <value>security.rest.api.authorizations.check.debug   true</value>
                                 </replacement>
                             </replacements>
                         </configuration>
@@ -367,46 +346,45 @@
                             <replacements>
                                 <replacement>
                                     <token>custom.page.debug                       false</token>
-                                    <value>#Debug mode enabled by default in Studio environment
-custom.page.debug                       true</value>
+                                    <value>custom.page.debug                       true</value>
                                 </replacement>
                             </replacements>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-		</plugins>
-	</build>
+        </plugins>
+    </build>
 
-	<profiles>
-		<profile>
-			<id>upgrade-trunk-snapshot</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>upgrade-trunk-snapshot</id>
-								<phase>pre-clean</phase>
-								<configuration>
-									<tasks>
-										<echo>Updating pom version from ${current.version} to ${next.snapshot.version}</echo>
-										<replace token="&lt;version&gt;${current.version}&lt;/version&gt;" value="&lt;version&gt;${next.snapshot.version}&lt;/version&gt;"
-											file="${basedir}/pom.xml" />
-										<replace token="&lt;Bundle-Version&gt;${current.model.version}&lt;/Bundle-Version&gt;" value="&lt;Bundle-Version&gt;${next.snapshot.model.version}&lt;/Bundle-Version&gt;"
-											file="${basedir}/pom.xml" />
-									</tasks>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+    <profiles>
+        <profile>
+            <id>upgrade-trunk-snapshot</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>upgrade-trunk-snapshot</id>
+                                <phase>pre-clean</phase>
+                                <configuration>
+                                    <tasks>
+                                        <echo>Updating pom version from ${current.version} to ${next.snapshot.version}</echo>
+                                        <replace token="&lt;version&gt;${current.version}&lt;/version&gt;" value="&lt;version&gt;${next.snapshot.version}&lt;/version&gt;"
+                                            file="${basedir}/pom.xml" />
+                                        <replace token="&lt;Bundle-Version&gt;${current.model.version}&lt;/Bundle-Version&gt;" value="&lt;Bundle-Version&gt;${next.snapshot.model.version}&lt;/Bundle-Version&gt;"
+                                            file="${basedir}/pom.xml" />
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
