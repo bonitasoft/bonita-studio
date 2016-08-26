@@ -4,7 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry exported="true" kind="lib" path="lib/bonita-client.jar" sourcepath="lib/bonita-client-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/bonita-common.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/bonita-server.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/console-server.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/console-common.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/theme-builder.jar"/>
