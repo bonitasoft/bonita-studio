@@ -177,11 +177,11 @@ public class BPMNToProc extends ToProcProcessor {
     protected Diagram diagram;
     private IProcBuilder builder;
 
-    private final List<String> subProcessesId = new ArrayList<String>();
+    private final List<String> subProcessesId = new ArrayList<>();
     private File result;
     protected Map<String, Actor> participants;
-    protected Map<String, String> dataNameByItemDefinition = new HashMap<String, String>();
-    protected Map<String, TEventDefinition> idOfEventDefinitions = new HashMap<String, TEventDefinition>();
+    protected Map<String, String> dataNameByItemDefinition = new HashMap<>();
+    protected Map<String, TEventDefinition> idOfEventDefinitions = new HashMap<>();
     protected Map<String, ShapeNodeEditPart> editParts;
     protected MainProcessEditPart diagramPart;
     private String JAVA_XMLNS = "java";// put java by default
@@ -409,8 +409,8 @@ public class BPMNToProc extends ToProcProcessor {
 
         bpmnDiagrams = definitions.getBPMNDiagram();
         this.definitions = definitions;
-        subProcesses = new Stack<TSubProcess>();
-        bpmnProcess = new ArrayList<TProcess>();
+        subProcesses = new Stack<>();
+        bpmnProcess = new ArrayList<>();
 
         Point location = new Point(5, 5);
         rootElements = definitions.getRootElement();
@@ -510,7 +510,7 @@ public class BPMNToProc extends ToProcProcessor {
             addFontStyle(tLane.getId());
             builder.addDescription(retrieveDocumentation(tLane));
 
-            final List<TFlowElement> inLane = new ArrayList<TFlowElement>();
+            final List<TFlowElement> inLane = new ArrayList<>();
             /* Retrieve flowElement that are in the Tlane */
             for (final String flownNodeRef : tLane.getFlowNodeRef()) {
                 for (final TFlowElement flowElement : flowElements) {
@@ -570,7 +570,7 @@ public class BPMNToProc extends ToProcProcessor {
     }
 
     private List<TLane> getAllTLanes(final List<TLaneSet> laneSets) {
-        final List<TLane> res = new ArrayList<TLane>();
+        final List<TLane> res = new ArrayList<>();
         for (final TLaneSet laneSet : laneSets) {
             for (final TLane lane : laneSet.getLane()) {
                 res.add(lane);
@@ -581,7 +581,7 @@ public class BPMNToProc extends ToProcProcessor {
     }
 
     private Collection<? extends TLane> getAllTLanes(final TLaneSet childLaneSet) {
-        final List<TLane> res = new ArrayList<TLane>();
+        final List<TLane> res = new ArrayList<>();
         if (childLaneSet != null) {
             for (final TLane lane : childLaneSet.getLane()) {
                 res.add(lane);
@@ -648,7 +648,7 @@ public class BPMNToProc extends ToProcProcessor {
     private void processAnnotations(final TProcess process)
             throws ProcBuilderException {
         final EList<TArtifact> artifacts = process.getArtifact();
-        final List<String> sourceRefs = new ArrayList<String>();
+        final List<String> sourceRefs = new ArrayList<>();
         for (final TArtifact tArtifact : artifacts) {
             if (tArtifact instanceof TTextAnnotation) {
                 final TTextAnnotation textAnnotation = (TTextAnnotation) tArtifact;
@@ -684,7 +684,8 @@ public class BPMNToProc extends ToProcProcessor {
 
         for (final TArtifact tArtifact : artifacts) {
             if (!(tArtifact instanceof TTextAnnotation)) {
-                if (!(tArtifact instanceof TAssociation && sourceRefs.contains(((TAssociation) tArtifact).getSourceRef().getLocalPart()))) {
+                if (!(tArtifact instanceof TAssociation && (sourceRefs.contains(((TAssociation) tArtifact).getSourceRef().getLocalPart())
+                        || sourceRefs.contains(((TAssociation) tArtifact).getTargetRef().getLocalPart())))) {
                     status.add(new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, tArtifact.eClass().getName() + ": "
                             + tArtifact.getId()));
                     BonitaStudioLog.log("can't create element for " + tArtifact);
@@ -956,7 +957,7 @@ public class BPMNToProc extends ToProcProcessor {
     }
 
     private void initDiagramFor(final String id) {
-        bpmnProcessDiagrams = new ArrayList<BPMNPlane>();
+        bpmnProcessDiagrams = new ArrayList<>();
         TCollaboration collaboration = null;
         final Iterator<TRootElement> rootElementIterator = rootElements.iterator();
         while (collaboration == null && rootElementIterator.hasNext()) {
@@ -1472,7 +1473,7 @@ public class BPMNToProc extends ToProcProcessor {
                         + "\'\\)/"
                         + XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION
                         + ":(.+)");
-        final Map<String, TExpression> connectorParameter = new HashMap<String, TExpression>();
+        final Map<String, TExpression> connectorParameter = new HashMap<>();
         for (final TDataInputAssociation dia : tServiceTask
                 .getDataInputAssociation()) {
             for (final TAssignment inputAssignment : dia.getAssignment()) {
@@ -1495,7 +1496,7 @@ public class BPMNToProc extends ToProcProcessor {
                         + XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION
                         + ":(.+)");
 
-        final Map<Expression, Expression> outputOperations = new HashMap<Expression, Expression>();
+        final Map<Expression, Expression> outputOperations = new HashMap<>();
         for (final TDataOutputAssociation doa : tServiceTask
                 .getDataOutputAssociation()) {
             for (final TAssignment outputAssignment : doa.getAssignment()) {
@@ -2066,15 +2067,15 @@ public class BPMNToProc extends ToProcProcessor {
     }
 
     private final static String[] toStringTable = { "string", "Name", "NCName", "QName", "normalizedString" };
-    private final static Set<String> toString = new HashSet<String>(Arrays.asList(toStringTable));
+    private final static Set<String> toString = new HashSet<>(Arrays.asList(toStringTable));
     private final static String[] toIntegerTable = { "byte", "int", "integer",
             "nonPositiveInteger", "nonNegativeInteger", "positiveInteger",
             "short", "unsignedByte", "unsignedInt", "unsignedShort" };
-    private final static Set<String> toInteger = new HashSet<String>(Arrays.asList(toIntegerTable));
+    private final static Set<String> toInteger = new HashSet<>(Arrays.asList(toIntegerTable));
     private final static String[] toDecimalTable = { "decimal", "double", "float", "unsignedLong" };
-    private final static Set<String> toDecimal = new HashSet<String>(Arrays.asList(toDecimalTable));
+    private final static Set<String> toDecimal = new HashSet<>(Arrays.asList(toDecimalTable));
     private final static String[] toDateTable = { "date", "dateTime" };
-    private final static Set<String> toDate = new HashSet<String>(Arrays.asList(toDateTable));
+    private final static Set<String> toDate = new HashSet<>(Arrays.asList(toDateTable));
     private boolean isInSubProcEventContainerSearch;
     private MultiStatus status;
 
@@ -2688,9 +2689,9 @@ public class BPMNToProc extends ToProcProcessor {
         int maxX = 0;
         int maxY = 0;
 
-        final Set<String> laneIds = new HashSet<String>();
-        final Set<String> flowElementIds = new HashSet<String>();
-        final Set<String> artifactIds = new HashSet<String>();
+        final Set<String> laneIds = new HashSet<>();
+        final Set<String> flowElementIds = new HashSet<>();
+        final Set<String> artifactIds = new HashSet<>();
         String bpmnShapeId = null;
 
         /* Find the process definition */
@@ -2790,7 +2791,7 @@ public class BPMNToProc extends ToProcProcessor {
     }
 
     private Collection<? extends String> findAllLanesIdInside(final TLaneSet laneSet) {
-        final List<String> laneIds = new ArrayList<String>();
+        final List<String> laneIds = new ArrayList<>();
         for (final TLane lane : laneSet.getLane()) {
             laneIds.add(lane.getId());
             final TLaneSet childLaneSet = lane.getChildLaneSet();
