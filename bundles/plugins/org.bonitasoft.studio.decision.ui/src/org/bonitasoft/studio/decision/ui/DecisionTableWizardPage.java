@@ -287,8 +287,19 @@ public class DecisionTableWizardPage extends WizardPage {
                 new Composite(placeHolder, SWT.NONE).setLayoutData(new GridData(0, 0));
             }
 
-            final ExpressionViewer op1widget = new ExpressionViewer(placeHolder, SWT.BORDER);
+            final ExpressionViewer op1widget = new ExpressionViewer(placeHolder, SWT.BORDER) {
+
+                /*
+                 * (non-Javadoc)
+                 * @see org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer#defaultExpressionType()
+                 */
+                @Override
+                protected String defaultExpressionType() {
+                    return ExpressionConstants.CONDITION_TYPE;
+                }
+            };
             op1widget.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(500, SWT.DEFAULT).grab(true, false).span(2, 1).create());
+            op1widget.setDefaultReturnType(Boolean.class.getName());
             op1widget.addExpressionValidator(new ComparisonExpressionValidator());
             op1widget.addExpressionValidationListener(new IExpressionValidationListener() {
 
@@ -299,7 +310,9 @@ public class DecisionTableWizardPage extends WizardPage {
 
             });
             op1widget.setContext(container);
-            op1widget.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONDITION_TYPE));
+            op1widget.addFilter(
+                    new AvailableExpressionTypeFilter(ExpressionConstants.CONDITION_TYPE, ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.VARIABLE_TYPE,
+                            ExpressionConstants.PARAMETER_TYPE));
             op1widget.setContext(container);
             op1widget.setInput(lineWorkingCopy);
             op1widget.setSelection(new StructuredSelection(cond));
@@ -505,9 +518,9 @@ public class DecisionTableWizardPage extends WizardPage {
                 final Label condLabel = new Label(gridPlaceholder, SWT.NONE);
                 condLabel.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, condLabel));
                 String stringCondition = cond.getContent();
-                if (stringCondition.length() > 15) {
+                if (stringCondition.length() > 30) {
                     condLabel.setToolTipText(stringCondition);
-                    stringCondition = stringCondition.substring(0, 12) + "...";
+                    stringCondition = stringCondition.substring(0, 27) + "...";
                 }
                 condLabel.setText(stringCondition);
                 andLabel = new Label(gridPlaceholder, SWT.NONE);
