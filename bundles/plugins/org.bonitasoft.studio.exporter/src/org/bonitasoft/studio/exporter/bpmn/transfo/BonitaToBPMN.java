@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.exporter.bpmn.transfo;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,6 +29,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -118,6 +122,8 @@ import org.bonitasoft.studio.model.process.StartSignalEvent;
 import org.bonitasoft.studio.model.process.StartTimerEvent;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.model.process.TextAnnotation;
+import org.bonitasoft.studio.model.process.TextAnnotationAttachment;
 import org.bonitasoft.studio.model.process.ThrowLinkEvent;
 import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.XMLData;
@@ -129,6 +135,8 @@ import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SequenceFlowNameEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEventEditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.TextAnnotation2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.TextAnnotationAttachmentEditPart;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.IFigure;
@@ -147,6 +155,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.ElementHandlerImpl;
+import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.CompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -171,6 +180,7 @@ import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.ModelFactory;
 import org.omg.spec.bpmn.model.TActivity;
 import org.omg.spec.bpmn.model.TAssignment;
+import org.omg.spec.bpmn.model.TAssociation;
 import org.omg.spec.bpmn.model.TBaseElement;
 import org.omg.spec.bpmn.model.TBoundaryEvent;
 import org.omg.spec.bpmn.model.TCallActivity;
@@ -225,6 +235,8 @@ import org.omg.spec.bpmn.model.TStandardLoopCharacteristics;
 import org.omg.spec.bpmn.model.TStartEvent;
 import org.omg.spec.bpmn.model.TSubProcess;
 import org.omg.spec.bpmn.model.TTerminateEventDefinition;
+import org.omg.spec.bpmn.model.TText;
+import org.omg.spec.bpmn.model.TTextAnnotation;
 import org.omg.spec.bpmn.model.TThrowEvent;
 import org.omg.spec.bpmn.model.TTimerEventDefinition;
 import org.omg.spec.bpmn.model.TUserTask;
@@ -234,6 +246,11 @@ import org.omg.spec.dd.dc.DcFactory;
 import org.omg.spec.dd.dc.DcPackage;
 import org.omg.spec.dd.dc.Font;
 import org.omg.spec.dd.di.Shape;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 
 /**
  * @author Mickael Istria
@@ -506,13 +523,13 @@ public class BonitaToBPMN implements IBonitaTransformer {
     }
 
     /**
-     * @param childPart
+     * @param pollEditPart
      * @param definitions
      * @param collaborationDiagram
      * @param collaboration
      */
-    private void processPool(final PoolEditPart childPart, final TDefinitions definitions, final TCollaboration collaboration) {
-        final Pool pool = (Pool) childPart.resolveSemanticElement();
+    private void processPool(final PoolEditPart pollEditPart, final TDefinitions definitions, final TCollaboration collaboration) {
+        final Pool pool = (Pool) pollEditPart.resolveSemanticElement();
         // create semantic process
         final TProcess bpmnProcess = ModelFactory.eINSTANCE.createTProcess();
         setCommonAttributes(pool, bpmnProcess);
@@ -531,9 +548,9 @@ public class BonitaToBPMN implements IBonitaTransformer {
         }
 
         //create graphic process
-        final BPMNShape processShape = createBPMNShape(childPart);
+        final BPMNShape processShape = createBPMNShape(pollEditPart);
         processShape.setBpmnElement(QName.valueOf(participant.getId()));
-        final IFigure bonitaPoolFigure = childPart.getFigure();
+        final IFigure bonitaPoolFigure = pollEditPart.getFigure();
         final Rectangle bounds = getAbsoluteLabelBounds(bonitaPoolFigure);
         final Bounds laneBounds = DcFactory.eINSTANCE.createBounds();
         laneBounds.setHeight(bounds.preciseHeight());
@@ -541,15 +558,87 @@ public class BonitaToBPMN implements IBonitaTransformer {
         laneBounds.setX(bounds.preciseX());
         laneBounds.setY(bounds.preciseY());
         processShape.setBounds(laneBounds);
-        processShape.setId(ModelHelper.getEObjectID(childPart.getNotationView()));
+        processShape.setId(ModelHelper.getEObjectID(pollEditPart.getNotationView()));
         processShape.setIsHorizontal(true);
         bpmnPlane.getDiagramElement().add(processShape);
 
         populateWithData(pool, bpmnProcess);//create data before in order to have them accessible after
         populateWithMessage(pool, bpmnProcess);
-        populate(childPart, bpmnProcess, null);
-        populateWithSequenceFlow(childPart, bpmnProcess);
+        populate(pollEditPart, bpmnProcess, null);
+        populateWithSequenceFlow(pollEditPart, bpmnProcess);
+        populateWithTextAnnotation(pollEditPart, pool, bpmnProcess);
 
+    }
+
+    private void populateWithTextAnnotation(final PoolEditPart poolEditPart, final Pool pool, final TProcess bpmnProcess) {
+        final List<TextAnnotation> annotations = ModelHelper.getAllItemsOfType(pool, ProcessPackage.Literals.TEXT_ANNOTATION);
+        bpmnProcess.getArtifact().addAll(newArrayList(Iterables.transform(annotations, new Function<TextAnnotation, TTextAnnotation>() {
+
+            @Override
+            public TTextAnnotation apply(final TextAnnotation source) {
+                final TTextAnnotation annotation = ModelFactory.eINSTANCE.createTTextAnnotation();
+                final TText text = ModelFactory.eINSTANCE.createTText();
+                text.getMixed().add(XMLTypePackage.Literals.XML_TYPE_DOCUMENT_ROOT__TEXT, source.getText());
+                annotation.setText(text);
+                annotation.setId(EcoreUtil.generateUUID());
+                final List<TextAnnotationAttachment> textAnnotationAttachments = ModelHelper.getAllItemsOfType(pool,
+                        ProcessPackage.Literals.TEXT_ANNOTATION_ATTACHMENT);
+
+
+                final Map filterEntries = Maps.filterEntries(poolEditPart.getViewer().getEditPartRegistry(),
+                        entryFor(source, TextAnnotation2EditPart.VISUAL_ID));
+
+                final ShapeNodeEditPart editPart = (ShapeNodeEditPart) filterEntries.values().iterator().next();
+                createGraphicForFlowElement(editPart, annotation);
+
+                for (final TextAnnotationAttachment attachement : textAnnotationAttachments) {
+                    if (Objects.equals(attachement.getSource(), source)) {
+                        final TAssociation association = ModelFactory.eINSTANCE.createTAssociation();
+                        association.setId(EcoreUtil.generateUUID());
+                        association.setSourceRef(QName.valueOf(annotation.getId()));
+                        association.setTargetRef(QName.valueOf(mapping.get(attachement.getTarget()).getId()));
+                        bpmnProcess.getArtifact().add(association);
+                        final BPMNEdge edge = DiFactory.eINSTANCE.createBPMNEdge();
+                        edge.setBpmnElement(QName.valueOf(association.getId()));
+                        final Map attachmentEntries = Maps.filterEntries(poolEditPart.getViewer().getEditPartRegistry(),
+                                entryFor(attachement, TextAnnotationAttachmentEditPart.VISUAL_ID));
+                        final TextAnnotationAttachmentEditPart connectionEditPart = (TextAnnotationAttachmentEditPart) attachmentEntries.values().iterator()
+                                .next();
+                        final PointList pointList = connectionEditPart.getConnectionFigure().getPoints();
+                        for (int i = 0; i < pointList.size(); i++) {
+                            final org.omg.spec.dd.dc.Point ddPoint = DcFactory.eINSTANCE.createPoint();
+                            final Point point = pointList.getPoint(i);
+                            ddPoint.setX(point.preciseX());
+                            ddPoint.setY(point.preciseY());
+                            edge.getWaypoint().add(ddPoint);
+                        }
+
+                        edge.setId(ModelHelper.getEObjectID(connectionEditPart.getNotationView()));
+                        bpmnPlane.getDiagramElement().add(edge);
+                    }
+                }
+                return annotation;
+            }
+
+
+        })));
+    }
+
+    private Predicate<Entry<Object, Object>> entryFor(final EObject element, final int visualID) {
+        return new Predicate<Entry<Object, Object>>() {
+
+            @Override
+            public boolean apply(Entry<Object, Object> entry) {
+                if (entry.getValue() instanceof IGraphicalEditPart) {
+                    final View view = (View) entry.getKey();
+                    final IGraphicalEditPart part = (IGraphicalEditPart) entry.getValue();
+                    return Objects.equals(part.resolveSemanticElement(), element)
+                            && Objects.equals(Integer.valueOf(view.getType()), visualID);
+                }
+                return false;
+            }
+
+        };
     }
 
     private void populateWithMessage(final Pool pool, final TProcess bpmnProcess) {
@@ -664,7 +753,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
         return tDataInput;
     }
 
-    protected TDataOutput fillIOSpecificationWithNewDataOutput(final QName dataItemDefinitionIdAsQname, final TInputOutputSpecification tInputOutputAssociation) {
+    protected TDataOutput fillIOSpecificationWithNewDataOutput(final QName dataItemDefinitionIdAsQname,
+            final TInputOutputSpecification tInputOutputAssociation) {
         final TDataOutput tDataOutput = ModelFactory.eINSTANCE.createTDataOutput();
         tDataOutput.setItemSubjectRef(dataItemDefinitionIdAsQname);
         tDataOutput.setId(EcoreUtil.generateUUID());
@@ -1042,7 +1132,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
         }
     }
 
-    protected void createGraphicForFlowElement(final ShapeNodeEditPart bonitaElementPart, final TFlowElement bpmnElement) {
+    protected void createGraphicForFlowElement(final ShapeNodeEditPart bonitaElementPart, final TBaseElement bpmnElement) {
         final BPMNShape elementShape = createBPMNShape(bonitaElementPart);
 
         elementShape.setBpmnElement(QName.valueOf(bpmnElement.getId()));
@@ -1513,8 +1603,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
             final TTimerEventDefinition eventDef = createTimerEventDef(bonitaEvent);
             bpmnEvent.getEventDefinition().add(eventDef);
             res = bpmnEvent;
-        }
-        else {
+        } else {
             errors.add(NLS.bind(Messages.defaultMappingToActivity, child.getName()));
             final TActivity bpmnActivity = ModelFactory.eINSTANCE.createTTask();
             setCommonAttributes(child, bpmnActivity);
