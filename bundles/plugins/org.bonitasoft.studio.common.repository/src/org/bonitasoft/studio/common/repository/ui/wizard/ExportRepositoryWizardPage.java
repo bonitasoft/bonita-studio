@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
@@ -97,7 +98,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
     private final String defaultFileName;
     private ViewerFilter[] filters = {};
 
-    private Set<Object> defaultSelectedFiles = new HashSet<Object>();
+    private Set<Object> defaultSelectedFiles = new HashSet<>();
 
     public ExportRepositoryWizardPage(final List<IRepositoryStore<? extends IRepositoryFileStore>> stores, final boolean isZip, final String defaultFileName) {
         super(ExportRepositoryWizardPage.class.getName());
@@ -201,7 +202,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
     }
 
     private Set<IRepositoryFileStore> getSelectedFileStores() {
-        final Set<IRepositoryFileStore> checkedArtifacts = new HashSet<IRepositoryFileStore>();
+        final Set<IRepositoryFileStore> checkedArtifacts = new HashSet<>();
         for (final Object element : treeViewer.checkedElementsObservable()) {
             if (element instanceof IRepositoryFileStore) {
                 checkedArtifacts.add((IRepositoryFileStore) element);
@@ -292,7 +293,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
         operation.setDestinationPath(getDetinationPath());
         final Set<IResource> resourcesToExport = computeResourcesToExport();
         try {
-            final Set<IResource> toOpen = new HashSet<IResource>();
+            final Set<IResource> toOpen = new HashSet<>();
             for (final IEditorReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
                 final IFile file = (IFile) EditorUtil.retrieveResourceFromEditorInput(ref.getEditorInput());
                 if (resourcesToExport.contains(file)) {
@@ -309,13 +310,13 @@ public class ExportRepositoryWizardPage extends WizardPage {
     }
 
     protected Set<IResource> computeResourcesToExport() {
-        final Set<IResource> resourcesToExport = new HashSet<IResource>();
+        final Set<IResource> resourcesToExport = new HashSet<>();
         for (final IRepositoryFileStore file : getSelectedFileStores()) {
-            IResource resource = file.getResource();
+            final IResource resource = file.getResource();
 			if (resource != null && resource.exists()) {
             	try {
 					addChildrenFile(resource,resourcesToExport);
-				} catch (CoreException e) {
+				} catch (final CoreException e) {
 				BonitaStudioLog.error(e);
 				}
                 resourcesToExport.addAll(file.getRelatedResources());
@@ -325,16 +326,21 @@ public class ExportRepositoryWizardPage extends WizardPage {
     }
 
     private void addChildrenFile(IResource resource, Set<IResource> resourcesToExport) throws CoreException {
-    	if(resource instanceof IFile){
+        if (resource instanceof IFile) {
     		resourcesToExport.add(resource);
-    	}else if(resource instanceof IFolder){
-    		for(IResource r : ((IFolder) resource).members()){
+        } else if (resource instanceof IFolder && !isMetadataFolder(resource)) {
+    		for(final IResource r : ((IFolder) resource).members()){
     			addChildrenFile(r,resourcesToExport);
     		}
     	}
 	}
 
-	protected void createDestination(final Composite group) {
+    private boolean isMetadataFolder(IResource resource) {
+        final String resourceName = resource.getName();
+        return Pattern.matches(".metadata", resourceName);
+    }
+
+    protected void createDestination(final Composite group) {
         final Label destPath = new Label(group, SWT.NONE);
         destPath.setText(Messages.destinationPath + " *");
         destPath.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
