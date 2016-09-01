@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.exporter.bpmn.transfo;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.io.File;
@@ -249,6 +250,7 @@ import org.omg.spec.dd.di.Shape;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 
@@ -584,7 +586,6 @@ public class BonitaToBPMN implements IBonitaTransformer {
                 final List<TextAnnotationAttachment> textAnnotationAttachments = ModelHelper.getAllItemsOfType(pool,
                         ProcessPackage.Literals.TEXT_ANNOTATION_ATTACHMENT);
 
-
                 final Map filterEntries = Maps.filterEntries(poolEditPart.getViewer().getEditPartRegistry(),
                         entryFor(source, TextAnnotation2EditPart.VISUAL_ID));
 
@@ -593,33 +594,35 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
                 for (final TextAnnotationAttachment attachement : textAnnotationAttachments) {
                     if (Objects.equals(attachement.getSource(), source)) {
-                        final TAssociation association = ModelFactory.eINSTANCE.createTAssociation();
-                        association.setId(EcoreUtil.generateUUID());
-                        association.setSourceRef(QName.valueOf(annotation.getId()));
-                        association.setTargetRef(QName.valueOf(mapping.get(attachement.getTarget()).getId()));
-                        bpmnProcess.getArtifact().add(association);
-                        final BPMNEdge edge = DiFactory.eINSTANCE.createBPMNEdge();
-                        edge.setBpmnElement(QName.valueOf(association.getId()));
-                        final Map attachmentEntries = Maps.filterEntries(poolEditPart.getViewer().getEditPartRegistry(),
-                                entryFor(attachement, TextAnnotationAttachmentEditPart.VISUAL_ID));
-                        final TextAnnotationAttachmentEditPart connectionEditPart = (TextAnnotationAttachmentEditPart) attachmentEntries.values().iterator()
-                                .next();
-                        final PointList pointList = connectionEditPart.getConnectionFigure().getPoints();
-                        for (int i = 0; i < pointList.size(); i++) {
-                            final org.omg.spec.dd.dc.Point ddPoint = DcFactory.eINSTANCE.createPoint();
-                            final Point point = pointList.getPoint(i);
-                            ddPoint.setX(point.preciseX());
-                            ddPoint.setY(point.preciseY());
-                            edge.getWaypoint().add(ddPoint);
-                        }
+                        TFlowElement tFlowElement = mapping.get(attachement.getTarget());
+                        if (tFlowElement != null && !isNullOrEmpty(tFlowElement.getId())) {
+                            final TAssociation association = ModelFactory.eINSTANCE.createTAssociation();
+                            association.setId(EcoreUtil.generateUUID());
+                            association.setSourceRef(QName.valueOf(annotation.getId()));
+                            association.setTargetRef(QName.valueOf(mapping.get(attachement.getTarget()).getId()));
+                            bpmnProcess.getArtifact().add(association);
+                            final BPMNEdge edge = DiFactory.eINSTANCE.createBPMNEdge();
+                            edge.setBpmnElement(QName.valueOf(association.getId()));
+                            final Map attachmentEntries = Maps.filterEntries(poolEditPart.getViewer().getEditPartRegistry(),
+                                    entryFor(attachement, TextAnnotationAttachmentEditPart.VISUAL_ID));
+                            final TextAnnotationAttachmentEditPart connectionEditPart = (TextAnnotationAttachmentEditPart) attachmentEntries.values().iterator()
+                                    .next();
+                            final PointList pointList = connectionEditPart.getConnectionFigure().getPoints();
+                            for (int i = 0; i < pointList.size(); i++) {
+                                final org.omg.spec.dd.dc.Point ddPoint = DcFactory.eINSTANCE.createPoint();
+                                final Point point = pointList.getPoint(i);
+                                ddPoint.setX(point.preciseX());
+                                ddPoint.setY(point.preciseY());
+                                edge.getWaypoint().add(ddPoint);
+                            }
 
-                        edge.setId(ModelHelper.getEObjectID(connectionEditPart.getNotationView()));
-                        bpmnPlane.getDiagramElement().add(edge);
+                            edge.setId(ModelHelper.getEObjectID(connectionEditPart.getNotationView()));
+                            bpmnPlane.getDiagramElement().add(edge);
+                        }
                     }
                 }
                 return annotation;
             }
-
 
         })));
     }
