@@ -34,6 +34,7 @@ import org.bonitasoft.studio.diagram.test.TestConvertToMessage;
 import org.bonitasoft.studio.diagram.test.TestMoveBetweenLane;
 import org.bonitasoft.studio.diagram.test.TestSave;
 import org.bonitasoft.studio.engine.test.bar.BarExporterTest;
+import org.bonitasoft.studio.exporter.tests.bos.ExportBosArchiveIT;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNConnectorExportImportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNEventSubProcessExportImportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNExportTests;
@@ -99,6 +100,7 @@ import org.junit.runners.Suite;
     BPMNGatewayExportImportTest.class,
     BPMNEventSubProcessExportImportTest.class,
     BarExporterTest.class,
+    ExportBosArchiveIT.class,
     TestRunWithDocument.class,
     TestDocument.class,
     DuplicateCommandTest.class,
