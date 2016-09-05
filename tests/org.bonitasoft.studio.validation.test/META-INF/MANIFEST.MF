@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Validation Test
 Bundle-SymbolicName: org.bonitasoft.studio.validation.test
-Bundle-Version: 7.3.2.qualifier
+Bundle-Version: 7.3.3.qualifier
 Bundle-Activator: org.bonitasoft.studio.validation.test.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.core.runtime,
