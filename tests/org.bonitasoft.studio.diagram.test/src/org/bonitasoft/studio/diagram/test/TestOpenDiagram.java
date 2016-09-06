@@ -24,17 +24,17 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.application.BotOpenDiagramDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.widget.BotTreeWidget;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestOpenDiagram extends SWTBotGefTestCase {
+public class TestOpenDiagram  {
 
     private boolean askRename;
     private boolean disablePopup;
+    private SWTGefBot bot = new SWTGefBot();
 
-    @Override
     @After
     public void tearDown() throws Exception {
         bot.saveAllEditors();
@@ -43,9 +43,7 @@ public class TestOpenDiagram extends SWTBotGefTestCase {
     }
 
     @Before
-    @Override
     public void setUp() throws Exception {
-        super.setUp();
         disablePopup = FileActionDialog.getDisablePopup();
         FileActionDialog.setDisablePopup(true);
         askRename = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE);

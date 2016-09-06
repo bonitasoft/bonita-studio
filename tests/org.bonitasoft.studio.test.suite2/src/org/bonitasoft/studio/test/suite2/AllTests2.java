@@ -53,13 +53,12 @@ import org.bonitasoft.studio.tests.parameter.TestProcessParameters;
 import org.bonitasoft.studio.tests.perspectives.TestAutomaticSwitchPerspective;
 import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
 import org.bonitasoft.studio.tests.refactoring.widget.TestRefactorWidgetOperation;
-import org.bonitasoft.studio.tests.refactoring.widget.TestRemoveWidgetReferencesOperation;
 import org.bonitasoft.studio.tests.repository.UIDesignerWorkspaceIntegrationIT;
 import org.bonitasoft.studio.tests.timer.TestNonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.themes.tests.TestCSSModel;
 import org.bonitasoft.studio.themes.tests.TestDirtyState;
 import org.bonitasoft.studio.themes.tests.TestThemeRepository;
-import org.bonitasoft.studio.util.test.BonitaJunit4TestSuite;
+import org.bonitasoft.studio.util.test.BonitaSuite;
 import org.bonitasoft.studio.validation.test.TestTokenDispatcher;
 import org.bonitasoft.studio.validation.test.TestValidationConstraints;
 import org.eclipse.core.runtime.CoreException;
@@ -72,10 +71,8 @@ import org.junit.runners.Suite;
 
 import junit.framework.TestSuite;
 
-/**
- * @author Romain Bioteau
- */
-@RunWith(BonitaJunit4TestSuite.class)
+
+@RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
         TestBugs.class,//must be the first (to check for zoomContributionItem at startup)
         TestProcessZoo.class,
@@ -101,13 +98,11 @@ import junit.framework.TestSuite;
         TestBonitaAPI.class,
         TestNonInterruptingBoundaryTimerEvent.class,
         TestUserFilterMatchingEngineVersion.class,
-        // keep it at the end because if it fails it might be in an infinite loop
         TestDeployCommand.class,
         MigrationReportPDFExportTest.class,
         TestValidationConstraints.class,
         TestTestConnectorOperation.class,
         TestRefactorWidgetOperation.class,
-        TestRemoveWidgetReferencesOperation.class,
         TestWebserviceVersionForBPMNImport.class,
         TestTokenDispatcher.class,
         DocumentMigrationIT.class,

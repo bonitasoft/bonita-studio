@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Component;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -37,6 +35,8 @@ import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.eclipse.swt.graphics.Image;
+
+import junit.framework.TestCase;
 
 /**
  * @author Romain Bioteau
@@ -165,7 +165,6 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 			}
 		}
 		if(!testReport.toString().equals("testProvidedDefinitionsSanity report:")){
-			System.out.println(testReport.toString());
 			fail(testReport.toString());
 		}
 	}
@@ -267,7 +266,6 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 			}
 		}
 		if(!testReport.toString().equals("testProvidedImplementationsSanity report:")){
-			System.out.println(testReport.toString());
 			fail(testReport.toString());
 		}
 	}

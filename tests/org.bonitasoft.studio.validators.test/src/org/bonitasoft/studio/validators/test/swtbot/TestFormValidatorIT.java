@@ -22,12 +22,18 @@ import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspecti
 import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotAddFormWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.validator.BotValidatorPropertySection;
 import org.bonitasoft.studio.validators.i18n.Messages;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class TestFormValidatorIT  {
 
-public class TestFormValidatorIT extends SWTBotGefTestCase {
-
+    private SWTGefBot bot = new SWTGefBot();
+    
+    @Test
     public void testParameterEnablementForGroovyValidator() {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();

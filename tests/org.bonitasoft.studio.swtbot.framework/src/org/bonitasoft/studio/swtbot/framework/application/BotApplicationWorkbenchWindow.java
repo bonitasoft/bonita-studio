@@ -40,7 +40,6 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     }
 
     public BotProcessDiagramPerspective createNewDiagram() {
-        final long timebeforeCreatenewDiagram = System.currentTimeMillis();
         final int nbEditorsBefore = bot.editors().size();
         bot.waitUntil(Conditions.waitForWidget(WithId.withId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL)), 40000);
         bot.waitUntil(Conditions.shellIsActive(bot.shellWithId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL).getText()), 40000);
@@ -63,8 +62,6 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
                 return "Editor for new diagram has not been opened";
             }
         }, 30000, 100);
-        System.out.println("Time to create a new diagram: " + String.valueOf(System.currentTimeMillis() - timebeforeCreatenewDiagram));
-
         return new BotProcessDiagramPerspective(bot);
     }
 

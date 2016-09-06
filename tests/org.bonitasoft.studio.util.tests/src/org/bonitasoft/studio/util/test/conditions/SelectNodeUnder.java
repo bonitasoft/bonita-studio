@@ -31,10 +31,8 @@ public class SelectNodeUnder implements ICondition {
     }
 
     public boolean test() throws Exception {
-        System.out.println("SelectNodeUnder.test" + parentNode + " --> " + subNodeLabel);
         bot.tree().unselect();
         final SWTBotTreeItem expandedNode = bot.tree().select(parentNode).expandNode(parentNode);
-        System.out.println("Available nodes under expanded one" + parentNode + ": " + expandedNode.getNodes());
         expandedNode.select(subNodeLabel);
         return bot.tree().selectionCount() > 0;
     }

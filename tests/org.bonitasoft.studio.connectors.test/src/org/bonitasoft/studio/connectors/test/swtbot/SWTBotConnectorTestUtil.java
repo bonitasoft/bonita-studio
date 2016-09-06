@@ -20,8 +20,6 @@ package org.bonitasoft.studio.connectors.test.swtbot;
 
 import java.util.List;
 
-import org.junit.Assert;
-
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -31,6 +29,7 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.junit.Assert;
 
 /**
  * @author Aur�lie Zara
@@ -191,7 +190,7 @@ public class SWTBotConnectorTestUtil {
 		bot.button(IDialogConstants.FINISH_LABEL).click();
 		activateConnectorImplementationShell(bot);
 		bot.table().select(id);
-		SWTBotCombo comboBoxToSelectVersion = bot.comboBoxWithLabel("Definition version");
+		final SWTBotCombo comboBoxToSelectVersion = bot.comboBoxWithLabel("Definition version");
 		if(comboBoxToSelectVersion.isEnabled()){
 			comboBoxToSelectVersion.setSelection(version);
 		}
@@ -236,7 +235,6 @@ public class SWTBotConnectorTestUtil {
 		for(int i = 0; i < categoryPathLabels.length; i++){
 			
 			final String categoryLabel = categoryPathLabels[i];
-			System.out.println("will try to open node: "+categoryLabel);
 			bot.waitUntil(new ICondition() {
 
 				public boolean test() throws Exception {
@@ -248,7 +246,6 @@ public class SWTBotConnectorTestUtil {
 						categoryItem = categoryItem.expandNode(categoryLabel);
 					}
 					
-					System.out.println("item expanded: "+categoryItem.getText());
 					nodes = categoryItem.getNodes();
 					if(!nodes.isEmpty() && nodes.get(0).isEmpty()){
 						return false;
@@ -268,7 +265,7 @@ public class SWTBotConnectorTestUtil {
 
 
 		String cNode = null;
-		for(String node : nodes){
+		for(final String node : nodes){
 			if(node.startsWith(connectorDefinitionLabel) && node.contains(version)){
 				cNode =  node ;
 				break;
@@ -280,7 +277,7 @@ public class SWTBotConnectorTestUtil {
 
 			public boolean test() throws Exception {
 				categoryItem.select(nodeToSelect);
-				String selection = bot.tree().selection().get(0,0);
+				final String selection = bot.tree().selection().get(0,0);
 				return selection != null &&  selection.startsWith(connectorDefinitionLabel);
 			}
 

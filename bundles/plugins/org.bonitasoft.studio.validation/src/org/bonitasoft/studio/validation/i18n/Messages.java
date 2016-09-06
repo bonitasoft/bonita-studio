@@ -68,8 +68,6 @@ public class Messages extends NLS {
 
     public static String validation_signalEvent_codeNotSet;
 
-    public static String Validation_SimulationEmptyExpression;
-
     public static String Validation_SubProcMustHaveStartEvent;
 
     public static String Validation_SubProcMustHaveOnlyOneStartEvent;

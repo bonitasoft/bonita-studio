@@ -17,6 +17,8 @@
  */
 package org.bonitasoft.studio.application.test;
 
+import static org.junit.Assert.assertEquals;
+
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.rule.LegacySWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
@@ -24,7 +26,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.junit.Rule;
@@ -32,8 +34,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestMenus extends SWTBotGefTestCase {
+public class TestMenus {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Rule
     public LegacySWTGefBotRule rule = new LegacySWTGefBotRule(bot);
 

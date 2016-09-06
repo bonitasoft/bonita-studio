@@ -1,8 +1,10 @@
 package org.bonitasoft.studio.connectors.test.swtbot;
 
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Assert;
+import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -21,17 +23,18 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestTextAreaInConnectorWizard extends SWTBotGefTestCase {
+public class TestTextAreaInConnectorWizard {
 
     private final String connectorId = "textAreaInWizardTest";
     final String widgetId = "textWidget";
@@ -39,7 +42,9 @@ public class TestTextAreaInConnectorWizard extends SWTBotGefTestCase {
     final String textArea = "Text area editor";
     final String name = "testTextAreaConnector";
     final String version = "1.0.0";
-
+    
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Before
     public void disablePopup() {
         FileActionDialog.setDisablePopup(true);
@@ -159,7 +164,6 @@ public class TestTextAreaInConnectorWizard extends SWTBotGefTestCase {
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
 
-    @Override
     @After
     public void tearDown() {
         bot.saveAllEditors();

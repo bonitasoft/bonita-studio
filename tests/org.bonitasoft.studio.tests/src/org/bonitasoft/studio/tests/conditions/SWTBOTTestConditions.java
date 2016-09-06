@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.tests.conditions;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -31,15 +34,17 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.emf.validation.model.EvaluationMode;
 import org.eclipse.emf.validation.service.IBatchValidator;
 import org.eclipse.emf.validation.service.ModelValidationService;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class SWTBOTTestConditions extends SWTBotGefTestCase {
+public class SWTBOTTestConditions  {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 

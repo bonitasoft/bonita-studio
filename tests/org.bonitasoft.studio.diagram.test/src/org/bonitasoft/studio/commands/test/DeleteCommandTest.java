@@ -14,8 +14,11 @@
  */
 package org.bonitasoft.studio.commands.test;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -26,23 +29,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
-/**
- * @author Florine Boudin
- *
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class DeleteCommandTest extends SWTBotGefTestCase {
+public class DeleteCommandTest   {
 
-    @Override
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         bot.saveAllEditors();
         bot.closeAllEditors();
     }
 
-    @Override
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         bot.activeEditor().saveAndClose();
         bot.closeAllEditors();
     }

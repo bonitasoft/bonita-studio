@@ -15,6 +15,9 @@
 
 package org.bonitasoft.studio.properties.test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
@@ -23,7 +26,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.junit.After;
@@ -31,18 +34,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aurelie Zara
- */
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestConditionExpression extends SWTBotGefTestCase implements SWTBotConstants {
+public class TestConditionExpression implements SWTBotConstants {
 
     private final String poolName = "Test Conditions";
     private final String poolVersion = "1.0";
     private final String validErrorMessage = "wrong XText validation, no underline error should be displayed";
     private final String unvalidErrorMessage = "wrong XText validation, underline error should be displayed";
 
+    private final SWTGefBot bot = new SWTGefBot();
+    
     @Before
     public void initialiseTest() {
         SWTBotTestUtil.createNewDiagram(bot);

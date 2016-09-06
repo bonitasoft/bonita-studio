@@ -55,7 +55,7 @@ import org.bonitasoft.studio.tests.document.TestDocumentRefactoring;
 import org.bonitasoft.studio.tests.form.TestFileWidgetMigration;
 import org.bonitasoft.studio.tests.groovy.TestFunctionRepository;
 import org.bonitasoft.studio.tests.subprocess.TestSubprocess;
-import org.bonitasoft.studio.util.test.BonitaJunit4TestSuite;
+import org.bonitasoft.studio.util.test.BonitaSuite;
 import org.bonitasoft.studio.workspace.test.TestInitialWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -77,10 +77,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-/**
- * @author Romain Bioteau
- */
-@RunWith(BonitaJunit4TestSuite.class)
+@RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
         TestInitialWorkspace.class,
         TestExtensionProject.class,

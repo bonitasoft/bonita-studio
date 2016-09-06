@@ -14,6 +14,10 @@
  */
 package org.bonitasoft.expressions.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -33,7 +37,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.junit.Test;
@@ -43,7 +47,7 @@ import org.junit.runner.RunWith;
  * @author Romain Bioteau
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SWTBotConstants {
+public class TestPatternExpressionViewer  implements SWTBotConstants {
 
     private static final String DATA_NAME_1 = "myData1";
     private static final String DATA_NAME_2 = "myData2";
@@ -55,6 +59,8 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
     private static final String GROOVY_SQL_QUERY = "\"SELECT \"+" + DATA_NAME_1 + "+\" from MyTable WHERE \"+" + DATA_NAME_2 + "+\"='\"+" + DATA_NAME_3
             + "+\"'\"";
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Test
     public void testPatternExpressionViewer() {
         SWTBotTestUtil.createNewDiagram(bot);

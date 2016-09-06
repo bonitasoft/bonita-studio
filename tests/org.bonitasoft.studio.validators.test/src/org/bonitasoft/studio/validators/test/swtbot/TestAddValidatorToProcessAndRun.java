@@ -14,12 +14,14 @@
  */
 package org.bonitasoft.studio.validators.test.swtbot;
 
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.swtbot.framework.rule.LegacySWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Rule;
@@ -27,11 +29,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestAddValidatorToProcessAndRun extends SWTBotGefTestCase {
+public class TestAddValidatorToProcessAndRun {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Rule
     public LegacySWTGefBotRule botRule = new LegacySWTGefBotRule(bot);
-
+    
     @Test
     public void addValidatorOnFieldAndRun() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
