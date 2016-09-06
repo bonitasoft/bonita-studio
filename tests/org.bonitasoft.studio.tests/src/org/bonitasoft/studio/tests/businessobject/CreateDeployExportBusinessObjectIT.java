@@ -6,6 +6,8 @@ package org.bonitasoft.studio.tests.businessobject;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,10 +25,11 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
@@ -34,45 +37,44 @@ import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
-/**
- * @author Romain Bioteau
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class CreateDeployExportBusinessObjectIT extends SWTBotGefTestCase {
+public class CreateDeployExportBusinessObjectIT {
 
+    private final SWTGefBot bot = new SWTGefBot();
+
+    @Rule
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
+    
     private Keyboard keyboard;
 
-    private File tmpFile;
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private BusinessObjectModelRepositoryStore bdmStore;
 
-    @Override
+    private File tmpFile;
+
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         String layout = "EN_US";
         if (Platform.getOS().equals(Platform.OS_MACOSX)) {
             layout = "MAC_" + layout;
         }
         SWTBotPreferences.KEYBOARD_LAYOUT = layout;
         keyboard = KeyboardFactory.getSWTKeyboard();
-        tmpFile = new File(System.getProperty("java.io.tmpdir"), "bdm.zip");
+        tmpFile = temporaryFolder.newFile("bdm.zip");
 
         bdmStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         final BusinessObjectModelFileStore businessObjectModelFileStore = bdmStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
         if (businessObjectModelFileStore != null) {
             businessObjectModelFileStore.delete();
         }
-    }
-
-    @Override
-    @After
-    public void tearDown() throws Exception {
-        tmpFile.delete();
     }
 
     @Test
@@ -136,7 +138,7 @@ public class CreateDeployExportBusinessObjectIT extends SWTBotGefTestCase {
         editIndex("Employee", "NAMEINDEX", new String[] { "lastName -- STRING" }, 0);
 
         // Add custom query
-        final Map<String, String> queryParam = new HashMap<String, String>();
+        final Map<String, String> queryParam = new HashMap<>();
         queryParam.put("maxSalary", Double.class.getName());
         addCustomQuery("Employee", "findByMaxSalary", "SELECT e FROM Employee e WHERE e.salary < :maxSalary", queryParam, "Multiple (java.util.List)", 0);
 
@@ -226,7 +228,7 @@ public class CreateDeployExportBusinessObjectIT extends SWTBotGefTestCase {
 
         final SWTBotTable paramTableBot = bot.table();
         final int rowCount = paramTableBot.rowCount();
-        final List<String> items = new ArrayList<String>();
+        final List<String> items = new ArrayList<>();
         for (int i = 0; i < rowCount; i++) {
             items.add(paramTableBot.getTableItem(i).getText());
         }

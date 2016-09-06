@@ -17,6 +17,9 @@
  */
 package org.bonitasoft.studio.actors.tests.organization;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +32,7 @@ import org.bonitasoft.studio.actors.tests.SWTbot.SWTBotActorFilterUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
@@ -45,8 +48,10 @@ import org.junit.runner.RunWith;
  */
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class OrganizationCreationTest extends SWTBotGefTestCase {
+public class OrganizationCreationTest {
 
+    private final SWTGefBot bot = new SWTGefBot();
+    
     @Test
     public void testAddOrganization() {
         final String firstName1 = "Coralie";
@@ -129,10 +134,6 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
             }
         }
         assertEquals("There should be two root groups",2, nbRootGroup);
-        //        for(User u : orga.getUsers().getUser()){
-        //            assertNotNull(u.getMetaDatas());
-        //        }
-
 
         synchronizeOrganization(organizationName,user1);
         synchronizeOrganization("ACME","walter.bates");
@@ -144,7 +145,6 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
             final List<String[]> memberShip) {
         bot.button(Messages.add).click();
         bot.tabItem(Messages.general).activate();
-        System.out.println("typing :" + username);
         final SWTBotText usernameText = bot.textWithLabel(Messages.userName + " *");
         usernameText.setText("");
         usernameText.setText(username);
@@ -193,8 +193,6 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
 
         SWTBotTable table = bot.table();
         Assert.assertNotNull(table);
-
-        System.out.println("Table size = "+ table.columnCount()+" x "+table.rowCount());
 
         // Set Description of the new Organisation
         final int idxBonita = table.indexOf("ACME  (" + Messages.active + ")", 0);

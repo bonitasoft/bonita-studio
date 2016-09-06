@@ -17,6 +17,10 @@
  */
 package org.bonitasoft.studio.exporter.tests.bpmn;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -37,6 +41,7 @@ import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -45,29 +50,32 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.omg.spec.bpmn.di.util.DiResourceFactoryImpl;
 import org.omg.spec.bpmn.model.DocumentRoot;
-/**
- * @author Aurélien
- *
- */
+
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class BPMNExportImportMessageDataTest extends SWTBotGefTestCase {
+public class BPMNExportImportMessageDataTest {
 	
 	private static  MainProcess mainProcessAfterReimport;
 	private static boolean isInitalized = false;
 	private static ThrowMessageEvent throwMessageEvent;
 	private static CatchMessageEvent catchMessageEvent;
 	
+    private final SWTGefBot bot = new SWTGefBot();
+
+    @Rule
+    public final SWTGefBotRule rule = new SWTGefBotRule(bot);
+
 	@Before
-	public void init() throws IOException{
+    public void init() throws Exception {
 		if(!isInitalized){
 			prepareTest();
 		}
@@ -76,76 +84,76 @@ public class BPMNExportImportMessageDataTest extends SWTBotGefTestCase {
 	
 	@Test
 	public void testDataDefined(){
-		Message message = throwMessageEvent.getEvents().get(0);
-		TableExpression messageContent = message.getMessageContent();
-		EList<Expression> messageDataLine = messageContent
+		final Message message = throwMessageEvent.getEvents().get(0);
+		final TableExpression messageContent = message.getMessageContent();
+		final EList<Expression> messageDataLine = messageContent
 				.getExpressions()
 				.get(0)
 				.getExpressions();
 		assertEquals("messageContentId1", messageDataLine.get(0));
 		assertNotNull(messageDataLine.get(1));
-		
 	}
 	
 	@Test
 	public void testDataMappedCorrectlyOnThrow(){
-		Message message = throwMessageEvent.getEvents().get(0);
-		TableExpression messageContent = message.getMessageContent();
-		EList<Expression> messageDataLine = messageContent
+		final Message message = throwMessageEvent.getEvents().get(0);
+		final TableExpression messageContent = message.getMessageContent();
+		final EList<Expression> messageDataLine = messageContent
 				.getExpressions()
 				.get(0)
 				.getExpressions();
-		Expression messageValue = messageDataLine.get(1);
+		final Expression messageValue = messageDataLine.get(1);
 		assertEquals("data1", messageValue.getName());
 		assertEquals(ExpressionConstants.VARIABLE_TYPE, messageValue.getType());
 	}
 	
 	@Test
 	public void testDataMappedCorrectlyOnCatch(){
-		String eventId = catchMessageEvent.getEvent();
-		Message message = throwMessageEvent.getEvents().get(0);
+		final String eventId = catchMessageEvent.getEvent();
+		final Message message = throwMessageEvent.getEvents().get(0);
 		assertEquals("Event name of catch not well defined",message.getName(), eventId);
 	}
 	
 	protected void prepareTest() throws IOException {
 		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "MessageDataTestValue-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "MessageDataTestValue", BPMNExportImportMessageDataTest.class, false);
-		SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
-		SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();	
-		MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
-		IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped) ;
-		File bpmnFileExported = File.createTempFile("testMessageDataTestValue", ".bpmn");
+		final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
+		final SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();	
+		final MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
+		final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped) ;
+		final File bpmnFileExported = File.createTempFile("testMessageDataTestValue", ".bpmn");
 		final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
 		assertTrue("Error during export", transformed);
 
 
-		ResourceSet resourceSet1 = new ResourceSetImpl();
+		final ResourceSet resourceSet1 = new ResourceSetImpl();
 		final Map<String, Object> extensionToFactoryMap = resourceSet1.getResourceFactoryRegistry().getExtensionToFactoryMap();
 		final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
 		extensionToFactoryMap.put("bpmn", diResourceFactoryImpl);
-		Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));		
+		final Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));		
 		resource2.load(Collections.emptyMap());
 
 		final DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
 		
 		Display.getDefault().syncExec(new Runnable() {
 
-			public void run() {
+			@Override
+            public void run() {
 				try {
 					mainProcessAfterReimport = BPMNTestUtil.importBPMNFile(model2);
-				} catch (MalformedURLException e) {
+				} catch (final MalformedURLException e) {
 					e.printStackTrace();
 				}				
 			}
 		});
 		
-		for(Element element : ((Lane)((Pool)mainProcessAfterReimport.getElements().get(0)).getElements().get(0)).getElements()){
+		for(final Element element : ((Lane)((Pool)mainProcessAfterReimport.getElements().get(0)).getElements().get(0)).getElements()){
 			if(element instanceof ThrowMessageEvent){
 				throwMessageEvent = (ThrowMessageEvent) element;
 				break;
 			}
 		}
 		
-		for(Element element : ((Pool)mainProcessAfterReimport.getElements().get(1)).getElements()){
+		for(final Element element : ((Pool)mainProcessAfterReimport.getElements().get(1)).getElements()){
 			if(element instanceof CatchMessageEvent){
 				catchMessageEvent = (CatchMessageEvent) element;
 				break;

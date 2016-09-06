@@ -38,18 +38,18 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContra
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Romain Bioteau
- */
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class ContractIT extends SWTBotGefTestCase {
 
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class ContractIT  {
+
+    private final SWTGefBot bot = new SWTGefBot();
+    
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 

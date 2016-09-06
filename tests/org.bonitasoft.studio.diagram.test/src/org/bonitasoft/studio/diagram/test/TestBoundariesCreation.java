@@ -17,6 +17,8 @@
  */
 package org.bonitasoft.studio.diagram.test;
 
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.model.process.BoundaryMessageEvent;
 import org.bonitasoft.studio.model.process.BoundarySignalEvent;
@@ -27,38 +29,44 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * @author Aurelien Pupier
- */
-public class TestBoundariesCreation extends SWTBotGefTestCase {
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class TestBoundariesCreation {
 
     SWTBotGefEditor gmfEditor;
+    private final SWTGefBot bot = new SWTGefBot();
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotEditor botEditor = bot.activeEditor();
         gmfEditor = bot.gefEditor(botEditor.getTitle());
     }
 
-
+    @Test
     public void testCreateBoundaryErrorEventFromPalette(){
         testCreateBoundaryFromPalette(IntermediateErrorCatchEvent.class, Messages.CatchError_title);
     }
 
+    @Test
     public void testCreateBoundaryMessageEventFromPalette(){
         testCreateBoundaryFromPalette(BoundaryMessageEvent.class, Messages.CatchMessage_title);
     }
 
+    @Test
     public void testCreateBoundarySignalEventFromPalette(){
         testCreateBoundaryFromPalette(BoundarySignalEvent.class, Messages.CatchSignal_title);
     }
 
+    @Test
     public void testCreateBoundaryTimerEventFromPalette(){
         testCreateBoundaryFromPalette(BoundaryTimerEvent.class, Messages.Timer_title);
     }
@@ -67,15 +75,15 @@ public class TestBoundariesCreation extends SWTBotGefTestCase {
         /*Activate the right tool*/
         gmfEditor.activateTool(toolName);
         /*And then click on the figure, in fact we try to click on the NameEditPart*/
-        SWTBotGefEditPart editPartStep1 = gmfEditor.getEditPart("Step1");
-        IGraphicalEditPart step1Part = (IGraphicalEditPart)editPartStep1.part();
-        Point center = step1Part.getFigure().getBounds().getCenter();
+        final SWTBotGefEditPart editPartStep1 = gmfEditor.getEditPart("Step1");
+        final IGraphicalEditPart step1Part = (IGraphicalEditPart)editPartStep1.part();
+        final Point center = step1Part.getFigure().getBounds().getCenter();
         step1Part.getFigure().translateToAbsolute(center);
         gmfEditor.click(center.x, center.y);
         /*Check that the boundary is created*/
         boolean createWorks = false;
-        for(SWTBotGefEditPart swtBotEditPart : editPartStep1.parent().children()){
-            EditPart part = swtBotEditPart.part();
+        for(final SWTBotGefEditPart swtBotEditPart : editPartStep1.parent().children()){
+            final EditPart part = swtBotEditPart.part();
             if(part instanceof IGraphicalEditPart
                     && clazz.isInstance(((IGraphicalEditPart) part).resolveSemanticElement())){
                 createWorks = true;
@@ -86,9 +94,8 @@ public class TestBoundariesCreation extends SWTBotGefTestCase {
     }
 
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         gmfEditor.close();
     }
 

@@ -1,22 +1,21 @@
 /**
  * Copyright (C) 2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.exporter.tests.bpmn;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +40,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -51,54 +50,48 @@ import org.junit.runner.RunWith;
 import org.omg.spec.bpmn.di.util.DiResourceFactoryImpl;
 import org.omg.spec.bpmn.model.DocumentRoot;
 
-/**
- * @author Florine Boudin
- *
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class BPMNEventSubProcessExportImportTest extends SWTBotGefTestCase {
-	
-    private static  MainProcess mainProcessAfterReimport;
+public class BPMNEventSubProcessExportImportTest {
 
-	
-	final String SubProcessName ="MyEventSubprocess";
-	
-	private static SubProcessEvent eventSubProcessAfterReimport;
+    private static MainProcess mainProcessAfterReimport;
 
-	
-	
-	
+    final String SubProcessName = "MyEventSubprocess";
+
+    private static SubProcessEvent eventSubProcessAfterReimport;
+
+    private SWTGefBot bot = new SWTGefBot();
+
     private static boolean isInitalized = false;
 
     @Before
-    public void init() throws IOException{
-        if(!isInitalized){
+    public void init() throws IOException {
+        if (!isInitalized) {
             prepareTest();
         }
         isInitalized = true;
     }
 
-
-	@Test
-    public void testEventSubProcess_name() throws IOException, ExecutionException{
+    @Test
+    public void testEventSubProcess_name() throws IOException, ExecutionException {
         assertEquals("Event SubProcess name not correct", SubProcessName, eventSubProcessAfterReimport.getName());
     }
 
-	@Test
-    public void testEventSubProcess_name2() throws IOException, ExecutionException{
+    @Test
+    public void testEventSubProcess_name2() throws IOException, ExecutionException {
         assertEquals("Event SubProcess name not correct", SubProcessName, eventSubProcessAfterReimport.getName());
     }
-	
-	private void prepareTest() throws IOException {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "diagramtoTestEventSubProcess-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "diagramWithEventSubProcess", BPMNEventSubProcessExportImportTest.class, false);
-       SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
+
+    private void prepareTest() throws IOException {
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "diagramtoTestEventSubProcess-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA,
+                "diagramWithEventSubProcess", BPMNEventSubProcessExportImportTest.class, false);
+        SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
         SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
         MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
-        IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped) ;
+        IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
         File bpmnFileExported = File.createTempFile("testEventSubProcess", ".bpmn");
         final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
         assertTrue("Error during export", transformed);
-        
+
         ResourceSet resourceSet1 = new ResourceSetImpl();
         final Map<String, Object> extensionToFactoryMap = resourceSet1.getResourceFactoryRegistry().getExtensionToFactoryMap();
         final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
@@ -118,14 +111,14 @@ public class BPMNEventSubProcessExportImportTest extends SWTBotGefTestCase {
                 }
             }
         });
-        Lane lane = (Lane)((Pool)mainProcessAfterReimport.getElements().get(0)).getElements().get(0);
-        for(Element element : lane.getElements()){
-            if(element instanceof SubProcessEvent){
-            	eventSubProcessAfterReimport = (SubProcessEvent)element;
+        Lane lane = (Lane) ((Pool) mainProcessAfterReimport.getElements().get(0)).getElements().get(0);
+        for (Element element : lane.getElements()) {
+            if (element instanceof SubProcessEvent) {
+                eventSubProcessAfterReimport = (SubProcessEvent) element;
                 break;
 
             }
         }
-	}
-    
+    }
+
 }

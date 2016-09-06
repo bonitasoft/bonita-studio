@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.diagram.test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +28,7 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.utils.TableCollection;
@@ -43,12 +45,14 @@ import org.junit.runner.RunWith;
  * @author aurelie zara
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestDeleteDiagrams extends SWTBotGefTestCase {
+public class TestDeleteDiagrams  {
 
     private final int nbDiagrams = 4;
     // Before and After
     private static boolean disablePopup;
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @BeforeClass
     public static void setUpBeforeClass() {
         disablePopup = FileActionDialog.getDisablePopup();
@@ -62,12 +66,9 @@ public class TestDeleteDiagrams extends SWTBotGefTestCase {
 
 
     @After
-    @Override
     public void tearDown() {
         bot.saveAllEditors();
     }
-
-
 
     @Test
     public void testDeleteDiagrams() {
@@ -97,10 +98,6 @@ public class TestDeleteDiagrams extends SWTBotGefTestCase {
         final TableCollection selection = tree.selection();
         assertEquals("only " + currentDiagramName + " should be selected in the tree viewer", 1, selection.rowCount());
         assertEquals("diagram " + currentDiagramName + " should be selected", currentDiagramName, selection.get(0, 0));
-
-        //   final SWTBotTreeItem firstSwtBotTreeItem = tree.getAllItems()[1];
-        //   final SWTBotTreeItem secondSwtBotTreeItem = tree.getAllItems()[2];
-        //   final SWTBotTreeItem thirdSwtBotTreeItem = tree.getAllItems()[3];
 
         tree.select(newDiagramsName.get(1), newDiagramsName.get(2), newDiagramsName.get(3));
 

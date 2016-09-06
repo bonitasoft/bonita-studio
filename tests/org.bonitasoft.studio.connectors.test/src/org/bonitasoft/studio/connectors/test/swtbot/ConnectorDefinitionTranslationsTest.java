@@ -17,6 +17,10 @@
  */
 package org.bonitasoft.studio.connectors.test.swtbot;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -28,7 +32,7 @@ import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
@@ -41,14 +45,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aurélie Zara
- * 
- */
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ConnectorDefinitionTranslationsTest extends SWTBotGefTestCase {
+public class ConnectorDefinitionTranslationsTest  {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     private void openConnectorDefinitionWizardPage(String id,String categoryId) throws Exception {
         final String packageLang = "java.lang.";
         final String packageUtil = "java.util.";

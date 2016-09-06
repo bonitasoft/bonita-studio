@@ -17,6 +17,11 @@
  */
 package org.bonitasoft.studio.connectors.test.swtbot;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -34,7 +39,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
@@ -44,13 +49,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aur�lie Zara
- * 
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ConnectorImplementationTest extends SWTBotGefTestCase implements SWTBotConstants{
+public class ConnectorImplementationTest implements SWTBotConstants{
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Before
     public void createDefinition() {
         final String id = "testEdit";
@@ -72,7 +75,6 @@ public class ConnectorImplementationTest extends SWTBotGefTestCase implements SW
 
     @Test
     public void createConnectorImplementation() throws Exception {
-        // TODO add dependancies test
     	final int nbEditorsBefore = bot.editors().size();
         final String id = "testImplementation";
         final String definition = "testEdit";

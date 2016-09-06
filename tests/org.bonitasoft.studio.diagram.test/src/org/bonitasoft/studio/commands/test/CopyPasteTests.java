@@ -14,60 +14,41 @@
  */
 package org.bonitasoft.studio.commands.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.diagram.custom.editPolicies.NextElementEditPolicy;
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.application.BotOpenDiagramDialog;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
-import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
-import org.eclipse.swtbot.swt.finder.waits.ICondition;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Mickael Istria
- */
+
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class CopyPasteTests extends SWTBotGefTestCase {
+public class CopyPasteTests  {
 
-    @Override
-    @Before
-    public void setUp() {
-        FileActionDialog.setDisablePopup(true);
-        bot.saveAllEditors();
-        bot.closeAllEditors();
-    }
+    private final SWTGefBot bot = new SWTGefBot();
 
-    @Override
-    @After
-    public void tearDown() {
-        bot.saveAllEditors();
-        bot.closeAllEditors();
-    }
+    @Rule
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Test
     public void testCopyPaste() {
@@ -107,96 +88,34 @@ public class CopyPasteTests extends SWTBotGefTestCase {
     }
 
     private void waitForcloseAction(final SWTBotGefEditor editor) {
-        bot.waitUntil(new ICondition() {
+        bot.waitUntil(new DefaultCondition() {
 
             @Override
             public boolean test() throws Exception {
-                // TODO Auto-generated method stub
                 return !editor.isActive();
             }
 
             @Override
-            public void init(final SWTBot bot) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
             public String getFailureMessage() {
-
                 return "not save yet";
             }
         }, 40000);
     }
 
     private void waitForSaveAction(final SWTBotGefEditor editor) {
-        bot.waitUntil(new ICondition() {
-
+        bot.waitUntil(new DefaultCondition() {
+            
+            
             @Override
             public boolean test() throws Exception {
-                // TODO Auto-generated method stub
                 return !editor.isDirty();
             }
-
-            @Override
-            public void init(final SWTBot bot) {
-                // TODO Auto-generated method stub
-
-            }
-
+            
             @Override
             public String getFailureMessage() {
-
                 return "not save yet";
             }
         }, 40000);
-    }
-
-    @Test
-    @Ignore
-    public void testBug2610() throws Exception {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcessWithData_1_0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "ProcessWithData", this.getClass(), false);
-        final SWTBotGefEditor editor = bot.gefEditor(bot.activeEditor().getTitle());
-        final SWTBotGefEditPart part = editor.getEditPart("StepWithData");
-        part.click();
-        editor.clickContextMenu("Copy");
-        final SWTBotGefEditPart poolPart = part.parent().parent();
-        poolPart.click();
-        editor.clickContextMenu("Paste");
-        bot.waitUntil(new DefaultCondition() {
-
-            @Override
-            public boolean test() throws Exception {
-                return findNewActivityPart(poolPart) != null;
-            }
-
-            @Override
-            public String getFailureMessage() {
-                return "Can't find the new Activity EditPart that just have been pasted";
-            }
-        });
-        final SWTBotGefEditPart newPart = findNewActivityPart(poolPart);
-
-        final IGraphicalEditPart activityEditPart = (IGraphicalEditPart) newPart.part();
-        final Activity activity = (Activity) activityEditPart.resolveSemanticElement();
-        final EList<Data> activityDatas = activity.getData();
-        final Data firstData = activityDatas.get(0);
-        Assert.assertNotNull("Data type not copied", firstData.getDataType());
-        Assert.assertTrue("Bad Copied DataType", firstData.getDataType() instanceof StringType);
-        final Data secondData = activityDatas.get(1);
-        Assert.assertNotNull("Data type not copied", secondData.getDataType());
-        Assert.assertTrue("Bad Copied DataType", secondData.getDataType() instanceof EnumType);
-    }
-
-    private SWTBotGefEditPart findNewActivityPart(
-            final SWTBotGefEditPart poolPart) {
-        SWTBotGefEditPart newPart = null;
-        for (final SWTBotGefEditPart child : poolPart.children()) {
-            if (child.sourceConnections().size() == 0 && child.targetConnections().size() == 0) {
-                newPart = child;
-            }
-        }
-        return newPart;
     }
 
     @Test
@@ -215,10 +134,6 @@ public class CopyPasteTests extends SWTBotGefTestCase {
         assertEquals("Not same number of transitions as expected", 2, ModelHelper.getParentProcess(lane).getConnections().size());
     }
 
-    /**
-     * @param editor1
-     * @return
-     */
     private MainProcess getLabelFromEditor(final SWTBotGefEditor editor1) {
         return (MainProcess) ((ProcessDiagramEditor) editor1.getReference().getEditor(false)).getDiagramEditPart().resolveSemanticElement();
     }
@@ -285,7 +200,6 @@ public class CopyPasteTests extends SWTBotGefTestCase {
         editor1.show();
         editor1.select(stepPart);
 
-        //FIXME: need to unselect, reselect to have conextual menu enablement refreshed
         editor1.select(poolPart);
         editor1.select(stepPart);
         editor1.clickContextMenu("Copy");

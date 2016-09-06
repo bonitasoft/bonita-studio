@@ -174,7 +174,6 @@ public class BotQAUtil implements SWTBotConstants{
 
             @Override
             public String getFailureMessage() {
-                System.out.println(element + "is not in sourcelane");
                 return "element is not in sourcelane (unable to move the step)";
             }
         });

@@ -17,6 +17,8 @@
  */
 package org.bonitasoft.studio.diagram.test;
 
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.diagram.form.edit.parts.MessageInfoEditPart;
@@ -25,24 +27,21 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Baptiste Mesta
- *
- */
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class TestConvertToMessage extends SWTBotGefTestCase {
 
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class TestConvertToMessage  {
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Test
     public void testConvertToMessage() throws InterruptedException{
         //bug 1983
@@ -102,7 +101,7 @@ public class TestConvertToMessage extends SWTBotGefTestCase {
 
         menu.menu("Save").click();
 
-        Assert.assertTrue("The convert is not working on form diagram.",  found);
+        assertTrue("The convert is not working on form diagram.",  found);
         assertTrue("",((Widget) ((IGraphicalEditPart)part).resolveSemanticElement()).getDisplayLabel() == null );
     }
 }
