@@ -21,7 +21,14 @@ import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPl
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
+import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
+import org.eclipse.swtbot.swt.finder.results.BoolResult;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -68,7 +75,32 @@ public class SWTGefBotRule implements TestRule {
     }
 
     protected void afterStatement() {
+        try {
+            bot.waitUntil(BonitaBPMConditions.noPopupActive());
+        } catch (final TimeoutException e) {
+            closeAllShells(bot);
+            throw e;
+        }
         closeAllAndReturnToWelcomePage();
+    }
+
+    private void closeAllShells(SWTWorkbenchBot bot) {
+        final SWTBotShell[] shells = bot.shells();
+        for (final SWTBotShell shell : shells) {
+            if (shell.isOpen() && !isEclipseShell(shell)) {
+                shell.close();
+            }
+        }
+    }
+
+    private boolean isEclipseShell(final SWTBotShell shell) {
+        return UIThreadRunnable.syncExec(new BoolResult() {
+            @Override
+            public Boolean run() {
+                return PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                        .getShell() == shell.widget;
+            }
+        });
     }
 
     protected void beforeStatement() {

@@ -17,6 +17,12 @@
  */
 package org.bonitasoft.studio.exporter.tests.bpmn;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -46,7 +52,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -56,12 +62,12 @@ import org.junit.runner.RunWith;
 import org.omg.spec.bpmn.di.util.DiResourceFactoryImpl;
 import org.omg.spec.bpmn.model.DocumentRoot;
 
-/**
- * @author Aurelien Pupier
- *
- */
+
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
+public class BPMNConnectorExportImportTest   {
+    
+    private final SWTGefBot bot = new SWTGefBot();
+    
     final String connectorName = "connectorName";
     final String connectorDefVersion = "1.0.0";
     private static  MainProcess mainProcessAfterReimport;
@@ -143,7 +149,6 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
                     assertFalse("There should be a referenced element", leftOperand.getReferencedElements().isEmpty());
                     return;
                 }
-                System.out.println("right operand not used"+rightOperand2.getName());
             }
         }
         fail("output operation not found for connectorOuputConstant");
@@ -163,7 +168,6 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
                     assertFalse("There should be a referenced element", leftOperand.getReferencedElements().isEmpty());
                     return;
                 }
-                System.out.println("right operand not used"+rightOperand.getName());
             }
         }
         fail("output operation not found for connectorOuput Groovy");
@@ -188,11 +192,6 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
         fail("output operation not found for connectorOuput Groovy");
     }
 
-
-    //TODO check connector parameter mapping with variable
-    //TODO check connector parameter mapping with groovy script
-    //TODO check connector output mapping
-
     protected void prepareTest() throws IOException {
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "diagramToTestConnectorBPMNImportExport-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "diagramToTestConnectorBPMNImportExport", BPMNConnectorExportImportTest.class, false);
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
@@ -215,6 +214,7 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
 
         Display.getDefault().syncExec(new Runnable() {
 
+            @Override
             public void run() {
                 try {
                     mainProcessAfterReimport = BPMNTestUtil.importBPMNFile(model2);

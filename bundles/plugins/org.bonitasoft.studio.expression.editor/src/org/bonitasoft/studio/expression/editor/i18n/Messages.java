@@ -49,8 +49,6 @@ public class Messages extends NLS {
 
     public static String assignment;
 
-    public static String shortExpr_tooltip;
-
     public static String upRowSort;
 
     public static String downRowSort;

@@ -59,7 +59,7 @@ import org.bonitasoft.studio.tests.debug.TestDebugFeature;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
 import org.bonitasoft.studio.tests.pagetemplate.PageTemplateEditionIT;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
-import org.bonitasoft.studio.util.test.BonitaTestSuite;
+import org.bonitasoft.studio.util.test.BonitaSuite;
 import org.bonitasoft.studio.validators.test.swtbot.TestAddValidatorToProcessAndRun;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -69,7 +69,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-@RunWith(BonitaTestSuite.class)
+@RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
         TestMenus.class,
         OpenNameAndVersionForDiagramDialogTest.class,

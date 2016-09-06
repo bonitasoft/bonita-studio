@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.tests.timer;
 
 import static org.bonitasoft.studio.common.Messages.daysLabel;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -33,7 +35,7 @@ import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.finder.matchers.WidgetMatcherFactory;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
@@ -44,17 +46,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aurelien Pupier
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestTimer extends SWTBotGefTestCase implements SWTBotConstants {
+public class TestTimer implements SWTBotConstants {
 
     private static final String JAVA_LANG_LONG = "java.lang.Long";
     private static final String DEFAULT_TIMER_NAME = "Timer1";
 
     private final String editExpressionShellLabel = "Edit expression";
 
+    private final SWTGefBot bot = new SWTGefBot();
+    
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
@@ -378,7 +379,6 @@ public class TestTimer extends SWTBotGefTestCase implements SWTBotConstants {
         bot.menu("Diagram").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(), status.isOK());
-
     }
 
     /**

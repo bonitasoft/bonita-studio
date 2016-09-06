@@ -17,6 +17,11 @@
  */
 package org.bonitasoft.studio.actors.tests.exporter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
@@ -36,20 +41,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author aurelie
- *
- */
-
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
+public class SWTBotActorFilterExportTests  {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     private void exportActorFilter(final String connector, final String fileName,
             final boolean hasDependencies, final boolean hasSources) throws Exception {
         final File f = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());

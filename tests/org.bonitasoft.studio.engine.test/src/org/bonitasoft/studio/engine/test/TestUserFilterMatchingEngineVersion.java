@@ -96,13 +96,11 @@ public class TestUserFilterMatchingEngineVersion {
         final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
         assertNotNull("processDef should not be null", processDef);
         final ProcessInstance processInstance = processApi.startProcess(processId);
-        System.out.println("Process Instance started in state: " + processInstance.getState());
 
         final boolean evaluateAsync = new TestAsyncThread(30, 1000) {
 
             @Override
             public boolean isTestGreen() throws Exception {
-                System.out.println("Proces Instance started in state: " + processInstance.getId() + processInstance.getState());
                 newTask = EngineAPIUtil.findNewAssignedTaskForSpecifiedProcessDefAndUser(session, tasks, processId, williamJobsID);
 
                 return newTask != null;

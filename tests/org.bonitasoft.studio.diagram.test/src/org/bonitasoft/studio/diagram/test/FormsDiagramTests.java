@@ -17,6 +17,8 @@
  */
 package org.bonitasoft.studio.diagram.test;
 
+import static org.junit.Assert.assertEquals;
+
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.form.CheckBoxSingleFormField;
 import org.bonitasoft.studio.model.form.Form;
@@ -27,7 +29,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -37,14 +39,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Mickael Istria
- * 
- */
+
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class FormsDiagramTests extends SWTBotGefTestCase {
+public class FormsDiagramTests {
 
-
+    private SWTGefBot bot = new SWTGefBot();
+    
 	@Test
 	public void testFormsDiagramTest() throws ExecutionException, InterruptedException {
 

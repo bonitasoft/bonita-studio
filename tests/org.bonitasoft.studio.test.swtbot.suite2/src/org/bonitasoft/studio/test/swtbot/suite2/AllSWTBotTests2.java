@@ -35,17 +35,11 @@ import org.bonitasoft.studio.diagram.test.TestMoveBetweenLane;
 import org.bonitasoft.studio.diagram.test.TestSave;
 import org.bonitasoft.studio.engine.test.bar.BarExporterTest;
 import org.bonitasoft.studio.exporter.tests.bos.ExportBosArchiveIT;
-import org.bonitasoft.studio.exporter.tests.bpmn.BPMNConnectorExportImportTest;
-import org.bonitasoft.studio.exporter.tests.bpmn.BPMNEventSubProcessExportImportTest;
-import org.bonitasoft.studio.exporter.tests.bpmn.BPMNExportTests;
-import org.bonitasoft.studio.exporter.tests.bpmn.BPMNGatewayExportImportTest;
-import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
 import org.bonitasoft.studio.migration.tests.MigrationReporTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.test.CallActivityMappingIT;
 import org.bonitasoft.studio.properties.test.TestResources;
-import org.bonitasoft.studio.repository.test.swtbot.TestExportBosArchive;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.businessobject.CreateDeployExportBusinessObjectIT;
 import org.bonitasoft.studio.tests.conditions.SWTBOTTestConditions;
@@ -62,7 +56,7 @@ import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.migration.BarImportReportIT;
 import org.bonitasoft.studio.tests.refactoring.widget.RefactorWidgetIT;
 import org.bonitasoft.studio.tests.timer.TestTimer;
-import org.bonitasoft.studio.util.test.BonitaTestSuite;
+import org.bonitasoft.studio.util.test.BonitaSuite;
 import org.bonitasoft.studio.validators.test.swtbot.TestCreateValidatorWizard;
 import org.bonitasoft.studio.validators.test.swtbot.TestFormValidatorIT;
 import org.eclipse.core.runtime.CoreException;
@@ -73,50 +67,44 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-@RunWith(BonitaTestSuite.class)
+@RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
-    TestBonitaGroovyEditorDialog.class,
-    CopyPasteTests.class,
-    DeleteCommandTest.class,
-    TestBug1640.class,
-    NewRunTest.class,
-    DeleteWidgetWithContextMenuIT.class,
-    DataWizardIT.class,
-    SWTBOTTestConditions.class,
-    TestConvertToMessage.class,
-    ExtractAsSubprocessTest.class,
-    BPMNExportTests.class,
-    BPMNSequenceFlowDefaultFlowExportImportTest.class,
-    SharedEditingDomainTests.class,
-    TestBoundariesCreation.class,
-    TestResources.class,
-    OpenNameAndVersionForDiagramDialogTest.class,
-    TestDuplicate.class,
-    TestCreateValidatorWizard.class,
-    TestLifeCycleWidget.class,
-    TestConnectorExpression.class,
-    MultiInstantiationIT.class,
-    BPMNConnectorExportImportTest.class,
-    BPMNGatewayExportImportTest.class,
-    BPMNEventSubProcessExportImportTest.class,
-    BarExporterTest.class,
-    ExportBosArchiveIT.class,
-    TestRunWithDocument.class,
-    TestDocument.class,
-    DuplicateCommandTest.class,
-    TestExportBosArchive.class,
-    TestSave.class,
-    TestMoveBetweenLane.class,
-    MigrationReporTest.class,
-    TestTimer.class,
-    ConnectorEditedInAsingleCommandIT.class,
-    TestProcessDependencies.class,
-    ContractIT.class,
-    RefactorWidgetIT.class,
-    TestFormValidatorIT.class,
-    TestOrganizationPassword.class,
-    BarImportReportIT.class,
-    CallActivityMappingIT.class,
+        TestBonitaGroovyEditorDialog.class,
+        CopyPasteTests.class,
+        DeleteCommandTest.class,
+        TestBug1640.class,
+        NewRunTest.class,
+        DeleteWidgetWithContextMenuIT.class,
+        DataWizardIT.class,
+        SWTBOTTestConditions.class,
+        TestConvertToMessage.class,
+        ExtractAsSubprocessTest.class,
+        SharedEditingDomainTests.class,
+        TestBoundariesCreation.class,
+        TestResources.class,
+        OpenNameAndVersionForDiagramDialogTest.class,
+        TestDuplicate.class,
+        TestCreateValidatorWizard.class,
+        TestLifeCycleWidget.class,
+        TestConnectorExpression.class,
+        MultiInstantiationIT.class,
+        BarExporterTest.class,
+        ExportBosArchiveIT.class,
+        TestRunWithDocument.class,
+        TestDocument.class,
+        DuplicateCommandTest.class,
+        TestSave.class,
+        TestMoveBetweenLane.class,
+        MigrationReporTest.class,
+        TestTimer.class,
+        ConnectorEditedInAsingleCommandIT.class,
+        TestProcessDependencies.class,
+        ContractIT.class,
+        RefactorWidgetIT.class,
+        TestFormValidatorIT.class,
+        TestOrganizationPassword.class,
+        BarImportReportIT.class,
+        CallActivityMappingIT.class,
         CreateDeployExportBusinessObjectIT.class,
         ConvertActivityTypeWithBoundariesIT.class
 })
@@ -125,10 +113,10 @@ public class AllSWTBotTests2 {
     @BeforeClass
     public static void setUp() {
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-        .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
+                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
         WebBrowserUIPlugin.getInstance().getPreferenceStore()
-        .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
+                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         FileActionDialog.setDisablePopup(true);
     }
 

@@ -31,14 +31,7 @@ public class «getExternalizerClassName()» extends org.eclipse.osgi.util.NLS {
 	}
 
 	«EXPAND Fields»
-    //TODO: put accessor fields manually
-    «REM»Custom bonita label«ENDREM»
-	public static String cannotSaveTitle;
-	public static String cannotSaveMessage;
-	public static String ConfirmReplaceProcessDesc;
-	public static String ConfirmReplaceProcessTitle;
-	public static String saveDidNotChangeFileTitle;
-	public static String saveDidNotChangeFileDescription;	
+
 }
 «ENDDEFINE»
 

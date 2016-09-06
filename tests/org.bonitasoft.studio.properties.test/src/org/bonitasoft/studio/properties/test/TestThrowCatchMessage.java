@@ -17,6 +17,9 @@
  */
 package org.bonitasoft.studio.properties.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import java.io.IOException;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -25,7 +28,7 @@ import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
@@ -34,13 +37,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author aurelie Zara
- * 
- */
-
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestThrowCatchMessage extends SWTBotGefTestCase implements
+public class TestThrowCatchMessage  implements
 		SWTBotConstants {
 	private final String catchMessageEventName = "send order";
 	private final String sectionTitle = "Messages";
@@ -58,6 +56,8 @@ public class TestThrowCatchMessage extends SWTBotGefTestCase implements
 	private final String messageContent2 = "customerInformation";
 	private final String messageContent3 = "orderInformation";
 
+	private SWTGefBot bot = new SWTGefBot();
+	
 	@Test
 	public void testThrowCathMessage() throws IOException {
 		SWTBotTestUtil.importProcessWIthPathFromClass(bot,
@@ -194,9 +194,8 @@ public class TestThrowCatchMessage extends SWTBotGefTestCase implements
 		assertEquals(correlationKey2, bot.table().cell(1, 0));
 	}
 
-	@Override
 	@After
-	public void tearDown() {
+	public void tearDown() throws Exception {
 		bot.saveAllEditors();
 		bot.closeAllEditors();
 	}

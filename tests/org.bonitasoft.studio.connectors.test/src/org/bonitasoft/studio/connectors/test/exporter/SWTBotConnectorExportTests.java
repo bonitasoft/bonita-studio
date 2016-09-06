@@ -17,6 +17,11 @@
  */
 package org.bonitasoft.studio.connectors.test.exporter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
@@ -39,7 +44,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
@@ -48,17 +53,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author aurelie
- *
- */
-
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
+public class SWTBotConnectorExportTests  {
 
 	private static final String CONNCTOR_EMAIL_IMPL_ID = "email-impl";
 	private String emailConnectorVersion = "1.0.0";
-
+	private SWTGefBot bot = new SWTGefBot();
+	
 	@Before
 	public void initializeEmailVersion() {
 		final ConnectorImplRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);

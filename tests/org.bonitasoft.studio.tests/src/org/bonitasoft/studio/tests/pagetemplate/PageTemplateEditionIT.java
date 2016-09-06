@@ -25,7 +25,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.form.general.BotGe
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,8 +35,10 @@ import org.junit.runner.RunWith;
  * @author Aurelien Pupier
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class PageTemplateEditionIT extends SWTBotGefTestCase {
+public class PageTemplateEditionIT  {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
