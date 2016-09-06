@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.tests.dialog;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramDialog;
@@ -26,7 +29,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swtbot.eclipse.finder.SWTBotEclipseTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.ui.PlatformUI;
@@ -34,13 +37,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aurelien Pupier
- *         Replace me with unit test
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCase {
+public class OpenNameAndVersionForDiagramDialogTest {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     private static final int VALIDATION_DELAY = 100;
 
     @Before

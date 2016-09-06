@@ -57,10 +57,6 @@ public class XtextComparisonExpressionLoaderTest {
             if (current instanceof Operation_Equals) {
                 final Expression_ProcessRef left = (Expression_ProcessRef) ((Operation_Equals) current).getLeft();
                 final EObject value = left.getValue();
-                final TreeIterator<EObject> eAllContents = value.eAllContents();
-                while (eAllContents.hasNext()) {
-                    System.out.println(eAllContents.next());
-                }
                 Assert.assertEquals("管理者", value);
                 return;
             }

@@ -17,6 +17,9 @@
  */
 package org.bonitasoft.studio.exporter.tests.bpmn;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -44,12 +47,16 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.ui.IEditorReference;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.TDefinitions;
 import org.omg.spec.bpmn.model.TFlowElement;
@@ -58,22 +65,19 @@ import org.omg.spec.bpmn.model.TRootElement;
 import org.omg.spec.bpmn.model.TSequenceFlow;
 import org.omg.spec.bpmn.model.util.ModelResourceFactoryImpl;
 
-
-
-/**
- * @author Mickael Istria
- * @contributor Aurelien Pupier
- */
-public class BPMNExportTests extends SWTBotGefTestCase {
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class BPMNExportTests  {
 
     final String resFileLocation = System.getProperty("user.home") + File.separator + "TestExportToBPMNDiagram-1.0.bpmn";
     private DiagramEditPart dep;
-
-    @Override
-    public void setUp() {
+    private final SWTGefBot bot = new SWTGefBot();
+    
+    @Before
+    public void setUp() throws Exception {
         new File(resFileLocation).delete();
     }
 
+    @Test
     public void testExportToBPMN() throws Exception {
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestExportToBPMNDiagram_1_0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "TestExportToBPMN", this.getClass(), false);
 
@@ -82,6 +86,7 @@ public class BPMNExportTests extends SWTBotGefTestCase {
 
         Display.getDefault().syncExec(new Runnable() {
 
+            @Override
             public void run() {
                 try{
                     dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, new Shell());
@@ -144,19 +149,19 @@ public class BPMNExportTests extends SWTBotGefTestCase {
 
     private boolean menuBPMN2found = false;
 
+    @Test
     public void testBPMN2MenuPresent(){
         final SWTBotMenu processMenu = bot.menu("Diagram");
         final SWTBotMenu exportAsMenu = processMenu.menu("Export as").click();
         final MenuItem mi = exportAsMenu.widget;
         Display.getDefault().syncExec(new Runnable() {
 
+            @Override
             public void run() {
                 mi.getMenu().notifyListeners(SWT.Show, new Event()) ;
                 final MenuItem[] mis = mi.getMenu().getItems();
-                System.out.println("Menu present in "+mi.getText());
                 for (final MenuItem mi: mis) {
                     final String menuText = mi.getText();
-                    System.out.println(menuText);
                     menuBPMN2found = menuBPMN2found || "BPMN 2.0...".equals(menuText);
                 }
 
@@ -168,6 +173,7 @@ public class BPMNExportTests extends SWTBotGefTestCase {
         //exportAsMenu.menu("BPMN 2.0...");//check that th emenu exists
     }
 
+    @Test
     public void testBPMN2MenuPresentAfterOepningAnotherEditor(){
     	final String id = "testBPMN2MenuPresentAfterOpeningAnotherEditor";
         final String className = "MyConnectorImpl"+System.currentTimeMillis();
@@ -176,10 +182,12 @@ public class BPMNExportTests extends SWTBotGefTestCase {
 
         bot.waitUntil(Conditions.waitForEditor(new BaseMatcher<IEditorReference>() {
 
+            @Override
             public boolean matches(final Object item) {
                 return "org.eclipse.jdt.ui.CompilationUnitEditor".equals(((IEditorReference)item).getId());
             }
 
+            @Override
             public void describeTo(final Description description) {
 
             }
@@ -195,6 +203,7 @@ public class BPMNExportTests extends SWTBotGefTestCase {
         final MenuItem mi = exportAsMenu.widget;
         Display.getDefault().syncExec(new Runnable() {
 
+            @Override
             public void run() {
                 mi.getMenu().notifyListeners(SWT.Show, new Event()) ;
                 final MenuItem[] mis = mi.getMenu().getItems();

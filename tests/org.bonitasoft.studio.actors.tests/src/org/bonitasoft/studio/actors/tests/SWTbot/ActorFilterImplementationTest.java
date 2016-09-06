@@ -1,5 +1,11 @@
 package org.bonitasoft.studio.actors.tests.SWTbot;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 /*
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
@@ -17,10 +23,10 @@ package org.bonitasoft.studio.actors.tests.SWTbot;
 import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.actors.repository.ActorFilterImplRepositoryStore;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.repository.ClassGenerator;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.repository.ClassGenerator;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -31,7 +37,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
@@ -41,14 +47,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aur�lie Zara
- * 
- */
-
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ActorFilterImplementationTest extends SWTBotGefTestCase implements SWTBotConstants {
+public class ActorFilterImplementationTest implements SWTBotConstants {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     protected void selectDefinition(final String definition) {
         bot.treeWithId(SWTBOT_ID_EXPLORER_LEFT_TREE).select(0);
         bot.waitUntil(new ICondition() {

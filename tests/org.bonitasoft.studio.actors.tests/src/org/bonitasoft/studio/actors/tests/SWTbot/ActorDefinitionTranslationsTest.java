@@ -17,6 +17,10 @@
  */
 package org.bonitasoft.studio.actors.tests.SWTbot;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -28,7 +32,7 @@ import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
@@ -45,8 +49,10 @@ import org.junit.runner.RunWith;
  */
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ActorDefinitionTranslationsTest extends SWTBotGefTestCase {
+public class ActorDefinitionTranslationsTest {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
 	private void openActorFilterDefinitionWizardPage(String id)
 			throws Exception {
 		final String packageLang = "java.lang.";

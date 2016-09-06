@@ -14,13 +14,17 @@
  */
 package org.bonitasoft.studio.connectors.test.swtbot;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
@@ -34,8 +38,10 @@ import org.junit.runner.RunWith;
  * @author Aurelie Zara
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
+public class TestLoadSaveConnectorConfiguration  {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Before
     public void initTest() {
         FileActionDialog.setDisablePopup(true);

@@ -17,6 +17,8 @@
  */
 package org.bonitasoft.studio.diagram.test;
 
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.commands.ExecutionException;
@@ -26,7 +28,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.SWTBot;
@@ -36,15 +38,11 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Baptiste Mesta
- *
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestMoveBetweenLane extends SWTBotGefTestCase {
+public class TestMoveBetweenLane  {
 
-
-
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Test
     public void testMoveElementsBetweenLanes() throws ExecutionException, InterruptedException {
         SWTBotTestUtil.createNewDiagram(bot);

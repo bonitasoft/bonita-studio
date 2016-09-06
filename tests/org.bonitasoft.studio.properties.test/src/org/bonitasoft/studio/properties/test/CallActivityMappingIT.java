@@ -24,15 +24,17 @@ import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspecti
 import org.bonitasoft.studio.swtbot.framework.diagram.general.BotCallActivityMappingPropertySection;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class CallActivityMappingIT extends SWTBotGefTestCase {
-
+public class CallActivityMappingIT {
+    
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 

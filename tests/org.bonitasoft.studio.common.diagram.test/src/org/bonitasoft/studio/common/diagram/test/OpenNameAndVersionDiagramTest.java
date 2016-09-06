@@ -1,11 +1,14 @@
 package org.bonitasoft.studio.common.diagram.test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.finder.SWTBotEclipseTestCase;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
@@ -13,8 +16,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class OpenNameAndVersionDiagramTest extends SWTBotEclipseTestCase implements SWTBotConstants {
+public class OpenNameAndVersionDiagramTest implements SWTBotConstants {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Test
     public void testOpenNameAndVersionDiagram() {
 

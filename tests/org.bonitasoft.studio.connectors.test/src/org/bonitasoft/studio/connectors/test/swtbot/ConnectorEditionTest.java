@@ -14,6 +14,10 @@
  */
 package org.bonitasoft.studio.connectors.test.swtbot;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Category;
@@ -27,20 +31,19 @@ import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.util.test.conditions.SelectNodeUnder;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aurélie Zara
- *
- */
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class ConnectorEditionTest extends SWTBotGefTestCase {
 
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class ConnectorEditionTest  {
+
+    private SWTGefBot bot = new SWTGefBot();
+    
     public void removeConnectorDefinition(final String name,final String version) {
         SWTBotConnectorTestUtil.activateConnectorDefEditionShell( bot);
         bot.tree().setFocus();
@@ -59,9 +62,7 @@ public class ConnectorEditionTest extends SWTBotGefTestCase {
     }
 
     @Before
-    @Override
     public void setUp() throws Exception {
-        super.setUp();
         FileActionDialog.setDisablePopup(true);
         ConnectorEditPlugin.getPlugin().getPreferenceStore().setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
     }

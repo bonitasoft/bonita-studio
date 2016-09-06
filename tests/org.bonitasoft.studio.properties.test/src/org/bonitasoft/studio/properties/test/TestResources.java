@@ -17,21 +17,25 @@
  */
 package org.bonitasoft.studio.properties.test;
 
+import static org.junit.Assert.assertEquals;
+
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * @author Aurelien Pupier
- *
- */
-public class TestResources extends SWTBotGefTestCase implements SWTBotConstants{
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class TestResources implements SWTBotConstants{
 
-
+    private final SWTGefBot bot = new SWTGefBot();
+    
+    @Test
     public void testCorrectLabelProvider() throws Exception{
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestExportToBPMNDiagram_1_0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "TestExportToBPMNDiagram", TestResources.class, false);
-        SWTBotGefEditor gefEditor = bot.gefEditor(bot.activeEditor().getTitle());
+        final SWTBotGefEditor gefEditor = bot.gefEditor(bot.activeEditor().getTitle());
         gefEditor.getEditPart("Pool1").parent().select();
 
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).setFocus();
