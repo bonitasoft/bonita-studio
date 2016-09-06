@@ -17,27 +17,24 @@
  */
 package org.bonitasoft.studio.diagram.test;
 
-import org.junit.Assert;
-
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.ui.IEditorPart;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aurelien Pupier
- *
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestUndoRedoStackLimit extends SWTBotGefTestCase {
+public class TestUndoRedoStackLimit  {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Test
     public void testFormsDiagramTest() throws ExecutionException, InterruptedException {
         /*Open a process diagram editor*/

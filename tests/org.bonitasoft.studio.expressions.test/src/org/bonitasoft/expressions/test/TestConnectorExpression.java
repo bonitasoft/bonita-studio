@@ -17,26 +17,25 @@
  */
 package org.bonitasoft.expressions.test;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.connectors.test.swtbot.SWTBotConnectorTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
-/**
- * @author aurelie Zara
- *
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestConnectorExpression extends SWTBotGefTestCase implements SWTBotConstants {
+public class TestConnectorExpression  implements SWTBotConstants {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     private void createConnectorDefinition(String id){
         SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
         fillDefinition(id);
@@ -98,9 +97,6 @@ public class TestConnectorExpression extends SWTBotGefTestCase implements SWTBot
         SWTBotConnectorTestUtil.activateConnectorTestWizard(bot);
         bot.text().setText(id);
         bot.table().select(id);
-    //    bot.tree().select("Uncategorized");
-      //  bot.table().select(id);
-        //bot.table().select(indices);
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON,0).click();
         bot.table().select("Constant");

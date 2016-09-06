@@ -17,6 +17,10 @@
  */
 package org.bonitasoft.studio.connectors.test.swtbot;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Checkbox;
 import org.bonitasoft.studio.connector.model.definition.Component;
@@ -29,7 +33,7 @@ import org.bonitasoft.studio.connector.model.definition.Text;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
@@ -40,13 +44,12 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aur�lie Zara
- * 
- */
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class ConnectorDefinitionWizardPageTest extends SWTBotGefTestCase {
 
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class ConnectorDefinitionWizardPageTest  {
+
+    private SWTGefBot bot = new SWTGefBot();
+    
     private void openConnectorDefinitionWizardPage(String id) {
         final String packageLang = "java.lang.";
         final String packageUtil = "java.util.";

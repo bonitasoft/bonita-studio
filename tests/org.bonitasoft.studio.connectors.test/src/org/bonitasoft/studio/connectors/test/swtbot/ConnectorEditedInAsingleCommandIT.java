@@ -21,15 +21,17 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.connectors.BotAddC
 import org.bonitasoft.studio.swtbot.framework.diagram.general.connectors.BotConnectorsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.connectors.BotEditConnectorDialog;
 import org.bonitasoft.studio.swtbot.framework.expression.BotScriptExpressionEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ConnectorEditedInAsingleCommandIT extends SWTBotGefTestCase {
+public class ConnectorEditedInAsingleCommandIT {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Test
     public void testSingleCommandWhileEditingConnectorConfiguration() {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);

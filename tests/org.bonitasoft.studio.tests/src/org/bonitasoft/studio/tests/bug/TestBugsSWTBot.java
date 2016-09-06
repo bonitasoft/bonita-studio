@@ -15,19 +15,26 @@
 package org.bonitasoft.studio.tests.bug;
 
 import static org.bonitasoft.studio.repository.themes.i18n.Messages.themeRepository;
+import static org.junit.Assert.assertEquals;
 
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.junit.After;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author Mickael Istria
  */
-public class TestBugsSWTBot extends SWTBotGefTestCase {
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class TestBugsSWTBot {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Test
     public void testOpenHtmlEditor() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
@@ -45,8 +52,8 @@ public class TestBugsSWTBot extends SWTBotGefTestCase {
         assertEquals("org.eclipse.wst.html.core.htmlsource.source", activeEditor.getReference().getId());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         bot.closeAllEditors();
     }
 }

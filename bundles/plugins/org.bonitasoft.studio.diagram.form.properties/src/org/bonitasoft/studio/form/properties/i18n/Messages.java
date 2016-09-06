@@ -130,7 +130,6 @@ public class Messages extends NLS {
     public static String data_tooltip_long;
     public static String data_tooltip_list;
     public static String data_tooltip_boolean;
-    public static String data_tooltip_image;
 
 
     public static String headers;
@@ -195,14 +194,10 @@ public class Messages extends NLS {
     public static String confirm_remove_template;
 
     public static String mapUnsupported;
-    public static String formFieldTypeLabel;
     public static String name;
-    public static String returnType;
 
     public static String outputOperation;
 
-    public static String noDocument;
-    public static String urlExplanation;
     public static String AppearancePropertySection_maxLengthForTextArea;
     public static String selectListOfOptions;
     public static String noListOfOptionsAvailable;
@@ -215,27 +210,17 @@ public class Messages extends NLS {
     public static String confirmDeleteFile_msg;
 
     public static String useDocument;
-    public static String useUrl;
     public static String useResource;
 
     public static String data_tooltip_url;
 
     public static String filewidget_resource_hint;
-    public static String outputDocumentStorage;
 
-    public static String noDocumentOutput;
-    public static String updateExistingDocument;
-    public static String updateExistingDocumentHint;
-    public static String updateExistingForMultipleDocumentHint;
     public static String data_tooltip_url_multiple;
     public static String filewidget_resource_hint_multiple;
-    public static String data_tooltip_multiple_document;
-    public static String createAnewDocument;
     public static String updatingWidgetReferences;
     public static String fieldModifier;
     public static String modifierDescription;
-    public static String newDocumentNameHint;
-    public static String multipleExplanation;
 
     public static String generateFromEnumTooltip;
 
@@ -248,8 +233,6 @@ public class Messages extends NLS {
     public static String widgetEditMessage;
 
     public static String editWidgetNameTitle;
-
-    public static String removingWidgetReferences;
 
     public static String documentPickerLabel;
 

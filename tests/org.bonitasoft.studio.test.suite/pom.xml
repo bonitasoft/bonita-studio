@@ -14,7 +14,7 @@
 
     <properties>
         <javaOPTS>-Xms512m -Xmx1024m -XX:MaxPermSize=640m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=TestSuite.hprof</javaOPTS>
-        <additionalArgs>-Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</additionalArgs>
+        <additionalArgs>-Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level} -Dosgi.nls.warnings=ignore</additionalArgs>
     </properties>
 
     <build>
@@ -74,7 +74,6 @@
                     <useUIHarness>true</useUIHarness>
                     <application>org.bonitasoft.studio.application.application</application>
                     <product>org.bonitasoft.studio.product</product>
-                    <showEclipseLog>true</showEclipseLog>
                     <includes>
                         <include>**/AllTests.java</include>
                     </includes>

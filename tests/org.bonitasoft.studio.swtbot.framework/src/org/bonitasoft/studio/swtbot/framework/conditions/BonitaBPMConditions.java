@@ -25,4 +25,8 @@ public class BonitaBPMConditions {
         return new ActiveWelcomePageCondition();
     }
 
+    public static ICondition noPopupActive() {
+        return new NoPopupCondition();
+    }
+
 }

@@ -15,6 +15,10 @@
 package org.bonitasoft.studio.validators.test.swtbot;
 
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.rule.LegacySWTGefBotRule;
 import org.bonitasoft.studio.validators.i18n.Messages;
@@ -25,7 +29,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.matchers.WidgetMatcherFactory;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
@@ -35,13 +39,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aurelien Pupier
- * @author Romain Bioteau
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestCreateValidatorWizard extends SWTBotGefTestCase {
+public class TestCreateValidatorWizard {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Rule
     public LegacySWTGefBotRule botRule = new LegacySWTGefBotRule(bot);
 
