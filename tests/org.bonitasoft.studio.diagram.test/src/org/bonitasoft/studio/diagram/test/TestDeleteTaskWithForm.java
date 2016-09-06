@@ -17,20 +17,20 @@
 
 package org.bonitasoft.studio.diagram.test;
 
+import static org.junit.Assert.assertFalse;
+
 import java.util.List;
 
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.junit.Test;
 
-/**
- * @author Aurelie Zara
- *
- */
-public class TestDeleteTaskWithForm extends SWTBotGefTestCase{
+public class TestDeleteTaskWithForm {
+    
+    private SWTGefBot bot = new SWTGefBot();
 	private String diagramTitle=null;
 
 	@Test 

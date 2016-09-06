@@ -16,6 +16,7 @@ package org.bonitasoft.studio.tests.processzoo.examples;
 
 import static org.bonitasoft.studio.actors.i18n.Messages.selectActorTitle;
 import static org.bonitasoft.studio.actors.i18n.Messages.useTaskActors;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +36,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -45,16 +46,15 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aurelie Zara
- * @author Romain Bioteau
- */
+
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstants {
+public class TestWebPurchase implements SWTBotConstants {
 
     private static final String PAGEFLOW_LABEL = "Pageflow";
     private String diagramTitle = null;
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Test
     public void testWebPurchase() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);

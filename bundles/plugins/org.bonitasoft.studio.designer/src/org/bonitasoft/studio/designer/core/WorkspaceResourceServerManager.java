@@ -1,10 +1,13 @@
 package org.bonitasoft.studio.designer.core;
 
+import java.util.logging.Level;
+
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.restlet.Component;
 import org.restlet.Server;
 import org.restlet.data.Protocol;
+import org.restlet.engine.Engine;
 
 public class WorkspaceResourceServerManager {
 
@@ -14,6 +17,7 @@ public class WorkspaceResourceServerManager {
 
     public synchronized static WorkspaceResourceServerManager getInstance() {
         if (INSTANCE == null) {
+            Engine.setRestletLogLevel(Level.OFF);
             INSTANCE = new WorkspaceResourceServerManager();
         }
         return INSTANCE;

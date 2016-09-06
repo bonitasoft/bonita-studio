@@ -44,12 +44,11 @@
                     <useUIHarness>true</useUIHarness>
                     <application>org.bonitasoft.studio.application.application</application>
                     <product>org.bonitasoft.studio.product</product>
-                    <showEclipseLog>true</showEclipseLog>
                     <includes>
-                        <include>**/AllSWTBotTests2.java</include>
+                        <include>**/AllSWTBot*Tests*.java</include>
                     </includes>
-                    <argLine>${tycho.testArgLine} -Xms512m -Xmx1024m -XX:MaxPermSize=640m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=SWTBotTests.hprof -Dbonita.client.home=${license.dir} -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</argLine>
-                    <appArgLine>-nl en</appArgLine>
+                    <argLine>${tycho.testArgLine} -Xms512m -Xmx1024m -XX:MaxPermSize=640m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=SWTBotTests.hprof -Dbonita.client.home=${license.dir} -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level} -Dosgi.nls.warnings=ignore</argLine>
+                    <appArgLine>-nl en -clean</appArgLine>
                     <osgiDataDirectory>${project.parent.basedir}/lé test</osgiDataDirectory>
                     <bundleStartLevel>
                         <bundle>

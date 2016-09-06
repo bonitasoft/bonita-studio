@@ -16,6 +16,9 @@
  */
 package org.bonitasoft.studio.actors.tests.SWTbot;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,15 +33,17 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestOrganizationPassword extends SWTBotGefTestCase {
+public class TestOrganizationPassword  {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Test
     public void testImportExportWithPasswordUpdated() throws IOException {
         importOrganizationProgrammatically();

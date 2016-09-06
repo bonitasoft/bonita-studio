@@ -15,24 +15,29 @@
 package org.bonitasoft.studio.configuration.test.swtbot;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.diagram.configuration.BotConfigureDialog;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestProcessDependencies extends SWTBotGefTestCase {
+public class TestProcessDependencies {
 
+    private final SWTGefBot bot = new SWTGefBot();
+    
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
@@ -51,8 +56,11 @@ public class TestProcessDependencies extends SWTBotGefTestCase {
                 "CustomConnectorWithoutDependencies",
                 getClass(), false);
 
-        assertThat(new BotApplicationWorkbenchWindow(bot).configure().selectProcessDependencies().selectTreeView().items()).contains(Messages.others,
+        final BotConfigureDialog configureBot = new BotApplicationWorkbenchWindow(bot).configure();
+        final List<String> items = configureBot.selectProcessDependencies().selectTreeView().items();
+        assertThat(items).contains(Messages.others,
                 Messages.connector);
+        configureBot.cancel();
     }
 
 }

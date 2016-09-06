@@ -17,6 +17,9 @@
  */
 package org.bonitasoft.studio.diagram.test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
@@ -25,7 +28,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.After;
@@ -33,13 +36,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Mickael Istria
- *
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestBug1640 extends SWTBotGefTestCase {
+public class TestBug1640 {
 
+    private SWTGefBot bot = new SWTGefBot();
 
 	@Test
 	public void testBug1640() throws Exception {
@@ -92,9 +92,8 @@ public class TestBug1640 extends SWTBotGefTestCase {
 		Assert.assertEquals(1, bot.editors().size());
 	}
 
-	@Override
 	@After
-	public void tearDown() {
+	public void tearDown() throws Exception{
 		bot.saveAllEditors();
 		bot.closeAllEditors();
 	}

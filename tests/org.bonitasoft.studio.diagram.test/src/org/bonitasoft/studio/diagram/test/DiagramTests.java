@@ -23,6 +23,7 @@ import static org.bonitasoft.studio.properties.i18n.Messages.activityType;
 import static org.bonitasoft.studio.properties.i18n.Messages.activityType_task;
 import static org.bonitasoft.studio.properties.i18n.Messages.addForm;
 import static org.bonitasoft.studio.properties.i18n.Messages.addFormTitle;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,7 +54,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.SWTBot;
@@ -75,20 +76,11 @@ import org.junit.runner.RunWith;
  * @author Florine Boudin
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class DiagramTests extends SWTBotGefTestCase {
+public class DiagramTests {
 
+    private final SWTGefBot bot = new SWTGefBot();
     private static final String DATA_NAME_LABEL = name + " *";
     private static final String PAGEFLOW_LABEL = "Pageflow";
-
-    //@Test TODO reactivate me
-    public void testBug1678() {
-        SWTBotTestUtil.createNewDiagram(bot);
-        final SWTBotEditor botEditor = bot.activeEditor();
-        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-        final SWTBotGefEditPart part = getPartRecursively(gmfEditor.rootEditPart(), "Step1");
-        part.select();
-        Assert.assertTrue(bot.menu("Edit").menu("Copy").isEnabled());
-    }
 
     @Test
     public void testDiagramTest() throws ExecutionException {
@@ -219,7 +211,6 @@ public class DiagramTests extends SWTBotGefTestCase {
 
             if (taskName != "Step4") {
                 // create new Task
-                System.out.println("s = " + taskName);
                 Assert.assertNotNull("Error: No " + taskName + " task found.", gmfEditor.getEditPart(taskName));
                 SWTBotTestUtil.selectTaskFromSelectedElementAndDragIt(gmfEditor, taskName, new Point(i, 110));
                 i += 200;
@@ -244,7 +235,6 @@ public class DiagramTests extends SWTBotGefTestCase {
         for (final String nametask : taskNameList) {
 
             if (nametask != "Step4") {
-                //System.out.println("s = "+s);
                 gmfEditor.getEditPart(nametask).click();
                 bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
                 SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);

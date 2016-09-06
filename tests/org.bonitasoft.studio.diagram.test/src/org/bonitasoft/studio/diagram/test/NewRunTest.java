@@ -22,7 +22,7 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
@@ -30,31 +30,33 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Romain Bioteau
- *
- */
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class NewRunTest extends SWTBotGefTestCase {
 
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class NewRunTest {
+
+    private final SWTGefBot bot = new SWTGefBot();
+    
     @Test
     public void testNewRun() throws Exception {
         final long nbProcBeforeRun = getNBProcessDefinitions();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 5; i++) {
             SWTBotTestUtil.createNewDiagram(bot);
         }
         SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
 
         bot.waitUntil(new ICondition() {
 
+            @Override
             public boolean test() throws Exception {
                 return getNBProcessDefinitions() == nbProcBeforeRun + 1 ;
             }
 
+            @Override
             public void init(final SWTBot bot) {
             }
 
+            @Override
             public String getFailureMessage() {
                 return "the new+run swtbot test should be started and ready";
             }

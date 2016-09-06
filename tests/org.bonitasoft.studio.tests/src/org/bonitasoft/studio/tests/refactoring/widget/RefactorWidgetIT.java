@@ -24,18 +24,18 @@ import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Romain Bioteau
- */
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class RefactorWidgetIT extends SWTBotGefTestCase {
 
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class RefactorWidgetIT  {
+
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 

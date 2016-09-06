@@ -17,25 +17,30 @@
  */
 package org.bonitasoft.studio.tests.document;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.process.ProcessInstance;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Romain Bioteau
- *
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestRunWithDocument extends SWTBotGefTestCase {
+public class TestRunWithDocument {
+
+    private final SWTGefBot bot = new SWTGefBot();
+    
+    @Rule
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Test
     public void testRunWithDocument() throws Exception {
@@ -45,9 +50,9 @@ public class TestRunWithDocument extends SWTBotGefTestCase {
 
     protected void runAndCheckResult() throws Exception {
         new RunProcessCommand(true).execute(new ExecutionEvent());
-        APISession session = BOSEngineManager.getInstance().loginDefaultTenant(new NullProgressMonitor());
-        ProcessAPI processAPI = BOSEngineManager.getInstance().getProcessAPI(session) ;
-        long processDefinitionId = processAPI.getProcessDefinitionId("ProcessWithAttachment", "1.0");
+        final APISession session = BOSEngineManager.getInstance().loginDefaultTenant(new NullProgressMonitor());
+        final ProcessAPI processAPI = BOSEngineManager.getInstance().getProcessAPI(session) ;
+        final long processDefinitionId = processAPI.getProcessDefinitionId("ProcessWithAttachment", "1.0");
         final ProcessInstance instance = processAPI.startProcess(processDefinitionId);
 
         assertNotNull("Document TestInternalDocument is missing",processAPI.getDocumentAtProcessInstantiation(instance.getId(), "TestInternalDocument"));

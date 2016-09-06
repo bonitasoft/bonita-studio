@@ -17,6 +17,9 @@
  */
 package org.bonitasoft.studio.exporter.tests.bpmn;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 
 import org.bonitasoft.studio.common.DataTypeLabels;
@@ -44,6 +47,7 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.junit.Test;
 import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.TActivity;
 import org.omg.spec.bpmn.model.TAssignment;
@@ -54,14 +58,10 @@ import org.omg.spec.bpmn.model.TProcess;
 import org.omg.spec.bpmn.model.TProperty;
 import org.omg.spec.bpmn.model.TRootElement;
 
-import junit.framework.TestCase;
 
-/**
- * @author Aurelien Pupier
- *
- */
-public class BPMNDataExportImportTest extends TestCase {
+public class BPMNDataExportImportTest {
 
+    @Test
     public void testProcessTextData() throws ExecutionException, IOException{
         final String structureRef = "java.lang.String";
         final Data data = createTextDataSample(structureRef);
@@ -74,6 +74,7 @@ public class BPMNDataExportImportTest extends TestCase {
         compareProcessData(data, mainProcess);
     }
 
+    @Test
     public void testProcessIntegerData() throws ExecutionException, IOException{
         final String structureRef = "java.lang.Integer";
         final Data data = createIntegerDataSample(structureRef);
@@ -86,6 +87,7 @@ public class BPMNDataExportImportTest extends TestCase {
         compareProcessData(data, mainProcess);
     }
 
+    @Test
     public void testProcessDoubleData() throws ExecutionException, IOException{
         final Data data = createDoubleDataSample();
         final String dataType = DataTypeLabels.doubleDataType;
@@ -108,6 +110,7 @@ public class BPMNDataExportImportTest extends TestCase {
         return data;
     }
 
+    @Test
     public void testProcessBooleanData() throws ExecutionException, IOException{
         final String structureRef = "java.lang.Boolean";
         final Data data = createBooleanDataSample(structureRef);
@@ -120,6 +123,7 @@ public class BPMNDataExportImportTest extends TestCase {
         compareProcessData(data, mainProcess);
     }
 
+    @Test
     public void testProcessDateData() throws ExecutionException, IOException{
         final Data data = ProcessFactory.eINSTANCE.createData();
         final Expression textDefaultValue = ExpressionFactory.eINSTANCE.createExpression();
@@ -139,6 +143,7 @@ public class BPMNDataExportImportTest extends TestCase {
         compareProcessData(data, mainProcess);
     }
 
+    @Test
     public void testProcessJavaData() throws ExecutionException, IOException{
         final String structureRef = "java.util.List";
         final JavaObjectData data = createJavaDataSample(structureRef);
@@ -152,6 +157,7 @@ public class BPMNDataExportImportTest extends TestCase {
         compareProcessData(data, mainProcess);
     }
 
+    @Test
     public void testProcessXMLData() throws ExecutionException, IOException{
         final String structureRef = "java.util.List";
         final XMLData data = ProcessFactory.eINSTANCE.createXMLData();
@@ -181,6 +187,7 @@ public class BPMNDataExportImportTest extends TestCase {
         compareProcessData(data, mainProcess);
     }
 
+    @Test
     public void testStepTransientTextData() throws ExecutionException, IOException{
         final String structureRef = "java.lang.String";
         final Data data = createTextDataSample(structureRef);
@@ -195,6 +202,7 @@ public class BPMNDataExportImportTest extends TestCase {
         compareStepTransientData(data, mainProcess);
     }
 
+    @Test
     public void testStepTransientXMLData() throws ExecutionException, IOException{
         final String structureRef = "java.util.List";
         final XMLData data = ProcessFactory.eINSTANCE.createXMLData();
@@ -225,6 +233,7 @@ public class BPMNDataExportImportTest extends TestCase {
         compareStepTransientData(data, mainProcess);
     }
 
+    @Test
     public void testStepTransientTextDataWithScriptInitialValue() throws ExecutionException, IOException{
         final String structureRef = "java.lang.String";
         final Data data = ProcessFactory.eINSTANCE.createData();
@@ -246,6 +255,7 @@ public class BPMNDataExportImportTest extends TestCase {
         compareStepTransientData(data, mainProcess);
     }
 
+    @Test
     public void testStepTransientFloatData() throws ExecutionException, IOException{
         final Data data = createDoubleDataSample();
         data.setTransient(true);
@@ -259,6 +269,7 @@ public class BPMNDataExportImportTest extends TestCase {
         compareStepTransientData(data, mainProcess);
     }
 
+    @Test
     public void testStepTransientIntegerData() throws ExecutionException, IOException{
         final String structureRef = "java.lang.Long";
         final Data data = createIntegerDataSample(structureRef);
@@ -272,6 +283,7 @@ public class BPMNDataExportImportTest extends TestCase {
         compareStepTransientData(data, mainProcess);
     }
 
+    @Test
     public void testStepTransientJavaData() throws ExecutionException, IOException{
         final String structureRef = "java.util.List";
         final JavaObjectData initialData = createJavaDataSample(structureRef);
@@ -285,6 +297,7 @@ public class BPMNDataExportImportTest extends TestCase {
         compareStepTransientData(initialData, mainProcess);
     }
 
+    @Test
     public void testStepTransientBooleanData() throws ExecutionException, IOException{
         final String structureRef = "java.lang.Boolean";
         final Data initialData = createBooleanDataSample(structureRef);
@@ -298,6 +311,7 @@ public class BPMNDataExportImportTest extends TestCase {
         compareStepTransientData(initialData, mainProcess);
     }
 
+    @Test
     public void testStepBooleanData() throws ExecutionException, IOException{
         final String structureRef = "java.lang.Boolean";
         final Data initialData = createBooleanDataSample(structureRef);
@@ -322,6 +336,7 @@ public class BPMNDataExportImportTest extends TestCase {
         compareStepData(initialData, mainProcess);
     }
 
+    @Test
     public void testStepIntegerData() throws ExecutionException, IOException{
         final String structureRef = "java.lang.Integer";
         final Data initialData = createIntegerDataSample(structureRef);
