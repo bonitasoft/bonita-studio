@@ -51,7 +51,6 @@ import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.utils.EMFComparePrettyPrinter;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -105,11 +104,9 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 
     protected void mergeDiferencesIntoActorMappings(final List<ActorMappingsType> actorMappings, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
-        EMFComparePrettyPrinter.printComparison(comparison, System.out);
 		for(final Diff difference : differences){
             if (difference instanceof AttributeChange) {
                 final AttributeChange updateAttributeChange = (AttributeChange) difference;
-
                 final Object oldElement = updateAttributeChange.getMatch().getRight();
                 final Object newElement = updateAttributeChange.getMatch().getLeft();
                 final EAttribute attribute = updateAttributeChange.getAttribute();
@@ -262,7 +259,7 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 	protected List<ActorMappingsType> getAllActorMappings(
 			final ProcessConfigurationRepositoryStore confStore,
 			final DiagramRepositoryStore diagramStore) {
-		final List<ActorMappingsType> allActorMappings = new ArrayList<ActorMappingsType>();
+		final List<ActorMappingsType> allActorMappings = new ArrayList<>();
 		for(final ProcessConfigurationFileStore fileStore : confStore.getChildren()){
 			final Configuration c = fileStore.getContent();
 			if(c != null && c.getActorMappings() != null){

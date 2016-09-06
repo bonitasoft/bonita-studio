@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.tests.dialog;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.List;
@@ -35,7 +36,7 @@ import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
@@ -43,13 +44,11 @@ import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aurelien Pupier
- *
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestDuplicate extends SWTBotGefTestCase {
+public class TestDuplicate  {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Test
     public void testDuplicateWithSeveralPool() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);

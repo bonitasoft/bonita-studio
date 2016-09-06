@@ -317,10 +317,6 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
         return remove;
     }
 
-    protected String getExpressionTooltip() {
-        return Messages.shortExpr_tooltip;
-    }
-
     /**
      * add lines from the form
      */

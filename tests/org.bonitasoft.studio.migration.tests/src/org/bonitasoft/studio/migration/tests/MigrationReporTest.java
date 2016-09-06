@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.migration.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.net.URL;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -28,17 +31,16 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- * @author Romain Bioteau
- */
-public class MigrationReporTest extends SWTBotGefTestCase {
+public class MigrationReporTest {
 
+    private SWTGefBot bot = new SWTGefBot();
+    
     private final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
     @BeforeClass

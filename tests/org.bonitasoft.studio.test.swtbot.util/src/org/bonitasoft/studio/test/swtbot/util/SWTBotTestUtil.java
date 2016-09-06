@@ -108,23 +108,18 @@ public class SWTBotTestUtil implements SWTBotConstants {
     public static final int CONTEXTUALPALETTE_EVENT = 3;
     public static final String IMPORTER_TITLE_BONITA = "Bonita 6.x and 7.x";
 
-    public static void createNewDiagram(final SWTWorkbenchBot bot) {
-        final long timebeforeCreatenewDiagram = System.currentTimeMillis();
-        final int nbEditorsBefore = bot.editors().size();
-        bot.waitUntil(Conditions.waitForWidget(WithId.withId(SWTBOT_ID_MAIN_SHELL)), 40000);
-        bot.waitUntil(Conditions.shellIsActive(bot.shellWithId(SWTBOT_ID_MAIN_SHELL).getText()), 40000);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")), 40000);
-        final SWTBotMenu menu = bot.menu("Diagram");
+    public static void createNewDiagram(final SWTWorkbenchBot wBot) {
+        final int nbEditorsBefore = wBot.editors().size();
+        wBot.waitUntil(Conditions.waitForWidget(WithId.withId(SWTBOT_ID_MAIN_SHELL)), 40000);
+        wBot.waitUntil(Conditions.shellIsActive(wBot.shellWithId(SWTBOT_ID_MAIN_SHELL).getText()), 40000);
+        wBot.waitUntil(Conditions.widgetIsEnabled(wBot.menu("Diagram")), 40000);
+        final SWTBotMenu menu = wBot.menu("Diagram");
         menu.menu("New").click();
-        bot.waitUntil(new ICondition() {
+        wBot.waitUntil(new DefaultCondition() {
 
             @Override
             public boolean test() throws Exception {
-                return nbEditorsBefore + 1 == bot.editors().size();
-            }
-
-            @Override
-            public void init(final SWTBot bot) {
+                return nbEditorsBefore + 1 == wBot.editors().size();
             }
 
             @Override
@@ -132,19 +127,14 @@ public class SWTBotTestUtil implements SWTBotConstants {
                 return "Editor for new diagram has not been opened";
             }
         }, 30000, 100);
-        System.out.println("Time to create a new diagram: " + String.valueOf(System.currentTimeMillis() - timebeforeCreatenewDiagram));
     }
 
-    public static IStatus selectAndRunFirstPoolFound(final SWTGefBot bot) throws ExecutionException {
-        bot.waitUntil(new ICondition() {
+    public static IStatus selectAndRunFirstPoolFound(final SWTGefBot gefbot) throws ExecutionException {
+        gefbot.waitUntil(new DefaultCondition() {
 
             @Override
             public boolean test() throws Exception {
-                return bot.activeEditor() != null;
-            }
-
-            @Override
-            public void init(final SWTBot bot) {
+                return gefbot.activeEditor() != null;
             }
 
             @Override
@@ -152,8 +142,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
                 return "No active editor found";
             }
         });
-        final SWTBotEditor botEditor = bot.activeEditor();
-        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final SWTBotEditor botEditor = gefbot.activeEditor();
+        final SWTBotGefEditor gmfEditor = gefbot.gefEditor(botEditor.getTitle());
         final List<SWTBotGefEditPart> runnableEPs = gmfEditor.editParts(new BaseMatcher<EditPart>() {
 
             @Override
@@ -214,7 +204,6 @@ public class SWTBotTestUtil implements SWTBotConstants {
              * @see org.eclipse.swtbot.swt.finder.results.VoidResult#run()
              */
             @Override
-            @SuppressWarnings("restriction")
             public void run() {
                 try {
                     final List<? extends Widget> widgets = viewerBot.getFinder().findControls(WidgetMatcherFactory.widgetOfType(TabbedPropertyList.class));
@@ -1006,20 +995,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
      * @param connectorTool
      */
     public static void editConnector(final SWTGefBot bot, final String connectorType, final String connectorTool) {
-
         bot.waitUntil(Conditions.shellIsActive("Connectors"));
-        //      SWTBotTree tree = bot.tree();
-        //      tree.expandNode(connectorType);
-        //      SWTBotTreeItem theItem = tree.getTreeItem(connectorType);
-        //      Assert.assertNotNull("Error : No item "+connectorType+" found in the tree.", theItem);
-        //      for( SWTBotTreeItem item : theItem.getItems()){
-        //          System.out.println("item = "+item.getText());
-        //          if(item.getText().startsWith(connectorTool)){
-        //              item.select();
-        //              item.click();
-        //              break;
-        //          }
-        //      }
         bot.text().setText(connectorTool);
         bot.table().select(0);
         Assert.assertTrue("Error : No " + connectorTool + " " + connectorType + " found in the connector list", bot.button(IDialogConstants.NEXT_LABEL)

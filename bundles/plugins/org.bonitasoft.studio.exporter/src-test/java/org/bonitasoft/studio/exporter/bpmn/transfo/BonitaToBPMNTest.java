@@ -35,9 +35,7 @@ import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.gmf.CustomEventLabelEditPart;
 import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.builders.XMLDataBuilder;
@@ -50,7 +48,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -118,20 +115,6 @@ public class BonitaToBPMNTest extends BonitaToBPMN {
         Assertions.assertThat(loopCharacteristics).isNotNull();
         Assertions.assertThat(loopCharacteristics.isIsSequential()).isTrue();
         Assertions.assertThat(loopCharacteristics.getCompletionCondition().getMixed().getValue(0)).isEqualTo("my completion condition");
-    }
-
-    @Test
-    @Ignore("Multi instance initialized by a data is not implemented yet")
-    public void testMultiInstanceInitializedByData() {
-        final Pool pool = ProcessFactory.eINSTANCE.createPool();
-        final Data data = ProcessFactory.eINSTANCE.createData();
-        data.setName("myData");
-        pool.getData().add(data);
-        final Activity bonitaActivity = ProcessFactory.eINSTANCE.createActivity();
-        pool.getElements().add(bonitaActivity);
-        bonitaActivity.setType(MultiInstanceType.PARALLEL);
-        bonitaActivity.setCollectionDataToMultiInstantiate(data);
-        //Assertions.assertThat(loopCharacteristics.getLoopDataInputRef().getLocalPart()).isEqualTo("myData");
     }
 
     @Test

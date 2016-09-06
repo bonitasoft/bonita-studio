@@ -14,11 +14,16 @@
  */
 package org.bonitasoft.studio.engine.test.bar;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.util.Vector;
 
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPropertiesViewFolder;
 import org.bonitasoft.studio.swtbot.framework.diagram.execution.BotExecutionDiagramPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
@@ -28,7 +33,7 @@ import org.bonitasoft.studio.util.test.conditions.ShellIsActiveWithThreadSTacksO
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
@@ -38,14 +43,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Florine Boudin
- */
+
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class BarExporterTest extends SWTBotGefTestCase {
+public class BarExporterTest {
 
     final public static String EditorTitleRegex = "(.*)\\s\\((.*)\\)";
 
+    private final SWTGefBot bot = new SWTGefBot();
+    
     @Rule
     public SWTGefBotRule gefBotRule = new SWTGefBotRule(bot);
 
@@ -55,7 +60,6 @@ public class BarExporterTest extends SWTBotGefTestCase {
         SWTBotTestUtil.createNewDiagram(bot);
         final SWTBotEditor activeEditor = bot.activeEditor();
         final String editorTitle = activeEditor.getTitle();
-        //System.out.println("editorTitle1 = "+editorTitle1);
         assertFalse("Error: first diagram name is empty.", editorTitle.isEmpty());
 
         new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab().selectInstantiationFormTab().selectLegacy();
@@ -78,9 +82,7 @@ public class BarExporterTest extends SWTBotGefTestCase {
 
         // Save Diagram
         bot.menu("Diagram").menu("Save").click();
-
-        //System.out.println(editorTitle);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Server")));
+        bot.waitUntil(BonitaBPMConditions.noPopupActive());
 
         // Menu Server > Build...
         bot.menu("Server").menu("Build...").click();
@@ -99,7 +101,6 @@ public class BarExporterTest extends SWTBotGefTestCase {
 
         // Number of pool in the diagram
         final int poolListSize = diagramTreeItem.getItems().length;
-        //System.out.println("Diagram contains "+ poolListSize + " items");
         assertEquals("Error: Diagram must contain 3 Pools.", 3, poolListSize);
 
         // unselect the first pool of the list
@@ -127,7 +128,6 @@ public class BarExporterTest extends SWTBotGefTestCase {
         final String tmpBarFolderPath = tmpBarFolder.getAbsolutePath();
         bot.comboBoxWithLabel(Messages.destinationPath + " *").setText(tmpBarFolderPath);
         //		String tmpBarFolderPath = bot.comboBoxWithLabel(Messages.destinationPath+" *").getText();
-        //		System.out.println("tmpBarFolder = "+tmpBarFolderPath);
 
         // click 'Finish' button to close 'Build' shell
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));

@@ -14,6 +14,11 @@
  */
 package org.bonitasoft.studio.tests.iteration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -49,19 +54,19 @@ import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Romain Bioteau
- */
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotConstants {
 
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class MultiInstantiationIT  implements SWTBotConstants {
+
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Rule
     public SWTGefBotRule swtGefBotRule = new SWTGefBotRule(bot);
 

@@ -16,6 +16,9 @@
  */
 package org.bonitasoft.studio.configuration.test.swtbot;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -27,7 +30,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
@@ -45,12 +48,11 @@ import org.junit.runner.RunWith;
  *
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestConfigurationDialog extends SWTBotGefTestCase {
+public class TestConfigurationDialog {
 
-
+    private SWTGefBot bot = new SWTGefBot();
 	final String defaultEmployeeActor = "Employee actor";
 
-	@Override
 	@Before
 	public void setUp() throws Exception {
 		SWTBotTestUtil.createNewDiagram(bot);

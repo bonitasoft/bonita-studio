@@ -1,6 +1,7 @@
 package org.bonitasoft.studio.diagram.test;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withMnemonic;
+import static org.junit.Assert.assertFalse;
 
 import java.util.List;
 
@@ -12,10 +13,11 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -27,11 +29,13 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class TestSave {
 
-public class TestSave extends SWTBotGefTestCase {
-
-
+    private SWTGefBot bot = new SWTGefBot();
+    
     // Before and After
     private static boolean disablePopup;
 
@@ -76,9 +80,8 @@ public class TestSave extends SWTBotGefTestCase {
         }
     };
 
-    @Override
     @After
-    public void tearDown(){
+    public void tearDown() throws Exception{
         bot.saveAllEditors();
     }
 
@@ -136,8 +139,6 @@ public class TestSave extends SWTBotGefTestCase {
         final ICommandService service =  (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         final Command cmd = service.getCommand(SAVE_COMMAND_ID);
         assertFalse(cmd.isEnabled());
-
-
     }
 
 

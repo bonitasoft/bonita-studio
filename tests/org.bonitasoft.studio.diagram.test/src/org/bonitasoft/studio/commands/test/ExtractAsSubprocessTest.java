@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.commands.test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,24 +31,22 @@ import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.bonitasoft.studio.test.swtbot.util.conditions.EditorOpenCondition;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * @author Mickael Istria
- *
- */
-public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
-    /**
-     * @author Mickael Istria
-     *
-     */
+
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class ExtractAsSubprocessTest {
+
+    private final SWTGefBot bot = new SWTGefBot();
+    
     public class OneMoreEditor extends DefaultCondition {
 
         private final SWTGefBot bot;
@@ -85,15 +85,13 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
     private final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
 
-    @Override
     @Before
-    public void setUp() {
+    public void setUp() throws Exception{
         bot.closeAllEditors();
     }
 
-    @Override
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         bot.saveAllEditors();
         bot.closeAllEditors();
     }
@@ -160,7 +158,6 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         importProcess();
 
         final String title = bot.activeEditor().getTitle();
-        System.out.println(title);
         final SWTBotGefEditor editor1 = bot.gefEditor(title);
         final SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
         final SWTBotGefEditPart step2Part = editor1.getEditPart("Step2").parent();

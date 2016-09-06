@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.tests.groovy;
 
 import static org.bonitasoft.studio.dependencies.i18n.Messages.selectMissingJarTitle;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
@@ -24,7 +25,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.junit.After;
@@ -32,12 +33,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aurelien Pupier
- */
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
 
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class TestBonitaGroovyEditorDialog {
+
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 

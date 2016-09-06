@@ -14,6 +14,10 @@
  */
 package org.bonitasoft.studio.connectors.test.database;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Category;
@@ -22,7 +26,7 @@ import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,8 +35,10 @@ import org.junit.runner.RunWith;
  * @author Romain Bioteau
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestDatabaseConnectorOutputMode extends SWTBotGefTestCase implements SWTBotConstants {
-
+public class TestDatabaseConnectorOutputMode implements SWTBotConstants {
+    
+    private SWTGefBot bot = new SWTGefBot();
+    
     private static final String DATA_NAME_1 = "myData1";
     private static final String QUERY1 = "SELECT col1 from MyTable WHERE id='${" + DATA_NAME_1 + "}'";
     private static final String QUERY2 = "SELECT col1,col2,col3 from MyTable";

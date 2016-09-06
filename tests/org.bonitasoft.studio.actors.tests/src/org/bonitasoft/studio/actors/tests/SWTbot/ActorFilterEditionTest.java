@@ -14,6 +14,11 @@
  */
 package org.bonitasoft.studio.actors.tests.SWTbot;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.common.Messages;
@@ -27,7 +32,7 @@ import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorDefiniti
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.util.test.conditions.SelectNodeUnder;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
@@ -35,18 +40,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aurelie Zara
- *
- */
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ActorFilterEditionTest extends SWTBotGefTestCase {
+public class ActorFilterEditionTest  {
 
-    @Override
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         ConnectorEditPlugin.getPlugin().getPreferenceStore().setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
     }
 

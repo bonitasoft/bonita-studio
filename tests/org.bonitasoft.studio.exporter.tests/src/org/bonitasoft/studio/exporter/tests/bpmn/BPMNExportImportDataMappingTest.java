@@ -17,6 +17,11 @@
  */
 package org.bonitasoft.studio.exporter.tests.bpmn;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -43,7 +48,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -53,16 +58,14 @@ import org.junit.runner.RunWith;
 import org.omg.spec.bpmn.di.util.DiResourceFactoryImpl;
 import org.omg.spec.bpmn.model.DocumentRoot;
 
-/**
- * @author Aurelien Pupier
- *
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class BPMNExportImportDataMappingTest extends SWTBotGefTestCase {
+public class BPMNExportImportDataMappingTest {
 
 	private static  MainProcess mainProcessAfterReimport;
 	private static boolean isInitalized = false;
 	private static CallActivity callActivity;
+
+    private final SWTGefBot bot = new SWTGefBot();
 
 	@Before
 	public void init() throws IOException{
@@ -146,7 +149,8 @@ public class BPMNExportImportDataMappingTest extends SWTBotGefTestCase {
 
 		Display.getDefault().syncExec(new Runnable() {
 
-			public void run() {
+			@Override
+            public void run() {
 				try {
 					mainProcessAfterReimport = BPMNTestUtil.importBPMNFile(model2);
 				} catch (final MalformedURLException e) {

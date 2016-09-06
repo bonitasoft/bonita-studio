@@ -92,11 +92,11 @@ public class DefinitionResourceProvider {
     private StoreControl storeControl;
     private ArrayList<Category> categories;
     private Category uncategorized;
-    private final Map<String, ResourceBundle> resourceBundleCache = new WeakHashMap<String, ResourceBundle>();
+    private final Map<String, ResourceBundle> resourceBundleCache = new WeakHashMap<>();
     private final static Map<IRepositoryStore<? extends IRepositoryFileStore>, DefinitionResourceProvider> INSTANCES_MAP;
 
     static {
-        INSTANCES_MAP = new WeakHashMap<IRepositoryStore<? extends IRepositoryFileStore>, DefinitionResourceProvider>();
+        INSTANCES_MAP = new WeakHashMap<>();
     }
 
     public static DefinitionResourceProvider getInstance(
@@ -326,7 +326,7 @@ public class DefinitionResourceProvider {
     }
 
     public Set<Locale> getExistingLocale(final ConnectorDefinition definition) {
-        final Set<Locale> result = new HashSet<Locale>();
+        final Set<Locale> result = new HashSet<>();
         String defId = null;
         if (definition == null) {
             return result;
@@ -400,7 +400,7 @@ public class DefinitionResourceProvider {
     }
 
     public List<File> getExistingLocalesResource(final ConnectorDefinition def) {
-        final List<File> result = new ArrayList<File>();
+        final List<File> result = new ArrayList<>();
         if (def.eResource() == null) {
             return result;
         }
@@ -497,7 +497,7 @@ public class DefinitionResourceProvider {
     }
 
     public Set<String> getProvidedCategoriesIds() {
-        final Set<String> providedCategoryIds = new HashSet<String>();
+        final Set<String> providedCategoryIds = new HashSet<>();
         for (final IRepositoryFileStore defFile : store.getChildren()) {
             if (!defFile.canBeShared()) { // provided definition
                 try {
@@ -516,7 +516,7 @@ public class DefinitionResourceProvider {
     }
 
     public Set<String> getUserCategoriesIds() {
-        final Set<String> userCategoryIds = new HashSet<String>();
+        final Set<String> userCategoryIds = new HashSet<>();
         final Set<String> providedCategoryIds = getProvidedCategoriesIds();
         for (final IRepositoryFileStore defFile : store.getChildren()) {
             if (defFile.canBeShared()) {
@@ -581,7 +581,6 @@ public class DefinitionResourceProvider {
                     try {
                         final String name = store.getResource().getName() + "/" + category.getIcon();
                         final URL resourceURL = bundle.getResource(name);
-                        BonitaStudioLog.debug(name, "org.bonitasoft.studio.connectors.model.edit");
                         if (resourceURL != null) {
                             iconURL = FileLocator.toFileURL(resourceURL);
                         }
@@ -626,7 +625,7 @@ public class DefinitionResourceProvider {
 
     private List<ConnectorDefinition> getAllDefinitionWithCategotyId(final String id) {
         if (store instanceof IDefinitionRepositoryStore) {
-            final List<ConnectorDefinition> result = new ArrayList<ConnectorDefinition>();
+            final List<ConnectorDefinition> result = new ArrayList<>();
             for (final ConnectorDefinition def : ((IDefinitionRepositoryStore) store).getDefinitions()) {
                 for (final Category c : def.getCategory()) {
                     if (c.getId().equals(id)) {
@@ -640,8 +639,8 @@ public class DefinitionResourceProvider {
     }
 
     public void loadDefinitionsCategories(final IProgressMonitor monitor) {
-        categories = new ArrayList<Category>();
-        final Set<String> idsToAdd = new HashSet<String>();
+        categories = new ArrayList<>();
+        final Set<String> idsToAdd = new HashSet<>();
         idsToAdd.addAll(getProvidedCategoriesIds());
         idsToAdd.addAll(getUserCategoriesIds());
         boolean addUnloadableCategory = false;

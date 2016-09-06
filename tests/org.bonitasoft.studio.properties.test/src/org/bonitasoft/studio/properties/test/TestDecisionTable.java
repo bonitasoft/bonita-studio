@@ -19,44 +19,33 @@ import static org.bonitasoft.studio.properties.i18n.Messages.useDecisionTable;
 
 import java.io.IOException;
 
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.decision.ui.Messages;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
-/**
- * @author Florine Boudin
- *
- */
+
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestDecisionTable extends SWTBotGefTestCase {
+public class TestDecisionTable {
 
-    @Override
-    @Before
-    public void setUp() {
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
-        FileActionDialog.setDisablePopup(true);
-    }
-
+    private final SWTGefBot bot = new SWTGefBot();
+    
+    @Rule
+    public final SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Test
     public void testConditionExpressions() throws IOException, InterruptedException{
-
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestDecisionTable-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "TestDecisionTable", getClass(), false);
 
         final SWTBotEditor botEditor = bot.activeEditor();
@@ -89,9 +78,7 @@ public class TestDecisionTable extends SWTBotGefTestCase {
         changeCondition(0, "myText==\"\"");
         testUpdateLineButtonEnabled();
         bot.button(Messages.updateLine).click();
-        bot.button(IDialogConstants.FINISH_LABEL);
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        bot.saveAllEditors();
+        bot.button(IDialogConstants.FINISH_LABEL).click();
     }
 
     private void addTrueCondition(final int idx, final String condition){

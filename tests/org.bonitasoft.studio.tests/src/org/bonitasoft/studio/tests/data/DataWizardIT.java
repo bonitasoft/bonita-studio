@@ -15,6 +15,9 @@
 package org.bonitasoft.studio.tests.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.DataTypeLabels;
@@ -58,7 +61,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
@@ -73,8 +75,10 @@ import org.junit.runner.RunWith;
  * @author Baptiste Mesta
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class DataWizardIT extends SWTBotGefTestCase {
+public class DataWizardIT {
 
+    private final SWTGefBot bot = new SWTGefBot();
+    
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
@@ -94,10 +98,6 @@ public class DataWizardIT extends SWTBotGefTestCase {
 
         assertTrue("no data added", pool.getData().size() == 1);
         assertTrue("wrong data added", pool.getData().get(0).getName().equals("newData"));
-
-        final BotApplicationWorkbenchWindow applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
-
-        applicationWorkbenchWindow.close();
     }
 
     @Test
@@ -127,8 +127,6 @@ public class DataWizardIT extends SWTBotGefTestCase {
         final Data firstData = pool.getData().get(0);
         assertEquals("wrong rename", firstData.getName(), "anewName");
         assertTrue("wrong change type", firstData.getDataType() instanceof IntegerType);
-
-        applicationWorkbenchWindow.close();
     }
 
     @Test
@@ -162,9 +160,6 @@ public class DataWizardIT extends SWTBotGefTestCase {
 
         assertEquals("data not removed", nbData - 1, pool.getData().size());
         assertFalse("the wrong data was removed", firstData.equals(pool.getData().get(0)));
-
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        applicationWorkbenchWindow.close();
     }
 
     @Test
@@ -201,9 +196,8 @@ public class DataWizardIT extends SWTBotGefTestCase {
                 return "data not removed";
             }
         });
+        
         assertEquals("data not added", nbPoolData - 1, pool.getData().size());
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        bot.menu("Diagram").menu("Close").click();
     }
 
     private Pool createProcessWithData() {
@@ -286,12 +280,6 @@ public class DataWizardIT extends SWTBotGefTestCase {
 
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        final BotApplicationWorkbenchWindow applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
-        applicationWorkbenchWindow.save();
-
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        applicationWorkbenchWindow.close();
     }
 
     @Test

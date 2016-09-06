@@ -23,34 +23,28 @@ import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramMigrationPerspective;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
-/**
- * @author Romain Bioteau
- *
- */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class BarImportReportIT extends SWTBotGefTestCase {
+public class BarImportReportIT {
 
     private boolean disablePopup;
-
-    @Override
+    private SWTGefBot bot = new SWTGefBot();
+    
     @Before
-    public void setUp() {
+    public void setUp() throws Exception{
         disablePopup = FileActionDialog.getDisablePopup();
         FileActionDialog.setDisablePopup(true);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
     }
 
-    @Override
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         bot.saveAllEditors();
         bot.closeAllEditors();
         FileActionDialog.setDisablePopup(disablePopup);
