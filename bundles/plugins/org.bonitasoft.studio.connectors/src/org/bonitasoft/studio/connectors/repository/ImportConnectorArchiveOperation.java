@@ -179,31 +179,31 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
 
     private void importConnectorImplementation(final File tmpDir) {
         final File[] files = tmpDir.listFiles(implFileFilter);
-        if (files != null && files.length == 1) {
-            final File implFile = files[0];
-            final IRepositoryStore implStore = getImplementationStore();
-            try {
-                final FileInputStream fis = new FileInputStream(implFile);
-                implStore.importInputStream(implFile.getName(), fis);
-                fis.close();
-            } catch (final Exception e) {
-                BonitaStudioLog.error(e);
-            }
-
-            final IRepositoryFileStore implFileStore = implStore.getChild(implFile.getName());
-            try {
-                final ConnectorImplementation impl = (ConnectorImplementation) implFileStore.getContent();
-                if (impl.isHasSources()) {
-                    final String implJarName = NamingUtils
-                            .toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)
-                            + ".jar";
-                    importImplementationSources(tmpDir, implJarName);
+        if (files != null) {
+            for (final File implFile : files) {
+                final IRepositoryStore implStore = getImplementationStore();
+                try {
+                    final FileInputStream fis = new FileInputStream(implFile);
+                    implStore.importInputStream(implFile.getName(), fis);
+                    fis.close();
+                } catch (final Exception e) {
+                    BonitaStudioLog.error(e);
                 }
-                importImplementationDependencies(tmpDir, impl);
-            } catch (final ReadFileStoreException e) {
-                BonitaStudioLog.error("Failed to read connector implementation", e);
-            }
 
+                final IRepositoryFileStore implFileStore = implStore.getChild(implFile.getName());
+                try {
+                    final ConnectorImplementation impl = (ConnectorImplementation) implFileStore.getContent();
+                    if (impl.isHasSources()) {
+                        final String implJarName = NamingUtils
+                                .toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)
+                                + ".jar";
+                        importImplementationSources(tmpDir, implJarName);
+                    }
+                    importImplementationDependencies(tmpDir, impl);
+                } catch (final ReadFileStoreException e) {
+                    BonitaStudioLog.error("Failed to read connector implementation", e);
+                }
+            }
         }
     }
 
@@ -213,34 +213,35 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
 
     private void importConnectorDefinition(final File tmpDir) {
         final File[] files = tmpDir.listFiles(defFileFilter);
-        if (files != null && files.length == 1) {
-            final File defFile = files[0];
-            final IRepositoryStore defStore = getDefinitionStore();
-            IRepositoryFileStore fileStore = null;
-            try (final FileInputStream fis = new FileInputStream(defFile);) {
-                final ConnectorDefinition connectorDefinition = toConnectorDefinition(defFile);
-                if (connectorDefinition == null) {
-                    fileStore = defStore.importInputStream(defFile.getName(), fis);
-                } else {
-                    final IRepositoryFileStore existingDef = defStore.getChild(defFile.getName());
-                    if (existingDef == null || !existingDef.isReadOnly()
-                            || !defintionHasIdAndVersion(existingDef, connectorDefinition.getId(), connectorDefinition.getVersion())) {
+        if (files != null) {
+            for (final File defFile : files) {
+                final IRepositoryStore defStore = getDefinitionStore();
+                IRepositoryFileStore fileStore = null;
+                try (final FileInputStream fis = new FileInputStream(defFile);) {
+                    final ConnectorDefinition connectorDefinition = toConnectorDefinition(defFile);
+                    if (connectorDefinition == null) {
                         fileStore = defStore.importInputStream(defFile.getName(), fis);
                     } else {
-                        status = ValidationStatus.warning(Messages.bind(Messages.providedDefinitionAlreadyExists, existingDef.getDisplayName()));
+                        final IRepositoryFileStore existingDef = defStore.getChild(defFile.getName());
+                        if (existingDef == null || !existingDef.isReadOnly()
+                                || !defintionHasIdAndVersion(existingDef, connectorDefinition.getId(), connectorDefinition.getVersion())) {
+                            fileStore = defStore.importInputStream(defFile.getName(), fis);
+                        } else {
+                            status = ValidationStatus.warning(Messages.bind(Messages.providedDefinitionAlreadyExists, existingDef.getDisplayName()));
+                        }
                     }
+                } catch (final Exception e) {
+                    BonitaStudioLog.error(e);
                 }
-            } catch (final Exception e) {
-                BonitaStudioLog.error(e);
-            }
-            if (fileStore != null) {
-                importIcons(tmpDir);
-                importMessages(tmpDir);
                 if (fileStore != null) {
-                    try {
-                        importDefinitionDependencies(tmpDir, (ConnectorDefinition) fileStore.getContent());
-                    } catch (final ReadFileStoreException e) {
-                        BonitaStudioLog.error("Failed to read connector implementation", e);
+                    importIcons(tmpDir);
+                    importMessages(tmpDir);
+                    if (fileStore != null) {
+                        try {
+                            importDefinitionDependencies(tmpDir, (ConnectorDefinition) fileStore.getContent());
+                        } catch (final ReadFileStoreException e) {
+                            BonitaStudioLog.error("Failed to read connector implementation", e);
+                        }
                     }
                 }
             }

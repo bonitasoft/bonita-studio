@@ -51,6 +51,8 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.TableExpression;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -69,20 +71,18 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.Section;
 
-
 /**
  * @author Elias Ricken de Medeiros
- *
  */
 public class PageComponentSwitchBuilder {
 
     protected final ConnectorDefinition definition;
-
 
     protected DefinitionResourceProvider messageProvider;
 
@@ -199,23 +199,24 @@ public class PageComponentSwitchBuilder {
     public Label createFieldLabel(final Composite composite, final int verticalAlignment, final String id, final boolean isMandatory) {
         final Composite labelContainer = getParentCompositeForLabel(composite);
         final Label fieldLabel = new Label(labelContainer, SWT.WRAP);
-        setText(id, isMandatory, fieldLabel);
+        fieldLabel.setText(getLabelText(id, isMandatory));
         final GridDataFactory factory = GridDataFactory.fillDefaults().align(SWT.END, verticalAlignment);
-        if(hasFixedSize()) {
+        if (hasFixedSize()) {
             factory.grab(true, false);
         }
         fieldLabel.setLayoutData(factory.create());
         return fieldLabel;
     }
 
-    private void setText(final String id, final boolean isMandatory, final Label fieldLabel) {
+    private String getLabelText(final String id, final boolean isMandatory) {
         if (id != null) {
             String label = getLabel(id);
             if (isMandatory) {
                 label = label + " *";
             }
-            fieldLabel.setText(label);
+           return label;
         }
+        return "";
     }
 
     private Composite getParentCompositeForLabel(final Composite currentComposite) {
@@ -254,13 +255,13 @@ public class PageComponentSwitchBuilder {
             final Composite exprLabelComposite = new Composite(composite, SWT.INHERIT_DEFAULT);
             exprLabelComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
             exprLabelComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
-            final Label fieldLabel = createFieldLabel(exprLabelComposite, SWT.CENTER, object.getId(), input.isMandatory());
+            createFieldLabel(exprLabelComposite, SWT.CENTER, object.getId(), input.isMandatory());
+
             final Label emptyLine = new Label(exprLabelComposite, SWT.NONE);
             emptyLine.setText("");
 
-            final CheckBoxExpressionViewer viewer = new CheckBoxExpressionViewer(composite, fieldLabel, SWT.BORDER,
+            final CheckBoxExpressionViewer viewer = new CheckBoxExpressionViewer(composite, null, SWT.BORDER,
                     ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION);
-            viewer.getCheckboxControl().setText(fieldLabel.getText());
             viewer.setIsPageFlowContext(isPageFlowContext);
             viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
             viewer.setContext(container);
@@ -283,7 +284,6 @@ public class PageComponentSwitchBuilder {
                 falseExp.setType(ExpressionConstants.CONSTANT_TYPE);
             }
             viewer.setSelection(new StructuredSelection(parameter.getExpression()));
-            fieldLabel.setVisible(!viewer.isCheckboxMode());
             return viewer;
         }
         return null;
@@ -302,11 +302,14 @@ public class PageComponentSwitchBuilder {
             }
             final String desc = messageProvider.getFieldDescription(definition, object.getId());
             if (desc != null && !desc.isEmpty()) {
-                label.setToolTipText(desc);
+                ControlDecoration controlDecoration = new ControlDecoration(label, SWT.RIGHT);
+                controlDecoration.setDescriptionText(desc);
+                controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
+                controlDecoration.setMarginWidth(1);
             }
 
             final Composite radioCompoiste = new Composite(composite, SWT.NONE);
-            radioCompoiste.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+            radioCompoiste.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(16, 0).create());
             if (object.getOrientation() == Orientation.HORIZONTAL) {
                 radioCompoiste.setLayout(GridLayoutFactory.fillDefaults().numColumns(object.getChoices().size()).create());
             } else {
@@ -413,13 +416,17 @@ public class PageComponentSwitchBuilder {
         final ConnectorParameter parameter = connectorConfigurationSupport.getConnectorParameter(array.getInputName(), array, input);
 
         if (parameter != null) {
-            final Label labelField = createFieldLabel(composite, SWT.TOP, array.getId(), input.isMandatory());
+            Composite container = new Composite(composite,SWT.NONE);
+            container.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
+            container.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+            final Label labelField = createFieldLabel(container, SWT.TOP, array.getId(), input.isMandatory());
+            labelField.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
             final String desc = getDescription(array.getId());
             if (desc != null && !desc.isEmpty()) {
                 createDescriptionDecorator(composite, labelField, desc);
             }
 
-            final ExpressionCollectionViewer viewer = new ExpressionCollectionViewer(composite, 0, array.isFixedRows(), array.getCols().intValue(),
+            final ExpressionCollectionViewer viewer = new ExpressionCollectionViewer(container, 0, array.isFixedRows(), array.getCols().intValue(),
                     array.isFixedCols(), array.getColsCaption(), true, false);
             if (desc != null && !desc.isEmpty()) {
                 viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).indent(10, 0).create());
@@ -482,6 +489,7 @@ public class PageComponentSwitchBuilder {
         if (desc != null && !desc.isEmpty()) {
             groupSection.setDescription(desc);
         }
+        groupSection.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
         groupSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         return groupSection;
     }
@@ -594,7 +602,7 @@ public class PageComponentSwitchBuilder {
         if (parameter != null) {
             createFieldLabel(composite, SWT.CENTER, object.getId(), input.isMandatory());
             final Combo combo = new Combo(composite, SWT.READ_ONLY | SWT.BORDER);
-            combo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+            combo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(16, 0).create());
 
             final AbstractExpression inputExpression = parameter.getExpression();
             for (final String item : object.getItems()) {
@@ -621,7 +629,10 @@ public class PageComponentSwitchBuilder {
 
             final String desc = getDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {
-                combo.setToolTipText(desc);
+                ControlDecoration controlDecoration = new ControlDecoration(combo, SWT.LEFT);
+                controlDecoration.setDescriptionText(desc);
+                controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
+                controlDecoration.setMarginWidth(1);
             }
 
             ((Expression) inputExpression).setType(ExpressionConstants.CONSTANT_TYPE);
