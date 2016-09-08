@@ -345,7 +345,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
                 GridDataFactory.fillDefaults().grab(true, false).create());
 
         switchTableModeLink = new Link(mainComposite, SWT.NONE);
-        switchTableModeLink.setLayoutData(GridDataFactory.fillDefaults()
+        switchTableModeLink.setLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER)
                 .create());
         if (widgetFactory != null) {
             widgetFactory.adapt(switchTableModeLink, false, false);

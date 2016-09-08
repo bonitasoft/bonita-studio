@@ -90,7 +90,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
     }
 
     private void addDecorator(final Composite composite) {
-        checkBoxDecoration = new ControlDecoration(checkBoxControl, SWT.RIGHT, composite);
+        checkBoxDecoration = new ControlDecoration(checkBoxControl, SWT.LEFT, composite);
         checkBoxDecoration.setImage(Pics.getImage(PicsConstants.hint));
         refreshDecoration();
     }
@@ -132,13 +132,17 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
     private void switchToExpressionMode() {
         mc.hide(checkBoxControl);
         mc.show(control);
-        mc.show(expressionModeLabel);
+        if(expressionModeLabel != null){
+            mc.show(expressionModeLabel);
+        }
         refreshDecoration();
     }
 
     private void switchToCheckBoxMode() {
         mc.hide(control);
-        mc.hide(expressionModeLabel);
+        if(expressionModeLabel != null){
+            mc.hide(expressionModeLabel);
+        }
         mc.show(checkBoxControl);
         refreshDecoration();
     }
