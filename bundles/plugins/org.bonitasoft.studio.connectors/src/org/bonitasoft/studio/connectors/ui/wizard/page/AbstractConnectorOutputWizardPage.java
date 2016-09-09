@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.process.Connector;
@@ -45,6 +46,7 @@ public abstract class AbstractConnectorOutputWizardPage extends WizardPage imple
 	private IWizardPage previousPageBackup;
 	private boolean isPageFlowContext = false;
 	private IExpressionNatureProvider storageExpressionProvider;
+    private DefinitionResourceProvider messageProvider;
 
 
 	public AbstractConnectorOutputWizardPage(){
@@ -99,13 +101,17 @@ public abstract class AbstractConnectorOutputWizardPage extends WizardPage imple
         this.elementContainer = elementContainer;
     }
 
+    public DefinitionResourceProvider getMessageProvider() {
+        return messageProvider;
+    }
+
     @Override
     public IWizardPage getPreviousPage() {
         if(previousPageBackup != null){
         	return previousPageBackup;
         }
     	
-    	IWizard wizard = getWizard();
+    	final IWizard wizard = getWizard();
         if(wizard != null){
             return wizard.getPreviousPage(this);
         }
@@ -127,7 +133,6 @@ public abstract class AbstractConnectorOutputWizardPage extends WizardPage imple
     @Override
     public void setIsPageFlowContext(boolean isPageFlowContext) {
     	this.isPageFlowContext=isPageFlowContext;
-    	
     }
 
     public IExpressionNatureProvider getStorageExpressionProvider() {
@@ -138,4 +143,8 @@ public abstract class AbstractConnectorOutputWizardPage extends WizardPage imple
 			IExpressionNatureProvider storageExpressionProvider) {
 		this.storageExpressionProvider = storageExpressionProvider;
 	}
+
+    public void setMessageProvider(DefinitionResourceProvider messageProvider) {
+        this.messageProvider = messageProvider;
+    }
 }

@@ -20,25 +20,11 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ImportConnectorArchiveOperation;
-import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 
 
-/**
- * @author Romain Bioteau
- *
- */
+
 public class ImportActorFilterArchiveOperation extends ImportConnectorArchiveOperation{
 
-
-    @Override
-    protected IStatus checkTypeIsValid(String type) {
-        if(!ExportActorFilterArchiveOperation.FILTER_TYPE.equals(type)){
-            return ValidationStatus.error("This is not a filter archive") ;
-        }
-        return Status.OK_STATUS;
-    }
 
     @Override
     protected IRepositoryStore<?> getImplementationStore() {
