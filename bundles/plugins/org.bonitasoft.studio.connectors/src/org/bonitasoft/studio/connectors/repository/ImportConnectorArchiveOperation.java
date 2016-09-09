@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Properties;
 
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProjectUtil;
@@ -118,12 +117,6 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
             BonitaStudioLog.error(e);
         }
 
-        status = readManifest(tmp);
-        if (status.getSeverity() != IStatus.OK) {
-            PlatformUtil.delete(tmp, monitor);
-            return;
-        }
-
         try {
             FileActionDialog.activateYesNoToAll();
             importConnectorDefinition(tmp);
@@ -136,45 +129,6 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
 
     public IStatus getStatus() {
         return status;
-    }
-
-    private IStatus readManifest(final File tmp) {
-        final File manifest = new File(tmp, ExportConnectorArchiveOperation.DESCRIPTOR_FILE);
-        if (!manifest.exists()) {
-            return ValidationStatus.error("Descriptor file not found");
-        }
-
-        try {
-            final Properties p = new Properties();
-            final FileInputStream fis = new FileInputStream(manifest);
-            p.load(fis);
-
-            final String version = p.getProperty(ExportConnectorArchiveOperation.VERSION);
-            if (version == null || version.isEmpty()) {
-                return ValidationStatus.error("Version is missing in the descriptor");
-            }
-
-            final String type = p.getProperty(ExportConnectorArchiveOperation.TYPE);
-            if (type == null || type.isEmpty()) {
-                return ValidationStatus.error("Type is missing in the descriptor");
-            }
-
-            final IStatus status = checkTypeIsValid(type);
-            if (status.getSeverity() != IStatus.OK) {
-                return status;
-            }
-
-        } catch (final Exception e) {
-            return ValidationStatus.error("Cannot read the descriptor file");
-        }
-        return Status.OK_STATUS;
-    }
-
-    protected IStatus checkTypeIsValid(final String type) {
-        if (!ExportConnectorArchiveOperation.CONNECTOR_TYPE.equals(type)) {
-            return ValidationStatus.error("This is not a connector archive");
-        }
-        return Status.OK_STATUS;
     }
 
     private void importConnectorImplementation(final File tmpDir) {
@@ -315,7 +269,7 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
     private void importImplementationSources(final File tmpDir, final String implJarName) {
         final File srcDir = new File(tmpDir, ExportConnectorArchiveOperation.SRC_DIR);
         if (srcDir.exists()) {
-            final List<File> files = new ArrayList<File>();
+            final List<File> files = new ArrayList<>();
             findSourceFiles(srcDir, files);
             final SourceRepositoryStore sourceStore = getSourceStore();
             for (final File sourceFile : files) {
