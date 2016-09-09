@@ -160,7 +160,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
 		connectorWorkingCopy.setConfiguration(configuration);
 		editMode = false;
 		this.connectorContainmentFeature = connectorContainmentFeature;
-		this.featureToCheckForUniqueID = new HashSet<EStructuralFeature>();
+		this.featureToCheckForUniqueID = new HashSet<>();
 		this.featureToCheckForUniqueID.add(connectorContainmentFeature);
 		setWindowTitle(Messages.connectors);
 		setNeedsProgressMonitor(false);
@@ -209,7 +209,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
 
 		initializeContainment();
 
-		contributions = new ArrayList<CustomWizardExtension>();
+		contributions = new ArrayList<>();
 		for (final IConfigurationElement element : BonitaStudioExtensionRegistryManager
 				.getInstance().getConfigurationElements(CUSTOM_WIZARD_ID)) {
 			contributions.add(new CustomWizardExtension(element));
@@ -311,11 +311,11 @@ public class ConnectorWizard extends ExtensibleWizard implements
 		boolean changed = false;
 		if (configuration != null) {
 			final EList<Input> inputs = definition.getInput();
-			final Set<String> inputNames = new HashSet<String>();
+			final Set<String> inputNames = new HashSet<>();
 			for (final Input in : inputs) {
 				inputNames.add(in.getName());
 			}
-			final Set<String> connectorParamKey = new HashSet<String>();
+			final Set<String> connectorParamKey = new HashSet<>();
 			for (final ConnectorParameter parameter : configuration
 					.getParameters()) {
 				connectorParamKey.add(parameter.getKey());
@@ -323,7 +323,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
 
 			if (!inputNames.equals(connectorParamKey)) {
 				connectorParamKey.removeAll(inputNames);
-				final List<ConnectorParameter> toRemove = new ArrayList<ConnectorParameter>();
+				final List<ConnectorParameter> toRemove = new ArrayList<>();
 				for (final ConnectorParameter parameter : configuration
 						.getParameters()) {
 					if (connectorParamKey.contains(parameter.getKey())) {
@@ -336,7 +336,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
 			}
 		}
 		final EList<Output> outputs = definition.getOutput();
-		final Set<String> outputNames = new HashSet<String>();
+		final Set<String> outputNames = new HashSet<>();
 		for (final Output out : outputs) {
 			outputNames.add(out.getName());
 		}
@@ -416,6 +416,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
 				}
 
 			}
+            outputPage.setMessageProvider(messageProvider);
 			outputPage.setElementContainer(container);
 			outputPage.setConnector(connectorWorkingCopy);
 			outputPage.setDefinition(definition);
@@ -617,7 +618,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
 	}
 
 	protected List<IWizardPage> getPagesFor(final ConnectorDefinition definition) {
-		final List<IWizardPage> result = new ArrayList<IWizardPage>();
+		final List<IWizardPage> result = new ArrayList<>();
 
 		if (isDatabaseConnector(definition)) {// DRIVER SELECTION PAGE
 			result.add(new DatabaseConnectorDriversWizardPage(definition
