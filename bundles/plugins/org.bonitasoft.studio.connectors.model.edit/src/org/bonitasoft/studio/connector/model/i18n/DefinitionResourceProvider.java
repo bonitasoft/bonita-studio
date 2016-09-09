@@ -83,6 +83,8 @@ public class DefinitionResourceProvider {
     public static final String connectorDefinitionDescription = "connectorDefinitionDescription";
     public static final String fieldDescription = "description";
     private static final String CLASSPATH_DIR = "dependencies";
+    private static final String OUTPUTS_DESC = "outputsDescription";
+    private static final String OUTPUT_DESC = "output.description";
 
     private ImageRegistry categoryImageRegistry;
     private final ImageRegistry definitionImageRegistry;
@@ -94,6 +96,7 @@ public class DefinitionResourceProvider {
     private Category uncategorized;
     private final Map<String, ResourceBundle> resourceBundleCache = new WeakHashMap<>();
     private final static Map<IRepositoryStore<? extends IRepositoryFileStore>, DefinitionResourceProvider> INSTANCES_MAP;
+
 
     static {
         INSTANCES_MAP = new WeakHashMap<>();
@@ -231,6 +234,14 @@ public class DefinitionResourceProvider {
     public String getFieldDescription(final ConnectorDefinition definition,
             final String fieldId) {
         return getMessage(definition, fieldId + "." + fieldDescription);
+    }
+
+    public String getOutputsDescription(final ConnectorDefinition definition) {
+        return getMessage(definition, OUTPUTS_DESC);
+    }
+
+    public String getOutputDescription(final ConnectorDefinition definition, final String outputName) {
+        return getMessage(definition, outputName + "." + OUTPUT_DESC);
     }
 
     public String getCategoryLabel(final ConnectorDefinition definition,
@@ -388,6 +399,10 @@ public class DefinitionResourceProvider {
 
     public String getPageDescription(final Properties messages, final String pageId) {
         return messages.getProperty(pageId + "." + pageDescription);
+    }
+
+    public String getOutputsDescription(final Properties messages) {
+        return messages.getProperty(OUTPUTS_DESC);
     }
 
     public String getCategoryLabel(final Properties messages, final Category category) {
@@ -773,5 +788,6 @@ public class DefinitionResourceProvider {
     public void removeCategoryLabel(final Properties messages, final Category c) {
         messages.remove(c.getId() + "." + category);
     }
+
 
 }
