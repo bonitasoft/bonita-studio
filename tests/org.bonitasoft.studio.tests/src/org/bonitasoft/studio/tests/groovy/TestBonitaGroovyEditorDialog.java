@@ -15,11 +15,14 @@
 package org.bonitasoft.studio.tests.groovy;
 
 import static org.bonitasoft.studio.dependencies.i18n.Messages.selectMissingJarTitle;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
@@ -29,6 +32,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +46,12 @@ public class TestBonitaGroovyEditorDialog {
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
+    @Before
+    public void waitForEngineStarted() throws Exception {
+        APISession apiSession = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        BOSEngineManager.getInstance().logoutDefaultTenant(apiSession);
+    }
+    
     @Test
     public void testOpenBonitaGroovyEditorDialog() throws ExecutionException, CoreException, IOException {
         bot.menu("Development").menu("Manage Groovy scripts...").click();
