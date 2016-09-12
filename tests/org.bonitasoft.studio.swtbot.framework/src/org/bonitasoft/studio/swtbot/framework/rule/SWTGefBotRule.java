@@ -78,8 +78,8 @@ public class SWTGefBotRule implements TestRule {
         try {
             bot.waitUntil(BonitaBPMConditions.noPopupActive());
         } catch (final TimeoutException e) {
+            bot.captureScreenshot(String.format("screenshots/OpenedShellAfterTest%s.jpg", System.currentTimeMillis()));
             closeAllShells(bot);
-            throw e;
         }
         closeAllAndReturnToWelcomePage();
     }
