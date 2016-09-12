@@ -31,7 +31,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.codegen.ecore,
  assertj-core;bundle-version="1.5.0";resolution:=optional
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.bonitasoft.studio.diagram.form.custom.clipboard,or
  g.bonitasoft.studio.diagram.form.custom.commands,org.bonitasoft.studi
  o.diagram.form.custom.editpolicies,org.bonitasoft.studio.diagram.form

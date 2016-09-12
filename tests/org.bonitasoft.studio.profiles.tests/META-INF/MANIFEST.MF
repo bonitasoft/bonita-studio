@@ -10,5 +10,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.swtbot.swt.finder,
  org.bonitasoft.studio.profiles,
  org.bonitasoft.studio.common.repository
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.bonitasoft.studio.profiles.tests
