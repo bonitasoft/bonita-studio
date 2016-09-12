@@ -22,7 +22,8 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.expressions.test;bundle-version="1.0.0",
  org.bonitasoft.studio.migration.tests;bundle-version="1.0.0",
  org.junit;bundle-version="4.11.0",
- org.bonitasoft.studio.connectors.test
+ org.bonitasoft.studio.connectors.test,
+ org.eclipse.swtbot.swt.finder
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 
