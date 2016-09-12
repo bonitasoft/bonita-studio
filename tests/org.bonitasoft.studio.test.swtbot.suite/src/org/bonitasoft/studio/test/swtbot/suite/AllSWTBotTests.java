@@ -63,6 +63,9 @@ import org.bonitasoft.studio.util.test.BonitaSuite;
 import org.bonitasoft.studio.validators.test.swtbot.TestAddValidatorToProcessAndRun;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
+import org.eclipse.swtbot.swt.finder.results.VoidResult;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -121,6 +124,15 @@ public class AllSWTBotTests {
         WebBrowserUIPlugin.getInstance().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         FileActionDialog.setDisablePopup(true);
+        UIThreadRunnable.syncExec(new VoidResult() {
+
+            @Override
+            public void run() {
+                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()
+                        .forceActive();
+            }
+        });
+
     }
 
     @AfterClass
