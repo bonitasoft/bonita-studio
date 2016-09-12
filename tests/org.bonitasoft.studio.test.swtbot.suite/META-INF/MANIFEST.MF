@@ -23,6 +23,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.connectors.model.edit;bundle-version="6.0.0",
  org.bonitasoft.studio.application.test,
  org.eclipse.swtbot.swt.finder
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.test.swtbot.suite
