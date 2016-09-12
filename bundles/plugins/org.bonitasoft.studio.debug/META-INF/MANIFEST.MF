@@ -24,7 +24,7 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.profiles;bundle-version="1.0.0",
  org.bonitasoft.studio.connectors;bundle-version="1.0.0",
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.bonitasoft.studio.debug,org.bonitasoft.studio.debu
  g.command,org.bonitasoft.studio.debug.i18n;x-friends:="org.bonitasoft
  .studio.tests"
