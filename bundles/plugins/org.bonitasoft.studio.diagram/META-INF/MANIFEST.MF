@@ -46,4 +46,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.gef;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.studio.common
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

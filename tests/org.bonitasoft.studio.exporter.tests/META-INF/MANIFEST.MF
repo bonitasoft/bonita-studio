@@ -39,7 +39,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.designer;bundle-version="7.4.0",
  org.bonitasoft.studio.preferences
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.bonitasoft.studio.exporter.tests,
  org.bonitasoft.studio.exporter.tests.api,
  org.bonitasoft.studio.exporter.tests.application,
