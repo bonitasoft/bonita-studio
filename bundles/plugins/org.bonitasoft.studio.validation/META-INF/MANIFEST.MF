@@ -37,7 +37,7 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.contract;bundle-version="7.1.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: BonitaSoft S.A.
 Import-Package: org.bonitasoft.engine.bdm,
  org.bonitasoft.engine.bdm.model,
