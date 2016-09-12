@@ -31,7 +31,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.eclipse.core.databinding;bundle-version="1.4.1",
  org.bonitasoft.studio.util.tests;bundle-version="6.4.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.bonitasoft.studio.test.swtbot.util,org.bonitasoft.
  studio.test.swtbot.util.conditions
 Bundle-ActivationPolicy: lazy
