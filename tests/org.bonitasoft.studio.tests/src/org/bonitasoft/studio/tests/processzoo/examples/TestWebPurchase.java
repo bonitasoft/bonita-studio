@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.PositionConstants;
@@ -43,6 +44,7 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -53,8 +55,11 @@ public class TestWebPurchase implements SWTBotConstants {
     private static final String PAGEFLOW_LABEL = "Pageflow";
     private String diagramTitle = null;
 
-    private SWTGefBot bot = new SWTGefBot();
+    private final SWTGefBot bot = new SWTGefBot();
     
+    @Rule
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
+
     @Test
     public void testWebPurchase() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
@@ -98,8 +103,8 @@ public class TestWebPurchase implements SWTBotConstants {
         SWTBotTestUtil.addNewData(bot, "customerName", "Text", false, null);
         bot.buttonWithId(SWTBOT_ID_ADD_PROCESS_DATA).click();
         SWTBotTestUtil.addNewData(bot, "customerPhone", "Text", false, null);
-        final Map<String, List<String>> options = new HashMap<String, List<String>>();
-        final ArrayList<String> choices = new ArrayList<String>();
+        final Map<String, List<String>> options = new HashMap<>();
+        final ArrayList<String> choices = new ArrayList<>();
         choices.add("TV");
         choices.add("Mobile Phone");
         choices.add("Laptop");
@@ -135,8 +140,8 @@ public class TestWebPurchase implements SWTBotConstants {
         bot.radio(useTaskActors).click();
         bot.comboBoxWithLabel(selectActorTitle).setSelection(0);
         selectDataVariablesTabbedPropertyView();
-        final Map<String, List<String>> options = new HashMap<String, List<String>>();
-        final List<String> choices = new ArrayList<String>();
+        final Map<String, List<String>> options = new HashMap<>();
+        final List<String> choices = new ArrayList<>();
         choices.add("Approve");
         choices.add("Reject");
         choices.add("More Info");
