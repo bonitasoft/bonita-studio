@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -32,14 +33,13 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
-import org.junit.After;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestThrowCatchMessage  implements
-		SWTBotConstants {
+public class TestThrowCatchMessage implements SWTBotConstants {
 	private final String catchMessageEventName = "send order";
 	private final String sectionTitle = "Messages";
 	private final String messageContentSectionTitle = "Message content";
@@ -56,15 +56,18 @@ public class TestThrowCatchMessage  implements
 	private final String messageContent2 = "customerInformation";
 	private final String messageContent3 = "orderInformation";
 
-	private SWTGefBot bot = new SWTGefBot();
+	private final SWTGefBot bot = new SWTGefBot();
 	
+    @Rule
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
+
 	@Test
 	public void testThrowCathMessage() throws IOException {
 		SWTBotTestUtil.importProcessWIthPathFromClass(bot,
 				"DemoMessageContentCorrelation-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA,
 				"DemoMessageContentCorrelation", this.getClass(), false);
-		SWTBotEditor botEditor = bot.activeEditor();
-		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+		final SWTBotEditor botEditor = bot.activeEditor();
+		final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
 		SWTBotTestUtil.selectEventOnProcess(bot, gmfEditor,
 				catchMessageEventName);
@@ -194,29 +197,24 @@ public class TestThrowCatchMessage  implements
 		assertEquals(correlationKey2, bot.table().cell(1, 0));
 	}
 
-	@After
-	public void tearDown() throws Exception {
-		bot.saveAllEditors();
-		bot.closeAllEditors();
-	}
 
 	@Test
 	public void testCathMessageNotAllowed() throws IOException {
 		SWTBotTestUtil.importProcessWIthPathFromClass(bot,
 				"TestCatchMessageSelectionTest-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA,
 				"TestCatchMessageSelectionTest", this.getClass(), false);
-		SWTBotEditor botEditor = bot.activeEditor();
-		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+		final SWTBotEditor botEditor = bot.activeEditor();
+		final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
 		SWTBotTestUtil.selectEventOnProcess(bot, gmfEditor, "Message2");
 		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
 		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL)
 				.setFocus();
 
-		SWTBotCombo combo = bot
+		final SWTBotCombo combo = bot
 				.comboBoxWithLabel(Messages.selectMessageEventLabel);
 
-		for (String s : combo.items()) {
+		for (final String s : combo.items()) {
 			Assert.assertFalse(
 					"The message throw from the same pool should not be available in the combo.",
 					s.equals("theMessage"));
