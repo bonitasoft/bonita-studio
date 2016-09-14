@@ -549,7 +549,7 @@
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-rest-impl</artifactId>
-                                    <version>1.0.0-SNAPSHOT</version>
+                                    <version>alpha01</version>
                                     <classifier>connector</classifier>
                                     <type>zip</type>
                                 </artifactItem>
