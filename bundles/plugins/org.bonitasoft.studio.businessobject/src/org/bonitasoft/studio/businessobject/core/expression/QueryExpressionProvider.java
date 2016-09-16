@@ -133,7 +133,7 @@ public class QueryExpressionProvider implements IExpressionProvider {
     protected BusinessObjectModel getBusinessObjectModel() {
         final BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         if (fileStore == null) {
-            fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.ZIP_FILENAME);
+            fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
         }
         if (fileStore != null) {
             return fileStore.getContent();
