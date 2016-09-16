@@ -18,29 +18,38 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Collection;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.engine.bdm.model.Index;
 import org.bonitasoft.engine.bdm.model.UniqueConstraint;
 import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.engine.bdm.validator.BusinessObjectModelValidator;
+import org.bonitasoft.engine.bdm.validator.ValidationStatus;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
+import org.bonitasoft.studio.common.jface.dialog.ProblemsDialog;
+import org.bonitasoft.studio.common.jface.dialog.TypedLabelProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
+import org.bonitasoft.studio.engine.ui.dialog.ProcessEnablementProblemsDialog;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -118,21 +127,44 @@ public class ManageBusinessDataModelWizard extends Wizard {
                         fStore.delete();
                     } else {
                         monitor.beginTask(Messages.validatingBDM, IProgressMonitor.UNKNOWN);
-                        for (final BusinessObject bo : businessObjectModel.getBusinessObjects()) {
-                            if (bo.getFields().isEmpty()) {
-                                throw new InvocationTargetException(new Exception(Messages.bind(Messages.atLeastOneAttributeShouldExists,
-                                        NamingUtils.getSimpleName(bo.getQualifiedName()))));
-                            }
-                            for (final Index index : bo.getIndexes()) {
-                                validateIndex(index, bo);
-                            }
-                            for (final UniqueConstraint uc : bo.getUniqueConstraints()) {
-                                validateUniqueConstraint(uc, bo);
-                            }
+                       final ValidationStatus validate = new  BusinessObjectModelValidator().validate(businessObjectModel);
+                        if(!validate.getErrors().isEmpty()){
+                            Display.getDefault().asyncExec(new Runnable() {
+                                
+                                
+                                @Override
+                                public void run() {
+                                    new ProblemsDialog<String>(getShell(), Messages.modelValidationFailedTitle,Messages.modelValidationFailedMsg, MessageDialog.ERROR, new String[]{IDialogConstants.OK_LABEL}) {
+
+                                        @Override
+                                        protected TypedLabelProvider<String> getTypedLabelProvider() {
+                                            return new TypedLabelProvider<String>() {
+
+                                                @Override
+                                                public String getText(String element) {
+                                                    return element;
+                                                }
+
+                                                @Override
+                                                public Image getImage(String element) {
+                                                    return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
+                                                }
+                                            };
+                                        }
+
+                                        @Override
+                                        protected Collection<String> getInput() {
+                                            return validate.getErrors();
+                                        }
+                                    }.open();
+                                }
+                            });
+                            throw new InterruptedException();
+                        }else{
+                            monitor.setTaskName(Messages.saving);
+                            fStore.save(businessObjectModel);
+                            monitor.done();
                         }
-                        monitor.setTaskName(Messages.saving);
-                        fStore.save(businessObjectModel);
-                        monitor.done();
                     }
                 }
             });
