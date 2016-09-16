@@ -322,6 +322,8 @@ public class Messages extends NLS {
 
 	public static String queryReturnTypeWarning;
 
+	public static String modelValidationFailedMsg;
+
     private Messages() {
     }
 
