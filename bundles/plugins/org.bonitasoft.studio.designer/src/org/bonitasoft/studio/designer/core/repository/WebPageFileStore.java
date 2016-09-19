@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -76,6 +77,9 @@ public class WebPageFileStore extends InFolderJSONFileStore {
 
     @Override
     public Set<IRepositoryFileStore> getRelatedFileStore() {
+        if (PlatformUtil.isHeadless()) {
+            return super.getRelatedFileStore();
+        }
         if (webFormBOSArchiveFileStoreProvider != null) {
             try {
                 return webFormBOSArchiveFileStoreProvider.getRelatedFileStore(this);
