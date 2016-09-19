@@ -47,18 +47,18 @@ public class InitWorkspaceAdvisor extends InstallerApplicationWorkbenchAdvisor {
 
         if (repositoryToImport != null && repositoryToImport.length > 0) {
             for (final File workspaceArchive : repositoryToImport) {
-                final String repositoryName = workspaceArchive.getName().substring(0, workspaceArchive.getName().lastIndexOf("."));
+                final String name = workspaceArchive.getName();
+                final String repositoryName = name.substring(0, name.lastIndexOf("."));
                 RepositoryManager.getInstance().setRepository(repositoryName, Repository.NULL_PROGRESS_MONITOR);
                 final IRepository repository = RepositoryManager.getInstance().getRepository(repositoryName);
                 if (repository != null) {
                     try {
-                        final boolean disableConfirmation = FileActionDialog.getDisablePopup();
-                        FileActionDialog.setDisablePopup(false);
-                        final ToProcProcessor importer = ImporterRegistry.getInstance().createImporterFor(workspaceArchive.getName());
+                        FileActionDialog.setDisablePopup(true);
+                        final ToProcProcessor importer = ImporterRegistry.getInstance().createImporterFor(name);
                         if (importer != null) {
+                            importer.setRepository(repositoryName);
                             importer.createDiagram(workspaceArchive.toURL(), Repository.NULL_PROGRESS_MONITOR);
                         }
-                        FileActionDialog.setDisablePopup(disableConfirmation);
                         workspaceArchive.delete();
                     } catch (final Exception e) {
                         BonitaStudioLog.error(e);

@@ -19,6 +19,7 @@ import org.bonitasoft.studio.debug.DebugPlugin;
 import org.bonitasoft.studio.validation.ValidationPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -60,6 +61,9 @@ public class ApplicationPlugin extends AbstractUIPlugin {
         try {
             DebugPlugin.getDefault().getBundle().start();
             ValidationPlugin.getDefault().getBundle().start();
+            if (ConsolePlugin.getDefault() == null) {
+                new ConsolePlugin();
+            }
         } catch (final BundleException e) {
             BonitaStudioLog.error(e);
         }

@@ -33,6 +33,8 @@
 package org.bonitasoft.studio.application;
 
 import org.bonitasoft.studio.application.advisor.InitWorkspaceAdvisor;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.equinox.app.IApplication;
 
 /**
@@ -42,7 +44,7 @@ public class BonitaStudioInitializerApplication extends BonitaStudioApplication 
 
     @Override
     protected BonitaStudioWorkbenchAdvisor createWorkbenchAdvisor() {
-        return new InitWorkspaceAdvisor();
+        return ContextInjectionFactory.make(InitWorkspaceAdvisor.class, EclipseContextFactory.create());
     }
 
 }

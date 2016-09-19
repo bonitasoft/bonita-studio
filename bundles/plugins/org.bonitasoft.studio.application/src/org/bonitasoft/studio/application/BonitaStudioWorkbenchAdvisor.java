@@ -410,7 +410,9 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         executeConfigurationElement(sortedConfigElems);
 
         doInitWorkspace();
-        doStartEngine();
+        if (!PlatformUtil.isHeadless()) {
+            doStartEngine();
+        }
         executeContributions();
     }
 
@@ -466,7 +468,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     private List<IConfigurationElement> retrievePreStartupContribution() {
         final IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
                 "org.bonitasoft.studio.application.prestartup"); //$NON-NLS-1$
-        final List<IConfigurationElement> sortedConfigElems = new ArrayList<IConfigurationElement>();
+        final List<IConfigurationElement> sortedConfigElems = new ArrayList<>();
         for (final IConfigurationElement elem : elems) {
             sortedConfigElems.add(elem);
         }
@@ -590,9 +592,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     protected void doStartEngine() {
-        if (PlatformUtil.isHeadless()) {
-            return;
-        }
         //Avoid deadlock when starting engine caused by ProcessConsoleManger triggering some UI dependent code in a non UI thread.
         new GroovyConsoleLineTracker();
         final StartEngineJob job = new StartEngineJob("Starting BOS Engine");
