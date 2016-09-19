@@ -506,8 +506,16 @@ public class Repository implements IRepository, IJavaContainer {
         operation.setDestinationPath(fileName);
         final Set<IResource> allResources = new HashSet<>();
         for (final IRepositoryStore<?> store : getAllExportableStores()) {
-            allResources.add(store.getResource());
-            allResources.addAll(allRelatedResources(store));
+            for (final IRepositoryFileStore fs : store.getChildren()) {
+                if (fs.canBeExported()) {
+                    allResources.add(fs.getResource());
+                    for (final IRepositoryFileStore relatedFs : fs.getRelatedFileStore()) {
+                        if (relatedFs.canBeExported()) {
+                            allResources.add(relatedFs.getResource());
+                        }
+                    }
+                }
+            }
         }
         operation.setResources(allResources);
         final IStatus status = operation.run(NULL_PROGRESS_MONITOR);
@@ -516,16 +524,6 @@ public class Repository implements IRepository, IJavaContainer {
         } else {
             BonitaStudioLog.info(String.format("%s archive exported successfully.", fileName), CommonRepositoryPlugin.PLUGIN_ID);
         }
-    }
-
-    private List<IResource> allRelatedResources(final IRepositoryStore<?> store) {
-        final List<IResource> relatedResources = new ArrayList<>();
-        for (final IRepositoryFileStore fs : store.getChildren()) {
-            for (final IRepositoryFileStore related : fs.getRelatedFileStore()) {
-                relatedResources.add(related.getResource());
-            }
-        }
-        return relatedResources;
     }
 
     protected void logErrorStatus(final IStatus status) {
