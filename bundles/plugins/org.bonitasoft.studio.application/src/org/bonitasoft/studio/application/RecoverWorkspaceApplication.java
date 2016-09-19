@@ -21,6 +21,8 @@ import java.util.Map;
 
 import org.bonitasoft.studio.application.advisor.RecoverWorkspaceAdvisor;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 
@@ -54,7 +56,9 @@ public class RecoverWorkspaceApplication extends BonitaStudioApplication impleme
 
     @Override
     protected BonitaStudioWorkbenchAdvisor createWorkbenchAdvisor() {
-        return new RecoverWorkspaceAdvisor(newWorkspaceLocation);
+        final RecoverWorkspaceAdvisor advisor =  ContextInjectionFactory.make(RecoverWorkspaceAdvisor.class, EclipseContextFactory.create());
+        advisor.setNewWorkspaceLocation(newWorkspaceLocation);
+        return advisor;
     }
 
 	/* (non-Javadoc)

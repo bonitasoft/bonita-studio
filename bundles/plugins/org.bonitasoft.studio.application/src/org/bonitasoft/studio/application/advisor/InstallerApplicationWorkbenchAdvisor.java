@@ -18,17 +18,15 @@ import org.bonitasoft.studio.application.BonitaStudioWorkbenchAdvisor;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.core.job.WorkspaceInitializationJob;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRunnable;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.jobs.Job;
 
 public abstract class InstallerApplicationWorkbenchAdvisor extends BonitaStudioWorkbenchAdvisor {
 
@@ -51,20 +49,10 @@ public abstract class InstallerApplicationWorkbenchAdvisor extends BonitaStudioW
     public void preStartup() {
         try {
             final IProgressMonitor monitor = new NullProgressMonitor();
-            final IWorkspaceRunnable workspaceOperation = new IWorkspaceRunnable() {
-
-                @Override
-                public void run(final IProgressMonitor monitor) throws CoreException {
-                    final IRepository repository = RepositoryManager.getInstance().getCurrentRepository();
-                    if (!repository.getProject().exists()) {
-                        repository.create(Repository.NULL_PROGRESS_MONITOR);
-                    }
-                }
-            };
-            ResourcesPlugin.getWorkspace().run(workspaceOperation, monitor);
+            disableGroovyDSL();
+            doInitWorkspace();
             BOSWebServerManager.getInstance().copyTomcatBundleInWorkspace(monitor);
             BonitaHomeUtil.initBonitaHome();
-
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
@@ -72,6 +60,11 @@ public abstract class InstallerApplicationWorkbenchAdvisor extends BonitaStudioW
 
     @Override
     public void postStartup() {
+        try {
+            Job.getJobManager().join(WorkspaceInitializationJob.WORKSPACE_INIT_FAMILY, new NullProgressMonitor());
+        } catch (OperationCanceledException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+        }
         executePostStartupHandler();
     }
 

@@ -14,11 +14,13 @@
  */
 package org.bonitasoft.studio.application.advisor;
 
+import static org.bonitasoft.studio.common.repository.Repository.NULL_PROGRESS_MONITOR;
+
 import java.io.File;
 
+import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.resources.IProject;
@@ -30,17 +32,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
-/**
- * @author Romain
- */
+
 public class RecoverWorkspaceAdvisor extends InstallerApplicationWorkbenchAdvisor {
 
-    private final String targetPath;
-
-    public RecoverWorkspaceAdvisor(final String targetPath) {
-        super();
-        this.targetPath = targetPath;
-    }
+    private String targetPath;
 
     /*
      * (non-Javadoc)
@@ -57,10 +52,14 @@ public class RecoverWorkspaceAdvisor extends InstallerApplicationWorkbenchAdviso
         if (defaultDir != null && defaultDir.exists()) {
             super.preStartup();
         } else {
-            MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.invalidWorkspaceTitle, Messages.invalidWorkspace);
+            if (defaultDir.getLocation() != null) {
+                MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.invalidWorkspaceTitle,
+                        Messages.bind(Messages.invalidWorkspace, defaultDir.getLocation().toFile().getParentFile().getAbsolutePath()));
+            } else {
+                BonitaStudioLog.error("Invalid input workspace, default project not found.", ApplicationPlugin.PLUGIN_ID);
+            }
             PlatformUI.getWorkbench().close();
         }
-
     }
 
     /*
@@ -71,12 +70,13 @@ public class RecoverWorkspaceAdvisor extends InstallerApplicationWorkbenchAdviso
     protected void executePostStartupHandler() {
         for (final IRepository repo : RepositoryManager.getInstance().getAllRepositories()) {
             if (!repo.isShared()) {
-                RepositoryManager.getInstance().setRepository(repo.getName(), false, Repository.NULL_PROGRESS_MONITOR);
+                RepositoryManager.getInstance().setRepository(repo.getName(), false, NULL_PROGRESS_MONITOR);
+                RepositoryManager.getInstance().getRepository(repo.getName()).open(NULL_PROGRESS_MONITOR);
                 repo.exportToArchive(targetPath + File.separatorChar + repo.getName() + ".bos");
                 RepositoryManager.getInstance().getCurrentRepository().close();
             }
         }
-        RepositoryManager.getInstance().setRepository("default", Repository.NULL_PROGRESS_MONITOR);
+        RepositoryManager.getInstance().setRepository("default", NULL_PROGRESS_MONITOR);
     }
 
     /*
@@ -89,6 +89,10 @@ public class RecoverWorkspaceAdvisor extends InstallerApplicationWorkbenchAdviso
         if (defaultDir != null && defaultDir.exists()) {
             super.postStartup();
         }
+    }
+
+    public void setNewWorkspaceLocation(String newWorkspaceLocation) {
+        this.targetPath = newWorkspaceLocation;
     }
 
 }
