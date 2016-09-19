@@ -548,9 +548,9 @@
                                  <!--REST CONNECTORS -->
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-rest-impl</artifactId>
-                                    <version>alpha01</version>
-                                    <classifier>connector</classifier>
+                                    <artifactId>bonita-connector-rest</artifactId>
+                                    <version>alpha02</version>
+                                    <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
                             </artifactItems>
