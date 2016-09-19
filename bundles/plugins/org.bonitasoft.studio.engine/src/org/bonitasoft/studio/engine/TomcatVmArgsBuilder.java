@@ -73,6 +73,7 @@ public class TomcatVmArgsBuilder {
         } catch (final IOException e) {
             BonitaStudioLog.error(e);
         }
+        addSystemProperty(args, "bonita.csrf.cookie.path", "\"/\"");
         addUIDesignerOptions(args);
         final String res = args.toString();
         if (System.getProperty("log.tomcat.vm.args") != null) {

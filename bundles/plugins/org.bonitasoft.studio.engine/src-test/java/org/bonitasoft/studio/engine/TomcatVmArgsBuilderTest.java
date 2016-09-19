@@ -89,4 +89,10 @@ public class TomcatVmArgsBuilderTest {
     public void should_launch_tomcat_with_768m_of_max_memoty_heap_space() throws Exception {
         assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Xmx768m");
     }
+
+    @Test
+    public void should_launch_tomcat_with_bonita_csrf_cookie_path() throws Exception {
+        assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Dbonita.csrf.cookie.path=\"/\"");
+    }
 }
+
