@@ -8,29 +8,21 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.diagram.application;
 
-import org.bonitasoft.studio.swtbot.framework.BotBase;
-import org.bonitasoft.studio.swtbot.framework.BotQAUtil;
+import org.bonitasoft.studio.swtbot.framework.BotPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotPageflowPropertySection;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
-/**
- * Application Diagram properties view.
- * 
- * @author Joachim Segala
- */
-public class BotApplicationDiagramPropertiesView extends BotBase {
 
-    public BotApplicationDiagramPropertiesView(final SWTGefBot bot) {
-        super(bot);
+public class BotApplicationDiagramPropertiesView extends BotPropertiesView {
+
+    public BotApplicationDiagramPropertiesView(final SWTGefBot bot, SWTBotView botView) {
+        super(bot, botView);
     }
 
-    /**
-     * Select the pageflow tab.
-     * 
-     * @return
-     */
+
     public BotPageflowPropertySection selectPageflowTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Pageflow");
+        selectTab("Pageflow");
         return new BotPageflowPropertySection(bot);
     }
 

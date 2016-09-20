@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.properties.sections.subprocess;
+package org.bonitasoft.studio.properties.sections.callActivity;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.toArray;

@@ -14,49 +14,54 @@
  */
 package org.bonitasoft.studio.swtbot.framework.diagram.execution;
 
-import org.bonitasoft.studio.swtbot.framework.BotBase;
-import org.bonitasoft.studio.swtbot.framework.BotQAUtil;
+import org.bonitasoft.studio.swtbot.framework.BotPropertiesView;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.BotCallActivityInputMappingPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.connectors.BotConnectorsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.operations.BotOperationsPropertySection;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
-/**
- * @author aurelie
- */
-public class BotExecutionDiagramPropertiesView extends BotBase {
 
-    public BotExecutionDiagramPropertiesView(final SWTGefBot bot) {
-        super(bot);
+public class BotExecutionDiagramPropertiesView extends BotPropertiesView {
+
+
+    public BotExecutionDiagramPropertiesView(final SWTGefBot bot, SWTBotView botView) {
+        super(bot, botView);
     }
 
     public BotConnectorsPropertySection selectConnectorsInTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Connectors in");
+        selectTab("Connectors in");
         return new BotConnectorsPropertySection(bot);
     }
 
     public BotOperationsPropertySection selectOperationTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Operations");
+        selectTab("Operations");
         return new BotOperationsPropertySection(bot);
     }
 
     public BotContractPropertySection selectContractTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Contract");
+        selectTab("Contract");
         return new BotContractPropertySection(bot);
     }
 
     public BotFormMappingPropertySection selectInstantiationFormTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Instantiation form");
+        selectTab("Instantiation form");
         return new BotFormMappingPropertySection(bot);
     }
 
     public BotFormMappingPropertySection selectOverviewFormTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Overview form");
+        selectTab("Overview form");
         return new BotFormMappingPropertySection(bot);
     }
 
     public BotFormMappingPropertySection selectFormTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Form");
+        selectTab("Form");
         return new BotFormMappingPropertySection(bot);
+    }
+
+    public BotCallActivityInputMappingPropertySection selectDataToSendTab() {
+        selectTab("Data to send");
+        return new BotCallActivityInputMappingPropertySection(bot);
     }
 }

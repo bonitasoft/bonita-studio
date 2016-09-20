@@ -8,8 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.diagram.general;
 
-import org.bonitasoft.studio.swtbot.framework.BotBase;
-import org.bonitasoft.studio.swtbot.framework.BotQAUtil;
+import org.bonitasoft.studio.swtbot.framework.BotPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorAssignementPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorDefinitionPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotDiagramPropertySection;
@@ -17,6 +16,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotGeneral
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotReccurencePropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.lane.BotLanePropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.pool.BotPoolPropertySection;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**
@@ -24,10 +24,10 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
  *
  * @author Joachim Segala
  */
-public class BotGeneralDiagramPropertiesView extends BotBase {
+public class BotGeneralDiagramPropertiesView extends BotPropertiesView {
 
-    public BotGeneralDiagramPropertiesView(final SWTGefBot bot) {
-        super(bot);
+    public BotGeneralDiagramPropertiesView(final SWTGefBot bot, SWTBotView botView) {
+        super(bot, botView);
     }
 
     /**
@@ -36,27 +36,25 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
      * @return
      */
     public BotGeneralPropertySection selectGeneralTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "General");
+        selectTab("General");
         return new BotGeneralPropertySection(bot);
     }
 
     public BotDiagramPropertySection selectDiagramTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Diagram");
+        selectTab("Diagram");
         return new BotDiagramPropertySection(bot);
     }
 
     public void selectPortalTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Portal");
-        //TODO:
+        selectTab("Portal");
     }
-
     /**
      * Select the pool tab.
      *
      * @return
      */
     public BotPoolPropertySection selectPoolTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Pool");
+        selectTab("Pool");
         return new BotPoolPropertySection(bot);
     }
 
@@ -66,30 +64,23 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
      * @return
      */
     public BotLanePropertySection selectLaneTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Lane");
+        selectTab("Lane");
         return new BotLanePropertySection(bot);
     }
 
     public BotActorDefinitionPropertySection selectActorsDefinitionTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Actors");
+        selectTab("Actors");
         return new BotActorDefinitionPropertySection(bot);
     }
 
     public BotActorAssignementPropertySection selectActorAssignementTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Actors");
+        selectTab("Actors");
         return new BotActorAssignementPropertySection(bot);
     }
 
     public BotReccurencePropertySection selectIterationTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Iteration");
+        selectTab("Iteration");
         return new BotReccurencePropertySection(bot);
     }
-
-    public BotCallActivityMappingPropertySection selectMappingTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Mapping");
-        return new BotCallActivityMappingPropertySection(bot);
-    }
-
-
 
 }

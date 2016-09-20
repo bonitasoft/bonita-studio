@@ -40,7 +40,8 @@ public class GeneralExtensibleGridPropertySection extends ExtensibleGridProperty
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection#addContributions()
 	 */
-	protected void addContributions() {
+	@Override
+    protected void addContributions() {
 		addContribution(new ProcessElementNameContribution(getTabbedPropertySheetPage(),this));
 		addContribution(new MessageFlowContribution());
 		addContribution(new VersionGridPropertySectionContribution());
@@ -49,16 +50,15 @@ public class GeneralExtensibleGridPropertySection extends ExtensibleGridProperty
 		addContribution(new CatchLinkEventSectionContribution());
 		addContribution(new ThrowLinkEventSectionContribution());
 		addContribution(new LinkTypeSelectionSectionContribution(getTabbedPropertySheetPage()));
-		ActivityTypeSelectionGridPropertySectionContribution activityTypeContrib = new ActivityTypeSelectionGridPropertySectionContribution(getTabbedPropertySheetPage());
+		final ActivityTypeSelectionGridPropertySectionContribution activityTypeContrib = new ActivityTypeSelectionGridPropertySectionContribution(getTabbedPropertySheetPage());
 		addContribution(activityTypeContrib);
-		MessageEventTypeSelectionGridPropertySectionContribution messageEventContrib = new MessageEventTypeSelectionGridPropertySectionContribution(getTabbedPropertySheetPage());
+		final MessageEventTypeSelectionGridPropertySectionContribution messageEventContrib = new MessageEventTypeSelectionGridPropertySectionContribution(getTabbedPropertySheetPage());
 		addContribution(messageEventContrib);
 		addContribution(new TimerEventConditionContribution());
 		addContribution(new CatchEventEventSelectionContribution());
 		addContribution(new SignalEventEventSelectionContribution());
-		addContribution(new SubProcessPropertySectionContribution());
 		addContribution(new TransitionConditionContribution());
-		GatewayTypeSelectionGridPropertySectionContribution gatewayTypeContrib = new GatewayTypeSelectionGridPropertySectionContribution(getTabbedPropertySheetPage());
+		final GatewayTypeSelectionGridPropertySectionContribution gatewayTypeContrib = new GatewayTypeSelectionGridPropertySectionContribution(getTabbedPropertySheetPage());
 		addContribution(gatewayTypeContrib);
 		addContribution(new TaskPriorityPropertySection());
 		addContribution(new ErrorEventSectionContribution());
