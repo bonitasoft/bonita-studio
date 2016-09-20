@@ -26,14 +26,16 @@ import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributo
 public class BonitaApplicationPropertiesBrowserPage extends
 		BonitaPropertiesBrowserPage {
 
-	public BonitaApplicationPropertiesBrowserPage(
+    public static final String VIEW_ID = "org.bonitasoft.studio.views.properties.application";
+
+    public BonitaApplicationPropertiesBrowserPage(
 			ITabbedPropertySheetPageContributor contributor) {
 		super(contributor);
 	}
 
 	@Override
 	protected String getViewID() {
-		return "org.bonitasoft.studio.views.properties.application";
+        return VIEW_ID;
 	}
 
 }

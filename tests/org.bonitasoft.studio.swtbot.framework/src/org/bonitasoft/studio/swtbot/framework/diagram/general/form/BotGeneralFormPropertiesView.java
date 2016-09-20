@@ -9,12 +9,12 @@
 package org.bonitasoft.studio.swtbot.framework.diagram.general.form;
 
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.swtbot.framework.BotBase;
-import org.bonitasoft.studio.swtbot.framework.BotQAUtil;
+import org.bonitasoft.studio.swtbot.framework.BotPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.data.BotDataFormPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.general.BotGeneralPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.validator.BotValidatorPropertySection;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**
@@ -22,39 +22,37 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
  *
  * @author Joachim Segala
  */
-public class BotGeneralFormPropertiesView extends BotBase {
+public class BotGeneralFormPropertiesView extends BotPropertiesView {
 
-    public BotGeneralFormPropertiesView(final SWTGefBot bot) {
-        super(bot);
+    public BotGeneralFormPropertiesView(final SWTGefBot bot, SWTBotView botView) {
+        super(bot, botView);
     }
 
     public BotGeneralPropertySection selectGeneralTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "General");
+        selectTab("General");
         return new BotGeneralPropertySection(bot);
     }
 
     public void selectUserAidsTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "User aids");
-        //TODO:
+        selectTab("User aids");
     }
 
     public void selectOptionsTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Options");
-        //TODO:
+        selectTab("Options");
     }
 
     public BotDataFormPropertySection selectDataTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Data");
+        selectTab("Data");
         return new BotDataFormPropertySection(bot);
     }
 
     public void selectActionsTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Action");
+        selectTab("Action");
         //TODO:
     }
 
     public BotValidatorPropertySection selectValidatorsTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Validators");
+        selectTab("Validators");
         return new BotValidatorPropertySection(bot);
     }
 
