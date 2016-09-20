@@ -62,9 +62,10 @@ public class BarExporterTest {
         final String editorTitle = activeEditor.getTitle();
         assertFalse("Error: first diagram name is empty.", editorTitle.isEmpty());
 
-        new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab().selectInstantiationFormTab().selectLegacy();
+        final BotExecutionDiagramPropertiesView executionTab = new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab();
+        executionTab.selectInstantiationFormTab().selectLegacy();
         new BotGefProcessDiagramEditor(bot).selectElement("Step1");
-        new BotExecutionDiagramPropertiesView(bot).selectFormTab().selectLegacy();
+        executionTab.selectFormTab().selectLegacy();
 
         // get the GEF editor to activate tools
         final SWTBotGefEditor gmfEditor = bot.gefEditor(editorTitle);

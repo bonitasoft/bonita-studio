@@ -15,6 +15,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.execution.BotExecutionDiag
 import org.bonitasoft.studio.swtbot.framework.diagram.general.BotGeneralDiagramPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.validation.BotValidationPropertiesView;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**
@@ -34,18 +35,21 @@ public class BotProcessDiagramPropertiesViewFolder extends BotBase {
      * @return
      */
     public BotGeneralDiagramPropertiesView selectGeneralTab() {
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-        return new BotGeneralDiagramPropertiesView(bot);
+        final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL);
+        view.show();
+        return new BotGeneralDiagramPropertiesView(bot, view);
     }
     
     public BotDataDiagramPropertiesView selectDataTab(){
-    	bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
-    	return new BotDataDiagramPropertiesView(bot);
+        final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA);
+        view.show();
+        return new BotDataDiagramPropertiesView(bot, view);
     }
     
     public BotExecutionDiagramPropertiesView selectExecutionTab(){
-    	bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION).show();
-    	return new BotExecutionDiagramPropertiesView(bot);
+        final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION);
+        view.show();
+        return new BotExecutionDiagramPropertiesView(bot, view);
     }
     
 
@@ -55,18 +59,17 @@ public class BotProcessDiagramPropertiesViewFolder extends BotBase {
      * @return
      */
     public BotApplicationDiagramPropertiesView selectApplicationTab() {
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
-        return new BotApplicationDiagramPropertiesView(bot);
+        final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
+        view.show();
+        return new BotApplicationDiagramPropertiesView(bot, view);
     }
 
     public void selectAppearanceTab() {
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPEARANCE).show();
-        //TODO:
     }
 
     public void selectSimulationTab() {
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_SIMULATION).show();
-        //TODO:
     }
 
     public BotValidationPropertiesView selectValidationStatusTab() {
