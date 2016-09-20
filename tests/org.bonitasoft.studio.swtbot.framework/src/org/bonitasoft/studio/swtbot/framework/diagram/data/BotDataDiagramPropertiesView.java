@@ -15,41 +15,32 @@
 package org.bonitasoft.studio.swtbot.framework.diagram.data;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.swtbot.framework.BotBase;
-import org.bonitasoft.studio.swtbot.framework.BotQAUtil;
+import org.bonitasoft.studio.swtbot.framework.BotPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotDocumentsPropertySection;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
-/**
- * @author aurelie
- */
-public class BotDataDiagramPropertiesView extends BotBase {
 
-    /**
-     * @param bot
-     */
-    public BotDataDiagramPropertiesView(final SWTGefBot bot) {
-        super(bot);
+public class BotDataDiagramPropertiesView extends BotPropertiesView {
+
+    public BotDataDiagramPropertiesView(final SWTGefBot bot, SWTBotView botView) {
+        super(bot, botView);
     }
 
-    /**
-     * Select the data tab.
-     *
-     * @return
-     */
+
     public BotDataPropertySection selectLocalDataTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, SWTBotConstants.VIEWS_PROPERTIES_TASK_DATA_VARIABLES);
+        selectTab(SWTBotConstants.VIEWS_PROPERTIES_TASK_DATA_VARIABLES);
         return new BotDataPropertySection(bot);
     }
 
     public BotDataPropertySection selectPoolDataTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, SWTBotConstants.VIEWS_PROPERTIES_POOL_DATA_VARIABLES);
+        selectTab(SWTBotConstants.VIEWS_PROPERTIES_POOL_DATA_VARIABLES);
         return new BotDataPropertySection(bot);
     }
 
     public BotDocumentsPropertySection selectDocumentsTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Documents");
+        selectTab("Documents");
         return new BotDocumentsPropertySection(bot);
     }
 

@@ -146,7 +146,7 @@ public class TestWebPurchase implements SWTBotConstants {
         choices.add("Reject");
         choices.add("More Info");
         options.put("Approval", choices);
-        bot.button(Messages.Add).click();
+        bot.button(Messages.AddSimple).click();
         SWTBotTestUtil.addListOfOptionData(bot, "decision", "Text", options, false, "Approve");
         createSalesReviewForm(gmfEditor);
         bot.editorByTitle(diagramTitle).show();

@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -1085,6 +1086,20 @@ public class SWTBotTestUtil implements SWTBotConstants {
         proposalTAble.select(row);
         SWTBotTestUtil.pressEnter();
         bot.waitUntil(Conditions.shellCloses(proposalShell));
+    }
+
+    public static List<String> listExpressionProposal(final SWTBot bot, final int index) {
+        bot.toolbarButtonWithId(SWTBOT_ID_EXPRESSIONVIEWER_DROPDOWN, index).click();
+        final SWTBotShell proposalShell = bot.shellWithId(SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_SHELL);
+        final SWTBot proposalBot = proposalShell.bot();
+        final SWTBotTable proposalTAble = proposalBot.tableWithId(SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_TABLE);
+
+        final List<String> result = new ArrayList<>();
+        for (int i = 0; i < proposalTAble.rowCount(); i++) {
+            result.add(proposalTAble.getTableItem(i).getText());
+        }
+        proposalShell.close();
+        return result;
     }
 
     public static void pressUndo() {

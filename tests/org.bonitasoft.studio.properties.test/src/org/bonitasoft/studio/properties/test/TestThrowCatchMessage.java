@@ -78,7 +78,7 @@ public class TestThrowCatchMessage implements SWTBotConstants {
 				Conditions.widgetIsEnabled(bot.textWithLabel(Messages.name)),
 				10000);
 		SWTBotTestUtil.selectTabbedPropertyView(bot, sectionTitle);
-		bot.button(Messages.Add).click();
+        bot.button(Messages.AddSimple).click();
 		bot.waitUntil(Conditions
 				.shellIsActive(Messages.messageEventAddWizardPageTitle));
 		assertFalse(IDialogConstants.FINISH_LABEL
