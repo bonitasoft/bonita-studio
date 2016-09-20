@@ -18,34 +18,35 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.model.process.InputMappingAssignationType;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotCCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 
 
-public class BotCallActivityMappingPropertySection extends BotBase {
+public class BotCallActivityInputMappingPropertySection extends BotBase {
 
-    public BotCallActivityMappingPropertySection(final SWTGefBot bot) {
+    public BotCallActivityInputMappingPropertySection(final SWTGefBot bot) {
         super(bot);
     }
 
-    public BotCallActivityMappingPropertySection autoMap() {
-        bot.button(Messages.autoMap).click();
+    public BotCallActivityInputMappingPropertySection fetchContract() {
+        bot.button(Messages.fetchContract).click();
         return this;
     }
 
-    public BotCallActivityMappingPropertySection addInputMapping() {
+    public BotCallActivityInputMappingPropertySection addInputMapping() {
         bot.buttonWithId(SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_ADD_INPUT).click();
         return this;
     }
 
-    public BotCallActivityMappingPropertySection updateInputMapping(final int index, final String processData,
+    public BotCallActivityInputMappingPropertySection updateInputMapping(final int index, final String processData, final String returnType,
             final InputMappingAssignationType assignationType,
             final String calledProcessElement) {
         if (processData != null) {
-            bot.ccomboBoxWithId(SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_SOURCEDATA, index).setSelection(processData);
+            SWTBotTestUtil.selectExpressionProposal(bot, processData, returnType, index);
         }
         if (assignationType != null) {
-            final SWTBotCCombo assignationTypeCombo = bot.ccomboBoxWithId(SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_ASSIGNATIONTYPE, index);
+            final SWTBotCombo assignationTypeCombo = bot.comboBoxWithId(SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_ASSIGNATIONTYPE, index);
             switch (assignationType) {
                 case CONTRACT_INPUT:
                     assignationTypeCombo.setSelection(Messages.assignToContractInput);
@@ -63,7 +64,7 @@ public class BotCallActivityMappingPropertySection extends BotBase {
         return this;
     }
 
-    public BotCallActivityMappingPropertySection deleteInputMapping(final int index) {
+    public BotCallActivityInputMappingPropertySection deleteInputMapping(final int index) {
         bot.buttonWithId(SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_DELETE_INPUT, index).click();
         return this;
     }

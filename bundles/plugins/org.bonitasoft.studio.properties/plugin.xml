@@ -45,12 +45,24 @@
                id="tab.lane"
                label="%tab.lane.label">
          </propertyTab>
+         <propertyTab
+               afterTab="tab.userxp"
+               category="domain"
+               id="tab.callActivity"
+               label="%tab.callActivity.label">
+         </propertyTab>
  
          <propertyTab
-               afterTab="tab.data"
+               afterTab="tab.connectors.in"
                category="domain"
-               id="tab.subprocessMapping"
-               label="%tab.subprocessMapping.label">
+               id="tab.callActivityMapping.input"
+               label="%tab.callActivityMapping.input.label">
+         </propertyTab>
+         <propertyTab
+               afterTab="tab.callActivityMapping.input"
+               category="domain"
+               id="tab.callActivityMapping.output"
+               label="%tab.callActivityMapping.output.label">
          </propertyTab>
          <propertyTab
                afterTab="tab.general"
@@ -129,7 +141,7 @@
                label="%tab.operations.label">
          </propertyTab>
          <propertyTab
-               afterTab="tab.data"
+               afterTab="tab.callActivityMapping.output"
                category="domain"
                id="tab.loop"
                label="%tab.loop.label">
@@ -199,12 +211,28 @@
               viewID="org.bonitasoft.studio.views.properties.process.general">
         </propertySection>
         <propertySection
-              class="org.bonitasoft.studio.properties.sections.subprocess.ParametersMappingSection"
+              class="org.bonitasoft.studio.properties.sections.callActivity.CallActivitySection"
               enablesFor="1"
               filter="org.bonitasoft.studio.properties.filters.SubProcessFilter"
-              id="SubProcessMappingSection"
-              tab="tab.subprocessMapping"
+              id="CallActivitySection"
+              tab="tab.callActivity"
               viewID="org.bonitasoft.studio.views.properties.process.general">
+        </propertySection>
+        <propertySection
+              class="org.bonitasoft.studio.properties.sections.callActivity.InputParametersMappingSection"
+              enablesFor="1"
+              filter="org.bonitasoft.studio.properties.filters.SubProcessFilter"
+              id="InputMappingSection"
+              tab="tab.callActivityMapping.input"
+              viewID="org.bonitasoft.studio.views.properties.process.execution">
+        </propertySection>
+        <propertySection
+              class="org.bonitasoft.studio.properties.sections.callActivity.OutputParametersMappingSection"
+              enablesFor="1"
+              filter="org.bonitasoft.studio.properties.filters.SubProcessFilter"
+              id="OutputMappingSection"
+              tab="tab.callActivityMapping.output"
+              viewID="org.bonitasoft.studio.views.properties.process.execution">
         </propertySection>
         <propertySection
               class="org.bonitasoft.studio.properties.sections.userxp.UserXPSection"

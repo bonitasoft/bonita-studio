@@ -455,6 +455,24 @@ public class Messages extends NLS {
     public static String sectionDescriptionProcessEntryForm;
 
     public static String processScopeVariableWarning;
+    public static String dataToSendSectionDescription;
+    public static String dataToRecieveSectionDescription;
+    public static String dataFromRootProcess;
+    public static String dataInCalledProcess;
+    public static String dataFromCalledProcess;
+    public static String dataInRootProcess;
+
+    public static String configureDataToSend;
+
+    public static String fetchContract;
+
+    public static String processNotFoundExcpetion;
+
+    public static String latest;
+
+    public static String noProcessToCallDefined;
+
+    public static String noContractDefinedException;
 
     static {
         // initialize resource bundle

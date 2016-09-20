@@ -38,37 +38,36 @@ public class CallActivityConstraint extends AbstractLiveValidationMarkerConstrai
 
     @Override
     protected IStatus performBatchValidation(final IValidationContext ctx) {
-        final CallActivity subProcess = (CallActivity) ctx.getTarget();
-        final Expression subprocessName = subProcess.getCalledActivityName();
+        final CallActivity callActivity = (CallActivity) ctx.getTarget();
+        final Expression subprocessName = callActivity.getCalledActivityName();
         if (subprocessName == null || subprocessName.getContent() == null || subprocessName.getContent().isEmpty()) {
-            return ctx.createFailureStatus(new Object[] { Messages.Validation_NoSubProcess });
+            return ctx.createFailureStatus(new Object[] { Messages.bind(Messages.Validation_NoSubProcess, callActivity.getName()) });
         }
-        final Expression subprocessVersion = subProcess.getCalledActivityVersion();
+        final Expression subprocessVersion = callActivity.getCalledActivityVersion();
         final AbstractProcess subProc = findSubProcTargeted(subprocessName, subprocessVersion);
 
         if (subProc == null) {
             return ctx.createSuccessStatus();
         }
         final List<Data> data = ModelHelper.getAccessibleData(subProc);
-
-        for (final OutputMapping out : subProcess.getOutputMappings()) {
+        for (final OutputMapping out : callActivity.getOutputMappings()) {
             if (out.getProcessTarget() == null) {
                 return ctx.createFailureStatus(new Object[] { Messages.bind(Messages.Validation_Subprocess_OutputMapping_SourceData_Not_Found,
-                        out.getSubprocessSource()) });
+                        callActivity.getName()) });
             }
             if (!exist(out.getSubprocessSource(), data)) {
                 return ctx.createFailureStatus(new Object[] { Messages.bind(Messages.Validation_Subprocess_OutputMapping_SourceData_Not_Found,
-                        out.getSubprocessSource()) });
+                        callActivity.getName()) });
             }
         }
-        for (final InputMapping in : subProcess.getInputMappings()) {
+        for (final InputMapping in : callActivity.getInputMappings()) {
             if (in.getProcessSource() == null) {
                 return ctx.createFailureStatus(new Object[] { Messages.bind(Messages.Validation_Subprocess_InputMapping_TargetData_Not_Found,
-                        in.getSubprocessTarget()) });
+                        callActivity.getName()) });
             }
             if (InputMappingAssignationType.DATA == in.getAssignationType() && !exist(in.getSubprocessTarget(), data)) {
                 return ctx.createFailureStatus(new Object[] { Messages.bind(Messages.Validation_Subprocess_InputMapping_TargetData_Not_Found,
-                        in.getSubprocessTarget()) });
+                        callActivity.getName()) });
             }
         }
 

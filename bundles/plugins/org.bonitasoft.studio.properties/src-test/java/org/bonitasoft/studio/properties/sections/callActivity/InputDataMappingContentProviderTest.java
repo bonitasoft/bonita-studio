@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.properties.sections.subprocess;
+package org.bonitasoft.studio.properties.sections.callActivity;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
@@ -32,6 +32,7 @@ import org.bonitasoft.studio.data.provider.DataExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.builders.CallActivityBuilder;
+import org.bonitasoft.studio.properties.sections.callActivity.InputDataMappingContentProvider;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.After;
