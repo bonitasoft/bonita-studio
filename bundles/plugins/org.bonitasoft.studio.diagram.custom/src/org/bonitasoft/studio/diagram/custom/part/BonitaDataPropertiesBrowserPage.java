@@ -16,6 +16,8 @@ import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributo
 public class BonitaDataPropertiesBrowserPage extends
         BonitaPropertiesBrowserPage {
 
+    public static final String VIEW_ID = "org.bonitasoft.studio.views.properties.process.data";
+
     public BonitaDataPropertiesBrowserPage(
             final ITabbedPropertySheetPageContributor contributor) {
         super(contributor);
@@ -43,7 +45,7 @@ public class BonitaDataPropertiesBrowserPage extends
 
     @Override
     protected String getViewID() {
-        return "org.bonitasoft.studio.views.properties.process.data";
+        return VIEW_ID;
     }
 
 }

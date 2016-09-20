@@ -10,6 +10,7 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.form;
 
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 
@@ -30,8 +31,9 @@ public class BotFormPropertySection extends BotBase {
      * @return
      */
     public BotGeneralFormPropertiesView selectGeneralTab() {
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
-        return new BotGeneralFormPropertiesView(bot);
+        final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL);
+        view.show();
+        return new BotGeneralFormPropertiesView(bot, view);
     }
 
 }

@@ -26,14 +26,16 @@ import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributo
 public class BonitaGeneralProcessPropertiesBrowserPage extends
 		BonitaPropertiesBrowserPage {
 
-	public BonitaGeneralProcessPropertiesBrowserPage(
+    public static final String VIEW_ID = "org.bonitasoft.studio.views.properties.process.general";
+
+    public BonitaGeneralProcessPropertiesBrowserPage(
 			ITabbedPropertySheetPageContributor contributor) {
 		super(contributor);
 	}
 
 	@Override
 	protected String getViewID() {
-		return "org.bonitasoft.studio.views.properties.process.general";
+        return VIEW_ID;
 	}
 
 }
