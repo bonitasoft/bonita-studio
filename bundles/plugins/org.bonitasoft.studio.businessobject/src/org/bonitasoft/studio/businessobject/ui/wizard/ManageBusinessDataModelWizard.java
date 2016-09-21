@@ -170,9 +170,9 @@ public class ManageBusinessDataModelWizard extends Wizard {
             });
         } catch (final InvocationTargetException e) {
             MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.modelValidationFailedTitle, e.getCause().getMessage());
+            BonitaStudioLog.error(e);
             return false;
         } catch (final InterruptedException e) {
-            BonitaStudioLog.error(e);
             return false;
         }
         return true;
