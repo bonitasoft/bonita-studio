@@ -19,9 +19,11 @@ package org.bonitasoft.studio.migration.custom.migration;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edapt.spi.migration.AttributeSlot;
 import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
 import org.eclipse.emf.edapt.spi.migration.MetamodelResource;
@@ -56,6 +58,14 @@ public class InstanceBuilder {
 
     public InstanceBuilder withFeature(final EStructuralFeature feature, final Object value) {
         instance.set(feature, value);
+        return this;
+    }
+    
+    public InstanceBuilder withAttributeSlot(EAttribute attribute, Object value) {
+        AttributeSlot attributeSlot = MigrationFactory.eINSTANCE.createAttributeSlot();
+        attributeSlot.setEAttribute(attribute);
+        attributeSlot.getValues().add(value);
+        instance.getSlots().add(attributeSlot);
         return this;
     }
 
@@ -98,5 +108,7 @@ public class InstanceBuilder {
             model = null;
         }
     }
+
+
 
 }

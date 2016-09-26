@@ -68,12 +68,6 @@ public class BusinessObjectTypeCustomMigrationTest {
         when(diagramInstance.get("datatypes")).thenReturn(emptyDatatypesList);
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
 
     @Test
     public void should_migrateAfter_Add_the_businessObjectType_InDiagram_IfNotExists() throws Exception {
