@@ -1721,14 +1721,14 @@ public class ProcBuilder implements IProcBuilder {
         }
     }
 
-    @Override
-    public void setStepDuration(final long duration) throws ProcBuilderException {
-        if (!(currentStep instanceof Activity)) {
-            throw new ProcBuilderException("Impossible to set duration property on " + currentStep != null ? ((Element) currentStep).getName() : "null");
-        }
-        commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getActivity_Duration(),
-                String.valueOf(duration)));
-    }
+//    @Override
+//    public void setStepDuration(final long duration) throws ProcBuilderException {
+//        if (!(currentStep instanceof Activity)) {
+//            throw new ProcBuilderException("Impossible to set duration property on " + currentStep != null ? ((Element) currentStep).getName() : "null");
+//        }
+//        commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getActivity_Duration(),
+//                String.valueOf(duration)));
+//    }
 
     @Override
     public void addLoopCondition(final Expression loopConditionExpression, final String maxLoopExpression, final TestTimeType testTime)

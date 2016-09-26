@@ -52,7 +52,8 @@ Require-Bundle: org.bonitasoft.studio.diagram;bundle-version="1.0.0",
  org.bonitasoft.studio.tests-utils;bundle-version="7.1.0";resolution:=optional,
  org.eclipse.jface,
  org.eclipse.e4.ui.model.workbench,
- org.eclipse.e4.ui.workbench
+ org.eclipse.e4.ui.workbench,
+ org.eclipse.e4.core.contexts
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.properties.filters,
