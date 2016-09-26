@@ -348,7 +348,8 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
         srcCombo.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.DOCUMENT_TYPE));
 
-        srcCombo.setInput(selectionProvider.getAdapter(EObject.class));
+        dbc.bindValue(ViewersObservables.observeInput(srcCombo),
+                ViewersObservables.observeSingleSelection(selectionProvider));
         if (mapping.getProcessSource() == null) {
             getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), mapping, ProcessPackage.Literals.INPUT_MAPPING__PROCESS_SOURCE,
                     ExpressionHelper.createConstantExpression("", String.class.getName())));

@@ -35,6 +35,6 @@ public class EMFPredicatesTest {
 
     @Test(expected = AssertionError.class)
     public void throw_AssertionError_if_feature_is_not_found() throws Exception {
-        featureNotNull(ProcessPackage.Literals.ACTIVITY__DURATION).apply(aPool().build());
+        featureNotNull(ProcessPackage.Literals.TASK__EXPECTED_DURATION).apply(aPool().build());
     }
 }
