@@ -524,7 +524,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//AbstractTimerEvent/condition"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Activity">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Activity/duration"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Activity/BoundaryIntermediateEvents"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Actor">
@@ -838,6 +837,7 @@
     <genClasses ecoreClass="process.ecore#//Task">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Task/overrideActorsOfTheLane"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Task/priority"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Task/expectedDuration"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//TargetElement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//TargetElement/incoming"/>

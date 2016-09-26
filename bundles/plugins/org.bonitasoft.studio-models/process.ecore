@@ -43,8 +43,6 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Activity" eSuperTypes="#//FlowElement #//ConnectableElement #//OperationContainer #//MultiInstantiable">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        defaultValueLiteral="3600000"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="BoundaryIntermediateEvents"
         upperBound="-1" eType="#//BoundaryEvent" containment="true"/>
   </eClassifiers>
@@ -599,6 +597,8 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
         defaultValueLiteral="2"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expectedDuration" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TargetElement" abstract="true" interface="true"
       eSuperTypes="#//Element">

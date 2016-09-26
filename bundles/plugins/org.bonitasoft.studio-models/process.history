@@ -3162,17 +3162,11 @@
           <referenceValue href="process.ecore#//OperationContainer"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14MMdGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_14MMdGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_jhhR4oCgEeaCgs3tERkvbw">
         <target href="process.ecore#//Activity"/>
-        <element href="process.ecore#//Activity/duration"/>
-        <changes xsi:type="history:Set" xmi:id="_14MMdWnREeaTLbmqFFisdA" featureName="name" dataValue="duration">
-          <element href="process.ecore#//Activity/duration"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14MMdmnREeaTLbmqFFisdA" featureName="defaultValueLiteral" dataValue="3600000">
-          <element href="process.ecore#//Activity/duration"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14MMd2nREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//Activity/duration"/>
+        <changes xsi:type="history:Set" xmi:id="_14MMdWnREeaTLbmqFFisdA" element="_jhhR4oCgEeaCgs3tERkvbw" featureName="name" dataValue="duration"/>
+        <changes xsi:type="history:Set" xmi:id="_14MMdmnREeaTLbmqFFisdA" element="_jhhR4oCgEeaCgs3tERkvbw" featureName="defaultValueLiteral" dataValue="3600000"/>
+        <changes xsi:type="history:Set" xmi:id="_14MMd2nREeaTLbmqFFisdA" element="_jhhR4oCgEeaCgs3tERkvbw" featureName="eType">
           <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         </changes>
       </changes>
@@ -14320,6 +14314,64 @@
       </changes>
       <changes xsi:type="history:Set" xmi:id="_br1eMGnaEeaTLbmqFFisdA" featureName="value" dataValue="switch(getType()){&#xD;&#xA;case BOOLEAN:return java.lang.Boolean.class.getName();&#xD;&#xA;case DATE: return java.util.Date.class.getName();&#xD;&#xA;case INTEGER: return java.lang.Integer.class.getName();&#xA;case LONG: return java.lang.Long.class.getName();&#xD;&#xA;case DECIMAL: return java.lang.Double.class.getName();&#xD;&#xA;case FILE:return &quot;org.bonitasoft.engine.bpm.contract.FileInputValue&quot;;&#xD;&#xA;case COMPLEX:return java.util.Map.class.getName();&#xD;&#xA;case TEXT:&#xD;&#xA;default: return java.lang.String.class.getName();&#xD;&#xA;}" oldDataValue="switch(getType()){&#xD;&#xA;case BOOLEAN:return java.lang.Boolean.class.getName();&#xD;&#xA;case DATE: return java.util.Date.class.getName();&#xD;&#xA;case INTEGER: return java.lang.Integer.class.getName();&#xD;&#xA;case DECIMAL: return java.lang.Double.class.getName();&#xD;&#xA;case FILE:return &quot;org.bonitasoft.engine.bpm.contract.FileInputValue&quot;;&#xD;&#xA;case COMPLEX:return java.util.Map.class.getName();&#xD;&#xA;case TEXT:&#xD;&#xA;default: return java.lang.String.class.getName();&#xD;&#xA;}">
         <element href="process.ecore#//ContractInput/getJavaType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+      </changes>
+    </changes>
+  </releases>
+  <releases xmi:id="_fgoZ4IChEeaCgs3tERkvbw" date="2016-09-22T11:43:27.494+0200" label="7.4.0-002">
+    <changes xsi:type="history:MigrationChange" xmi:id="_bbJyQIChEeaCgs3tERkvbw" migration="org.bonitasoft.studio.migration.custom.migration.ExpectedDurationMigration">
+      <changes xsi:type="history:OperationChange" xmi:id="_jhhR4ICgEeaCgs3tERkvbw">
+        <changes xsi:type="history:Delete" xmi:id="_jhhR4YCgEeaCgs3tERkvbw" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//Activity"/>
+          <element xsi:type="ecore:EAttribute" xmi:id="_jhhR4oCgEeaCgs3tERkvbw" name="duration" defaultValueLiteral="3600000">
+            <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </element>
+        </changes>
+        <operation xmi:id="_jhhR5ICgEeaCgs3tERkvbw" name="deleteFeature2">
+          <parameters xmi:id="_jhhR5YCgEeaCgs3tERkvbw" name="feature">
+            <referenceValue xmi:id="_jhhR5oCgEeaCgs3tERkvbw" element="_jhhR4oCgEeaCgs3tERkvbw"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_qxlmMICgEeaCgs3tERkvbw">
+        <changes xsi:type="history:Create" xmi:id="_qxlmMYCgEeaCgs3tERkvbw" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//Task"/>
+          <element href="process.ecore#//Task/expectedDuration"/>
+          <changes xsi:type="history:Set" xmi:id="_qxlmMoCgEeaCgs3tERkvbw" featureName="name" dataValue="expectedDuration">
+            <element href="process.ecore#//Task/expectedDuration"/>
+          </changes>
+          <changes xsi:type="history:Set" xmi:id="_qxlmM4CgEeaCgs3tERkvbw" featureName="containment" dataValue="true" oldDataValue="false">
+            <element href="process.ecore#//Task/expectedDuration"/>
+          </changes>
+          <changes xsi:type="history:Set" xmi:id="_qxlmNICgEeaCgs3tERkvbw" featureName="eType">
+            <element href="process.ecore#//Task/expectedDuration"/>
+            <referenceValue href="expression.ecore#//Expression"/>
+          </changes>
+        </changes>
+        <operation xmi:id="_qxlmNYCgEeaCgs3tERkvbw" name="newReference">
+          <parameters xmi:id="_qxlmNoCgEeaCgs3tERkvbw" name="eClass">
+            <referenceValue xmi:id="_qxlmN4CgEeaCgs3tERkvbw">
+              <element href="process.ecore#//Task"/>
+            </referenceValue>
+          </parameters>
+          <parameters xmi:id="_qxmNQICgEeaCgs3tERkvbw" name="name">
+            <dataValue>expectedDuration</dataValue>
+          </parameters>
+          <parameters xmi:id="_qxmNQYCgEeaCgs3tERkvbw" name="type">
+            <referenceValue xmi:id="_qxmNQoCgEeaCgs3tERkvbw">
+              <element href="expression.ecore#//Expression"/>
+            </referenceValue>
+          </parameters>
+          <parameters xmi:id="_qxmNQ4CgEeaCgs3tERkvbw" name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters xmi:id="_qxmNRICgEeaCgs3tERkvbw" name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters xmi:id="_qxmNRYCgEeaCgs3tERkvbw" name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters xmi:id="_qxmNRoCgEeaCgs3tERkvbw" name="opposite"/>
+        </operation>
       </changes>
     </changes>
   </releases>
