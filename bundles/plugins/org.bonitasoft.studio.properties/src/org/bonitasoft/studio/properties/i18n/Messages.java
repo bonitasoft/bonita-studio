@@ -474,6 +474,10 @@ public class Messages extends NLS {
 
     public static String noContractDefinedException;
 
+    public static String dueDateCalculation;
+
+    public static String dueDateCalculationHint;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

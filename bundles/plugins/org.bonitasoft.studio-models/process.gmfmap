@@ -361,6 +361,15 @@
               body="org.bonitasoft.studio.model.process.FormMapping mapping = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createFormMapping();&#xD;&#xA;mapping.setTargetForm(org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createFormReferenceExpression(&quot;&quot;, &quot;&quot;));&#xD;&#xA;return mapping ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Task/expectedDuration"/>
+          <value
+              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.CONSTANT_TYPE,Long.class.getName(),true);"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">

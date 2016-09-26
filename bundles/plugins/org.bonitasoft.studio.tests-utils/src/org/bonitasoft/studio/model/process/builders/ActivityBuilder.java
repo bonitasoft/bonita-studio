@@ -32,11 +32,6 @@ public class ActivityBuilder<T extends Activity, B extends ActivityBuilder<T, B>
         return new ActivityBuilder<Activity, B>();
     }
 
-    public B withDuration(final String duration) {
-        getBuiltInstance().setDuration(duration);
-        return getThis();
-    }
-
     public B withMultiInstanceType(final MultiInstanceType type) {
         getBuiltInstance().setType(type);
         return getThis();
