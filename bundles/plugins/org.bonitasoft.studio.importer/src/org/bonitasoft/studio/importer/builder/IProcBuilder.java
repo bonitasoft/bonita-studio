@@ -367,11 +367,6 @@ public interface IProcBuilder {
      */
     public void addActor(String name, String documentation);
 
-    /**
-     * @param duration
-     * @throws ProcBuilderException
-     */
-    public void setStepDuration(long duration) throws ProcBuilderException;
 
     /**
      * @param loopCondition
