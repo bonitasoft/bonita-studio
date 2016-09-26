@@ -21,11 +21,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ProjectUtil;
-import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
 import org.bonitasoft.studio.model.actormapping.ActorMappingFactory;
 import org.bonitasoft.studio.model.actormapping.ActorMappingsType;
@@ -42,24 +40,10 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 
 
-/**
- * @author Romain Bioteau
- *
- */
 public class ActorMappingExporter {
 
     public byte[] toByteArray(final Configuration configuration) throws ActorMappingExportException {
         if (containsActorMapping(configuration)) {
-            final StringBuffer result = new StringBuffer("");
-            for (final ActorMapping mapping : configuration.getActorMappings().getActorMapping()) {
-                if (!checkActorMappingGroup(mapping)) {
-                    result.append("- " + mapping.getName() + "\n");
-                }
-            }
-            if (result.length() > 0) {
-                throw new ActorMappingExportException(Messages.errorActorMappingGroup + " : \n" + result.toString());
-            }
-
             final File tmpFile = new File(getTempFolder(), EcoreUtil.generateUUID() + ".xml");
             final org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI.createFileURI(tmpFile.getAbsolutePath());
             final Resource resource = new ActorMappingResourceFactoryImpl().createResource(uri);
@@ -68,7 +52,7 @@ public class ActorMappingExporter {
             cleanMapping(mapping);
             root.setActorMappings(mapping);
             resource.getContents().add(root);
-            final Map<String, String> options = new HashMap<String, String>();
+            final Map<String, String> options = new HashMap<>();
             options.put(XMLResource.OPTION_ENCODING, "UTF-8");
             options.put(XMLResource.OPTION_XML_VERSION, "1.0");
             ByteArrayOutputStream byteArrayOutputStream = null;
@@ -120,18 +104,5 @@ public class ActorMappingExporter {
                 m.setUsers(null);
             }
         }
-    }
-
-    protected boolean checkActorMappingGroup(final ActorMapping mapping) {
-        final List<String> list1 = mapping.getGroups().getGroup();
-        final List<String> list2 = mapping.getGroups().getGroup();
-        for (final String s1 : list1) {
-            for (final String s2 : list2) {
-                if (!s1.equals(s2) && (s2.startsWith(s1) || s1.startsWith(s2))) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }
