@@ -100,8 +100,8 @@ public class OpenH2ConsoleHandlerTest {
         final ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
         verify(runtime).exec(argument.capture());
 
-        assertThat(argument.getValue()).contains("-webPort").startsWith("java -jar h2.jar -browser").endsWith(
-                "-tcp -user sa -url jdbc:h2:file:/test/h2_db/business_data.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;AUTO_SERVER=TRUE; -driver org.h2.Driver");
+        assertThat(argument.getValue()).contains("-webPort").startsWith("java -jar \"h2.jar\" -browser").endsWith(
+                "-tcp -user sa -url \"jdbc:h2:file:/test/h2_db/business_data.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;AUTO_SERVER=TRUE;\" -driver org.h2.Driver");
     }
 
 }
