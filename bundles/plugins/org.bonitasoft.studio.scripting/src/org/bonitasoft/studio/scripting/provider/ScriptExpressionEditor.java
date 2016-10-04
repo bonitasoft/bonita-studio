@@ -56,7 +56,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -76,7 +75,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 
     private Text expressionNameText;
 
-    private Combo expressionInterpreterCombo;
+    //  private Combo expressionInterpreterCombo;
 
     private IExpressionEditor editor;
 
@@ -123,22 +122,22 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         scriptNameLabel.setText(Messages.name + " *");
 
         expressionNameText = new Text(mainComposite, SWT.BORDER | SWT.SINGLE);
-        expressionNameText.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
+        expressionNameText.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).indent(5, 0).span(2, 1).create());
+        //
+        //        final Label interpreterLabel = new Label(mainComposite, SWT.NONE);
+        //        interpreterLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
+        //        interpreterLabel.setText(Messages.interpreter);
 
-        final Label interpreterLabel = new Label(mainComposite, SWT.NONE);
-        interpreterLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
-        interpreterLabel.setText(Messages.interpreter);
-
-        expressionInterpreterCombo = new Combo(mainComposite, SWT.READ_ONLY | SWT.BORDER);
-        expressionInterpreterCombo.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
-
-        for (final IScriptLanguageProvider provider : ScriptLanguageService.getInstance().getScriptLanguageProviders()) {
-            expressionInterpreterCombo.add(provider.getLanguageName());
-        }
-
-        if (expressionInterpreterCombo.getItemCount() < 2) {
-            expressionInterpreterCombo.setEnabled(false);
-        }
+        //        expressionInterpreterCombo = new Combo(mainComposite, SWT.READ_ONLY | SWT.BORDER);
+        //        expressionInterpreterCombo.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
+        //
+        //        for (final IScriptLanguageProvider provider : ScriptLanguageService.getInstance().getScriptLanguageProviders()) {
+        //            expressionInterpreterCombo.add(provider.getLanguageName());
+        //        }
+        //
+        //        if (expressionInterpreterCombo.getItemCount() < 2) {
+        //            expressionInterpreterCombo.setEnabled(false);
+        //        }
 
         final IScriptLanguageProvider provider = ScriptLanguageService.getInstance().getScriptLanguageProvider(languageId);
         editor = provider.getExpressionEditor();
@@ -231,7 +230,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
             final ExpressionViewer viewer) {
         this.inputExpression = inputExpression;
         final IObservableValue nameModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
-        final IObservableValue interpreterModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__INTERPRETER);
+        //   final IObservableValue interpreterModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__INTERPRETER);
 
         final UpdateValueStrategy opposite = new UpdateValueStrategy();
         opposite.setConverter(new BooleanInverserConverter());
@@ -240,7 +239,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         targetToModel.setAfterConvertValidator(new EmptyInputValidator(Messages.name));
         ControlDecorationSupport.create(
                 dataBindingContext.bindValue(SWTObservables.observeText(expressionNameText, SWT.Modify), nameModelObservable, targetToModel, null), SWT.LEFT);
-        dataBindingContext.bindValue(SWTObservables.observeSelection(expressionInterpreterCombo), interpreterModelObservable);
+        //        dataBindingContext.bindValue(SWTObservables.observeSelection(expressionInterpreterCombo), interpreterModelObservable);
         nameModelObservable.addValueChangeListener(new IValueChangeListener() {
 
             @Override

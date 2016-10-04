@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.properties.AbstractPropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.viewer.DefaultExpressionNameResolver;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -85,6 +86,7 @@ public class StepSummarySectionContribution extends AbstractPropertySectionContr
         expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.CONTRACT_INPUT_TYPE }));
         expressionViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
+        expressionViewer.setExpressionNameResolver(new DefaultExpressionNameResolver("descriptionAfterCompletion"));
         expressionViewer.setInput(eObject) ;
         expressionViewer.setMessage(Messages.stepSummaryHint,IStatus.INFO) ;
         expressionViewer.addExpressionValidator(new ExpressionLengthValidator(maxLength));

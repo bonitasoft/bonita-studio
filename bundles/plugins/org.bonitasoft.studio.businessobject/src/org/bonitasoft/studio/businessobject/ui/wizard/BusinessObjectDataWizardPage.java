@@ -163,7 +163,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         defaultValueExpressionViewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.QUERY_TYPE,
                 ExpressionConstants.CONTRACT_INPUT_TYPE, ExpressionConstants.PARAMETER_TYPE));
         defaultValueExpressionViewer.addEditorFilter(ExpressionConstants.CONTRACT_INPUT_TYPE, ExpressionConstants.PARAMETER_TYPE);
-
+        defaultValueExpressionViewer.setExpressionNameResolver(new DataDefaultValueExpressionNameResolver(businessObjectData));
         final ControlDecoration hint = new ControlDecoration(defaultValueExpressionViewer.getTextControl(), SWT.LEFT);//TODO: remove me for 7.0.0 GA
         hint.setShowOnlyOnFocus(false);
         hint.setImage(imageProvider.getHintImage());
@@ -334,7 +334,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
     }
 
     protected List<BusinessObject> getAllBusinessObjects() {
-        final List<BusinessObject> result = new ArrayList<BusinessObject>();
+        final List<BusinessObject> result = new ArrayList<>();
         for (final BusinessObjectModelFileStore def : businessObjectModelStore.getChildren()) {
             final List<BusinessObject> bo = def.getBusinessObjects();
             result.addAll(bo);

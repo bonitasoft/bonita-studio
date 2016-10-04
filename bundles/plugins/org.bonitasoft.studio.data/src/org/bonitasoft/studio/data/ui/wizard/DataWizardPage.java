@@ -230,7 +230,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     private boolean isOverviewContext = false;
 
-    final private Set<String> availableDataNames = new HashSet<String>();
+    final private Set<String> availableDataNames = new HashSet<>();
 
     private final ViewerFilter typeViewerFilter = new ViewerFilter() {
 
@@ -570,7 +570,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     }
 
     private Iterable<Data> findDataInScope() {
-        final Set<Data> dataInScope = new HashSet<Data>();
+        final Set<Data> dataInScope = new HashSet<>();
         //Data in same scope
         for (final EStructuralFeature featureToCheck : featureToCheckForUniqueID) {
             final Object eGet = container.eGet(featureToCheck);
@@ -835,6 +835,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         defaultValueViewer = new ExpressionViewer(defaultValueComposite, SWT.BORDER, ProcessPackage.Literals.DATA__DEFAULT_VALUE);
         defaultValueViewer.setIsPageFlowContext(isPageFlowContext);
         defaultValueViewer.setIsOverviewContext(isOverviewContext);
+        defaultValueViewer.setExpressionNameResolver(new DataDefaultValueExpressionNameResolver(data));
         defaultValueViewer.getControl().setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
         defaultValueViewer.setContext(container);
 
