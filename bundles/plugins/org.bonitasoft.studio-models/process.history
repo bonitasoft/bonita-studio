@@ -14375,5 +14375,8 @@
       </changes>
     </changes>
   </releases>
+  <releases xmi:id="_sj1AgIoPEeaSVcTFVrb5Fw" date="2016-09-22T11:43:27.494+0200" label="7.4.0-003">
+    <changes xsi:type="history:MigrationChange" xmi:id="_sj1AgYoPEeaSVcTFVrb5Fw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateAlfrescoConnectorDefinitionsMigration"/>
+  </releases>
   <releases xmi:id="_15TmyGnREeaTLbmqFFisdA"/>
 </history:History>
