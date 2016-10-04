@@ -6,7 +6,7 @@ import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
 public class DeleteFolderAlfrescoConnectorMapper extends
 		AbstractConnectorDefinitionMapper implements IConnectorDefinitionMapper {
 
-	private static final String DELETE_FOLDER_ALFRESCO_ID ="Alfresco34DeleteFileByPath";
+    private static final String DELETE_FOLDER_ALFRESCO_ID = "AlfrescoDeleteFileByPath";
 	private static final String LEGACY_DELETE_FOLDER_ALFRESCO_ID="AlfrescoDeleteFileByPath";
 	
 	@Override
