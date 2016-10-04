@@ -32,6 +32,7 @@ import org.bonitasoft.studio.data.ui.property.section.DataLabelProvider;
 import org.bonitasoft.studio.expression.editor.constant.ExpressionReturnTypeContentProvider;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
+import org.bonitasoft.studio.expression.editor.viewer.DefaultExpressionNameResolver;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.groovy.DisplayEngineExpressionWithName;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -231,7 +232,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 		loopConditionExpressionViewer.addFilter(new DisplayEngineExpressionWithName(new String[] {
 				org.bonitasoft.engine.expression.ExpressionConstants.LOOP_COUNTER.getEngineConstantName() }));
 		loopConditionExpressionViewer.addFilter(new OnlyProcessDataViewerFilter());
-
+        loopConditionExpressionViewer.setExpressionNameResolver(new DefaultExpressionNameResolver("loopWhile"));
 		context.bindValue(ViewersObservables.observeInput(loopConditionExpressionViewer), selectionObservable);
 		context.bindValue(ViewersObservables.observeSingleSelection(loopConditionExpressionViewer),
 				CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), selectionObservable,
@@ -249,7 +250,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 						ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.SCRIPT_TYPE }));
 		maximumLoopExpressionViewer.setMessage(Messages.optionalLabel, IStatus.INFO);
 		maximumLoopExpressionViewer.addFilter(new OnlyProcessDataViewerFilter());
-
+        maximumLoopExpressionViewer.setExpressionNameResolver(new DefaultExpressionNameResolver("maximumLoop"));
 		context.bindValue(ViewersObservables.observeInput(maximumLoopExpressionViewer), selectionObservable);
 		context.bindValue(ViewersObservables.observeSingleSelection(maximumLoopExpressionViewer),
 				CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), selectionObservable,
@@ -324,6 +325,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 		label.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
 		final ExpressionViewer completionConditionViewer = new ExpressionViewer(completionComposite, SWT.BORDER,
 				widgetFactory);
+        completionConditionViewer.setExpressionNameResolver(new DefaultExpressionNameResolver("earlyCompletionCondition"));
 		completionConditionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		completionConditionViewer.addFilter(new CompletionConditionFilter(selectionProvider));
 		completionConditionViewer.addFilter(new DisplayEngineExpressionWithName(new String[] {
@@ -616,7 +618,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 		cardinalityExpression.addFilter(new AvailableExpressionTypeFilter(
 				new String[] { ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
 						ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.SCRIPT_TYPE }));
-
+        cardinalityExpression.setExpressionNameResolver(new DefaultExpressionNameResolver("numberOfInstancesToCreate"));
 		final IObservableValue selectionObservable = ViewersObservables.observeSingleSelection(selectionProvider);
 		context.bindValue(ViewersObservables.observeInput(cardinalityExpression), selectionObservable);
 		context.bindValue(ViewersObservables.observeSingleSelection(cardinalityExpression),

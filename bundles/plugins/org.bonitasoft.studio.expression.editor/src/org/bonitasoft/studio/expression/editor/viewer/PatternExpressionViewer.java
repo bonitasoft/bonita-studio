@@ -82,7 +82,7 @@ public class PatternExpressionViewer extends Composite {
     private ExpressionViewer expressionViewer;
     private final IExpressionNatureProvider expressionNatureProvider = ExpressionContentProvider.getInstance();
     private ExpressionContentAssistProcessor contentAssisProcessor;
-    private final Set<ViewerFilter> filters = new HashSet<ViewerFilter>();
+    private final Set<ViewerFilter> filters = new HashSet<>();
     protected Expression expression;
     private List<Expression> filteredExpressions;
     private PatternLineStyleListener patternLineStyle;
@@ -97,7 +97,7 @@ public class PatternExpressionViewer extends Composite {
     private Object input;
     private static Set<String> compatibleTypes;
     static {
-        compatibleTypes = new HashSet<String>();
+        compatibleTypes = new HashSet<>();
         compatibleTypes.add(String.class.getName());
         compatibleTypes.add(Integer.class.getName());
         compatibleTypes.add(Long.class.getName());
@@ -339,7 +339,7 @@ public class PatternExpressionViewer extends Composite {
 
     protected void manageNatureProviderAndAutocompletionProposal(final Object input) {
         filteredExpressions =  getFilteredExpressions() ;
-        final Set<Expression> expressionSet = new HashSet<Expression>(filteredExpressions);
+        final Set<Expression> expressionSet = new HashSet<>(filteredExpressions);
         contentAssisProcessor.setExpressions(expressionSet);
         if(patternLineStyle != null){
             patternLineStyle.setExpressions(expressionSet);
@@ -376,7 +376,7 @@ public class PatternExpressionViewer extends Composite {
     }
 
     private List<Expression> getFilteredExpressions() {
-        final List<Expression> filteredExpressions = new ArrayList<Expression>() ;
+        final List<Expression> filteredExpressions = new ArrayList<>() ;
         final Expression[] expressions = expressionNatureProvider.getExpressions(contextInput);
         if(expressions != null){
             filteredExpressions.addAll(Arrays.asList(expressions)) ;
@@ -424,5 +424,9 @@ public class PatternExpressionViewer extends Composite {
     public void setInput(final Object input) {
         this.input = input;
         expressionViewer.setInput(input);
+    }
+
+    public void setExpressionNameResolver(final ExpressionNameResolver expressionNameResolver) {
+        expressionViewer.setExpressionNameResolver(expressionNameResolver);
     }
 }

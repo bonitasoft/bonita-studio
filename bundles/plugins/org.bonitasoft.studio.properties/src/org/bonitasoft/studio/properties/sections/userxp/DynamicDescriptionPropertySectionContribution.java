@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.properties.AbstractPropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.viewer.DefaultExpressionNameResolver;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -60,6 +61,7 @@ public class DynamicDescriptionPropertySectionContribution extends AbstractPrope
         expressionViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
         expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.SCRIPT_TYPE }));
+        expressionViewer.setExpressionNameResolver(new DefaultExpressionNameResolver("dynamicDescription"));
         expressionViewer.setInput(eObject) ;
         expressionViewer.setMessage(Messages.dynamicDescriptionHint,IStatus.INFO) ;
         expressionViewer.addExpressionValidator(new ExpressionLengthValidator(MAX_LENGTH));

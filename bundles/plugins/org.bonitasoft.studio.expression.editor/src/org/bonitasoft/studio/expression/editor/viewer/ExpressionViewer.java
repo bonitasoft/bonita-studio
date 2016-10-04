@@ -153,9 +153,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     private ControlDecoration typeDecoration;
     //private final boolean editing = false;
     protected EObject context;
-    private final List<ISelectionChangedListener> expressionEditorListener = new ArrayList<ISelectionChangedListener>();
+    private final List<ISelectionChangedListener> expressionEditorListener = new ArrayList<>();
     private boolean withConnector = false;
-    private final List<IExpressionValidationListener> validationListeners = new ArrayList<IExpressionValidationListener>();
+    private final List<IExpressionValidationListener> validationListeners = new ArrayList<>();
     private ToolItem eraseControl;
     private boolean isPageFlowContext = false;
     private boolean isOverviewContext = false;
@@ -173,18 +173,19 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     protected IExpressionNatureProvider expressionNatureProvider = ExpressionContentProvider.getInstance();
     protected DataBindingContext externalDataBindingContext;
     protected Binding expressionBinding;
-    private final Map<Integer, String> messages = new HashMap<Integer, String>();
+    private final Map<Integer, String> messages = new HashMap<>();
     protected ToolBar toolbar;
-    private final List<IExpressionToolbarContribution> toolbarContributions = new ArrayList<IExpressionToolbarContribution>();
+    private final List<IExpressionToolbarContribution> toolbarContributions = new ArrayList<>();
     protected boolean isPassword;
     private DefaultToolTip textTooltip;
     private IExpressionProposalLabelProvider expressionProposalLableProvider;
     private ContentAssistText contentAssistText;
     private ISelection selection;
     private final ExpressionEditorService expressionEditorService;
-    private final Set<String> filteredEditor = new HashSet<String>();
+    private final Set<String> filteredEditor = new HashSet<>();
     protected final ExpressionItemProvider expressionItemProvider = new ExpressionItemProvider(new ExpressionItemProviderAdapterFactory());
     private String defaultReturnType;
+    private ExpressionNameResolver expressionNameResolver = new DefaultExpressionNameResolver();
 
     public ExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
         this(composite, style, widgetFactory, null);
@@ -245,7 +246,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             final EditingDomain editingDomain, final EReference expressionReference, final boolean withConnector) {
         Assert.isNotNull(composite, "composite");
         expressionEditorService = ExpressionEditorService.getInstance();
-        filters = new HashSet<ViewerFilter>();
+        filters = new HashSet<>();
         this.withConnector = withConnector;
         createControl(composite, style, widgetFactory);
         setContentProvider(new ArrayContentProvider());
@@ -550,7 +551,12 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         final EditExpressionDialog dialog = new EditExpressionDialog(control.getShell(), isPassword, EcoreUtil.copy(getSelectedExpression()), editInput,
                 getEditingDomain(), filters.toArray(new ViewerFilter[filters.size()]), this);
         dialog.setEditorFilters(filteredEditor);
+        dialog.setExpressionNameResolver(expressionNameResolver);
         return dialog;
+    }
+
+    public void setExpressionNameResolver(ExpressionNameResolver expressionNameResolver) {
+        this.expressionNameResolver = expressionNameResolver;
     }
 
     protected void fireExpressionEditorChanged(final SelectionChangedEvent selectionChangedEvent) {
@@ -663,7 +669,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     private ArrayList<String> getFilteredExpressionType() {
-        final ArrayList<String> filteredExpressions = new ArrayList<String>();
+        final ArrayList<String> filteredExpressions = new ArrayList<>();
         final Set<ViewerFilter> fitlers = getFilters();
 
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
@@ -687,7 +693,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     protected Set<Expression> getFilteredExpressions() {
-        final Set<Expression> filteredExpressions = new TreeSet<Expression>(new ExpressionComparator());
+        final Set<Expression> filteredExpressions = new TreeSet<>(new ExpressionComparator());
         if (expressionNatureProvider != null) {
             if (!(expressionNatureProvider instanceof ExpressionContentProvider)) {
                 final ExpressionContentProvider provider = ExpressionContentProvider.getInstance();
@@ -700,7 +706,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             if (expressions != null) {
                 filteredExpressions.addAll(Arrays.asList(expressions));
             }
-            final Set<Expression> toRemove = new HashSet<Expression>();
+            final Set<Expression> toRemove = new HashSet<>();
             if (context != null) {
                 for (final Expression exp : filteredExpressions) {
                     for (final ViewerFilter filter : getFilters()) {
@@ -891,7 +897,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             // THOSES TYPES
         }
 
-        final Set<String> cache = new HashSet<String>();
+        final Set<String> cache = new HashSet<>();
         for (final Expression e : getFilteredExpressions()) {
             if (e.getName() != null && e.getName().equals(input)) {
                 cache.add(e.getContent());
@@ -942,7 +948,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             return ExpressionConstants.MESSAGE_ID_TYPE;
         }
 
-        final Set<String> cache = new HashSet<String>();
+        final Set<String> cache = new HashSet<>();
         for (final Expression e : getFilteredExpressions()) {
             if (e.getName() != null && e.getName().equals(input)) {
                 cache.add(e.getType());

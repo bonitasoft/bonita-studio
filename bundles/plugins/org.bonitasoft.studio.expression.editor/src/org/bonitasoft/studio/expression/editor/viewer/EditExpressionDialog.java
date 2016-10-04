@@ -119,7 +119,9 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
     private final ExpressionViewer expressionViewer;
 
-    private Set<String> filteredEditor = new HashSet<String>();
+    private Set<String> filteredEditor = new HashSet<>();
+
+    private ExpressionNameResolver expressionNameResolver;
 
     @Override
     public void openTray(final DialogTray tray) throws IllegalStateException, UnsupportedOperationException {
@@ -356,10 +358,10 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         currentExpressionEditor = provider.getExpressionEditor(inputExpression, context);
         currentExpressionEditor.setIsPageFlowContext(isPageFlowContext);
         if (currentExpressionEditor != null) {
-            //            if (dataBindingContext != null) {
-            //                dataBindingContext.dispose();
-            //            }
             dataBindingContext = new EMFDataBindingContext();
+
+
+
             currentExpressionEditor.createExpressionEditor(contentComposite, dataBindingContext, isPassword);
             contentComposite.layout(true, true);
             if (helpControl != null) {
@@ -387,6 +389,12 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
                 domain.getCommandStack().execute(SetCommand.create(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__TYPE, type));
             } else {
                 inputExpression.setType(type);
+            }
+            if (!ExpressionConstants.SCRIPT_TYPE.equals(inputExpression.getType())) {
+                inputExpression.setName("");
+            }
+            if (expressionNameResolver != null) {
+                inputExpression.setName(expressionNameResolver.getName(inputExpression));
             }
             currentExpressionEditor.bindExpression(dataBindingContext, context, inputExpression, viewerTypeFilters, expressionViewer);
             currentExpressionEditor.addListener(new Listener() {
@@ -492,6 +500,10 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
     public void setEditorFilters(final Set<String> filteredEditor) {
         this.filteredEditor = filteredEditor;
+    }
+
+    public void setExpressionNameResolver(ExpressionNameResolver expressionNameResolver) {
+        this.expressionNameResolver = expressionNameResolver;
     }
 
 }

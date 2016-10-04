@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.gef;bundle-version="3.7.2",
  org.eclipse.gmf.runtime.diagram.ui,
  org.bonitasoft.studio.engine;bundle-version="1.0.0",
- org.bonitasoft.studio.expression.editor;bundle-version="1.0.0"
+ org.bonitasoft.studio.expression.editor;bundle-version="1.0.0",
+ org.bonitasoft.studio.swtbot.framework;bundle-version="7.4.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.bonitasoft.expressions.test;uses:="org.eclipse.swt
  bot.eclipse.gef.finder,org.osgi.framework"
