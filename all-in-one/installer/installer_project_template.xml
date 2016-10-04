@@ -279,9 +279,8 @@
                 <substitution>
                     <pattern>-clearPersistedState</pattern>
                     <value>-clearPersistedState
-                        -vm
-                        ../../../jre/Contents/Home/bin/java
-                    </value>
+-vm
+ ../../../jre/Contents/Home/bin/java</value>
                 </substitution>
             </substitutionList>
             <ruleList>
