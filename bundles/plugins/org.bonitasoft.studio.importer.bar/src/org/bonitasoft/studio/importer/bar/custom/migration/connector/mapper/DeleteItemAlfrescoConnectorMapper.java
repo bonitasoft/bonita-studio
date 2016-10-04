@@ -6,7 +6,7 @@ import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
 public class DeleteItemAlfrescoConnectorMapper extends
 		AbstractConnectorDefinitionMapper implements IConnectorDefinitionMapper {
 
-	private static final String DELETE_ITEM_ALFRESCO_ID = "Alfresco34DeleteItemById";
+    private static final String DELETE_ITEM_ALFRESCO_ID = "AlfrescoDeleteItemById";
 	private static final String LEGACY_DELETE_ITEM_ALFRESCO_ID="AlfrescoDeleteItemById";
 	
 	@Override
