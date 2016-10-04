@@ -140,6 +140,7 @@ public class PageComponentSwitchBuilder {
         final ExpressionViewer viewer = new ExpressionViewer(composite, SWT.BORDER);
         viewer.setIsPageFlowContext(isPageFlowContext);
         viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        viewer.setExpressionNameResolver(new ConnectorInputNameResolver(parameter.getKey()));
         viewer.setContext(container);
         if (autoCompletionLabelProvider != null) {
             viewer.setAutocomplitionLabelProvider(autoCompletionLabelProvider);
@@ -163,7 +164,7 @@ public class PageComponentSwitchBuilder {
 
     private void handleDocumentsOption(final Text object, final ExpressionViewer viewer) {
         if (object.isShowDocuments()) {
-            final Set<String> contentTypes = new HashSet<String>(connectorExpressionContentTypeFilter.getContentTypes());
+            final Set<String> contentTypes = new HashSet<>(connectorExpressionContentTypeFilter.getContentTypes());
             contentTypes.add(ExpressionConstants.DOCUMENT_REF_TYPE);
             viewer.addFilter(new AvailableExpressionTypeFilter(contentTypes.toArray(new String[contentTypes.size()])));
         } else {
@@ -263,6 +264,7 @@ public class PageComponentSwitchBuilder {
             final CheckBoxExpressionViewer viewer = new CheckBoxExpressionViewer(composite, null, SWT.BORDER,
                     ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION);
             viewer.setIsPageFlowContext(isPageFlowContext);
+            viewer.setExpressionNameResolver(new ConnectorInputNameResolver(parameter.getKey()));
             viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
             viewer.setContext(container);
 
@@ -302,7 +304,7 @@ public class PageComponentSwitchBuilder {
             }
             final String desc = messageProvider.getFieldDescription(definition, object.getId());
             if (desc != null && !desc.isEmpty()) {
-                ControlDecoration controlDecoration = new ControlDecoration(label, SWT.RIGHT);
+                final ControlDecoration controlDecoration = new ControlDecoration(label, SWT.RIGHT);
                 controlDecoration.setDescriptionText(desc);
                 controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
                 controlDecoration.setMarginWidth(1);
@@ -362,7 +364,7 @@ public class PageComponentSwitchBuilder {
             final PatternExpressionViewer viewer = new PatternExpressionViewer(composite, SWT.NONE);
             viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
             viewer.addFilter(connectorExpressionContentTypeFilter);
-
+            viewer.setExpressionNameResolver(new ConnectorInputNameResolver(parameter.getKey()));
             final Expression exp = (Expression) parameter.getExpression();
             final String desc = getDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {
@@ -416,7 +418,7 @@ public class PageComponentSwitchBuilder {
         final ConnectorParameter parameter = connectorConfigurationSupport.getConnectorParameter(array.getInputName(), array, input);
 
         if (parameter != null) {
-            Composite container = new Composite(composite,SWT.NONE);
+            final Composite container = new Composite(composite,SWT.NONE);
             container.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
             container.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
             final Label labelField = createFieldLabel(container, SWT.TOP, array.getId(), input.isMandatory());
@@ -514,7 +516,7 @@ public class PageComponentSwitchBuilder {
             }
 
             if (object.isShowDocuments()) {
-                final Set<String> contentTypes = new HashSet<String>(connectorExpressionContentTypeFilter.getContentTypes());
+                final Set<String> contentTypes = new HashSet<>(connectorExpressionContentTypeFilter.getContentTypes());
                 contentTypes.add(ExpressionConstants.DOCUMENT_REF_TYPE);
                 viewer.addFilter(new AvailableExpressionTypeFilter(contentTypes.toArray(new String[contentTypes.size()])));
             } else {
@@ -629,7 +631,7 @@ public class PageComponentSwitchBuilder {
 
             final String desc = getDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {
-                ControlDecoration controlDecoration = new ControlDecoration(combo, SWT.LEFT);
+                final ControlDecoration controlDecoration = new ControlDecoration(combo, SWT.LEFT);
                 controlDecoration.setDescriptionText(desc);
                 controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
                 controlDecoration.setMarginWidth(1);

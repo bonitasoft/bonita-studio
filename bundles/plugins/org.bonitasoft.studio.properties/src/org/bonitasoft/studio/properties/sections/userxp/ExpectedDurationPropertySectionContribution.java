@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.viewer.DefaultExpressionNameResolver;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ReceiveTask;
@@ -41,8 +42,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -53,7 +52,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 public class ExpectedDurationPropertySectionContribution implements IExtensibleGridPropertySectionContribution {
 
 
-    private TaskSelectionProvider selectionProvider;
+    private final TaskSelectionProvider selectionProvider;
     private EMFDataBindingContext context;
 
     @Inject
@@ -113,9 +112,10 @@ public class ExpectedDurationPropertySectionContribution implements IExtensibleG
         context = new EMFDataBindingContext();
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
-        ExpressionViewer viewer = new ExpressionViewer(composite, SWT.BORDER , widgetFactory);
+        final ExpressionViewer viewer = new ExpressionViewer(composite, SWT.BORDER , widgetFactory);
         viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create());
         viewer.setMessage(Messages.dueDateCalculationHint, IStatus.INFO);
+        viewer.setExpressionNameResolver(new DefaultExpressionNameResolver("dueDateCalculation"));
         viewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.PARAMETER_TYPE));
         context.bindValue(ViewersObservables.observeInput(viewer),  ViewersObservables.observeSingleSelection(selectionProvider));
         context.bindValue(ViewersObservables.observeSingleSelection(viewer), 
