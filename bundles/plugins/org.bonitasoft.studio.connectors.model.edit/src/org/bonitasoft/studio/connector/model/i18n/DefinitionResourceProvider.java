@@ -82,6 +82,7 @@ public class DefinitionResourceProvider {
     public static final String connectorDefinition = "connectorDefinitionLabel";
     public static final String connectorDefinitionDescription = "connectorDefinitionDescription";
     public static final String fieldDescription = "description";
+    public static final String fieldExample = "example";
     private static final String CLASSPATH_DIR = "dependencies";
     private static final String OUTPUTS_DESC = "outputsDescription";
     private static final String OUTPUT_DESC = "output.description";
@@ -234,6 +235,11 @@ public class DefinitionResourceProvider {
     public String getFieldDescription(final ConnectorDefinition definition,
             final String fieldId) {
         return getMessage(definition, fieldId + "." + fieldDescription);
+    }
+
+    public String getFieldExample(final ConnectorDefinition definition,
+            final String fieldId) {
+        return getMessage(definition, fieldId + "." + fieldExample);
     }
 
     public String getOutputsDescription(final ConnectorDefinition definition) {
@@ -500,6 +506,10 @@ public class DefinitionResourceProvider {
 
     public String getFieldDescription(final Properties messages, final String fieldId) {
         return messages.getProperty(fieldId + "." + fieldDescription);
+    }
+
+    public String getFieldExample(final Properties messages, final String fieldId) {
+        return messages.getProperty(fieldId + "." + fieldExample);
     }
 
     public void setFieldDescription(final Properties messages, final String fieldId,

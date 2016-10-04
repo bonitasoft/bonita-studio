@@ -77,6 +77,8 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.Section;
 
+import com.google.common.base.Strings;
+
 /**
  * @author Elias Ricken de Medeiros
  */
@@ -141,6 +143,10 @@ public class PageComponentSwitchBuilder {
         viewer.setIsPageFlowContext(isPageFlowContext);
         viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         viewer.setExpressionNameResolver(new ConnectorInputNameResolver(parameter.getKey()));
+        final String example = messageProvider.getFieldExample(definition, object.getId());
+        if (!Strings.isNullOrEmpty(example)) {
+            viewer.setExample(example);
+        }
         viewer.setContext(container);
         if (autoCompletionLabelProvider != null) {
             viewer.setAutocomplitionLabelProvider(autoCompletionLabelProvider);
