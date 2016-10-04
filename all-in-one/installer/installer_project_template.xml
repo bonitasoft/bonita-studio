@@ -280,7 +280,7 @@
                     <pattern>-clearPersistedState</pattern>
                     <value>-clearPersistedState
 -vm
- ../../../jre/Contents/Home/bin/java</value>
+../../../jre/Contents/Home/bin/java</value>
                 </substitution>
             </substitutionList>
             <ruleList>
