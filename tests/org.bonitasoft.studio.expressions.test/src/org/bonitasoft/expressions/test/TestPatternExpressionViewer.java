@@ -34,12 +34,14 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -47,7 +49,7 @@ import org.junit.runner.RunWith;
  * @author Romain Bioteau
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestPatternExpressionViewer  implements SWTBotConstants {
+public class TestPatternExpressionViewer implements SWTBotConstants {
 
     private static final String DATA_NAME_1 = "myData1";
     private static final String DATA_NAME_2 = "myData2";
@@ -59,8 +61,11 @@ public class TestPatternExpressionViewer  implements SWTBotConstants {
     private static final String GROOVY_SQL_QUERY = "\"SELECT \"+" + DATA_NAME_1 + "+\" from MyTable WHERE \"+" + DATA_NAME_2 + "+\"='\"+" + DATA_NAME_3
             + "+\"'\"";
 
-    private SWTGefBot bot = new SWTGefBot();
+    private final SWTGefBot bot = new SWTGefBot();
     
+    @Rule
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
+
     @Test
     public void testPatternExpressionViewer() {
         SWTBotTestUtil.createNewDiagram(bot);
@@ -207,7 +212,6 @@ public class TestPatternExpressionViewer  implements SWTBotConstants {
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON, buttonIndex).click();
         bot.table().select("Script");
         bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name *")), 10000);
-        assertFalse("ok button should be disabled until name is specified", bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.textWithLabel("Name *").setText(scriptName);
         bot.styledText().setText(groovyScript);
         assertFalse("return type combobox should be disabled", bot.comboBoxWithLabel("Return type").isEnabled());

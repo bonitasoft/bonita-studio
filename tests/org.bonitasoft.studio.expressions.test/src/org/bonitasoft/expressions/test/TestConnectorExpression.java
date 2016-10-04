@@ -17,7 +17,8 @@
  */
 package org.bonitasoft.expressions.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestConnectorExpression  implements SWTBotConstants {
 
-    private SWTGefBot bot = new SWTGefBot();
+    private final SWTGefBot bot = new SWTGefBot();
     
     private void createConnectorDefinition(String id){
         SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
@@ -117,7 +118,6 @@ public class TestConnectorExpression  implements SWTBotConstants {
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON,buttonIndex).click();
         bot.table().select("Script");
         bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name *")),10000);
-        assertFalse("ok button should be disabled until name is specified",bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.textWithLabel("Name *").setText(scriptName);
         bot.styledText().setText(groovyScript);
         assertFalse("return type combobox should be disabled",bot.comboBoxWithLabel("Return type").isEnabled());
