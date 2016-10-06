@@ -68,7 +68,7 @@ public class ImportStatusDialog extends MessageDialog {
     }
     protected static String[] getLabels(final boolean canOpen) {
         if (canOpen) {
-            return new String[] { Messages.openDiagram, IDialogConstants.OK_LABEL, Messages.copyToClipboard };
+            return new String[] { Messages.seeDetails, IDialogConstants.OK_LABEL, Messages.copyToClipboard };
         }
         return new String[] { IDialogConstants.OK_LABEL, Messages.copyToClipboard };
     }
@@ -138,7 +138,7 @@ public class ImportStatusDialog extends MessageDialog {
 
     @Override
     protected Button createButton(final Composite parent, final int id, final String label, final boolean defaultButton) {
-        if (Messages.openDiagram.equals(label)) {
+        if (Messages.seeDetails.equals(label)) {
             return super.createButton(parent, IDialogConstants.OPEN_ID, label, defaultButton);
         }
         if (Messages.copyToClipboard.equals(label)) {
