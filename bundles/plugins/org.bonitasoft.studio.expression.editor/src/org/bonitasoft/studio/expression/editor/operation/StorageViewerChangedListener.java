@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.expression.editor.operation;
 
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.Operation;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -23,9 +24,11 @@ import org.eclipse.swt.widgets.Link;
 class StorageViewerChangedListener implements ISelectionChangedListener {
 
     private final OperationViewer operationViewer;
+    private final Operation action;
 
-    StorageViewerChangedListener(final OperationViewer operationViewer) {
+    StorageViewerChangedListener(final OperationViewer operationViewer, final Operation action) {
         this.operationViewer = operationViewer;
+        this.action = action;
     }
 
     @Override
