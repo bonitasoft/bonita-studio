@@ -17,18 +17,16 @@ package org.bonitasoft.studio.expression.editor.operation;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Operation;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
 
 public class DefaultReturnTypeResolver {
 
-    private final IObservableValue operationObservable;
+    private final Operation operation;
 
-    public DefaultReturnTypeResolver(final IObservableValue operationObservable) {
-        this.operationObservable = operationObservable;
+    public DefaultReturnTypeResolver(final Operation operation) {
+        this.operation = operation;
     }
 
     public String guessRightOperandReturnType() {
-        Operation operation = (Operation) operationObservable.getValue();
         final String type = operation.getOperator().getType();
         if (ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(type)) {
             return DocumentValue.class.getName();
