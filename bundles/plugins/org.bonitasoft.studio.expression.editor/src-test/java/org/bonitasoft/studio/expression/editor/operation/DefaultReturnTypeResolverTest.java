@@ -21,25 +21,16 @@ import static org.bonitasoft.studio.model.expression.builders.OperatorBuilder.an
 
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
-import org.eclipse.core.databinding.observable.Realm;
-import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.junit.Rule;
 import org.junit.Test;
 
 public class DefaultReturnTypeResolverTest {
 
-    @Rule
-    public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
-    
     @Test
     public void should_return_left_operand_return_type_for_ASSIGNMENT_operator() throws Exception {
-        WritableValue writableValue = new WritableValue(Realm.getDefault());
-        writableValue.setValue(anOperation()
+        final DefaultReturnTypeResolver defaultReturnTypeResolver = new DefaultReturnTypeResolver(anOperation()
                 .havingLeftOperand(anExpression().withReturnType(String.class.getName()))
                 .havingOperator(anOperator().withType(ExpressionConstants.ASSIGNMENT_OPERATOR))
                 .havingRightOperand(anExpression()).build());
-        final DefaultReturnTypeResolver defaultReturnTypeResolver = new DefaultReturnTypeResolver(writableValue);
 
         final String returnType = defaultReturnTypeResolver.guessRightOperandReturnType();
 
@@ -48,12 +39,10 @@ public class DefaultReturnTypeResolverTest {
 
     @Test
     public void should_return_DocumentValue_return_type_for_SET_DOCUMENT_operator() throws Exception {
-        WritableValue writableValue = new WritableValue();
-        writableValue.setValue(anOperation()
+        final DefaultReturnTypeResolver defaultReturnTypeResolver = new DefaultReturnTypeResolver(anOperation()
                 .havingLeftOperand(anExpression().withReturnType(String.class.getName()))
                 .havingOperator(anOperator().withType(ExpressionConstants.SET_DOCUMENT_OPERATOR))
                 .havingRightOperand(anExpression()).build());
-        final DefaultReturnTypeResolver defaultReturnTypeResolver = new DefaultReturnTypeResolver(writableValue);
 
         final String returnType = defaultReturnTypeResolver.guessRightOperandReturnType();
 
@@ -62,12 +51,10 @@ public class DefaultReturnTypeResolverTest {
 
     @Test
     public void should_return_setter_parameter_return_type_for_JAVA_METHOD_OPERATOR_operator() throws Exception {
-        WritableValue writableValue = new WritableValue();
-        writableValue.setValue(anOperation()
+        final DefaultReturnTypeResolver defaultReturnTypeResolver = new DefaultReturnTypeResolver(anOperation()
                 .havingLeftOperand(anExpression().withReturnType(String.class.getName()))
                 .havingOperator(anOperator().withType(ExpressionConstants.JAVA_METHOD_OPERATOR).havingInputTypes(Boolean.class.getName()))
                 .havingRightOperand(anExpression()).build());
-        final DefaultReturnTypeResolver defaultReturnTypeResolver = new DefaultReturnTypeResolver(writableValue);
 
         final String returnType = defaultReturnTypeResolver.guessRightOperandReturnType();
 
