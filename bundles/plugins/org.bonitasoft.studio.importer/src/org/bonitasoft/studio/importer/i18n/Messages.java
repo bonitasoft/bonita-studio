@@ -42,7 +42,7 @@ public class Messages extends NLS {
     public static String importButtonLabel;
     public static String importSucessfulMessage;
     public static String importResultTitle;
-    public static String openDiagram;
+    public static String seeDetails;
     public static String skipValidation;
     public static String importStatusMsg;
     public static String copyToClipboard;
