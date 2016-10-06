@@ -17,7 +17,6 @@ package org.bonitasoft.studio.intro.actions;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.importer.handler.ImportHandler;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
