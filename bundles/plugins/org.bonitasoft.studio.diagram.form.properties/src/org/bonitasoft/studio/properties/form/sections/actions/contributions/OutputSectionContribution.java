@@ -104,7 +104,7 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
                 dataBinding.dispose();
             }
             dataBinding = new EMFDataBindingContext();
-            operationViewer.setContext(dataBinding);
+         
             Operation action = element.getAction();
             if (action == null) {
                 action = ExpressionFactory.eINSTANCE.createOperation();
@@ -121,6 +121,8 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
             }
             operationViewer.setEditingDomain(getEditingDomain());
             operationViewer.setEObject(element);
+            operationViewer.setOperation(action);
+            operationViewer.createDatabinding(dataBinding);
             final UpdateValueStrategy strategy = new UpdateValueStrategy();
             strategy.setConverter(new BooleanInverserConverter());
 
