@@ -15,14 +15,20 @@
 package org.bonitasoft.studio.expression.editor.operation;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.form.Form;
@@ -36,12 +42,20 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.Binding;
+import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.IListChangeListener;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.list.ListChangeEvent;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.command.MoveCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -53,7 +67,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
@@ -141,6 +154,8 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
             }
 
             private Operation createOperation() {
+                final CompoundCommand cc = new CompoundCommand("Init Operands of Operation");
+
                 final Operation action = ExpressionFactory.eINSTANCE.createOperation();
                 final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
                 operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
@@ -153,7 +168,51 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
                 } else {
                     getActions().add(action);
                 }
+
+                Expression actionExp = action.getRightOperand();
+                if (actionExp == null) {
+                    actionExp = createInitialRightOperand(cc, action);
+                }
+                final Expression storageExp = action.getLeftOperand();
+                if (storageExp == null) {
+                    createInitialLeftOperand(cc, action);
+                }
+                if (getEditingDomain() != null) {
+                    getEditingDomain().getCommandStack().execute(cc);
+                }
+
                 return action;
+            }
+
+            private void createInitialLeftOperand(final CompoundCommand cc, final Operation action) {
+                Expression storageExp;
+                storageExp = ExpressionFactory.eINSTANCE.createExpression();
+                if (getEditingDomain() != null) {
+                    cc.append(
+                            SetCommand.create(getEditingDomain(), action, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND, storageExp));
+                } else {
+                    action.setLeftOperand(storageExp);
+                }
+            }
+
+            private Expression createInitialRightOperand(final CompoundCommand cc, final Operation action) {
+                Expression actionExp;
+                actionExp = ExpressionFactory.eINSTANCE.createExpression();
+                if (actionExpressionFilter instanceof AvailableExpressionTypeFilter) {
+                    final Set<String> possibleContentTypes = ((AvailableExpressionTypeFilter) actionExpressionFilter).getContentTypes();
+                    if (!possibleContentTypes.contains(ExpressionConstants.CONSTANT_TYPE)) {
+                        if (!possibleContentTypes.isEmpty()) {
+                            actionExp.setType(possibleContentTypes.iterator().next());
+                        }
+                    }
+                }
+                if (getEditingDomain() != null) {
+                    cc.append(
+                            SetCommand.create(getEditingDomain(), action, ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND, actionExp));
+                } else {
+                    action.setRightOperand(actionExp);
+                }
+                return actionExp;
             }
         });
     }
@@ -202,18 +261,21 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
         return lineNumber;
     }
 
-    public void addLineUI(final Operation action) {
-        moveToolbars.add(createMoveToolbar(action));
-        final OperationViewer opViewer = createOperationViewer(action);
+    public void addLineUI(final Operation operation) {
+        moveToolbars.add(createMoveToolbar());
+        final OperationViewer opViewer = createOperationViewer();
+        opViewer.setOperation(operation);
+        opViewer.setEObject(eObject);
+        opViewer.createDatabinding(context);
         operationViewers.add(opViewer);
         removes.add(createRemoveButton(opViewer));
         updateOrderButtons();
     }
 
-    private ToolBar createMoveToolbar(final Operation action) {
+    private ToolBar createMoveToolbar() {
         final ToolBar moveTB = new ToolBar(operationComposite, SWT.FLAT | SWT.NO_FOCUS | SWT.VERTICAL);
         moveTB.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).create());
-        if(widgetFactory != null){
+        if (widgetFactory != null) {
             widgetFactory.adapt(moveTB);
         }
         final ToolItem moveTop = new ToolItem(moveTB, SWT.FLAT | SWT.NO_FOCUS);
@@ -223,19 +285,18 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
 
             @Override
             public void widgetSelected(SelectionEvent e) {
+                int index = moveToolbars.indexOf(moveTB);
                 final EList<Operation> actions = (EList<Operation>) getActions();
-                actions.move(actions.indexOf(action) - 1, action);
-                org.eclipse.swt.custom.BusyIndicator.showWhile(Display.getDefault(),new Runnable() {
-                    
-                    @Override
-                    public void run() {
-                        removeLinesUI();
-                        fillTable();
-                        refresh();
-                    }
-                });
-
+                EditingDomain editingDomain = getEditingDomain();
+                if (editingDomain != null) {
+                    editingDomain.getCommandStack()
+                            .execute(MoveCommand.create(getEditingDomain(), getEObject(), getActionTargetFeature(), actions.get(index), index - 1));
+                }else{
+                    actions.move(index - 1, actions.get(index));
+                }
             }
+
+          
         });
         final ToolItem moveDown = new ToolItem(moveTB, SWT.FLAT | SWT.NO_FOCUS);
         moveDown.setImage(Pics.getImage(PicsConstants.arrowDownOrder));
@@ -245,30 +306,23 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
             @Override
             public void widgetSelected(SelectionEvent e) {
                 final EList<Operation> actions = (EList<Operation>) getActions();
-                actions.move(actions.indexOf(action) + 1, action);
-                org.eclipse.swt.custom.BusyIndicator.showWhile(Display.getDefault(),new Runnable() {
-                    
-                    @Override
-                    public void run() {
-                        removeLinesUI();
-                        fillTable();
-                        refresh();
-                    }
-                });
-
+                int index = moveToolbars.indexOf(moveTB);
+                EditingDomain editingDomain = getEditingDomain();
+                if (editingDomain != null) {
+                    getEditingDomain().getCommandStack()
+                            .execute(MoveCommand.create(getEditingDomain(), getEObject(), getActionTargetFeature(), actions.get(index), index + 1));
+                }else{
+                    actions.move(index + 1, actions.get(index));
+                }
             }
         });
-
         return moveTB;
     }
-
-    protected OperationViewer createOperationViewer(final Operation action) {
+    
+    protected OperationViewer createOperationViewer() {
         final OperationViewer viewer = new OperationViewer(operationComposite, widgetFactory, getEditingDomain(), actionExpressionFilter,
                 storageExpressionFilter, isPageFlowContext);
         viewer.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
-        if (context != null) {
-            viewer.setContext(context);
-        }
         if (eObjectContext != null) {
             viewer.setContext(eObjectContext);
         }
@@ -281,10 +335,6 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
         for (final IExpressionValidator validator : validators) {
             viewer.addActionExpressionValidator(validator);
         }
-
-        viewer.setOperation(action);
-        viewer.setEObject(eObject);
-
         return viewer;
     }
 
@@ -321,6 +371,17 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
      * add lines from the form
      */
     public void fillTable() {
+        IObservableList observableList = CustomEMFEditObservables.observeList(Realm.getDefault(), getEObject(),  getActionTargetFeature());
+        observableList.addListChangeListener(new IListChangeListener() {
+            
+            
+            @Override
+            public void handleListChange(ListChangeEvent event) {
+              for(Object operation : event.getObservableList()){
+                  operationViewers.get( event.getObservableList().indexOf(operation)).setOperation((Operation) operation);
+              }
+            }
+        });
         for (final Operation action : getActions()) {
             addLineUI(action);
         }
@@ -332,13 +393,13 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
             if (moveToolbars.indexOf(tb) == getActions().size() - 1 && moveToolbars.indexOf(tb) == 0) {
                 tb.getItem(0).setEnabled(false);
                 tb.getItem(1).setEnabled(false);
-            }else  if (moveToolbars.indexOf(tb) == 0) {
+            } else if (moveToolbars.indexOf(tb) == 0) {
                 tb.getItem(1).setEnabled(true);
                 tb.getItem(0).setEnabled(false);
             } else if (moveToolbars.indexOf(tb) == getActions().size() - 1) {
                 tb.getItem(1).setEnabled(false);
                 tb.getItem(0).setEnabled(true);
-            }else {
+            } else {
                 tb.getItem(0).setEnabled(true);
                 tb.getItem(1).setEnabled(true);
             }
@@ -389,6 +450,9 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
     }
 
     public EObject getEObject() {
+        if (eObject instanceof Lane) {
+            return getEObject().eContainer();
+        }
         return eObject;
     }
 
@@ -401,9 +465,6 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
     @SuppressWarnings("unchecked")
     private List<Operation> getActions() {
         EObject eObject = getEObject();
-        if (getEObject() instanceof Lane) {
-            eObject = getEObject().eContainer();
-        }
         return (List<Operation>) eObject.eGet(getActionTargetFeature());
     }
 
