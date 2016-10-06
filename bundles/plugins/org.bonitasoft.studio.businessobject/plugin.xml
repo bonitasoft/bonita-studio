@@ -36,6 +36,7 @@
             </command>
             <command
                   commandId="org.bonitasoft.studio.businessobject.openH2Console"
+                  icon="icons/h2.png"
                   style="push">
             </command>
             <separator
