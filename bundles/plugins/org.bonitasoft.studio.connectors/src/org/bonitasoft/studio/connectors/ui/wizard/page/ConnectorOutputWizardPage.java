@@ -62,11 +62,11 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
 
         final Composite mainComposite = new Composite(scrolledComposite, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(5, 5, 5, 0).create());
 
         if (!Strings.isNullOrEmpty(outputsDescription)) {
             final Link description = new Link(mainComposite, SWT.WRAP);
-            description.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+            description.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).hint(400, SWT.DEFAULT).create());
             description.setText(outputsDescription);
             description.addSelectionListener(new SelectionAdapter() {
 
