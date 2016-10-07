@@ -142,8 +142,13 @@ public class CreateBusinessDataProposalListener implements IDataProposalListener
 
     private boolean isSupportedType(String returnType) {
         final BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        final BusinessObjectModel content = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME).getContent();
-        return content.getBusinessObjectsClassNames().contains(returnType) || Object.class.getName().equals(returnType);
+        final BusinessObjectModelFileStore child = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        if (child != null) {
+            final BusinessObjectModel content = child.getContent();
+            return content.getBusinessObjectsClassNames().contains(returnType) || Object.class.getName().equals(returnType);
+        }
+        return Object.class.getName().equals(returnType);
+
     }
 
     @Override
