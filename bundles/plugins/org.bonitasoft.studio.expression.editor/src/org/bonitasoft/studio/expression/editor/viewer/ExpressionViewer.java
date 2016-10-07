@@ -455,6 +455,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             expressionProposalLableProvider = new ExpressionLabelProvider();
         }
         contentAssistText = new ContentAssistText(control, expressionProposalLableProvider, style);
+
         textControl = contentAssistText.getTextControl();
         if (widgetFactory != null) {
             widgetFactory.adapt(textControl, false, false);
@@ -771,6 +772,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         expressionBinding = internalDataBindingContext.bindValue(textDelayedObservableValue, nameObservable,
                 targetToModelNameStrategy, updateValueStrategy().create());
         bindEditableText(typeObservable);
+        internalDataBindingContext.bindValue(ViewersObservables.observeSingleSelection(contentAssistText), getSelectedExpressionObservable());
         if (externalDataBindingContext != null) {
             externalDataBindingContext.addBinding(expressionBinding);
             externalDataBindingContext.addValidationStatusProvider(expressionViewerValidator);

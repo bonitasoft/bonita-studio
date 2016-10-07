@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.expression.editor.operation;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -49,7 +48,6 @@ import org.eclipse.core.databinding.observable.list.ListChangeEvent;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
-import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.command.AddCommand;
@@ -72,11 +70,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
-/**
- * @author Aurelien Pupier
- * @author Aurelie Zara
- * @author Romain Bioteau
- */
+
 public abstract class OperationsComposite extends Composite implements IBonitaVariableContext {
 
     public static final String SWTBOT_ID_REMOVE_LINE = "actionLinesCompositeRemoveButton";
@@ -98,6 +92,7 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
     private EObject eObjectContext;
     private boolean isPageFlowContext = false;
     private final Composite operationComposite;
+    private final IListChangeListener operationListlistener;
 
     public OperationsComposite(final TabbedPropertySheetPage tabbedPropertySheetPage,
             final Composite mainComposite, final ViewerFilter actionExpressionFilter,
@@ -125,6 +120,19 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
         this.storageExpressionFilter = storageExpressionFilter;
 
         createAddButton(buttonComposite);
+
+        operationListlistener = new IListChangeListener() {
+
+            @Override
+            public void handleListChange(ListChangeEvent event) {
+                for (final Object operation : event.getObservableList()) {
+                    final int operationIndex = event.getObservableList().indexOf(operation);
+                    if (operationViewers.size() > operationIndex) {
+                        operationViewers.get(operationIndex).setOperation((Operation) operation);
+                    }
+                }
+            }
+        };
     }
 
     public OperationsComposite(final TabbedPropertySheetPage tabbedPropertySheetPage,
@@ -285,18 +293,17 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                int index = moveToolbars.indexOf(moveTB);
+                final int index = moveToolbars.indexOf(moveTB);
                 final EList<Operation> actions = (EList<Operation>) getActions();
-                EditingDomain editingDomain = getEditingDomain();
+                final EditingDomain editingDomain = getEditingDomain();
                 if (editingDomain != null) {
                     editingDomain.getCommandStack()
                             .execute(MoveCommand.create(getEditingDomain(), getEObject(), getActionTargetFeature(), actions.get(index), index - 1));
-                }else{
+                } else {
                     actions.move(index - 1, actions.get(index));
                 }
             }
 
-          
         });
         final ToolItem moveDown = new ToolItem(moveTB, SWT.FLAT | SWT.NO_FOCUS);
         moveDown.setImage(Pics.getImage(PicsConstants.arrowDownOrder));
@@ -306,19 +313,19 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
             @Override
             public void widgetSelected(SelectionEvent e) {
                 final EList<Operation> actions = (EList<Operation>) getActions();
-                int index = moveToolbars.indexOf(moveTB);
-                EditingDomain editingDomain = getEditingDomain();
+                final int index = moveToolbars.indexOf(moveTB);
+                final EditingDomain editingDomain = getEditingDomain();
                 if (editingDomain != null) {
                     getEditingDomain().getCommandStack()
                             .execute(MoveCommand.create(getEditingDomain(), getEObject(), getActionTargetFeature(), actions.get(index), index + 1));
-                }else{
+                } else {
                     actions.move(index + 1, actions.get(index));
                 }
             }
         });
         return moveTB;
     }
-    
+
     protected OperationViewer createOperationViewer() {
         final OperationViewer viewer = new OperationViewer(operationComposite, widgetFactory, getEditingDomain(), actionExpressionFilter,
                 storageExpressionFilter, isPageFlowContext);
@@ -371,17 +378,9 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
      * add lines from the form
      */
     public void fillTable() {
-        IObservableList observableList = CustomEMFEditObservables.observeList(Realm.getDefault(), getEObject(),  getActionTargetFeature());
-        observableList.addListChangeListener(new IListChangeListener() {
-            
-            
-            @Override
-            public void handleListChange(ListChangeEvent event) {
-              for(Object operation : event.getObservableList()){
-                  operationViewers.get( event.getObservableList().indexOf(operation)).setOperation((Operation) operation);
-              }
-            }
-        });
+        final IObservableList observableList = CustomEMFEditObservables.observeList(Realm.getDefault(), getEObject(), getActionTargetFeature());
+        observableList.removeListChangeListener(operationListlistener);
+        observableList.addListChangeListener(operationListlistener);
         for (final Operation action : getActions()) {
             addLineUI(action);
         }
@@ -464,7 +463,7 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
 
     @SuppressWarnings("unchecked")
     private List<Operation> getActions() {
-        EObject eObject = getEObject();
+        final EObject eObject = getEObject();
         return (List<Operation>) eObject.eGet(getActionTargetFeature());
     }
 

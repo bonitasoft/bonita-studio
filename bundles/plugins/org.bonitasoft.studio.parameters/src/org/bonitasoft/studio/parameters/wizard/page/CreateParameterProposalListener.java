@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -100,7 +101,7 @@ public class CreateParameterProposalListener implements IProposalListener {
     }
 
     @Override
-    public boolean isRelevant(final EObject context) {
+    public boolean isRelevant(final EObject context, final ISelection selection) {
         return true;
     }
 

@@ -11,6 +11,7 @@ package org.bonitasoft.studio.expression.editor.provider;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jface.viewers.ISelection;
 
 /**
  * @author Maxence Raoux
@@ -22,6 +23,6 @@ public interface IProposalListener extends IBonitaVariableContext {
 
     public void setEStructuralFeature(EStructuralFeature feature);
 
-    public boolean isRelevant(EObject context);
+    public boolean isRelevant(EObject context, ISelection selection);
 }
 

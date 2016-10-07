@@ -187,7 +187,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
             final String expressionTypeLink = element.getAttribute("type");
             if (expressionTypeLink.equals(ExpressionConstants.VARIABLE_TYPE)) {
                 final IProposalListener proposalListener = (IProposalListener) element.createExecutableExtension("providerClass");
-                if (proposalListener.isRelevant(context) && proposalListener instanceof CreateVariableProposalListener) {
+                if (proposalListener.isRelevant(context, null) && proposalListener instanceof CreateVariableProposalListener) {
                     expressionViewer.getContentProposal().addNewData(proposalListener);
                     fillViewerData(context, filters);
                     return;
@@ -197,11 +197,11 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
     }
 
     private void fillViewerData(final EObject context, final ViewerFilter[] filters) {
-        final Set<Data> input = new HashSet<Data>();
+        final Set<Data> input = new HashSet<>();
         final IExpressionProvider provider = ExpressionEditorService.getInstance()
                 .getExpressionProvider(ExpressionConstants.VARIABLE_TYPE);
         final Set<Expression> expressions = provider.getExpressions(context);
-        final Set<Expression> filteredExpressions = new HashSet<Expression>();
+        final Set<Expression> filteredExpressions = new HashSet<>();
         if (expressions != null) {
             filteredExpressions.addAll(expressions);
             if (input != null && filters != null) {

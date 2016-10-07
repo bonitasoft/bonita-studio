@@ -16,6 +16,7 @@ package org.bonitasoft.studio.expression.editor.provider;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jface.viewers.ISelection;
 
 /**
  * @author Romain Bioteau
@@ -53,7 +54,7 @@ public abstract class IProposalAdapter implements IProposalListener {
     }
 
     @Override
-    public boolean isRelevant(final EObject context) {
+    public boolean isRelevant(final EObject context, final ISelection selection) {
         return false;
     }
 }
