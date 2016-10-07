@@ -49,6 +49,7 @@ import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -724,26 +725,29 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                 final Composite creationZoneComposite = new Composite(parent, SWT.NONE);
                 creationZoneComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
                 creationZoneComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-                Link createDataLink;
                 final ExtensionContextInjectionFactory extensionContextInjectionFactory = new ExtensionContextInjectionFactory();
                 for (final IConfigurationElement element : getProposalListeners()) {
                     final String expressionTypeLink = element.getAttribute("type");
                     if (!filteredExpressionType.contains(expressionTypeLink)) {
-                        createDataLink = new Link(creationZoneComposite, SWT.NONE);
-                        final String name = element.getAttribute("name");
-                        createDataLink.setText(name);
                         try {
                             final IProposalListener listener = extensionContextInjectionFactory.make(element, "providerClass", IProposalListener.class);
-                            createDataLink.addSelectionListener(new SelectionAdapter() {
+                            if (listener.isRelevant(context, selection)) {
+                                final Link createDataLink = new Link(creationZoneComposite, SWT.NONE);
+                                final String name = element.getAttribute("name");
+                                createDataLink.setText(name);
 
-                                @Override
-                                public void widgetSelected(final SelectionEvent e) {
-                                    linkClicked = true;
-                                    updateExpressionField(addNewData(listener));
-                                    linkClicked = false;
-                                }
+                                createDataLink.addSelectionListener(new SelectionAdapter() {
 
-                            });
+                                    @Override
+                                    public void widgetSelected(final SelectionEvent e) {
+                                        linkClicked = true;
+                                        updateExpressionField(addNewData(listener));
+                                        linkClicked = false;
+                                    }
+
+                                });
+                                linkList.add(createDataLink);
+                            }
                         } catch (final InjectionException e1) {
                             BonitaStudioLog.error(e1);
                         } catch (final ClassNotFoundException e1) {
@@ -751,7 +755,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                         } catch (final InvalidRegistryObjectException e1) {
                             BonitaStudioLog.error(e1);
                         }
-                        linkList.add(createDataLink);
+
                     }
                 }
                 creationZoneComposite.getParent().layout(true, true);
@@ -765,9 +769,9 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
         private IConfigurationElement[] getProposalListeners() {
             final IConfigurationElement[] configurationElements = BonitaStudioExtensionRegistryManager.getInstance()
                     .getConfigurationElements("org.bonitasoft.studio.expression.proposalListener");
-            final List<IConfigurationElement> elements = new ArrayList<IConfigurationElement>();
+            final List<IConfigurationElement> elements = new ArrayList<>();
             // Filters duplicates
-            final Set<String> expressionTypes = new HashSet<String>();
+            final Set<String> expressionTypes = new HashSet<>();
             for (final IConfigurationElement e : configurationElements) {
                 final String type = e.getAttribute("type");
                 if (type.equals(ExpressionConstants.DOCUMENT_REF_TYPE) && expressionTypes.contains(ExpressionConstants.DOCUMENT_TYPE)) {
@@ -1422,6 +1426,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
     private boolean createShortcutZone;
 
+    private ISelection selection;
+
     /**
      * Construct a content proposal adapter that can assist the user with
      * choosing content for the field.
@@ -1460,7 +1466,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
         Assert.isNotNull(controlContentAdapter);
         this.control = control;
         this.controlContentAdapter = controlContentAdapter;
-        linkList = new ArrayList<Link>();
+        linkList = new ArrayList<>();
         // The rest of these may be null
         this.proposalProvider = proposalProvider;
         triggerKeyStroke = keyStroke;
@@ -1468,7 +1474,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
             autoActivateString = new String(autoActivationCharacters);
         }
         addControlListener(control);
-        filteredExpressionType = new ArrayList<String>();
+        filteredExpressionType = new ArrayList<>();
     }
 
     public void setContext(final EObject context) {
@@ -1882,8 +1888,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                             // check the character field...
                             if (triggerKeyStroke.getModifierKeys() == KeyStroke.NO_KEY && triggerKeyStroke.getNaturalKey() == e.character
                                     ||
-                                    // ...or there are modifiers, in which case the
-                                    // keycode and state must match
+                            // ...or there are modifiers, in which case the
+                            // keycode and state must match
                                     triggerKeyStroke.getNaturalKey() == e.keyCode && (triggerKeyStroke.getModifierKeys() & e.stateMask) == triggerKeyStroke
                                             .getModifierKeys()) {
                                 // We never propagate the keystroke for an explicit
@@ -2407,6 +2413,10 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
     public void setCreateShortcutZone(final boolean createShortcutZone) {
         this.createShortcutZone = createShortcutZone;
+    }
+
+    public void setSelection(ISelection selection) {
+        this.selection = selection;
     }
 
 }
