@@ -14,92 +14,77 @@
  */
 package org.bonitasoft.studio.properties.sections.operation;
 
+import javax.inject.Inject;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
-import org.bonitasoft.studio.expression.editor.operation.PropertyOperationsComposite;
-import org.bonitasoft.studio.model.process.OperationContainer;
+import org.bonitasoft.studio.expression.editor.operation.OperationGroupViewer;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.ReceiveTask;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Romain Bioteau
  */
 public class OperationsPropertySection extends AbstractBonitaDescriptionSection {
 
-    protected OperationsComposite operationComposite;
+    protected OperationGroupViewer operationComposite;
 
-    private OperationContainer lastEObject;
+    private final OperationContainerSelectionProvider selectionProvider;
 
-    @Override
-    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
-
+    @Inject
+    public OperationsPropertySection(OperationContainerSelectionProvider selectionProvider) {
+        this.selectionProvider = selectionProvider;
     }
 
     @Override
     protected void createContent(final Composite parent) {
+        final EMFDataBindingContext context = new EMFDataBindingContext();
+
         final Composite mainComposite = getWidgetFactory().createComposite(parent);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 15).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        operationComposite = createActionLinesComposite(mainComposite);
-        operationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        operationComposite = createViewer(mainComposite);
+        operationComposite.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        operationComposite.setContext(context);
+        operationComposite.setInput(CustomEMFEditObservables.observeDetailList(Realm.getDefault(),
+                ViewersObservables.observeSingleSelection(selectionProvider), ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS));
+        
+        context.bindValue(ViewersObservables.observeSingleSelection(selectionProvider), ViewersObservables.observeSingleSelection(operationComposite));
+        
     }
 
-    @Override
-    public void refresh() {
-        super.refresh();
-        operationComposite.refreshViewers();
-        if (operationComposite.getOperationViewers().size() != lastEObject.getOperations().size()) {
-            operationComposite.removeLinesUI();
-            operationComposite.fillTable();
-            operationComposite.refresh();
-        }
-    }
-
-    protected OperationsComposite createActionLinesComposite(final Composite parent) {
-        final AvailableExpressionTypeFilter actionFilter = new AvailableExpressionTypeFilter(new String[] {
+    protected OperationGroupViewer createViewer(final Composite parent) {
+        final AvailableExpressionTypeFilter actionFilter = new AvailableExpressionTypeFilter(
                 ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.CONTRACT_INPUT_TYPE,
                 ExpressionConstants.PARAMETER_TYPE,
                 ExpressionConstants.DOCUMENT_TYPE,
                 ExpressionConstants.SCRIPT_TYPE,
-                ExpressionConstants.QUERY_TYPE
-        });
+                ExpressionConstants.QUERY_TYPE);
 
-        final AvailableExpressionTypeFilter dataFilter = new AvailableExpressionTypeFilter(new String[] {
+        final AvailableExpressionTypeFilter dataFilter = new AvailableExpressionTypeFilter(
                 ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.SEARCH_INDEX_TYPE,
-                ExpressionConstants.DOCUMENT_REF_TYPE
-        });
+                ExpressionConstants.DOCUMENT_REF_TYPE);
 
-        return new PropertyOperationsComposite(getTabbedPropertySheetPage(), parent, actionFilter, dataFilter);
+        return new OperationGroupViewer(getTabbedPropertySheetPage(), parent, actionFilter, dataFilter);
     }
 
     @Override
     public void setInput(final IWorkbenchPart part, final ISelection selection) {
         super.setInput(part, selection);
-        if (lastEObject == null || lastEObject != null && !lastEObject.equals(getEObject())) {
-            lastEObject = (OperationContainer) getEObject();
-            operationComposite.setEObject(getEObject());
-            if (lastEObject instanceof ReceiveTask) {
-                operationComposite.setOperationContainmentFeature(ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS);
-            }
-            operationComposite.setContext(new EMFDataBindingContext());
-            operationComposite.removeLinesUI();
-            operationComposite.fillTable();
-            operationComposite.refresh();
-        }
+        selectionProvider.setSelection(selection);
     }
 
     /*
