@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.IControlContentAdapter;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.widgets.Control;
 
@@ -81,6 +82,10 @@ public class AutoCompletionField {
 
     public void setCreateShortcutZone(final boolean createShortcutZone) {
         contentProposalAdapter.setCreateShortcutZone(createShortcutZone);
+    }
+
+    public void setSelection(ISelection selection) {
+        this.contentProposalAdapter.setSelection(selection);
     }
 
 }

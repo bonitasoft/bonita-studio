@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -143,7 +144,7 @@ public class CreateVariableProposalListener implements IDataProposalListener {
     }
 
     @Override
-    public boolean isRelevant(final EObject context) {
+    public boolean isRelevant(final EObject context, final ISelection selection) {
         return true;
     }
 

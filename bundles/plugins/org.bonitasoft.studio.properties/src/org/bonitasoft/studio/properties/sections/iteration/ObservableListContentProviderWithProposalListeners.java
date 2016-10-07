@@ -33,7 +33,7 @@ import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 public abstract class ObservableListContentProviderWithProposalListeners extends ObservableListContentProvider {
 
     private static final String PROPOSAL_LISTENER_EXTENSION_ID = "org.bonitasoft.studio.expression.proposalListener";
-    private final List<IProposalListener> proposalListeners = new ArrayList<IProposalListener>();
+    private final List<IProposalListener> proposalListeners = new ArrayList<>();
 
     public ObservableListContentProviderWithProposalListeners(final EObject context) {
         initProposalListeners(context);
@@ -50,7 +50,7 @@ public abstract class ObservableListContentProviderWithProposalListeners extends
                 IDataProposalListener extension;
                 try {
                     extension = (IDataProposalListener) configElement.createExecutableExtension("providerClass");
-                    if (extension.isRelevant(context) && !proposalListeners.contains(extension)) {
+                    if (extension.isRelevant(context, null) && !proposalListeners.contains(extension)) {
                         extension.setMultipleData(isMultipleData());
                         proposalListeners.add(extension);
                     }
@@ -65,7 +65,7 @@ public abstract class ObservableListContentProviderWithProposalListeners extends
     @Override
     public Object[] getElements(final Object inputElement) {
         final Object[] elements = super.getElements(inputElement);
-        final List<Object> result = new ArrayList<Object>();
+        final List<Object> result = new ArrayList<>();
         for (final Object element : elements) {
             result.add(element);
         }
