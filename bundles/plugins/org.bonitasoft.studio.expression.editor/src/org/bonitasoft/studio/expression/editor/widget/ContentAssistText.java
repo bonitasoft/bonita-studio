@@ -25,6 +25,9 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.FocusEvent;
@@ -47,14 +50,16 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * @author Romain Bioteau
  */
-public class ContentAssistText extends Composite implements SWTBotConstants {
+public class ContentAssistText extends Composite implements SWTBotConstants, ISelectionProvider {
 
     private final Text textControl;
     private final AutoCompletionField autoCompletion;
     private boolean drawBorder = true;
     private final ToolBar tb;
     private boolean isReadOnly = false;
-    private final List<IBonitaContentProposalListener2> contentAssistListerners = new ArrayList<IBonitaContentProposalListener2>();
+    private final List<IBonitaContentProposalListener2> contentAssistListerners = new ArrayList<>();
+    private final List<ISelectionChangedListener> listeners = new ArrayList<>();
+    private ISelection selection;
 
     public ContentAssistText(final Composite parent, final IExpressionProposalLabelProvider contentProposalLabelProvider, int style) {
         super(parent, SWT.NONE);
@@ -198,6 +203,39 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 
     public void addContentAssistListener(final IBonitaContentProposalListener2 listener) {
         contentAssistListerners.add(listener);
+    }
+
+    @Override
+    public void addSelectionChangedListener(final ISelectionChangedListener listener) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
+
+    @Override
+    public void removeSelectionChangedListener(final ISelectionChangedListener listener) {
+        if (listeners.contains(listener)) {
+            listeners.remove(listener);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+     */
+    @Override
+    public ISelection getSelection() {
+        return selection;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+     */
+    @Override
+    public void setSelection(ISelection selection) {
+        this.selection = selection;
+        getAutocompletion().setSelection(selection);
     }
 
 }
