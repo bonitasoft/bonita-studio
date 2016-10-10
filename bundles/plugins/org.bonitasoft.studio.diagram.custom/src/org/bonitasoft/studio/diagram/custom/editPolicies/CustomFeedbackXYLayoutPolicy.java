@@ -118,6 +118,8 @@ public class CustomFeedbackXYLayoutPolicy extends XYLayoutEditPolicy implements 
                         }
                     }
                 }
+                
+                
 
                 @Override
                 public void addSelectionHandles() {

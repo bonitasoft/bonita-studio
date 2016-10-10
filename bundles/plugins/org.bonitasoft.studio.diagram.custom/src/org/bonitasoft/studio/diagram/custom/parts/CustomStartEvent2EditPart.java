@@ -44,12 +44,14 @@ public class CustomStartEvent2EditPart extends StartEvent2EditPart {
 	 */
 	@Override
 	protected NodeFigure createNodePlate() {
-		DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(FiguresHelper.EVENT_WIDTH, FiguresHelper.EVENT_WIDTH) {
-			public PointList getPolygonPoints() {
-				Rectangle anchRect = getHandleBounds();
+		final DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(FiguresHelper.EVENT_WIDTH, FiguresHelper.EVENT_WIDTH) {
+			@Override
+            public PointList getPolygonPoints() {
+				final Rectangle anchRect = getHandleBounds();
 				return FiguresHelper.CirclePointList(anchRect);
 			}
 		};
 		return result;
 	}
+	
 }

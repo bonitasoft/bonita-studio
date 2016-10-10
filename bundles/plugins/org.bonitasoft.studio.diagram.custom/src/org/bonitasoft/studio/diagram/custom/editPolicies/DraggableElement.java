@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.diagram.custom.editPolicies;
 
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.Locator;
@@ -62,7 +63,7 @@ public class DraggableElement extends AbstractHandle {
 			public void relocate(IFigure target) {
 				target.setLocation(new Point(10, 10));
 			}
-		}, Cursors.CURSOR_SEG_ADD);
+		}, Pics.getOpenedHandCursor());
 		this.zoomManager = zoomManager ; 
 		this.toolEntry = toolEntry;
 		this.tool = tool;

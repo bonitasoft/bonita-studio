@@ -336,7 +336,7 @@
               xsi:type="gmfgraph:GridLayoutData"
               grabExcessHorizontalSpace="true"
               grabExcessVerticalSpace="true"
-              verticalAlignment="FILL"
+              verticalAlignment="CENTER"
               horizontalAlignment="FILL"/>
         </children>
       </actualFigure>
@@ -942,7 +942,7 @@
               xsi:type="gmfgraph:GridLayoutData"
               grabExcessHorizontalSpace="true"
               grabExcessVerticalSpace="true"
-              verticalAlignment="FILL"
+              verticalAlignment="CENTER"
               horizontalAlignment="FILL"/>
         </children>
       </actualFigure>

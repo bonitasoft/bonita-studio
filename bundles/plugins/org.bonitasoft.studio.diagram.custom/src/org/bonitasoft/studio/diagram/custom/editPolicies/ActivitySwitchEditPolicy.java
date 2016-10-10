@@ -91,7 +91,9 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 
 
@@ -154,7 +156,7 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
         }
         image.setSize(16, 16);
         image.setToolTip(new Label(processPaletteLabelProvider.getProcessPaletteText(type.getEClass())));
-
+        image.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_HAND));
 
 
         final MouseListener listener = new MouseListener() {
@@ -274,6 +276,8 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
 
             iconImage = Pics.getImage("Icon_tools.png", Activator.getDefault()) ;
             toolImage = new ImageFigure(iconImage);
+            toolImage.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_HAND));
+
             dropMenu = new DropDownMenuFigure(toolImage,composite,layer, Messages.switchTool);
             toolBarFigure.addToMenu(dropMenu);
             dropMenu.addToggleVisibilityListener(new Listener() {

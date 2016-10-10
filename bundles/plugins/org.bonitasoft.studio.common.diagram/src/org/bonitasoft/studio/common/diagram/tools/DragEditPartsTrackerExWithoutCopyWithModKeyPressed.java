@@ -18,8 +18,10 @@
 package org.bonitasoft.studio.common.diagram.tools;
 
 import org.bonitasoft.studio.model.process.SubProcessEvent;
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
@@ -29,6 +31,7 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Cursor;
 
 /**
  * @author Aurelien Pupier
@@ -54,6 +57,7 @@ public class DragEditPartsTrackerExWithoutCopyWithModKeyPressed extends DragEdit
 	 */
 	public DragEditPartsTrackerExWithoutCopyWithModKeyPressed(EditPart sourceEditPart) {
 		super(sourceEditPart);
+		setDefaultCursor(Pics.getClosedHandCursor());
 	}
 
 	/*
@@ -94,5 +98,6 @@ public class DragEditPartsTrackerExWithoutCopyWithModKeyPressed extends DragEdit
 			super.executeCurrentCommand() ;
 		}
 	}
+
 
 }
