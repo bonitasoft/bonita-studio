@@ -42,6 +42,9 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.widgets.Display;
 
 
 /**
@@ -174,6 +177,7 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
      */
     public class CustomSequenceFlowFigure extends PolylineConnectionEx {
 
+        
         /**
          * @generated
          */
