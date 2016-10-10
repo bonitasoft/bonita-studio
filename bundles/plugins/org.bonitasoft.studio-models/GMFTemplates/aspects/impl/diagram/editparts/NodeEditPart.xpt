@@ -29,6 +29,9 @@
 «FOREACH getInnerFixedLabels(self) AS label»«LET label.viewmap.oclAsType(gmfgen::ParentAssignedViewmap) AS childViewmap-»
 		if (childEditPart instanceof «label.getEditPartQualifiedClassName()») {
 			((«label.getEditPartQualifiedClassName()») childEditPart).«EXPAND impl::diagram::editparts::TextAware::labelSetterName FOR childViewmap»(getPrimaryShape().«childViewmap.getterName»());
+   			if (VISUAL_ID != 3007 && VISUAL_ID != 2007 && VISUAL_ID != 3015 && VISUAL_ID != 3058) {
+					getPrimaryShape().«childViewmap.getterName»().addMouseMotionListener(new org.bonitasoft.studio.common.diagram.ActivityNameCursorMouseMotionListener(this));
+			}
 			return true;
 		}
 «ENDLET»«ENDFOREACH-»
@@ -77,6 +80,41 @@
 		};
 	}
 «ENDDEFINE»
+
+«DEFINE setupContentPane FOR gmfgen::GenNode-»
+	«EXPAND xpt::Common::generatedMemberComment(
+		'Default implementation treats passed figure as content pane.\n' + 
+		'Respects layout one may have set for generated figure.\n' + 
+		'@param nodeShape instance of generated figure class'
+	)»
+	protected org.eclipse.draw2d.IFigure setupContentPane(org.eclipse.draw2d.IFigure nodeShape) {
+		«IF not childNodes->isEmpty() or (not compartments->isEmpty() or labels[not oclIsKindOf(gmfgen::GenExternalNodeLabel)]->notEmpty())-»
+			if (nodeShape.getLayoutManager() == null) {
+				«IF getLayoutType() = gmfgen::ViewmapLayoutType::XY_LAYOUT-»
+					nodeShape.setLayoutManager(new org.eclipse.draw2d.FreeformLayout() {
+
+						public Object getConstraint(org.eclipse.draw2d.IFigure figure) {
+							Object result = constraints.get(figure);
+							if (result == null) {
+								result = new org.eclipse.draw2d.geometry.Rectangle(0, 0, -1, -1);
+							}
+							return result;
+						}
+					});
+				«ELSE-»
+					org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout layout =new org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout();
+					layout.setSpacing(«IF getDiagram().isPixelMapMode()»5«ELSE»getMapMode().DPtoLP(5)«ENDIF»);
+					nodeShape.setLayoutManager(layout);
+				«ENDIF-»
+			}
+		«ENDIF-»
+		 if (VISUAL_ID != 3007 && VISUAL_ID != 2007) {
+			getPrimaryShape().addMouseMotionListener(new org.bonitasoft.studio.common.diagram.ActivityCursorMouseMotionListener());
+		 }
+		return nodeShape; // use nodeShape itself as contentPane
+	}
+«ENDDEFINE»
+
 
 «DEFINE borderItemSelectionEditPolicy FOR gmfgen::GenNode-»
 «REM»do not reset selection edit policy on child«ENDREM»

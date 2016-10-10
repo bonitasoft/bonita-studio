@@ -21,6 +21,7 @@ import java.util.Locale;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -42,6 +43,10 @@ public class Pics extends AbstractUIPlugin {
     private static Pics plugin;
 
     private static ImageDescriptor wizban;
+
+    private static Cursor CURSOR_OPENED_HAND;
+
+    private static Cursor CURSOR_CLOSE_HAND;
 
     private static class ClassPathResourceImageDescriptor extends ImageDescriptor {
 
@@ -115,11 +120,10 @@ public class Pics extends AbstractUIPlugin {
     public static ImageDescriptor getImageDescriptor(final String imageName, final AbstractUIPlugin plugin) {
         ImageDescriptor desc;
         try {
-            desc =
-                    ImageDescriptor.createFromURL(
-                            new URL(
-                                    plugin.getBundle().getResource("/"), //$NON-NLS-1$
-                                    "icons/" + imageName)); //$NON-NLS-1$
+            desc = ImageDescriptor.createFromURL(
+                    new URL(
+                            plugin.getBundle().getResource("/"), //$NON-NLS-1$
+                            "icons/" + imageName)); //$NON-NLS-1$
         } catch (final MalformedURLException e) {
             desc = ImageDescriptor.getMissingImageDescriptor();
         }
@@ -168,6 +172,25 @@ public class Pics extends AbstractUIPlugin {
 
     public static Image getFlag(final Locale locale) {
         return getImage("/flags/" + locale.getCountry() + ".png"); //$NON-NLS-1$
+    }
+
+    public static Cursor getOpenedHandCursor() {
+        if(CURSOR_OPENED_HAND == null){
+            CURSOR_OPENED_HAND = createCursor(getImageDescriptor("/cursor/open_hand.png"));
+        }
+        return CURSOR_OPENED_HAND; //$NON-NLS-1$
+    }
+    
+    public static Cursor getClosedHandCursor() {
+        if(CURSOR_CLOSE_HAND == null){
+            CURSOR_CLOSE_HAND = createCursor(getImageDescriptor("/cursor/closed_hand.png"));
+        }
+        return CURSOR_CLOSE_HAND; //$NON-NLS-1$
+    }
+
+    private static Cursor createCursor(ImageDescriptor imageDescriptor) {
+        ImageData openHand = imageDescriptor.getImageData();
+        return new Cursor(Display.getCurrent(), openHand, 12, 12);
     }
 
     /**

@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009-2014 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.diagram.custom.editPolicies;
 
@@ -22,6 +19,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
@@ -58,7 +56,6 @@ import org.eclipse.gmf.runtime.diagram.ui.tools.UnspecifiedTypeCreationTool;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.IHintedType;
-import org.eclipse.gmf.runtime.gef.ui.internal.l10n.Cursors;
 import org.eclipse.gmf.runtime.notation.Bounds;
 import org.eclipse.gmf.runtime.notation.Connector;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -67,7 +64,6 @@ import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mickael Istria
@@ -75,385 +71,367 @@ import org.eclipse.ui.PlatformUI;
  */
 public class DraggableElementCreationTool extends CreationTool implements DragTracker {
 
-	private DraggableElement draggableElement;
-	private IFigure figure;
-	private UnspecifiedTypeCreationTool tool;
+    private final DraggableElement draggableElement;
+    private final IFigure figure;
+    private final UnspecifiedTypeCreationTool tool;
 
-	// compartment feedback
-	private boolean dragged;
+    // compartment feedback
+    private boolean dragged;
 
-	private PrecisionRectangle sourceRectangle, compoundSrcRect;
-	private SnapToHelper helper ;
-	private Cursor cursor;
-	private Image image;
-	private ZoomManager zoomManager;
+    private PrecisionRectangle sourceRectangle, compoundSrcRect;
+    private SnapToHelper helper;
+    private Cursor cursor;
+    private Image image;
+    private final ZoomManager zoomManager;
 
-	/**
-	 * @param toolEntry The tool entry to create the node
-	 * @param draggableElement 
-	 */
-	public DraggableElementCreationTool(UnspecifiedTypeCreationTool tool, DraggableElement draggableElement,ZoomManager zoomManager) {
+    /**
+     * @param toolEntry The tool entry to create the node
+     * @param draggableElement
+     */
+    public DraggableElementCreationTool(UnspecifiedTypeCreationTool tool, DraggableElement draggableElement, ZoomManager zoomManager) {
+        this.tool = tool;
+        this.draggableElement = draggableElement;
+        this.zoomManager = zoomManager;
+        this.figure = createImage();
 
-		this.tool = tool;
-		this.draggableElement = draggableElement;
-		this.zoomManager = zoomManager ;
-		this.figure = createImage();
-
-		// Remove cursor
-		initCursor();
-		setUnloadWhenFinished(true);
-	}
-
-	private void initCursor() {
-		if(image== null || image.isDisposed()){
-			image = new Image(PlatformUI.getWorkbench().getDisplay(), 1, 1);
-		}
-		if(cursor == null || cursor.isDisposed()){
-			cursor = new Cursor(PlatformUI.getWorkbench().getDisplay(), image.getImageData(), 0, 0);
-			setDefaultCursor(cursor);
-		}
-	}
-
-	/**
-	 * @return
-	 */
-	private IFigure createImage() {
-		CreateUnspecifiedTypeRequest createUnspecifiedTypeRequest = (CreateUnspecifiedTypeRequest)tool.createCreateRequest();
-		EClass eClass = ((IElementType)createUnspecifiedTypeRequest.getElementTypes().get(0)).getEClass();
-		IFigure svgFigure = FiguresHelper.getSelectedFigure(eClass,-1,-1,null,null);
-		Rectangle r = svgFigure.getBounds().getCopy() ;
-		r.performScale(zoomManager.getZoom());
-		svgFigure.setBounds(r) ;
-		return svgFigure;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.tools.AbstractTool#getCommandName()
-	 */
-	@Override
-	protected String getCommandName() {
-		return null;
-	}
-
-	@Override
-	protected Request createTargetRequest() {
-		return  tool.createCreateRequest(); 
-	}
+        // Remove cursor
+        //	initCursor();
+        setDefaultCursor(Pics.getClosedHandCursor());
+        setUnloadWhenFinished(true);
+    }
 
 
-	@Override
-	protected boolean handleDrag() {
-		dragged = true;
-		if (getTargetEditPart() != null){
-			helper = (SnapToHelper) getTargetEditPart().getAdapter(SnapToHelper.class);
-		}
+    /**
+     * @return
+     */
+    private IFigure createImage() {
+        final CreateUnspecifiedTypeRequest createUnspecifiedTypeRequest = (CreateUnspecifiedTypeRequest) tool.createCreateRequest();
+        final EClass eClass = ((IElementType) createUnspecifiedTypeRequest.getElementTypes().get(0)).getEClass();
+        final IFigure svgFigure = FiguresHelper.getSelectedFigure(eClass, -1, -1, null, null);
+        final Rectangle r = svgFigure.getBounds().getCopy();
+        r.performScale(zoomManager.getZoom());
+        svgFigure.setBounds(r);
+        return svgFigure;
+    }
 
-		updateTargetUnderMouse();
-		updateTargetRequest();
-		redrawFeedback();
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.gef.tools.AbstractTool#getCommandName()
+     */
+    @Override
+    protected String getCommandName() {
+        return null;
+    }
 
-		return super.handleDrag();
-	}
+    @Override
+    protected Request createTargetRequest() {
+        return tool.createCreateRequest();
+    }
 
-	@Override
-	protected boolean handleMove() {
-		super.handleMove();
-		redrawFeedback();
-		if (getTargetEditPart() != null){
-			helper = (SnapToHelper) getTargetEditPart().getAdapter(SnapToHelper.class);
-		}
-		return true;
-	}
+    @Override
+    protected boolean handleDrag() {
+        dragged = true;
+        if (getTargetEditPart() != null) {
+            helper = (SnapToHelper) getTargetEditPart().getAdapter(SnapToHelper.class);
+        }
 
+        updateTargetUnderMouse();
+        updateTargetRequest();
+        redrawFeedback();
 
+        return super.handleDrag();
+    }
 
-	protected void updateTargetRequest() {
+    @Override
+    protected boolean handleMove() {
+        super.handleMove();
+        redrawFeedback();
+        if (getTargetEditPart() != null) {
+            helper = (SnapToHelper) getTargetEditPart().getAdapter(SnapToHelper.class);
+        }
+        return true;
+    }
 
-		((CreateRequest)getTargetRequest()).setLocation(getLocation());
-		CreateRequest req = getCreateRequest();
-		req.getExtendedData().clear();
+    @Override
+    protected void updateTargetRequest() {
+        ((CreateRequest) getTargetRequest()).setLocation(getLocation());
+        final CreateRequest req = getCreateRequest();
+        req.getExtendedData().clear();
 
-		if (isInState(STATE_DRAG_IN_PROGRESS)) {
-			snapPoint(req);
-		}else{
-			req.setLocation(getLocation());
-			req.setSize(null);
-		}
+        if (isInState(STATE_DRAG_IN_PROGRESS)) {
+            snapPoint(req);
+        } else {
+            req.setLocation(getLocation());
+            req.setSize(null);
+        }
 
+    }
 
+    protected void snapPoint(CreateRequest request) {
+        if (helper != null && figure != null) {
+            final PrecisionRectangle baseRect = sourceRectangle.getPreciseCopy();
+            final PrecisionRectangle jointRect = compoundSrcRect.getPreciseCopy();
+            final PrecisionPoint preciseDelta = new PrecisionPoint(getLocation().preciseX(), getLocation().preciseY());
+            baseRect.translate(preciseDelta);
+            jointRect.translate(preciseDelta);
 
-	}
+            helper.snapPoint(request, PositionConstants.HORIZONTAL | PositionConstants.VERTICAL, new PrecisionRectangle[] {
+                    baseRect, jointRect }, preciseDelta);
+            request.setLocation(preciseDelta);
+        }
 
-	protected void snapPoint(CreateRequest request) {
+    }
 
-		if (helper != null && figure != null) {
-			PrecisionRectangle baseRect = sourceRectangle.getPreciseCopy();
-			PrecisionRectangle jointRect = compoundSrcRect.getPreciseCopy();
-			PrecisionPoint preciseDelta = new PrecisionPoint(getLocation().preciseX(),getLocation().preciseY());
-			baseRect.translate(preciseDelta);
-			jointRect.translate(preciseDelta);
+    @SuppressWarnings("deprecation")
+    private void captureSourceDimensions() {
+        if (figure == null)
+            return;
 
-			helper.snapPoint(request, PositionConstants.HORIZONTAL | PositionConstants.VERTICAL, new PrecisionRectangle[] {
-					baseRect, jointRect}, preciseDelta);
-			request.setLocation(preciseDelta);
-		}
+        final PrecisionRectangle bounds = new PrecisionRectangle(figure.getBounds());
+        bounds.performScale(zoomManager.getZoom());
+        figure.translateToAbsolute(bounds);
 
-	}
+        if (sourceRectangle == null) {
+            if (figure instanceof HandleBounds)
+                sourceRectangle = new PrecisionRectangle(
+                        ((HandleBounds) figure).getHandleBounds());
+            else
+                sourceRectangle = new PrecisionRectangle(figure.getBounds());
+            figure.translateToAbsolute(sourceRectangle);
 
-	@SuppressWarnings("deprecation")
-	private void captureSourceDimensions() {
-		if(figure == null)
-			return ;
+        }
 
-		PrecisionRectangle	bounds = new PrecisionRectangle(figure.getBounds());
-		bounds.performScale(zoomManager.getZoom());
-		figure.translateToAbsolute(bounds);
+        if (compoundSrcRect == null)
+            compoundSrcRect = new PrecisionRectangle(bounds);
+        else
+            compoundSrcRect = compoundSrcRect.union(bounds);
+    }
 
-		if(sourceRectangle == null){
-			if (figure instanceof HandleBounds)
-				sourceRectangle = new PrecisionRectangle(
-						((HandleBounds)figure).getHandleBounds());
-			else
-				sourceRectangle = new PrecisionRectangle(figure.getBounds());
-			figure.translateToAbsolute(sourceRectangle);
+    @Override
+    protected void setState(int state) {
+        captureSourceDimensions();
+        super.setState(state);
+    }
 
-		}
+    private void redrawFeedback() {
+        this.calculateCursor();
+        final Command command = getCommand();
 
-		if (compoundSrcRect == null)
-			compoundSrcRect = new PrecisionRectangle(bounds);
-		else
-			compoundSrcRect = compoundSrcRect.union(bounds);
-	}
+        if (command != null && command.canExecute()) {
 
+            if (!draggableElement.getLayer().getChildren().contains(figure)) {
+                draggableElement.getLayer().add(figure);
+            }
+            final IFigure parentFigure = draggableElement.getLayer();
 
-	@Override
-	protected void setState(int state) {
-		captureSourceDimensions();
-		super.setState(state);
-	}
+            final Point location = ((CreateRequest) getTargetRequest()).getLocation();
+            FiguresHelper.translateToAbsolute(parentFigure, location);
 
+            showTargetCompartmentFeedback();
+            figure.setLocation(location);
+        } else {
+            if (draggableElement.getLayer().getChildren().contains(figure)) {
+                draggableElement.getLayer().remove(figure);
+            }
+        }
+    }
 
-	/**
-	 * 
-	 */
-	private void redrawFeedback() {
-		this.calculateCursor();
-		Command command = getCommand();
+    @Override
+    protected boolean handleButtonDown(int button) {
+        setCursor(Pics.getClosedHandCursor());
+        if (stateTransition(STATE_INITIAL, STATE_DRAG)) {
+            getCreateRequest().setLocation(getLocation());
+            //lockTargetEditPart(getTargetEditPart());
+            // Snap only when size on drop is employed
+            if (getTargetEditPart() != null)
+                helper = (SnapToHelper) getTargetEditPart().getAdapter(SnapToHelper.class);
+        }
+        return true;
 
-		if (command != null && command.canExecute()) {
+    }
 
-			if (!draggableElement.getLayer().getChildren().contains(figure)) {
-				draggableElement.getLayer().add(figure);
-			}
-			IFigure parentFigure = draggableElement.getLayer();
+    @Override
+    protected boolean handleButtonUp(int button) {
 
-			Point location =((CreateRequest) getTargetRequest()).getLocation();
-			FiguresHelper.translateToAbsolute(parentFigure, location);
+        if (stateTransition(STATE_DRAG | STATE_DRAG_IN_PROGRESS, STATE_TERMINAL)) {
+            eraseTargetFeedback();
+        }
 
-			showTargetCompartmentFeedback();
-			figure.setLocation(location);
-		} else {
-			if (draggableElement.getLayer().getChildren().contains(figure)) {
-				draggableElement.getLayer().remove(figure);
-			}
-		}
-	}
+        if (!dragged) {
+            this.reactivate();
+            return true;
+        }
+        createItem();
 
-	@Override
-	protected boolean handleButtonDown(int button) {
+        setState(STATE_TERMINAL);
+        handleFinished();
 
-		setCursor(Cursors.CURSOR_SEG_ADD);
-		if (stateTransition(STATE_INITIAL, STATE_DRAG)) {
-			getCreateRequest().setLocation(getLocation());
-			//lockTargetEditPart(getTargetEditPart());
-			// Snap only when size on drop is employed
-			if (getTargetEditPart() != null)
-				helper = (SnapToHelper)getTargetEditPart().getAdapter(SnapToHelper.class);
-		}
-		return true;		
-
-	}
-
-	@Override
-	protected boolean handleButtonUp(int button) {
-
-		if (stateTransition(STATE_DRAG | STATE_DRAG_IN_PROGRESS, STATE_TERMINAL)) {
-			eraseTargetFeedback();
-		}
-
-		if (! dragged) {
-			this.reactivate();
-			return true;
-		}
-		createItem();
-
-		setState(STATE_TERMINAL);
-		handleFinished();
-
-		return true;
-	}
-
-
-	/**
-	 * 
-	 */
-	private void createItem() {
-		updateTargetUnderMouse();
-		if (draggableElement.getLayer().getChildren().contains(figure)) {
-			draggableElement.getLayer().remove(figure);
-		}
-		GraphicalEditPart editPart = (GraphicalEditPart)getTargetEditPart();
-		if(editPart != null){
-			Command command = getCommand() ;
-			IAdaptable targetAdapter = null;
-			if(command instanceof ICommandProxy){
-				editPart.getDiagramEditDomain().getDiagramCommandStack().execute(command);
-				final ICommand iCommand = ((ICommandProxy)command).getICommand();
-				final CommandResult commandResult = iCommand.getCommandResult();
-				if(commandResult != null
-						&& commandResult.getReturnValue() != null 
-						&& !((List<?>)commandResult.getReturnValue()).isEmpty())
-					targetAdapter = (IAdaptable) ((List<?>)commandResult.getReturnValue()).get(0) ;
-			}else if(command instanceof CompoundCommand){
-				CompoundCommand cmd = (CompoundCommand) command ;
-				editPart.getDiagramEditDomain().getDiagramCommandStack().execute(cmd);
-				if(cmd != null){
-					for(Object c : cmd.getCommands()){
-						if(c instanceof ICommandProxy){
-							final CommandResult commandResult = ((ICommandProxy)c).getICommand().getCommandResult();
-							if(commandResult != null 
-									&& commandResult.getReturnValue() != null 
-									&& !((List<?>)commandResult.getReturnValue()).isEmpty())
-								targetAdapter = (IAdaptable) ((List<?>)commandResult.getReturnValue()).get(0) ;
-						}
-					}
-				}
-			}
-			if(targetAdapter == null){
-				CreateUnspecifiedTypeRequest nodeRequest = (CreateUnspecifiedTypeRequest)getTargetRequest();
+        return true;
+    }
 
 
-				for (Object item : nodeRequest.getElementTypes()) {
-					IElementType type = (IElementType)item;
-					CreateRequest subReq = nodeRequest.getRequestForType(type);
-					List<?> newObject = (List<?>) subReq.getNewObject();
-					if (newObject != null &&
-							! newObject.isEmpty()) {
-						IAdaptable adaptable = (IAdaptable)newObject.get(0);
-						if (adaptable.getAdapter(Node.class) != null) {
-							targetAdapter = adaptable;
-						}
-					}
-				}
-			}
-			CreateConnectionViewAndElementRequest connectionRequest = null;
-			if(targetAdapter instanceof ViewAndElementDescriptor){
-				//
-				String semanticHint = ((ViewAndElementDescriptor) targetAdapter).getSemanticHint();
-				DeferredCreateConnectionViewAndElementCommand connectionCommand = null;
-				if(!ProcessElementTypes.TextAnnotation_3015.getId().contains(semanticHint)){
-					connectionRequest = new CreateConnectionViewAndElementRequest(ProcessElementTypes.SequenceFlow_4001,
-							((IHintedType)ProcessElementTypes.SequenceFlow_4001).getSemanticHint(), getPreferencesHint());
-					connectionCommand = new DeferredCreateConnectionViewAndElementCommand(connectionRequest, draggableElement.getHost(), targetAdapter, editPart.getViewer());
+    private void createItem() {
+        updateTargetUnderMouse();
+        if (draggableElement.getLayer().getChildren().contains(figure)) {
+            draggableElement.getLayer().remove(figure);
+        }
+        final GraphicalEditPart editPart = (GraphicalEditPart) getTargetEditPart();
+        if (editPart != null) {
+            final Command command = getCommand();
+            IAdaptable targetAdapter = null;
+            if (command instanceof ICommandProxy) {
+                editPart.getDiagramEditDomain().getDiagramCommandStack().execute(command);
+                final ICommand iCommand = ((ICommandProxy) command).getICommand();
+                final CommandResult commandResult = iCommand.getCommandResult();
+                if (commandResult != null
+                        && commandResult.getReturnValue() != null
+                        && !((List<?>) commandResult.getReturnValue()).isEmpty())
+                    targetAdapter = (IAdaptable) ((List<?>) commandResult.getReturnValue()).get(0);
+            } else if (command instanceof CompoundCommand) {
+                final CompoundCommand cmd = (CompoundCommand) command;
+                editPart.getDiagramEditDomain().getDiagramCommandStack().execute(cmd);
+                if (cmd != null) {
+                    for (final Object c : cmd.getCommands()) {
+                        if (c instanceof ICommandProxy) {
+                            final CommandResult commandResult = ((ICommandProxy) c).getICommand().getCommandResult();
+                            if (commandResult != null
+                                    && commandResult.getReturnValue() != null
+                                    && !((List<?>) commandResult.getReturnValue()).isEmpty())
+                                targetAdapter = (IAdaptable) ((List<?>) commandResult.getReturnValue()).get(0);
+                        }
+                    }
+                }
+            }
+            if (targetAdapter == null) {
+                final CreateUnspecifiedTypeRequest nodeRequest = (CreateUnspecifiedTypeRequest) getTargetRequest();
 
-				} else if(ProcessElementTypes.TextAnnotation_3015.getId().contains(semanticHint)){
-					connectionRequest = new CreateConnectionViewAndElementRequest(ProcessElementTypes.TextAnnotationAttachment_4003,
-							((IHintedType)ProcessElementTypes.TextAnnotationAttachment_4003).getSemanticHint(), getPreferencesHint());
-					//need to inverse source and target for textAnnotation
-					connectionCommand = new DeferredCreateConnectionViewAndElementCommand(connectionRequest, targetAdapter, draggableElement.getHost(), editPart.getViewer());			
-				}
-				if(connectionCommand.canExecute()){
-					editPart.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(connectionCommand));
-				}
-			}
-			if(targetAdapter != null && targetAdapter instanceof ViewAndElementDescriptor){
-				IGraphicalEditPart targetEditPart = (IGraphicalEditPart) editPart.getViewer().getEditPartRegistry().get(targetAdapter.getAdapter(View.class));
-				Location loc = (Location) ((Node)((IGraphicalEditPart) targetEditPart).getNotationView()).getLayoutConstraint() ;
-				Point newLoc = FiguresHelper.handleCompartmentMargin((IGraphicalEditPart) targetEditPart, loc.getX(), loc.getY(),(((IGraphicalEditPart) targetEditPart).resolveSemanticElement() instanceof SubProcessEvent)) ;
-				if(((IGraphicalEditPart) targetEditPart).getParent() instanceof ShapeCompartmentEditPart){
-					ShapeCompartmentEditPart compartment = (ShapeCompartmentEditPart) ((IGraphicalEditPart) targetEditPart).getParent();
-					Bounds parentBounds = (Bounds) ((Node)((IGraphicalEditPart) targetEditPart.getParent().getParent()).getNotationView()).getLayoutConstraint() ;
-					if(compartment.resolveSemanticElement() instanceof  SubProcessEvent){
-						newLoc.translate(-parentBounds.getX(), -parentBounds.getY());
-					}
-					while(newLoc.y + 65 > compartment.getFigure().getBounds().height){
-						newLoc.y = newLoc.y -10;
-					}
-					while(newLoc.x + 100 > compartment.getFigure().getBounds().width){
-						newLoc.x = newLoc.x -10;
-					}
-					if(compartment.resolveSemanticElement() instanceof  SubProcessEvent){
-						newLoc.translate(parentBounds.getX(), parentBounds.getY());
-					}
-				}
+                for (final Object item : nodeRequest.getElementTypes()) {
+                    final IElementType type = (IElementType) item;
+                    final CreateRequest subReq = nodeRequest.getRequestForType(type);
+                    final List<?> newObject = (List<?>) subReq.getNewObject();
+                    if (newObject != null &&
+                            !newObject.isEmpty()) {
+                        final IAdaptable adaptable = (IAdaptable) newObject.get(0);
+                        if (adaptable.getAdapter(Node.class) != null) {
+                            targetAdapter = adaptable;
+                        }
+                    }
+                }
+            }
+            CreateConnectionViewAndElementRequest connectionRequest = null;
+            if (targetAdapter instanceof ViewAndElementDescriptor) {
+                //
+                final String semanticHint = ((ViewAndElementDescriptor) targetAdapter).getSemanticHint();
+                DeferredCreateConnectionViewAndElementCommand connectionCommand = null;
+                if (!ProcessElementTypes.TextAnnotation_3015.getId().contains(semanticHint)) {
+                    connectionRequest = new CreateConnectionViewAndElementRequest(ProcessElementTypes.SequenceFlow_4001,
+                            ((IHintedType) ProcessElementTypes.SequenceFlow_4001).getSemanticHint(), getPreferencesHint());
+                    connectionCommand = new DeferredCreateConnectionViewAndElementCommand(connectionRequest, draggableElement.getHost(), targetAdapter,
+                            editPart.getViewer());
 
-				executeCommand(new ICommandProxy(new SetBoundsCommand(((IGraphicalEditPart) targetEditPart).getEditingDomain(), "Check Overlap", new EObjectAdapter(((IGraphicalEditPart) targetEditPart).getNotationView()),newLoc))) ;
+                } else if (ProcessElementTypes.TextAnnotation_3015.getId().contains(semanticHint)) {
+                    connectionRequest = new CreateConnectionViewAndElementRequest(ProcessElementTypes.TextAnnotationAttachment_4003,
+                            ((IHintedType) ProcessElementTypes.TextAnnotationAttachment_4003).getSemanticHint(), getPreferencesHint());
+                    //need to inverse source and target for textAnnotation
+                    connectionCommand = new DeferredCreateConnectionViewAndElementCommand(connectionRequest, targetAdapter, draggableElement.getHost(),
+                            editPart.getViewer());
+                }
+                if (connectionCommand.canExecute()) {
+                    editPart.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(connectionCommand));
+                }
+            }
+            if (targetAdapter != null && targetAdapter instanceof ViewAndElementDescriptor) {
+                final IGraphicalEditPart targetEditPart = (IGraphicalEditPart) editPart.getViewer().getEditPartRegistry()
+                        .get(targetAdapter.getAdapter(View.class));
+                final Location loc = (Location) ((Node) targetEditPart.getNotationView()).getLayoutConstraint();
+                final Point newLoc = FiguresHelper.handleCompartmentMargin(targetEditPart, loc.getX(), loc.getY(),
+                        (targetEditPart.resolveSemanticElement() instanceof SubProcessEvent));
+                if (targetEditPart.getParent() instanceof ShapeCompartmentEditPart) {
+                    final ShapeCompartmentEditPart compartment = (ShapeCompartmentEditPart) targetEditPart.getParent();
+                    final Bounds parentBounds = (Bounds) ((Node) ((IGraphicalEditPart) targetEditPart.getParent().getParent()).getNotationView())
+                            .getLayoutConstraint();
+                    if (compartment.resolveSemanticElement() instanceof SubProcessEvent) {
+                        newLoc.translate(-parentBounds.getX(), -parentBounds.getY());
+                    }
+                    while (newLoc.y + 65 > compartment.getFigure().getBounds().height) {
+                        newLoc.y = newLoc.y - 10;
+                    }
+                    while (newLoc.x + 100 > compartment.getFigure().getBounds().width) {
+                        newLoc.x = newLoc.x - 10;
+                    }
+                    if (compartment.resolveSemanticElement() instanceof SubProcessEvent) {
+                        newLoc.translate(parentBounds.getX(), parentBounds.getY());
+                    }
+                }
 
-				if(connectionRequest != null){
-					ConnectionViewAndElementDescriptor connectionDescriptor = (ConnectionViewAndElementDescriptor) connectionRequest.getNewObject() ;
-					Connector edge = (Connector) connectionDescriptor.getAdapter(Edge.class) ;
-					ConnectionEditPart connectionEP =  (ConnectionEditPart) editPart.getViewer().getEditPartRegistry().get(edge);
+                executeCommand(new ICommandProxy(new SetBoundsCommand(targetEditPart.getEditingDomain(), "Check Overlap",
+                        new EObjectAdapter(targetEditPart.getNotationView()), newLoc)));
 
-					if(connectionEP != null){
-						SetConnectionBendpointsCommand setConnectionBendPointsCommand = new SetConnectionBendpointsCommand(connectionEP.getEditingDomain());
-						setConnectionBendPointsCommand.setEdgeAdapter(connectionDescriptor);	
-						PointList bendpoints = new PointList() ;
-						bendpoints.addPoint(0, 0) ;
-						bendpoints.addPoint(0, 0) ;
-						setConnectionBendPointsCommand.setNewPointList(bendpoints, bendpoints.getFirstPoint(), bendpoints.getLastPoint());
-						connectionEP.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(setConnectionBendPointsCommand));
+                if (connectionRequest != null) {
+                    final ConnectionViewAndElementDescriptor connectionDescriptor = (ConnectionViewAndElementDescriptor) connectionRequest.getNewObject();
+                    final Connector edge = (Connector) connectionDescriptor.getAdapter(Edge.class);
+                    final ConnectionEditPart connectionEP = (ConnectionEditPart) editPart.getViewer().getEditPartRegistry().get(edge);
 
-					}
-				}
+                    if (connectionEP != null) {
+                        final SetConnectionBendpointsCommand setConnectionBendPointsCommand = new SetConnectionBendpointsCommand(
+                                connectionEP.getEditingDomain());
+                        setConnectionBendPointsCommand.setEdgeAdapter(connectionDescriptor);
+                        final PointList bendpoints = new PointList();
+                        bendpoints.addPoint(0, 0);
+                        bendpoints.addPoint(0, 0);
+                        setConnectionBendPointsCommand.setNewPointList(bendpoints, bendpoints.getFirstPoint(), bendpoints.getLastPoint());
+                        connectionEP.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(setConnectionBendPointsCommand));
 
+                    }
+                }
 
+                editPart.getViewer().select(targetEditPart);
+            }
+        }
+    }
 
-				editPart.getViewer().select(targetEditPart);
-			}
-		}
-	}
+    @Override
+    public void eraseTargetFeedback() {
+        if (draggableElement.getLayer().getChildren().contains(figure)) {
+            draggableElement.getLayer().remove(figure);
+        }
+        hideTargetCompartmentFeedback();
+        super.eraseTargetFeedback();
+    }
 
-	@Override
-	public void eraseTargetFeedback() {
-		if (draggableElement.getLayer().getChildren().contains(figure)) {
-			draggableElement.getLayer().remove(figure);
-		}
-		hideTargetCompartmentFeedback();
-		super.eraseTargetFeedback();
-	}
+    /**
+     * 
+     */
+    private void showTargetCompartmentFeedback() {
+        // DO NOTHING
+    }
 
-	/**
-	 * 
-	 */
-	private void showTargetCompartmentFeedback() {
-		// DO NOTHING
-	}
+    /**
+     * 
+     */
+    private void hideTargetCompartmentFeedback() {
+        // DO NOTHING
+    }
 
-	/**
-	 * 
-	 */
-	private void hideTargetCompartmentFeedback() {
-		// DO NOTHING
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool#deactivate()
+     */
+    @Override
+    public void deactivate() {
+        super.deactivate();
+        if (cursor != null && !cursor.isDisposed()) {
+            cursor.dispose();
+        }
+        if (image != null && !image.isDisposed()) {
+            image.dispose();
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool#deactivate()
-	 */
-	@Override
-	public void deactivate() {
-		super.deactivate();
-		if(cursor != null && !cursor.isDisposed()){
-			cursor.dispose();
-		}
-		if(image != null && !image.isDisposed()){
-			image.dispose();
-		}
-	}
-	
-	@Override
-	public void activate() {
-		super.activate();
-		initCursor();
-	}
+    @Override
+    public void activate() {
+        super.activate();
+        //	initCursor();
+    }
 
 }

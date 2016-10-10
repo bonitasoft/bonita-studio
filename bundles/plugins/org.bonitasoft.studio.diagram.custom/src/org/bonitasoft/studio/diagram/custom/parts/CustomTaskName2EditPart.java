@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.diagram.tools.CustomTextDirectEditManager;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ProcessEditPartFactory;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.TaskName2EditPart;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -75,5 +76,5 @@ public class CustomTaskName2EditPart extends TaskName2EditPart {
         super.setLabelText(text);
         FiguresHelper.resizeActivitiesFigure((IGraphicalEditPart) getParent(), text);
     }
-
+    
 }

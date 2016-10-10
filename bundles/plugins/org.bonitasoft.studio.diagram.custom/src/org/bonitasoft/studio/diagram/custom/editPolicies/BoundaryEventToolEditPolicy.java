@@ -50,6 +50,7 @@ import org.bonitasoft.studio.model.process.diagram.edit.parts.Task2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.TaskEditPart;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ImageFigure;
@@ -71,7 +72,9 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 
 /**
@@ -150,6 +153,7 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
     private Pair<IFigure,MouseListener> createClickableItem(final Point location, final EditPart host, final IElementType type) {
         ImageFigure image;
         image = new ImageFigure(IconService.getInstance().getIcon(type));
+        image.setCursor(org.eclipse.gmf.runtime.gef.ui.internal.l10n.Cursors.CURSOR_SEG_ADD);
         image.setSize(16, 16);
         image.setToolTip(new Label(processPaletteLabelProvider.getProcessPaletteText(type.getEClass())));
 
@@ -252,6 +256,7 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
 
             iconImage =  Pics.getImage("boundary_tool.png", Activator.getDefault()) ;
             toolImage = new ImageFigure(iconImage);
+            toolImage.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_HAND));
             dropMenu = new DropDownMenuFigure(toolImage, composite,layer, Messages.boundaryTool);
             toolBarFigure.addToMenu(dropMenu);
             dropMenu.addToggleVisibilityListener(new Listener() {
