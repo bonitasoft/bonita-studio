@@ -33,7 +33,7 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
  */
 public class CustomConnectionHandleTool extends UnspecifiedTypeConnectionTool  implements DragTracker{
 
-	private EditPart owner;
+	private final EditPart owner;
 
 	public CustomConnectionHandleTool(EditPart owner,List<IElementType> type) {
 		super(type);
@@ -59,8 +59,8 @@ public class CustomConnectionHandleTool extends UnspecifiedTypeConnectionTool  i
 	 */
 	@Override
 	protected boolean updateTargetUnderMouse() {
-		boolean r = super.updateTargetUnderMouse() ;
-		EditPart editPart = getTargetEditPart() ;
+		final boolean r = super.updateTargetUnderMouse() ;
+		final EditPart editPart = getTargetEditPart() ;
 		if(((IGraphicalEditPart)editPart).resolveSemanticElement() instanceof Pool){
 			setTargetEditPart(null);//pool cannot be connected to anything
 		}

@@ -21,6 +21,7 @@ package org.bonitasoft.studio.diagram.custom.editPolicies;
 import java.util.ArrayList;
 
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.Locator;
@@ -40,14 +41,15 @@ import org.eclipse.swt.graphics.Image;
 public class CustomConnectionHandle extends ConnectionHandle {
 
 
-	private Image image;
-	private ArrayList<IElementType> types;
+	private final Image image;
+	private final ArrayList<IElementType> types;
 	
 	public CustomConnectionHandle(IGraphicalEditPart ownerEditPart, ToolEntry toolEntry) {
 		super(ownerEditPart, HandleDirection.OUTGOING, null);
 		setLocator(new Locator() {
 			
-			public void relocate(IFigure target) {
+			@Override
+            public void relocate(IFigure target) {
 				target.setLocation(new Point(10, 10));
 			}
 		});
@@ -57,20 +59,22 @@ public class CustomConnectionHandle extends ConnectionHandle {
 		
 		
 		image = toolEntry.getSmallIcon().createImage();
-		ImageFigure imageFigure = new ImageFigure(image);
+		final ImageFigure imageFigure = new ImageFigure(image);
 		imageFigure.setSize(16, 16);
+        setCursor(Pics.getOpenedHandCursor());
 		add(imageFigure);
 		setLocator(	
 				new Locator() {
 			
-			public void relocate(IFigure target) {
+			@Override
+            public void relocate(IFigure target) {
 				target.setLocation(new Point(10, 10));
 			}
 		});
 		
 		setToolTip(null);
 		
-		types = new ArrayList<IElementType>() ;
+		types = new ArrayList<>() ;
 		types.add(ProcessElementTypes.MessageFlow_4002) ;
 		types.add(ProcessElementTypes.SequenceFlow_4001);
 		types.add(ProcessElementTypes.TextAnnotationAttachment_4003);
@@ -85,7 +89,6 @@ public class CustomConnectionHandle extends ConnectionHandle {
 
 	@Override
 	protected DragTracker createDragTracker() {
-
 		return new CustomConnectionHandleTool(getOwner(),types);
 	}
 	
