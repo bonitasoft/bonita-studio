@@ -44,10 +44,20 @@ public class OpenH2ConsoleHandler{
         try {
             final String h2JarPath = locateH2jar(repositoryAccessor);
             final Process process = getRuntime()
-                    .exec(String.format("java -jar '%s' -browser -webPort %s -tcp -user %s -url '%s' -driver %s", h2JarPath, PORT,
+                    .exec(new String[] {
+                            "java",
+                            "-jar",
+                            h2JarPath,
+                            "-browser",
+                            "-webPort",
+                            String.valueOf(PORT),
+                            "-tcp",
+                            "-user",
                             USER,
+                            "-url",
                             String.format(URL, pathToDBFolder(repositoryAccessor)),
-                            DRIVER));
+                            "-driver",
+                            DRIVER });
             getRuntime().addShutdownHook(exitProcessHook(process));
         } catch (final IOException e) {
             throw new ExecutionException("Failed to locate h2 jar", e);
