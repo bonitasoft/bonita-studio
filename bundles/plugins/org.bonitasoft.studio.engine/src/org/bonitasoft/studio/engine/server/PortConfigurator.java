@@ -18,9 +18,7 @@ import static com.google.common.collect.Iterators.forArray;
 import static com.google.common.collect.Maps.uniqueIndex;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.EnginePlugin;
@@ -30,11 +28,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jst.server.tomcat.core.internal.Tomcat70Configuration;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Listener;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Server;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerPort;
@@ -48,9 +43,6 @@ import com.google.common.base.Function;
  */
 public class PortConfigurator {
 
-    private static final String SERVER_FIELD_NAME = "server";
-    private static final String TCP_PORT = "tcpPort";
-    private static final String H2_LISTENER_CLASSNAME = "org.bonitasoft.tomcat.H2Listener";
     public static final int MIN_PORT_NUMBER = 1024;
     public static final int MAX_PORT_NUMBER = 65535;
 
@@ -95,19 +87,6 @@ public class PortConfigurator {
         throw new IllegalStateException(String.format("Unbable to retrieve TomcatServer from server: %s", server.getId()));
     }
 
-    public IStatus canStartH2Server(final IProgressMonitor monitor) throws CoreException {
-        if (h2PortInUse(monitor)) {
-            return new Status(
-                    IStatus.ERROR,
-                    EnginePlugin.PLUGIN_ID,
-                    "H2 server TCP port is already used by another application. Most likely another BonitaBPM instances. Please close all other running instances of BonitaBPM and restart.");
-        }
-        return Status.OK_STATUS;
-    }
-
-    public boolean h2PortInUse(final IProgressMonitor monitor) throws CoreException {
-        return isPortInUse(h2TCPPort(monitor));
-    }
 
     private void configurePort(final ServerPort port, final IProgressMonitor monitor) throws CoreException {
         final int tomcatPort = preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT);
@@ -144,30 +123,6 @@ public class PortConfigurator {
                 return serverPort.getId();
             }
         };
-    }
-
-    private int h2TCPPort(final IProgressMonitor monitor) throws CoreException {
-        final TomcatServer tomcatServer = asTomcatServer(monitor);
-        final Tomcat70Configuration tomcatConfig = (Tomcat70Configuration) tomcatServer.getTomcatConfiguration();
-        try {
-            final Field field = Tomcat70Configuration.class.getDeclaredField(SERVER_FIELD_NAME);
-            field.setAccessible(true);
-            final Server server = (Server) field.get(tomcatConfig);
-            return 9091; // parseInt(findListenerWithClassName(server, H2_LISTENER_CLASSNAME).getAttributeValue(TCP_PORT));
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-            throw new CoreException(new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e));
-        }
-    }
-
-    private Listener findListenerWithClassName(final Server server, final String className) {
-        final int listenerCount = server.getListenerCount();
-        for (int i = 0; i < listenerCount; i++) {
-            final Listener listener = server.getListener(i);
-            if (className.equals(listener.getClassName())) {
-                return listener;
-            }
-        }
-        throw new NoSuchElementException("Cannot find a Listener with classname " + className);
     }
 
     protected boolean isPortInUse(final int port) {

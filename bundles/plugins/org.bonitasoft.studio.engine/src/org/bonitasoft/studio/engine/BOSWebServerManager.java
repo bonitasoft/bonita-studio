@@ -347,12 +347,7 @@ public class BOSWebServerManager {
         final IServer server = configureServer(runtime, sType, file,
                 configurationFolder, monitor);
         portConfigurator = newPortConfigurator(server);
-        final IStatus h2ServerStatus = portConfigurator.canStartH2Server(monitor);
-        if (!h2ServerStatus.isOK()) {
-            throw new CoreException(h2ServerStatus);
-        }
-        portConfigurator
-                .configureServerPort(Repository.NULL_PROGRESS_MONITOR);
+        portConfigurator.configureServerPort(Repository.NULL_PROGRESS_MONITOR);
         return server;
     }
 
@@ -416,7 +411,7 @@ public class BOSWebServerManager {
 
     private void waitServerStopped(final IProgressMonitor monitor) throws CoreException {
         while (tomcat != null
-                && tomcat.getServerState() != IServer.STATE_STOPPED || portConfigurator != null && portConfigurator.h2PortInUse(monitor)) {
+                && tomcat.getServerState() != IServer.STATE_STOPPED) {
             try {
                 Thread.sleep(1000);
             } catch (final InterruptedException e) {
