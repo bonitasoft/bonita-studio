@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -38,63 +39,78 @@ import org.eclipse.jface.text.IRegion;
  */
 public class ComputePatternDependenciesJob extends Job {
 
-	private final Map<String, List<EObject>> cache;
-	private IDocument document;
-	private List<Expression> filteredExpressions;
+    private final Map<String, List<EObject>> cache;
+    private IDocument document;
+    private List<Expression> filteredExpressions;
 
-	public void setFilteredExpressions(List<Expression> filteredExpressions) {
-		this.filteredExpressions = filteredExpressions;
-	}
+    public void setFilteredExpressions(List<Expression> filteredExpressions) {
+        this.filteredExpressions = filteredExpressions;
+    }
 
-	public ComputePatternDependenciesJob(final IDocument document,List<Expression> filteredExpressions) {
-		super(ComputePatternDependenciesJob.class.getName());
-		cache = new HashMap<String, List<EObject>>();
-		this.document = document;
-		this.filteredExpressions = filteredExpressions;
-	}
+    public ComputePatternDependenciesJob(final IDocument document, List<Expression> filteredExpressions) {
+        super(ComputePatternDependenciesJob.class.getName());
+        cache = new HashMap<>();
+        this.document = document;
+        this.filteredExpressions = filteredExpressions;
+    }
 
-	@Override
-	protected IStatus run(final IProgressMonitor monitor) {
-		final String expression = getTextContent();
-		if (cache.get(expression) == null) {
-			final FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(document);
-			final Set<String> addedExp = new HashSet<String>();
-			final List<EObject> deps = new ArrayList<EObject>();
-			for(Expression exp : filteredExpressions){
-				IRegion index;
-				try {
-					int i = 0;
-					index = finder.find(0,exp.getName(), true, true, true, false);
-					while (index != null) {
-						if(!addedExp.contains(exp.getName())){
-							deps.add(ExpressionHelper.createDependencyFromEObject(exp.getReferencedElements().get(0)));
-							addedExp.add(exp.getName());
-						}
-						i = i + index.getLength();
-						index = finder.find(i,exp.getName(), true, true, true, false);
-					}
-				} catch (final BadLocationException e1) {
-					// Just ignore them
-				}
-			}
-			cache.put(expression, deps);
-		}
-		return Status.OK_STATUS;
-	}
+    @Override
+    protected IStatus run(final IProgressMonitor monitor) {
+        final String expression = getTextContent();
+        if (cache.get(expression) == null) {
+            final FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(document);
+            final Set<String> addedExp = new HashSet<>();
+            final List<EObject> deps = new ArrayList<>();
+            IRegion index;
+            try {
+                int i = 0;
+                index = finder.find(0, "${", true, true, false, false);
+                while (index != null) {
+                    final IRegion end = finder.find(index.getOffset(), "}", true, true, false, false);
+                    String expressionContent = "";
+                    if (end != null) {
+                        expressionContent = document.get(index.getOffset() + 2, end.getOffset() - index.getOffset() - 2);
+                    }
+                    if (!addedExp.contains(expressionContent)) {
+                        final Expression groovyScriptExpression = ExpressionHelper.createGroovyScriptExpression(expressionContent, String.class.getName());
+                        groovyScriptExpression.setName(expressionContent);
+                        final Document expDoc = new Document();
+                        expDoc.set(expressionContent);
+                        final FindReplaceDocumentAdapter expDocFinder = new FindReplaceDocumentAdapter(expDoc);
+                        for (final Expression exp : filteredExpressions) {
+                            if (expDocFinder.find(0, exp.getName(), true, true, true, false) != null) {
+                                groovyScriptExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(exp));
+                            }
+                        }
 
-	protected String getTextContent() {
-		return document.get();
-	}
+                        deps.add(groovyScriptExpression);
+                        addedExp.add(expressionContent);
+                    }
+                    i = end.getOffset();
+                    index = finder.find(i, "${", true, true, false, false);
+                }
+            } catch (final BadLocationException e1) {
+                e1.printStackTrace();
+            }
 
-	public List<EObject> getDependencies(final String expression) {
-		return cache.get(expression);
-	}
+            cache.put(expression, deps);
+        }
+        return Status.OK_STATUS;
+    }
 
-	public IDocument getDocument() {
-		return document;
-	}
+    protected String getTextContent() {
+        return document.get();
+    }
 
-	public void setDocument(final IDocument document) {
-		this.document = document;
-	}
+    public List<EObject> getDependencies(final String expression) {
+        return cache.get(expression);
+    }
+
+    public IDocument getDocument() {
+        return document;
+    }
+
+    public void setDocument(final IDocument document) {
+        this.document = document;
+    }
 }

@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.validation.constraints;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,10 +25,6 @@ import org.codehaus.groovy.ast.CodeVisitorSupport;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.expr.BinaryExpression;
-import org.codehaus.groovy.ast.expr.MethodCallExpression;
-import org.codehaus.groovy.ast.expr.TupleExpression;
-import org.codehaus.groovy.ast.expr.VariableExpression;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codehaus.groovy.syntax.Types;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -45,17 +39,7 @@ public class ValidationCodeVisitorSupport extends CodeVisitorSupport {
     private final IStatus okStatus;
     private final MultiStatus errorStatus;
     private final IValidationContext context;
-    private final Set<MethodSignature> declaredMethodsSignature = new HashSet<MethodSignature>();
-    private static Set<MethodSignature> defaultGroovyMethodsSignature;
-
-    static {
-        defaultGroovyMethodsSignature = new HashSet<MethodSignature>();
-        for (final Method m : DefaultGroovyMethods.class.getMethods()) {
-            if (m.getModifiers() == (Modifier.PUBLIC | Modifier.STATIC)) {
-                defaultGroovyMethodsSignature.add(new MethodSignature(m.getName(), m.getParameterTypes().length));
-            }
-        }
-    }
+    private final Set<MethodSignature> declaredMethodsSignature = new HashSet<>();
 
     public ValidationCodeVisitorSupport(final IValidationContext context, final Expression expression, final ModuleNode node) {
         dependenciesName = retrieveDependenciesList(expression);
@@ -65,28 +49,6 @@ public class ValidationCodeVisitorSupport extends CodeVisitorSupport {
         for (final MethodNode method : node.getMethods()) {
             declaredMethodsSignature.add(new MethodSignature(method.getName(), method.getParameters().length));
         }
-    }
-
-    @Override
-    public void visitMethodCallExpression(final MethodCallExpression call) {
-        final String methodName = call.getMethodAsString();
-        org.codehaus.groovy.ast.expr.Expression arguments = call.getArguments();
-        if (arguments instanceof TupleExpression) {
-            final TupleExpression tuple = (TupleExpression) arguments;
-            final MethodSignature methodSignature = new MethodSignature(methodName, tuple.getExpressions().size());
-            if (defaultGroovyMethodsSignature.contains(methodSignature)) {
-                final org.codehaus.groovy.ast.expr.Expression objectExpression = call.getObjectExpression();
-                if (objectExpression instanceof VariableExpression && ((VariableExpression) objectExpression).isThisExpression()) {
-                    if (!declaredMethodsSignature.contains(methodSignature)) {
-                        errorStatus
-                                .add(context
-                                        .createFailureStatus(Messages.bind(
-                                                Messages.defaultGroovyMethodImportMissing, methodName)));
-                    }
-                }
-            }
-        }
-        super.visitMethodCallExpression(call);
     }
 
     @Override
@@ -104,7 +66,7 @@ public class ValidationCodeVisitorSupport extends CodeVisitorSupport {
 
     private Set<String> retrieveDependenciesList(final Expression expression) {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
         if (engineExpression != null) {
             for (final org.bonitasoft.engine.expression.Expression dep : engineExpression.getDependencies()) {
                 result.add(dep.getName());

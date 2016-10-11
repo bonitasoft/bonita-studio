@@ -44,7 +44,7 @@ public abstract class AssertionCondition extends DefaultCondition {
      */
     @Override
     public String getFailureMessage() {
-        return error.getMessage();
+        return error != null ? error.getMessage() : "";
     }
 
 }

@@ -18,7 +18,6 @@ package org.bonitasoft.studio.expression.editor.viewer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -95,17 +94,6 @@ public class PatternExpressionViewer extends Composite {
     private Binding patternBinding;
     private ControlDecoration helpDecoration;
     private Object input;
-    private static Set<String> compatibleTypes;
-    static {
-        compatibleTypes = new HashSet<>();
-        compatibleTypes.add(String.class.getName());
-        compatibleTypes.add(Integer.class.getName());
-        compatibleTypes.add(Long.class.getName());
-        compatibleTypes.add(Double.class.getName());
-        compatibleTypes.add(Float.class.getName());
-        compatibleTypes.add(Date.class.getName());
-        compatibleTypes.add(Boolean.class.getName());
-    }
 
     public PatternExpressionViewer(final Composite parent, final int style) {
         super(parent, style);
@@ -385,9 +373,6 @@ public class PatternExpressionViewer extends Composite {
                     for(final ViewerFilter filter : filters){
                         if (filter != null && !filter.select(expressionViewer, input, exp)) {
                             filteredExpressions.remove(exp) ;
-                        }
-                        if (!compatibleTypes.contains(exp.getReturnType())) {
-                            filteredExpressions.remove(exp);
                         }
                     }
                 }
