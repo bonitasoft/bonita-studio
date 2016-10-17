@@ -6,9 +6,8 @@
  * Bonitasoft, 32 rue Gustave Eiffel – 38000 Grenoble
  * or Bonitasoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
-package org.bonitasoft.studio.groovy.ui.viewer;
+package org.bonitasoft.studio.groovy.contentassist;
 
-import org.bonitasoft.studio.groovy.ui.contentassist.ExtendedJavaContentAssistInvocationContext;
 import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProcessor;
 import org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext;
 import org.eclipse.jface.text.ITextViewer;
