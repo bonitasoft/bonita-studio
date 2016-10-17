@@ -35,7 +35,8 @@ Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional,
  org.codehaus.groovy.eclipse.quickfix;bundle-version="2.9.1",
  com.google.guava;bundle-version="11.0.1",
  org.eclipse.e4.core.di,
- assertj-core;bundle-version="1.5.0";resolution:=optional
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
+ org.eclipse.jdt.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
@@ -48,6 +49,8 @@ Import-Package: org.bonitasoft.engine.api,
  org.eclipse.jdt.core,
  org.eclipse.ui.part
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.groovy,org.bonitasoft.studio.gro
- ovy.library,org.bonitasoft.studio.groovy.provider,org.bonitasoft.stud
- io.groovy.repository
+Export-Package: org.bonitasoft.studio.groovy,
+ org.bonitasoft.studio.groovy.contentassist,
+ org.bonitasoft.studio.groovy.library,
+ org.bonitasoft.studio.groovy.provider,
+ org.bonitasoft.studio.groovy.repository
