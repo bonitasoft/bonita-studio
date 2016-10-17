@@ -24,8 +24,8 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.widgets.MagicComposite;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
-import org.bonitasoft.studio.expression.editor.pattern.contentAssist.PatternExpressionCompletionProcessor;
 import org.bonitasoft.studio.expression.editor.pattern.contentAssist.ExpressionContentAssistProcessor;
+import org.bonitasoft.studio.expression.editor.pattern.contentAssist.PatternExpressionCompletionProcessor;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionNameResolver;
@@ -268,7 +268,7 @@ public class PatternExpressionViewer extends Composite {
         partitioner.connect(document);
         document.setDocumentPartitioner(partitioner);
         patternExpressionModelBuilder = new PatternExpressionModelBuilder();
-        document.addDocumentPartitioningListener(patternExpressionModelBuilder);
+        document.addDocumentListener(patternExpressionModelBuilder);
         viewer.setDocument(document);
         final TextViewerUndoManager undoManager = new TextViewerUndoManager(UNDO_REDO_HISTORY_SIZE);
         viewer.setUndoManager(undoManager);
