@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.expression.editor.pattern;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,18 +22,19 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jface.text.IDocumentPartitioningListener;
 import org.eclipse.jface.text.ITypedRegion;
 
+import com.google.common.collect.Sets;
 
-public class PatternExpressionModelBuilder implements IDocumentPartitioningListener {
+public class PatternExpressionModelBuilder implements IDocumentListener {
 
     private List<Expression> scope;
     private Expression expression;
-
 
     public void setScope(List<Expression> scope) {
         this.scope = scope;
@@ -44,17 +44,7 @@ public class PatternExpressionModelBuilder implements IDocumentPartitioningListe
         this.expression = expression;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.text.IDocumentPartitioningListener#documentPartitioningChanged(org.eclipse.jface.text.IDocument)
-     */
-    @Override
-    public void documentPartitioningChanged(IDocument document) {
-        if (expression == null) {
-            return;
-        }
-        expression.getReferencedElements().clear();
-        final Set<String> addedExp = new HashSet<>();
+    private List<ITypedRegion> allGroovyPartitions(IDocument document) {
         final IDocumentPartitioner partitioner = document.getDocumentPartitioner();
         final ITypedRegion[] regions = partitioner.computePartitioning(0, document.getLength());
         final List<ITypedRegion> groovyPartions = new ArrayList<>();
@@ -64,11 +54,36 @@ public class PatternExpressionModelBuilder implements IDocumentPartitioningListe
                 groovyPartions.add(partition);
             }
         }
+        return groovyPartions;
+    }
 
-        for (final ITypedRegion region : groovyPartions) {
+    private String strip(String expression) {
+        if (expression.startsWith("${")) {
+            expression = expression.substring(2);
+        }
+        if (expression.endsWith("}")) {
+            expression = expression.substring(0, expression.length() - 1);
+        }
+        return expression;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
+     */
+    @Override
+    public void documentChanged(DocumentEvent event) {
+        final IDocument document = event.getDocument();
+        doBuild(document, allGroovyPartitions(document));
+    }
+
+    private void doBuild(IDocument document, List<ITypedRegion> groovyPartitions) {
+        final Set<String> parsedExpressions = Sets.newHashSet();
+        expression.getReferencedElements().clear();
+        for (final ITypedRegion region : groovyPartitions) {
             try {
                 final String expressionContent = strip(document.get(region.getOffset(), region.getLength()));
-                if (expressionContent != null && !addedExp.contains(expressionContent)) {
+                if (expressionContent != null && !parsedExpressions.contains(expressionContent)) {
                     final Expression groovyScriptExpression = ExpressionHelper.createGroovyScriptExpression(expressionContent, String.class.getName());
                     groovyScriptExpression.setName(expressionContent);
                     final Document expDoc = new Document();
@@ -80,7 +95,7 @@ public class PatternExpressionModelBuilder implements IDocumentPartitioningListe
                         }
                     }
                     expression.getReferencedElements().add(groovyScriptExpression);
-                    addedExp.add(expressionContent);
+                    parsedExpressions.add(expressionContent);
                 }
             } catch (final BadLocationException e) {
 
@@ -88,7 +103,13 @@ public class PatternExpressionModelBuilder implements IDocumentPartitioningListe
         }
     }
 
-    private String strip(String expression) {
-        return expression.substring(2, expression.length() - 1);
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+     */
+    @Override
+    public void documentAboutToBeChanged(DocumentEvent event) {
+
     }
+
 }
