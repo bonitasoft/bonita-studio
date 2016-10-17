@@ -22,6 +22,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -79,6 +80,13 @@ public class ExpressionLabelProvider extends LabelProvider implements IExpressio
     @Override
     public String getContent(final Expression expression) {
         return expression.getContent();
+    }
+
+    public StyledString getStyledString(org.bonitasoft.studio.model.expression.Expression expression) {
+        final StyledString styledString = new StyledString(expression.getName());
+        styledString.append(" -- ");
+        styledString.append(new StyledString(expression.getReturnType(), StyledString.DECORATIONS_STYLER));
+        return styledString;
     }
 
 }

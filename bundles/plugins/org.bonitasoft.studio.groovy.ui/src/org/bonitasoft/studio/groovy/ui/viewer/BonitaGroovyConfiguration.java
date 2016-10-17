@@ -17,6 +17,7 @@ package org.bonitasoft.studio.groovy.ui.viewer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.groovy.contentassist.ExtendedJavaCompletionProcessor;
 import org.codehaus.groovy.eclipse.editor.GroovyColorManager;
 import org.codehaus.groovy.eclipse.editor.GroovyConfiguration;
 import org.codehaus.groovy.eclipse.editor.GroovyPartitionScanner;
@@ -98,7 +99,7 @@ public class BonitaGroovyConfiguration extends GroovyConfiguration {
             final IContentAssistProcessor processor = assistant.getContentAssistProcessor(IDocument.DEFAULT_CONTENT_TYPE);
             final List<CompletionProposalCategory> categories = (List<CompletionProposalCategory>) ReflectionUtils.getPrivateField(ContentAssistProcessor.class,
                     "fCategories", processor);
-            final List<CompletionProposalCategory> newCategories = new ArrayList<CompletionProposalCategory>();
+            final List<CompletionProposalCategory> newCategories = new ArrayList<>();
             for (final CompletionProposalCategory category : categories) {
                 if (!category.getId().equals("org.eclipse.jdt.ui.javaTypeProposalCategory")
                         && !category.getId().equals("org.eclipse.jdt.ui.javaNoTypeProposalCategory")

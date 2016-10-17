@@ -92,22 +92,28 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 			@Override
 			public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
 				final Object leftSelection =((IStructuredSelection) leftTree.getSelection()).getFirstElement();
-				final Set<Object> parents = new HashSet<Object>();
+				final Set<Object> parents = new HashSet<>();
+                final Set<String> candidates = new HashSet<>();
 				Object p = contentProvider.getParent(element);
 				if(p != null){
 					parents.add(p);
+                    candidates.add(labelProvider.getText(p));
 				}
 				while (p != null) {
 					p = contentProvider.getParent(p);
 					if(p != null){
 						parents.add(p);
+                        candidates.add(labelProvider.getText(p));
 					}
 				}
 				if(searchField.getText().isEmpty()){
 					return leftSelection == null || parents.contains(leftSelection);
 				}
 				final String text = labelProvider.getText(element);
-				return text != null && text.toLowerCase().contains(searchField.getText().toLowerCase()) && ( leftSelection == null || parents.contains(leftSelection)) ;
+                candidates.add(text);
+                return text != null &&
+                        isCandidate(candidates, searchField.getText()) &&
+                        (leftSelection == null || parents.contains(leftSelection));
 			}
 		});
 		leftTree.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -167,8 +173,17 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 		});
 	}
 
-	protected Object[] getSubtree(final Object selection) {
-		final Set<Object> result = new HashSet<Object>();
+    protected boolean isCandidate(Set<String> candidates, String text) {
+        for (final String c : candidates) {
+            if (c.toLowerCase().contains(text.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected Object[] getSubtree(final Object selection) {
+		final Set<Object> result = new HashSet<>();
 		addChildren(result,selection);
 		return result.toArray();
 	}
