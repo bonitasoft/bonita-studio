@@ -37,10 +37,10 @@ import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionSwitch;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.pattern.PatternExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.CheckBoxExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.expression.editor.viewer.PatternExpressionViewer;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -72,7 +72,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
 
 
     private final Composite parent;
-    private final java.util.List<Section> sections = new ArrayList<Section>() ;
+    private final java.util.List<Section> sections = new ArrayList<>() ;
     protected final IWizardContainer iWizardContainer;
     protected final PageComponentSwitchBuilder componentBuilder;
 

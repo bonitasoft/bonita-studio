@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.expression.editor.viewer;
+package org.bonitasoft.studio.expression.editor.pattern.contentAssist;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,31 +25,22 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionComparator;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.eclipse.jface.text.IDocument;
+import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.contentassist.CompletionProposal;
-import org.eclipse.jface.text.contentassist.ContextInformationValidator;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 
-
-/**
- * @author Romain Bioteau
- *
- */
 public class ExpressionContentAssistProcessor implements IContentAssistProcessor {
 
     private static final String DEL_PREFIX = "${";
 	private static final String DEL_SUFFIX = "}";
-	private final ContextInformationValidator contextInfoValidator;
     private Set<Expression> expressions;
     private final ExpressionLabelProvider labelProvider;
 
-    public ExpressionContentAssistProcessor(final IDocument document){
+    public ExpressionContentAssistProcessor(){
         super();
-        contextInfoValidator = new ContextInformationValidator(this);
         labelProvider = new ExpressionLabelProvider();
     }
 
@@ -71,8 +62,8 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
 
 
     private ICompletionProposal[] buildProposals(final Set<Expression> expressions, final int offset, final ITextViewer textViewer) {
-        final List<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
-        final List<Expression> sortedExpressions = new ArrayList<Expression>(expressions);
+        final List<ICompletionProposal> proposals = new ArrayList<>();
+        final List<Expression> sortedExpressions = new ArrayList<>(expressions);
         Collections.sort(sortedExpressions,new ExpressionComparator());
         final String content = textViewer.getDocument().get();
         boolean showAllProposals = false;
@@ -92,20 +83,19 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
         for (final Expression expression : sortedExpressions) {
             if(isSupportedType(expression.getType())){
                 if(!showAllProposals && expression.getName().startsWith(previousString.toString())){
-                    final String pContent = expression.getName();
-                    final String replacementString = addDelimiters(pContent);
-					proposals.add(new CompletionProposal(replacementString, offset-previousString.length(),previousString.length(),replacementString.length(),labelProvider.getImage(expression),labelProvider.getText(expression),null,null));
+                    final String replacementString = addDelimiters(expression);
+					proposals.add(new JavaCompletionProposal(replacementString, offset-previousString.length(),replacementString.length(),labelProvider.getImage(expression),labelProvider.getStyledString(expression),10000));
                 }else if(showAllProposals){
-                    final String replacementString = addDelimiters(expression.getName());
-					proposals.add(new CompletionProposal(replacementString, offset,0,replacementString.length(),labelProvider.getImage(expression),labelProvider.getText(expression),null,null));
+                    final String replacementString = addDelimiters(expression);
+					proposals.add(new JavaCompletionProposal(replacementString, offset,replacementString.length(),labelProvider.getImage(expression),labelProvider.getStyledString(expression),10000));
                 }
             }
         }
         return proposals.toArray(new ICompletionProposal[proposals.size()]);
     }
 
-    protected String addDelimiters(final String pContent) {
-		return DEL_PREFIX + pContent + DEL_SUFFIX;
+    protected String addDelimiters(final Expression expression) {
+        return DEL_PREFIX + expression.getName() + DEL_SUFFIX;
 	}
 
 
@@ -144,7 +134,7 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
      */
     @Override
     public IContextInformationValidator getContextInformationValidator() {
-        return contextInfoValidator;
+        return null;
     }
 
     /* (non-Javadoc)

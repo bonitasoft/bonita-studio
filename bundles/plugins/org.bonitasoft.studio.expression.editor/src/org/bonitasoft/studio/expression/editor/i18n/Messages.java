@@ -70,7 +70,7 @@ public class Messages extends NLS {
 
     public static String eraseExpressionMsg;
 
-    public static String patternViewerHelp;
+    public static String patternViewerHint;
 
     public static String returnTypeIsMandatory;
 

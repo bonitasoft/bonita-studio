@@ -36,13 +36,13 @@ import org.bonitasoft.studio.connector.model.definition.Text;
 import org.bonitasoft.studio.connector.model.definition.TextArea;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.pattern.PatternExpressionViewer;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.viewer.CheckBoxExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.GroovyOnlyExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.IExpressionModeListener;
-import org.bonitasoft.studio.expression.editor.viewer.PatternExpressionViewer;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
@@ -368,7 +368,7 @@ public class PageComponentSwitchBuilder {
             createFieldLabel(composite, SWT.TOP, object.getId(), input.isMandatory());
 
             final PatternExpressionViewer viewer = new PatternExpressionViewer(composite, SWT.NONE);
-            viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
+            viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
             viewer.addFilter(connectorExpressionContentTypeFilter);
             viewer.setExpressionNameResolver(new ConnectorInputNameResolver(parameter.getKey()));
             final Expression exp = (Expression) parameter.getExpression();
