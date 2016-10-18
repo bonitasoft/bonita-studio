@@ -376,8 +376,9 @@ public class PageComponentSwitchBuilder {
             if (desc != null && !desc.isEmpty()) {
                 viewer.setHint(desc);
             }
-            viewer.setContextInput(container);
             viewer.setInput(parameter);
+            viewer.setContextInput(container);
+
             final UpdateValueStrategy startegy = new UpdateValueStrategy();
             if (input.isMandatory()) {
                 startegy.setAfterConvertValidator(new EmptyInputValidator(getLabel(object.getId())));
