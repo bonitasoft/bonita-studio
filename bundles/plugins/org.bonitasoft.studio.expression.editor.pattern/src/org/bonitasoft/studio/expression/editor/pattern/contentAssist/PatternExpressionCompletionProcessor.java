@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.expression.editor.pattern.GroovyExpressionPartitioner;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.groovy.GroovyCompilationUnitFactory;
 import org.bonitasoft.studio.groovy.contentassist.ExtendedJavaContentAssistInvocationContext;
@@ -70,8 +71,11 @@ public class PatternExpressionCompletionProcessor implements IContentAssistProce
         ICompilationUnit newCompilationUnit;
         try {
             final IDocument document = viewer.getDocument();
-            final ITypedRegion partition = document.getPartition(offset);
+            GroovyExpressionPartitioner groovyExpressionPartitioner = new GroovyExpressionPartitioner(); 
+            groovyExpressionPartitioner.connect(document);
+            ITypedRegion partition = groovyExpressionPartitioner.getPartition(offset);
             String script = document.get(partition.getOffset() + 2, partition.getLength() - 2);
+            groovyExpressionPartitioner.disconnect();
             if (script.endsWith("}")) {
                 script = script.substring(0, script.length() - 1);
             }

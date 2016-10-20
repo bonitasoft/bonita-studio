@@ -90,7 +90,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		createSelectModeLabelControl(mainComposite);
 
 		scriptExpression = (Expression) getConnectorParameter(getInput(SCRIPT_KEY)).getExpression();
-		IObservableValue scriptContentValue = EMFObservables.observeValue(scriptExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
+		final IObservableValue scriptContentValue = EMFObservables.observeValue(scriptExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
 		scriptContentValue.addValueChangeListener(this);
 		outputTypeExpression = (Expression) getConnectorParameter(getInput(OUTPUT_TYPE_KEY)).getExpression();
 		outputTypeExpression.setName(OUTPUT_TYPE_KEY);
@@ -160,7 +160,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
 			@Override
 			public void handleValueChange(ValueChangeEvent event) {
-				IWizardPage p = getNextPage();
+				final IWizardPage p = getNextPage();
 				if(p instanceof DatabaseConnectorOutputWizardPage){
 					((DatabaseConnectorOutputWizardPage)p).updateOutputs((String) event.getObservableValue().getValue());
 				}
@@ -208,7 +208,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
 	protected void parseQuery() {
 		if(graphicalModeSelectionValue != null){
-			IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
+			final IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
 			if(SQLQueryUtil.isGraphicalModeSupportedFor(scriptExpression)){
 				enableGraphicalMode.setValue(true);
 				if(!editing){
@@ -233,7 +233,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
 
 	protected void updateEnabledChoices() {
-		String content = outputTypeExpression.getContent();
+		final String content = outputTypeExpression.getContent();
 		if(content != null){
 			if(SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1 && !SQLQueryUtil.useWildcard(scriptExpression)){
 				singleModeRadioObserveEnabled.setValue(false);
@@ -265,7 +265,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
 	protected void updateQuery() {
 		if(graphicalModeSelectionValue != null){
-			IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
+			final IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
 			if(SQLQueryUtil.isGraphicalModeSupportedFor(scriptExpression)){
 				enableGraphicalMode.setValue(true);
 				updateEnabledChoices();
@@ -367,7 +367,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		oneRowRadio.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
 		oneRowRadio.setText(Messages.oneRowNCol);
 
-		final ControlDecoration oneRowDeco = new ControlDecoration(oneRowRadio, SWT.RIGHT);
+        final ControlDecoration oneRowDeco = new ControlDecoration(oneRowRadio, SWT.RIGHT, choicesComposite);
 		oneRowDeco.setImage(Pics.getImage(PicsConstants.hint));
 		oneRowDeco.setDescriptionText(Messages.oneRowHint);
 
@@ -399,7 +399,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		oneColRadio.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
 		oneColRadio.setText(Messages.nRowOneCol);
 
-		final ControlDecoration oneColDeco = new ControlDecoration(oneColRadio, SWT.RIGHT);
+        final ControlDecoration oneColDeco = new ControlDecoration(oneColRadio, SWT.RIGHT, choicesComposite);
 		oneColDeco.setImage(Pics.getImage(PicsConstants.hint));
 		oneColDeco.setDescriptionText(Messages.oneColHint);
 
@@ -433,7 +433,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		tableRadio.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
 		tableRadio.setText(Messages.nRowsNcolumns);
 
-		final ControlDecoration tableDeco = new ControlDecoration(tableRadio, SWT.RIGHT);
+        final ControlDecoration tableDeco = new ControlDecoration(tableRadio, SWT.RIGHT, choicesComposite);
 		tableDeco.setImage(Pics.getImage(PicsConstants.hint));
 		tableDeco.setDescriptionText(Messages.tableHint);
 
@@ -477,7 +477,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 			return previousPageBackup;
 		}
 
-		IWizard wizard = getWizard();
+		final IWizard wizard = getWizard();
 		if(wizard != null){
 			return wizard.getPreviousPage(this);
 		}
