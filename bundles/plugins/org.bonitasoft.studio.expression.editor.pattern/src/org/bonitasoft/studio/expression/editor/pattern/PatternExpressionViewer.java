@@ -55,13 +55,6 @@ import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.TextViewerUndoManager;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
-import org.eclipse.jface.text.rules.FastPartitioner;
-import org.eclipse.jface.text.rules.IPartitionTokenScanner;
-import org.eclipse.jface.text.rules.IPredicateRule;
-import org.eclipse.jface.text.rules.IToken;
-import org.eclipse.jface.text.rules.MultiLineRule;
-import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
-import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -262,9 +255,7 @@ public class PatternExpressionViewer extends Composite {
 
     protected void configureTextViewer() {
         final Document document = new Document();
-        final IDocumentPartitioner partitioner = new FastPartitioner(
-                createScanner(),
-                new String[] { GROOVY_EXPRESSION_CONTENT_TYPE });
+        final IDocumentPartitioner partitioner = new GroovyExpressionPartitioner();
         partitioner.connect(document);
         document.setDocumentPartitioner(partitioner);
         patternExpressionModelBuilder = new PatternExpressionModelBuilder();
@@ -294,15 +285,6 @@ public class PatternExpressionViewer extends Composite {
     }
 
 
-    private IPartitionTokenScanner createScanner() {
-        final IToken string = new Token(GROOVY_EXPRESSION_CONTENT_TYPE);
-        final RuleBasedPartitionScanner scanner = new RuleBasedPartitionScanner();
-        scanner.setPredicateRules(new IPredicateRule[] {
-                new MultiLineRule(GROOVY_START_TAG, GROOVY_END_TAG, string)
-        });
-        return scanner;
-    }
-
     protected TextViewer createViewer(final Composite parent) {
         return new TextViewer(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
     }
@@ -313,8 +295,8 @@ public class PatternExpressionViewer extends Composite {
         final List<Expression> filteredExpressions = getFilteredExpressions();
         patternExpressionModelBuilder.setScope(filteredExpressions);
         final ContentAssistant assistant = new ContentAssistant();
-        final FakeEditorPart fakeEditorPart = new FakeEditorPart();
-        final PatternExpressionCompletionProcessor javaCompletionProcessor = new PatternExpressionCompletionProcessor(fakeEditorPart, filteredExpressions);
+        final PatternExpressionCompletionProcessor javaCompletionProcessor = new PatternExpressionCompletionProcessor(new FakeEditorPart(),
+                filteredExpressions);
         javaCompletionProcessor.setCompletionProposalAutoActivationCharacters(new char[] { '.' });
         assistant.setContentAssistProcessor(javaCompletionProcessor, GROOVY_EXPRESSION_CONTENT_TYPE);
         assistant.setShowEmptyList(true);
