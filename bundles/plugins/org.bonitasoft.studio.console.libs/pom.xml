@@ -150,7 +150,7 @@
                                     <type>war</type>
                                 </artifactItem>
                             </artifactItems>
-                            <outputDirectory>${tomcat.bundle.dir}/webapps</outputDirectory>
+                            <outputDirectory>${tomcat.bundle.dir}/server/webapps</outputDirectory>
                             <overWriteReleases>true</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
                         </configuration>
@@ -241,10 +241,10 @@
                                 <move todir="${tomcat.bundle.dir}">
                                     <fileset dir="${tomcat.bundle.dir}/BonitaBPMCommunity-${bundle.version}-Tomcat-${tomcat.version}/" />
                                 </move>
-                                <concat append="true" destfile="${tomcat.bundle.dir}/conf/catalina.properties">java.awt.headless=true</concat>
-                                <replace file="${tomcat.bundle.dir}/conf/logging.properties" token="org.bonitasoft.level = WARNING" value="org.bonitasoft.level = INFO"
+                                <concat append="true" destfile="${tomcat.bundle.dir}/server/conf/catalina.properties">java.awt.headless=true</concat>
+                                <replace file="${tomcat.bundle.dir}/server/conf/logging.properties" token="org.bonitasoft.level = WARNING" value="org.bonitasoft.level = INFO"
                                     failOnNoReplacements="true" />
-                                <delete dir="${tomcat.bundle.dir}/webapps/examples" />
+                                <delete dir="${tomcat.bundle.dir}/server/webapps/examples" />
 
                                 <!-- Package javadoc -->
                                 <zip destfile="${basedir}/javadoc.zip" basedir="${javadoc.dir}" encoding="UTF-8" />
