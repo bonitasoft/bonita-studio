@@ -94,8 +94,8 @@ public class BOSWebServerManager {
     protected static final String START_TIMEOUT = "start-timeout";
 
     protected static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
-    protected final String tomcatInstanceLocation = new File(ResourcesPlugin
-            .getWorkspace().getRoot().getLocation().toFile(), "tomcat")
+    protected final String tomcatInstanceLocation = new File(new File(ResourcesPlugin
+            .getWorkspace().getRoot().getLocation().toFile(), "tomcat"),"server")
                     .getAbsolutePath();
     private static final String TOMCAT_LOG_FILE = "tomcat.log";
 
