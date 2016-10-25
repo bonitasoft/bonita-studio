@@ -136,7 +136,7 @@ public class BOSWebServerManager {
             final File tomcatLib = new File(targetFolder, "lib");
             if (!tomcatLib.exists()) {
                 BonitaStudioLog.debug("Copying tomcat bundle in workspace...", EnginePlugin.PLUGIN_ID);
-                final URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat");
+                final URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat/server");
                 tomcatFolder = new File(FileLocator.toFileURL(url).getFile());
                 PlatformUtil.copyResource(targetFolder, tomcatFolder, monitor);
                 PlatformUtil.delete(new File(targetFolder, "bonita"), monitor);
@@ -152,11 +152,11 @@ public class BOSWebServerManager {
     }
 
     protected void addPageBuilderWar(final File targetFolder, final IProgressMonitor monitor) throws IOException {
-        BonitaStudioLog.debug("Copying Designer war in tomcat/webapps...", EnginePlugin.PLUGIN_ID);
+        BonitaStudioLog.debug("Copying Designer war in tomcat/server/webapps...", EnginePlugin.PLUGIN_ID);
         final URL url = Platform.getBundle(UIDesignerPlugin.PLUGIN_ID).getResource("webapp");
         final File pageBuilderWarFile = new File(FileLocator.toFileURL(url).getFile(), "designer.war");
         PlatformUtil.copyResource(new File(targetFolder, "webapps"), pageBuilderWarFile, monitor);
-        BonitaStudioLog.debug("Designer war copied in tomcat/webapps.",
+        BonitaStudioLog.debug("Designer war copied in tomcat/server/webapps.",
                 EnginePlugin.PLUGIN_ID);
     }
 
@@ -164,11 +164,11 @@ public class BOSWebServerManager {
         final File webappDir = new File(targetFolder, "webapps");
         final File targetBonitaWarFile = new File(webappDir, "bonita.war");
         if (!targetBonitaWarFile.exists()) {
-            BonitaStudioLog.debug("Copying Bonita war in tomcat/webapps...", EnginePlugin.PLUGIN_ID);
-            final URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat/webapp");
+            BonitaStudioLog.debug("Copying Bonita war in tomcat/server/webapps...", EnginePlugin.PLUGIN_ID);
+            final URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat/server/webapp");
             final File bonitaWarFile = new File(FileLocator.toFileURL(url).getFile(), "bonita.war");
             PlatformUtil.copyResource(webappDir, bonitaWarFile, monitor);
-            BonitaStudioLog.debug("Bonita war copied in tomcat/webapps.",
+            BonitaStudioLog.debug("Bonita war copied in tomcat/server/webapps.",
                     EnginePlugin.PLUGIN_ID);
         }
     }
