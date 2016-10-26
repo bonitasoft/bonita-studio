@@ -97,6 +97,8 @@ public class BOSWebServerManager {
     protected final String tomcatInstanceLocation = new File(new File(ResourcesPlugin
             .getWorkspace().getRoot().getLocation().toFile(), "tomcat"),"server")
                     .getAbsolutePath();
+    protected final String bundleLocation = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(), "tomcat")
+                    .getAbsolutePath();
     private static final String TOMCAT_LOG_FILE = "tomcat.log";
 
     private static final int MAX_SERVER_START_TIME = 300000;
@@ -132,15 +134,13 @@ public class BOSWebServerManager {
     public void copyTomcatBundleInWorkspace(final IProgressMonitor monitor) {
         File tomcatFolder = null;
         try {
-            File bundleLocation = new File(ResourcesPlugin
-                    .getWorkspace().getRoot().getLocation().toFile(), "tomcat");
             final File tomcatFolderInWorkspace = new File(tomcatInstanceLocation);
             final File tomcatLib = new File(tomcatFolderInWorkspace, "lib");
             if (!tomcatLib.exists()) {
                 BonitaStudioLog.debug("Copying tomcat bundle in workspace...", EnginePlugin.PLUGIN_ID);
                 final URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat");
                 tomcatFolder = new File(FileLocator.toFileURL(url).getFile());
-                PlatformUtil.copyResource(bundleLocation, tomcatFolder, monitor);
+                PlatformUtil.copyResource(new File(bundleLocation), tomcatFolder, monitor);
                 BonitaStudioLog.debug("Tomcat bundle copied in workspace.",
                         EnginePlugin.PLUGIN_ID);
                 addBonitaWar(tomcatFolderInWorkspace, monitor);
@@ -318,7 +318,7 @@ public class BOSWebServerManager {
         repositoryAccessor.init();
         workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-                getTomcatVMArgsBuilder(repositoryAccessor).getVMArgs(tomcatInstanceLocation));
+                getTomcatVMArgsBuilder(repositoryAccessor).getVMArgs(bundleLocation));
         workingCopy.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_FILE,
                 getTomcatLogFile());
         workingCopy.setAttribute(IDebugUIConstants.ATTR_APPEND_TO_FILE, true);

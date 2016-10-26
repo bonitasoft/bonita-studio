@@ -38,13 +38,14 @@ public class TomcatVmArgsBuilder {
         this.repositoryAccessor = repositoryAccessor;
     }
 
-    public String getVMArgs(final String tomcatInstanceLocation) {
+    public String getVMArgs(final String bundleLocation) {
         final StringBuilder args = new StringBuilder();
         addMemoryOptions(args);
         final String tomcatExtraParams = System.getProperty("tomcat.extra.params");
         if (tomcatExtraParams != null) {
             args.append(" " + tomcatExtraParams);
         }
+        String tomcatInstanceLocation = bundleLocation + File.separatorChar + "server";
         addSystemProperty(args, "catalina.home", "\"" + tomcatInstanceLocation + "\"");
         addSystemProperty(args, "CATALINA_HOME", "\"" + tomcatInstanceLocation + "\"");
         addSystemProperty(args, "CATALINA_TMPDIR", "\"" + tomcatInstanceLocation + File.separatorChar + "temp\"");
@@ -53,7 +54,7 @@ public class TomcatVmArgsBuilder {
         addSystemProperty(args, "wtp.deploy", "\"" + tomcatInstanceLocation + File.separatorChar + "webapps\"");
         addSystemProperty(args, "java.endorsed.dirs", "\"" + tomcatInstanceLocation + File.separatorChar + "endorsed\"");
         addSystemProperty(args, "sysprop.bonita.db.vendor", "h2");
-        addSystemProperty(args, "org.bonitasoft.platform.setup.folder", "\"" + tomcatInstanceLocation + File.separatorChar + "setup\"");
+        addSystemProperty(args, "org.bonitasoft.platform.setup.folder", "\"" + bundleLocation + File.separatorChar + "setup\"");
         addSystemProperty(args, "bitronix.tm.configuration",
                 "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar + "bitronix-config.properties\"");
         addSystemProperty(args, "java.util.logging.manager", "org.apache.juli.ClassLoaderLogManager");
