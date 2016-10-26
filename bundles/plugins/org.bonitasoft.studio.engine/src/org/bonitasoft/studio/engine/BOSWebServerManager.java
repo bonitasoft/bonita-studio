@@ -132,18 +132,19 @@ public class BOSWebServerManager {
     public void copyTomcatBundleInWorkspace(final IProgressMonitor monitor) {
         File tomcatFolder = null;
         try {
-            final File targetFolder = new File(tomcatInstanceLocation);
-            final File tomcatLib = new File(targetFolder, "lib");
+            File bundleLocation = new File(ResourcesPlugin
+                    .getWorkspace().getRoot().getLocation().toFile(), "tomcat");
+            final File tomcatFolderInWorkspace = new File(tomcatInstanceLocation);
+            final File tomcatLib = new File(tomcatFolderInWorkspace, "lib");
             if (!tomcatLib.exists()) {
                 BonitaStudioLog.debug("Copying tomcat bundle in workspace...", EnginePlugin.PLUGIN_ID);
-                final URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat/server");
+                final URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat");
                 tomcatFolder = new File(FileLocator.toFileURL(url).getFile());
-                PlatformUtil.copyResource(targetFolder, tomcatFolder, monitor);
-                PlatformUtil.delete(new File(targetFolder, "bonita"), monitor);
+                PlatformUtil.copyResource(bundleLocation, tomcatFolder, monitor);
                 BonitaStudioLog.debug("Tomcat bundle copied in workspace.",
                         EnginePlugin.PLUGIN_ID);
-                addBonitaWar(targetFolder, monitor);
-                addPageBuilderWar(targetFolder, monitor);
+                addBonitaWar(tomcatFolderInWorkspace, monitor);
+                addPageBuilderWar(tomcatFolderInWorkspace, monitor);
             }
 
         } catch (final IOException e) {
