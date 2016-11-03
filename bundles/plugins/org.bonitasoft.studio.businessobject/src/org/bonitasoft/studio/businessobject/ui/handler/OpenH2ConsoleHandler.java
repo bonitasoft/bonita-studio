@@ -89,7 +89,7 @@ public class OpenH2ConsoleHandler{
         final Path path = Paths.get(root.toURI()).resolve(Paths.get("tomcat", "server", "lib", "bonita"));
         final Optional<File> candidate = tryFind(fileTreeTraverser().children(path.toFile()), h2Jar());
         if (!candidate.isPresent()) {
-            throw new FileNotFoundException("Cannot find h2 jar file in tomcat/lib/bonita folder.");
+            throw new FileNotFoundException("Cannot find h2 jar file in tomcat/server/lib/bonita folder.");
         }
         return candidate.get().getAbsolutePath();
     }
