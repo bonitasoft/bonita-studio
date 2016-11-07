@@ -74,7 +74,13 @@ public class PatternExpressionModelBuilder implements IDocumentListener {
     @Override
     public void documentChanged(DocumentEvent event) {
         final IDocument document = event.getDocument();
-        doBuild(document, allGroovyPartitions(document));
+        if (shouldBuild()) {
+            doBuild(document, allGroovyPartitions(document));
+        }
+    }
+
+    private boolean shouldBuild() {
+        return expression != null;
     }
 
     private void doBuild(IDocument document, List<ITypedRegion> groovyPartitions) {
