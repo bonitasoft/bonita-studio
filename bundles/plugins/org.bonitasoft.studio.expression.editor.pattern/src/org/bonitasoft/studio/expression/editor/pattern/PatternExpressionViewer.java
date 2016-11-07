@@ -254,13 +254,14 @@ public class PatternExpressionViewer extends Composite {
     }
 
     protected void configureTextViewer() {
-        final Document document = new Document();
-        final IDocumentPartitioner partitioner = new GroovyExpressionPartitioner();
-        partitioner.connect(document);
-        document.setDocumentPartitioner(partitioner);
+        IDocument document = viewer.getDocument();
+        if (document == null) {
+            document = new Document();
+            viewer.setDocument(document);
+        }
+        addDocumentPartitioner(document);
         patternExpressionModelBuilder = new PatternExpressionModelBuilder();
         document.addDocumentListener(patternExpressionModelBuilder);
-        viewer.setDocument(document);
         final TextViewerUndoManager undoManager = new TextViewerUndoManager(UNDO_REDO_HISTORY_SIZE);
         viewer.setUndoManager(undoManager);
         undoManager.connect(viewer);
@@ -282,6 +283,12 @@ public class PatternExpressionViewer extends Composite {
             }
         });
 
+    }
+
+    protected void addDocumentPartitioner(final IDocument document) {
+        final IDocumentPartitioner partitioner = new GroovyExpressionPartitioner();
+        partitioner.connect(document);
+        document.setDocumentPartitioner(partitioner);
     }
 
 
