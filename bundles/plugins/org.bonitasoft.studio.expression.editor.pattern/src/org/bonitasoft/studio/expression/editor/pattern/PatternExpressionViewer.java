@@ -208,11 +208,15 @@ public class PatternExpressionViewer extends Composite {
             patternBinding.dispose();
             patternBinding = null;
         }
-        expression.getReferencedElements().clear();
-        patternExpressionModelBuilder.setExpression(expression);
+        configurePatternExpressionModelBuilder();
         patternBinding = context.bindValue(SWTObservables.observeText(viewer.getTextWidget(), SWT.Modify),
                 EMFObservables.observeValue(expression, ExpressionPackage.Literals.EXPRESSION__CONTENT), startegy, null);
 
+    }
+
+    protected void configurePatternExpressionModelBuilder() {
+        expression.getReferencedElements().clear();
+        patternExpressionModelBuilder.setExpression(expression);
     }
 
     protected void createExpressionViewer() {
