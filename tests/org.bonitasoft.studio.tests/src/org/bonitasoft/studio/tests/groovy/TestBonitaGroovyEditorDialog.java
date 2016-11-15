@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.tests.groovy;
 
 import static org.bonitasoft.studio.dependencies.i18n.Messages.selectMissingJarTitle;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
@@ -23,6 +23,7 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
@@ -41,14 +42,14 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestBonitaGroovyEditorDialog {
 
-    private SWTGefBot bot = new SWTGefBot();
+    private final SWTGefBot bot = new SWTGefBot();
     
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Before
     public void waitForEngineStarted() throws Exception {
-        APISession apiSession = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        final APISession apiSession = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
         BOSEngineManager.getInstance().logoutDefaultTenant(apiSession);
     }
     
@@ -68,12 +69,19 @@ public class TestBonitaGroovyEditorDialog {
         bot.waitUntil(Conditions.shellIsActive(selectMissingJarTitle));
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellIsActive("Evaluation results"), 60000);
-        final boolean groovyEvaluateOK = "test me".equals(bot.text().getText());
-        if (!groovyEvaluateOK) {
-            bot.button(IDialogConstants.CANCEL_LABEL).click();
-            bot.button(IDialogConstants.OK_LABEL).click();
-        }
-        assertTrue("Error while evaluating groovy script", groovyEvaluateOK);
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                final boolean groovyEvaluateOK = "test me".equals(bot.text().getText());
+                if (!groovyEvaluateOK) {
+                    bot.button(IDialogConstants.CANCEL_LABEL).click();
+                    bot.button(IDialogConstants.OK_LABEL).click();
+                }
+                assertTrue("Error while evaluating groovy script", groovyEvaluateOK);
+            }
+        }, 10000);
+
         bot.button(IDialogConstants.OK_LABEL).click();
         if (!FileActionDialog.getDisablePopup()) {
             bot.button(IDialogConstants.OK_LABEL).click();
