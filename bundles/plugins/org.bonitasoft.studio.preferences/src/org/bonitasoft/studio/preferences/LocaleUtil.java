@@ -43,6 +43,7 @@ public class LocaleUtil {
 
     public static File getPortalI18NFolder() {
         return new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(), "tomcat"
+                + File.separator + "server"
                 + File.separator + "webapps"
                 + File.separator + "bonita"
                 + File.separator + "WEB-INF"
@@ -59,7 +60,7 @@ public class LocaleUtil {
                 return filename.endsWith(".po") && filename.contains("portal");
             }
         });
-        final Set<Locale> locales = new TreeSet<Locale>(localeComparator);
+        final Set<Locale> locales = new TreeSet<>(localeComparator);
         locales.add(Locale.ENGLISH);
         if (poFiles != null) {
             for (String poFile : poFiles) {
@@ -99,7 +100,7 @@ public class LocaleUtil {
 
     public static Locale[] getStudioLocales() {
         final Enumeration<URL> findEntries = BonitaStudioPreferencesPlugin.getDefault().getBundle().findEntries("/", "message*_*.properties", false);
-        final Set<Locale> locales = new TreeSet<Locale>(localeComparator);
+        final Set<Locale> locales = new TreeSet<>(localeComparator);
         locales.add(Locale.ENGLISH);
         if (findEntries != null) {
             while (findEntries.hasMoreElements()) {
