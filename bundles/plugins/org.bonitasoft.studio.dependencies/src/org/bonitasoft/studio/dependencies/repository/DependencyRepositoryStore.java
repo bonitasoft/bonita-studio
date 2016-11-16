@@ -155,7 +155,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     }
 
     protected File getTomcatRootFile() {
-        return new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(), "tomcat");
+        return new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(), "tomcat" + File.separatorChar + "server");
     }
 
     @Override
