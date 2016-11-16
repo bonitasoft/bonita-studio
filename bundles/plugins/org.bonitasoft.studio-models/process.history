@@ -14378,5 +14378,8 @@
   <releases xmi:id="_sj1AgIoPEeaSVcTFVrb5Fw" date="2016-09-22T11:43:27.494+0200" label="7.4.0-003">
     <changes xsi:type="history:MigrationChange" xmi:id="_sj1AgYoPEeaSVcTFVrb5Fw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateAlfrescoConnectorDefinitionsMigration"/>
   </releases>
+  <releases xmi:id="_V5DkcKwLEeaAKfvw_yYhbg" date="2016-11-16T10:43:27.494+0100" label="7.4.0-004">
+    <changes xsi:type="history:MigrationChange" xmi:id="_V5DkcawLEeaAKfvw_yYhbg" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateRestConnectorVersionTo100"/>
+  </releases>
   <releases xmi:id="_15TmyGnREeaTLbmqFFisdA"/>
 </history:History>
