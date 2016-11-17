@@ -65,8 +65,11 @@ import org.eclipse.jface.text.source.CompositeRuler;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.ISources;
@@ -152,7 +155,8 @@ public class GroovyViewer implements IDocumentListener {
             BonitaStudioLog.error(e1);
         }
 
-        getSourceViewer().getTextWidget().setTextLimit(MAX_SCRIPT_LENGTH);
+       final StyledText styledText = getSourceViewer().getTextWidget();
+        styledText.setTextLimit(MAX_SCRIPT_LENGTH);
         getSourceViewer().addTextListener(new ITextListener() {
 
             private boolean isReconciling;
@@ -172,7 +176,26 @@ public class GroovyViewer implements IDocumentListener {
             }
         });
 
-        getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, getProvidedVariables(null, null));
+        styledText.setData(BONITA_KEYWORDS_DATA_KEY, getProvidedVariables(null, null));
+        styledText.addFocusListener(new FocusListener() {
+            
+            
+            @Override
+            public void focusLost(FocusEvent e) {
+                IEclipseContext context = (IEclipseContext) styledText.getShell().getData("org.eclipse.e4.ui.shellContext");
+                if(context != null){
+                    context.deactivate();
+                }
+            }
+            
+            @Override
+            public void focusGained(FocusEvent e) {
+                IEclipseContext context = (IEclipseContext) styledText.getShell().getData("org.eclipse.e4.ui.shellContext");
+                if(context != null){
+                    context.activate();
+                }   
+            }
+        });
         mainComposite.getShell().addDisposeListener(new DisposeListener() {
 
             @Override
