@@ -192,9 +192,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         while (!Objects.equals(e4Context.getActiveLeaf(), e4Context)) {
             e4Context.getActiveLeaf().deactivate();
         }
-        final IEclipseContext expressionDialogContext = e4Context.createChild("expressionDialogContext");
-        expressionDialogContext.activate();
-        getShell().setData("org.eclipse.e4.ui.shellContext", expressionDialogContext);
+        getShell().setData("org.eclipse.e4.ui.shellContext", e4Context.createChild("expressionDialogContext"));
     }
 
 
