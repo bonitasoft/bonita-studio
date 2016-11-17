@@ -18,7 +18,9 @@ import static com.google.common.io.Files.newInputStreamSupplier;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -42,7 +44,11 @@ public class DatabaseHandlerTest {
         final IProject project = mock(IProject.class, RETURNS_DEEP_STUBS);
         final File rootFolder = tmpFolder.newFolder();
         when(project.getLocation().toFile()).thenReturn(rootFolder);
-        final DatabaseHandler databaseHandler = new DatabaseHandler(project);
+        final DatabaseHandler databaseHandler = spy(new DatabaseHandler(project));
+        final Properties dbProperties = new Properties();
+        dbProperties.put(DatabaseHandler.BONITA_DB_NAME_PROPERTY, "bonita_journal.db");
+        dbProperties.put(DatabaseHandler.BUSINESS_DATA_DB_NAME_PROPERTY, "business_data.db");
+        doReturn(dbProperties).when(databaseHandler).readDatabaseProperties();
 
         final File file = databaseHandler.createBitronixConfFile();
 

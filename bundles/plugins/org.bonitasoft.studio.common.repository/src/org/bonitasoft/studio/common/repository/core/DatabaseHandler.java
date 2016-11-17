@@ -15,13 +15,17 @@
 package org.bonitasoft.studio.common.repository.core;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Properties;
 
+import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.FileLocator;
 
 import com.google.common.io.Files;
 
@@ -31,6 +35,8 @@ public class DatabaseHandler {
     public static final String H2_DATABASE_FOLDER_NAME = "h2_database";
     public static final String DB_LOCATION_PROPERTY = "org.bonitasoft.h2.database.dir";
     public static final String BITRONIX_ROOT = "btm.root";
+    static final String BONITA_DB_NAME_PROPERTY = "db.database.name";
+    static final String BUSINESS_DATA_DB_NAME_PROPERTY = "bdm.db.database.name";
 
     private final IProject project;
 
@@ -38,20 +44,33 @@ public class DatabaseHandler {
         this.project = project;
     }
 
-    public void removeEngineDatabase() {
-        deleteH2DbFiles("bonita");
+    protected Properties readDatabaseProperties() throws IOException {
+        final URL databasePropertiesURL = FileLocator.toFileURL(ProjectUtil.getConsoleLibsBundle().getResource("tomcat/setup/database.properties"));
+        final File file = new File(databasePropertiesURL.getFile());
+        final Properties properties = new Properties();
+        try (FileInputStream inStream = new FileInputStream(file)) {
+            properties.load(inStream);
+        }
+        return properties;
+
     }
 
-    public void removeBusinessDataDatabase() {
-        deleteH2DbFiles("business");
+    public void removeEngineDatabase() throws IOException {
+        final Properties databaseProperties = readDatabaseProperties();
+        deleteH2DbFiles(databaseProperties.getProperty(BONITA_DB_NAME_PROPERTY));
     }
 
-    protected void deleteH2DbFiles(final String fileStartName) {
+    public void removeBusinessDataDatabase() throws IOException {
+        final Properties databaseProperties = readDatabaseProperties();
+        deleteH2DbFiles(databaseProperties.getProperty(BUSINESS_DATA_DB_NAME_PROPERTY));
+    }
+
+    protected void deleteH2DbFiles(final String dbFileName) {
         final File workDir = getDBLocation();
         if (workDir != null && workDir.exists()) {
             for (final File file : workDir.listFiles()) {
                 final String fileName = file.getName();
-                if (fileName.endsWith("h2.db") && fileName.contains(fileStartName)) {
+                if (fileName.endsWith("h2.db") && fileName.startsWith(dbFileName)) {
                     PlatformUtil.delete(file, null);
                     if (file.exists()) {
                         BonitaStudioLog.info(fileName + " failed to be deleted", CommonRepositoryPlugin.PLUGIN_ID);
@@ -68,6 +87,7 @@ public class DatabaseHandler {
     }
 
     public File createBitronixConfFile() throws IOException {
+        final Properties databaseProperties = readDatabaseProperties();
         final File confFile = new File(getDBLocation(), "conf" + File.separator + BITRONIX_RESOURCES_PROPERTIES);
         confFile.delete();
         confFile.getParentFile().mkdirs();
@@ -75,11 +95,11 @@ public class DatabaseHandler {
         final Properties bitronixResources = new Properties();
         bitronixResources.put("allowLocalTransactions", Boolean.TRUE.toString());
         final BitronixDatasourceConfiguration engineDS = new BitronixDatasourceConfiguration("jdbc/bonitaDSXA");
-        engineDS.setDatabaseFile(getDBLocation().getAbsolutePath() + File.separatorChar + "bonita_journal.db");
+        engineDS.setDatabaseFile(getDBLocation().getAbsolutePath() + File.separatorChar + databaseProperties.getProperty(BONITA_DB_NAME_PROPERTY));
         bitronixResources.putAll(engineDS.toMap("ds1"));
 
         final BitronixDatasourceConfiguration businessDataDS = new BitronixDatasourceConfiguration("jdbc/BusinessDataDSXA");
-        businessDataDS.setDatabaseFile(getDBLocation().getAbsolutePath() + File.separatorChar + "business_data.db");
+        businessDataDS.setDatabaseFile(getDBLocation().getAbsolutePath() + File.separatorChar + databaseProperties.getProperty(BUSINESS_DATA_DB_NAME_PROPERTY));
         businessDataDS.setMinPoolSize(0);
         businessDataDS.setMaxPoolSize(5);
         bitronixResources.putAll(businessDataDS.toMap("ds2"));

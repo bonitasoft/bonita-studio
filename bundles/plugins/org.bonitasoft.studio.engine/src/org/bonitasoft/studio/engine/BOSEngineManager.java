@@ -215,7 +215,11 @@ public class BOSEngineManager {
             BOSWebServerManager.getInstance().stopServer(monitor);
             isRunning = false;
         }
-        BOSWebServerManager.getInstance().cleanBeforeShutdown();
+        try {
+            BOSWebServerManager.getInstance().cleanBeforeShutdown();
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
+        }
     }
 
     private boolean dropBusinessDataDBOnExit() {
@@ -306,7 +310,7 @@ public class BOSEngineManager {
     }
 
     protected ClassLoader createEngineClassloader() {
-        final Set<URL> urls = new HashSet<URL>();
+        final Set<URL> urls = new HashSet<>();
         Enumeration<URL> foundJars = ProjectUtil.getConsoleLibsBundle().findEntries("/lib", "*.jar", true);
         while (foundJars.hasMoreElements()) {
             final URL url = foundJars.nextElement();
