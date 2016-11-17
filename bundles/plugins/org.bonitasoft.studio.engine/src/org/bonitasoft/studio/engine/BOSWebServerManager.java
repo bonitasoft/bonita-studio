@@ -467,7 +467,7 @@ public class BOSWebServerManager {
         return generateUrlBase() + LOGINSERVICE_PATH + "username=" + username + "&password=" + password;
     }
 
-    public void cleanBeforeShutdown() {
+    public void cleanBeforeShutdown() throws IOException {
         final Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         final DatabaseHandler bonitaHomeHandler = currentRepository.getDatabaseHandler();
         if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT)) {
