@@ -25,7 +25,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.databinding;bundle-version="1.4.2",
  org.bonitasoft.studio.validation.common;bundle-version="7.1.0",
  org.eclipse.gmf.runtime.diagram.ui;bundle-version="1.8.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar
 Export-Package: org.bonitasoft.studio.importer.bos.factory,

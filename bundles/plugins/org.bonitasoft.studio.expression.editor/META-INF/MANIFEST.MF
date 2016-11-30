@@ -56,7 +56,7 @@ Require-Bundle: org.eclipse.ui,
  org.codehaus.groovy.eclipse.codeassist.completion;bundle-version="2.9.2",
  org.eclipse.jdt.groovy.core;bundle-version="2.9.2",
  org.codehaus.groovy.eclipse.core
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.bonitasoft.engine.bpm.contract,
  org.bonitasoft.engine.bpm.document,
  org.bonitasoft.engine.expression

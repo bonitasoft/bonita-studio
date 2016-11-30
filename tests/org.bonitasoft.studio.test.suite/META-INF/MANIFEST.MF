@@ -26,6 +26,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.browser;bundle-version="3.3.101",
  org.junit;bundle-version="4.11.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: BonitaSoft S.A.
 Export-Package: org.bonitasoft.studio.test.suite

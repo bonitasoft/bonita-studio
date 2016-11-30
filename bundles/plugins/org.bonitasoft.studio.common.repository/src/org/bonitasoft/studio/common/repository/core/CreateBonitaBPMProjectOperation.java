@@ -39,8 +39,8 @@ public class CreateBonitaBPMProjectOperation implements IWorkspaceRunnable {
     private IProject project;
     private final IWorkspace workspace;
     private final String projectName;
-    private final Set<String> builders = new HashSet<String>();
-    private final Set<String> natures = new HashSet<String>();
+    private final Set<String> builders = new HashSet<>();
+    private final Set<String> natures = new HashSet<>();
 
     public CreateBonitaBPMProjectOperation(final IWorkspace workspace, final String projectName) {
         this.workspace = workspace;
@@ -76,9 +76,9 @@ public class CreateBonitaBPMProjectOperation implements IWorkspaceRunnable {
     private void createJavaProject(final IProgressMonitor monitor) {
         monitor.subTask(Messages.initializingJavaProject);
         final IJavaProject javaProject = asJavaProject();
-        javaProject.setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
-        javaProject.setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
-        javaProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
+        javaProject.setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
+        javaProject.setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
+        javaProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
         javaProject.setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
         monitor.worked(1);
     }

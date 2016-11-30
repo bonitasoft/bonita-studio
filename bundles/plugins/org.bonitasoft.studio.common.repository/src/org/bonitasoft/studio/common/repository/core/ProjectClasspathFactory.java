@@ -92,7 +92,7 @@ public class ProjectClasspathFactory {
     }
 
     protected IExecutionEnvironment javaRuntimeEnvironment() {
-        return JavaRuntime.getExecutionEnvironmentsManager().getEnvironment("JavaSE-1.7");
+        return JavaRuntime.getExecutionEnvironmentsManager().getEnvironment("JavaSE-1.8");
     }
 
     protected IClasspathEntry newContainerEntry(final IPath path, final boolean isExported) {

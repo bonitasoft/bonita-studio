@@ -23,6 +23,6 @@ Require-Bundle: org.eclipse.ui,
  assertj-core;bundle-version="1.5.0";resolution:=optional,
  org.eclipse.ui.workbench,
  org.eclipse.ui.ide;bundle-version="3.10.1"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.validation.common.operation

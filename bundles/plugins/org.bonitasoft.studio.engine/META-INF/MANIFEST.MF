@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.bonitasoft.studio.engine;singleton:=true
 Bundle-Version: 7.4.2.qualifier
 Bundle-Localization: plugin
 Bundle-Vendor: BonitaSoft S.A.
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.bonitasoft.studio.model;bundle-version="1.0.0",
  org.bonitasoft.studio.preferences;bundle-version="1.0.0",
  org.bonitasoft.studio.common;bundle-version="1.0.0",

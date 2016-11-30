@@ -130,7 +130,7 @@ public class FileAndImageWidgetMigration extends ReportCustomMigration {
 		Instance expression = null;
 		if(imgPaths.containsKey(widget.getUuid())){
 			final String imgPath = imgPaths.get(widget.getUuid());
-			if(widget.get("isADocument")){
+			if((Boolean) widget.get("isADocument")){
 				Instance documentToSet = null;
 				for(final Instance document : model.getAllInstances("process.Document")){
 					if(imgPath.equals(document.get("name"))){
