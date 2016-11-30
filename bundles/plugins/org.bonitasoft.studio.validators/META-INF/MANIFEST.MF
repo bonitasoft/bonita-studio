@@ -37,7 +37,7 @@ Require-Bundle: org.eclipse.ui,
  org.mockito;bundle-version="1.10.19";resolution:=optional,
  org.bonitasoft.studio.tests-utils;bundle-version="7.0.2";resolution:=optional,
  org.eclipse.emf.ecore
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.validators.descriptor.validator,
  org.bonitasoft.studio.validators.i18n,org.bonitasoft.studio.validator

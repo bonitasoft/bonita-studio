@@ -5,5 +5,5 @@ Bundle-SymbolicName: org.bonitasoft.studio.expression.editor.win32;singleton:=tr
 Bundle-Version: 7.4.2.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Fragment-Host: org.bonitasoft.studio.expression.editor;bundle-version="6.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Eclipse-PlatformFilter: (& (osgi.ws=win32) (osgi.os=win32))

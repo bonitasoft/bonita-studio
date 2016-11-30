@@ -29,7 +29,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.preferences,
  org.bonitasoft.studio.tests-utils;bundle-version="6.4.0",
  org.bonitasoft.studio.importer.bos;bundle-version="7.1.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.migration.tests,org.bonitasoft.s
  tudio.migration.tests.document

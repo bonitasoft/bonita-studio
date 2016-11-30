@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.bonitasoft.studio.expression.editor;bundle-version="1.0.0",
  org.bonitasoft.studio.swtbot.framework;bundle-version="7.4.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.bonitasoft.expressions.test;uses:="org.eclipse.swt
  bot.eclipse.gef.finder,org.osgi.framework"
 Bundle-Vendor: BonitaSoft S.A.

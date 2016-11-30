@@ -15,6 +15,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.swtbot.junit4_x,
  org.bonitasoft.studio.test.swtbot.util,
  org.eclipse.swtbot.eclipse.gef.finder
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.common.diagram.test

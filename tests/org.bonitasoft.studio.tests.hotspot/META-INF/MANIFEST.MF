@@ -5,6 +5,6 @@ Bundle-SymbolicName: org.bonitasoft.studio.tests.hotspot;singleton:=true
 Bundle-Version: 7.4.2.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Fragment-Host: org.bonitasoft.studio.tests;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .
 Import-Package: com.sun.management

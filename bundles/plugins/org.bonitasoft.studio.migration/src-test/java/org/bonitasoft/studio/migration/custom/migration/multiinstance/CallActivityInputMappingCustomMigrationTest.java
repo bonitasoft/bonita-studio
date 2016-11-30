@@ -84,8 +84,8 @@ public class CallActivityInputMappingCustomMigrationTest {
         callActivityInputMappingCustomMigration.migrateBefore(model, model.getMetamodel());
         callActivityInputMappingCustomMigration.migrateAfter(model, model.getMetamodel());
 
-        assertThat(inputMapping1.get(ProcessPackage.Literals.INPUT_MAPPING__PROCESS_SOURCE)).isNotNull().isInstanceOf(Instance.class);
-        assertThat(inputMapping2.get(ProcessPackage.Literals.INPUT_MAPPING__PROCESS_SOURCE)).isNotNull().isInstanceOf(Instance.class);
+        assertThat((Instance)inputMapping1.get(ProcessPackage.Literals.INPUT_MAPPING__PROCESS_SOURCE)).isNotNull().isInstanceOf(Instance.class);
+        assertThat((Instance)inputMapping2.get(ProcessPackage.Literals.INPUT_MAPPING__PROCESS_SOURCE)).isNotNull().isInstanceOf(Instance.class);
 
         assertThat(((Instance) inputMapping1.get(ProcessPackage.Literals.INPUT_MAPPING__PROCESS_SOURCE)).getType().getEClass()).isEqualTo(
                 ExpressionPackage.Literals.EXPRESSION);

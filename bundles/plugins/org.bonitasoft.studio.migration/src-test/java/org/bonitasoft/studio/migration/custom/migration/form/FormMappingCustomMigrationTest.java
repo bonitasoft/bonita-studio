@@ -21,6 +21,7 @@ import static org.bonitasoft.studio.migration.custom.migration.InstanceBuilder.a
 
 import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.MigrationFactory;
 import org.eclipse.emf.edapt.spi.migration.Model;
@@ -78,11 +79,11 @@ public class FormMappingCustomMigrationTest {
 
         final Instance processFormMapping = poolInstance.get("formMapping");
         assertThat(processFormMapping).isNotNull();
-        assertThat(processFormMapping.get("type")).isEqualTo(aModel.getMetamodel().getEEnum("process.FormMappingType").getEEnumLiteral("LEGACY"));
-        assertThat(processFormMapping.get("targetForm")).isNotNull();
+        assertThat((EEnumLiteral)processFormMapping.get("type")).isEqualTo(aModel.getMetamodel().getEEnum("process.FormMappingType").getEEnumLiteral("LEGACY"));
+        assertThat((Instance)processFormMapping.get("targetForm")).isNotNull();
 
         final Instance targetFormMapping = aTaskInstance.get("formMapping");
         assertThat(targetFormMapping).isNotNull();
-        assertThat(targetFormMapping.get("type")).isEqualTo(FormMappingType.INTERNAL);
+        assertThat((FormMappingType)targetFormMapping.get("type")).isEqualTo(FormMappingType.INTERNAL);
     }
 }

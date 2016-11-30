@@ -6,7 +6,7 @@ Bundle-Version: 7.4.2.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.wfmc._2002.xpdl1,org.wfmc._2002.xpdl1.impl,org.wfm
  c._2002.xpdl1.util
 Require-Bundle: org.eclipse.core.runtime,

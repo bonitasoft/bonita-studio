@@ -98,7 +98,7 @@
             <validVersionList>
                 <validVersion>
                     <bitness>@os_arch@</bitness>
-                    <minVersion>1.7</minVersion>
+                    <minVersion>1.8</minVersion>
                     <maxVersion>1.8</maxVersion>
                     <requireJDK>0</requireJDK>
                     <vendor></vendor>
@@ -245,7 +245,7 @@
         </createDirectory>
         <runProgram>
             <program>tar</program>
-            <programArguments>-xzf "${installdir}/jre-8u45-macosx-x64.gz" -C "${installdir}/jre"</programArguments>
+            <programArguments>-xzf "${installdir}/jre-8u112-macosx-x64.tar.gz" -C "${installdir}/jre"</programArguments>
             <progressText>Installing JRE...</progressText>
             <ruleList>
                 <platformTest>
@@ -255,7 +255,7 @@
         </runProgram>
         <runProgram>
             <program>mv</program>
-            <programArguments>"${installdir}/jre/jre1.8.0_45.jre/Contents" "${installdir}/jre"</programArguments>
+            <programArguments>"${installdir}/jre/jre1.8.0_112.jre/Contents" "${installdir}/jre"</programArguments>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -264,7 +264,7 @@
         </runProgram>
         <runProgram>
             <program>rm</program>
-            <programArguments>-rf "${installdir}/jre-8u45-macosx-x64.gz"</programArguments>
+            <programArguments>-rf "${installdir}/jre-8u112-macosx-x64.tar.gz"</programArguments>
             <ruleList>
                 <platformTest>
                     <type>osx</type>

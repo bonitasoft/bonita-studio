@@ -6,7 +6,7 @@ Bundle-Version: 7.4.2.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.bonitasoft.studio.importer.jpdl,org.jbpm.jpdl32,or
  g.jbpm.jpdl32.impl,org.jbpm.jpdl32.util
 Require-Bundle: org.eclipse.core.runtime,
