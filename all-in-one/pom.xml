@@ -285,11 +285,11 @@
             <properties>
                 <if.task>net.sf.antcontrib.logic.IfTask</if.task>
                 <jre.url>http://repositories.rd.lan/tools/studio-tools</jre.url>
-                <jre.winx86.url>jre1.7.0_55-windows</jre.winx86.url>
-                <jre.winx86.x64.url>jre1.7.0_55-windows-x64</jre.winx86.x64.url>
-                <jre.linuxx86.url>jre1.7.0_55-linux</jre.linuxx86.url>
-                <jre.linuxx86.x64.url>jre1.7.0_55-linux-x64</jre.linuxx86.x64.url>
-                <jre.osx.url>jre-8u45-macosx-x64</jre.osx.url>
+                <jre.winx86.url>jre-8u112-windows-i586</jre.winx86.url>
+                <jre.winx86.x64.url>jre-8u112-windows-x64</jre.winx86.x64.url>
+                <jre.linuxx86.url>jre-8u112-linux-i586</jre.linuxx86.url>
+                <jre.linuxx86.x64.url>jre-8u112-linux-x64</jre.linuxx86.x64.url>
+                <jre.osx.url>jre-8u112-macosx-x64</jre.osx.url>
             </properties>
             <build>
                 <plugins>
@@ -503,16 +503,17 @@
                                                 <isset property="jre.present" />
                                             </not>
                                             <then>
-												<get src="${jre.url}/${jre.winx86.url}.zip" dest="${user.home}"
+												<get src="${jre.url}/${jre.winx86.url}.tar.gz" dest="${user.home}"
 													verbose="true" />
-                                                <unzip src="${user.home}/${jre.winx86.url}.zip" dest="${user.home}" />
-
-                                                <delete file="${user.home}/${jre.winx86.url}.zip" />
+                                                 <gunzip src="${user.home}/${jre.winx86.url}.tar.gz"/>
+                                                 <untar src="${user.home}/${jre.winx86.url}.tar" dest="${user.home}/${jre.winx86.url}"/>   
+                                                <delete file="${user.home}/${jre.winx86.url}.tar" />
+                                                <delete file="${user.home}/${jre.winx86.url}.tar.gz" />
                                             </then>
                                         </if>
 										<copy
 											todir="${project.build.directory}/products/${productId}/win32/win32/x86/jre">
-                                            <fileset dir="${user.home}/${jre.winx86.url}/jre" />
+                                            <fileset dir="${user.home}/${jre.winx86.url}/jre1.8.0_112" />
                                         </copy>
                                     </tasks>
                                 </configuration>
@@ -534,17 +535,17 @@
                                                 <isset property="jre.present" />
                                             </not>
                                             <then>
-												<get src="${jre.url}/${jre.winx86.x64.url}.zip" dest="${user.home}"
+												<get src="${jre.url}/${jre.winx86.x64.url}.tar.gz" dest="${user.home}"
 													verbose="true" />
-												<unzip src="${user.home}/${jre.winx86.x64.url}.zip"
-													dest="${user.home}" />
-
-                                                <delete file="${user.home}/${jre.winx86.x64.url}.zip" />
+                                                 <gunzip src="${user.home}/${jre.winx86.x64.url}.tar.gz"/>
+                                                 <untar src="${user.home}/${jre.winx86.x64.url}.tar" dest="${user.home}/${jre.winx86.x64.url}"/>   
+                                                <delete file="${user.home}/${jre.winx86.x64.url}.tar" />
+                                                <delete file="${user.home}/${jre.winx86.x64.url}.tar.gz" />
                                             </then>
                                         </if>
 										<copy
 											todir="${project.build.directory}/products/${productId}/win32/win32/x86_64/jre">
-                                            <fileset dir="${user.home}/${jre.winx86.x64.url}/jre" />
+                                            <fileset dir="${user.home}/${jre.winx86.x64.url}/jre1.8.0_112" />
                                         </copy>
                                     </tasks>
                                 </configuration>
@@ -566,16 +567,16 @@
                                                 <isset property="jre.present" />
                                             </not>
                                             <then>
-                                                <get src="${jre.url}/${jre.linuxx86.url}.zip" dest="${user.home}" />
-												<unzip src="${user.home}/${jre.linuxx86.url}.zip"
-													dest="${user.home}" />
-
-                                                <delete file="${user.home}/${jre.linuxx86.url}.zip" />
+                                                <get src="${jre.url}/${jre.linuxx86.url}.tar.gz" dest="${user.home}" />
+                                                <gunzip src="${user.home}/${jre.linuxx86.url}.tar.gz"/>
+                                                <untar src="${user.home}/${jre.linuxx86.url}.tar" dest="${user.home}/${jre.linuxx86.url}"/>   
+                                                <delete file="${user.home}/${jre.linuxx86.url}.tar" />
+                                                <delete file="${user.home}/${jre.linuxx86.url}.tar.gz" />
                                             </then>
                                         </if>
 										<copy
 											todir="${project.build.directory}/products/${productId}/linux/gtk/x86/jre">
-                                            <fileset dir="${user.home}/${jre.linuxx86.url}/jre" />
+                                            <fileset dir="${user.home}/${jre.linuxx86.url}/jre1.8.0_112" />
                                         </copy>
                                     </tasks>
                                 </configuration>
@@ -597,16 +598,16 @@
                                                 <isset property="jre.present" />
                                             </not>
                                             <then>
-                                                <get src="${jre.url}/${jre.linuxx86.x64.url}.zip" dest="${user.home}" />
-												<unzip src="${user.home}/${jre.linuxx86.x64.url}.zip"
-													dest="${user.home}" />
-
-                                                <delete file="${user.home}/${jre.linuxx86.x64.url}.zip" />
+                                                <get src="${jre.url}/${jre.linuxx86.x64.url}.tar.gz" dest="${user.home}" />
+                                                 <gunzip src="${user.home}/${jre.linuxx86.x64.url}.tar.gz"/>
+                                                <untar src="${user.home}/${jre.linuxx86.x64.url}.tar" dest="${user.home}/${jre.linuxx86.x64.url}"/>   
+                                                <delete file="${user.home}/${jre.linuxx86.x64.url}.tar" />
+                                                <delete file="${user.home}/${jre.linuxx86.x64.url}.tar.gz" />
                                             </then>
                                         </if>
 										<copy
 											todir="${project.build.directory}/products/${productId}/linux/gtk/x86_64/jre">
-                                            <fileset dir="${user.home}/${jre.linuxx86.x64.url}/jre" />
+                                            <fileset dir="${user.home}/${jre.linuxx86.x64.url}/jre1.8.0_112" />
                                         </copy>
                                     </tasks>
                                 </configuration>
@@ -619,8 +620,8 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-										<get src="${jre.url}/${jre.osx.url}.gz"
-											dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${jre.osx.url}.gz" />
+										<get src="${jre.url}/${jre.osx.url}.tar.gz"
+											dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${jre.osx.url}.tar.gz" />
                                     </tasks>
                                 </configuration>
                             </execution>

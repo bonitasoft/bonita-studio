@@ -37,7 +37,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit;bundle-version="4.11.0";resolution:=optional,
  org.eclipse.core.databinding,
  org.mockito;bundle-version="1.10.19";resolution:=optional
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.importer.bar.custom.migration,or
  g.bonitasoft.studio.importer.bar.exception,org.bonitasoft.studio.impo

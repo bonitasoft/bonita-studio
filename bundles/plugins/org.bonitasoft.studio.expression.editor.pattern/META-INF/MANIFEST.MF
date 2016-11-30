@@ -25,7 +25,7 @@ Require-Bundle: org.bonitasoft.studio.pics,
  org.objectweb.asm;bundle-version="5.0.1",
  org.codehaus.groovy,
  org.codehaus.groovy.eclipse.core;bundle-version="2.9.2"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Export-Package: org.bonitasoft.studio.expression.editor.pattern,

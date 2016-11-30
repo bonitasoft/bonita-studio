@@ -109,7 +109,7 @@ public class DataDefaultValueMigration extends ReportCustomMigration {
                 || feature.equals(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA)
                 || feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA)){
             return DatasourceConstants.PAGEFLOW_DATASOURCE ;
-        }else if(data.get("transient")){
+        }else if((Boolean) data.get("transient")){
             return DatasourceConstants.IN_MEMORY_DATASOURCE;
         }else{
             return DatasourceConstants.BOS_DATASOURCE ;

@@ -70,7 +70,7 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.codehaus.groovy.eclipse.dsl;bundle-version="2.9.2",
  org.eclipse.core.net,
  org.eclipse.osgi
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.inject;version="1.0.0",
  org.bonitasoft.engine.api,

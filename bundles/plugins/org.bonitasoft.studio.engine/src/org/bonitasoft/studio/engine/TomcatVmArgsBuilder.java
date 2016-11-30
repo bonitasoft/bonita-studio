@@ -45,7 +45,7 @@ public class TomcatVmArgsBuilder {
         if (tomcatExtraParams != null) {
             args.append(" " + tomcatExtraParams);
         }
-        String tomcatInstanceLocation = bundleLocation + File.separatorChar + "server";
+        final String tomcatInstanceLocation = bundleLocation + File.separatorChar + "server";
         addSystemProperty(args, "catalina.home", "\"" + tomcatInstanceLocation + "\"");
         addSystemProperty(args, "CATALINA_HOME", "\"" + tomcatInstanceLocation + "\"");
         addSystemProperty(args, "CATALINA_TMPDIR", "\"" + tomcatInstanceLocation + File.separatorChar + "temp\"");
@@ -114,8 +114,6 @@ public class TomcatVmArgsBuilder {
         args.append("-Xms128m");
         args.append(" ");
         args.append("-Xmx768m");
-        args.append(" ");
-        args.append("-XX:MaxPermSize=256m");
     }
 
     protected void addSystemProperty(final StringBuilder sBuilder, final String key, final String value) {

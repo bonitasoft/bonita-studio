@@ -26,6 +26,6 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.importer;bundle-version="1.0.0",
  org.bonitasoft.studio.test.swtbot.util;bundle-version="1.0.0",
  org.bonitasoft.studio.common;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.xml.tests

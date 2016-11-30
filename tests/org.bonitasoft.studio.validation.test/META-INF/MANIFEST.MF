@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.common,
  org.eclipse.ui.ide;bundle-version="3.5.1",
  org.bonitasoft.studio.importer.bos;bundle-version="7.1.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.validation.test
 Import-Package: org.bonitasoft.studio.model.process.diagram.part,

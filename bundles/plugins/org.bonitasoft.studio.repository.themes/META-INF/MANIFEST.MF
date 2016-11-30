@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.bonitasoft.studio.pics,
  org.w3c.css.sac
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.theme,

@@ -37,7 +37,7 @@ Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional,
  org.eclipse.e4.core.di,
  assertj-core;bundle-version="1.5.0";resolution:=optional,
  org.eclipse.jdt.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,

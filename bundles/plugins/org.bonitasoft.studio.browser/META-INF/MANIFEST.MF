@@ -13,6 +13,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.browser,
  org.bonitasoft.studio.preferences,
  org.bonitasoft.studio.common
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.browser.operation

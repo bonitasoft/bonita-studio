@@ -4,7 +4,7 @@ Bundle-Name: Actor Test Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.actors.tests;singleton:=true
 Bundle-Version: 7.4.1.qualifier
 Bundle-Activator: org.bonitasoft.studio.actors.tests.Activator
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: BonitaSoft S.A.
 Export-Package: org.bonitasoft.studio.actors.tests,org.bonitasoft.stud
  io.actors.tests.SWTbot,org.bonitasoft.studio.actors.tests.exporter,or
@@ -24,6 +24,7 @@ Require-Bundle: org.bonitasoft.studio.common;bundle-version="1.0.0",
  org.junit,
  org.bonitasoft.studio.dependencies,
  org.bonitasoft.studio.test.swtbot.util,
- org.bonitasoft.studio.swtbot.framework;bundle-version="6.4.1"
+ org.bonitasoft.studio.swtbot.framework;bundle-version="6.4.1",
+ org.eclipse.core.databinding;bundle-version="1.4.2"
 
 

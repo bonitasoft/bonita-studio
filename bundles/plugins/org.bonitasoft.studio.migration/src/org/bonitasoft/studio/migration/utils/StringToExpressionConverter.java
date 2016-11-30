@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Model;
+import org.eclipse.swt.widgets.Display;
 import org.w3c.dom.Document;
 
 /**
@@ -542,7 +543,7 @@ public class StringToExpressionConverter {
     }
 
     public static String getDataReturnType(final Instance data) {
-        if (data.get("multiple")) {
+        if ((Boolean) data.get("multiple")) {
             return List.class.getName();
         }
         final Instance dataype = data.get("dataType");

@@ -24,6 +24,6 @@ Require-Bundle: org.eclipse.ui,
  org.junit;bundle-version="4.11.0",
  org.bonitasoft.studio.connectors.test,
  org.eclipse.swtbot.swt.finder
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 

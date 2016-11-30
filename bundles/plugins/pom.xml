@@ -134,14 +134,14 @@
                             <goal>testCompile</goal>
                         </goals>
                         <configuration>
-                            <source>1.7</source>
-                            <target>1.7</target>
+                            <source>1.8</source>
+                            <target>1.8</target>
                         </configuration>
                     </execution>
                 </executions>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 
