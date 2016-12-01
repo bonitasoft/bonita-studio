@@ -199,8 +199,10 @@
                         <id>make-directory-assembly</id>
                         <phase>prepare-package</phase>
                         <configuration>
+                       	 	<descriptors>
+                        		<descriptor>${basedir}/assembly-descriptor.xml</descriptor>
+                        	</descriptors>
                             <appendAssemblyId>false</appendAssemblyId>
-                            <descriptor>${basedir}/assembly-descriptor.xml</descriptor>
                             <finalName>${product.short.name}-${project.version}</finalName>
                         </configuration>
                         <goals>
@@ -212,8 +214,10 @@
                         <phase>package</phase>
                         <configuration>
                             <appendAssemblyId>false</appendAssemblyId>
-                            <descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
-                            <finalName>${product.short.name}-${project.version}</finalName>
+                            <descriptors>
+                        		<descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
+                        	</descriptors>
+                        	<finalName>${product.short.name}-${project.version}</finalName>
                         </configuration>
                         <goals>
                             <goal>single</goal>

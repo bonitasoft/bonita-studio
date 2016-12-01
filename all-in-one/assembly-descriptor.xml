@@ -11,17 +11,19 @@
 		<file>
 			<source>${project.build.directory}/products/${productId}/linux/gtk/x86/${product.short.name}</source>
 			<destName>${product.short.name}-linux</destName>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory />
+			<fileMode>0755</fileMode>
 		</file>
 		<file>
 			<source>${project.build.directory}/products/${productId}/linux/gtk/x86/${product.short.name}.ini</source>
 			<destName>${product.short.name}-linux.ini</destName>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory />
 		</file>
 		<file>
 			<source>${project.build.directory}/products/${productId}/linux/gtk/x86_64/${product.short.name}</source>
 			<destName>${product.short.name}64-linux</destName>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory />
+			<fileMode>0755</fileMode>
 		</file>
 		<file>
 			<source>${project.build.directory}/products/${productId}/linux/gtk/x86_64/${product.short.name}.ini</source>
@@ -31,31 +33,33 @@
 		<file>
 			<source>${project.build.directory}/products/${productId}/win32/win32/x86_64/${product.short.name}.exe</source>
 			<destName>${product.short.name}64.exe</destName>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory />
+			<fileMode>0755</fileMode>
 		</file>
 		<file>
 			<source>${project.build.directory}/products/${productId}/win32/win32/x86_64/${product.short.name}.ini</source>
 			<destName>${product.short.name}64.ini</destName>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory />
 		</file>
 		<file>
 			<source>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}.app/Contents/MacOS/${product.short.name}.ini</source>
-			<outputDirectory>/${product.short.name}.app/Contents/MacOS/</outputDirectory>
+			<outputDirectory>./${product.short.name}.app/Contents/MacOS/</outputDirectory>
 		</file>
 		<file>
 			<source>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}.app/Contents/MacOS/${product.short.name}</source>
-			<outputDirectory>/${product.short.name}.app/Contents/MacOS/</outputDirectory>
+			<outputDirectory>./${product.short.name}.app/Contents/MacOS/</outputDirectory>
+			<fileMode>0755</fileMode>
 		</file>
 		<file>
 			<source>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}.app/Contents/Resources/bonitasoft-icon-128-128-transparent.icns</source>
-			<outputDirectory>/${product.short.name}.app/Contents/Resources/</outputDirectory>
+			<outputDirectory>./${product.short.name}.app/Contents/Resources/</outputDirectory>
 		</file>
 		<file>
 			<source>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}.app/Contents/Info.plist</source>
-			<outputDirectory>/${product.short.name}.app/Contents/</outputDirectory>
+			<outputDirectory>./${product.short.name}.app/Contents/</outputDirectory>
 		</file>
 	</files>
-	
+
 	<fileSets>
 		<fileSet>
 			<directory>${project.build.directory}/products/${productId}/linux/gtk/x86</directory>
@@ -66,7 +70,7 @@
 				<exclude>${product.short.name}</exclude>
 				<exclude>${product.short.name}.ini</exclude>
 			</excludes>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory />
 		</fileSet>
 		<fileSet>
 			<directory>${project.build.directory}/products/${productId}/linux/gtk/x86_64</directory>
@@ -77,14 +81,14 @@
 				<exclude>${product.short.name}</exclude>
 				<exclude>${product.short.name}.ini</exclude>
 			</excludes>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory />
 		</fileSet>
 		<fileSet>
 			<directory>${project.build.directory}/products/${productId}/win32/win32/x86</directory>
 			<includes>
 				<include>**</include>
 			</includes>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory />
 		</fileSet>
 		<fileSet>
 			<directory>${project.build.directory}/products/${productId}/win32/win32/x86_64</directory>
@@ -95,7 +99,7 @@
 				<exclude>${product.short.name}.exe</exclude>
 				<exclude>${product.short.name}.ini</exclude>
 			</excludes>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory />
 		</fileSet>
 		<fileSet>
 			<directory>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64</directory>
@@ -105,7 +109,7 @@
 			<excludes>
 				<exclude>${product.short.name}.app</exclude>
 			</excludes>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory />
 		</fileSet>
 	</fileSets>
 </assembly>
