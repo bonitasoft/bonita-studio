@@ -57,10 +57,9 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
-import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
-import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
@@ -293,7 +292,7 @@ public class DiagramTests {
                     bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 1).click();
                     final String valueOf = "Integer.valueOf(field_varInteger1)";
                     SWTBotTestUtil.setScriptExpression(bot, "theInteger", valueOf, Integer.class.getName());
-                    bot.waitUntil(new ICondition() {
+                    bot.waitUntil(new DefaultCondition() {
 
                         @Override
                         public boolean test() throws Exception {
@@ -301,15 +300,10 @@ public class DiagramTests {
                         }
 
                         @Override
-                        public void init(final SWTBot bot) {
-
-                        }
-
-                        @Override
                         public String getFailureMessage() {
                             return "Expression not set properly";
                         }
-                    });
+                    }, 10000);
                 }
 
                 bot.activeEditor().saveAndClose();
