@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -35,6 +36,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -172,6 +174,8 @@ public class CronEditor extends Composite {
 		Messages.december,
 	};
 
+    private static final String CRON_DOCUMENTATION_URL  = String.format("http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=669&bos_redirect_product=bos&bos_redirect_major_version=%s",ProductVersion.majorVersion());
+
 	private CronExpression cronExpression;
 	private DataBindingContext context;
 	private IValidator dotValidator = new IValidator() {
@@ -194,7 +198,7 @@ public class CronEditor extends Composite {
 		
 		final Link aboutLabel = new Link(this, SWT.WRAP | SWT.NO_FOCUS);
 		aboutLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		aboutLabel.setText(Messages.cronShortDescription);
+		aboutLabel.setText(NLS.bind(Messages.cronShortDescription,CRON_DOCUMENTATION_URL));
 		aboutLabel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
