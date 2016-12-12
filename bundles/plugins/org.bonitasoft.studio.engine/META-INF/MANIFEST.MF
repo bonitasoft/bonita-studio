@@ -64,6 +64,7 @@ Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,
+ org.bonitasoft.engine.bpm.bar.actorMapping,
  org.bonitasoft.engine.bpm.businessdata,
  org.bonitasoft.engine.bpm.connector,
  org.bonitasoft.engine.bpm.contract,

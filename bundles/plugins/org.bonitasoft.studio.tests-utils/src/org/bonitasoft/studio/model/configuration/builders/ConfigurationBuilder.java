@@ -15,10 +15,14 @@
 package org.bonitasoft.studio.model.configuration.builders;
 
 import org.bonitasoft.studio.model.Buildable;
+import org.bonitasoft.studio.model.actormapping.ActorMapping;
+import org.bonitasoft.studio.model.actormapping.ActorMappingsType;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.DefinitionMapping;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
+import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.studio.model.parameter.builders.ParameterBuilder;
 
 /**
  * @author Romain Bioteau
@@ -88,6 +92,18 @@ public class ConfigurationBuilder {
         for (final Buildable<? extends FragmentContainer> dep : dependencies) {
             configuration.getApplicationDependencies().add(dep.build());
         }
+        return this;
+    }
+
+    public ConfigurationBuilder havingParameters(final Buildable<? extends Parameter>... parameters) {
+        for (final Buildable<? extends Parameter> parameter : parameters) {
+            configuration.getParameters().add(parameter.build());
+        }
+        return this;
+    }
+
+    public ConfigurationBuilder havingActorMapping(final Buildable<? extends ActorMappingsType> actorMapping) {
+        configuration.setActorMappings(actorMapping.build());
         return this;
     }
 

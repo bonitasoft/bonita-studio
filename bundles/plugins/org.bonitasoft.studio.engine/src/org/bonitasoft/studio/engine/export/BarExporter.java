@@ -15,10 +15,11 @@
 package org.bonitasoft.studio.engine.export;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.Maps.transformValues;
+import static com.google.common.collect.Maps.uniqueIndex;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,6 +48,9 @@ import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceCo
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.model.actormapping.ActorMapping;
+import org.bonitasoft.studio.model.actormapping.ActorMappingsType;
+import org.bonitasoft.studio.model.actormapping.MembershipType;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -64,6 +68,9 @@ import org.eclipse.gmf.runtime.diagram.ui.image.ImageFileFormat;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Maps;
 
 /**
  * @author Romain Bioteau
@@ -103,7 +110,7 @@ public class BarExporter {
         DesignProcessDefinition def;
         try {
             def = procBuilder.createDefinition(process);
-        } catch (InvalidProcessDefinitionException e1) {
+        } catch (final InvalidProcessDefinitionException e1) {
             throw new BarCreationException(String.format("Failed to create process definition for %s (%s)", process.getName(), process.getVersion()), e1);
         }
 
@@ -112,23 +119,12 @@ public class BarExporter {
         }
 
         final BusinessArchiveBuilder builder = new BusinessArchiveBuilder().createNewBusinessArchive();
-        builder.setProcessDefinition(def);
-
-        builder.setParameters(getParameterMapFromConfiguration(configuration));
-        byte[] content;
-        try {
-            content = new ActorMappingExporter().toByteArray(configuration);
-            if (content != null) {
-                builder.setActorMapping(content);
-            }
-        } catch (ActorMappingExportException | IOException e1) {
-            throw new BarCreationException("Failed to add Actor mapping.", e1);
-        }
+        builder.setProcessDefinition(def).setParameters(getParameters(configuration)).setActorMapping(getActorMapping(configuration));
 
         for (final BARResourcesProvider resourceProvider : getBARResourcesProvider()) {
             try {
                 resourceProvider.addResourcesForConfiguration(builder, process, configuration, excludedObject);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 throw new BarCreationException("Failed to add Process resources from configuration.", e);
             }
         }
@@ -138,7 +134,7 @@ public class BarExporter {
         if (provider != null) {
             try {
                 provider.addResourcesForConfiguration(builder, process, configuration, excludedObject);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 throw new BarCreationException("Failed to add Application resources from configuration.", e);
             }
         }
@@ -163,9 +159,31 @@ public class BarExporter {
             final BusinessArchive archive = builder.done();
             BonitaStudioLog.info("Build complete for process " + process.getName() + " (" + process.getVersion() + " ).", EnginePlugin.PLUGIN_ID);
             return archive;
-        }catch (InvalidBusinessArchiveFormatException e) {
+        } catch (final InvalidBusinessArchiveFormatException e) {
             throw new BarCreationException("Failed to create Business Archive.", e);
         }
+    }
+
+    protected org.bonitasoft.engine.bpm.bar.actorMapping.ActorMapping getActorMapping(Configuration configuration) {
+        final ActorMappingsType mappings = configuration.getActorMappings();
+        final org.bonitasoft.engine.bpm.bar.actorMapping.ActorMapping actorMapping = new org.bonitasoft.engine.bpm.bar.actorMapping.ActorMapping();
+        if (mappings != null) {
+            for (final ActorMapping mapping : mappings.getActorMapping()) {
+                actorMapping.addActor(toEngineActor(mapping));
+            }
+        }
+        return actorMapping;
+    }
+
+    private org.bonitasoft.engine.bpm.bar.actorMapping.Actor toEngineActor(ActorMapping mapping) {
+        final org.bonitasoft.engine.bpm.bar.actorMapping.Actor actor = new org.bonitasoft.engine.bpm.bar.actorMapping.Actor(mapping.getName());
+        actor.addUsers(mapping.getUsers().getUser());
+        actor.addGroups(mapping.getGroups().getGroup());
+        actor.addRoles(mapping.getRoles().getRole());
+        for (final MembershipType membership : mapping.getMemberships().getMembership()) {
+            actor.addMembership(membership.getGroup(), membership.getRole());
+        }
+        return actor;
     }
 
     public DesignProcessDefinitionBuilder getProcessDefinitionBuilder() {
@@ -219,6 +237,8 @@ public class BarExporter {
                 }
             }
         }
+
+        //TODO Remove configuration sync when all bar artifacts will be live update friendly (connectors, dependencies, parameters...) ? 
         if (configuration == null) {
             configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
             configuration.setName(configurationId);
@@ -229,14 +249,28 @@ public class BarExporter {
         return configuration;
     }
 
-    public Map<String, String> getParameterMapFromConfiguration(final Configuration configuration) {
-        final Map<String, String> result = new HashMap<String, String>();
-        for (final Parameter p : configuration.getParameters()) {
-            if (p.getValue() != null) {
-                result.put(p.getName(), p.getValue());
+    protected Map<String, String> getParameters(final Configuration configuration) {
+        return Maps.newHashMap(transformValues(uniqueIndex(configuration.getParameters(), toParameterKeys()), toParameterValues()));
+    }
+
+    private Function<Parameter, String> toParameterValues() {
+        return new Function<Parameter, String>() {
+
+            @Override
+            public String apply(Parameter parameter) {
+                return parameter.getValue();
             }
-        }
-        return result;
+        };
+    }
+
+    private Function<Parameter, String> toParameterKeys() {
+        return new Function<Parameter, String>() {
+
+            @Override
+            public String apply(Parameter parameter) {
+                return parameter.getName();
+            }
+        };
     }
 
     protected BARResourcesProvider getBARApplicationResourcesProvider() {
@@ -261,7 +295,7 @@ public class BarExporter {
     }
 
     public List<BARResourcesProvider> getBARResourcesProvider() {
-        final List<BARResourcesProvider> res = new ArrayList<BARResourcesProvider>();
+        final List<BARResourcesProvider> res = new ArrayList<>();
         final IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
                 BAR_RESOURCE_PROVIDERS_EXTENSION_POINT);
         for (final IConfigurationElement extension : extensions) {
