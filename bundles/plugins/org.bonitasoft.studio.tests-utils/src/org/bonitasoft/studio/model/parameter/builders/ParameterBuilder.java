@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.model.parameter.builders;
 
+import org.bonitasoft.studio.model.Buildable;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.parameter.ParameterFactory;
 
@@ -23,11 +24,23 @@ import org.bonitasoft.studio.model.parameter.ParameterFactory;
  * @author Romain Bioteau
  *
  */
-public class ParameterBuilder {
+public class ParameterBuilder implements Buildable<Parameter>{
 
 
     public static ParameterBuilder aParameter() {
         return new ParameterBuilder();
+    }
+    
+    public static ParameterBuilder aStringParameter(String name,String value) {
+        return new ParameterBuilder().withName(name).withValue(value).withType(String.class.getName());
+    }
+    
+    public static ParameterBuilder aBooleanParameter(String name,boolean value) {
+        return new ParameterBuilder().withName(name).withValue(String.valueOf(value)).withType(Boolean.class.getName());
+    }
+    
+    public static ParameterBuilder anIntegerParameter(String name,int value) {
+        return new ParameterBuilder().withName(name).withValue(String.valueOf(value)).withType(Integer.class.getName());
     }
 
     private final Parameter parameter;
