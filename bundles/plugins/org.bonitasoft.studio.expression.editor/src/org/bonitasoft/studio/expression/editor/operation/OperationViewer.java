@@ -233,7 +233,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
             getActionExpression().setExpressionNatureProvider(actionExpressionProvider);
         }
         getActionExpression().setExternalDataBindingContext(context);
-        context.bindValue(ViewersObservables.observeInput(getActionExpression()), eObjectObervable);
+        context.bindValue(ViewersObservables.observeInput(getActionExpression()), operationObservable);
 
         getActionExpression().addExpressionValidator(new OperationReturnTypesValidator());
 
