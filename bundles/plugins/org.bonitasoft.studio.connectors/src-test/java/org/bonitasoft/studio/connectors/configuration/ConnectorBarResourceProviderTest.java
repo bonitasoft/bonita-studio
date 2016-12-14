@@ -135,6 +135,30 @@ public class ConnectorBarResourceProviderTest {
         assertThat(barResourceCaptor.getValue().getName()).isEqualTo("myConnectorImpl-1.0.0.jar");
     }
 
+    @Test
+    public void should_add_implementation_jar__name_in_dependency_of_implemetation__bar_resource() throws Exception {
+        final ConnectorBarResourceProvider provider = new ConnectorBarResourceProvider(repositoryAccessor);
+
+        when(myConnectorImplFileStore.getContent()).thenReturn(aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
+                "org.test.MyConnector"));
+        when(myConnectorImplFileStore.canBeShared()).thenReturn(true);
+        when(libFileStore.getName()).thenReturn("myConnectorImpl-1.0.0.jar");
+        when(depStore.getChild("myConnectorImpl-1.0.0.jar")).thenReturn(libFileStore);
+        when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0")).thenReturn(myConnectorImplFileStore);
+
+        final BusinessArchiveBuilder builder = mock(BusinessArchiveBuilder.class);
+        provider.addResourcesForConfiguration(builder, aPool().build(), connectorConfiguration("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0"),
+                Collections.<EObject> emptySet());
+
+        final ConnectorImplementation implemetationWithSelfDep = provider.implemetationWithSelfDep(myConnectorImplFileStore,
+                connectorConfiguration("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0"));
+
+        final ArgumentCaptor<BarResource> barResourceCaptor = ArgumentCaptor.forClass(BarResource.class);
+        verify(builder).addConnectorImplementation(barResourceCaptor.capture());
+
+        assertThat(implemetationWithSelfDep.getJarDependencies().getJarDependency()).contains("myConnectorImpl-1.0.0.jar");
+    }
+
     private ConnectorImplementation aConnectorImplementation(final String definitionId,
             final String definitionVersion,
             final String implementationId,

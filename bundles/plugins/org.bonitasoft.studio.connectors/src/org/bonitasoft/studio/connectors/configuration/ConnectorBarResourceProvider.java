@@ -17,14 +17,18 @@ package org.bonitasoft.studio.connectors.configuration;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.tryFind;
 import static com.google.common.io.Files.toByteArray;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -41,6 +45,11 @@ import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;
+import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
+import org.bonitasoft.studio.connector.model.implementation.JarDependencies;
+import org.bonitasoft.studio.connector.model.implementation.util.ConnectorImplementationResourceFactoryImpl;
+import org.bonitasoft.studio.connector.model.implementation.util.ConnectorImplementationXMLProcessor;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -49,9 +58,15 @@ import org.bonitasoft.studio.model.configuration.DefinitionMapping;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
 /**
  * @author Romain Bioteau
@@ -59,10 +74,14 @@ import com.google.common.base.Predicate;
 public class ConnectorBarResourceProvider implements BARResourcesProvider {
 
     protected final RepositoryAccessor repositoryAccessor;
+    private final ConnectorImplementationResourceFactoryImpl resourceFactory;
+    private final ConnectorImplementationXMLProcessor xmlProcessor;
 
     @Inject
     public ConnectorBarResourceProvider(final RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
+        this.resourceFactory = new ConnectorImplementationResourceFactoryImpl();
+        this.xmlProcessor = new ConnectorImplementationXMLProcessor();
     }
 
     @Override
@@ -71,10 +90,8 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
         if (configuration == null) {
             return;
         }
-        final List<BarResource> resources = new ArrayList<BarResource>();
-
-        final DependencyRepositoryStore libStore = getDependencyRepositoryStore();
-        final ConnectorImplRepositoryStore implStore = getImplementationStore();
+        final List<BarResource> resources = new ArrayList<>();
+        final IImplementationRepositoryStore implStore = getImplementationStore();
         for (final DefinitionMapping association : filter(configuration.getDefinitionMappings(), and(actorFilterMappings(), withImplementation()))) {
             final String connectorImplementationFilename = NamingUtils.toConnectorImplementationFilename(
                     association.getImplementationId(),
@@ -87,11 +104,10 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
                 throw new FileNotFoundException(String.format("%s (%s) not found in repository", association.getImplementationId(),
                         association.getImplementationVersion()));
             }
-            addImplementation(builder, connectorImplementationFilename, implementationFileStore);
+            addImplementation(builder, connectorImplementationFilename, implementationFileStore, configuration);
 
             final ConnectorImplementation connectorImplementation = (ConnectorImplementation) implementationFileStore.getContent();
-            addProcessDependencies(builder, configuration, resources, libStore, association.getImplementationId(), association.getImplementationVersion(),
-                    connectorImplementation, implementationFileStore.canBeShared());
+            addProcessDependencies(builder, configuration, resources, connectorImplementation, implementationFileStore.canBeShared());
         }
 
         for (final BarResource barResource : resources) {
@@ -124,66 +140,39 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
         return FragmentTypes.CONNECTOR;
     }
 
-    /**
-     * @return
-     */
     protected DependencyRepositoryStore getDependencyRepositoryStore() {
         return repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class);
     }
 
-    /**
-     * @return
-     */
-    protected ConnectorImplRepositoryStore getImplementationStore() {
+    protected IImplementationRepositoryStore getImplementationStore() {
         return repositoryAccessor.getRepositoryStore(ConnectorImplRepositoryStore.class);
     }
 
-    /**
-     * @param builder
-     * @param configuration
-     * @param resources
-     * @param libStore
-     * @param implId
-     * @param implVersion
-     * @param implementation
-     * @param isUserImplementation
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws InvocationTargetException
-     */
     protected void addProcessDependencies(final BusinessArchiveBuilder builder, final Configuration configuration, final List<BarResource> resources,
-            final DependencyRepositoryStore libStore, final String implId, final String implVersion, final ConnectorImplementation implementation,
-            final boolean isUserImplementation) throws IOException, InvocationTargetException, InterruptedException {
-        for (final FragmentContainer fc : configuration.getProcessDependencies()) {
-            if (fc.getId().equals(FragmentTypes.CONNECTOR)) {
-                for (final FragmentContainer connector : fc.getChildren()) {
-                    if (connector.getId().equals(NamingUtils.toConnectorImplementationFilename(implId, implVersion, false))) {
-                        for (final Fragment fragment : connector.getFragments()) {
-                            final String jarName = fragment.getValue();
-                            if (jarName.endsWith(".jar") && fragment.isExported()) {
-                                if (isUserImplementation
-                                        && NamingUtils.toConnectorImplementationJarName(implementation).equals(fragment.getValue())) { //Generate jar from source file
-                                    if (!addImplementationJar(builder, implementation)) {
-                                        addResource(resources, libStore, jarName);
-                                    }
-                                } else {
-                                    addResource(resources, libStore, jarName);
-                                }
-
-                            }
-                        }
+            final ConnectorImplementation implementation, final boolean customImpl) throws InvocationTargetException, InterruptedException, IOException {
+        final DependencyRepositoryStore dependencyStore = repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class);
+        final Optional<FragmentContainer> fragmentContainer = tryFind(configuration.getProcessDependencies(), withId(getFragmentType()));
+        if (fragmentContainer.isPresent()) {
+            final Optional<FragmentContainer> implementationContainer = tryFind(
+                    fragmentContainer.get().getChildren(),
+                    withId(NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(),
+                            implementation.getImplementationVersion(),
+                            false)));
+            if (implementationContainer.isPresent()) {
+                for (final Fragment fragment : filter(implementationContainer.get().getFragments(), exportedJarFragment())) {
+                    if (customImpl && NamingUtils.toConnectorImplementationJarName(implementation).equals(fragment.getValue())) { //Generate jar from source file
+                        addImplementationJar(builder, implementation);
+                    }
+                    final IRepositoryFileStore jarFile = dependencyStore.getChild(fragment.getValue());
+                    if (jarFile != null) {
+                        resources.add(new BarResource(jarFile.getName(), jarFile.toByteArray()));
                     }
                 }
             }
         }
     }
 
-    /**
-     * @param resources
-     * @param libStore
-     * @param jarName
-     * @throws IOException
-     */
+
     protected void addResource(final List<BarResource> resources, final DependencyRepositoryStore libStore, final String jarName) throws IOException {
         final IRepositoryFileStore jarFileStore = libStore.getChild(jarName);
         if (jarFileStore != null) {
@@ -225,9 +214,89 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
     }
 
     protected void addImplementation(final BusinessArchiveBuilder builder, final String connectorImplementationFilename,
-            final EMFFileStore implementationFileStore)
+            final EMFFileStore implementationFileStore, final Configuration configuration)
             throws IOException {
-        builder.addConnectorImplementation(new BarResource(connectorImplementationFilename, implementationFileStore.toByteArray()));
+        builder.addConnectorImplementation(
+                newBarResource(connectorImplementationFilename, implementationFileStore, configuration));
+    }
+
+    protected BarResource newBarResource(final String connectorImplementationFilename, final EMFFileStore implementationFileStore,
+            final Configuration configuration) throws UnsupportedEncodingException, IOException {
+        return new BarResource(connectorImplementationFilename,
+                toXMLString(implemetationWithSelfDep(implementationFileStore, configuration)).getBytes("UTF-8"));
+    }
+
+    protected ConnectorImplementation implemetationWithSelfDep(final EMFFileStore implementationFileStore, final Configuration configuration)
+            throws IOException {
+        final ConnectorImplementation content = (ConnectorImplementation) implementationFileStore.getContent();
+        final ConnectorImplementation connectorImplementation = EcoreUtil.copy(content);
+        JarDependencies dependencies = content.getJarDependencies();
+        if (dependencies == null) {
+            dependencies = ConnectorImplementationFactory.eINSTANCE.createJarDependencies();
+            connectorImplementation.setJarDependencies(dependencies);
+        }
+        final EList<String> jarDependencies = dependencies.getJarDependency();
+        final String implementationJarName = NamingUtils.toConnectorImplementationJarName(content);
+        if (implementationFileStore.canBeShared()
+                && selfDependenciesIsExported(configuration, content)
+                && !jarDependencies.contains(implementationJarName)) {
+            connectorImplementation.getJarDependencies().getJarDependency().add(implementationJarName);
+        }
+        return connectorImplementation;
+    }
+
+    protected String toXMLString(final ConnectorImplementation connectorImplementation) throws IOException {
+        final XMLResource resource = (XMLResource) resourceFactory.createResource(URI.createURI("tmp.impl"));
+        resource.getContents().add(connectorImplementation);
+        final Map<Object, Object> options = resource.getDefaultSaveOptions();
+        options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+        try {
+            return xmlProcessor.saveToString(resource, options).replace("implementation:ConnectorImplementation", "implementation:connectorImplementation");
+        } finally {
+            if (resource != null) {
+                resource.delete(options);
+            }
+        }
+    }
+
+    private boolean selfDependenciesIsExported(Configuration configuration, ConnectorImplementation implementation) {
+        final Optional<FragmentContainer> connectorContainer = tryFind(configuration.getProcessDependencies(), withId(getFragmentType()));
+        final Optional<FragmentContainer> implementationContainer = tryFind(connectorContainer.get().getChildren(),
+                withId(NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(),
+                        implementation.getImplementationVersion(), false)));
+        final Optional<Fragment> fragment = tryFind(implementationContainer.get().getFragments(),
+                Predicates.and(withValue(NamingUtils.toConnectorImplementationJarName(implementation)), exportedJarFragment()));
+        return fragment.isPresent();
+    }
+
+    private Predicate<? super Fragment> exportedJarFragment() {
+        return new Predicate<Fragment>() {
+
+            @Override
+            public boolean apply(Fragment fragment) {
+                return fragment.isExported();
+            }
+        };
+    }
+
+    private Predicate<? super Fragment> withValue(final String value) {
+        return new Predicate<Fragment>() {
+
+            @Override
+            public boolean apply(Fragment fragment) {
+                return Objects.equals(fragment.getValue(), value);
+            }
+        };
+    }
+
+    private Predicate<FragmentContainer> withId(final String type) {
+        return new Predicate<FragmentContainer>() {
+
+            @Override
+            public boolean apply(FragmentContainer fc) {
+                return fc.getId().equals(type);
+            }
+        };
     }
 
 }
