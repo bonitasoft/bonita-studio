@@ -75,6 +75,7 @@
         <module>org.bonitasoft.studio.repository.themes</module>
         <module>org.bonitasoft.studio.repository.themes.bonitasoft</module>
         <module>org.bonitasoft.studio.scripting</module>
+        <module>org.bonitasoft.studio.ui</module>
         <module>org.bonitasoft.studio.validation</module>
         <module>org.bonitasoft.studio.validation.common</module>
         <module>org.bonitasoft.studio.validators</module>
