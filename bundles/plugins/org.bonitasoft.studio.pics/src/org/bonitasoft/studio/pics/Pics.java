@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.pics;
 
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
@@ -25,6 +26,8 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -62,7 +65,11 @@ public class Pics extends AbstractUIPlugin {
          */
         @Override
         public ImageData getImageData() {
-            return new ImageData(Pics.class.getResourceAsStream(file));
+            InputStream resourceAsStream = Pics.class.getResourceAsStream(file);
+            if (resourceAsStream != null) {
+                return new ImageData(resourceAsStream);
+            }
+            return new ImageData(1, 1, 16, new PaletteData(new RGB[] {}));
         }
 
     }
