@@ -33,6 +33,7 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
@@ -46,14 +47,21 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogTray;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -63,6 +71,9 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.core.databinding.Binding;
 
 /**
  * @author Romain Bioteau
@@ -71,7 +82,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 
     private final String languageId;
 
-    private Composite mainComposite;
+    private Composite mainComposite, inputNameComposite;
 
     private Text expressionNameText;
 
@@ -88,6 +99,10 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
     private IObservableValue returnTypeModelObservable = null;
 
     private boolean isPageFlowContext = false;
+
+    private CLabel errorLabel;
+
+    private Binding bindValue;
 
     public ScriptExpressionEditor(final Expression expression) {
         if (expression != null) {
@@ -108,50 +123,34 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
     public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        GridLayout layout = new GridLayout(4, false);
-        layout.marginBottom = 0;
-        layout.marginHeight = 0;
-        layout.marginWidth = 0;
-        layout.marginTop = 10;
-        layout.marginRight = 0;
-        layout.marginLeft = 0;
-        mainComposite.setLayout(layout);
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().create());
 
-        final Label scriptNameLabel = new Label(mainComposite, SWT.NONE);
-        scriptNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
-        scriptNameLabel.setText(Messages.name + " *");
+        new Label(mainComposite, SWT.NONE).setLayoutData(GridDataFactory.fillDefaults().indent(0, -LayoutConstants.getSpacing().y + 1).create()); //filler
 
-        expressionNameText = new Text(mainComposite, SWT.BORDER | SWT.SINGLE);
-        expressionNameText.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).indent(5, 0).span(2, 1).create());
-        //
-        //        final Label interpreterLabel = new Label(mainComposite, SWT.NONE);
-        //        interpreterLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
-        //        interpreterLabel.setText(Messages.interpreter);
+        inputNameComposite = new Composite(mainComposite, SWT.NONE);
+        inputNameComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
+        inputNameComposite.setLayoutData(GridDataFactory.fillDefaults().create());
+        
+        final Label scriptNameLabel = new Label(inputNameComposite, SWT.NONE);
+        scriptNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
+        scriptNameLabel.setText(Messages.name);
 
-        //        expressionInterpreterCombo = new Combo(mainComposite, SWT.READ_ONLY | SWT.BORDER);
-        //        expressionInterpreterCombo.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
-        //
-        //        for (final IScriptLanguageProvider provider : ScriptLanguageService.getInstance().getScriptLanguageProviders()) {
-        //            expressionInterpreterCombo.add(provider.getLanguageName());
-        //        }
-        //
-        //        if (expressionInterpreterCombo.getItemCount() < 2) {
-        //            expressionInterpreterCombo.setEnabled(false);
-        //        }
+        expressionNameText = new Text(inputNameComposite, SWT.BORDER | SWT.SINGLE);
+        expressionNameText.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(false, false).hint(400, SWT.DEFAULT).create());
+
+        LocalResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
+        Color errorColor = resourceManager.createColor(new RGB(214, 77, 77));
+
+        errorLabel = new CLabel(inputNameComposite, SWT.NONE);
+        errorLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).create());
+        errorLabel.setForeground(errorColor);
 
         final IScriptLanguageProvider provider = ScriptLanguageService.getInstance().getScriptLanguageProvider(languageId);
         editor = provider.getExpressionEditor();
         editor.setIsPageFlowContext(isPageFlowContext);
         final Composite editorComposite = new Composite(mainComposite, SWT.NONE);
         editorComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(4, 1).create());
-        layout = new GridLayout(1, false);
-        layout.marginBottom = 0;
-        layout.marginHeight = 0;
-        layout.marginWidth = 0;
-        layout.marginTop = 10;
-        layout.marginRight = 0;
-        layout.marginLeft = 0;
-        editorComposite.setLayout(layout);
+        editorComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         editor.createExpressionEditor(editorComposite, ctx);
 
         createReturnTypeComposite(editorComposite);
@@ -230,23 +229,18 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
             final ExpressionViewer viewer) {
         this.inputExpression = inputExpression;
         final IObservableValue nameModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
-        //   final IObservableValue interpreterModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__INTERPRETER);
 
         final UpdateValueStrategy opposite = new UpdateValueStrategy();
         opposite.setConverter(new BooleanInverserConverter());
 
+        IObservableValue nameTextObservable = SWTObservables.observeText(expressionNameText, SWT.Modify);
+
         final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
         targetToModel.setAfterConvertValidator(new EmptyInputValidator(Messages.name));
-        ControlDecorationSupport.create(
-                dataBindingContext.bindValue(SWTObservables.observeText(expressionNameText, SWT.Modify), nameModelObservable, targetToModel, null), SWT.LEFT);
-        //        dataBindingContext.bindValue(SWTObservables.observeSelection(expressionInterpreterCombo), interpreterModelObservable);
-        nameModelObservable.addValueChangeListener(new IValueChangeListener() {
-
-            @Override
-            public void handleValueChange(final ValueChangeEvent arg0) {
-                fireSelectionChanged();
-            }
-        });
+        bindValue = dataBindingContext.bindValue(nameTextObservable, nameModelObservable, targetToModel, null);
+        nameTextObservable.addValueChangeListener(handleValidationStatusChanged());
+        IObservableValue validationStatus = bindValue.getValidationStatus();
+        nameModelObservable.addValueChangeListener(event -> fireSelectionChanged());
 
         editor.bindExpression(dataBindingContext, context, inputExpression, filters, viewer);
 
@@ -265,6 +259,24 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 
         typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed());
         browseClassesButton.setEnabled(!inputExpression.isReturnTypeFixed());
+    }
+
+    private IValueChangeListener handleValidationStatusChanged() {
+        return event -> {
+            statusChanged((IStatus) bindValue.getValidationStatus().getValue());
+        };
+    }
+
+    private void statusChanged(IStatus status) {
+        if (!status.isOK()) {
+            errorLabel.setText(status.getMessage());
+            errorLabel.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK));
+
+        } else {
+            errorLabel.setText("");
+            errorLabel.setImage(null);
+        }
+        inputNameComposite.layout();
     }
 
     private boolean shouldChangeReturnType(final String inputExpressionReturnType, final String defaultReturnType) {

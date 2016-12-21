@@ -388,15 +388,6 @@ public class DiagramTests {
         // "Data type"
         bot.comboBoxWithLabel(datatypeLabel).setSelection(varType);
 
-        if (SWTBotTestUtil.testingBosSp()) {
-            final SWTBotCheckBox cb = bot.checkBox("Auto-generate form");
-            if (cb.isChecked() && !autoGenerateForm) {
-                cb.deselect();
-            } else if (!cb.isChecked() && autoGenerateForm) {
-                cb.select();
-            }
-        }
-
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
 

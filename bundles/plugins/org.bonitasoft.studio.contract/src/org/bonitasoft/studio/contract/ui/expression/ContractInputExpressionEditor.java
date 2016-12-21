@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -46,6 +44,7 @@ import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
@@ -59,7 +58,6 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ContractInputExpressionEditor extends SelectionAwareExpressionEditor
         implements IExpressionEditor {
@@ -82,6 +80,7 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
         mainComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        new Label(mainComposite, SWT.NONE).setLayoutData(GridDataFactory.fillDefaults().indent(0, -LayoutConstants.getSpacing().y + 1).create()); // Filler
 
         viewer = new ContractInputTableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER
                 | SWT.SINGLE | SWT.V_SCROLL);
@@ -119,7 +118,6 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
         typeText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
                 .align(SWT.FILL, SWT.CENTER).indent(10, 0).create());
     }
-
 
     private void updateViewerInput(final EObject context) {
         final Set<ContractInput> input = new HashSet<ContractInput>();
@@ -161,7 +159,6 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
         final IObservableValue referenceObservable = EMFObservables.observeValue(
                 inputExpression,
                 ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
-
 
         final IViewerObservableValue observeSingleSelection = ViewersObservables
                 .observeSingleSelection(viewer);
@@ -281,7 +278,6 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
         return !viewer.getSelection().isEmpty();
     }
 
-
     protected TableViewer getViewer() {
         return viewer;
     }
@@ -289,6 +285,5 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
     protected Expression getExpression() {
         return editorInputExpression;
     }
-
 
 }

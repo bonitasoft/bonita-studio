@@ -62,7 +62,7 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
             + "+\"'\"";
 
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
@@ -211,8 +211,8 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
     private void editGroovyEditor(final int buttonIndex, final String inputName, final String inputtype, final String scriptName, final String groovyScript) {
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON, buttonIndex).click();
         bot.table().select("Script");
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name *")), 10000);
-        bot.textWithLabel("Name *").setText(scriptName);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")), 10000);
+        bot.textWithLabel("Name").setText(scriptName);
         bot.styledText().setText(groovyScript);
         assertFalse("return type combobox should be disabled", bot.comboBoxWithLabel("Return type").isEnabled());
         assertEquals("return type should be" + inputtype, bot.comboBoxWithLabel("Return type").getText(), inputtype);

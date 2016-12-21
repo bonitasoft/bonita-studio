@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.LayerConstants;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -56,6 +57,7 @@ import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -107,6 +109,9 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).create());
 
+        Label filler = (new Label(mainComposite, SWT.NONE));
+        filler.setLayoutData(GridDataFactory.fillDefaults().indent(0, -LayoutConstants.getSpacing().y+1).span(2, 1).create());
+        
         viewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
 
         final TableLayout layout = new TableLayout();
@@ -125,31 +130,27 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
         viewer.setContentProvider(new ArrayContentProvider());
         viewer.setLabelProvider(new DataStyledTreeLabelProvider());
 
-        viewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
+        viewer.addPostSelectionChangedListener(event -> {
+            if (!event.getSelection().isEmpty()) {
+                javaTreeviewer.getTree().setEnabled(true);
 
-            @Override
-            public void selectionChanged(final SelectionChangedEvent event) {
-                if (!event.getSelection().isEmpty()) {
-                    javaTreeviewer.getTree().setEnabled(true);
+                data = (Data) ((IStructuredSelection) event.getSelection()).getFirstElement();
+                String className = null;
 
-                    data = (Data) ((IStructuredSelection) event.getSelection()).getFirstElement();
-                    String className = null;
-
-                    if (data.isMultiple()) {
-                        className = List.class.getName();
-                    } else if (data instanceof JavaObjectData) {
-                        className = ((JavaObjectData) data).getClassName();
+                if (data.isMultiple()) {
+                    className = List.class.getName();
+                } else if (data instanceof JavaObjectData) {
+                    className = ((JavaObjectData) data).getClassName();
+                }
+                if (className != null) {
+                    javaTreeviewer.setInput(className);
+                    if (editorInputExpression != null && editorInputExpression.isReturnTypeFixed()) {
+                        javaTreeviewer.addFilter(showOnlyMethodWithReturnType(editorInputExpression.getReturnType()));
                     }
-                    if (className != null) {
-                        javaTreeviewer.setInput(className);
-                        if (editorInputExpression != null && editorInputExpression.isReturnTypeFixed()) {
-                            javaTreeviewer.addFilter(showOnlyMethodWithReturnType(editorInputExpression.getReturnType()));
-                        }
-                        javaTreeviewer.expandAll();
-                        javaTreeviewer.getTree().setFocus();
-                        javaTreeviewer.getTree().getShell().layout(true, true);
-                        JavaExpressionEditor.this.fireSelectionChanged();
-                    }
+                    javaTreeviewer.expandAll();
+                    javaTreeviewer.getTree().setFocus();
+                    javaTreeviewer.getTree().getShell().layout(true, true);
+                    JavaExpressionEditor.this.fireSelectionChanged();
                 }
             }
         });
@@ -194,7 +195,7 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
     protected void createBrowseJavaObjectForReadExpression(final Composite composite) {
         final Composite res = new Composite(composite, SWT.NONE);
         res.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        res.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+        res.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(LayoutConstants.getSpacing().x, 0).create());
 
         final Label label = new Label(res, SWT.NONE);
         label.setText(Messages.browseJava);

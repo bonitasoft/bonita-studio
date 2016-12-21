@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,33 +20,38 @@ import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpression
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
-/**
- * @author Romain Bioteau
- * 
- */
 public class ConstantExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor {
 
     private Text valueText;
@@ -59,6 +62,8 @@ public class ConstantExpressionEditor extends SelectionAwareExpressionEditor imp
 
     private boolean isPageFlowContext = false;
 
+    private CLabel errorLabel;
+
     @Override
     public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx) {
         return createExpressionEditor(parent, ctx, false);
@@ -68,10 +73,11 @@ public class ConstantExpressionEditor extends SelectionAwareExpressionEditor imp
     public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx, boolean isPassword) {
         Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
-        mainComposite.setLayout(new GridLayout(2, false));
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().create());
 
         Label valueLabel = new Label(mainComposite, SWT.NONE);
+        valueLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).create());
+
         valueLabel.setText(Messages.value);
         if (isPassword) {
             valueText = new Text(mainComposite, SWT.BORDER | SWT.PASSWORD);
@@ -79,38 +85,34 @@ public class ConstantExpressionEditor extends SelectionAwareExpressionEditor imp
             valueText = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         }
 
-        valueText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(300, 80).create());
+        valueText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).indent(0, -LayoutConstants.getSpacing().y + 1).hint(300, 80).create());
 
-        Label typeLabel = new Label(mainComposite, SWT.NONE);
+        Composite comboComposite = new Composite(mainComposite, SWT.NONE);
+        comboComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 0).create());
+        comboComposite.setLayoutData(GridDataFactory.fillDefaults().create());
+
+        Composite comboHeaderComposite = new Composite(comboComposite, SWT.NONE);
+        comboHeaderComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        comboHeaderComposite.setLayoutData(GridDataFactory.fillDefaults().create());
+
+        Label typeLabel = new Label(comboHeaderComposite, SWT.NONE);
+        typeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).create());
         typeLabel.setText(Messages.returnType);
 
-        typeCombo = new ComboViewer(mainComposite, SWT.BORDER | SWT.READ_ONLY);
+        LocalResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
+        Color errorColor = resourceManager.createColor(new RGB(214, 77, 77));
+
+        errorLabel = new CLabel(comboHeaderComposite, SWT.NONE);
+        errorLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).create());
+        errorLabel.setForeground(errorColor);
+
+        typeCombo = new ComboViewer(comboComposite, SWT.BORDER | SWT.READ_ONLY);
         typeCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        typeCombo.setContentProvider(new IStructuredContentProvider() {
-
-            @Override
-            public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-            }
-
-            @Override
-            public void dispose() {
-            }
-
-            @Override
-            public Object[] getElements(Object inputElement) {
-                return new String[] {
-                        String.class.getName()
-                        , Boolean.class.getName()
-                        , Long.class.getName()
-                        , Float.class.getName()
-                        , Double.class.getName()
-                        , Integer.class.getName()
-                };
-            }
-        });
-
+        typeCombo.setContentProvider(ArrayContentProvider.getInstance());
         typeCombo.setLabelProvider(new ConstantTypeLabelProvider());
-        typeCombo.setInput(new Object());
+        typeCombo.setInput(new String[] {
+                String.class.getName(), Boolean.class.getName(), Long.class.getName(), Float.class.getName(), Double.class.getName(), Integer.class.getName()
+        });
 
         return mainComposite;
     }
@@ -124,7 +126,7 @@ public class ConstantExpressionEditor extends SelectionAwareExpressionEditor imp
 
         dataBindingContext.bindValue(SWTObservables.observeText(valueText, SWT.Modify), contentModelObservable);
         UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-        targetToModel.setAfterConvertValidator(new IValidator() {
+        targetToModel.setAfterGetValidator(new IValidator() {
 
             @Override
             public IStatus validate(Object value) {
@@ -134,10 +136,29 @@ public class ConstantExpressionEditor extends SelectionAwareExpressionEditor imp
                 return ValidationStatus.ok();
             }
         });
-        ControlDecorationSupport.create(
-                dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable, targetToModel, null), SWT.LEFT);
+
+        Binding bindValue = dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable, targetToModel, null);
+        IObservableValue validationStatus = bindValue.getValidationStatus();
+        validationStatus.addValueChangeListener(handleValidationStatusChanged());
         typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed());
 
+        statusChanged((IStatus) validationStatus.getValue());
+    }
+
+    private IValueChangeListener handleValidationStatusChanged() {
+        return event -> {
+            statusChanged((IStatus) event.diff.getNewValue());
+        };
+    }
+
+    private void statusChanged(IStatus status) {
+        if (!status.isOK()) {
+            errorLabel.setText(status.getMessage());
+            errorLabel.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK));
+        } else {
+            errorLabel.setText("");
+            errorLabel.setImage(null);
+        }
     }
 
     /*

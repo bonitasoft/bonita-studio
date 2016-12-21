@@ -44,6 +44,8 @@ import org.eclipse.jface.dialogs.DialogTray;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -71,10 +73,11 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 
-/**
- * @author Romain Bioteau
- */
 public class EditExpressionDialog extends TrayDialog implements IBonitaVariableContext {
+
+    private static final int HEIGHT = 600;
+
+    private static final int WIDTH = 800;
 
     protected Expression inputExpression;
 
@@ -160,12 +163,6 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         }
     }
 
-    @Override
-    public void create() {
-        super.create();
-        getShell().layout(true, true);
-    }
-
     /*
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.Composite)
@@ -195,7 +192,6 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         getShell().setData("org.eclipse.e4.ui.shellContext", e4Context.createChild("expressionDialogContext"));
     }
 
-
     private boolean isSupportedConstantType(final String returnType) {
         return returnType.equals(String.class.getName()) ||
                 returnType.equals(Boolean.class.getName()) ||
@@ -213,14 +209,14 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
     @Override
     protected Point getInitialSize() {
-        return new Point(600, 460);
+        return new Point(WIDTH, HEIGHT);
     }
 
     @Override
     protected Control createDialogArea(final Composite parent) {
         final Composite composite = (Composite) super.createDialogArea(parent);
 
-        composite.setLayout(new GridLayout(2, false));
+        composite.setLayout(GridLayoutFactory.swtDefaults().numColumns(2).margins(10, 5).spacing(10, 0).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createExpressionTypePanel(composite);
@@ -232,13 +228,13 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
     protected void createExpressionContentPanel(final Composite parentForm) {
         contentComposite = new Composite(parentForm, SWT.NONE);
         contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        contentComposite.setLayout(new GridLayout(1, false));
+        contentComposite.setLayout(GridLayoutFactory.fillDefaults().create());
     }
 
     protected void createExpressionTypePanel(final Composite parentForm) {
         final Composite parentComposite = new Composite(parentForm, SWT.NONE);
         parentComposite.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
-        parentComposite.setLayout(new GridLayout(1, false));
+        parentComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
 
         final Label expressionTypeLabel = new Label(parentComposite, SWT.NONE);
         expressionTypeLabel.setText(Messages.expressionTypeLabel);
@@ -358,10 +354,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         if (currentExpressionEditor != null) {
             dataBindingContext = new EMFDataBindingContext();
 
-
-
             currentExpressionEditor.createExpressionEditor(contentComposite, dataBindingContext, isPassword);
-            contentComposite.layout(true, true);
             if (helpControl != null) {
                 helpControl.setVisible(false);
                 if (currentExpressionEditor.provideDialogTray()) {
