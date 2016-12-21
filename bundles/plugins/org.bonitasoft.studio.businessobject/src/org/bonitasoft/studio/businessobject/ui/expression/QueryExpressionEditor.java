@@ -55,6 +55,7 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -98,10 +99,10 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
     public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).indent(0, 1).create());
 
         final Label queryExpressionGuidanceLabel = new Label(composite, SWT.WRAP);
-        queryExpressionGuidanceLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        queryExpressionGuidanceLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(0,0).span(2, 1).create());
         queryExpressionGuidanceLabel.setText(Messages.queryExpressionGuidance);
 
         final QueryExpressionModel queryExpresisonModel = getQueryExpressionModel();

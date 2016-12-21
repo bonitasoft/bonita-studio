@@ -48,6 +48,8 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -70,7 +72,6 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ParameterEditor extends SelectionAwareExpressionEditor implements
         IExpressionEditor {
@@ -92,28 +93,31 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
     @Override
     public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
 
-        createTableViewer(parent);
+        mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
-        createReturnTypeComposite(parent);
+        createTableViewer(mainComposite);
 
-        createAddExpressionButton(parent);
+        createAddExpressionButton(mainComposite);
+
+        createReturnTypeComposite(mainComposite);
 
         return mainComposite;
     }
 
     private void createTableViewer(final Composite parent) {
-        mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults()
-                .grab(true, true).create());
-        gridLayout = new GridLayout(1, false);
-        mainComposite.setLayout(gridLayout);
+
+        Label filler = new Label(mainComposite, SWT.NONE);
+        filler.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, -LayoutConstants.getSpacing().y + 1).create());
+
         viewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER
                 | SWT.SINGLE | SWT.V_SCROLL);
         final TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(100, false));
         viewer.getTable().setLayout(layout);
         viewer.getTable().setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, true).create());
+                GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
 
         final TableViewerColumn columnViewer = new TableViewerColumn(viewer, SWT.NONE);
         final TableColumn column = columnViewer.getColumn();
@@ -147,11 +151,8 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
     protected void createReturnTypeComposite(final Composite parent) {
         final Composite typeComposite = new Composite(parent, SWT.NONE);
         typeComposite.setLayoutData(GridDataFactory.fillDefaults()
-                .grab(true, false).create());
-        final GridLayout gl = new GridLayout(2, false);
-        gl.marginWidth = 0;
-        gl.marginHeight = 0;
-        typeComposite.setLayout(gl);
+                .grab(true, false).align(SWT.RIGHT, SWT.CENTER).create());
+        typeComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
         final Label typeLabel = new Label(typeComposite, SWT.NONE);
         typeLabel.setText(Messages.returnType);
@@ -159,8 +160,8 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
                 .align(SWT.FILL, SWT.CENTER).create());
 
         typeText = new Text(typeComposite, SWT.BORDER | SWT.READ_ONLY);
-        typeText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
-                .align(SWT.FILL, SWT.CENTER).create());
+        typeText.setLayoutData(GridDataFactory.fillDefaults().hint(250, SWT.DEFAULT)
+                .align(SWT.FILL, SWT.CENTER).indent(10, 0).create());
 
     }
 
@@ -193,7 +194,8 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
 
     private void expressionButtonListener(final EObject context) {
         final ParameterWizardDialog parameterDialog = new ParameterWizardDialog(
-                Display.getCurrent().getActiveShell(), new AddParameterWizard(ModelHelper.getParentProcess(context), TransactionUtil.getEditingDomain(context)));
+                Display.getCurrent().getActiveShell(),
+                new AddParameterWizard(ModelHelper.getParentProcess(context), TransactionUtil.getEditingDomain(context)));
         if (parameterDialog.open() == Dialog.OK) {
             fillViewerInput(context);
         }

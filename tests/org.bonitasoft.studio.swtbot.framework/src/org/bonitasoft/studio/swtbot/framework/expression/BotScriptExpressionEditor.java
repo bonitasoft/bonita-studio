@@ -31,7 +31,7 @@ public class BotScriptExpressionEditor extends AbstractBotExpressionEditor {
     }
 
     public BotScriptExpressionEditor setName(final String name) {
-        bot.textWithLabel(Messages.name + " *").setText(name);
+        bot.textWithLabel(Messages.name).setText(name);
         return this;
     }
 
