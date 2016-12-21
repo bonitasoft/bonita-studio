@@ -294,8 +294,8 @@ public class TestWebPurchase implements SWTBotConstants {
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON).click();
         bot.table().select("Script");
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name *")));
-        bot.textWithLabel("Name *").setText("thankMessage");
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")));
+        bot.textWithLabel("Name").setText("thankMessage");
         bot.sleep(1000);
         bot.styledText().setText(
                 "\"Thank you, \" + customerName +\", for your order of a \" +products + \".  Please enter your credit card information "

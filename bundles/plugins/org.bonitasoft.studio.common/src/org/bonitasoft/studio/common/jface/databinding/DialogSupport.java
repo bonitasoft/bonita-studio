@@ -130,19 +130,21 @@ public class DialogSupport {
                 ValidationStatusProvider validationStatusProvider = (ValidationStatusProvider) listDiffEntry
                         .getElement();
                 IObservableList targets = validationStatusProvider.getTargets();
-                if (listDiffEntry.isAddition()) {
-                    targets
-                    .addListChangeListener(validationStatusProviderTargetsListener);
-                    for (Iterator it = targets.iterator(); it.hasNext();) {
-                        ((IObservable) it.next())
-                        .addChangeListener(uiChangeListener);
-                    }
-                } else {
-                    targets
-                    .removeListChangeListener(validationStatusProviderTargetsListener);
-                    for (Iterator it = targets.iterator(); it.hasNext();) {
-                        ((IObservable) it.next())
-                        .removeChangeListener(uiChangeListener);
+                if (targets != null) {
+                    if (listDiffEntry.isAddition()) {
+                        targets
+                        .addListChangeListener(validationStatusProviderTargetsListener);
+                        for (Iterator it = targets.iterator(); it.hasNext();) {
+                            ((IObservable) it.next())
+                            .addChangeListener(uiChangeListener);
+                        }
+                    } else {
+                        targets
+                        .removeListChangeListener(validationStatusProviderTargetsListener);
+                        for (Iterator it = targets.iterator(); it.hasNext();) {
+                            ((IObservable) it.next())
+                            .removeChangeListener(uiChangeListener);
+                        }
                     }
                 }
             }
@@ -372,11 +374,13 @@ public class DialogSupport {
                 ValidationStatusProvider validationStatusProvider = (ValidationStatusProvider) it
                         .next();
                 IObservableList targets = validationStatusProvider.getTargets();
-                targets
-                .removeListChangeListener(validationStatusProviderTargetsListener);
-                for (Iterator iter = targets.iterator(); iter.hasNext();) {
-                    ((IObservable) iter.next())
-                    .removeChangeListener(uiChangeListener);
+                if(targets != null){
+                    targets
+                    .removeListChangeListener(validationStatusProviderTargetsListener);
+                    for (Iterator iter = targets.iterator(); iter.hasNext();) {
+                        ((IObservable) iter.next())
+                        .removeChangeListener(uiChangeListener);
+                    }
                 }
             }
             dbc.getValidationStatusProviders().removeListChangeListener(

@@ -852,7 +852,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
         bot.tableWithLabel(expressionTypeLabel).select("Script");
         bot.sleep(1000);
         // set the Script name
-        bot.textWithLabel("Name *").setText(scriptName);
+        bot.textWithLabel("Name").setText(scriptName);
         bot.styledText().setText(expression);
         if (returnTypeOfScript != null) {
             bot.comboBoxWithLabel(returnType).setText(returnTypeOfScript);
@@ -976,8 +976,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
         // 3th page
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON).click();
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name *")));
-        bot.textWithLabel("Name *").setText(scriptName);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")));
+        bot.textWithLabel("Name").setText(scriptName);
         bot.styledText().setText(scriptText);
         bot.button(IDialogConstants.OK_LABEL).click();
         //Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());

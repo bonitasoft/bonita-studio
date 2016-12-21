@@ -55,7 +55,7 @@ public class TestTimer implements SWTBotConstants {
     private final String editExpressionShellLabel = "Edit expression";
 
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
@@ -354,8 +354,8 @@ public class TestTimer implements SWTBotConstants {
 
         bot.table().select("Script");
 
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name *")));
-        bot.textWithLabel("Name *").setText("myScript");
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")));
+        bot.textWithLabel("Name").setText("myScript");
 
         bot.styledText().setText("120000");
 

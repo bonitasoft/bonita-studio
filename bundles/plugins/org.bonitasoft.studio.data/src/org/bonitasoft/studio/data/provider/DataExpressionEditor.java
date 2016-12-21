@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -58,6 +56,8 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -81,7 +81,6 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class DataExpressionEditor extends SelectionAwareExpressionEditor
         implements IExpressionEditor {
@@ -107,17 +106,19 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true).create());
-        gridLayout = new GridLayout(1, false);
-        mainComposite.setLayout(gridLayout);
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
+        Label filler = new Label(mainComposite, SWT.NONE); // filler
+        filler.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, -LayoutConstants.getSpacing().y + 1).create());
+        
         viewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER
                 | SWT.SINGLE | SWT.V_SCROLL);
-
+        viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         final TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(100, false));
         viewer.getTable().setLayout(layout);
         viewer.getTable().setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, true).create());
+                GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
 
         final TableViewerColumn columnViewer = new TableViewerColumn(viewer, SWT.NONE);
         final TableColumn column = columnViewer.getColumn();
@@ -140,12 +141,12 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
             }
         });
 
-        createReturnTypeComposite(parent);
-
-        addExpressionButton = new Button(parent, SWT.FLAT);
+        addExpressionButton = new Button(mainComposite, SWT.FLAT);
         addExpressionButton.setLayoutData(GridDataFactory.fillDefaults()
                 .align(SWT.LEFT, SWT.CENTER).hint(85, SWT.DEFAULT).create());
         addExpressionButton.setText(Messages.addData);
+
+        createReturnTypeComposite(mainComposite);
 
         return mainComposite;
     }
@@ -153,31 +154,17 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
     protected void createReturnTypeComposite(final Composite parent) {
         final Composite typeComposite = new Composite(parent, SWT.NONE);
         typeComposite.setLayoutData(GridDataFactory.fillDefaults()
-                .grab(true, false).create());
-        final GridLayout gl = new GridLayout(2, false);
-        gl.marginWidth = 0;
-        gl.marginHeight = 0;
-        typeComposite.setLayout(gl);
+                .grab(false, false).align(SWT.RIGHT, SWT.CENTER).create());
+        typeComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
         final Label typeLabel = new Label(typeComposite, SWT.NONE);
         typeLabel.setText(Messages.returnType);
         typeLabel.setLayoutData(GridDataFactory.fillDefaults()
-                .align(SWT.FILL, SWT.CENTER).create());
+                .align(SWT.RIGHT, SWT.CENTER).create());
 
         typeText = new Text(typeComposite, SWT.BORDER | SWT.READ_ONLY);
-        typeText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
+        typeText.setLayoutData(GridDataFactory.fillDefaults().hint(250, SWT.DEFAULT)
                 .align(SWT.FILL, SWT.CENTER).indent(10, 0).create());
-    }
-
-    protected void handleSpecificDatatypeEdition(final Data data) {
-        if (gridLayout.numColumns > 1) {
-            mainComposite.getChildren()[1].dispose();
-            gridLayout.numColumns--;
-            viewer.getTable().setLayoutData(
-                    GridDataFactory.fillDefaults().grab(true, true).create());
-            mainComposite.layout();
-        }
-
     }
 
     private void expressionButtonListener(final EObject context, final ExpressionViewer expressionViewer,
