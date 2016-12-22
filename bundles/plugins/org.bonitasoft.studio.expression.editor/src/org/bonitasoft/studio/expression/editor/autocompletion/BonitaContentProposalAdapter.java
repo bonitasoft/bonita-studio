@@ -47,7 +47,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -818,7 +817,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
         protected void adjustBounds() {
             // Get our control's location in display coordinates.
             final Point location = control.getDisplay().map(control.getParent(), null, control.getLocation());
-            int initialX = location.x + POPUP_OFFSET;
+            int initialX = location.x - POPUP_OFFSET;
             int initialY = location.y + control.getSize().y + POPUP_OFFSET;
             // If we are inserting content, use the cursor position to
             // position the control.
@@ -831,20 +830,20 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
             // If there is no specified size, force it by setting
             // up a layout on the table.
             if (popupSize == null) {
-                final GridData data = new GridData(GridData.FILL_BOTH);
-                data.heightHint = proposalTable.getItemHeight() * POPUP_CHAR_HEIGHT;
-                data.widthHint = Math.max(control.getSize().x + TB_OFFSET, POPUP_MINIMUM_WIDTH);
+                final GridData data = GridDataFactory.fillDefaults().create();
+                data.heightHint = this.proposalTable.getItemHeight() * POPUP_CHAR_HEIGHT;
+                data.widthHint = proposalTable.getParent().computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
                 proposalTable.setLayoutData(data);
                 getShell().pack();
                 popupSize = getShell().getSize();
             }
 
             // Constrain to the display
-            final Rectangle constrainedBounds = getConstrainedShellBounds(new Rectangle(initialX, initialY, popupSize.x,
-                    popupSize.y));
+            final Rectangle constrainedBounds = getConstrainedShellBounds(new Rectangle(initialX, initialY, popupSize.x, popupSize.y));
 
             // If there has been an adjustment causing the popup to overlap
             // with the control, then put the popup above the control.
+            initialX = initialX - (popupSize.x - control.getParent().getSize().x);
             if (constrainedBounds.y < initialY) {
                 getShell().setBounds(initialX, location.y - popupSize.y, popupSize.x, popupSize.y);
             } else {
@@ -1276,7 +1275,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      * The corresponding SWT bug is
      * https://bugs.eclipse.org/bugs/show_bug.cgi?id=90321
      */
-    private static final boolean USE_VIRTUAL = !Util.isMotif();
+    private static final boolean USE_VIRTUAL = false;// !Util.isMotif();
 
     /*
      * The delay before showing a secondary popup.
