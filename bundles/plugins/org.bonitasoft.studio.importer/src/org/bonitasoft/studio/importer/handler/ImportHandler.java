@@ -34,6 +34,7 @@ import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -69,31 +70,28 @@ public class ImportHandler extends AbstractHandler {
 
     public void execute() {
         final ImportFileWizard importFileWizard = createImportWizard();
-        new CustomWizardDialog(Display.getDefault().getActiveShell(), importFileWizard, Messages.importButtonLabel).open();
-        final String absoluteFilePath = importFileWizard.getSelectedFilePath();
-        if (absoluteFilePath == null) {
-            return;
-        }
-        final File selectedFile = new File(absoluteFilePath);
-        final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(Display.getDefault().getActiveShell());
-        final ImportFileOperation operation = createImportFileOperation(importFileWizard, selectedFile, progressManager);
-        try {
-            progressManager.run(true, false, operation);
-        } catch (final InvocationTargetException | InterruptedException e) {
-            final Throwable t = e instanceof InvocationTargetException ? ((InvocationTargetException) e).getTargetException() : e;
-            BonitaStudioLog.error("Import has failed for file " + selectedFile.getName(), ImporterPlugin.PLUGIN_ID);
-            BonitaStudioLog.error(e, ImporterPlugin.PLUGIN_ID);
-            String message = Messages.errorWhileImporting_message;
-            if (t != null && !isNullOrEmpty(t.getMessage())) {
-                message = t.getMessage();
+        if (new CustomWizardDialog(Display.getDefault().getActiveShell(), importFileWizard, Messages.importButtonLabel).open() == Dialog.OK) {     
+            final File selectedFile = new File(importFileWizard.getSelectedFilePath());
+            final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(Display.getDefault().getActiveShell());
+            final ImportFileOperation operation = createImportFileOperation(importFileWizard, selectedFile, progressManager);
+            try {
+                progressManager.run(true, false, operation);
+            } catch (final InvocationTargetException | InterruptedException e) {
+                final Throwable t = e instanceof InvocationTargetException ? ((InvocationTargetException) e).getTargetException() : e;
+                BonitaStudioLog.error("Import has failed for file " + selectedFile.getName(), ImporterPlugin.PLUGIN_ID);
+                BonitaStudioLog.error(e, ImporterPlugin.PLUGIN_ID);
+                String message = Messages.errorWhileImporting_message;
+                if (t != null && !isNullOrEmpty(t.getMessage())) {
+                    message = t.getMessage();
+                }
+                new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title, message, e).open();
             }
-            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title, message, e).open();
+            for (final DiagramFileStore fileStore : operation.getFileStoresToOpen()) {
+                fileStore.open();
+            }
+            PlatformUtil.openIntroIfNoOtherEditorOpen();
+            Display.getDefault().asyncExec(openStatusDialog(operation));
         }
-        for (final DiagramFileStore fileStore : operation.getFileStoresToOpen()) {
-            fileStore.open();
-        }
-        PlatformUtil.openIntroIfNoOtherEditorOpen();
-        Display.getDefault().asyncExec(openStatusDialog(operation));
     }
 
     protected ImportFileOperation createImportFileOperation(final ImportFileWizard importFileWizard, final File selectedFile,
