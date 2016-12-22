@@ -25,7 +25,7 @@
                         <artifactId>tycho-eclipserun-plugin</artifactId>
                         <configuration>
                             <appArgLine>-data ${workspacePath} -application org.eclipse.ant.core.antRunner -buildfile generateGenModels.xml -clean -noSplash -consoleLog</appArgLine>
-                            <argLine>${os-jvm-flags} -Xmx512m -Xms256m -XX:MaxPermSize=512m -DworkspacePath=${workspacePath}</argLine>
+                            <argLine>${os-jvm-flags} -Xmx512m -Xms256m -DworkspacePath=${workspacePath}</argLine>
                             <repositories>
                                 <repository>
                                     <id>BonitaBPM P2 Repository</id>

@@ -233,7 +233,7 @@
                 <artifactId>tycho-eclipserun-plugin</artifactId>
                 <configuration>
                     <appArgLine>${os-jvm-flags} ${argLine}/</appArgLine>
-                    <argLine>-Xmx512m -Xms256m -XX:MaxPermSize=512m</argLine>
+                    <argLine>-Xmx512m -Xms256m</argLine>
                     <repositories>
                         <repository>
                             <id>BonitaBPM P2 Repository</id>
