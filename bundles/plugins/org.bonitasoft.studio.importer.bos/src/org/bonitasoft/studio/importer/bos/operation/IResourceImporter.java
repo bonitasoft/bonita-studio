@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -39,7 +37,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class IResourceImporter {
 
@@ -76,11 +73,9 @@ public class IResourceImporter {
         }
     }
 
-    void processContainer(final IContainer container, final Counter nbFileToImport) throws CoreException
-    {
+    void processContainer(final IContainer container, final Counter nbFileToImport) throws CoreException {
         final IResource[] members = container.members();
-        for (final IResource member : members)
-        {
+        for (final IResource member : members) {
             if (member instanceof IFolder) {
                 processContainer((IFolder) member, nbFileToImport);
             } else if (member instanceof IFile) {

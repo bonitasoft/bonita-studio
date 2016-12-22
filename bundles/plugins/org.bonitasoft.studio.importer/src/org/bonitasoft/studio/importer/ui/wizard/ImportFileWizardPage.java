@@ -118,7 +118,7 @@ public class ImportFileWizardPage extends WizardPage {
 
         final Label importDescriptionLabel = new Label(descComposite, SWT.NONE);
         importDescriptionLabel.setText(Messages.importDescriptionLabel);
-        
+
         final Label descriptionImage = new Label(descComposite, SWT.NONE);
         descriptionImage.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
 
@@ -151,14 +151,14 @@ public class ImportFileWizardPage extends WizardPage {
             public void widgetSelected(SelectionEvent e) {
                 final String file = openFileDialog();
                 if (file != null) {
-                    filePathObservable.setValue(file);
+                    text.setText(file);
                     if (new File(file).exists()) {
                         savePath(new File(file).getParentFile().getAbsolutePath());
                     }
                 }
             }
-
         });
+
         importList.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
@@ -214,6 +214,5 @@ public class ImportFileWizardPage extends WizardPage {
     private void savePath(String path) {
         ImporterPlugin.getDefault().getDialogSettings().put(LAST_IMPORT_PATH, path);
     }
-
 
 }
