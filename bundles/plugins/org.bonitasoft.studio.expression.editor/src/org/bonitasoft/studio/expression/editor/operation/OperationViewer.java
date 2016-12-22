@@ -75,7 +75,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
-
 public class OperationViewer extends Composite implements IBonitaVariableContext {
 
     private final class RevalidateActionExpressionChangeListener implements IChangeListener {
@@ -148,8 +147,8 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
     public void createDatabinding(EMFDataBindingContext context) {
         defaultReturnTypeResolver = new DefaultReturnTypeResolver(operationObervable);
 
-        bindStorageViewer(context,operationObervable);
-        bindActionExpression(context,operationObervable);
+        bindStorageViewer(context, operationObervable);
+        bindActionExpression(context, operationObervable);
         updateVisibilityOfActionExpressionControl(operationObervable);
 
         final IObservableValue rightOperandObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), operationObervable,
@@ -157,11 +156,11 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
         final IObservableValue rightOperandReturnTypeObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), rightOperandObservable,
                 ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
         rightOperandReturnTypeObservable.addChangeListener(new RevalidateActionExpressionChangeListener());
-        bindOperator(context,operationObervable);
-        
+        bindOperator(context, operationObervable);
+
     }
 
-    private void bindOperator(EMFDataBindingContext context,IObservableValue operationObervable) {
+    private void bindOperator(EMFDataBindingContext context, IObservableValue operationObervable) {
         final UpdateValueStrategy uvsOperator = new UpdateValueStrategy();
         final IObservableValue operatorObservableValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), operationObervable,
                 ExpressionPackage.Literals.OPERATION__OPERATOR);
@@ -185,7 +184,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                 operatorExpressionObserveValue);
     }
 
-    private void bindStorageViewer(EMFDataBindingContext context,final IObservableValue operationObservable) {
+    private void bindStorageViewer(EMFDataBindingContext context, final IObservableValue operationObservable) {
         if (storageExpressionProvider != null) {
             storageViewer.setExpressionNatureProvider(storageExpressionProvider);
         }
@@ -228,7 +227,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
         });
     }
 
-    private void bindActionExpression(EMFDataBindingContext context,final IObservableValue operationObservable) {
+    private void bindActionExpression(EMFDataBindingContext context, final IObservableValue operationObservable) {
         if (actionExpressionProvider != null) {
             getActionExpression().setExpressionNatureProvider(actionExpressionProvider);
         }
@@ -241,7 +240,8 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                 ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND);
         final IObservableValue leftOperandObservableValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), operationObservable,
                 ExpressionPackage.Literals.OPERATION__LEFT_OPERAND);
-        final IObservableValue returnTypeExpressionObservableValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), actionExpressionObservableValue,
+        final IObservableValue returnTypeExpressionObservableValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
+                actionExpressionObservableValue,
                 ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
         context.bindValue(
                 ViewerProperties.singleSelection().observe(getActionExpression()),
@@ -268,8 +268,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
 
     private void updateVisibilityOfActionExpressionControl(final IObservableValue operationObservableValue) {
         operationObservableValue.addValueChangeListener(new IValueChangeListener() {
-            
-            
+
             @Override
             public void handleValueChange(ValueChangeEvent event) {
                 final IObservableValue observableValue = event.getObservableValue();
@@ -282,7 +281,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                 }
             }
         });
-      
+
     }
 
     protected void doCreateControls() {
@@ -290,7 +289,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
         setOperatorLink(createOperatorLink());
         setActionExpression(createActionExpressionViewer());
     }
-    
+
     protected Link createOperatorLink() {
         final Link operatorLabel = new Link(this, SWT.NONE);
         if (widgetFactory != null) {
@@ -353,7 +352,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
         final ReadOnlyExpressionViewer storageViewer = new ReadOnlyExpressionViewer(this, SWT.BORDER, widgetFactory, getEditingDomain(),
                 ExpressionPackage.Literals.OPERATION__LEFT_OPERAND);
         storageViewer.setIsPageFlowContext(isPageFlowContext);
-        storageViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(230, SWT.DEFAULT).grab(false, false).create());
+        storageViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).grab(true, false).create());
         if (storageExpressionFilter != null) {
             storageViewer.addFilter(storageExpressionFilter);
         }

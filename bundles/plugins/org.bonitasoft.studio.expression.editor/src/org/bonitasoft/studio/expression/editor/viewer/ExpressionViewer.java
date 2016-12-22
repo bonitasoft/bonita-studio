@@ -659,8 +659,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                 && filteredExpressionType.contains(ExpressionConstants.FORM_REFERENCE_TYPE)
                 && filteredExpressions.isEmpty()) {
             contentAssistText.setProposalEnabled(false);
-        }
-        else {
+        } else {
             contentAssistText.setProposalEnabled(true);
         }
     }
@@ -1017,18 +1016,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         final Entry<Integer, String> message = getMessageToDisplay();
         if (message != null) {
             messageDecoration.setDescriptionText(message.getValue());
-            if (message.getKey() == IStatus.INFO) {
-                // Issue with focus
-                messageDecoration.setShowOnlyOnFocus(false);
-            } else {
-                messageDecoration.setShowOnlyOnFocus(false);
-            }
-
+            messageDecoration.setShowOnlyOnFocus(false);
             final Image icon = getImageForMessageKind(message.getKey());
             if (icon != null) {
                 messageDecoration.setImage(icon);
             }
-
             messageDecoration.show();
 
         } else {
@@ -1292,7 +1284,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
     @Override
     public boolean isPageFlowContext() {
-
         return isPageFlowContext;
     }
 
@@ -1344,9 +1335,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             try {
                 service.busyCursorWhile(removeOperation);
                 isExecuted = true;
-            } catch (final InvocationTargetException e) {
-                BonitaStudioLog.error(e);
-            } catch (final InterruptedException e) {
+            } catch (final InvocationTargetException | InterruptedException e) {
                 BonitaStudioLog.error(e);
             }
 

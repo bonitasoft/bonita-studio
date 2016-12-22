@@ -169,8 +169,6 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 createOperation();
-                //                addLineUI(action);
-                //                refresh();
             }
 
             private Operation createOperation() {
@@ -235,6 +233,9 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
 
     public void setEditingDomain(EditingDomain editingDomain) {
         this.editingDomain = editingDomain;
+        for (final OperationViewer v : operationViewers) {
+            v.setEditingDomain(editingDomain);
+        }
     }
 
     public int getNbLines() {
@@ -248,13 +249,6 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
             }
             refresh();
         }
-    }
-
-    private void removeLine(final int i) {
-        // removeLineUI(i);
-        getOperations().remove(i);
-        //        updateOrderButtons();
-        //        refresh();
     }
 
     protected int removeLineUI(final int i) {
@@ -353,25 +347,12 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                removeLine(removes.indexOf(e.getSource()));
+                getOperations().remove(removes.indexOf(e.getSource()));
             }
         });
         opViewer.layout(true, true);
         return remove;
     }
-
-    //    /**
-    //     * add lines from the form
-    //     */
-    //    public void fillTable() {
-    //        final IObservableList observableList = CustomEMFEditObservables.observeList(Realm.getDefault(), getEObject(), getOperationContainmentFeature());
-    //        observableList.removeListChangeListener(operationListlistener);
-    //        observableList.addListChangeListener(operationListlistener);
-    //        for (final Operation action : getOperations()) {
-    //            addLineUI(action);
-    //        }
-    //        updateOrderButtons();
-    //    }
 
     private void updateOrderButtons() {
         for (final ToolBar tb : moveToolbars) {
@@ -466,6 +447,7 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
      */
     @Override
     public void setIsOverviewContext(boolean isOverviewContext) {
+        //NOTHING TO DO
     }
 
     protected EReference getOperationContainmentFeature() {
@@ -561,7 +543,6 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
             listeners.remove(listener);
         }
     }
-
 
     /*
      * (non-Javadoc)
