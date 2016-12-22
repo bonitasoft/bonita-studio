@@ -13,24 +13,13 @@
 		<tychoVersion>0.22.0</tychoVersion>
 		<tychoExtrasVersion>0.22.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
-		<bundle.version>7.5.0-SNAPSHOT</bundle.version>
+		<bundle.version>${project.version}</bundle.version>
 		<ui.designer.version>1.5.5</ui.designer.version>
-		<engine.version>7.5.0-SNAPSHOT</engine.version>
-		<filters.version>7.5.0-SNAPSHOT</filters.version>
+		<engine.version>${project.version}</engine.version>
+		<filters.version>${project.version}</filters.version>
 		<theme.builder.version>1.1.0</theme.builder.version>
 		<watchdog.version>7.2.0</watchdog.version>
 		<p2MirrorUrl>http://repositories.rd.lan/p2/7.2</p2MirrorUrl>
-		<!-- Sonar -->
-		<jacoco.version>0.7.2.201409121644</jacoco.version>
-		<sonar.language>java</sonar.language>
-		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-		<sonar.junit.reportsPath>target/surefire-reports/</sonar.junit.reportsPath>
-		<sonar.jacoco.reportPath>target/jacoco.exec</sonar.jacoco.reportPath>
-		<sonar.jacoco.itReportPath>${project.basedir}/../../../../target/jacoco-it.exec</sonar.jacoco.itReportPath>
-		<!-- Skip generated code -->
-		<sonar.skippedModules>org.bonitasoft.studio.model,org.bonitasoft.studio.model.edit,org.bonitasoft.studio.diagram,org.bonitasoft.studio.diagram.form,org.bonitasoft.studio.connector.model,org.bonitasoft.studio.connector.model.edit,org.bonitasoft.studio.tests-utils</sonar.skippedModules>
-		<sonar.exclusions>src/org/w3/**/*,src/org/omg/**/*,src/org/wfmc/**/*,src/org/jbpm/**/*,**/Messages.java,file:**/src-gen/**/*,src/org/bonitasoft/studio/connector/model/definition/provider/**/*,src/org/bonitasoft/studio/connector/model/implementation/provider/**/*,src/org/bonitasoft/studio/actors/model/organization/**/*,src/org/bonitasoft/studio/validators/descriptor/validator/**/*</sonar.exclusions>
-		<sonar.skipDesign>true</sonar.skipDesign><!-- Takes too much time -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -47,11 +36,11 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-                <plugin>
-                    <groupId>org.bonitasoft.maven</groupId>
-                    <artifactId>image-overlay-plugin</artifactId>
-                    <version>1.0.2</version>
-                </plugin>
+				<plugin>
+					<groupId>org.bonitasoft.maven</groupId>
+					<artifactId>image-overlay-plugin</artifactId>
+					<version>1.0.2</version>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -84,182 +73,144 @@
 					<configuration>
 						<strictBinIncludes>false</strictBinIncludes>
 						<strictVersions>false</strictVersions>
-                        <archive>
-                           <addMavenDescriptor>false</addMavenDescriptor>
-                        </archive>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.sonatype.tycho</groupId>
-                    <artifactId>maven-osgi-compiler-plugin</artifactId>
-                    <inherited>true</inherited>
-                    <version>${tychoVersion}</version>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.10</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.7</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.2.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.eclipse.tycho</groupId>
-                    <artifactId>tycho-surefire-plugin</artifactId>
-                    <version>${tycho.version}</version>
-                    <configuration>
-                        <useUIHarness>false</useUIHarness>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${jacoco.version}</version>
-                </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.jacoco</groupId>
-                                        <artifactId>
-                                            jacoco-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [${jacoco.version},)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>prepare-agent</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <include>org.bonitasoft.studio.*</include>
-                    </includes>
-                    <append>true</append>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>pre-test</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>post-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.eclipse.tycho</groupId>
-                <artifactId>tycho-versions-plugin</artifactId>
-            </plugin>
-            <!-- enable tycho build extension -->
-            <plugin>
-                <groupId>org.eclipse.tycho</groupId>
-                <artifactId>tycho-maven-plugin</artifactId>
-                <version>${tychoVersion}</version>
-                <extensions>true</extensions>
-            </plugin>
-            <plugin>
-                <groupId>org.eclipse.tycho</groupId>
-                <artifactId>target-platform-configuration</artifactId>
-                <version>${tychoVersion}</version>
-                <configuration>
-                    <executionEnvironment>JavaSE-1.8</executionEnvironment>
-                    <environments>
-                        <environment>
-                            <os>linux</os>
-                            <ws>gtk</ws>
-                            <arch>x86_64</arch>
-                        </environment>
-                        <environment>
-                            <os>linux</os>
-                            <ws>gtk</ws>
-                            <arch>x86</arch>
-                        </environment>
-                        <environment>
-                            <os>macosx</os>
-                            <ws>cocoa</ws>
-                            <arch>x86_64</arch>
-                        </environment>
-                        <environment>
-                            <os>win32</os>
-                            <ws>win32</ws>
-                            <arch>x86</arch>
-                        </environment>
-                        <environment>
-                            <os>win32</os>
-                            <ws>win32</ws>
-                            <arch>x86_64</arch>
-                        </environment>
-                    </environments>
-                    <target>
-                        <artifact>
-                            <groupId>org.bonitasoft.studio</groupId>
-                            <artifactId>platform</artifactId>
-                            <version>7.5.0-SNAPSHOT</version>
-                        </artifact>
-                    </target>
-                    <filters>
-                        <filter>
-                            <type>eclipse-plugin</type>
-                            <id>org.bonitasoft.studioEx.console.libs</id>
-                            <removeAll />
-                        </filter>
-                    </filters>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+						<archive>
+							<addMavenDescriptor>false</addMavenDescriptor>
+						</archive>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.sonatype.tycho</groupId>
+					<artifactId>maven-osgi-compiler-plugin</artifactId>
+					<inherited>true</inherited>
+					<version>${tychoVersion}</version>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.10</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>3.0.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.7</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.2.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-surefire-plugin</artifactId>
+					<version>${tycho.version}</version>
+					<configuration>
+						<useUIHarness>false</useUIHarness>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>1.12</version>
+				</plugin>
+				<plugin>
+					<groupId>com.google.code.maven-replacer-plugin</groupId>
+					<artifactId>replacer</artifactId>
+					<version>1.5.3</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>target-platform-configuration</artifactId>
+					<version>${tychoVersion}</version>
+					<configuration>
+						<executionEnvironment>JavaSE-1.8</executionEnvironment>
+						<environments>
+							<environment>
+								<os>linux</os>
+								<ws>gtk</ws>
+								<arch>x86_64</arch>
+							</environment>
+							<environment>
+								<os>linux</os>
+								<ws>gtk</ws>
+								<arch>x86</arch>
+							</environment>
+							<environment>
+								<os>macosx</os>
+								<ws>cocoa</ws>
+								<arch>x86_64</arch>
+							</environment>
+							<environment>
+								<os>win32</os>
+								<ws>win32</ws>
+								<arch>x86</arch>
+							</environment>
+							<environment>
+								<os>win32</os>
+								<ws>win32</ws>
+								<arch>x86_64</arch>
+							</environment>
+						</environments>
+						<target>
+							<artifact>
+								<groupId>org.bonitasoft.studio</groupId>
+								<artifactId>platform</artifactId>
+								<version>7.5.0-SNAPSHOT</version>
+							</artifact>
+						</target>
+						<filters>
+							<filter>
+								<type>eclipse-plugin</type>
+								<id>org.bonitasoft.studioEx.console.libs</id>
+								<removeAll />
+							</filter>
+						</filters>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-versions-plugin</artifactId>
+			</plugin>
+			<!-- enable tycho build extension -->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tychoVersion}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>update-site</id>
+			<url>${p2MirrorUrl}</url>
+			<layout>p2</layout>
+		</repository>
+	</repositories>
 
 	<profiles>
 		<profile>
@@ -272,7 +223,7 @@
 			<properties>
 				<os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
 			</properties>
-		</profile>		
+		</profile>
 		<profile>
 			<id>tag-trunk</id>
 			<build>
@@ -286,9 +237,10 @@
 								<phase>pre-clean</phase>
 								<configuration>
 									<tasks>
-										<echo>Updating pom version from ${current.version} to ${tag.version}</echo>
-										<replace token="&lt;version&gt;${current.version}&lt;/version&gt;" value="&lt;version&gt;${tag.version}&lt;/version&gt;"
-											file="${basedir}/pom.xml" />
+										<echo>Updating pom version from ${current.version} to
+											${tag.version}</echo>
+										<replace token="&lt;version&gt;${current.version}&lt;/version&gt;"
+											value="&lt;version&gt;${tag.version}&lt;/version&gt;" file="${basedir}/pom.xml" />
 									</tasks>
 								</configuration>
 								<goals>
@@ -313,8 +265,10 @@
 								<phase>pre-clean</phase>
 								<configuration>
 									<tasks>
-										<echo>Updating pom version from ${tag.version} to ${current.version}</echo>
-										<replace token="&lt;version&gt;${tag.version}&lt;/version&gt;" value="&lt;version&gt;${current.version}&lt;/version&gt;"
+										<echo>Updating pom version from ${tag.version} to
+											${current.version}</echo>
+										<replace token="&lt;version&gt;${tag.version}&lt;/version&gt;"
+											value="&lt;version&gt;${current.version}&lt;/version&gt;"
 											file="${basedir}/pom.xml" />
 									</tasks>
 								</configuration>
@@ -340,8 +294,10 @@
 								<phase>pre-clean</phase>
 								<configuration>
 									<tasks>
-										<echo>Updating pom version from ${current.version} to ${next.snapshot.version}</echo>
-										<replace token="&lt;version&gt;${current.version}&lt;/version&gt;" value="&lt;version&gt;${next.snapshot.version}&lt;/version&gt;"
+										<echo>Updating pom version from ${current.version} to
+											${next.snapshot.version}</echo>
+										<replace token="&lt;version&gt;${current.version}&lt;/version&gt;"
+											value="&lt;version&gt;${next.snapshot.version}&lt;/version&gt;"
 											file="${basedir}/pom.xml" />
 									</tasks>
 								</configuration>
@@ -354,22 +310,6 @@
 				</plugins>
 			</build>
 		</profile>
-		<profile>
-		<id>StaticCodeAnalysis</id>
-		<properties>
-			<maven.pmd.cpd.enable>true</maven.pmd.cpd.enable>
-			<aggregate>true</aggregate>
-		</properties>
-		<reporting>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-pmd-plugin</artifactId>
-					<version>3.0.1</version>
-				</plugin>
-			</plugins>
-		</reporting>
-	</profile>
 	</profiles>
 
 

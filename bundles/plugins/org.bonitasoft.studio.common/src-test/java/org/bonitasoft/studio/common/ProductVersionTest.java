@@ -20,34 +20,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.ivy.plugins.parser.m2.PomReader;
 import org.apache.ivy.plugins.repository.url.URLResource;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.osgi.framework.Version;
+import org.xml.sax.SAXException;
 
-/**
- * @author Romain Bioteau
- *
- */
 public class ProductVersionTest {
 
-	private String pomVersion;
 
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		URL originURL = ProductVersionTest.class.getResource(ProductVersionTest.class.getSimpleName()+".class");
+    private String loadPomVersion() throws MalformedURLException, IOException, SAXException {
+        URL originURL = ProductVersion.class.getResource(ProductVersion.class.getSimpleName() + ".class");
 		File originFile = new File(originURL.getFile());
-		assertThat(originFile.exists()).isTrue();
+        assertThat(originFile).exists();
 		File pomFile = originFile;
 		while (pomFile != null && !pomFile.getName().equals("pom.xml")) {
 			File[] listFiles = pomFile.getParentFile().listFiles(new FilenameFilter() {
@@ -67,22 +58,18 @@ public class ProductVersionTest {
 		URL descriptorURL = pomFile.toURI().toURL();
 		URLResource resource = new URLResource(descriptorURL);
 		PomReader domReader = new PomReader(descriptorURL, resource);        
-		pomVersion = domReader.getVersion();
+        String pomVersion = domReader.getVersion();
 		if(pomVersion.indexOf("-SNAPSHOT") != -1){
 			pomVersion = pomVersion.substring(0, pomVersion.indexOf("-SNAPSHOT"));
 		}
-	}
+        return pomVersion;
+    }
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
 
 
 	@Test
 	public void shouldCurrentProductVersionEquals_POMVersionIgnoringQualifier() throws Exception {
+        String pomVersion = loadPomVersion();
 		Version current = new Version(ProductVersion.CURRENT_VERSION);
 		Version osgiPomVersion = Version.parseVersion(pomVersion);
 		assertThat(current.getMajor()).isEqualTo(osgiPomVersion.getMajor());

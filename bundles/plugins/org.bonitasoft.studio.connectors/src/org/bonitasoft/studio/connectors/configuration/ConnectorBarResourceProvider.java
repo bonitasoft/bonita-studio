@@ -14,10 +14,6 @@
  */
 package org.bonitasoft.studio.connectors.configuration;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.tryFind;
 import static com.google.common.io.Files.toByteArray;
 
 import java.io.File;
@@ -30,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -64,10 +61,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-
 /**
  * @author Romain Bioteau
  */
@@ -90,9 +83,15 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
         if (configuration == null) {
             return;
         }
-        final List<BarResource> resources = new ArrayList<>();
         final IImplementationRepositoryStore implStore = getImplementationStore();
-        for (final DefinitionMapping association : filter(configuration.getDefinitionMappings(), and(actorFilterMappings(), withImplementation()))) {
+        final List<BarResource> resources = new ArrayList<>();
+        List<DefinitionMapping> mappings = configuration.getDefinitionMappings().stream()
+                .filter(mapping -> Objects.equals(getFragmentType(), mapping.getType()))
+                .filter(mapping -> java.util.Optional.ofNullable(mapping.getImplementationId()).isPresent()
+                        && java.util.Optional.ofNullable(mapping.getDefinitionVersion()).isPresent())
+                .collect(Collectors.toList());
+
+        for (final DefinitionMapping association : mappings) {
             final String connectorImplementationFilename = NamingUtils.toConnectorImplementationFilename(
                     association.getImplementationId(),
                     association.getImplementationVersion(), true);
@@ -115,27 +114,6 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
         }
     }
 
-    private Predicate<DefinitionMapping> withImplementation() {
-        return new Predicate<DefinitionMapping>() {
-
-            @Override
-            public boolean apply(final DefinitionMapping mapping) {
-                return !isNullOrEmpty(mapping.getImplementationId()) && !isNullOrEmpty(mapping.getDefinitionVersion());
-            }
-        };
-    }
-
-    private Predicate<DefinitionMapping> actorFilterMappings() {
-        return new Predicate<DefinitionMapping>() {
-
-            @Override
-            public boolean apply(final DefinitionMapping mapping) {
-                return getFragmentType().equals(mapping.getType());
-            }
-
-        };
-    }
-
     protected String getFragmentType() {
         return FragmentTypes.CONNECTOR;
     }
@@ -151,15 +129,18 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
     protected void addProcessDependencies(final BusinessArchiveBuilder builder, final Configuration configuration, final List<BarResource> resources,
             final ConnectorImplementation implementation, final boolean customImpl) throws InvocationTargetException, InterruptedException, IOException {
         final DependencyRepositoryStore dependencyStore = repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class);
-        final Optional<FragmentContainer> fragmentContainer = tryFind(configuration.getProcessDependencies(), withId(getFragmentType()));
+        final java.util.Optional<FragmentContainer> fragmentContainer = configuration.getProcessDependencies().stream()
+                .filter(fc -> fc.getId().equals(getFragmentType())).findFirst();
         if (fragmentContainer.isPresent()) {
-            final Optional<FragmentContainer> implementationContainer = tryFind(
-                    fragmentContainer.get().getChildren(),
-                    withId(NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(),
+            final java.util.Optional<FragmentContainer> implementationContainer = fragmentContainer.get().getChildren().stream()
+                    .filter(fragment -> Objects.equals(fragment.getId(), NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(),
                             implementation.getImplementationVersion(),
-                            false)));
+                            false)))
+                    .findFirst();
+         
             if (implementationContainer.isPresent()) {
-                for (final Fragment fragment : filter(implementationContainer.get().getFragments(), exportedJarFragment())) {
+                for (final Fragment fragment : implementationContainer.get().getFragments().stream().filter(fragment -> fragment.isExported())
+                        .collect(Collectors.toList())) {
                     if (customImpl && NamingUtils.toConnectorImplementationJarName(implementation).equals(fragment.getValue())) { //Generate jar from source file
                         addImplementationJar(builder, implementation);
                     }
@@ -171,7 +152,6 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
             }
         }
     }
-
 
     protected void addResource(final List<BarResource> resources, final DependencyRepositoryStore libStore, final String jarName) throws IOException {
         final IRepositoryFileStore jarFileStore = libStore.getChild(jarName);
@@ -260,43 +240,15 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
     }
 
     private boolean selfDependenciesIsExported(Configuration configuration, ConnectorImplementation implementation) {
-        final Optional<FragmentContainer> connectorContainer = tryFind(configuration.getProcessDependencies(), withId(getFragmentType()));
-        final Optional<FragmentContainer> implementationContainer = tryFind(connectorContainer.get().getChildren(),
-                withId(NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(),
-                        implementation.getImplementationVersion(), false)));
-        final Optional<Fragment> fragment = tryFind(implementationContainer.get().getFragments(),
-                Predicates.and(withValue(NamingUtils.toConnectorImplementationJarName(implementation)), exportedJarFragment()));
-        return fragment.isPresent();
+        final java.util.Optional<FragmentContainer> connectorContainer = configuration.getProcessDependencies().stream()
+                .filter(fragment -> Objects.equals(fragment.getId(), getFragmentType())).findFirst();
+        final java.util.Optional<FragmentContainer> implementationContainer = connectorContainer.get().getChildren().stream()
+                .filter(fragment -> Objects.equals(fragment.getId(), NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(),
+                        implementation.getImplementationVersion(), false))).findAny();
+        return implementationContainer.get().getFragments().stream()
+                .filter(fragment -> Objects.equals(fragment.getValue(), NamingUtils.toConnectorImplementationJarName(implementation)))
+                .filter(fragment -> fragment.isExported()).findFirst().isPresent();
     }
 
-    private Predicate<? super Fragment> exportedJarFragment() {
-        return new Predicate<Fragment>() {
-
-            @Override
-            public boolean apply(Fragment fragment) {
-                return fragment.isExported();
-            }
-        };
-    }
-
-    private Predicate<? super Fragment> withValue(final String value) {
-        return new Predicate<Fragment>() {
-
-            @Override
-            public boolean apply(Fragment fragment) {
-                return Objects.equals(fragment.getValue(), value);
-            }
-        };
-    }
-
-    private Predicate<FragmentContainer> withId(final String type) {
-        return new Predicate<FragmentContainer>() {
-
-            @Override
-            public boolean apply(FragmentContainer fc) {
-                return fc.getId().equals(type);
-            }
-        };
-    }
 
 }
