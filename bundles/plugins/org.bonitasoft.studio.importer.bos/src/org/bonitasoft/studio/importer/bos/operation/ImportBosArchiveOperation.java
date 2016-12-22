@@ -119,7 +119,6 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         for (final IRepositoryStore<? extends IRepositoryFileStore> repository : allRepositories) {
             repositoryMap.put(repository.getName(), repository);
         }
-
         IContainer rootContainer = null;
         try {
             rootContainer = getRootContainer(container, repositoryMap);
