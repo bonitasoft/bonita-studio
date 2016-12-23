@@ -18,14 +18,12 @@ import org.bonitasoft.studio.ui.databinding.UpdateValueStrategyFactory;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
 /**
  * An abstract {@link ControlWidget} builder.
@@ -33,18 +31,15 @@ import org.eclipse.swt.widgets.Label;
 public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
 
     protected final GridData gridData = new GridData();
-    protected boolean readOnly = false;
+
     protected boolean labelAbove = false;
-    protected int labelWidth = IDialogConstants.ENTRY_FIELD_WIDTH;
+
     protected String label;
     protected UpdateValueStrategy modelToTargetStrategy;
     protected UpdateValueStrategy targetToModelStrategy;
     protected Object layoutData;
-    protected String message;
     protected IObservableValue modelObservable;
     protected DataBindingContext ctx;
-    protected int horizontalLabelAlignment = SWT.RIGHT;
-    protected int verticalLabelAlignment = SWT.CENTER;
 
     /**
      * Adds a text label next to the control.
@@ -57,54 +52,10 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
     }
 
     /**
-     * Sets the {@link Label} with.
-     * 
-     * @see {@link org.bonitasoft.studio.ui.widget.ControlWidgetBuilder#withLabelWidth(int) withLabelWidth} to set a label
-     */
-    public T withLabelWidth(int labelWidth) {
-        this.labelWidth = labelWidth;
-        return (T) this;
-    }
-
-    /**
-     * Sets the {@link Label} horizontal alignment to <em>SWT.LEFT</em>.
-     * Default alignment is<em>SWT.RIGHT</em>.
-     */
-    public T alignLabelLeft() {
-        this.horizontalLabelAlignment = SWT.LEFT;
-        return (T) this;
-    }
-
-    /**
-     * Sets the {@link Label} vertical alignment to <em>SWT.TOP</em>.
-     * Default alignment is<em>SWT.CENTER</em>.
-     */
-    public T alignLabelTop() {
-        this.verticalLabelAlignment = SWT.TOP;
-        return (T) this;
-    }
-
-    /**
-     * Adds a text message under the control. Should be use when additional user guidance is needed.
-     */
-    public T withMessage(String message) {
-        this.message = message;
-        return (T) this;
-    }
-
-    /**
      * Set the position of the text label above the control.
      */
     public T labelAbove() {
         this.labelAbove = true;
-        return (T) this;
-    }
-
-    /**
-     * Set the control in read-only mode.
-     */
-    public T readOnly() {
-        this.readOnly = true;
         return (T) this;
     }
 

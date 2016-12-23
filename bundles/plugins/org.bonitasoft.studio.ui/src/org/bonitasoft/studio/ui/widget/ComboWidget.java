@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
-public class ComboWidget extends ControlWidget {
+public class ComboWidget extends EditableControlWidget {
 
-    public static class Builder extends ControlWidgetBuilder<Builder, ComboWidget> {
+    public static class Builder extends EditableControlWidgetBuilder<Builder, ComboWidget> {
 
         private String[] items;
 
