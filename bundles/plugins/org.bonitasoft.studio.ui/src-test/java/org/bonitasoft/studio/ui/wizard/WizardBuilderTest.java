@@ -20,6 +20,7 @@ import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.bonitasoft.studio.ui.validator.EmptyInputValidator;
+import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -124,6 +125,13 @@ public class WizardBuilderTest {
                                         return value == null || ((String) value).isEmpty() ? ValidationStatus.warning("Manager is missing")
                                                 : ValidationStatus.ok();
                                     }))
+                                    .createIn(container);
+
+                            new ButtonWidget.Builder()
+                                    .withLabel("Button")
+                                    .grabHorizontalSpace()
+                                    .fill()
+                                    .onClick(e -> System.out.println("click"))
                                     .createIn(container);
 
                             return container;

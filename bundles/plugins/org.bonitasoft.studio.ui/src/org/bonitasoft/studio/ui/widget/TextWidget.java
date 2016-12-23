@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
-public class TextWidget extends ControlWidget {
+public class TextWidget extends EditableControlWidget {
 
-    public static class Builder extends ControlWidgetBuilder<Builder, TextWidget> {
+    public static class Builder extends EditableControlWidgetBuilder<Builder, TextWidget> {
 
         private String placeholder;
 
