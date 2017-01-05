@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.expression.editor.message;
 
@@ -30,7 +28,6 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.TableExpression;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
-import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -39,48 +36,47 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class MessageIdExpressionProvider implements IExpressionProvider {
 
-
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressions(org.eclipse.emf.ecore.EObject)
      */
     @Override
     public Set<Expression> getExpressions(EObject context) {
-        if(context instanceof AbstractCatchMessageEvent){
-            String event = ((AbstractCatchMessageEvent) context).getEvent();
-            if(event != null){
-                final Message message = ModelHelper.findEvent((Element) context, event);
-                if(message != null){
-                    TableExpression throwMessageContent = message.getMessageContent();
-                    HashSet<Expression> messageContentIds = new HashSet<Expression>();
-                    for (int i=0;i<throwMessageContent.getExpressions().size();i++){
-                        ListExpression row = throwMessageContent.getExpressions().get(i);
-                        Expression id = row.getExpressions().get(0);
-                        if (id!=null && id.getName() !=null){
-                            messageContentIds.add(createExpression(id.getName()));
-                        }
+        AbstractCatchMessageEvent catchMessageEvent = ModelHelper.getFirstContainerOfType(context,
+                AbstractCatchMessageEvent.class);
+        String event = ((AbstractCatchMessageEvent) catchMessageEvent).getEvent();
+        if (event != null) {
+            final Message message = ModelHelper.findEvent(catchMessageEvent, event);
+            if (message != null) {
+                TableExpression throwMessageContent = message.getMessageContent();
+                HashSet<Expression> messageContentIds = new HashSet<Expression>();
+                for (int i = 0; i < throwMessageContent.getExpressions().size(); i++) {
+                    ListExpression row = throwMessageContent.getExpressions().get(i);
+                    Expression id = row.getExpressions().get(0);
+                    if (id != null && id.getName() != null) {
+                        messageContentIds.add(createExpression(id.getName()));
                     }
-                    return messageContentIds;
                 }
+                return messageContentIds;
             }
         }
         return Collections.emptySet();
     }
 
     private Expression createExpression(String id) {
-        Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
-        exp.setType(getExpressionType()) ;
-        exp.setContent(id) ;
-        exp.setName(id) ;
-        exp.setReturnType(String.class.getName()) ;
+        Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+        exp.setType(getExpressionType());
+        exp.setContent(id);
+        exp.setName(id);
+        exp.setReturnType(String.class.getName());
         return exp;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionType()
      */
     @Override
@@ -88,7 +84,8 @@ public class MessageIdExpressionProvider implements IExpressionProvider {
         return ExpressionConstants.MESSAGE_ID_TYPE;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getIcon(org.bonitasoft.studio.model.expression.Expression)
      */
     @Override
@@ -96,7 +93,8 @@ public class MessageIdExpressionProvider implements IExpressionProvider {
         return Pics.getImage(PicsConstants.enveloppe);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getTypeIcon()
      */
     @Override
@@ -104,7 +102,8 @@ public class MessageIdExpressionProvider implements IExpressionProvider {
         return Pics.getImage(PicsConstants.enveloppe);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getProposalLabel(org.bonitasoft.studio.model.expression.Expression)
      */
     @Override
@@ -112,12 +111,13 @@ public class MessageIdExpressionProvider implements IExpressionProvider {
         return expression.getContent();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#isRelevantFor(org.eclipse.emf.ecore.EObject)
      */
     @Override
     public boolean isRelevantFor(EObject context) {
-        return context instanceof AbstractCatchMessageEvent;
+        return ModelHelper.getFirstContainerOfType(context, AbstractCatchMessageEvent.class) != null;
     }
 
     @Override
@@ -126,9 +126,8 @@ public class MessageIdExpressionProvider implements IExpressionProvider {
     }
 
     @Override
-    public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
+    public IExpressionEditor getExpressionEditor(Expression expression, EObject context) {
         return new MessageIdExpressionEditor();
     }
-
 
 }
