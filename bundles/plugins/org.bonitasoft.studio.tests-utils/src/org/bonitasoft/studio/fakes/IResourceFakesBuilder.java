@@ -17,38 +17,53 @@ package org.bonitasoft.studio.fakes;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import java.io.InputStream;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 
-public class IResourceFakesBuilder {
+public class IResourceFakesBuilder<T extends IResource> {
 
-    public static IResourceFakesBuilder anIFile() {
-        return new IResourceFakesBuilder(mock(IFile.class));
+    public static IResourceFakesBuilder<IFile> anIFile() {
+        return new IResourceFakesBuilder<IFile>(mock(IFile.class));
     }
 
-    public static IResourceFakesBuilder anIFolder() {
-        return new IResourceFakesBuilder(mock(IFolder.class));
+    public static IResourceFakesBuilder<IFolder> anIFolder() {
+        return new IResourceFakesBuilder<IFolder>(mock(IFolder.class));
     }
 
     private final IResource resourceFake;
 
-    private IResourceFakesBuilder(final IResource resourceFake) {
+    private IResourceFakesBuilder(final T resourceFake) {
         this.resourceFake = resourceFake;
     }
 
-    public IResourceFakesBuilder withName(final String resourceName) {
+    public IResourceFakesBuilder<T> withName(final String resourceName) {
         doReturn(resourceName).when(resourceFake).getName();
         return this;
     }
 
-    public IResourceFakesBuilder exists() {
+    public IResourceFakesBuilder<T> exists() {
         doReturn(true).when(resourceFake).exists();
         return this;
     }
 
-    public IResource build() {
-        return resourceFake;
+    public T build() {
+        return (T) resourceFake;
+    }
+
+    public IResourceFakesBuilder<IFile> withContent(InputStream resourceAsStream) {
+        if (!(resourceFake instanceof IFile)) {
+            throw new IllegalAccessError("Only IFile can have a content..");
+        }
+        try {
+            doReturn(resourceAsStream).when((IFile) resourceFake).getContents();
+        } catch (CoreException e) {
+            return (IResourceFakesBuilder<IFile>) this;
+        }
+        return (IResourceFakesBuilder<IFile>) this;
     }
 
 }
