@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+   <extension
+         point="org.bonitasoft.studio.repositoryStore">
+      <repositoryStore
+            class="org.bonitasoft.studio.la.repository.ApplicationRepositoryStore">
+      </repositoryStore>
+   </extension>
+   <extension
+         id="org.bonitasoft.studio.la.fragment"
+         point="org.eclipse.e4.workbench.model">
+      <fragment
+            uri="fragment.e4xmi">
+      </fragment>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.menu.filter">
+         <menu
+               icon="icons/applicationStore.gif"
+               label="%applicationMenuLabel">
+            <command
+                  commandId="org.bonitasoft.studio.la.new.command"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+
+</plugin>
