@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -39,7 +37,6 @@ import org.eclipse.swt.widgets.Control;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class IndexFieldsEditingSupport extends EditingSupport {
 
@@ -126,7 +123,7 @@ public class IndexFieldsEditingSupport extends EditingSupport {
      * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object, java.lang.Object)
      */
     @Override
-    protected void setValue(Object element, Object value) {
+    protected void setValue(final Object element, Object value) {
         if (value == null) {
             return;
         }
@@ -148,7 +145,13 @@ public class IndexFieldsEditingSupport extends EditingSupport {
             }
         }
         ((Index) element).setFieldNames(fieldNames);
-        getViewer().update(element, null);
+        getViewer().getControl().getDisplay().asyncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                getViewer().update(element, null);
+            }
+        });
 
     }
 

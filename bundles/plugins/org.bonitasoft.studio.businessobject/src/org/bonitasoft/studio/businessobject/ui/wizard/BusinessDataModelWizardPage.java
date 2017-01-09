@@ -113,7 +113,8 @@ public class BusinessDataModelWizardPage extends WizardPage {
         final DataBindingContext ctx = new DataBindingContext();
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).extendedMargins(10, 10, 10, 0).spacing(1, 5).create());
+        mainComposite.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(3).extendedMargins(10, 10, 10, 0).spacing(1, 5).create());
 
         final IViewerObservableValue viewerObservableValue = createListOfBusinessObjects(mainComposite, ctx);
         createSeparator(mainComposite);
@@ -130,12 +131,14 @@ public class BusinessDataModelWizardPage extends WizardPage {
 
     protected void createHelpControl(final Composite mainComposite) {
         helpLabel = new Label(mainComposite, SWT.WRAP);
-        helpLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(400, SWT.DEFAULT).span(3, 1).indent(0, 10).create());
+        helpLabel.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).hint(400, SWT.DEFAULT).span(3, 1).indent(0, 10).create());
         helpLabel.setVisible(false);
         helpLabel.setText(Messages.howToUseBusinessObjectsContent);
     }
 
-    protected void createBusinessObjectDescription(final Composite mainComposite, final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
+    protected void createBusinessObjectDescription(final Composite mainComposite, final DataBindingContext ctx,
+            final IViewerObservableValue viewerObservableValue) {
         businessObjectDescriptionGroup = new Group(mainComposite, SWT.NONE);
         businessObjectDescriptionGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(1, 2).create());
         businessObjectDescriptionGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
@@ -146,7 +149,8 @@ public class BusinessDataModelWizardPage extends WizardPage {
             public void handleValueChange(final ValueChangeEvent event) {
                 final Object newValue = event.diff.getNewValue();
                 if (newValue != null) {
-                    businessObjectDescriptionGroup.setText(NamingUtils.getSimpleName(((BusinessObject) newValue).getQualifiedName()));
+                    businessObjectDescriptionGroup
+                            .setText(NamingUtils.getSimpleName(((BusinessObject) newValue).getQualifiedName()));
                 } else {
                     businessObjectDescriptionGroup.setText(Messages.selectABusinessObjectToEdit);
                 }
@@ -164,48 +168,59 @@ public class BusinessDataModelWizardPage extends WizardPage {
         createIndexesTabItem(ctx, viewerObservableValue, tabFolder);
     }
 
-    protected void createQueriesTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue, final TabFolder tabFolder) {
+    protected void createQueriesTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+            final TabFolder tabFolder) {
         final TabItem queriesItem = new TabItem(tabFolder, SWT.BORDER);
         queriesItem.setText(Messages.queries);
 
         queriesItem.setControl(new QueriesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList));
     }
 
-    protected void createAttributeTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue, final TabFolder tabFolder) {
+    protected void createAttributeTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+            final TabFolder tabFolder) {
         final TabItem attributeItem = new TabItem(tabFolder, SWT.BORDER);
         attributeItem.setText(Messages.attributes);
-        attributeItem.setControl(new AttributesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel));
+        attributeItem.setControl(
+                new AttributesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel));
     }
 
-    protected void createConstraintsTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue, final TabFolder tabFolder) {
+    protected void createConstraintsTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+            final TabFolder tabFolder) {
         final TabItem constraintsTabItem = new TabItem(tabFolder, SWT.BORDER);
         constraintsTabItem.setText(Messages.constraints);
-        constraintsTabItem.setControl(new UniqueConstraintTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel));
+        constraintsTabItem.setControl(
+                new UniqueConstraintTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel));
     }
 
-    protected void createIndexesTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue, final TabFolder tabFolder) {
+    protected void createIndexesTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+            final TabFolder tabFolder) {
         final TabItem indexTabItem = new TabItem(tabFolder, SWT.BORDER);
         indexTabItem.setText(Messages.indexes);
-        indexTabItem.setControl(new IndexesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel));
+        indexTabItem.setControl(
+                new IndexesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel));
     }
 
     protected Button createDeleteButton(final Composite buttonsComposite) {
         final Button deleteButton = new Button(buttonsComposite, SWT.FLAT);
-        deleteButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        deleteButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
+                .minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         deleteButton.setText(Messages.delete);
         deleteButton.setEnabled(false);
         return deleteButton;
     }
 
-    protected Button createAddButton(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue, final Composite buttonsComposite) {
+    protected Button createAddButton(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+            final Composite buttonsComposite) {
         final Button addButton = new Button(buttonsComposite, SWT.FLAT);
-        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
+                .minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         addButton.setText(Messages.add);
         addButton.setEnabled(false);
         return addButton;
     }
 
-    protected void createDescription(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue, final Group descriptionGroup) {
+    protected void createDescription(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+            final Group descriptionGroup) {
         final Label descriptionLabel = new Label(descriptionGroup, SWT.NONE);
         descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).create());
         descriptionLabel.setText(Messages.description);
@@ -214,7 +229,8 @@ public class BusinessDataModelWizardPage extends WizardPage {
         descriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 50).create());
         descriptionText.setEnabled(viewerObservableValue.getValue() != null);
 
-        final IObservableValue observeDetailValue = PojoObservables.observeDetailValue(viewerObservableValue, "description", String.class);
+        final IObservableValue observeDetailValue = PojoObservables.observeDetailValue(viewerObservableValue, "description",
+                String.class);
         ctx.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify), observeDetailValue);
 
         final UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
@@ -231,10 +247,12 @@ public class BusinessDataModelWizardPage extends WizardPage {
     protected void createSeparator(final Composite mainComposite) {
         final Label separator = new Label(mainComposite, SWT.NONE);
         separator.setImage(Pics.getImage("arrow.png", BusinessObjectPlugin.getDefault()));
-        separator.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.CENTER, SWT.CENTER).span(1, 2).create());
+        separator.setLayoutData(
+                GridDataFactory.fillDefaults().grab(false, true).align(SWT.CENTER, SWT.CENTER).span(1, 2).create());
     }
 
-    protected IViewerObservableValue createListOfBusinessObjects(final Composite mainComposite, final DataBindingContext ctx) {
+    protected IViewerObservableValue createListOfBusinessObjects(final Composite mainComposite,
+            final DataBindingContext ctx) {
         final Group group = new Group(mainComposite, SWT.NONE);
         group.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
         group.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(5, 0).create());
@@ -245,16 +263,19 @@ public class BusinessDataModelWizardPage extends WizardPage {
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
 
         final Button addButton = new Button(buttonsComposite, SWT.FLAT);
-        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
+                .minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         addButton.setText(Messages.add);
 
         final Button deleteButton = new Button(buttonsComposite, SWT.FLAT);
-        deleteButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        deleteButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
+                .minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         deleteButton.setText(Messages.delete);
         deleteButton.setEnabled(false);
 
         final TableViewer boTableViewer = new TableViewer(group, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-        boTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, SWT.DEFAULT).create());
+        boTableViewer.getControl()
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, SWT.DEFAULT).create());
         boTableViewer.getTable().setLinesVisible(true);
         boTableViewer.getTable().setHeaderVisible(true);
         final TableLayout tableLayout = new TableLayout();
@@ -279,8 +300,9 @@ public class BusinessDataModelWizardPage extends WizardPage {
             public void afterEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) {
                 final ISelection selection = boTableViewer.getSelection();
                 if (selection != null && ((IStructuredSelection) selection).getFirstElement() != null) {
-                    businessObjectDescriptionGroup.setText(NamingUtils.getSimpleName(((BusinessObject) ((IStructuredSelection) selection).getFirstElement())
-                            .getQualifiedName()));
+                    businessObjectDescriptionGroup.setText(
+                            NamingUtils.getSimpleName(((BusinessObject) ((IStructuredSelection) selection).getFirstElement())
+                                    .getQualifiedName()));
                     boTableViewer.refresh();
                 } else {
                     businessObjectDescriptionGroup.setText(Messages.selectABusinessObjectToEdit);
@@ -305,10 +327,12 @@ public class BusinessDataModelWizardPage extends WizardPage {
             }
         });
 
-        ctx.bindValue(SWTObservables.observeEnabled(deleteButton), observeSingleSelection, new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
+        ctx.bindValue(SWTObservables.observeEnabled(deleteButton), observeSingleSelection,
+                new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 enableStrategy);
 
-        final IObservableList businessObjectObserveList = PojoObservables.observeList(businessObjectModel, "businessObjects");
+        final IObservableList businessObjectObserveList = PojoObservables.observeList(businessObjectModel,
+                "businessObjects");
         boTableViewer.setInput(businessObjectObserveList);
         addButton.addSelectionListener(new SelectionAdapter() {
 
@@ -388,7 +412,8 @@ public class BusinessDataModelWizardPage extends WizardPage {
         if (businessObjectModel.getBusinessObjects().isEmpty()) {
             packageNameObserveText.setValue(DEFAULT_PACKAGE_NAME);
         } else {
-            packageNameObserveText.setValue(NamingUtils.getPackageName(businessObjectModel.getBusinessObjects().get(0).getQualifiedName()));
+            packageNameObserveText.setValue(
+                    NamingUtils.getPackageName(businessObjectModel.getBusinessObjects().get(0).getQualifiedName()));
         }
     }
 
@@ -396,7 +421,14 @@ public class BusinessDataModelWizardPage extends WizardPage {
         final BusinessObject businessObject = new BusinessObject();
         businessObject.setQualifiedName(generateObjectName());
         businessObjectsObserveList.add(businessObject);
-        boTableViewer.editElement(businessObject, 0);
+        boTableViewer.getControl().getDisplay().asyncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                boTableViewer.editElement(businessObject, 0);
+            }
+        });
+
     }
 
     protected IStatus validatePackageName(final Object value) {
@@ -434,7 +466,8 @@ public class BusinessDataModelWizardPage extends WizardPage {
         }
     }
 
-    protected void createBusinessObjectNameColumn(final DataBindingContext ctx, final IViewerObservableValue businessObjectSingleSelection,
+    protected void createBusinessObjectNameColumn(final DataBindingContext ctx,
+            final IViewerObservableValue businessObjectSingleSelection,
             final TableViewer boTableViewer) {
         final TableViewerColumn columnViewer = new TableViewerColumn(boTableViewer, SWT.FILL);
         final TableColumn column = columnViewer.getColumn();
@@ -453,8 +486,10 @@ public class BusinessDataModelWizardPage extends WizardPage {
                 return super.getText(element);
             }
         });
-        columnViewer.setEditingSupport(new BusinessObjectNameEditingSupport(businessObjectModel, businessObjectSingleSelection, PojoObservables.observeValue(
-                this, "packageName"), columnViewer.getViewer(), ctx));
+        columnViewer.setEditingSupport(new BusinessObjectNameEditingSupport(businessObjectModel,
+                businessObjectSingleSelection, PojoObservables.observeValue(
+                        this, "packageName"),
+                columnViewer.getViewer(), ctx));
 
         final TableColumnSorter sorter = new TableColumnSorter(boTableViewer);
         sorter.setColumn(column);
