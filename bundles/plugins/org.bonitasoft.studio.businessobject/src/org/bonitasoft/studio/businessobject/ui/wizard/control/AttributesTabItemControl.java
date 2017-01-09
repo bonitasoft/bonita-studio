@@ -95,7 +95,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
 
     private final BusinessObjectModel businessObjectModel;
 
-    public AttributesTabItemControl(final TabFolder parent, final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+    public AttributesTabItemControl(final TabFolder parent, final DataBindingContext ctx,
+            final IViewerObservableValue viewerObservableValue,
             final IObservableList fieldsList,
             final BusinessObjectModel businessObjectModel) {
         super(parent, SWT.NONE);
@@ -112,15 +113,18 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         createAttributeDetailControl(ctx, attributeSelectionObservable, viewerObservableValue);
     }
 
-    private void createAttributeDetailControl(final DataBindingContext ctx, final IViewerObservableValue attributeSelectionObservable,
+    private void createAttributeDetailControl(final DataBindingContext ctx,
+            final IViewerObservableValue attributeSelectionObservable,
             final IViewerObservableValue viewerObservableValue) {
         final Group detailGroup = new Group(this, SWT.NONE);
         detailGroup.setText(Messages.details);
-        detailGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 80).indent(0, 10).span(2, 1).create());
+        detailGroup.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 80).indent(0, 10).span(2, 1).create());
         final StackLayout stackLayout = new StackLayout();
         detailGroup.setLayout(stackLayout);
 
-        final Composite relationFieldContent = createRelationFieldDetailContent(detailGroup, ctx, attributeSelectionObservable, viewerObservableValue);
+        final Composite relationFieldContent = createRelationFieldDetailContent(detailGroup, ctx,
+                attributeSelectionObservable, viewerObservableValue);
         final Composite stringFieldContent = createStringFieldDetailContent(detailGroup, ctx, attributeSelectionObservable);
         final Composite emptyContent = createNoDetailsContent(detailGroup);
         stackLayout.topControl = emptyContent;
@@ -188,7 +192,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
             public IStatus validate(final Object value) {
                 if (value == null || value.toString().isEmpty()) {
                     final Object selectedField = attributeSelectionObservable.getValue();
-                    if (selectedField instanceof SimpleField && ((SimpleField) selectedField).getType() == FieldType.STRING) {
+                    if (selectedField instanceof SimpleField
+                            && ((SimpleField) selectedField).getType() == FieldType.STRING) {
                         return ValidationStatus.error(Messages.lengthCannotBeEmpty);
                     }
                 }
@@ -272,7 +277,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
             public void handleValueChange(final ValueChangeEvent event) {
                 final BusinessObject bo = (BusinessObject) event.diff.getNewValue();
                 if (bo != null) {
-                    eagerDecorator.setDescriptionText(Messages.bind(Messages.alwaysLoadHint, NamingUtils.getSimpleName(bo.getQualifiedName())));
+                    eagerDecorator.setDescriptionText(
+                            Messages.bind(Messages.alwaysLoadHint, NamingUtils.getSimpleName(bo.getQualifiedName())));
                 }
             }
         });
@@ -286,7 +292,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         return composite;
     }
 
-    private IViewerObservableValue createAttributeTableControl(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
+    private IViewerObservableValue createAttributeTableControl(final DataBindingContext ctx,
+            final IViewerObservableValue viewerObservableValue) {
         final Composite buttonsComposite = new Composite(this, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).indent(0, 20).create());
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
@@ -307,16 +314,20 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         final Button downButton = createDownButton(viewerObservableValue, buttonsComposite);
         final Button deleteButton = createDeleteButton(buttonsComposite);
 
-        final TableViewer featuresTableViewer = new TableViewer(this, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
-        featuresTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, 200).create());
+        final TableViewer featuresTableViewer = new TableViewer(this,
+                SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
+        featuresTableViewer.getControl()
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, 200).create());
         featuresTableViewer.getTable().setEnabled(viewerObservableValue.getValue() != null);
         featuresTableViewer.getTable().setLinesVisible(true);
         featuresTableViewer.getTable().setHeaderVisible(true);
         featuresTableViewer.setContentProvider(new ObservableListContentProvider());
         ColumnViewerToolTipSupport.enableFor(featuresTableViewer);
 
-        ctx.bindValue(SWTObservables.observeEnabled(featuresTableViewer.getTable()), viewerObservableValue, null, enableStrategy);
-        final IViewerObservableValue observeAttributeSelection = ViewersObservables.observeSingleSelection(featuresTableViewer);
+        ctx.bindValue(SWTObservables.observeEnabled(featuresTableViewer.getTable()), viewerObservableValue, null,
+                enableStrategy);
+        final IViewerObservableValue observeAttributeSelection = ViewersObservables
+                .observeSingleSelection(featuresTableViewer);
 
         final TableLayout tableLayout = new TableLayout();
         tableLayout.addColumnData(new ColumnWeightData(4));
@@ -457,7 +468,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         return observeAttributeSelection;
     }
 
-    protected void createFieldNameColumn(final DataBindingContext ctx, final TableViewer featuresTableViewer, final IViewerObservableValue viewerObservableValue) {
+    protected void createFieldNameColumn(final DataBindingContext ctx, final TableViewer featuresTableViewer,
+            final IViewerObservableValue viewerObservableValue) {
         final TableViewerColumn nameColumnViewer = new TableViewerColumn(featuresTableViewer, SWT.FILL);
         final TableColumn column = nameColumnViewer.getColumn();
         column.setText(Messages.name);
@@ -475,7 +487,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
                 return super.getText(element);
             }
         });
-        nameColumnViewer.setEditingSupport(new FieldNameEditingSupport(viewerObservableValue, nameColumnViewer.getViewer(), ctx));
+        nameColumnViewer
+                .setEditingSupport(new FieldNameEditingSupport(viewerObservableValue, nameColumnViewer.getViewer(), ctx));
     }
 
     protected void createFieldTypeColumn(final DataBindingContext ctx, final TableViewer featuresTableViewer,
@@ -484,8 +497,9 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         final TableColumn column = typeColumnViewer.getColumn();
         column.setText(Messages.type);
         typeColumnViewer.setLabelProvider(new FieldTypeLabelProvider());
-        typeColumnViewer.setEditingSupport(new FieldTypeEditingSupport(typeColumnViewer.getViewer(), businessObjectModel, fieldsList,
-                fieldSingSelectionObervableValue));
+        typeColumnViewer
+                .setEditingSupport(new FieldTypeEditingSupport(typeColumnViewer.getViewer(), businessObjectModel, fieldsList,
+                        fieldSingSelectionObervableValue));
     }
 
     protected void createMandatoryColumn(final TableViewer featuresTableViewer) {
@@ -515,7 +529,14 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
 
         fieldsList.add(field);
         observeAttributeSelection.setValue(field);
-        featuresTableViewer.editElement(field, 0);
+        featuresTableViewer.getControl().getDisplay().asyncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                featuresTableViewer.editElement(field, 0);
+            }
+        });
+
     }
 
     protected void deleteField(final TableViewer featuresTableViewer, final IObservableValue viewerObservableValue) {
@@ -523,7 +544,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         fieldsList.removeAll(selection.toList());
     }
 
-    protected void moveUp(final IObservableValue observeFieldsDetailValue, final IViewerObservableValue observeSingleSelection) {
+    protected void moveUp(final IObservableValue observeFieldsDetailValue,
+            final IViewerObservableValue observeSingleSelection) {
         final Field selectedFeature = (Field) observeSingleSelection.getValue();
         final List<Field> eList = getFieldList(observeFieldsDetailValue);
         final int indexOf = eList.indexOf(selectedFeature);
@@ -537,7 +559,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         return (List<Field>) PojoObservables.observeDetailValue(viewerObservableValue, "fields", null).getValue();
     }
 
-    protected void moveDown(final IObservableValue observeFieldsDetailValue, final IViewerObservableValue observeSingleSelection) {
+    protected void moveDown(final IObservableValue observeFieldsDetailValue,
+            final IViewerObservableValue observeSingleSelection) {
         final Field selectedFeature = (Field) observeSingleSelection.getValue();
         final List<Field> eList = getFieldList(observeFieldsDetailValue);
         final int indexOf = eList.indexOf(selectedFeature);

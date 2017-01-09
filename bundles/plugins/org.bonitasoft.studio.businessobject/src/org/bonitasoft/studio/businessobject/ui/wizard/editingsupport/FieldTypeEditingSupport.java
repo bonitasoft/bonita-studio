@@ -52,7 +52,8 @@ public class FieldTypeEditingSupport extends EditingSupport {
 
     private final IObservableValue selectedFieldObservableValue;
 
-    public FieldTypeEditingSupport(final ColumnViewer viewer, final BusinessObjectModel bom, final IObservableList fieldsList,
+    public FieldTypeEditingSupport(final ColumnViewer viewer, final BusinessObjectModel bom,
+            final IObservableList fieldsList,
             final IObservableValue selectedFieldObservableValue) {
         super(viewer);
         this.bom = bom;
@@ -62,7 +63,8 @@ public class FieldTypeEditingSupport extends EditingSupport {
 
     @Override
     protected CellEditor getCellEditor(final Object element) {
-        final ComboBoxViewerCellEditor cellEditor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(), SWT.READ_ONLY);
+        final ComboBoxViewerCellEditor cellEditor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(),
+                SWT.READ_ONLY);
         cellEditor.setContentProvider(ArrayContentProvider.getInstance());
         final FieldTypeLabelProvider labelProvider = new FieldTypeLabelProvider();
         cellEditor.setLabelProvider(labelProvider);
@@ -79,8 +81,9 @@ public class FieldTypeEditingSupport extends EditingSupport {
                 return labelProvider.getText(o1).compareTo(labelProvider.getText(o2));
             }
 
-        }).immutableSortedCopy(newArrayList(FieldType.STRING, FieldType.TEXT, FieldType.BOOLEAN, FieldType.INTEGER, FieldType.LONG,
-                FieldType.FLOAT, FieldType.DOUBLE, FieldType.DATE));
+        }).immutableSortedCopy(
+                newArrayList(FieldType.STRING, FieldType.TEXT, FieldType.BOOLEAN, FieldType.INTEGER, FieldType.LONG,
+                        FieldType.FLOAT, FieldType.DOUBLE, FieldType.DATE));
 
         result.addAll(sortedFieldTypes);
         result.addAll(bom.getBusinessObjects());
@@ -120,7 +123,13 @@ public class FieldTypeEditingSupport extends EditingSupport {
                 updateToSimpleField((RelationField) element, (FieldType) value);
             }
         }
-        getViewer().refresh();
+        getViewer().getControl().getDisplay().asyncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                getViewer().update(element, null);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")

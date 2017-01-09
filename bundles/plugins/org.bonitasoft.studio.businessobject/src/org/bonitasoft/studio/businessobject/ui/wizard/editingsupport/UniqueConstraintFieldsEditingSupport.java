@@ -59,7 +59,8 @@ public class UniqueConstraintFieldsEditingSupport extends EditingSupport {
 
             @Override
             protected Object openDialogBox(Control cellEditorWindow) {
-                ElementCheckboxSelectionDialog dialog = new ElementCheckboxSelectionDialog(cellEditorWindow.getShell(), new FieldLabelProvider());
+                ElementCheckboxSelectionDialog dialog = new ElementCheckboxSelectionDialog(cellEditorWindow.getShell(),
+                        new FieldLabelProvider());
                 BusinessObject businessObject = (BusinessObject) viewerObservableValue.getValue();
                 List<Field> fields = businessObject.getFields();
                 if (fields == null) {
@@ -121,7 +122,7 @@ public class UniqueConstraintFieldsEditingSupport extends EditingSupport {
      * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object, java.lang.Object)
      */
     @Override
-    protected void setValue(Object element, Object value) {
+    protected void setValue(final Object element, Object value) {
         if (value == null) {
             return;
         }
@@ -143,7 +144,13 @@ public class UniqueConstraintFieldsEditingSupport extends EditingSupport {
             }
         }
         ((UniqueConstraint) element).setFieldNames(fieldNames);
-        getViewer().update(element, null);
+        getViewer().getControl().getDisplay().asyncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                getViewer().update(element, null);
+            }
+        });
 
     }
 
