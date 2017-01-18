@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.ui.databinding;
 
-import java.util.Objects;
-
 import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.observable.DisposeEvent;
 import org.eclipse.core.databinding.observable.IDisposeListener;
@@ -63,7 +61,7 @@ public abstract class ControlMessageSupport {
     protected boolean statusHasChanged(ValueChangeEvent event) {
         final IStatus newStatus = (IStatus) event.diff.getNewValue();
         final IStatus oldStatus = (IStatus) event.diff.getOldValue();
-        return !Objects.equals(oldStatus, newStatus);
+        return oldStatus != newStatus;
     }
 
     protected abstract void statusChanged(IStatus status);

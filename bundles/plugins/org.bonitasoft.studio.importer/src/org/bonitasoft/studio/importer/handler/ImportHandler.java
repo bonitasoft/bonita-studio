@@ -70,21 +70,25 @@ public class ImportHandler extends AbstractHandler {
 
     public void execute() {
         final ImportFileWizard importFileWizard = createImportWizard();
-        if (new CustomWizardDialog(Display.getDefault().getActiveShell(), importFileWizard, Messages.importButtonLabel).open() == Dialog.OK) {     
+        if (new CustomWizardDialog(Display.getDefault().getActiveShell(), importFileWizard, Messages.importButtonLabel)
+                .open() == Dialog.OK) {
             final File selectedFile = new File(importFileWizard.getSelectedFilePath());
-            final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(Display.getDefault().getActiveShell());
+            final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(
+                    Display.getDefault().getActiveShell());
             final ImportFileOperation operation = createImportFileOperation(importFileWizard, selectedFile, progressManager);
             try {
                 progressManager.run(true, false, operation);
             } catch (final InvocationTargetException | InterruptedException e) {
-                final Throwable t = e instanceof InvocationTargetException ? ((InvocationTargetException) e).getTargetException() : e;
+                final Throwable t = e instanceof InvocationTargetException
+                        ? ((InvocationTargetException) e).getTargetException() : e;
                 BonitaStudioLog.error("Import has failed for file " + selectedFile.getName(), ImporterPlugin.PLUGIN_ID);
                 BonitaStudioLog.error(e, ImporterPlugin.PLUGIN_ID);
                 String message = Messages.errorWhileImporting_message;
                 if (t != null && !isNullOrEmpty(t.getMessage())) {
                     message = t.getMessage();
                 }
-                new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title, message, e).open();
+                new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title, message, e)
+                        .open();
             }
             for (final DiagramFileStore fileStore : operation.getFileStoresToOpen()) {
                 fileStore.open();
@@ -102,4 +106,5 @@ public class ImportHandler extends AbstractHandler {
     protected ImportFileWizard createImportWizard() {
         return new ImportFileWizard();
     }
+
 }

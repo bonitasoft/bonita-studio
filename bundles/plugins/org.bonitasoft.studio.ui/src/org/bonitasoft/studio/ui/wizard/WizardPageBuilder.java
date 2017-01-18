@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.ui.wizard;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.bonitasoft.studio.ui.databinding.NoMessageWizardPageSupport;
@@ -31,7 +32,7 @@ public class WizardPageBuilder {
     private String title;
     private String description;
     private ControlSupplier controlSupplier;
-    private Supplier<DataBindingContext> contextSupplier;
+    private Optional<DataBindingContext> context = Optional.empty();
     private boolean disposeContext = true;
 
     private WizardPageBuilder() {
@@ -43,8 +44,8 @@ public class WizardPageBuilder {
      * 
      * @see {@link org.bonitasoft.studio.ui.wizard.WizardPageBuilder#keepDatabindingContextAlive() keepDatabindingContextAlive}
      */
-    public WizardPageBuilder withDatabindingContext(Supplier<DataBindingContext> databindingContextSupplier) {
-        this.contextSupplier = databindingContextSupplier;
+    public WizardPageBuilder withDatabindingContext(DataBindingContext context) {
+        this.context = Optional.ofNullable(context);
         return this;
     }
 
@@ -90,7 +91,7 @@ public class WizardPageBuilder {
 
             @Override
             public void createControl(Composite parent) {
-                ctx = contextSupplier.get();
+                ctx = context.orElse(new DataBindingContext());
                 NoMessageWizardPageSupport.create(this, ctx);
                 setControl(controlSupplier.createControl(parent, ctx));
             }

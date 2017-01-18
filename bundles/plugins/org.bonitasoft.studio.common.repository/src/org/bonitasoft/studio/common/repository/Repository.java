@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.common.repository;
 
-import static com.google.common.collect.Iterables.tryFind;
 import static org.eclipse.core.runtime.Path.fromOSString;
 
 import java.io.File;
@@ -88,9 +87,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.xml.sax.InputSource;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-
 /**
  * @author Romain Bioteau
  */
@@ -159,16 +155,20 @@ public class Repository implements IRepository, IJavaContainer {
             }
             if (BonitaStudioLog.isLoggable(IStatus.OK)) {
                 final long duration = System.currentTimeMillis() - init;
-                BonitaStudioLog.debug("Repository " + project.getName() + " created in " + DateUtil.getDisplayDuration(duration),
+                BonitaStudioLog.debug(
+                        "Repository " + project.getName() + " created in " + DateUtil.getDisplayDuration(duration),
                         CommonRepositoryPlugin.PLUGIN_ID);
             }
         }
         return this;
     }
 
-    protected CreateBonitaBPMProjectOperation newProjectWorkspaceOperation(final String projectName, final IWorkspace workspace) {
-        return new CreateBonitaBPMProjectOperation(workspace, projectName).addNature("org.eclipse.xtext.ui.shared.xtextNature")
-                .addNature("org.bonitasoft.studio.common.repository.bonitaNature").addNature(JavaCore.NATURE_ID).addNature("org.eclipse.pde.PluginNature")
+    protected CreateBonitaBPMProjectOperation newProjectWorkspaceOperation(final String projectName,
+            final IWorkspace workspace) {
+        return new CreateBonitaBPMProjectOperation(workspace, projectName)
+                .addNature("org.eclipse.xtext.ui.shared.xtextNature")
+                .addNature("org.bonitasoft.studio.common.repository.bonitaNature").addNature(JavaCore.NATURE_ID)
+                .addNature("org.eclipse.pde.PluginNature")
                 .addNature("org.eclipse.jdt.groovy.core.groovyNature").addBuilder("org.eclipse.jdt.core.javabuilder")
                 .addBuilder("org.eclipse.xtext.ui.shared.xtextBuilder").addBuilder("org.eclipse.pde.ManifestBuilder")
                 .addBuilder("org.eclipse.pde.SchemaBuilder");
@@ -237,7 +237,6 @@ public class Repository implements IRepository, IJavaContainer {
         return this;
     }
 
-
     protected void updateStudioShellText() {
         Display.getDefault().asyncExec(new Runnable() {
 
@@ -297,11 +296,13 @@ public class Repository implements IRepository, IJavaContainer {
                 }
 
             });
-            final IConfigurationElement[] repositoryStoreConfigurationElements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                    REPOSITORY_STORE_EXTENSION_POINT_ID);
+            final IConfigurationElement[] repositoryStoreConfigurationElements = BonitaStudioExtensionRegistryManager
+                    .getInstance().getConfigurationElements(
+                            REPOSITORY_STORE_EXTENSION_POINT_ID);
             for (final IConfigurationElement configuration : repositoryStoreConfigurationElements) {
                 try {
-                    final IRepositoryStore<? extends IRepositoryFileStore> store = createRepositoryStore(configuration, monitor);
+                    final IRepositoryStore<? extends IRepositoryFileStore> store = createRepositoryStore(configuration,
+                            monitor);
                     if (migrationEnabled()) {
                         try {
                             store.migrate(monitor);
@@ -333,7 +334,8 @@ public class Repository implements IRepository, IJavaContainer {
             monitor.worked(1);
             return store;
         } catch (final ClassNotFoundException e) {
-            throw new CoreException(new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, "Failed to instantiate Repository store", e));
+            throw new CoreException(new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID,
+                    "Failed to instantiate Repository store", e));
         }
     }
 
@@ -349,7 +351,8 @@ public class Repository implements IRepository, IJavaContainer {
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
             }
-            RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE, enableAutobuild);
+            RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE,
+                    enableAutobuild);
         }
     }
 
@@ -522,7 +525,8 @@ public class Repository implements IRepository, IJavaContainer {
         if (!status.isOK()) {
             logErrorStatus(status);
         } else {
-            BonitaStudioLog.info(String.format("%s archive exported successfully.", fileName), CommonRepositoryPlugin.PLUGIN_ID);
+            BonitaStudioLog.info(String.format("%s archive exported successfully.", fileName),
+                    CommonRepositoryPlugin.PLUGIN_ID);
         }
     }
 
@@ -534,7 +538,8 @@ public class Repository implements IRepository, IJavaContainer {
             }
 
         }
-        BonitaStudioLog.error("Export to archive failed.\n" + status.getMessage() + "\n" + sb.toString(), CommonRepositoryPlugin.PLUGIN_ID);
+        BonitaStudioLog.error("Export to archive failed.\n" + status.getMessage() + "\n" + sb.toString(),
+                CommonRepositoryPlugin.PLUGIN_ID);
     }
 
     @Override
@@ -623,7 +628,8 @@ public class Repository implements IRepository, IJavaContainer {
             BonitaStudioLog.error(e);
         }
 
-        return new NonLockingJarFileClassLoader(getName() + "_URLClassLoader", jars.toArray(new URL[jars.size()]), BusinessArchive.class.getClassLoader());
+        return new NonLockingJarFileClassLoader(getName() + "_URLClassLoader", jars.toArray(new URL[jars.size()]),
+                BusinessArchive.class.getClassLoader());
     }
 
     @Override
@@ -655,10 +661,11 @@ public class Repository implements IRepository, IJavaContainer {
             if (iPath.segmentCount() > 1) {
                 final String storeName = iPath.segments()[0];
                 final IFile file = getProject().getFile(iPath);
-                final IRepositoryStore<? extends IRepositoryFileStore> repositoryStore = getRepositoryStoreByName(storeName);
-                if (belongToRepositoryStore(repositoryStore, file)) {
-                    return repositoryStore.createRepositoryFileStore(file.getName());
-                }
+                return getRepositoryStoreByName(storeName)
+                        .filter(repositoryStore -> belongToRepositoryStore(repositoryStore, file))
+                        .map(repositoryStore -> repositoryStore
+                                .createRepositoryFileStore(file.getName()))
+                        .orElse(null);
             }
         }
         return null;
@@ -669,23 +676,9 @@ public class Repository implements IRepository, IJavaContainer {
     }
 
     @Override
-    public IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStoreByName(final String storeName) throws CoreException {
-        final Optional<IRepositoryStore<? extends IRepositoryFileStore>> foundStore = tryFind(getAllStores(), storeWithName(storeName));
-        if (!foundStore.isPresent()) {
-            throw new CoreException(new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, String.format("No repository store found with name: %s",
-                    storeName)));
-        }
-        return foundStore.get();
-    }
-
-    private Predicate<? super IRepositoryStore<? extends IRepositoryFileStore>> storeWithName(final String storeName) {
-        return new Predicate<IRepositoryStore<? extends IRepositoryFileStore>>() {
-
-            @Override
-            public boolean apply(final IRepositoryStore<? extends IRepositoryFileStore> store) {
-                return store.getName().equals(storeName);
-            }
-        };
+    public java.util.Optional<IRepositoryStore<? extends IRepositoryFileStore>> getRepositoryStoreByName(
+            final String storeName) {
+        return getAllStores().stream().filter(store -> Objects.equals(store.getName(), storeName)).findFirst();
     }
 
     private boolean belongToRepositoryStore(final IRepositoryStore<?> store, final IFile file) {
@@ -711,7 +704,8 @@ public class Repository implements IRepository, IJavaContainer {
 
     protected BonitaBPMProjectMigrationOperation newProjectMigrationOperation(final IProject project) {
         return new BonitaBPMProjectMigrationOperation(project, this).addNature("org.eclipse.xtext.ui.shared.xtextNature")
-                .addNature("org.bonitasoft.studio.common.repository.bonitaNature").addNature(JavaCore.NATURE_ID).addNature("org.eclipse.pde.PluginNature")
+                .addNature("org.bonitasoft.studio.common.repository.bonitaNature").addNature(JavaCore.NATURE_ID)
+                .addNature("org.eclipse.pde.PluginNature")
                 .addNature("org.eclipse.jdt.groovy.core.groovyNature").addBuilder("org.eclipse.jdt.core.javabuilder")
                 .addBuilder("org.eclipse.xtext.ui.shared.xtextBuilder").addBuilder("org.eclipse.pde.ManifestBuilder")
                 .addBuilder("org.eclipse.pde.SchemaBuilder");

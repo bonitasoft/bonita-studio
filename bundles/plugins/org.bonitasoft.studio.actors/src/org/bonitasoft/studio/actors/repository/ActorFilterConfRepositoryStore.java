@@ -121,7 +121,8 @@ public class ActorFilterConfRepositoryStore extends AbstractEMFRepositoryStore<D
         return result;
     }
 
-    public List<ConnectorConfiguration> getFilterConfigurationsFor(final String defintionId, final String definitionVersion) {
+    public List<ConnectorConfiguration> getFilterConfigurationsFor(final String defintionId,
+            final String definitionVersion) {
         final List<ConnectorConfiguration> result = new ArrayList<ConnectorConfiguration>();
         for (final ConnectorConfiguration child : getFilterConfigurations()) {
             if (child.getDefinitionId().equals(defintionId) && child.getVersion().equals(definitionVersion)) {
@@ -167,7 +168,8 @@ public class ActorFilterConfRepositoryStore extends AbstractEMFRepositoryStore<D
     }
 
     @Override
-    protected InputStream handlePreImport(final String fileName, final InputStream inputStream) throws MigrationException, IOException {
+    protected InputStream handlePreImport(final String fileName, final InputStream inputStream)
+            throws MigrationException, IOException {
         CopyInputStream copyIs = null;
         try {
             final InputStream is = super.handlePreImport(fileName, inputStream);
@@ -224,5 +226,4 @@ public class ActorFilterConfRepositoryStore extends AbstractEMFRepositoryStore<D
     protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
         adapterFactory.addAdapterFactory(new ConnectorConfigurationAdapterFactory());
     }
-
 }

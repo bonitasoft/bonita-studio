@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -36,6 +37,11 @@ public interface IRepositoryStore<T extends IRepositoryFileStore> extends IDispl
     T importInputStream(String fileName, InputStream inputStream);
 
     T importIResource(String fileName, IResource resource);
+
+    T importArchiveData(ImportArchiveData importArchiveData, IProgressMonitor monitor) throws CoreException;
+
+    T importArchiveData(String folderName, List<ImportArchiveData> importArchiveData, IProgressMonitor monitor)
+            throws CoreException;
 
     String getName();
 

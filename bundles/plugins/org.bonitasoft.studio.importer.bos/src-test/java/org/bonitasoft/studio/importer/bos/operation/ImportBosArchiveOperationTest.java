@@ -1,23 +1,21 @@
 package org.bonitasoft.studio.importer.bos.operation;
 
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.Map;
-import java.util.Properties;
 
 import org.bonitasoft.studio.common.repository.Repository;
-import org.eclipse.core.resources.IContainer;
+import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -33,22 +31,17 @@ public class ImportBosArchiveOperationTest {
     private File archiveFile;
 
     @Mock
-    private IContainer container;
-    @Mock
     private IProgressMonitor monitor;
+    @Mock
+    private ParseBosArchiveOperation parseOpeation;
 
     @Before
     public void setUp() throws Exception {
         archiveFile = new File(ImportBosArchiveOperationTest.class.getResource("/customer_support_2.0.bos").getFile());
-        doNothing().when(operationUnserTest).cleanTmpProject();
+        when(parseOpeation.getImportArchiveModel()).thenReturn(mock(ImportArchiveModel.class));
+        doReturn(parseOpeation).when(operationUnserTest).newParseBosOperation(Matchers.any(File.class),
+                Matchers.any(Repository.class));
         doReturn(Collections.emptyList()).when(operationUnserTest).getValidators();
-        doReturn(container).when(operationUnserTest).createTempProject(archiveFile, monitor);
-        doReturn(container).when(operationUnserTest).getRootContainer(Mockito.any(IContainer.class), Mockito.any(Map.class));
-        doReturn(new Properties()).when(operationUnserTest).getManifestInfo(container);
-    }
-
-    @After
-    public void tearDown() throws Exception {
     }
 
     @Test

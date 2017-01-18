@@ -86,7 +86,8 @@ public class BosArchiveProcessor extends ToProcProcessor {
 
     @Override
     public ImportStatusDialogHandler getImportStatusDialogHandler(final IStatus status) {
-        return new BosImportStatusDialogHandler(status, RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class));
+        return new BosImportStatusDialogHandler(status,
+                RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class));
     }
 
 }

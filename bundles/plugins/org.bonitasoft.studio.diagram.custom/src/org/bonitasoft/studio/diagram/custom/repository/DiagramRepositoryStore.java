@@ -45,6 +45,7 @@ import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
+import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
@@ -61,6 +62,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -85,14 +87,14 @@ public class DiagramRepositoryStore extends
         AbstractEMFRepositoryStore<DiagramFileStore> {
 
     private static final String STORE_NAME = "diagrams";
-    private static final Set<String> extensions = new HashSet<String>();
+    private static final Set<String> extensions = new HashSet<>();
     static {
         extensions.add("proc");
     }
 
     private AdapterFactoryLabelProvider labelProvider;
 
-    private final Map<String, String> eObjectIdToLabel = new HashMap<String, String>();
+    private final Map<String, String> eObjectIdToLabel = new HashMap<>();
 
     /*
      * (non-Javadoc)
@@ -127,7 +129,7 @@ public class DiagramRepositoryStore extends
     }
 
     public List<AbstractProcess> getAllProcesses() {
-        final List<AbstractProcess> processes = new ArrayList<AbstractProcess>();
+        final List<AbstractProcess> processes = new ArrayList<>();
         for (final IRepositoryFileStore file : getChildren()) {
             processes.addAll(((DiagramFileStore) file).getProcesses());
         }
@@ -146,7 +148,7 @@ public class DiagramRepositoryStore extends
     }
 
     public List<AbstractProcess> findProcesses(final String processName) {
-        final List<AbstractProcess> result = new ArrayList<AbstractProcess>();
+        final List<AbstractProcess> result = new ArrayList<>();
         for (final AbstractProcess proc : getAllProcesses()) {
             if (proc.getName().equals(processName)) {
                 result.add(proc);
@@ -184,8 +186,8 @@ public class DiagramRepositoryStore extends
     public List<DiagramFileStore> getRecentChildren(final int nbResult) {
         refresh();
 
-        final List<DiagramFileStore> result = new ArrayList<DiagramFileStore>();
-        final List<IResource> resources = new ArrayList<IResource>();
+        final List<DiagramFileStore> result = new ArrayList<>();
+        final List<IResource> resources = new ArrayList<>();
         final IFolder folder = getResource();
         try {
             for (final IResource r : folder.members()) {
@@ -264,6 +266,27 @@ public class DiagramRepositoryStore extends
         return fileStore;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore#doImportArchiveData(org.bonitasoft.studio.common.repository.ImportArchiveData,
+     * org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+    protected DiagramFileStore doImportArchiveData(ImportArchiveData importArchiveData, IProgressMonitor monitor)
+            throws CoreException {
+        final DiagramFileStore diagramfileStore = super.doImportArchiveData(importArchiveData, monitor);
+        if (diagramfileStore == null) {
+            return null;
+        }
+        final MainProcess content = diagramfileStore.getContent();
+        if (content == null) {
+            diagramfileStore.delete();
+            return null;
+        }
+
+        return diagramfileStore;
+    }
+
     @Override
     protected DiagramFileStore doImportInputStream(final String fileName,
             final InputStream inputStream) {
@@ -285,9 +308,9 @@ public class DiagramRepositoryStore extends
             FileUtil.copy(is, fos);
             final Map<String, String[]> featureValueFromEObjectType = new EMFResourceUtil(
                     tmpFile).getFeatureValueFromEObjectType(
-                    "process:MainProcess",
-                    ProcessPackage.Literals.ELEMENT__NAME,
-                    ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
+                            "process:MainProcess",
+                            ProcessPackage.Literals.ELEMENT__NAME,
+                            ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
             if (featureValueFromEObjectType.size() == 1) {
                 final String[] next = featureValueFromEObjectType.values()
                         .iterator().next();
@@ -318,7 +341,7 @@ public class DiagramRepositoryStore extends
     }
 
     public Set<String> getAllProcessIds() {
-        final Set<String> resut = new HashSet<String>();
+        final Set<String> resut = new HashSet<>();
         for (final DiagramFileStore fStore : getChildren()) {
             final EMFResourceUtil emfResourceUtil = new EMFResourceUtil(fStore
                     .getResource().getLocation().toFile());
@@ -487,9 +510,9 @@ public class DiagramRepositoryStore extends
     private String getModelVersion(final Resource resource) {
         final Map<String, String[]> featureValueFromEObjectType = new EMFResourceUtil(
                 new File(resource.getURI().toFileString()))
-                .getFeatureValueFromEObjectType(
-                        "process:MainProcess",
-                        ProcessPackage.Literals.MAIN_PROCESS__BONITA_MODEL_VERSION);
+                        .getFeatureValueFromEObjectType(
+                                "process:MainProcess",
+                                ProcessPackage.Literals.MAIN_PROCESS__BONITA_MODEL_VERSION);
         String modelVersion = null;
         for (final Entry<String, String[]> e : featureValueFromEObjectType
                 .entrySet()) {

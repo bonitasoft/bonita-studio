@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository.model;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
@@ -50,7 +51,7 @@ public interface IRepository extends IFileStoreChangeListener {
 
     <T> T getRepositoryStore(final Class<T> repositoryStoreClass);
 
-    IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStoreByName(String storeName) throws CoreException;
+    Optional<IRepositoryStore<? extends IRepositoryFileStore>> getRepositoryStoreByName(String storeName);
 
     List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores();
 
