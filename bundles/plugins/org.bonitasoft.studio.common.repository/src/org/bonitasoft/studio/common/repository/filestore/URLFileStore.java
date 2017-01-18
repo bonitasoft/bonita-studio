@@ -228,12 +228,4 @@ public class URLFileStore implements IRepositoryFileStore {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#openUI()
-     */
-    @Override
-    public IWorkbenchPart openUI() {
-        return null;
-    }
 }

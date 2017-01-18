@@ -21,14 +21,11 @@ import org.eclipse.core.runtime.IStatus;
 
 public class RegExpValidator extends StringValidator {
 
-    public static class Builder {
+    public static class Builder implements ValidatorBuilder<RegExpValidator> {
 
         private String message;
         private int severity = IStatus.ERROR;
         private String regExp;
-
-        public Builder() {
-        }
 
         public Builder withMessage(String message) {
             this.message = message;
@@ -55,6 +52,7 @@ public class RegExpValidator extends StringValidator {
             return this;
         }
 
+        @Override
         public RegExpValidator create() {
             return new RegExpValidator(regExp, message, severity);
         }

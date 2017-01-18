@@ -29,5 +29,53 @@
          </menu>
       </menuContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.bonitasoft.studio.la.ui.editor.ApplicationEditor"
+            contributorClass="org.bonitasoft.studio.la.ui.editor.ApplicationEditorActionBarContributor"
+            default="true"
+            extensions="xml"
+            icon="icons/applicationStore.gif"
+            id="org.bonitasoft.studio.la.editor"
+            name="%ApplicationEditor">
+         <contentTypeBinding
+               contentTypeId="org.bonitasoft.studio.la.applicationDescriptor">
+         </contentTypeBinding>
+      </editor>
+   </extension>
+   <extension
+         id=""
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            default-charset="UTF-8"
+            file-extensions="xml"
+            id="org.bonitasoft.studio.la.applicationDescriptor"
+            name="Application Descriptor"
+            priority="high">
+         <describer
+               class="org.bonitasoft.studio.la.ui.editor.ApplicationContentDescriber">
+         </describer>
+      </content-type>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.bonitasoft.studio.la.ui.ApplicationPerspectiveFactory"
+            id="org.bonitasoft.studio.la.perspective"
+            name="%ApplicationPerspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.wst.xml.core.catalogContributions">
+      <catalogContribution
+            id="application-xsd">
+         <public
+               publicId="http://documentation.bonitasoft.com/application-xml-schema/1.0"
+               uri="schema/application.xsd">
+         </public>
+      </catalogContribution>
+   </extension>
 
 </plugin>

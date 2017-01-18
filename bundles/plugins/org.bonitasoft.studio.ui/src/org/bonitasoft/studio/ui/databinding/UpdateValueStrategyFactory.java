@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.ui.databinding;
 
+import org.bonitasoft.studio.ui.validator.ValidatorBuilder;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -28,6 +29,10 @@ public class UpdateValueStrategyFactory {
 
     public UpdateValueStrategyFactory withValidator(final IValidator validator) {
         return withValidator(validator, ValidatorEvent.AFTER_GET);
+    }
+
+    public UpdateValueStrategyFactory withValidator(final ValidatorBuilder<?> validator) {
+        return withValidator(validator.create(), ValidatorEvent.AFTER_GET);
     }
 
     public UpdateValueStrategyFactory withValidator(final IValidator validator, final ValidatorEvent event) {

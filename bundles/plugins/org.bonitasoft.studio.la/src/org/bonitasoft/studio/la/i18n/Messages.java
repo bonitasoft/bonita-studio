@@ -20,6 +20,17 @@ public class Messages extends NLS {
 
     public static String applicationStoreName;
     public static String createNewApplication;
+    public static String create;
+    public static String newApplicationTitle;
+    public static String newApplicationDescription;
+    public static String applicationToken;
+    public static String applicationTokenMessage;
+    public static String version;
+    public static String displayName;
+    public static String displayNameMessage;
+    public static String required;
+    public static String tokenValidatorMessage;
+    public static String source;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
