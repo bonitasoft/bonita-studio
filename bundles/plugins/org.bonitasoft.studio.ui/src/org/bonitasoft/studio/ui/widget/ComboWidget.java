@@ -30,9 +30,6 @@ public class ComboWidget extends EditableControlWidget {
 
         private String[] items;
 
-        public Builder() {
-        }
-
         public Builder withItems(String... items) {
             this.items = items;
             return this;
@@ -40,14 +37,14 @@ public class ComboWidget extends EditableControlWidget {
 
         @Override
         public ComboWidget createIn(Composite container) {
-            final ComboWidget control = new ComboWidget(container, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
+            final ComboWidget control = new ComboWidget(container, labelAbove, horizontalLabelAlignment,
+                    verticalLabelAlignment, labelWidth, readOnly, label,
                     message);
-            if (layoutData != null) {
-                control.setLayoutData(layoutData);
-            }
+            control.setLayoutData(layoutData != null ? layoutData : gridData);
             control.setItems(items);
             if (ctx != null && modelObservable != null) {
-                control.bindControl(ctx, control.observeComboText(), modelObservable, targetToModelStrategy, modelToTargetStrategy);
+                control.bindControl(ctx, control.observeComboText(), modelObservable, targetToModelStrategy,
+                        modelToTargetStrategy);
             }
             return control;
         }
@@ -55,7 +52,8 @@ public class ComboWidget extends EditableControlWidget {
 
     private CCombo combo;
 
-    protected ComboWidget(Composite container, boolean topLabel, int horizontalLabelAlignment, int verticalLabelAlignment, int labelWidth, boolean readOnly,
+    protected ComboWidget(Composite container, boolean topLabel, int horizontalLabelAlignment, int verticalLabelAlignment,
+            int labelWidth, boolean readOnly,
             String label, String message) {
         super(container, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label, message);
     }
@@ -70,7 +68,8 @@ public class ComboWidget extends EditableControlWidget {
         container.setLayout(GridLayoutFactory.fillDefaults().margins(1, 3).create());
         container.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         container.setBackground(
-                readOnly ? Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND) : Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+                readOnly ? Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND)
+                        : Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         container.addListener(SWT.Paint, e -> drawBorder(container, e));
 
         int textStyle = 0;

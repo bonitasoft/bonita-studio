@@ -186,6 +186,11 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
         return (T) this;
     }
 
+    public T minimumWidth(int minimumWidth) {
+        this.gridData.minimumWidth = minimumWidth;
+        return (T) this;
+    }
+
     /**
      * Configure the {@link GridData} verticalIndent.
      * 

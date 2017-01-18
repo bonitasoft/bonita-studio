@@ -38,7 +38,8 @@ public class TestBOSArchiveImport {
     @Test
     public void testImportBOSArchiveLight() throws Exception {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
-        final File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("MyDiagram_1_0.bos")).getFile());
+        final File file = new File(
+                FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("MyDiagram_1_0.bos")).getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.run(new NullProgressMonitor());
@@ -48,7 +49,8 @@ public class TestBOSArchiveImport {
     @Test
     public void testImportBOSArchiveFull() throws Exception {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
-        final File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("testRepo_100912_1757.bos")).getFile());
+        final File file = new File(
+                FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("testRepo_100912_1757.bos")).getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.run(new NullProgressMonitor());
@@ -58,7 +60,8 @@ public class TestBOSArchiveImport {
     @Test
     public void testImportSeveralDiagrams() throws IOException, InvocationTargetException, InterruptedException {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
-        final File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("severalDiagramsImportTest.bos")).getFile());
+        final File file = new File(
+                FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("severalDiagramsImportTest.bos")).getFile());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.run(new NullProgressMonitor());
@@ -76,14 +79,17 @@ public class TestBOSArchiveImport {
     @Test
     public void testImportBOSArchiveDemoProcess() throws Exception {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
-        final File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("FillDBForDemo_1_0.bos")).getFile());
+        final File file = new File(
+                FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("FillDBForDemo_1_0.bos")).getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.run(new NullProgressMonitor());
         assertThat(operation.getStatus()).isNotNull();
 
-        final boolean javaFileExists = ResourcesPlugin.getWorkspace().getRoot().getProject(CommonRepositoryPlugin.getCurrentRepository())
-                .getFolder("src-connectors").getFolder("org").getFolder("bonitasoft").getFolder("connector").getFolder("demo").getFile("FillDBImpl.java")
+        final boolean javaFileExists = ResourcesPlugin.getWorkspace().getRoot()
+                .getProject(CommonRepositoryPlugin.getCurrentRepository())
+                .getFolder("src-connectors").getFolder("org").getFolder("bonitasoft").getFolder("connector")
+                .getFolder("demo").getFile("FillDBImpl.java")
                 .exists();
         assertThat(javaFileExists).isTrue();
 

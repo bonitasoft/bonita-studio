@@ -23,17 +23,6 @@
       </importFactory>
    </extension>
    <extension
-         point="org.bonitasoft.studio.importer.import">
-      <importFactory
-            description="%import_BPM2_desc"
-            filterExtensions="*.bpmn,*.xml"
-            importerFactoryClass="org.bonitasoft.studio.importer.bpmn.BPMNToProcFactory"
-            inputName="BPMN 2.0"
-            menuIcon="icon/bpmn-desc.png"
-            priorityDisplay="3">
-      </importFactory>
-   </extension>
-   <extension
          point="org.eclipse.ui.commands">
       <command
             id="org.bonitasoft.studio.application.importCommand"

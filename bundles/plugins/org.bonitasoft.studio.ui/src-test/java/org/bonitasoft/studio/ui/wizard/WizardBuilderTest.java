@@ -80,7 +80,7 @@ public class WizardBuilderTest {
                 .havingPage(newPage()
                         .withTitle("Page1")
                         .withDescription("Desc1")
-                        .withDatabindingContext(() -> new DataBindingContext())
+                        .withDatabindingContext(new DataBindingContext())
                         .withControl((parent, ctx) -> {
 
                             final Composite container = new Composite(parent, SWT.NONE);
@@ -88,18 +88,21 @@ public class WizardBuilderTest {
 
                             new TextWidget.Builder()
                                     .withLabel("Name")
-                                    .withLabelWidth(100)
                                     .withLayoutData(GridDataFactory.fillDefaults().grab(true, false).create())
+                                    .labelAbove()
+                                    .withButton("button")
+                                    .withMessage("Example: Jean, Marie ...")
                                     .bindTo(PojoObservables.observeValue(person, "name"))
                                     .inContext(ctx)
                                     .withTargetToModelStrategy(
-                                            updateValueStrategy().withValidator(new EmptyInputValidator.Builder().withMessage("Name is mandatory").create()))
+                                            updateValueStrategy().withValidator(new EmptyInputValidator.Builder()
+                                                    .withMessage("Name is mandatory").create()))
                                     .createIn(container);
 
                             new TextWidget.Builder()
                                     .withPlaceholder("Mr,Miss")
                                     .withLabel("Title")
-                                    .withLabelWidth(100)
+                                    .labelAbove()
                                     .withMessage("Example: Mr, Ms..")
                                     .fill()
                                     .grabHorizontalSpace()
@@ -108,7 +111,8 @@ public class WizardBuilderTest {
                                     .inContext(ctx)
                                     .withTargetToModelStrategy(
                                             updateValueStrategy()
-                                                    .withValidator(new EmptyInputValidator.Builder().withMessage("Title is mandatory").warningLevel().create()))
+                                                    .withValidator(new EmptyInputValidator.Builder()
+                                                            .withMessage("Title is mandatory").warningLevel().create()))
                                     .createIn(container);
 
                             new ComboWidget.Builder()
@@ -122,7 +126,8 @@ public class WizardBuilderTest {
                                     .bindTo(PojoObservables.observeValue(person, "manager"))
                                     .inContext(ctx)
                                     .withTargetToModelStrategy(updateValueStrategy().withValidator(value -> {
-                                        return value == null || ((String) value).isEmpty() ? ValidationStatus.warning("Manager is missing")
+                                        return value == null || ((String) value).isEmpty()
+                                                ? ValidationStatus.warning("Manager is missing")
                                                 : ValidationStatus.ok();
                                     }))
                                     .createIn(container);
@@ -137,7 +142,8 @@ public class WizardBuilderTest {
                             return container;
                         }))
                 .onFinish(() -> {
-                    return MessageDialog.openConfirm(Display.getDefault().getActiveShell(), String.format("Create %s ?", person.getName()),
+                    return MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
+                            String.format("Create %s ?", person.getName()),
                             "A new person will be added into the contact list.");
                 })/* .open(rule.getShell()) */;
 

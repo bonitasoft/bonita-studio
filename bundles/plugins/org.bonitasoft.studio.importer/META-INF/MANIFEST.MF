@@ -31,7 +31,8 @@ Require-Bundle: org.eclipse.ui,
  org.junit;resolution:=optional,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
  org.eclipse.jface.databinding,
- org.eclipse.core.databinding.beans
+ org.eclipse.core.databinding.beans,
+ org.bonitasoft.studio.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.importer,

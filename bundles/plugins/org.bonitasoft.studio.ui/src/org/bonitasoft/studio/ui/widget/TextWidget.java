@@ -14,57 +14,77 @@
  */
 package org.bonitasoft.studio.ui.widget;
 
+import java.util.Optional;
+
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
 public class TextWidget extends EditableControlWidget {
 
     public static class Builder extends EditableControlWidgetBuilder<Builder, TextWidget> {
 
-        private String placeholder;
-
-        public Builder() {
-        }
+        private Optional<String> placeholder = Optional.empty();
+        private Optional<String> labelButton = Optional.empty();
+        private Optional<Listener> buttonListner = Optional.empty();
 
         /**
          * Adds a placeholder to the resulting {@link Text}
          */
         public Builder withPlaceholder(String placeholder) {
-            this.placeholder = placeholder;
+            this.placeholder = Optional.ofNullable(placeholder);
+            return this;
+        }
+
+        /**
+         * Create a button after the Text, with a label
+         */
+        public Builder withButton(String labelButton) {
+            this.labelButton = Optional.ofNullable(labelButton);
+            return this;
+        }
+
+        /**
+         * add an onClick action to the button
+         */
+        public Builder onClickButton(Listener listener) {
+            this.buttonListner = Optional.ofNullable(listener);
             return this;
         }
 
         @Override
         public TextWidget createIn(Composite container) {
-            final TextWidget control = new TextWidget(container, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
-                    message);
-            if (layoutData != null) {
-                control.setLayoutData(layoutData);
-            } else {
-                control.setLayoutData(gridData);
-            }
-            if (placeholder != null) {
-                control.setPlaceholder(placeholder);
-            }
+            final TextWidget control = new TextWidget(container, labelAbove, horizontalLabelAlignment,
+                    verticalLabelAlignment, labelWidth, readOnly, label,
+                    message, labelButton);
+            control.setLayoutData(layoutData != null ? layoutData : gridData);
+            buttonListner.ifPresent(control::onCLickButton);
+            labelButton.ifPresent(control::setButtonLabel);
+            placeholder.ifPresent(control::setPlaceholder);
+
             if (ctx != null && modelObservable != null) {
-                control.bindControl(ctx, control.observeText(SWT.Modify), modelObservable, targetToModelStrategy, modelToTargetStrategy);
+                control.bindControl(ctx, control.observeText(SWT.Modify), modelObservable, targetToModelStrategy,
+                        modelToTargetStrategy);
             }
             return control;
         }
     }
 
     private Text text;
+    private Optional<Button> button;
 
-    protected TextWidget(Composite container, boolean topLabel, int horizontalLabelAlignment, int verticalLabelAlignment, int labelWidth, boolean readOnly,
-            String label, String message) {
-        super(container, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label, message);
+    protected TextWidget(Composite container, boolean topLabel, int horizontalLabelAlignment, int verticalLabelAlignment,
+            int labelWidth, boolean readOnly, String label, String message, Optional<String> labelButton) {
+        super(container, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label, message,
+                labelButton);
     }
 
     public ISWTObservableValue observeText(int event) {
@@ -75,28 +95,57 @@ public class TextWidget extends EditableControlWidget {
         text.setMessage(placeholder);
     }
 
+    public void setButtonLabel(String buttonLabel) {
+        if (buttonLabel != null) {
+            button.ifPresent(b -> b.setText(buttonLabel));
+        }
+    }
+
+    public void onCLickButton(Listener listener) {
+        if (listener != null) {
+            button.ifPresent(b -> b.addListener(SWT.Selection, listener));
+        }
+    }
+
+    public void focusButton() {
+        button.ifPresent(Button::setFocus);
+    }
+
+    public void focusText() {
+        this.text.setFocus();
+    }
+
     @Override
     protected Control createControl() {
         final Composite textContainer = new Composite(this, SWT.NONE);
         textContainer.setLayout(GridLayoutFactory.fillDefaults().margins(1, 3).create());
-        textContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        textContainer.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, true).span(labelAbove ? 2 : 1, 1).create());
         textContainer.setBackground(
-                readOnly ? Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND) : Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+                readOnly ? Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND)
+                        : Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         textContainer.addListener(SWT.Paint, e -> drawBorder(textContainer, e));
 
-        int textStyle = 0;
-        if (readOnly) {
-            textStyle = SWT.READ_ONLY;
-        }
+        final int textStyle = readOnly ? SWT.READ_ONLY : SWT.NONE;
 
         text = new Text(textContainer, SWT.SINGLE | textStyle);
-        text.setEditable(!readOnly);
-        text.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        text.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.CENTER).create());
+        text.setEnabled(!readOnly);
+
         text.setBackground(
-                readOnly ? Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND) : Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+                readOnly ? Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND)
+                        : Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         text.addListener(SWT.FocusIn, event -> redraw(textContainer));
         text.addListener(SWT.FocusOut, event -> redraw(textContainer));
+
+        button = buttonLabel.map(label -> new Button(this, SWT.None));
+        button.ifPresent(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BOTTOM)::applyTo);
+
         return textContainer;
+    }
+
+    public void setText(String text) {
+        this.text.setText(text);
     }
 
 }

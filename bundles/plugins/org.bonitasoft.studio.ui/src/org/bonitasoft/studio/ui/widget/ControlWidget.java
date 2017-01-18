@@ -34,39 +34,24 @@ public abstract class ControlWidget extends Composite {
 
     protected IStatus status = ValidationStatus.ok();
     protected String message;
-    protected boolean readOnly;
-    protected final Control control;
+    protected boolean readOnly = false;
+    protected boolean labelAbove = false;
+    protected Control control;
+    protected Optional<String> buttonLabel;
 
     protected ControlWidget(Composite parent,
-            boolean labelAbove,
-            int horizontalLabelAlignment,
-            int verticalLabelAlignment,
-            int labelHint,
-            String labelValue,
+            boolean labelAbove, int horizontalLabelAlignment, int verticalLabelAlignment, int labelHint, String labelValue,
             String message) {
         super(parent, SWT.NONE);
-        this.message = message;
-        setLayout(GridLayoutFactory.fillDefaults()
-                .numColumns(1)
-                .spacing(LayoutConstants.getSpacing().x, 1)
-                .create());
+        init(parent, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, labelValue, message);
+    }
 
-        final Optional<String> labelText = Optional.ofNullable(labelValue);
-        labelText.ifPresent(text -> {
-            label = new Label(this, SWT.NONE);
-            label.setLayoutData(GridDataFactory.swtDefaults().align(labelAbove ? SWT.LEFT : horizontalLabelAlignment, verticalLabelAlignment).create());
-            label.setText(text);
-            setLayout(GridLayoutFactory.fillDefaults()
-                    .numColumns(labelAbove ? 1 : 2)
-                    .spacing(LayoutConstants.getSpacing().x, 1)
-                    .create());
-        });
-
-        control = createControl();
-
-        labelText.ifPresent(text -> { //Create a filler label
-            new Label(this, SWT.NONE).setLayoutData(GridDataFactory.swtDefaults().hint(labelHint, SWT.DEFAULT).exclude(labelAbove).create());
-        });
+    protected ControlWidget(Composite parent, boolean labelAbove, int horizontalLabelAlignment, int verticalLabelAlignment,
+            int labelHint, boolean readOnly, String labelValue, String message, Optional<String> buttonLabel) {
+        super(parent, SWT.NONE);
+        this.buttonLabel = buttonLabel;
+        this.readOnly = readOnly;
+        init(parent, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, labelValue, message);
     }
 
     protected ControlWidget(Composite parent) {
@@ -76,6 +61,35 @@ public abstract class ControlWidget extends Composite {
                 .spacing(LayoutConstants.getSpacing().x, 1)
                 .create());
         control = createControl();
+    }
+
+    private void init(Composite parent, boolean labelAbove, int horizontalLabelAlignment,
+            int verticalLabelAlignment,
+            int labelHint,
+            String labelValue,
+            String message) {
+        this.message = message;
+        this.labelAbove = labelAbove;
+        setLayout(GridLayoutFactory.fillDefaults()
+                .numColumns(buttonLabel.isPresent() ? 3 : 2)
+                .spacing(LayoutConstants.getSpacing().x, 1)
+                .create());
+
+        final Optional<String> labelText = Optional.ofNullable(labelValue);
+        labelText.ifPresent(text -> {
+            label = new Label(this, SWT.NONE);
+            label.setLayoutData(GridDataFactory.swtDefaults()
+                    .align(labelAbove ? SWT.LEFT : horizontalLabelAlignment, verticalLabelAlignment)
+                    .span(labelAbove ? 2 : 1, 1).create());
+            label.setText(text);
+        });
+
+        control = createControl();
+
+        labelText.ifPresent(text -> { //Create a filler label
+            final Label a = new Label(this, SWT.NONE);
+            a.setLayoutData(GridDataFactory.swtDefaults().hint(labelHint, SWT.DEFAULT).exclude(labelAbove).create());
+        });
     }
 
     protected abstract Control createControl();

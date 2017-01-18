@@ -3,9 +3,14 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Bar Import plugin
 Bundle-SymbolicName: org.bonitasoft.studio.importer.bos;singleton:=true
 Bundle-Version: 7.5.0.qualifier
-Bundle-Localization: plugin
 Bundle-Activator: org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin
 Bundle-Vendor: BonitaSoft S.A.
+Bundle-Localization: plugin
+Export-Package: org.bonitasoft.studio.importer.bos.factory,
+ org.bonitasoft.studio.importer.bos.model,
+ org.bonitasoft.studio.importer.bos.operation,
+ org.bonitasoft.studio.importer.bos.status,
+ org.bonitasoft.studio.importer.bos.validator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.bonitasoft.studio.importer;bundle-version="1.0.0",
@@ -24,11 +29,14 @@ Require-Bundle: org.eclipse.ui,
  assertj-core;bundle-version="1.5.0";resolution:=optional,
  org.eclipse.core.databinding;bundle-version="1.4.2",
  org.bonitasoft.studio.validation.common;bundle-version="7.1.0",
- org.eclipse.gmf.runtime.diagram.ui;bundle-version="1.8.0"
+ org.eclipse.gmf.runtime.diagram.ui;bundle-version="1.8.0",
+ org.bonitasoft.studio.ui,
+ org.bonitasoft.studio.tests-utils;resolution:=optional,
+ org.eclipse.e4.ui.model.workbench;bundle-version="1.1.0.v20140512-1820",
+ org.eclipse.e4.core.di
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Import-Package: org.bonitasoft.engine.bpm.bar
-Export-Package: org.bonitasoft.studio.importer.bos.factory,
- org.bonitasoft.studio.importer.bos.operation,
- org.bonitasoft.studio.importer.bos.status,
- org.bonitasoft.studio.importer.bos.validator
+Import-Package: org.bonitasoft.engine.bpm.bar,
+ org.bonitasoft.studio.ui.widget,
+ org.eclipse.core.databinding.beans,
+ org.eclipse.jface.databinding.wizard
