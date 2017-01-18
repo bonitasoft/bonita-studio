@@ -104,6 +104,9 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
 
     @Override
     public LookNFeelFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
+        if (!fileName.endsWith(LF_EXTENSION)) {
+            return super.doImportInputStream(fileName, inputStream);
+        }
         final String looknfeelName = fileName.substring(0, fileName.length() - LF_EXTENSION.length() - 1);
         final IFolder parentFolder = getResource().getFolder(looknfeelName);
 
@@ -113,7 +116,8 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
 
                 @Override
                 public void run() {
-                    MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.impossibleToOverwriteTitle, Messages.impossibleToOverwriteMsg);
+                    MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.impossibleToOverwriteTitle,
+                            Messages.impossibleToOverwriteMsg);
                 }
             });
             return null;
@@ -136,7 +140,8 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
             }
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
-            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.looknfeelimportErrorTitle, Messages.looknfeelImportErrorMessage, e).open();
+            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.looknfeelimportErrorTitle,
+                    Messages.looknfeelImportErrorMessage, e).open();
             try {
                 parentFolder.delete(true, Repository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e1) {
@@ -173,7 +178,8 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
     @Override
     public List<LookNFeelFileStore> getChildren() {
         final List<LookNFeelFileStore> result = super.getChildren();
-        final Enumeration<URL> looknfeels = ThemeRepositoryPlugin.getDefault().getBundle().findEntries(STORE_NAME, "*", false);
+        final Enumeration<URL> looknfeels = ThemeRepositoryPlugin.getDefault().getBundle().findEntries(STORE_NAME, "*",
+                false);
         if (looknfeels != null) {
             while (looknfeels.hasMoreElements()) {
                 final URL url = looknfeels.nextElement();
@@ -222,7 +228,8 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
         replaceUrl(resource, "", 0, true);
     }
 
-    private void replaceUrl(final IResource resource, final String baseFolder, int depth, final boolean firstCall) throws CoreException, IOException {
+    private void replaceUrl(final IResource resource, final String baseFolder, int depth, final boolean firstCall)
+            throws CoreException, IOException {
         if (resource.getType() == IResource.FOLDER) {
             final IFolder folder = (IFolder) resource;
             String baseFolder2;
@@ -262,7 +269,8 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
             final StringBuffer stringBuffer = new StringBuffer();
             while (matcher.find()) {
                 final String url = matcher.group(2);
-                if (!(url.startsWith("http://") || url.startsWith("https://") || url.startsWith("file://") || url.startsWith("ftp://"))) {
+                if (!(url.startsWith("http://") || url.startsWith("https://") || url.startsWith("file://")
+                        || url.startsWith("ftp://"))) {
                     final StringBuilder builder = new StringBuilder();
                     for (int i = 0; i < depth; i++) {
                         builder.append("../");
@@ -273,7 +281,8 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
             }
             matcher.appendTail(stringBuffer);
             newContent = stringBuffer.toString();
-            file.setContents(new ByteArrayInputStream(newContent.getBytes(UTF_8)), IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+            file.setContents(new ByteArrayInputStream(newContent.getBytes(UTF_8)), IResource.FORCE,
+                    Repository.NULL_PROGRESS_MONITOR);
 
         }
     }
@@ -291,7 +300,8 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
             final IFile descriptor = root.getFile(ThemeDescriptorManager.THEME_DESCRIPTOR_NAME);
             if (descriptor.exists()) {
                 try {
-                    final ThemeDescriptor themeDescriptor = getThemeDescriptorManager().getThemeDescriptor(descriptor.getLocation().toFile());
+                    final ThemeDescriptor themeDescriptor = getThemeDescriptorManager()
+                            .getThemeDescriptor(descriptor.getLocation().toFile());
                     if (themeDescriptor.getType() == ThemeType.application) {
                         return new ApplicationLookNFeelFileStore(fileName, this);
                     } else if (themeDescriptor.getType() == ThemeType.userXP) {
@@ -303,7 +313,8 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
                 }
             } else {
                 try {
-                    final ThemeDescriptor themeDescriptor = getThemeDescriptorManager().createThemeDescriptor(fileName, descriptor.getLocation().toFile());
+                    final ThemeDescriptor themeDescriptor = getThemeDescriptorManager().createThemeDescriptor(fileName,
+                            descriptor.getLocation().toFile());
                     themeDescriptor.setType(ThemeType.application);
                     return new ApplicationLookNFeelFileStore(fileName, this);
                 } catch (final IOException e) {
@@ -337,7 +348,8 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
                 //            	fileStore.save(null);
                 return null;
             } catch (final Exception e1) {
-                BonitaStudioLog.error("Exception when searching for file with name: " + fileName, "org.bonitasoft.studio.repository.themes");
+                BonitaStudioLog.error("Exception when searching for file with name: " + fileName,
+                        "org.bonitasoft.studio.repository.themes");
                 BonitaStudioLog.error(e1);
                 return null;
             }
@@ -366,7 +378,8 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
         return result;
     }
 
-    public LookNFeelFileStore duplicateFrom(final String name, final String newDescription, final LookNFeelFileStore duplicateFrom) {
+    public LookNFeelFileStore duplicateFrom(final String name, final String newDescription,
+            final LookNFeelFileStore duplicateFrom) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("name can't be null or empty");
         }
@@ -380,7 +393,8 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
         if (getChild(name) != null || getResource().getFolder(name).exists()) {
             return null;
         }
-        PlatformUtil.copyResourceDirectory(getResource().getLocation().append(name).toFile(), normalizedRoot, Repository.NULL_PROGRESS_MONITOR);
+        PlatformUtil.copyResourceDirectory(getResource().getLocation().append(name).toFile(), normalizedRoot,
+                Repository.NULL_PROGRESS_MONITOR);
         refresh();
 
         final LookNFeelFileStore file = createRepositoryFileStore(name);

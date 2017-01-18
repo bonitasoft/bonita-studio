@@ -28,5 +28,27 @@ public class Messages extends NLS {
     public static String processesWithErrorAfterImport;
     public static String openDiagramWithErrors;
     public static String skippedValidationMessage;
+    public static String importButtonLabel;
+    public static String errorWhileImporting_message;
+    public static String errorWhileImporting_title;
+    public static String importProcessProgressDialog;
+    public static String importFileTitle;
+    public static String importFileDescription;
+    public static String selectFileToImport;
+    public static String browseButton_label;
+    public static String invalidFilePath;
+    public static String importProcessTitle;
+    public static String importDetails;
+    public static String importAll;
+    public static String keepAll;
+    public static String archiveColumn;
+    public static String actionColumn;
+    public static String conflictMessage;
+    public static String noConflictMessage;
+    public static String analyseBosArchive;
+    public static String importBosArchive;
+    public static String importBosArchiveTitle;
+    public static String overwriteMessage;
+    public static String keepMessage;
 
 }

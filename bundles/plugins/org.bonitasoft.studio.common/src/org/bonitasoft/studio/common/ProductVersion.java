@@ -67,7 +67,7 @@ public class ProductVersion {
         try {
             current = Version.parseVersion(version);
         } catch (final IllegalArgumentException e) {
-
+            return false;
         }
         final Version productVersion = new Version(CURRENT_VERSION);
         return current.compareTo(productVersion) <= 0;

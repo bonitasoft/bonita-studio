@@ -18,7 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.importer.bos.operation.IResourceImporter;
+import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
@@ -27,25 +27,27 @@ import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationO
 import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-
 public class DiagramValidator implements BosImporterValidator {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.importer.bos.validator.BosImporterValidator#validate(org.bonitasoft.studio.importer.bos.operation.IResourceImporter)
      */
     @Override
-    public ImportBosArchiveStatusBuilder validate(IResourceImporter resourceImporter, ImportBosArchiveStatusBuilder statusBuilder, IProgressMonitor monitor)
+    public ImportBosArchiveStatusBuilder validate(ImportBosArchiveOperation operation,
+            ImportBosArchiveStatusBuilder statusBuilder, IProgressMonitor monitor)
             throws ValidationException {
-        for (final IRepositoryFileStore diagramFileStore : resourceImporter.getImportedProcesses()) {
+        for (final IRepositoryFileStore diagramFileStore : operation.getImportedProcesses()) {
             try {
                 final AbstractProcess process = (AbstractProcess) diagramFileStore.getContent();
                 final RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(
                         new BatchValidationOperation(
-                                new OffscreenEditPartFactory(org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
+                                new OffscreenEditPartFactory(
+                                        org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
                                 new ValidationMarkerProvider()));
                 validationAction.addProcess(process);
                 validationAction.run(monitor);
-                if(!validationAction.getStatus().isOK()){
+                if (!validationAction.getStatus().isOK()) {
                     statusBuilder.addStatus(process, validationAction.getStatus());
                 }
             } catch (final ReadFileStoreException | InvocationTargetException | InterruptedException e) {

@@ -3,7 +3,7 @@
  * BonitaSoft is a trademark of BonitaSoft SA.
  * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
  * For commercial licensing information, contact:
- * BonitaSoft, 32 rue Gustave Eiffel – 38000 Grenoble
+ * BonitaSoft, 32 rue Gustave Eiffel ï¿½ 38000 Grenoble
  * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
 package org.bonitasoft.studio.ui.widget;
@@ -24,14 +24,9 @@ import org.eclipse.swt.widgets.Listener;
  */
 public class ButtonWidget extends ControlWidget {
 
-    private Listener listener;
-
     public static class Builder extends ControlWidgetBuilder<Builder, ButtonWidget> {
 
         private Listener listener;
-
-        public Builder() {
-        }
 
         /**
          * Add a {@link Listener} to this button
@@ -44,11 +39,7 @@ public class ButtonWidget extends ControlWidget {
         @Override
         public ButtonWidget createIn(Composite container) {
             final ButtonWidget control = new ButtonWidget(container);
-            if (layoutData != null) {
-                control.setLayoutData(layoutData);
-            } else {
-                control.setLayoutData(gridData);
-            }
+            control.setLayoutData(layoutData != null ? layoutData : gridData);
             if (this.label != null) {
                 control.setText(label);
             }
@@ -63,6 +54,20 @@ public class ButtonWidget extends ControlWidget {
 
     protected ButtonWidget(Composite parent) {
         super(parent);
+    }
+
+    /**
+     * enable the possibility to click on the button
+     */
+    public void enable() {
+        button.setEnabled(true);
+    }
+
+    /**
+     * disable the possibility to click on the button
+     */
+    public void disable() {
+        button.setEnabled(false);
     }
 
     public void onClick(Listener listener) {

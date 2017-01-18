@@ -151,10 +151,12 @@ public class ApplicationResourceRepositoryStore extends AbstractRepositoryStore<
                 if (targetFolder.exists()) {
                     String fileNameLabel = fileName;
                     final String processUUID = fileName;
-                    final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+                    final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
+                            .getRepositoryStore(DiagramRepositoryStore.class);
                     final AbstractProcess process = diagramStore.getProcessByUUID(processUUID);
                     if (process != null) {
-                        fileNameLabel = Messages.bind(Messages.applicationResourcesFor, process.getName() + " (" + process.getVersion() + ")");
+                        fileNameLabel = Messages.bind(Messages.applicationResourcesFor,
+                                process.getName() + " (" + process.getVersion() + ")");
                     }
                     if (FileActionDialog.overwriteQuestion(fileNameLabel)) {
                         targetFolder.delete(true, Repository.NULL_PROGRESS_MONITOR);

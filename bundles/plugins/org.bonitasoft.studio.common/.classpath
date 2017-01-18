@@ -6,6 +6,5 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="src-test/java"/>
 	<classpathentry kind="src" path="src-test/resources"/>
-	<classpathentry exported="true" kind="lib" path="ivy-2.2.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

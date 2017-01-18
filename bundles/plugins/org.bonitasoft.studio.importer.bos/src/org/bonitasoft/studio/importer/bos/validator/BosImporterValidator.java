@@ -14,13 +14,15 @@
  */
 package org.bonitasoft.studio.importer.bos.validator;
 
-import org.bonitasoft.studio.importer.bos.operation.IResourceImporter;
+import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public interface BosImporterValidator {
 
-    ImportBosArchiveStatusBuilder validate(IResourceImporter resourceImporter, ImportBosArchiveStatusBuilder statusBuilder, IProgressMonitor monitor)
+    ImportBosArchiveStatusBuilder validate(ImportBosArchiveOperation importBosArchiveOperation,
+            ImportBosArchiveStatusBuilder statusBuilder,
+            IProgressMonitor monitor)
             throws ValidationException;
 
 }

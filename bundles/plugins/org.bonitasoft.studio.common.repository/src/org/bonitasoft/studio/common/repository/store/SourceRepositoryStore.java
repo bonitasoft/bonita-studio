@@ -66,11 +66,12 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
             if (resource instanceof IFile) {
                 return doImportInputStream(fileName, ((IFile) resource).getContents());
             } else if (resource instanceof IFolder) {
-                final List<IFile> sourceFiles = new ArrayList<IFile>();
+                final List<IFile> sourceFiles = new ArrayList<>();
                 findParentPackage((IFolder) resource, sourceFiles);
                 for (final IFile sourceFile : sourceFiles) {
                     final IPath path = sourceFile.getProjectRelativePath();
-                    final IFile targetFile = RepositoryManager.getInstance().getCurrentRepository().getProject().getFile(path.removeFirstSegments(1));
+                    final IFile targetFile = RepositoryManager.getInstance().getCurrentRepository().getProject()
+                            .getFile(path.removeFirstSegments(1));
                     boolean skip = false;
                     if (targetFile.exists()) {
                         if (FileActionDialog.overwriteQuestion(targetFile.getName())) {
@@ -84,7 +85,8 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
                         refresh();
 
                         try {
-                            targetFile.create(new FileInputStream(sourceFile.getLocation().toFile()), true, Repository.NULL_PROGRESS_MONITOR);
+                            targetFile.create(new FileInputStream(sourceFile.getLocation().toFile()), true,
+                                    Repository.NULL_PROGRESS_MONITOR);
                             incrementaBuild();
                         } catch (final Exception e) {
                             BonitaStudioLog.error(e);
@@ -169,11 +171,11 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
     @Override
     public List<T> getChildren() {
         refresh();
-        Set<String> compatibleExtensions = getCompatibleExtensions();
+        final Set<String> compatibleExtensions = getCompatibleExtensions();
         if (compatibleExtensions != null && !compatibleExtensions.isEmpty()) {
             return super.getChildren();
         }
-        final List<T> result = new ArrayList<T>();
+        final List<T> result = new ArrayList<>();
         final IFolder folder = getResource();
         try {
             for (final IResource r : folder.members()) {
@@ -204,7 +206,8 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
 
     private boolean containsSourceFile(final IFolder folder) throws CoreException {
         for (final IResource res : folder.members()) {
-            if (res.getFileExtension() != null && (res.getFileExtension().equals("java") || res.getFileExtension().equals("grrovy"))) {
+            if (res.getFileExtension() != null
+                    && (res.getFileExtension().equals("java") || res.getFileExtension().equals("groovy"))) {
                 return true;
             }
         }
@@ -232,7 +235,8 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
                 }
                 return null;
             } else { // package name
-                final IPackageFragment packageFragment = javaProject.findPackageFragment(getResource().getFullPath().append(fileName.replace(".", "/")));
+                final IPackageFragment packageFragment = javaProject
+                        .findPackageFragment(getResource().getFullPath().append(fileName.replace(".", "/")));
                 if (packageFragment != null) {
                     return (T) new PackageFileStore(fileName, this);
                 }
@@ -246,7 +250,8 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
 
     private boolean isSourceType(final String qualifiedClassname, final IJavaProject javaProject) throws JavaModelException {
         final SearchEngine sEngine = new SearchEngine();
-        final IJavaSearchScope searchScope = SearchEngine.createJavaSearchScope(new IJavaElement[] { javaProject }, IJavaSearchScope.SOURCES);
+        final IJavaSearchScope searchScope = SearchEngine.createJavaSearchScope(new IJavaElement[] { javaProject },
+                IJavaSearchScope.SOURCES);
         final TypeNameFoundRequestor nameRequestor = new TypeNameFoundRequestor();
         sEngine.searchAllTypeNames(NamingUtils.getPackageName(qualifiedClassname).toCharArray(), SearchPattern.R_EXACT_MATCH,
                 NamingUtils.getSimpleName(qualifiedClassname)

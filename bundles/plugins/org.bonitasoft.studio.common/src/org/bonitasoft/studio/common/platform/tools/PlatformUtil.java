@@ -207,7 +207,8 @@ public class PlatformUtil {
      * @param patern
      * @return the new parent folder
      */
-    public static void copyResource(final File destFolder, final Bundle bundle, final String bundleFolder, final String pattern, final IProgressMonitor monitor) {
+    public static void copyResource(final File destFolder, final Bundle bundle, final String bundleFolder,
+            final String pattern, final IProgressMonitor monitor) {
         InputStream in = null;
         FileOutputStream out = null;
         try {
@@ -273,7 +274,8 @@ public class PlatformUtil {
      * @param resourceName
      * @return the copied resource
      */
-    public static void copyResourceDirectory(final File destFolder, final File sourceFolder, final IProgressMonitor monitor) {
+    public static void copyResourceDirectory(final File destFolder, final File sourceFolder,
+            final IProgressMonitor monitor) {
         if (fileSystem == null) {
             fileSystem = EFS.getLocalFileSystem();
         }
@@ -298,7 +300,8 @@ public class PlatformUtil {
      * @param resourceName
      * @return the copied resource
      */
-    public static void copyResource(final File destFolder, final File sourceFolder, final FilenameFilter filter, final IProgressMonitor monitor) {
+    public static void copyResource(final File destFolder, final File sourceFolder, final FilenameFilter filter,
+            final IProgressMonitor monitor) {
         if (sourceFolder.isDirectory()) {
             if (!destFolder.exists()) {
                 destFolder.mkdir();
@@ -328,7 +331,8 @@ public class PlatformUtil {
      * @param resourceName
      * @return the copied resource
      */
-    public static void copyResource(final File destinationFolder, final Bundle bundle, final String resourceName, final IProgressMonitor monitor) {
+    public static void copyResource(final File destinationFolder, final Bundle bundle, final String resourceName,
+            final IProgressMonitor monitor) {
         final URL url = bundle.getResource(resourceName);
         if (url == null) {
             return;
@@ -527,7 +531,8 @@ public class PlatformUtil {
 
     public static boolean isABonitaProduct(final String id) {
         if (id != null) {
-            return id.equals("org.bonitasoft.studio.product") || id.equals("org.bonitasoft.studioEx.product") || id.equals("org.bonitasoft.talendBPM.product");
+            return id.equals("org.bonitasoft.studio.product") || id.equals("org.bonitasoft.studioEx.product")
+                    || id.equals("org.bonitasoft.talendBPM.product");
         }
         return false;
     }
