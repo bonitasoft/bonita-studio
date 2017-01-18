@@ -26,6 +26,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -63,7 +64,12 @@ import org.osgi.framework.Bundle;
  */
 public class PlatformUtil {
 
+    private static final String INTROVIEW_ID = "org.eclipse.ui.internal.introview";
     private static IFileSystem fileSystem; // SINGLETON
+
+    private PlatformUtil() {
+
+    }
 
     public static void maximizeWindow(final IWorkbenchPage page) {
         if (!page.isPageZoomed()) {
@@ -88,36 +94,27 @@ public class PlatformUtil {
     }
 
     public static void closeIntro() {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        if (workbench != null) {
-            final Display display = workbench.getDisplay();
-            display.asyncExec(new Runnable() {
+        Optional.ofNullable(PlatformUI.getWorkbench())
+                .map(IWorkbench::getDisplay)
+                .ifPresent(display -> display.asyncExec(PlatformUtil::hideIntroPart));
+    }
 
-                @Override
-                public void run() {
-                    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-                    if (window != null) {
-                        final IWorkbenchPage activePage = window.getActivePage();
-                        if (activePage != null) {
-                            final IWorkbenchPart part = activePage.getActivePart();
-                            if (part != null) {
-                                final IIntroManager introManager = workbench.getIntroManager();
-                                if (introManager != null) {
-                                    if (introManager.getIntro() != null) {
-                                        introManager.closeIntro(introManager.getIntro());
-                                    } else {
-                                        final IViewPart view = activePage.findView("org.eclipse.ui.internal.introview");
-                                        if (view != null) {
-                                            activePage.hideView(view);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
+    public static Optional<IViewPart> findIntroPart() {
+        return Optional.ofNullable(PlatformUI.getWorkbench())
+                .map(IWorkbench::getActiveWorkbenchWindow)
+                .map(IWorkbenchWindow::getActivePage)
+                .flatMap(activePage -> Optional.ofNullable(activePage.findView(INTROVIEW_ID)));
+    }
+
+    public static void hideIntroPart() {
+        findIntroPart().ifPresent(PlatformUtil::hidePart);
+    }
+
+    public static void hidePart(IViewPart part) {
+        Optional.ofNullable(PlatformUI.getWorkbench())
+                .map(IWorkbench::getActiveWorkbenchWindow)
+                .map(IWorkbenchWindow::getActivePage)
+                .ifPresent(activePage -> activePage.hideView(part));
     }
 
     /**
@@ -175,7 +172,7 @@ public class PlatformUtil {
                     if (introManager.getIntro() != null) {
                         introManager.closeIntro(introManager.getIntro());
                     } else if (activePage != null) {
-                        final IViewPart view = activePage.findView("org.eclipse.ui.internal.introview");
+                        final IViewPart view = activePage.findView(INTROVIEW_ID);
                         if (view != null) {
                             activePage.hideView(view);
                         }
@@ -550,7 +547,7 @@ public class PlatformUtil {
             final IWorkbenchPage activePage = window.getActivePage();
             if (activePage != null) {
                 for (final IViewReference vr : activePage.getViewReferences()) {
-                    if (vr.getId().equals("org.eclipse.ui.internal.introview")) {
+                    if (vr.getId().equals(INTROVIEW_ID)) {
                         return true;
                     }
                 }
@@ -561,7 +558,7 @@ public class PlatformUtil {
                         if (introManager.getIntro() != null) {
                             return true;
                         } else {
-                            final IViewPart view = activePage.findView("org.eclipse.ui.internal.introview");
+                            final IViewPart view = activePage.findView(INTROVIEW_ID);
                             return view != null;
                         }
                     }

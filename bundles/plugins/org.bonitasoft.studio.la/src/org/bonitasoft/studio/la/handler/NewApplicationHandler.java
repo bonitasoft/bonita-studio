@@ -14,22 +14,56 @@
  */
 package org.bonitasoft.studio.la.handler;
 
+import static org.bonitasoft.engine.business.application.xml.ApplicationNodeBuilder.newApplication;
+import static org.bonitasoft.engine.business.application.xml.ApplicationNodeBuilder.newApplicationContainer;
 import static org.bonitasoft.studio.ui.wizard.WizardBuilder.newWizard;
+import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
-import org.bonitasoft.engine.business.application.xml.ApplicationNodeBuilder;
+import java.util.Optional;
+
+import org.bonitasoft.engine.business.application.xml.ApplicationNode;
+import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
+import org.bonitasoft.studio.la.ui.control.NewApplicationPage;
+import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
 public class NewApplicationHandler {
 
     @Execute
-    public void newApplication(Shell activeShell, RepositoryAccessor repositoryAccessor) {
-        MessageDialog.openInformation(activeShell, "Not implemented", "Wait & See");
+    public void openNewApplicationWizard(Shell activeShell, RepositoryAccessor repositoryAccessor) {
+        createWizard(newWizard(), repositoryAccessor)
+                .open(activeShell, Messages.create)
+                .ifPresent(IRepositoryFileStore::open);
+    }
+
+    protected WizardBuilder<ApplicationFileStore> createWizard(WizardBuilder<ApplicationFileStore> builder,
+            RepositoryAccessor repositoryAccessor) {
+        final ApplicationNode applicationNode = newApplication("myApp", "My App", "1.0").create();
+        return builder
+                .withTitle(Messages.createNewApplication)
+                .havingPage(newPage()
+                        .withTitle(Messages.newApplicationTitle)
+                        .withDescription(Messages.newApplicationDescription)
+                        .withControl(new NewApplicationPage(applicationNode)))
+                .onFinish(() -> createApplicationFileStore(applicationNode, repositoryAccessor));
+    }
+
+    protected Optional<ApplicationFileStore> createApplicationFileStore(ApplicationNode applicationNode,
+            RepositoryAccessor repositoryAccessor) {
+        final ApplicationRepositoryStore repositoryStore = repositoryAccessor
+                .getRepositoryStore(ApplicationRepositoryStore.class);
+        final Optional<ApplicationFileStore> fileStore = Optional.ofNullable(repositoryStore
+                .createRepositoryFileStore(String.format("%s.xml", applicationNode.getToken())));
+        final ApplicationNodeContainer nodeContainer = newApplicationContainer().create();
+        nodeContainer.addApplication(applicationNode);
+        fileStore.ifPresent(file -> file.save(nodeContainer));
+        return fileStore;
     }
 
 }

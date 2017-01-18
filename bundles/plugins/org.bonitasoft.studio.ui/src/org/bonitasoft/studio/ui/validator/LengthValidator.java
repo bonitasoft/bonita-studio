@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 
 public class LengthValidator extends StringValidator {
 
-    public static class Builder {
+    public static class Builder implements ValidatorBuilder<LengthValidator> {
 
         private String message;
         private int severity = IStatus.ERROR;
@@ -60,6 +60,7 @@ public class LengthValidator extends StringValidator {
             return this;
         }
 
+        @Override
         public LengthValidator create() {
             return new LengthValidator(message, severity, minLength, maxLength);
         }
@@ -91,7 +92,8 @@ public class LengthValidator extends StringValidator {
      */
     @Override
     protected String formatMessage(String value) {
-        return super.formatMessage(value).replace("%min", String.valueOf(minLength)).replace("%max", String.valueOf(maxLength));
+        return super.formatMessage(value).replace("%min", String.valueOf(minLength)).replace("%max",
+                String.valueOf(maxLength));
     }
 
 }

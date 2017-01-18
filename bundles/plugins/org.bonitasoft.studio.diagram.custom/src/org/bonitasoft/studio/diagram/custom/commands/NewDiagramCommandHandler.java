@@ -45,10 +45,11 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 
             @Override
             public void run() {
-                final IEditorPart editor = (IEditorPart) diagramFileStore.openUI();
+                final IEditorPart editor = (IEditorPart) diagramFileStore.open();
                 if (editor instanceof DiagramEditor) {
                     final String author = System.getProperty("user.name", "unknown");
-                    final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(diagramFileStore.getEMFResource());
+                    final TransactionalEditingDomain editingDomain = TransactionUtil
+                            .getEditingDomain(diagramFileStore.getEMFResource());
                     editingDomain.getCommandStack().execute(
                             SetCommand.create(editingDomain,
                                     ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement(),
@@ -61,7 +62,8 @@ public class NewDiagramCommandHandler extends AbstractHandler {
     }
 
     public DiagramFileStore newDiagram() {
-        final NewDiagramFactory diagramFactory = new NewDiagramFactory(RepositoryManager.getInstance().getCurrentRepository(),
+        final NewDiagramFactory diagramFactory = new NewDiagramFactory(
+                RepositoryManager.getInstance().getCurrentRepository(),
                 BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
         diagramFactory.setDefaultPoolWidth(getDefaultWidth());
         final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
@@ -84,7 +86,8 @@ public class NewDiagramCommandHandler extends AbstractHandler {
     }
 
     private int getDefaultWidth() {
-        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell() != null) {
+        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell() != null) {
             return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getClientArea().width - 240;
         }
         return 1000;

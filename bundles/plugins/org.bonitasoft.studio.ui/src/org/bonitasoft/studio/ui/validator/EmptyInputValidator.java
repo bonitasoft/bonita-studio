@@ -20,13 +20,10 @@ import org.eclipse.core.runtime.IStatus;
 
 public class EmptyInputValidator extends StringValidator {
 
-    public static class Builder {
+    public static class Builder implements ValidatorBuilder<EmptyInputValidator> {
 
         private String message;
         private int severity = IStatus.ERROR;
-
-        public Builder() {
-        }
 
         public Builder withMessage(String message) {
             this.message = message;
@@ -48,6 +45,7 @@ public class EmptyInputValidator extends StringValidator {
             return this;
         }
 
+        @Override
         public EmptyInputValidator create() {
             return new EmptyInputValidator(message, severity);
         }

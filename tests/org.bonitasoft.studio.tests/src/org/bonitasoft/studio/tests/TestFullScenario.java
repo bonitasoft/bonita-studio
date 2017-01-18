@@ -14,6 +14,12 @@
  */
 package org.bonitasoft.studio.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,13 +56,11 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.junit.Test;
 
 import junit.framework.TestCase;
 
-/**
- * @author Mickael Istria
- */
-public class TestFullScenario extends TestCase {
+public class TestFullScenario {
 
     private class CountProcessesResourceVisitor implements IResourceVisitor {
 
@@ -88,6 +92,7 @@ public class TestFullScenario extends TestCase {
     private static int nbProcBefore;
     private static String webPurchaseVersion = "1.5";
 
+    @Test
     public void testNewProcess() throws Exception {
         final CountProcessesResourceVisitor visitor = new CountProcessesResourceVisitor();
         RepositoryManager.getInstance().getCurrentRepository().getProject().accept(visitor);
@@ -124,7 +129,8 @@ public class TestFullScenario extends TestCase {
         final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
         final ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         final Command saveCommand = commandService.getCommand("org.eclipse.ui.file.save");
-        final ExecutionEvent executionEvent = new ExecutionEvent(saveCommand, Collections.EMPTY_MAP, null, handlerService.getClass());
+        final ExecutionEvent executionEvent = new ExecutionEvent(saveCommand, Collections.EMPTY_MAP, null,
+                handlerService.getClass());
         try {
             saveCommand.executeWithChecks(executionEvent);
         } catch (final NotDefinedException e) {
@@ -136,9 +142,6 @@ public class TestFullScenario extends TestCase {
         }
     }
 
-    /**
-     *
-     */
     public void reopenEditedProcess() {
         processEditor = getTheOnlyOneEditor();
         task = getTheTask(processEditor.getDiagramEditPart());
@@ -169,7 +172,8 @@ public class TestFullScenario extends TestCase {
         final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
         final ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         final Command saveCommand = commandService.getCommand("org.eclipse.ui.file.save");
-        final ExecutionEvent executionEvent = new ExecutionEvent(saveCommand, Collections.EMPTY_MAP, null, handlerService.getClass());
+        final ExecutionEvent executionEvent = new ExecutionEvent(saveCommand, Collections.EMPTY_MAP, null,
+                handlerService.getClass());
         try {
             saveCommand.executeWithChecks(executionEvent);
         } catch (final NotDefinedException e) {
@@ -184,60 +188,6 @@ public class TestFullScenario extends TestCase {
     }
 
     /**
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws FileNotFoundException
-     * @throws CoreException
-     */
-    //    public void importAndOverride() throws Exception {
-    //        //check that the previous test still get opened the same process with same version/name
-    //        MainProcess diagram = (MainProcess) getTheOnlyOneEditor().getDiagramEditPart().resolveSemanticElement();
-    //        ExportBosArchiveOperation op = new ExportBosArchiveOperation();
-    //        String destPath = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath()+File.separatorChar+"testExport.bos";
-    //        op.setDestinationPath(destPath);
-    //
-    //        ExportBosArchiveHandler handler = new ExportBosArchiveHandler();
-    //        Set<IResource> resourcesToExport = new HashSet<IResource>();
-    //        for(Object file :handler.getAllDiagramRelatedFiles(diagram)){
-    //            if(((IRepositoryFileStore) file).getResource() != null && ((IRepositoryFileStore) file).getResource().exists()){
-    //                resourcesToExport.add(((IRepositoryFileStore) file).getResource()) ;
-    //            }
-    //            if(!((IRepositoryFileStore) file).getRelatedResources().isEmpty()){
-    //                resourcesToExport.addAll(((IRepositoryFileStore) file).getRelatedResources()) ;
-    //            }
-    //        }
-    //        op.setResources(resourcesToExport);
-    //        op.run(new NullProgressMonitor());
-    //
-    //        TransactionalEditingDomain editingDomain = getTheOnlyOneEditor().getDiagramEditPart().getEditingDomain();
-    //        editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, diagram.getElements().get(0), ProcessPackage.Literals.CONTAINER__ELEMENTS, ProcessFactory.eINSTANCE.createActivity()));
-    //
-    //        ImportBosArchiveOperation importOp = new ImportBosArchiveOperation();
-    //        importOp.setArchiveFile(destPath);
-    //        importOp.run(new NullProgressMonitor());
-    //
-    //        processEditor = getTheOnlyOneEditor();
-    //
-    //        process = (MainProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
-    //        Pool pool = (Pool)process.getElements().get(0);
-    //        int nbActivity = 0;
-    //        for (Element item : pool.getElements()) {
-    //            if (item instanceof Activity) {
-    //                nbActivity++;
-    //            }
-    //        }
-    //        assertTrue("The new Web Purchase process should be more complicated", nbActivity == 1);
-    //        RepositoryManager.getInstance().getCurrentRepository().getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-    //
-    //
-    //        assertProjectContainsNFile(nbProcBefore + 1);
-    //        processEditor = getTheOnlyOneEditor();
-    //        new SaveCommandHandler().execute(null);
-    //        assertProjectContainsNFile(nbProcBefore + 1);
-    //
-    //    }
-
-    /**
      * @throws ExecutionException
      * @throws Exception
      * @throws InterruptedException
@@ -248,7 +198,8 @@ public class TestFullScenario extends TestCase {
         final RunProcessCommand deployProcessCommand = new RunProcessCommand(true);
 
         deployProcessCommand.execute(new ExecutionEvent());
-        final BufferedReader reader = new BufferedReader(new InputStreamReader((InputStream) deployProcessCommand.getUrl().getContent()));
+        final BufferedReader reader = new BufferedReader(
+                new InputStreamReader((InputStream) deployProcessCommand.getUrl().getContent()));
         String line = null;
         while ((line = reader.readLine()) != null) {
             if (line.toLowerCase().contains("bonita")) {
@@ -287,7 +238,8 @@ public class TestFullScenario extends TestCase {
         IEditorPart editor;
         ProcessDiagramEditor processEditor;
 
-        final IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
+        final IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .getEditorReferences();
         final StringBuilder sb = new StringBuilder();
         for (final IEditorReference iEditorReference : editorReferences) {
             sb.append(iEditorReference);
