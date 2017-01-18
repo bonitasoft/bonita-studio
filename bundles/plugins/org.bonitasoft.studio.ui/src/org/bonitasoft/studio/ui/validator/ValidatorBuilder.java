@@ -12,13 +12,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.ui.wizard;
+package org.bonitasoft.studio.ui.validator;
 
-import java.util.Optional;
+import org.eclipse.core.databinding.validation.IValidator;
 
 @FunctionalInterface
-public interface FinishHandler<T> {
+public interface ValidatorBuilder<T extends IValidator> {
 
-    Optional<T> finish() throws FinishHandlerException;
+    T create();
 
 }

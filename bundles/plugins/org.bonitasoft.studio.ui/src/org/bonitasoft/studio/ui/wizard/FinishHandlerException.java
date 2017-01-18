@@ -14,11 +14,10 @@
  */
 package org.bonitasoft.studio.ui.wizard;
 
-import java.util.Optional;
+public class FinishHandlerException extends Exception {
 
-@FunctionalInterface
-public interface FinishHandler<T> {
-
-    Optional<T> finish() throws FinishHandlerException;
+    public FinishHandlerException(String message, Throwable exception) {
+        super(message, exception);
+    }
 
 }

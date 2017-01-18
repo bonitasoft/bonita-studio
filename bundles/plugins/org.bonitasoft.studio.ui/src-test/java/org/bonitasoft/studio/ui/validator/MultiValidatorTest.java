@@ -17,7 +17,6 @@ package org.bonitasoft.studio.ui.validator;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.junit.Test;
 
 public class MultiValidatorTest {
@@ -54,9 +53,7 @@ public class MultiValidatorTest {
 
         final IStatus status = multiValidator.validate("Hello");
 
-        StatusAssert.assertThat(status).isInstanceOf(MultiStatus.class);
-        StatusAssert.assertThat(status).hasChildren(ValidationStatus.ok(),
-                ValidationStatus.warning("careful"), ValidationStatus.error("error"));
+        StatusAssert.assertThat(status).isEqualTo(ValidationStatus.error("error"));
     }
 
 }

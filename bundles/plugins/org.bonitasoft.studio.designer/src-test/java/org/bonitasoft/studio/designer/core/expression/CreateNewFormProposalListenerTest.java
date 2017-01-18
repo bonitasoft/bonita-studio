@@ -22,6 +22,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -65,7 +66,6 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
     @Mock
     private WebPageRepositoryStore formRepository;
 
-    @Mock
     private WebPageFileStore formFileStore;
 
     @Mock
@@ -79,14 +79,17 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
     @Before
     public void setUp() throws Exception {
         doReturn(formRepository).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
+        formFileStore = mock(WebPageFileStore.class);
         doReturn(formFileStore).when(formRepository).getChild("page-id");
 
-        createNewFormProposal = spy(new CreateNewFormProposalListener(pageDesignerURLFactory, progressService, repositoryAccessor));
+        createNewFormProposal = spy(
+                new CreateNewFormProposalListener(pageDesignerURLFactory, progressService, repositoryAccessor));
 
         when(createFormOperation.getNewPageId()).thenReturn("page-id");
         when(preferenceStore.get(CONSOLE_HOST, DEFAULT_HOST)).thenReturn(DEFAULT_HOST);
         when(preferenceStore.getInt(CONSOLE_PORT, DEFAULT_PORT)).thenReturn(DEFAULT_PORT);
-        doReturn(createFormOperation).when(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory), anyString(),
+        doReturn(createFormOperation).when(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory),
+                anyString(),
                 any(Contract.class), any(FormScope.class));
     }
 
@@ -110,7 +113,8 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
         createNewFormProposal.handleEvent(task.getFormMapping(), null);
 
         //Then
-        verify(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory), eq("newForm"), any(Contract.class), any(FormScope.class));
+        verify(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory), eq("newForm"), any(Contract.class),
+                any(FormScope.class));
     }
 
 }

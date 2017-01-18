@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.application;
 
@@ -23,31 +21,24 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.osgi.service.event.Event;
-import org.osgi.service.event.EventHandler;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class OpenIntroAddon {
 
-	private EventHandler testHandler;
+    @PostConstruct
+    public void pc(IEventBroker eventBroker) {
+        eventBroker.subscribe(UIEvents.UIElement.TOPIC_TOBERENDERED, this::handleEvent);
+    }
 
-	@PostConstruct
-	public void pc(IEventBroker eventBroker){
-		testHandler = new EventHandler() {
-
-			@Override
-			public void handleEvent(Event event) {
-				Object part = event.getProperty(UIEvents.EventTags.ELEMENT);
-				if (part instanceof MPart){
-					if (((MPart) part).getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
-						PlatformUtil.openIntroIfNoOtherEditorOpen();
-					}
-				}
-			}
-		};
-		eventBroker.subscribe(UIEvents.UIElement.TOPIC_TOBERENDERED, testHandler);
-	}
+    private void handleEvent(Event event) {
+        Object part = event.getProperty(UIEvents.EventTags.ELEMENT);
+        if (part instanceof MPart) {
+            if (((MPart) part).getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
+                PlatformUtil.openIntroIfNoOtherEditorOpen();
+            }
+        }
+    }
 
 }

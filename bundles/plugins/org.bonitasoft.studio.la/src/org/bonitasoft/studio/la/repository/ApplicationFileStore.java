@@ -34,7 +34,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.xml.sax.SAXException;
 
 import com.google.common.io.ByteStreams;
@@ -120,7 +124,15 @@ public class ApplicationFileStore extends AbstractFileStore {
      */
     @Override
     protected IWorkbenchPart doOpen() {
-        throw new RuntimeException("Not implemeted yet");
+        try {
+            return IDE.openEditor(getActivePage(), getResource());
+        } catch (final PartInitException e) {
+            throw new RuntimeException("Failed to open application descriptor.", e);
+        }
+    }
+
+    protected IWorkbenchPage getActivePage() {
+        return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     }
 
 }

@@ -12,13 +12,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.ui.wizard;
+package org.bonitasoft.studio.la.ui.editor;
 
-import java.util.Optional;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 
-@FunctionalInterface
-public interface FinishHandler<T> {
 
-    Optional<T> finish() throws FinishHandlerException;
+public class ApplicationEditorActionBarContributor extends MultiPageEditorActionBarContributor {
+
+    public ApplicationEditorActionBarContributor() {
+        // TODO Auto-generated constructor stub
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.part.MultiPageEditorActionBarContributor#setActivePage(org.eclipse.ui.IEditorPart)
+     */
+    @Override
+    public void setActivePage(IEditorPart activeEditor) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

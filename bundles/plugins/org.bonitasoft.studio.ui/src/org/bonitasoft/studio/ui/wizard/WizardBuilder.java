@@ -16,6 +16,7 @@ package org.bonitasoft.studio.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -28,24 +29,25 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * A helper builder to create a JFace {@link Wizard}
  */
-public class WizardBuilder {
+public class WizardBuilder<T> {
 
     private String windowTitle;
     private final List<WizardPageBuilder> pages = new ArrayList<>();
-    private FinishHandler finishHandler;
+    private FinishHandler<T> finishHandler;
     private final ImageDescriptor imageDescriptor = ImageDescriptor.createFromFile(WizardBuilder.class, "defaultPage.png");//$NON-NLS-N$
-
-    public static WizardBuilder newWizard() {
-        return new WizardBuilder();
-    }
+    private Optional<T> finishResult = Optional.empty();
 
     private WizardBuilder() {
+    }
+
+    public static <T> WizardBuilder<T> newWizard() {
+        return new WizardBuilder<>();
     }
 
     /**
      * Set the window title of the {@link Dialog} containing the {@link Wizard}
      */
-    public WizardBuilder withTitle(String title) {
+    public WizardBuilder<T> withTitle(String title) {
         this.windowTitle = title;
         return this;
     }
@@ -53,7 +55,7 @@ public class WizardBuilder {
     /**
      * Add Wizard page to this {@link Wizard} using {@link WizardPageBuilder}
      */
-    public WizardBuilder havingPage(WizardPageBuilder... pageBuilders) {
+    public WizardBuilder<T> havingPage(WizardPageBuilder... pageBuilders) {
         Stream.of(pageBuilders).forEach(p -> pages.add(p));
         return this;
     }
@@ -61,7 +63,7 @@ public class WizardBuilder {
     /**
      * A handler executed in the performFinish() operation of the {@link Wizard}
      */
-    public WizardBuilder onFinish(FinishHandler handler) {
+    public WizardBuilder<T> onFinish(FinishHandler<T> handler) {
         this.finishHandler = handler;
         return this;
     }
@@ -74,7 +76,12 @@ public class WizardBuilder {
 
             @Override
             public boolean performFinish() {
-                return finishHandler != null ? finishHandler.finish() : true;
+                try {
+                    finishResult = finishHandler.finish();
+                    return finishResult.isPresent();
+                } catch (final FinishHandlerException e) {
+                    return false;
+                }
             }
         };
         pages.stream().forEachOrdered(page -> wizard.addPage(page.asPage()));
@@ -88,14 +95,16 @@ public class WizardBuilder {
      * 
      * @param finishButton The label of the finish button
      */
-    public int open(Shell shell, String finishButton) {
-        return new CustomLabelWizardDialog(shell, asWizard(), finishButton).open();
+    public Optional<T> open(Shell shell, String finishButton) {
+        new CustomLabelWizardDialog(shell, asWizard(), finishButton).open();
+        return finishResult;
     }
 
     /**
      * Create the {@link Wizard} instance and open it in a {@link WizardDialog} for the given {@link Shell}
      */
-    public int open(Shell shell) {
-        return open(shell, IDialogConstants.FINISH_LABEL);
+    public Optional<T> open(Shell shell) {
+        open(shell, IDialogConstants.FINISH_LABEL);
+        return finishResult;
     }
 }

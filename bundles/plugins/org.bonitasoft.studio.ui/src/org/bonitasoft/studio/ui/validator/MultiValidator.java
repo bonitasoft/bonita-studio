@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.internal.runtime.LocalizationUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -33,18 +34,21 @@ public class MultiValidator implements IValidator {
 
     private static final String UNKNOWN_ID = "unknown"; //$NON-NLS-1$
 
-    public static class Builder {
+    public static class Builder implements ValidatorBuilder<MultiValidator> {
 
         private final List<IValidator> validators = new ArrayList<>();
-
-        public Builder() {
-        }
 
         public Builder havingValidators(IValidator... validators) {
             this.validators.addAll(Stream.of(validators).collect(Collectors.toList()));
             return this;
         }
 
+        public Builder havingValidators(ValidatorBuilder<?>... validators) {
+            this.validators.addAll(Stream.of(validators).map(ValidatorBuilder::create).collect(Collectors.toList()));
+            return this;
+        }
+
+        @Override
         public MultiValidator create() {
             return new MultiValidator(validators);
         }
@@ -63,7 +67,13 @@ public class MultiValidator implements IValidator {
         validators.stream()
                 .map(validator -> validator.validate(value))
                 .forEach(status -> multiStatus.add(status));
-        return multiStatus;
+        return maxSeverityStatus(multiStatus);
+    }
+
+    protected IStatus maxSeverityStatus(MultiStatus multiStatus) {
+        return Stream.of(multiStatus.getChildren()).collect(Collectors.<IStatus> maxBy(
+                (s1, s2) -> Integer.valueOf(s1.getSeverity()).compareTo(Integer.valueOf(s2.getSeverity()))))
+                .orElse(ValidationStatus.ok());
     }
 
 }

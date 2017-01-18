@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -38,10 +39,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -52,7 +53,7 @@ import com.google.common.io.Files;
  */
 public abstract class AbstractFileStore implements IRepositoryFileStore, IFileStoreChangeNotifier, IPartListener {
 
-    public final static String ASK_ACTION_ON_CLOSE = "ASK_ACTION_ON_CLOSE";
+    public static final String ASK_ACTION_ON_CLOSE = "ASK_ACTION_ON_CLOSE";
 
     private String name;
     final IRepositoryStore<? extends IRepositoryFileStore> store;
@@ -66,7 +67,7 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
     }
 
     private void initParameters() {
-        parameters = new HashMap<String, Object>();
+        parameters = new HashMap<>();
         parameters.put(ASK_ACTION_ON_CLOSE, true);
     }
 
@@ -86,9 +87,8 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
 
     @Override
     public String getDisplayName() {
-        if (getName().indexOf(".") != -1) {
-            final String name = getName().substring(0, getName().lastIndexOf("."));
-            return name;
+        if (getName().indexOf('.') != -1) {
+            return getName().substring(0, getName().lastIndexOf('.'));
         }
         return getName();
     }
@@ -105,7 +105,8 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
     @Override
     public boolean isReadOnly() {
         final IResource resource = getResource();
-        return resource != null && resource.exists() && resource.getResourceAttributes() != null && resource.getResourceAttributes().isReadOnly();
+        return resource != null && resource.exists() && resource.getResourceAttributes() != null
+                && resource.getResourceAttributes().isReadOnly();
     }
 
     @Override
@@ -160,53 +161,39 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
             }
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, this));
         } else {
-            Display.getDefault().syncExec(new Runnable() {
-
-                @Override
-                public void run() {
-                    MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle,
-                            Messages.bind(Messages.readOnlyFileWarning, getDisplayName()));
-                }
-            });
+            Display.getDefault().syncExec(
+                    () -> MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle,
+                            Messages.bind(Messages.readOnlyFileWarning, getDisplayName())));
         }
-    }
-
-    @Override
-    public IWorkbenchPart openUI() {
-        fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, this));
-        activePart = doOpen();
-        if (activePart != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
-                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
-            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(AbstractFileStore.this);
-        }
-
-        fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_OPEN, this));
-        return activePart;
     }
 
     @Override
     public IWorkbenchPart open() {
-        fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, this));
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-
-                    @Override
-                    public void run() {
-                        activePart = doOpen();
-                        if (activePart != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
-                                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
-                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(AbstractFileStore.this);
-                        }
-                    }
-                });
-            }
+        final Display display = Display.getDefault();
+        display.syncExec(PlatformUtil::hideIntroPart);
+        final boolean[] done = new boolean[1];
+        display.asyncExec(() -> {
+            fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, this));
+            activePart = doOpen();
+            registerPartListener(activePart, getActiveWindow());
+            fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_OPEN, AbstractFileStore.this));
+            done[0] = true;
         });
-
-        fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_OPEN, this));
+        while (!done[0]) {
+            display.syncExec(display::readAndDispatch);
+        }
         return activePart;
+    }
+
+    private void registerPartListener(IWorkbenchPart activePart, IWorkbenchWindow activeWindow) {
+        if (activePart != null && activeWindow != null
+                && activeWindow.getActivePage() != null) {
+            activeWindow.getActivePage().addPartListener(this);
+        }
+    }
+
+    private IWorkbenchWindow getActiveWindow() {
+        return PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     }
 
     @Override
@@ -227,7 +214,8 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
                 throw new IllegalArgumentException(newName + " already exists in this store");
             }
             try {
-                getResource().move(getParentStore().getResource().getFullPath().append(newName), true, Repository.NULL_PROGRESS_MONITOR);
+                getResource().move(getParentStore().getResource().getFullPath().append(newName), true,
+                        Repository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
@@ -287,10 +275,8 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
 
     @Override
     public void partClosed(final IWorkbenchPart part) {
-        if (activePart != null) {
-            if (part.equals(activePart)) {
-                close();
-            }
+        if (Objects.equals(part, activePart)) {
+            close();
         }
     }
 
@@ -336,7 +322,8 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof IRepositoryFileStore) {
-            return getName().equals(((IRepositoryFileStore) obj).getName()) && getParentStore().equals(((IRepositoryFileStore) obj).getParentStore());
+            return getName().equals(((IRepositoryFileStore) obj).getName())
+                    && getParentStore().equals(((IRepositoryFileStore) obj).getParentStore());
         }
         return super.equals(obj);
     }
@@ -352,7 +339,7 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
 
     @Override
     public Set<IResource> getRelatedResources() {
-        return new HashSet<IResource>();
+        return new HashSet<>();
     }
 
     @Override

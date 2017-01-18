@@ -18,6 +18,8 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 import static org.bonitasoft.studio.ui.wizard.WizardBuilder.newWizard;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.bonitasoft.studio.ui.validator.EmptyInputValidator;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
@@ -141,11 +143,9 @@ public class WizardBuilderTest {
 
                             return container;
                         }))
-                .onFinish(() -> {
-                    return MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
-                            String.format("Create %s ?", person.getName()),
-                            "A new person will be added into the contact list.");
-                })/* .open(rule.getShell()) */;
+                .onFinish(() -> Optional.of(MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
+                        String.format("Create %s ?", person.getName()),
+                        "A new person will be added into the contact list.")))/* .open(rule.getShell()) */;
 
     }
 

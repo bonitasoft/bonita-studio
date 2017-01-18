@@ -699,6 +699,12 @@
                   value="org.bonitasoft.studio.rest.api.extension.perspective">
             </equals>
          </with>
+         <with
+               variable="activeWorkbenchWindow.activePerspective">
+           <equals
+                  value="org.bonitasoft.studio.la.perspective">
+            </equals>
+         </with>
          </or>
       </definition>
       <definition
