@@ -29,9 +29,9 @@ public class ArchiveTreeContentProvider implements ITreeContentProvider {
     @Override
     public Object getParent(Object element) {
         if (element instanceof AbstractFolderModel) {
-            return ((AbstractFolderModel) element).getParent();
+            return ((AbstractFolderModel) element).getParent().orElseGet(null);
         }
-        return ((AbstractFileModel) element).getParent();
+        return ((AbstractFileModel) element).getParent().get();
     }
 
     @Override
