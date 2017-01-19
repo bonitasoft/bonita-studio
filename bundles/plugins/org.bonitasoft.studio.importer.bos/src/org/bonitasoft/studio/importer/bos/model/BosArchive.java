@@ -107,7 +107,6 @@ public class BosArchive extends ZipFile {
                     Lists.newArrayList(folderParentSegments),
                     resourcesToOpen, false);
         }
-
     }
 
     protected IStatus validate() {
