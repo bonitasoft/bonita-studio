@@ -34,14 +34,22 @@ public class ImportConflictsCheckerTest {
     @Test
     public void should_perform_conflict_analysis() throws Exception {
         final ImportConflictsChecker conflictsChecker = new ImportConflictsChecker(createRepository());
-        final BosArchive bosArchive = newBosArchive(loadArchiveFile("/customer_support_2.0.bos"));
+        final BosArchive bosArchive = newBosArchive(loadFile("/customer_support_2.0.bos"));
 
         final ImportArchiveModel archiveModel = conflictsChecker.checkConflicts(bosArchive, mock(IProgressMonitor.class));
+        final Optional<ImportStoreModel> libStore = archiveModel.getStores().stream()
+                .filter(folder -> Objects.equals(folder.getFolderName(), "lib")).findFirst();
         final Optional<ImportStoreModel> diagramsStore = archiveModel.getStores().stream()
                 .filter(folder -> Objects.equals(folder.getFolderName(), "diagrams")).findFirst();
 
+        assertThat(isConflicting(libStore)).isFalse();
+        assertThat(isConflicting(diagramsStore)).isTrue();
         assertThat(isConflicting(diagramsStore, "Customer Support-2.0.proc")).isTrue();
         assertThat(isConflicting(diagramsStore, "Customer Support - Set Up-2.0.proc")).isFalse();
+    }
+
+    private boolean isConflicting(Optional<ImportStoreModel> store) throws Exception {
+        return store.orElseThrow(() -> new Exception("store not found")).isConflicting();
     }
 
     private boolean isConflicting(Optional<ImportStoreModel> store, String fileName) throws Exception {
@@ -114,22 +122,13 @@ public class ImportConflictsCheckerTest {
     }
 
     private File createFile(String name) {
-        final File file = mock(File.class);
-        File[] fackArray;
         if (Objects.equals(name, "diagrams")) {
-            fackArray = new File[1];
-            final File fackFile = mock(File.class);
-            when(fackFile.getName()).thenReturn("Customer Support-2.0.proc");
-            when(fackFile.isFile()).thenReturn(true);
-            fackArray[0] = fackFile;
-        } else {
-            fackArray = new File[0];
+            return loadFile("/folder");
         }
-        when(file.listFiles()).thenReturn(fackArray);
-        return file;
+        return loadFile("/emptyFolder");
     }
 
-    private File loadArchiveFile(String filePath) {
+    private File loadFile(String filePath) {
         return new File(BosArchiveTest.class.getResource(filePath).getFile());
     }
 }

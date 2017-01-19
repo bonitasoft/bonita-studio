@@ -9,16 +9,16 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 
 public abstract class AbstractImportModel {
 
-    protected AbstractFolderModel parent;
+    protected Optional<AbstractFolderModel> parent;
     protected String path;
 
     public AbstractImportModel(String path, AbstractFolderModel parent) {
         requireNonNull(path);
         this.path = path;
-        this.parent = parent;
+        this.parent = Optional.ofNullable(parent);
     }
 
-    public AbstractFolderModel getParent() {
+    public Optional<AbstractFolderModel> getParent() {
         return parent;
     }
 
@@ -27,12 +27,17 @@ public abstract class AbstractImportModel {
     }
 
     protected Optional<IRepositoryStore<IRepositoryFileStore>> getParentRepositoryStore() {
-        AbstractFolderModel folder = getParent();
-        while (folder != null && !(folder instanceof ImportStoreModel)) {
-            folder = folder.getParent();
+        Optional<AbstractFolderModel> folder = getParent();
+        return folder.flatMap(this::getParentStoreModel);
+    }
+
+    private Optional<IRepositoryStore<IRepositoryFileStore>> getParentStoreModel(AbstractFolderModel folder) {
+        Optional<AbstractFolderModel> current = Optional.ofNullable(folder);
+        while (current.isPresent() && !(current.get() instanceof ImportStoreModel)) {
+            current = current.flatMap(AbstractImportModel::getParent);
         }
-        return folder instanceof ImportStoreModel ? Optional.of(((ImportStoreModel) folder).getRepositoryStore())
-                : Optional.empty();
+        return current.map(ImportStoreModel.class::cast)
+                .flatMap(store -> Optional.ofNullable(store.getRepositoryStore()));
     }
 
 }

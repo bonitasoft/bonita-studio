@@ -45,6 +45,10 @@ public abstract class AbstractFileModel extends AbstractImportModel implements I
 
     public void setStatus(ConflictStatus status) {
         this.status = status;
+        AbstractFolderModel p = parent.get();
+        if (isConflicting() && !p.isConflicting()) {
+            p.setStatus(status);
+        }
     }
 
     public boolean isConflicting() {

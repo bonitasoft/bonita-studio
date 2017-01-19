@@ -1,5 +1,6 @@
 package org.bonitasoft.studio.importer.bos.model;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -23,6 +24,11 @@ public class ImportStoreModel extends AbstractFolderModel {
 
     public IRepositoryStore<IRepositoryFileStore> getRepositoryStore() {
         return repositoryStore;
+    }
+
+    @Override
+    protected Optional<IRepositoryStore<IRepositoryFileStore>> getParentRepositoryStore() {
+        return Optional.ofNullable(getRepositoryStore());
     }
 
     /*

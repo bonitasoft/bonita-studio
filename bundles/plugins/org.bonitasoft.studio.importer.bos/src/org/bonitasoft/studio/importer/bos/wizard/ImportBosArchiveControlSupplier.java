@@ -14,7 +14,6 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -25,9 +24,9 @@ import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
-import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.model.ImportAction;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
+import org.bonitasoft.studio.importer.bos.model.ImportStoreModel;
 import org.bonitasoft.studio.importer.bos.operation.ParseBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.provider.ActionLabelProvider;
 import org.bonitasoft.studio.importer.bos.provider.ArchiveTreeContentProvider;
@@ -260,7 +259,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         treeSection.setExpanded(true);
         if (conflicts(archiveModel)) {
             for (final TreeItem item : viewer.getTree().getItems()) {
-                if (item.getData() instanceof AbstractFolderModel && isConflicting((AbstractFolderModel) item.getData())) {
+                if (item.getData() instanceof AbstractFolderModel
+                        && ((AbstractFolderModel) item.getData()).isConflicting()) {
                     openItem(item);
                 }
             }
@@ -284,18 +284,11 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         item.setExpanded(true);
         viewer.refresh();
         Stream.<TreeItem> of(item.getItems()).filter(childItem -> childItem.getData() instanceof AbstractFolderModel
-                && isConflicting((AbstractFolderModel) childItem.getData())).forEach(this::openItem);
+                && ((AbstractFolderModel) childItem.getData()).isConflicting()).forEach(this::openItem);
     }
 
     private boolean conflicts(ImportArchiveModel archiveModel) {
-        return archiveModel.getStores().stream().anyMatch(this::isConflicting);
-    }
-
-    private boolean isConflicting(AbstractFolderModel folder) {
-        if (folder.getFiles().stream().anyMatch(file -> Objects.equals(file.getStatus(), ConflictStatus.CONFLICTING))) {
-            return true;
-        }
-        return folder.getFolders().stream().anyMatch(this::isConflicting);
+        return archiveModel.getStores().stream().anyMatch(ImportStoreModel::isConflicting);
     }
 
     protected String openFileDialog(Shell shell) {
