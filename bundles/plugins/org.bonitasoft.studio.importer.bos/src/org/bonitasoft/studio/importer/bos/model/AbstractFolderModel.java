@@ -6,7 +6,6 @@ import java.util.Objects;
 
 public abstract class AbstractFolderModel extends AbstractImportModel implements IPresentable {
 
-    private ConflictStatus status = ConflictStatus.NONE;
     private final List<AbstractFolderModel> folders = new ArrayList<>();
     private final List<AbstractFileModel> files = new ArrayList<>();
     private final String folderName;
@@ -41,21 +40,6 @@ public abstract class AbstractFolderModel extends AbstractImportModel implements
 
     public List<AbstractFolderModel> getFolders() {
         return folders;
-    }
-
-    public boolean isConflicting() {
-        return status == ConflictStatus.CONFLICTING;
-    }
-
-    public void setStatus(ConflictStatus status) {
-        this.status = status;
-        if (parent.isPresent() && isConflicting() && !parent.get().isConflicting()) {
-            parent.get().setStatus(status);
-        }
-    }
-
-    public ConflictStatus getStatus() {
-        return status;
     }
 
     @Override
