@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
+import org.bonitasoft.studio.importer.bos.model.AbstractImportModel;
 import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.model.IPresentable;
 import org.bonitasoft.studio.pics.Pics;
@@ -54,7 +55,7 @@ public class ImportModelLabelProvider extends LabelProvider implements IStyledLa
     public Image getImage(Object element) {
         checkArgument(element instanceof IPresentable);
         final Image image = ((IPresentable) element).getImage();
-        if (image != null && element instanceof AbstractFileModel && ((AbstractFileModel) element).isConflicting()) {
+        if (image != null && element instanceof AbstractImportModel && ((AbstractImportModel) element).isConflicting()) {
             final Image overlayImage = createConflictOverlay(image).createImage();
             toDispose.add(overlayImage);
             return overlayImage;

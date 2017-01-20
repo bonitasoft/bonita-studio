@@ -10,7 +10,6 @@ import org.eclipse.swt.graphics.Image;
 
 public abstract class AbstractFileModel extends AbstractImportModel implements IPresentable {
 
-    private ConflictStatus status = ConflictStatus.NONE;
     protected ImportAction importAction = ImportAction.OVERWRITE;
     private final String fileName;
     private boolean toOpen;
@@ -35,24 +34,8 @@ public abstract class AbstractFileModel extends AbstractImportModel implements I
         return fileName;
     }
 
-    public ConflictStatus getStatus() {
-        return status;
-    }
-
     public void setImportAction(ImportAction importAction) {
         this.importAction = importAction;
-    }
-
-    public void setStatus(ConflictStatus status) {
-        this.status = status;
-        AbstractFolderModel p = parent.get();
-        if (isConflicting() && !p.isConflicting()) {
-            p.setStatus(status);
-        }
-    }
-
-    public boolean isConflicting() {
-        return status == ConflictStatus.CONFLICTING;
     }
 
     public void setToOpen(boolean toOpen) {
