@@ -9,6 +9,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 
 public abstract class AbstractImportModel {
 
+    protected ConflictStatus status = ConflictStatus.NONE;
     protected Optional<AbstractFolderModel> parent;
     protected String path;
 
@@ -24,6 +25,21 @@ public abstract class AbstractImportModel {
 
     public String getPath() {
         return path;
+    }
+
+    public ConflictStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ConflictStatus status) {
+        this.status = status;
+        if (parent.isPresent() && isConflicting() && !parent.get().isConflicting()) {
+            parent.get().setStatus(status);
+        }
+    }
+
+    public boolean isConflicting() {
+        return status == ConflictStatus.CONFLICTING;
     }
 
     protected Optional<IRepositoryStore<IRepositoryFileStore>> getParentRepositoryStore() {
