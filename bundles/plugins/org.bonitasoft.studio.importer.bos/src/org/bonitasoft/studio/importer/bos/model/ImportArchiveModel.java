@@ -28,6 +28,10 @@ public class ImportArchiveModel {
         return Collections.unmodifiableList(stores);
     }
 
+    public boolean isConflicting() {
+        return getStores().stream().anyMatch(ImportStoreModel::isConflicting);
+    }
+
     public BosArchive getBosArchive() {
         return bosArchive;
     }
