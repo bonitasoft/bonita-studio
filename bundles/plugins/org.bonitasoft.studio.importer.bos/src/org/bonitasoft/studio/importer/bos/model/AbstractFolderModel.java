@@ -3,6 +3,7 @@ package org.bonitasoft.studio.importer.bos.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public abstract class AbstractFolderModel extends AbstractImportModel implements IPresentable {
 
@@ -40,6 +41,10 @@ public abstract class AbstractFolderModel extends AbstractImportModel implements
 
     public List<AbstractFolderModel> getFolders() {
         return folders;
+    }
+
+    public Object[] getChildren() {
+        return Stream.concat(getFolders().stream(), getFiles().stream()).toArray();
     }
 
     @Override

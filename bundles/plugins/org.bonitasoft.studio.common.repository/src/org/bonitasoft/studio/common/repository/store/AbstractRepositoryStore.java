@@ -179,11 +179,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
     public T importArchiveData(String folderName, List<ImportArchiveData> importArchiveData, IProgressMonitor monitor)
             throws CoreException {
         importArchiveData.stream().forEach(data -> {
-            if (data.shouldOverwrite()) {
-                FileActionDialog.setYesToAll();
-            } else {
-                FileActionDialog.setNoToAll();
-            }
+            setUserChoice(data);
             try {
                 importArchiveData(data, monitor);
             } catch (final CoreException e) {
@@ -196,7 +192,16 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
     @Override
     public final T importArchiveData(ImportArchiveData importArchiveData, IProgressMonitor monitor)
             throws CoreException {
+        setUserChoice(importArchiveData);
         return doImportArchiveData(importArchiveData, monitor);
+    }
+
+    private void setUserChoice(ImportArchiveData data) {
+        if (data.shouldOverwrite()) {
+            FileActionDialog.setYesToAll();
+        } else {
+            FileActionDialog.setNoToAll();
+        }
     }
 
     protected T doImportIResource(final String fileName, final IResource resource) {

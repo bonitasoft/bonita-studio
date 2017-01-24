@@ -22,11 +22,9 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
-import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
-import org.bonitasoft.studio.importer.bos.model.ImportAction;
+import org.bonitasoft.studio.importer.bos.model.AbstractImportModel;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
-import org.bonitasoft.studio.importer.bos.model.ImportStoreModel;
 import org.bonitasoft.studio.importer.bos.operation.ParseBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.provider.ActionLabelProvider;
 import org.bonitasoft.studio.importer.bos.provider.ArchiveTreeContentProvider;
@@ -67,15 +65,17 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     private TreeViewer viewer;
     private String filePath;
-    private ButtonWidget importAllButton, keepAllButton;
+    private ButtonWidget importAllButton;
+    private ButtonWidget keepAllButton;
+    private ArchiveTreeContentProvider provider;
 
     private ImportArchiveModel archiveModel;
     private TextWidget textWidget;
     private Section treeSection;
     private Label descriptionLabel;
-    private LocalResourceManager resourceManager;
     private Color errorColor;
     private Color successColor;
+    private ImportActionSelector importActionSelector;
 
     /**
      * @see org.bonitasoft.studio.ui.wizard.ControlSupplier#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.core.databinding.DataBindingContext)
@@ -85,7 +85,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().create());
-        this.resourceManager = new LocalResourceManager(JFaceResources.getResources(), mainComposite);
+        final LocalResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), mainComposite);
         this.errorColor = resourceManager.createColor(ColorConstants.ERROR_RGB);
         this.successColor = resourceManager.createColor(ColorConstants.SUCCESS_RGB);
         this.doCreateFileBrowser(mainComposite, ctx);
@@ -121,10 +121,12 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
         fileTreeGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        viewer = new TreeViewer(fileTreeGroup, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+        viewer = new TreeViewer(fileTreeGroup,
+                SWT.VIRTUAL | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
         viewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        viewer.setContentProvider(new ArchiveTreeContentProvider());
-
+        provider = new ArchiveTreeContentProvider(viewer);
+        viewer.setContentProvider(provider);
+        viewer.setUseHashlookup(true); // important for lazy behavior!
         viewer.getTree().setHeaderVisible(true);
         viewer.getTree().setLinesVisible(true);
 
@@ -146,13 +148,14 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         buttonsComposite.setLayoutData(
                 GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.TOP).create());
 
+        importActionSelector = new ImportActionSelector(viewer);
         importAllButton = new ButtonWidget.Builder()
                 .withLabel(Messages.importAll)
                 .alignLeft()
                 .fill()
                 .grabHorizontalSpace()
                 .minimumWidth(BUTTON_WIDTH)
-                .onClick(this::selectOverwriteAll)
+                .onClick(importActionSelector::selectOverwriteAll)
                 .createIn(buttonsComposite);
         importAllButton.disable();
 
@@ -162,28 +165,11 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 .fill()
                 .minimumWidth(BUTTON_WIDTH)
                 .grabHorizontalSpace()
-                .onClick(this::selectKeepAll)
+                .onClick(importActionSelector::selectKeepAll)
                 .createIn(buttonsComposite);
         keepAllButton.disable();
 
         return fileTreeGroup;
-    }
-
-    protected void selectKeepAll(Event e) {
-        selectAll(ImportAction.KEEP);
-    }
-
-    private void selectAll(ImportAction importAction) {
-        archiveModel.getStores().stream().forEach(folder -> {
-            folder.getFiles().stream()
-                    .filter(AbstractFileModel::isConflicting)
-                    .forEach(f -> f.setImportAction(importAction));
-        });
-        viewer.refresh();
-    }
-
-    protected void selectOverwriteAll(Event e) {
-        selectAll(ImportAction.OVERWRITE);
     }
 
     private Composite doCreateFileBrowser(Composite parent, DataBindingContext dbc) {
@@ -223,6 +209,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 final File myFile = new File(filePath);
                 archiveModel = parseArchive(myFile.getAbsolutePath());
                 if (archiveModel != null) {
+                    importActionSelector.setArchiveModel(archiveModel);
                     viewer.setInput(archiveModel);
                     openTree();
                 }
@@ -257,38 +244,37 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     private void openTree() {
         treeSection.setExpanded(true);
-        if (conflicts(archiveModel)) {
-            for (final TreeItem item : viewer.getTree().getItems()) {
+        if (archiveModel.isConflicting()) {
+            final TreeItem[] items = viewer.getTree().getItems();
+            for (int i = 0; i < items.length; i++) {
+                final TreeItem item = items[i];
+                provider.updateElement(archiveModel, i);
                 if (item.getData() instanceof AbstractFolderModel
                         && ((AbstractFolderModel) item.getData()).isConflicting()) {
                     openItem(item);
                 }
             }
-            viewer.refresh();
             descriptionLabel.setText(Messages.conflictMessage);
-            descriptionLabel.getParent().layout();
             treeSection.getDescriptionControl().setForeground(errorColor);
             keepAllButton.enable();
             importAllButton.enable();
-
         } else {
             descriptionLabel.setText(Messages.noConflictMessage);
-            descriptionLabel.getParent().layout();
             treeSection.getDescriptionControl().setForeground(successColor);
             keepAllButton.disable();
             importAllButton.disable();
         }
+        descriptionLabel.getParent().layout();
     }
 
     private void openItem(TreeItem item) {
         item.setExpanded(true);
-        viewer.refresh();
-        Stream.<TreeItem> of(item.getItems()).filter(childItem -> childItem.getData() instanceof AbstractFolderModel
-                && ((AbstractFolderModel) childItem.getData()).isConflicting()).forEach(this::openItem);
-    }
-
-    private boolean conflicts(ImportArchiveModel archiveModel) {
-        return archiveModel.getStores().stream().anyMatch(ImportStoreModel::isConflicting);
+        final AbstractFolderModel parent = (AbstractFolderModel) item.getData();
+        parent.getFolders().stream().forEach(f -> provider.updateElement(parent, parent.getFolders().indexOf(f)));
+        Stream.of(item.getItems())
+                .filter(i -> i.getData() instanceof AbstractImportModel)
+                .filter(i -> ((AbstractImportModel) i.getData()).isConflicting())
+                .forEach(this::openItem);
     }
 
     protected String openFileDialog(Shell shell) {

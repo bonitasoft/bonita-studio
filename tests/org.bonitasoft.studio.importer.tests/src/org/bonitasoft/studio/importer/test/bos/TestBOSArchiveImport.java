@@ -19,21 +19,38 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
+import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.importer.bos.model.BosArchive;
+import org.bonitasoft.studio.importer.bos.model.ImportAction;
+import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.importer.bos.operation.ImportConflictsChecker;
+import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.swt.widgets.Display;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @author Romain Bioteau
  */
 public class TestBOSArchiveImport {
+
+    @Before
+    public void cleanDiagrams() throws Exception {
+        final DiagramRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+        repositoryStore.getChildren().stream().forEach(IRepositoryFileStore::delete);
+    }
 
     @Test
     public void testImportBOSArchiveLight() throws Exception {
@@ -44,6 +61,69 @@ public class TestBOSArchiveImport {
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.run(new NullProgressMonitor());
         assertThat(operation.getStatus()).isNotNull();
+    }
+
+    @Test
+    public void testKeepUserChoices() throws Exception {
+        ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
+        final File file = loadArchiveFile("TestImportUserChoices-1.0.bos");
+        operation.setArchiveFile(file.getAbsolutePath());
+        operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        operation.run(new NullProgressMonitor());
+        StatusAssert.assertThat(operation.getStatus()).isOK();
+        DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getCurrentRepository()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+
+        final byte[] firstDiagram = diagramStore.getDiagram("TestImportUserChoices", "1.0").toByteArray();
+
+        final File conflictingFile = loadArchiveFile("testConflicts-toImport/TestImportUserChoices-1.0.bos");
+
+        final ImportConflictsChecker conflictsChecker = new ImportConflictsChecker(
+                RepositoryManager.getInstance().getCurrentRepository());
+        final ImportArchiveModel archiveModel = conflictsChecker.checkConflicts(new BosArchive(conflictingFile),
+                new NullProgressMonitor());
+        archiveModel.getStores().stream()
+                .filter(store -> Objects.equals(store.getFolderName(), "diagrams"))
+                .forEach(store -> store.getFiles().stream().forEach(diagram -> diagram.setImportAction(ImportAction.KEEP)));
+
+        operation = new ImportBosArchiveOperation(conflictingFile, new SkippableProgressMonitorJobsDialog(
+                Display.getDefault().getActiveShell()), archiveModel);
+        operation.run(new NullProgressMonitor());
+        StatusAssert.assertThat(operation.getStatus()).isOK();
+
+        diagramStore = RepositoryManager.getInstance().getCurrentRepository()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+
+        final byte[] newDiagram = diagramStore.getDiagram("TestImportUserChoices", "1.0").toByteArray();
+        assertThat(firstDiagram).isEqualTo(newDiagram);
+    }
+
+    @Test
+    public void testOverwriteUserChoices() throws Exception {
+        ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
+        final File file = loadArchiveFile("TestImportUserChoices-1.0.bos");
+        operation.setArchiveFile(file.getAbsolutePath());
+        operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        operation.run(new NullProgressMonitor());
+        assertThat(operation.getStatus()).isNotNull();
+
+        DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getCurrentRepository()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+
+        final byte[] firstDiagram = diagramStore.getDiagram("TestImportUserChoices", "1.0").toByteArray();
+
+        final File conflictingFile = loadArchiveFile("testConflicts-toImport/TestImportUserChoices-1.0.bos");
+        operation = new ImportBosArchiveOperation();
+        operation.setArchiveFile(conflictingFile.getAbsolutePath());
+        operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        operation.run(new NullProgressMonitor());
+        assertThat(operation.getStatus()).isNotNull();
+
+        diagramStore = RepositoryManager.getInstance().getCurrentRepository()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+
+        final byte[] newDiagram = diagramStore.getDiagram("TestImportUserChoices", "1.0").toByteArray();
+        assertThat(firstDiagram).isNotEqualTo(newDiagram);
     }
 
     @Test
@@ -92,6 +172,9 @@ public class TestBOSArchiveImport {
                 .getFolder("demo").getFile("FillDBImpl.java")
                 .exists();
         assertThat(javaFileExists).isTrue();
+    }
 
+    private File loadArchiveFile(String filePath) throws IOException {
+        return new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource(filePath)).getFile());
     }
 }
