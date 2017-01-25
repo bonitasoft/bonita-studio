@@ -18,6 +18,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.eclipse.swt.graphics.Image;
 import org.json.JSONException;
 
 /**
@@ -37,5 +38,10 @@ public class WebWidgetFileStore extends InFolderJSONFileStore {
             BonitaStudioLog.error(String.format("Failed to retrieve 'custom' attribute in widget %s", getName()), e);
         }
         return super.canBeExported();
+    }
+
+    @Override
+    public Image getIcon() {
+        return getParentStore().getIcon();
     }
 }

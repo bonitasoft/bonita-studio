@@ -77,8 +77,7 @@ public class BPMNExportTests {
     @Test
     public void testExportToBPMN() throws Exception {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
-                .setArchive(
-                        BPMNExportTests.class.getResource("TestExportToBPMNDiagram_1_0.bos"))
+                .setArchive(BPMNExportTests.class.getResource("TestExportToBPMNDiagram_1_0.bos"))
                 .finish();
 
         final MainProcess mainProcess = (MainProcess) ((ProcessDiagramEditor) bot.activeEditor().getReference()

@@ -49,7 +49,7 @@ public abstract class AbstractFolderModel extends AbstractImportModel implements
 
     @Override
     public String getText() {
-        return getFolderName();
+        return displayName.orElse(getFolderName());
     }
 
 }

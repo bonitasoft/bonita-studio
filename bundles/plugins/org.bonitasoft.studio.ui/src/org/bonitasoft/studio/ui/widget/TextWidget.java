@@ -122,13 +122,14 @@ public class TextWidget extends EditableControlWidget {
         textContainer.setLayout(GridLayoutFactory.fillDefaults().margins(1, 3).create());
         textContainer.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).span(labelAbove ? 2 : 1, 1).create());
-        textContainer.setEnabled(!readOnly);
         configureEnablement(textContainer);
+
         textContainer.addListener(SWT.Paint, e -> drawBorder(textContainer, e));
 
         text = new Text(textContainer, SWT.SINGLE);
         text.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.CENTER).create());
         configureEnablement(text);
+
         text.addListener(SWT.FocusIn, event -> redraw(textContainer));
         text.addListener(SWT.FocusOut, event -> redraw(textContainer));
 
