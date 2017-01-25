@@ -1,8 +1,8 @@
 package org.bonitasoft.studio.importer.bos.provider;
 
+import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.model.ImportAction;
-import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
@@ -11,15 +11,16 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 
-public class DecisionEditingSupport extends EditingSupport {
+public class ImportActionEditingSupport extends EditingSupport {
 
-    private TreeViewer viewer;
-    private ComboBoxViewerCellEditor editor;
+    private final TreeViewer viewer;
+    private final ComboBoxViewerCellEditor editor;
 
-    public DecisionEditingSupport(TreeViewer viewer) {
+    public ImportActionEditingSupport(TreeViewer viewer) {
         super(viewer);
         this.viewer = viewer;
         this.editor = new ComboBoxViewerCellEditor(viewer.getTree(), SWT.BORDER | SWT.READ_ONLY);
+        editor.setActivationStyle(ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
         editor.setContentProvider(ArrayContentProvider.getInstance());
         editor.setLabelProvider(new LabelProvider());
         editor.setInput(ImportAction.values());
