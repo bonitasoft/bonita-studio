@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import org.bonitasoft.studio.decision.ui.Messages;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -34,19 +35,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
-
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestDecisionTable {
 
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public final SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Test
-    public void testConditionExpressions() throws IOException, InterruptedException{
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestDecisionTable-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "TestDecisionTable", getClass(), false);
+    public void testConditionExpressions() throws IOException, InterruptedException {
+        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
+                .setArchive(
+                        TestDecisionTable.class.getResource("TestDecisionTable-1.0.bos"))
+                .finish();
 
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
@@ -71,7 +73,7 @@ public class TestDecisionTable {
 
         changeCondition(2, "myBoolean");
         testUpdateLineButtonEnabled();
-        bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_ERASEBUTTON,0).click();
+        bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_ERASEBUTTON, 0).click();
         bot.sleep(1000);
         testUpdateLineButtonNotEnabled();
 
@@ -81,7 +83,7 @@ public class TestDecisionTable {
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
 
-    private void addTrueCondition(final int idx, final String condition){
+    private void addTrueCondition(final int idx, final String condition) {
         bot.link("<A>" + Messages.addCondition + "</A>").click(Messages.addCondition);
 
         testUpdateLineButtonNotEnabled();
@@ -89,7 +91,7 @@ public class TestDecisionTable {
         testUpdateLineButtonEnabled();
     }
 
-    private void addFalseCondition(final int idx, final String condition){
+    private void addFalseCondition(final int idx, final String condition) {
         bot.link("<A>" + Messages.addCondition + "</A>").click(Messages.addCondition);
 
         testUpdateLineButtonNotEnabled();
@@ -97,17 +99,17 @@ public class TestDecisionTable {
         testUpdateLineButtonNotEnabled();
     }
 
-
-    private void changeCondition(final int idx, final String condition){
+    private void changeCondition(final int idx, final String condition) {
         bot.text(idx).setText(condition);
         bot.sleep(1000);
     }
 
-    private void testUpdateLineButtonEnabled(){
+    private void testUpdateLineButtonEnabled() {
         Assert.assertTrue("Update Line Button should  be enabled", bot.button(Messages.updateLine).isEnabled());
 
     }
-    private void testUpdateLineButtonNotEnabled(){
+
+    private void testUpdateLineButtonNotEnabled() {
         Assert.assertTrue("Update Line Button should not be enabled", !bot.button(Messages.updateLine).isEnabled());
 
     }

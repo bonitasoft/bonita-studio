@@ -25,6 +25,7 @@ import java.util.Date;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.commands.ExecutionException;
@@ -62,7 +63,11 @@ public class TestTimer implements SWTBotConstants {
     @Test
     public void testEditTimerCondition() throws IOException {
         /* Import process */
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestTimer_1_0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "TestTimer", this.getClass(), false);
+        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
+                .setArchive(
+                        TestTimer.class.getResource("TestTimer_1_0.bos"))
+                .finish();
+
         final SWTBotGefEditor gefEditor = bot.gefEditor(bot.activeEditor().getTitle());
         /* Select step on which there is the connector to test */
 
@@ -106,7 +111,8 @@ public class TestTimer implements SWTBotConstants {
         bot.button(Messages.generateCronButtonLabel).click();
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        assertEquals("Error: Wrong Timer Condition", "0 0/5 * 1/1 * ? *", bot.textWithLabel(Messages.timerCondition).getText());
+        assertEquals("Error: Wrong Timer Condition", "0 0/5 * 1/1 * ? *",
+                bot.textWithLabel(Messages.timerCondition).getText());
 
         bot.menu("Diagram").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
@@ -138,7 +144,8 @@ public class TestTimer implements SWTBotConstants {
         bot.button(Messages.generateCronButtonLabel).click();
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        assertEquals("Error: Wrong Timer Condition", "0 30 8 ? 4 MON#2 *", bot.textWithLabel(Messages.timerCondition).getText());
+        assertEquals("Error: Wrong Timer Condition", "0 30 8 ? 4 MON#2 *",
+                bot.textWithLabel(Messages.timerCondition).getText());
 
         bot.menu("Diagram").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
@@ -168,7 +175,8 @@ public class TestTimer implements SWTBotConstants {
         bot.button(Messages.generateCronButtonLabel).click();
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        Assert.assertEquals("Error: Wrong Timer Condition", "0 0 12 ? 1/1 TUE#2 *", bot.textWithLabel(Messages.timerCondition).getText());
+        Assert.assertEquals("Error: Wrong Timer Condition", "0 0 12 ? 1/1 TUE#2 *",
+                bot.textWithLabel(Messages.timerCondition).getText());
 
         bot.menu("Diagram").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
@@ -199,7 +207,8 @@ public class TestTimer implements SWTBotConstants {
         bot.button(Messages.generateCronButtonLabel).click();
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        Assert.assertEquals("Error: Wrong Timer Condition", "0 15 9 ? * WED *", bot.textWithLabel(Messages.timerCondition).getText());
+        Assert.assertEquals("Error: Wrong Timer Condition", "0 15 9 ? * WED *",
+                bot.textWithLabel(Messages.timerCondition).getText());
 
         bot.menu("Diagram").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
@@ -229,7 +238,8 @@ public class TestTimer implements SWTBotConstants {
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
         // "Every day at xx:yy:zz"
-        Assert.assertEquals("Error: Wrong Timer Condition", "0 0 14 1/1 * ? *", bot.textWithLabel(Messages.timerCondition).getText());
+        Assert.assertEquals("Error: Wrong Timer Condition", "0 0 14 1/1 * ? *",
+                bot.textWithLabel(Messages.timerCondition).getText());
 
         bot.menu("Diagram").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
@@ -259,7 +269,8 @@ public class TestTimer implements SWTBotConstants {
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
         // "Every 4 hours"
-        Assert.assertEquals("Error: Wrong Timer Condition", "0 0 0/1 1/1 * ? *", bot.textWithLabel(Messages.timerCondition).getText());
+        Assert.assertEquals("Error: Wrong Timer Condition", "0 0 0/1 1/1 * ? *",
+                bot.textWithLabel(Messages.timerCondition).getText());
 
         bot.menu("Diagram").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
@@ -295,7 +306,8 @@ public class TestTimer implements SWTBotConstants {
 
         final String conditionRes = 2 + " " + daysLabel + " " + "02:02:00";
 
-        Assert.assertEquals("Error: Wrong Timer Condition", conditionRes, bot.textWithLabel(Messages.timerCondition).getText());
+        Assert.assertEquals("Error: Wrong Timer Condition", conditionRes,
+                bot.textWithLabel(Messages.timerCondition).getText());
 
         bot.menu("Diagram").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
@@ -374,7 +386,8 @@ public class TestTimer implements SWTBotConstants {
 
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        Assert.assertEquals("Error: Wrong Timer Condition", "00:02:00", bot.textWithLabel(Messages.timerCondition).getText());
+        Assert.assertEquals("Error: Wrong Timer Condition", "00:02:00",
+                bot.textWithLabel(Messages.timerCondition).getText());
 
         bot.menu("Diagram").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
@@ -413,7 +426,8 @@ public class TestTimer implements SWTBotConstants {
         final SWTBotCombo returnTypeCombo = bot.comboBoxWithLabel(org.bonitasoft.studio.groovy.ui.Messages.returnType);
         returnTypeCombo.setSelection(Long.class.getName());
 
-        Assert.assertEquals("Error: Wrong Timer Condition return type setted", Long.class.getName(), returnTypeCombo.getText());
+        Assert.assertEquals("Error: Wrong Timer Condition return type setted", Long.class.getName(),
+                returnTypeCombo.getText());
 
         // in the shell editor for 'Every hour'
         bot.button(IDialogConstants.OK_LABEL).click();
@@ -421,7 +435,8 @@ public class TestTimer implements SWTBotConstants {
         Assert.assertEquals("Error: Content of text field is not corrected.", "120000", bot.text().getText());
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        Assert.assertEquals("Error: Wrong Timer Condition", "00:02:00", bot.textWithLabel(Messages.timerCondition).getText());
+        Assert.assertEquals("Error: Wrong Timer Condition", "00:02:00",
+                bot.textWithLabel(Messages.timerCondition).getText());
         editTimerCondition(gmfEditor, DEFAULT_TIMER_NAME);
         Assert.assertTrue("Error: Wrong Timer Condition", bot.radio(Messages.durationLabel).isSelected());
         bot.button(IDialogConstants.CANCEL_LABEL).click();

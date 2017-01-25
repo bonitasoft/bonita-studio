@@ -21,10 +21,7 @@ import static org.bonitasoft.studio.expression.editor.i18n.Messages.editExpressi
 import static org.bonitasoft.studio.expression.editor.i18n.Messages.expressionTypeLabel;
 import static org.bonitasoft.studio.expression.editor.i18n.Messages.returnType;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +29,6 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -45,7 +41,6 @@ import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.model.process.diagram.form.edit.parts.FormEditPart;
 import org.bonitasoft.studio.util.test.conditions.ShellIsActiveWithThreadSTacksOnFailure;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
@@ -107,7 +102,6 @@ public class SWTBotTestUtil implements SWTBotConstants {
     public static final int CONTEXTUALPALETTE_SEQUENCEFLOW = 2;
     //TOOLBAREVENT doesn't work, create a comment
     public static final int CONTEXTUALPALETTE_EVENT = 3;
-    public static final String IMPORTER_TITLE_BONITA = "Bonita 6.x and 7.x";
 
     public static void createNewDiagram(final SWTWorkbenchBot wBot) {
         final int nbEditorsBefore = wBot.editors().size();
@@ -207,16 +201,20 @@ public class SWTBotTestUtil implements SWTBotConstants {
             @Override
             public void run() {
                 try {
-                    final List<? extends Widget> widgets = viewerBot.getFinder().findControls(WidgetMatcherFactory.widgetOfType(TabbedPropertyList.class));
-                    Assert.assertTrue("No widget of type " + TabbedPropertyList.class.getName() + " has been found", widgets.size() > 0);
+                    final List<? extends Widget> widgets = viewerBot.getFinder()
+                            .findControls(WidgetMatcherFactory.widgetOfType(TabbedPropertyList.class));
+                    Assert.assertTrue("No widget of type " + TabbedPropertyList.class.getName() + " has been found",
+                            widgets.size() > 0);
                     final TabbedPropertyList tabbedPropertyList = (TabbedPropertyList) widgets.get(0);
                     int i = 0;
                     boolean found = false;
                     ListElement currentTab;
-                    final Method selectMethod = TabbedPropertyList.class.getDeclaredMethod("select", new Class[] { int.class });
+                    final Method selectMethod = TabbedPropertyList.class.getDeclaredMethod("select",
+                            new Class[] { int.class });
                     selectMethod.setAccessible(true);
                     do {
-                        currentTab = (org.eclipse.ui.internal.views.properties.tabbed.view.TabbedPropertyList.ListElement) tabbedPropertyList.getElementAt(i);
+                        currentTab = (org.eclipse.ui.internal.views.properties.tabbed.view.TabbedPropertyList.ListElement) tabbedPropertyList
+                                .getElementAt(i);
                         if (currentTab != null) {
                             final String label = currentTab.getTabItem().getText();
                             if (label.equals(tabeText)) {
@@ -235,53 +233,6 @@ public class SWTBotTestUtil implements SWTBotConstants {
                 }
             }
         });
-    }
-
-    /**
-     * @param wBot
-     * @param resourceNameInClasspath
-     * @param importName: type of import (Bonita, xpdl, jpdl, ...)
-     * @param diagramEditorTitle
-     * @param srcClass
-     * @param mustAskOverride
-     * @throws IOException
-     */
-    public static void importProcessWIthPathFromClass(final SWTWorkbenchBot wBot, final String resourceNameInClasspath, final String importName,
-            final String diagramEditorTitle, final Class<?> srcClass, final boolean mustAskOverride) throws IOException {
-        BonitaStudioLog.log("SWTBot begin to import " + resourceNameInClasspath + " in mode " + importName);
-        final boolean disable = FileActionDialog.getDisablePopup();
-        FileActionDialog.setDisablePopup(true);
-        waitUntilBonitaBPmShellIsActive(wBot);
-        final SWTBotMenu menu = wBot.menu("Diagram");
-        menu.menu("Import...").click();
-
-        wBot.waitUntil(Conditions.shellIsActive("Import..."));
-        URL url = srcClass.getResource(resourceNameInClasspath);
-        url = FileLocator.toFileURL(url);
-        final File file = new File(url.getFile());
-        wBot.text().setText(file.getAbsolutePath());
-        wBot.table().select(importName);
-        wBot.button("Import").click();
-        wBot.waitUntil(new DefaultCondition() {
-
-            @Override
-            public boolean test() throws Exception {
-                for (final SWTBotEditor aBot : wBot.editors()) {
-                    if (aBot.getTitle().contains(diagramEditorTitle)) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            @Override
-            public String getFailureMessage() {
-                return "no active editor";
-            }
-        }, 65000);
-        FileActionDialog.setDisablePopup(disable);
-        BonitaStudioLog.log("SWTBot has imported " + resourceNameInClasspath + " in mode " + importName);
     }
 
     public static void waitUntilBonitaBPmShellIsActive(final SWTWorkbenchBot bot) {
@@ -344,7 +295,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
      * @param poolName
      * @param eventName
      */
-    public static void selectElementFromOverview(final SWTGefBot bot, final String poolName, final String laneName, final String eventName) {
+    public static void selectElementFromOverview(final SWTGefBot bot, final String poolName, final String laneName,
+            final String eventName) {
         final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW);
         view.show();
         view.setFocus();
@@ -382,7 +334,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
      * @param isEvent
      * @param dropLocation
      */
-    public static void selectElementInContextualPaletteAndDragIt(final SWTBotGefEditor gmfEditor, final String selectedElementName, final int elementIndex,
+    public static void selectElementInContextualPaletteAndDragIt(final SWTBotGefEditor gmfEditor,
+            final String selectedElementName, final int elementIndex,
             final Point dropLocation) {
         SWTBotGefEditPart element;
         final SWTBotGefEditPart gep = gmfEditor.getEditPart(selectedElementName);
@@ -390,7 +343,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
         element = gep.parent();
         element.select();
         final IGraphicalEditPart graphicalEditPart = (IGraphicalEditPart) element.part();
-        final NextElementEditPolicy nextElementEditPolicy = (NextElementEditPolicy) graphicalEditPart.getEditPolicy(NextElementEditPolicy.NEXT_ELEMENT_ROLE);
+        final NextElementEditPolicy nextElementEditPolicy = (NextElementEditPolicy) graphicalEditPart
+                .getEditPolicy(NextElementEditPolicy.NEXT_ELEMENT_ROLE);
 
         final IFigure toolbarFigure = nextElementEditPolicy.getFigure(elementIndex);
         final Point location = toolbarFigure.getBounds().getCenter().getCopy();
@@ -398,14 +352,16 @@ public class SWTBotTestUtil implements SWTBotConstants {
         gmfEditor.drag(location.x, location.y, dropLocation.x, dropLocation.y);
     }
 
-    public static void selectElementInContextualPaletteAndDragIt(final SWTBotGefEditor gmfEditor, final String selectedElementName, final int elementIndex,
+    public static void selectElementInContextualPaletteAndDragIt(final SWTBotGefEditor gmfEditor,
+            final String selectedElementName, final int elementIndex,
             final int position) {
         final SWTBotGefEditPart gep = gmfEditor.getEditPart(selectedElementName);
         Assert.assertNotNull("Error: No Edit Part \'" + selectedElementName + "\' found.", gep);
         final SWTBotGefEditPart element = gep.parent();
         element.select();
         final IGraphicalEditPart graphicalEditPart = (IGraphicalEditPart) element.part();
-        final NextElementEditPolicy nextElementEditPolicy = (NextElementEditPolicy) graphicalEditPart.getEditPolicy(NextElementEditPolicy.NEXT_ELEMENT_ROLE);
+        final NextElementEditPolicy nextElementEditPolicy = (NextElementEditPolicy) graphicalEditPart
+                .getEditPolicy(NextElementEditPolicy.NEXT_ELEMENT_ROLE);
 
         final IFigure toolbarFigure = nextElementEditPolicy.getFigure(elementIndex);
         Point dropLocation = null;
@@ -468,7 +424,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
      * @param selectedElementName
      * @param dropLocation
      */
-    public static void selectTaskFromSelectedElementAndDragIt(final SWTBotGefEditor gmfEditor, final String selectedElementName, final Point dropLocation) {
+    public static void selectTaskFromSelectedElementAndDragIt(final SWTBotGefEditor gmfEditor,
+            final String selectedElementName, final Point dropLocation) {
         selectElementInContextualPaletteAndDragIt(gmfEditor, selectedElementName, CONTEXTUALPALETTE_STEP, dropLocation);
     }
 
@@ -477,9 +434,11 @@ public class SWTBotTestUtil implements SWTBotConstants {
      * @param selectedElementName
      * @param dropLocation
      */
-    public static void selectTransitionFromSelectedElementAndDragIt(final SWTBotGefEditor gmfEditor, final String selectedElementName,
+    public static void selectTransitionFromSelectedElementAndDragIt(final SWTBotGefEditor gmfEditor,
+            final String selectedElementName,
             final Point dropLocation) {
-        selectElementInContextualPaletteAndDragIt(gmfEditor, selectedElementName, CONTEXTUALPALETTE_SEQUENCEFLOW, dropLocation);
+        selectElementInContextualPaletteAndDragIt(gmfEditor, selectedElementName, CONTEXTUALPALETTE_SEQUENCEFLOW,
+                dropLocation);
     }
 
     /**
@@ -491,7 +450,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
      * @param multiplicity
      * @param defaultValue
      */
-    public static void addNewData(final SWTBot bot, final String name, final String type, final boolean multiplicity, final String defaultValue) {
+    public static void addNewData(final SWTBot bot, final String name, final String type, final boolean multiplicity,
+            final String defaultValue) {
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.data.i18n.Messages.newVariable));
         bot.textWithLabel(org.bonitasoft.studio.data.i18n.Messages.name + " *").setText(name);
         bot.comboBoxWithLabel(org.bonitasoft.studio.data.i18n.Messages.datatypeLabel).setSelection(type);
@@ -508,7 +468,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
             final String name, final String type, final String defaultValueAsScript) {
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.data.i18n.Messages.newVariable));
         bot.textWithLabel(org.bonitasoft.studio.properties.i18n.Messages.name).setText(name);
-        bot.comboBoxWithLabel(org.bonitasoft.studio.properties.i18n.Messages.datatypeLabel).setSelection(org.bonitasoft.studio.common.Messages.JavaType);
+        bot.comboBoxWithLabel(org.bonitasoft.studio.properties.i18n.Messages.datatypeLabel)
+                .setSelection(org.bonitasoft.studio.common.Messages.JavaType);
         bot.button(org.bonitasoft.studio.data.i18n.Messages.browseClasses).click();
         bot.text().setText(type);
         bot.waitUntil(Conditions.tableHasRows(bot.table(), 2));
@@ -529,7 +490,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
      * @param multiplicity
      * @param defaultValue
      */
-    public static void addListOfOptionData(final SWTBot bot, final String name, final String type, final Map<String, List<String>> options,
+    public static void addListOfOptionData(final SWTBot bot, final String name, final String type,
+            final Map<String, List<String>> options,
             final boolean isMultiple, final String defaultValue) {
         bot.waitUntil(Conditions.shellIsActive("New variable"));
         bot.textWithLabel(org.bonitasoft.studio.properties.i18n.Messages.name + " *").setText(name);
@@ -569,10 +531,13 @@ public class SWTBotTestUtil implements SWTBotConstants {
      * @param startElementName
      * @param endElementName
      */
-    public static void addSequenceFlow(final SWTGefBot bot, final SWTBotGefEditor gmfEditor, final String startElementName, final String endElementName,
+    public static void addSequenceFlow(final SWTGefBot bot, final SWTBotGefEditor gmfEditor, final String startElementName,
+            final String endElementName,
             final int targetAnchorPosition) {
-        final int nbConnection = ModelHelper.getAllItemsOfType(((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement(),
-                ProcessPackage.Literals.SEQUENCE_FLOW).size();
+        final int nbConnection = ModelHelper
+                .getAllItemsOfType(((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement(),
+                        ProcessPackage.Literals.SEQUENCE_FLOW)
+                .size();
         final IGraphicalEditPart gep = (IGraphicalEditPart) gmfEditor.getEditPart(endElementName).parent().part();
         final IFigure figure = gep.getFigure();
         Point targetLocation = null;
@@ -597,13 +562,16 @@ public class SWTBotTestUtil implements SWTBotConstants {
         figure.translateToAbsolute(targetLocation);
         gmfEditor.mainEditPart().part().getViewer().findObjectAt(targetLocation);
 
-        selectElementInContextualPaletteAndDragIt(gmfEditor, startElementName, CONTEXTUALPALETTE_SEQUENCEFLOW, targetLocation);
+        selectElementInContextualPaletteAndDragIt(gmfEditor, startElementName, CONTEXTUALPALETTE_SEQUENCEFLOW,
+                targetLocation);
         bot.waitUntil(new ICondition() {
 
             @Override
             public boolean test() throws Exception {
-                return nbConnection + 1 == ModelHelper.getAllItemsOfType(((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement(),
-                        ProcessPackage.Literals.SEQUENCE_FLOW).size();
+                return nbConnection + 1 == ModelHelper
+                        .getAllItemsOfType(((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement(),
+                                ProcessPackage.Literals.SEQUENCE_FLOW)
+                        .size();
             }
 
             @Override
@@ -617,7 +585,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
         }, 5000, 1000);
     }
 
-    public Point getLocationOfElementInDiagram(final SWTGefBot bot, final SWTBotGefEditor gmfEditor, final String elementName) {
+    public Point getLocationOfElementInDiagram(final SWTGefBot bot, final SWTBotGefEditor gmfEditor,
+            final String elementName) {
         final IGraphicalEditPart gep = (IGraphicalEditPart) gmfEditor.getEditPart(elementName).parent().part();
         final IFigure figure = gep.getFigure();
         final Rectangle dest = figure.getBounds().getCopy();
@@ -690,7 +659,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
      * @param defaultFlow
      * @param condition
      */
-    public static void configureSequenceFlow(final SWTGefBot bot, final String name, final String pool, final boolean defaultFlow, final String condition,
+    public static void configureSequenceFlow(final SWTGefBot bot, final String name, final String pool,
+            final boolean defaultFlow, final String condition,
             final String expressionType) {
         bot.activeEditor().setFocus();
         final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW);
@@ -800,7 +770,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
         bot.styledText().setText(condition);
     }
 
-    public static StyleRange getTextStyleInEditExpressionDialog(final SWTGefBot bot, final String expressionType, final int line, final int column)
+    public static StyleRange getTextStyleInEditExpressionDialog(final SWTGefBot bot, final String expressionType,
+            final int line, final int column)
             throws OperationCanceledException, InterruptedException {
         bot.waitUntil(new ICondition() {
 
@@ -847,7 +818,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
      * @param expression
      * @param returnTypeOfScript
      */
-    public static void setScriptExpression(final SWTGefBot bot, final String scriptName, final String expression, final String returnTypeOfScript) {
+    public static void setScriptExpression(final SWTGefBot bot, final String scriptName, final String expression,
+            final String returnTypeOfScript) {
         bot.waitUntil(Conditions.shellIsActive(editExpression));
         bot.tableWithLabel(expressionTypeLabel).select("Script");
         bot.sleep(1000);
@@ -962,7 +934,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
     /**
      * @param bot
      */
-    public static void editScriptConnector(final SWTGefBot bot, final String scriptName, final String scriptText, final String scriptDescription) {
+    public static void editScriptConnector(final SWTGefBot bot, final String scriptName, final String scriptText,
+            final String scriptDescription) {
         // 1st page
         editConnector(bot, "Script", "Groovy");
 
@@ -971,7 +944,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
         if (scriptDescription != null) {
             bot.textWithLabel("Description").setText(scriptDescription);
         }
-        Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+        Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.",
+                bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
         bot.button(IDialogConstants.NEXT_LABEL).click();
 
         // 3th page
@@ -984,7 +958,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
         bot.button(IDialogConstants.NEXT_LABEL).click();
 
         // 4th page
-        Assert.assertTrue("Error : finish button is not enable in Connectors Wizard.", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+        Assert.assertTrue("Error : finish button is not enable in Connectors Wizard.",
+                bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
 
@@ -999,14 +974,16 @@ public class SWTBotTestUtil implements SWTBotConstants {
         bot.waitUntil(Conditions.shellIsActive("Connectors"));
         bot.text().setText(connectorTool);
         bot.table().select(0);
-        Assert.assertTrue("Error : No " + connectorTool + " " + connectorType + " found in the connector list", bot.button(IDialogConstants.NEXT_LABEL)
-                .isEnabled());
+        Assert.assertTrue("Error : No " + connectorTool + " " + connectorType + " found in the connector list",
+                bot.button(IDialogConstants.NEXT_LABEL)
+                        .isEnabled());
 
         bot.button(IDialogConstants.NEXT_LABEL).click();
 
     }
 
-    public static void editEmailConnector(final SWTGefBot bot, final String emailName, final String emailDescription, final String from, final String to,
+    public static void editEmailConnector(final SWTGefBot bot, final String emailName, final String emailDescription,
+            final String from, final String to,
             final String subject, final String message) {
         // 1st page
         editConnector(bot, "Messaging", "Email");
@@ -1016,18 +993,21 @@ public class SWTBotTestUtil implements SWTBotConstants {
         if (emailDescription != null && !emailDescription.isEmpty()) {
             bot.textWithLabel("Description").setText(emailDescription);
         }
-        Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+        Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.",
+                bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
         bot.button(IDialogConstants.NEXT_LABEL).click();
 
         // 3th page
-        Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+        Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.",
+                bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
         bot.button(IDialogConstants.NEXT_LABEL).click();
 
         // 4th page
         bot.textWithLabel("From *").setText(from);
         bot.textWithLabel("To *").setText(to);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)));
-        Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+        Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.",
+                bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
         bot.button(IDialogConstants.NEXT_LABEL).click();
 
         // 5th page
@@ -1036,16 +1016,19 @@ public class SWTBotTestUtil implements SWTBotConstants {
             bot.textWithLabel("Message").setText(message);
         }
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)));
-        Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+        Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.",
+                bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
         bot.button(IDialogConstants.NEXT_LABEL).click();
 
         // 6th page
-        Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+        Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.",
+                bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
     }
 
-    public static Point computeTargetLocation(final SWTBotGefEditor gmfEditor, final String sourceElement, final int position) {
+    public static Point computeTargetLocation(final SWTBotGefEditor gmfEditor, final String sourceElement,
+            final int position) {
         final SWTBotGefEditPart gep = gmfEditor.getEditPart(sourceElement);
         Assert.assertNotNull("Error: No Edit Part \'" + sourceElement + "\' found.", gep);
         final SWTBotGefEditPart element = gep.parent();
@@ -1074,7 +1057,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
     }
 
-    public static void selectExpressionProposal(final SWTBot bot, final String storageExpressionName, final String returnType, final int index) {
+    public static void selectExpressionProposal(final SWTBot bot, final String storageExpressionName,
+            final String returnType, final int index) {
         bot.toolbarButtonWithId(SWTBOT_ID_EXPRESSIONVIEWER_DROPDOWN, index).click();
         final SWTBotShell proposalShell = bot.shellWithId(SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_SHELL);
         final SWTBot proposalBot = proposalShell.bot();

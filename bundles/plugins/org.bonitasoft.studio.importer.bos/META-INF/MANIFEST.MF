@@ -7,6 +7,7 @@ Bundle-Activator: org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.importer.bos.factory,
+ org.bonitasoft.studio.importer.bos.i18n,
  org.bonitasoft.studio.importer.bos.model,
  org.bonitasoft.studio.importer.bos.operation,
  org.bonitasoft.studio.importer.bos.status,

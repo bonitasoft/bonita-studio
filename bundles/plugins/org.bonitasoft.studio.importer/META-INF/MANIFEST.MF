@@ -40,6 +40,7 @@ Export-Package: org.bonitasoft.studio.importer,
  org.bonitasoft.studio.importer.bpmn,
  org.bonitasoft.studio.importer.builder,
  org.bonitasoft.studio.importer.handler,
+ org.bonitasoft.studio.importer.i18n,
  org.bonitasoft.studio.importer.processors,
  org.bonitasoft.studio.importer.ui.dialog,
  org.bonitasoft.studio.importer.ui.wizard

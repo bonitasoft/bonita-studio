@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.importer.handler;
 
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -32,14 +31,11 @@ public class DefaultImportStatusDialogHandler implements ImportStatusDialogHandl
 
     @Override
     public void open(final Shell parentShell) {
-        //Dot not display during tests
-        if (!FileActionDialog.getDisablePopup()) {
-            if (importStatus.isOK()) {
-                MessageDialog.openInformation(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle,
-                        org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage);
-            } else {
-                openError(parentShell);
-            }
+        if (importStatus.isOK()) {
+            MessageDialog.openInformation(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle,
+                    org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage);
+        } else {
+            openError(parentShell);
         }
     }
 
@@ -47,6 +43,5 @@ public class DefaultImportStatusDialogHandler implements ImportStatusDialogHandl
         new ImportStatusDialog(parentShell, importStatus,
                 false).open();
     }
-
 
 }

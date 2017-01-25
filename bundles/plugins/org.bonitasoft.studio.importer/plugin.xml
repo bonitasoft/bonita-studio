@@ -25,8 +25,8 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            id="org.bonitasoft.studio.application.importCommand"
-            name="%importLabel">
+            id="org.bonitasoft.studio.importer.other.command"
+            name="%otherLabel">
       </command>
    </extension>
    <extension
@@ -40,8 +40,8 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.bonitasoft.studio.importer.handler.ImportHandler"
-            commandId="org.bonitasoft.studio.application.importCommand">
+            class="org.bonitasoft.studio.importer.handler.ImportOtherHandler"
+            commandId="org.bonitasoft.studio.importer.other.command">
          <activeWhen>
             <reference
                   definitionId="isABonitaProduct">

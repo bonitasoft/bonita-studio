@@ -4,17 +4,6 @@
    <extension-point id="validator" name="org.bonitasoft.studio.importer.bos.validator" schema="schema/org.bonitasoft.studio.importer.bos.validator.exsd"/>
 
    <extension
-         point="org.bonitasoft.studio.importer.import">
-      <importFactory
-            inputName="%import_BOS_Name"
-            menuIcon="icons/bos-desc.png"
-            importerFactoryClass="org.bonitasoft.studio.importer.bos.factory.BosArchiveImporterFactory"
-            description="%import_BOS_desc"
-            filterExtensions="*.bos"
-            priorityDisplay="1">
-      </importFactory>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.importer.bos.validator">
       <bosImporterValidator
             class="org.bonitasoft.studio.importer.bos.validator.DiagramValidator">
@@ -26,17 +15,6 @@
       <fragment
             uri="fragment.e4xmi">
       </fragment>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.processusMenu?after=org.bonitasoft.studio.menu.import">
-         <command
-               commandId="org.bonitasoft.studio.importer.bos.command"
-               style="push">
-         </command>
-      </menuContribution>
    </extension>
 
 </plugin>

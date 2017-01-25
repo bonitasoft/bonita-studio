@@ -18,7 +18,6 @@ import java.util.Properties;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
@@ -39,15 +38,15 @@ public class ImportAction implements IIntroAction {
      * (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
+    @Override
     public void run(IIntroSite introSite, Properties param) {
-        IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
-        IHandlerService handlerService = (IHandlerService) part.getSite().getService(IHandlerService.class);
-        ICommandService cmdService = (ICommandService) part.getSite().getService(ICommandService.class);
+        final IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+        final IHandlerService handlerService = (IHandlerService) part.getSite().getService(IHandlerService.class);
+        final ICommandService cmdService = (ICommandService) part.getSite().getService(ICommandService.class);
         // Do not replace by static link since this command does not resolve to the same between BOS and SP
-        Command open = cmdService.getCommand("org.bonitasoft.studio.application.importCommand");//$NON-NLS-1$
-        ExecutionEvent executionEvent = handlerService.createExecutionEvent(open, null);
+        final Command open = cmdService.getCommand("org.bonitasoft.studio.importer.bos.command");//$NON-NLS-1$
         try {
-            open.executeWithChecks(executionEvent);
+            open.executeWithChecks(handlerService.createExecutionEvent(open, null));
         } catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
             BonitaStudioLog.error(e);
         }

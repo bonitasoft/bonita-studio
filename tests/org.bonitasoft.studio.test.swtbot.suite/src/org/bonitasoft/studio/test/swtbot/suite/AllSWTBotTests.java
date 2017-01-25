@@ -29,7 +29,7 @@ import org.bonitasoft.studio.common.diagram.test.OpenNameAndVersionDiagramTest;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.configuration.test.swtbot.TestConfigurationDialog;
+import org.bonitasoft.studio.configuration.test.swtbot.ConfigurationDialogIT;
 import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
 import org.bonitasoft.studio.connectors.test.database.TestDatabaseConnectorOutputMode;
@@ -83,7 +83,7 @@ import org.junit.runners.Suite;
         TestPatternExpressionViewer.class,
         TestLoadSaveConnectorConfiguration.class,
         TestConditionExpression.class,
-        TestConfigurationDialog.class,
+        ConfigurationDialogIT.class,
         OrganizationCreationTest.class,
         TestDeleteDiagrams.class,
         ActorDefinitionTranslationsTest.class,
