@@ -49,7 +49,7 @@ public class ContractInputTypePropertyDescriptor extends CustomAdapterFactoryCon
             Object object,
             IItemPropertyDescriptor itemPropertyDescriptor,
             ILabelProvider labelProvider) {
-        return new ExtendedComboBoxCellEditor(
+        final ExtendedComboBoxCellEditor extendedComboBoxCellEditor = new ExtendedComboBoxCellEditor(
                 composite,
                 new ArrayList<Object>(itemPropertyDescriptor.getChoiceOfValues(object)),
                 labelProvider,
@@ -111,6 +111,8 @@ public class ContractInputTypePropertyDescriptor extends CustomAdapterFactoryCon
             }
 
         };
+        extendedComboBoxCellEditor.setActivationStyle(ExtendedComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
+        return extendedComboBoxCellEditor;
     }
 
     /*

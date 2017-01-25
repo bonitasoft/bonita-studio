@@ -66,6 +66,7 @@ public class FieldTypeEditingSupport extends EditingSupport {
         final ComboBoxViewerCellEditor cellEditor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(),
                 SWT.READ_ONLY);
         cellEditor.setContentProvider(ArrayContentProvider.getInstance());
+        cellEditor.setActivationStyle(ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
         final FieldTypeLabelProvider labelProvider = new FieldTypeLabelProvider();
         cellEditor.setLabelProvider(labelProvider);
         cellEditor.setInput(getInput(labelProvider));

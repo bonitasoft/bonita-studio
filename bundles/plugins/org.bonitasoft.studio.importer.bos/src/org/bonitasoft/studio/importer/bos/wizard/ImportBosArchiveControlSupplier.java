@@ -28,7 +28,7 @@ import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.ParseBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.provider.ActionLabelProvider;
 import org.bonitasoft.studio.importer.bos.provider.ArchiveTreeContentProvider;
-import org.bonitasoft.studio.importer.bos.provider.DecisionEditingSupport;
+import org.bonitasoft.studio.importer.bos.provider.ImportActionEditingSupport;
 import org.bonitasoft.studio.importer.bos.provider.ImportModelLabelProvider;
 import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.bonitasoft.studio.ui.ColorConstants;
@@ -44,7 +44,9 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
+import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
@@ -125,25 +127,26 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
         viewer = new TreeViewer(fileTreeGroup,
                 SWT.VIRTUAL | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
-        viewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        viewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(600, SWT.DEFAULT).create());
         provider = new ArchiveTreeContentProvider(viewer);
         viewer.setContentProvider(provider);
         viewer.setUseHashlookup(true); // important for lazy behavior!
         viewer.getTree().setHeaderVisible(true);
         viewer.getTree().setLinesVisible(true);
+        final TableLayout layout = new TableLayout();
+        layout.addColumnData(new ColumnWeightData(6, true));
+        layout.addColumnData(new ColumnWeightData(2, true));
+        viewer.getTree().setLayout(layout);
 
-        final TreeViewerColumn mainColumn = new TreeViewerColumn(viewer, SWT.NONE);
-        mainColumn.getColumn().setText(Messages.archiveColumn);
-        mainColumn.getColumn().setWidth(450);
-        mainColumn.setLabelProvider(new DelegatingStyledCellLabelProvider(new ImportModelLabelProvider(
+        final TreeViewerColumn archiveColumn = new TreeViewerColumn(viewer, SWT.NONE);
+        archiveColumn.getColumn().setText(Messages.archiveColumn);
+        archiveColumn.setLabelProvider(new DelegatingStyledCellLabelProvider(new ImportModelLabelProvider(
                 new ImportModelLabelProvider.ConflictStyler())));
 
-        final TreeViewerColumn secondColumn = new TreeViewerColumn(viewer, SWT.NONE);
-        secondColumn.getColumn().setText(Messages.actionColumn);
-        secondColumn.getColumn().setWidth(300);
-        secondColumn.setLabelProvider(new DelegatingStyledCellLabelProvider(new ActionLabelProvider()));
-
-        secondColumn.setEditingSupport(new DecisionEditingSupport(viewer));
+        final TreeViewerColumn actionColumn = new TreeViewerColumn(viewer, SWT.NONE);
+        actionColumn.getColumn().setText(Messages.actionColumn);
+        actionColumn.setLabelProvider(new DelegatingStyledCellLabelProvider(new ActionLabelProvider()));
+        actionColumn.setEditingSupport(new ImportActionEditingSupport(viewer));
 
         final Composite buttonsComposite = new Composite(fileTreeGroup, SWT.NONE);
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(5, 2).create());

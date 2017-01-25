@@ -17,12 +17,11 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.contract;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotCCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotList;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
@@ -44,13 +43,13 @@ public class BotContractInputRow extends BotBase {
         swtBotTreeItem = getTreeItem(inputTree(bot), row);
     }
 
-    private SWTBotTree inputTree(final SWTGefBot bot) {
-        return bot.treeWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE);
-    }
-
     public BotContractInputRow(final SWTGefBot bot, final SWTBotTreeItem item) {
         super(bot);
         swtBotTreeItem = item;
+    }
+
+    private SWTBotTree inputTree(final SWTGefBot bot) {
+        return bot.treeWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE);
     }
 
     public BotContractInputRow setName(final String name) {
@@ -64,16 +63,8 @@ public class BotContractInputRow extends BotBase {
     }
 
     private SWTBotTreeItem getTreeItem(final SWTBotTree swtBotTree, final int row) {
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                final Tree tree = swtBotTree.widget;
-                treeItem = tree.getItem(row);
-            }
-        });
+        Display.getDefault().syncExec(() -> treeItem = swtBotTree.widget.getItem(row));
         return new SWTBotTreeItem(treeItem);
-
     }
 
     public BotContractInputRow setDescription(final String description) {
@@ -90,8 +81,8 @@ public class BotContractInputRow extends BotBase {
         waitForInputTree();
         swtBotTreeItem.setFocus();
         swtBotTreeItem.click(TYPE_COLUMN);
-        final SWTBotCCombo comboBox = bot.ccomboBox();
-        comboBox.setSelection(type);
+        final SWTBotList comboBox = bot.list();
+        comboBox.select(type);
         pressEnter();
         return this;
     }
