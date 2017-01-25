@@ -11,7 +11,7 @@ import java.util.Optional;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
@@ -21,13 +21,12 @@ import org.bonitasoft.studio.importer.bos.wizard.ImportBosArchiveControlSupplier
 import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public class ImportBosHandler {
 
     @Execute
-    public void execute(Shell activeShell) {
+    public void execute(Shell activeShell, RepositoryAccessor repositoryAccessor) {
         final ImportBosArchiveControlSupplier bosArchiveControlSupplier = newImportBosArchiveControlSupplier();
         final Optional<ImportArchiveModel> archiveModel = WizardBuilder.<ImportArchiveModel> newWizard()
                 .withTitle(Messages.importBosArchiveTitle)
@@ -40,10 +39,12 @@ public class ImportBosHandler {
                 .open(activeShell, Messages.importButtonLabel);
 
         archiveModel
-                .ifPresent(model -> importArchive(activeShell, model, new File(bosArchiveControlSupplier.getFilePath())));
+                .ifPresent(model -> importArchive(activeShell, model, new File(bosArchiveControlSupplier.getFilePath()),
+                        repositoryAccessor));
     }
 
-    private void importArchive(Shell activeShell, ImportArchiveModel model, File archive) {
+    private void importArchive(Shell activeShell, ImportArchiveModel model, File archive,
+            RepositoryAccessor repositoryAccessor) {
         final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(activeShell);
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(archive, progressManager, model);
         try {
@@ -61,8 +62,8 @@ public class ImportBosHandler {
         }
         operation.openFilesToOpen();
         PlatformUtil.openIntroIfNoOtherEditorOpen();
-        Display.getDefault().asyncExec(() -> new BosImportStatusDialogHandler(operation.getStatus(),
-                RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class))
+        activeShell.getDisplay().asyncExec(() -> new BosImportStatusDialogHandler(operation.getStatus(),
+                repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class))
                         .open(activeShell));
     }
 

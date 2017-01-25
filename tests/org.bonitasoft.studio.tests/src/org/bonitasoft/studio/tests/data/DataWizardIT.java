@@ -78,7 +78,7 @@ import org.junit.runner.RunWith;
 public class DataWizardIT {
 
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
@@ -102,12 +102,16 @@ public class DataWizardIT {
 
     @Test
     public void testEditData() throws Exception {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcessWithData_1_0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "ProcessWithData", this.getClass(),
-                false);
+        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
+                .setArchive(
+                        DataWizardIT.class.getResource("ProcessWithData_1_0.bos"))
+                .finish();
 
         final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotProcessDiagramPerspective(bot);
-        final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = botProcessDiagramPerspective.getDiagramPropertiesPart();
-        final BotGefProcessDiagramEditor activeProcessDiagramEditor = botProcessDiagramPerspective.activeProcessDiagramEditor();
+        final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = botProcessDiagramPerspective
+                .getDiagramPropertiesPart();
+        final BotGefProcessDiagramEditor activeProcessDiagramEditor = botProcessDiagramPerspective
+                .activeProcessDiagramEditor();
         final SWTBotGefEditor gmfEditor = activeProcessDiagramEditor.getGmfEditor();
         final IGraphicalEditPart part = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
         final MainProcess model = (MainProcess) part.resolveSemanticElement();
@@ -148,7 +152,8 @@ public class DataWizardIT {
 
         final int nbData = pool.getData().size();
         final Data firstData = pool.getData().get(0);
-        bot.tableWithId(SWTBotConstants.SWTBOT_ID_PROCESS_DATA_LIST).select(firstData.getName() + " -- " + firstData.getDataType().getName());
+        bot.tableWithId(SWTBotConstants.SWTBOT_ID_PROCESS_DATA_LIST)
+                .select(firstData.getName() + " -- " + firstData.getDataType().getName());
         // button("Remove")
         bot.buttonWithId(SWTBotConstants.SWTBOT_ID_REMOVE_PROCESS_DATA).click();
         bot.button(IDialogConstants.OK_LABEL).click();
@@ -196,7 +201,7 @@ public class DataWizardIT {
                 return "data not removed";
             }
         });
-        
+
         assertEquals("data not added", nbPoolData - 1, pool.getData().size());
     }
 
@@ -264,7 +269,8 @@ public class DataWizardIT {
         bot.sleep(500);
 
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON).click();
-        assertEquals("Expression return type should be " + String.class.getName(), String.class.getName(), bot.comboBoxWithLabel(Messages.returnType).getText());
+        assertEquals("Expression return type should be " + String.class.getName(), String.class.getName(),
+                bot.comboBoxWithLabel(Messages.returnType).getText());
         bot.button(IDialogConstants.OK_LABEL).click();
 
         bot.comboBoxWithLabel(Messages.datatypeLabel).setSelection(DataTypeLabels.integerDataType);
@@ -273,8 +279,9 @@ public class DataWizardIT {
         bot.textWithLabel(Messages.defaultValueLabel).setText(defaultValue);
         bot.sleep(500);
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON).click();
-        assertEquals("Expression return type should be " + Integer.class.getName(), Integer.class.getName(), bot.comboBoxWithLabel(Messages.returnType)
-                .getText());
+        assertEquals("Expression return type should be " + Integer.class.getName(), Integer.class.getName(),
+                bot.comboBoxWithLabel(Messages.returnType)
+                        .getText());
 
         bot.button(IDialogConstants.OK_LABEL).click();
 
@@ -296,7 +303,8 @@ public class DataWizardIT {
                     new AbstractEMFOperation(TransactionUtil.getEditingDomain(pool), "Prepare Pool with Contract Input") {
 
                         @Override
-                        protected IStatus doExecute(final IProgressMonitor monitor, final IAdaptable info) throws ExecutionException {
+                        protected IStatus doExecute(final IProgressMonitor monitor, final IAdaptable info)
+                                throws ExecutionException {
                             final Contract contract = ProcessFactory.eINSTANCE.createContract();
                             final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
                             contractInput.setName("input1");
@@ -312,7 +320,8 @@ public class DataWizardIT {
             }
         });
 
-        final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectPoolDataTab();
+        final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab()
+                .selectPoolDataTab();
         final BotAddDataWizardPage addData = botDataPropertySection.addData();
         addData.editDefaultValueExpression().selectContractInputType().selectContractInput("input1 -- TEXT").ok();
         bot.button(IDialogConstants.CANCEL_LABEL).click();
@@ -332,7 +341,8 @@ public class DataWizardIT {
                     new AbstractEMFOperation(TransactionUtil.getEditingDomain(task), "Prepare Task with Contract Input") {
 
                         @Override
-                        protected IStatus doExecute(final IProgressMonitor monitor, final IAdaptable info) throws ExecutionException {
+                        protected IStatus doExecute(final IProgressMonitor monitor, final IAdaptable info)
+                                throws ExecutionException {
                             final Contract contract = ProcessFactory.eINSTANCE.createContract();
                             final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
                             contractInput.setName("input1");
@@ -348,11 +358,13 @@ public class DataWizardIT {
             }
         });
 
-        final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab();
+        final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab()
+                .selectLocalDataTab();
         final BotAddDataWizardPage addData = botDataPropertySection.addData();
         final BotExpressionEditorDialog editDefaultValueExpression = addData.editDefaultValueExpression();
         Assertions
-                .assertThat(editDefaultValueExpression.listAvailableTypes().containsItem(org.bonitasoft.studio.contract.i18n.Messages.contractInputTypeLabel))
+                .assertThat(editDefaultValueExpression.listAvailableTypes()
+                        .containsItem(org.bonitasoft.studio.contract.i18n.Messages.contractInputTypeLabel))
                 .isFalse();
         editDefaultValueExpression.cancel();
         bot.button(IDialogConstants.CANCEL_LABEL).click();
@@ -365,16 +377,19 @@ public class DataWizardIT {
         diagramPerspective.activeProcessDiagramEditor().selectDiagram();
         diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab().setName("DataInit");
 
-        final EObject selectedSemanticElement = diagramPerspective.activeProcessDiagramEditor().selectElement("Step1").getSelectedSemanticElement();
+        final EObject selectedSemanticElement = diagramPerspective.activeProcessDiagramEditor().selectElement("Step1")
+                .getSelectedSemanticElement();
         final AbstractProcess proc = ModelHelper.getParentProcess(selectedSemanticElement);
 
         // add data to Process
         diagramPerspective.activeProcessDiagramEditor().selectElement(proc.getName());
-        BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectPoolDataTab();
+        BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab()
+                .selectPoolDataTab();
         BotAddDataWizardPage addData = botDataPropertySection.addData();
         addData.setName("procVar_1").setType("Text").finishAndAdd().setName("procVar_2").setType("Integer").finish();
 
-        diagramPerspective.activeProcessDiagramEditor().addElementAfter("Step1", SWTBotTestUtil.CONTEXTUALPALETTE_STEP, PositionConstants.EAST);
+        diagramPerspective.activeProcessDiagramEditor().addElementAfter("Step1", SWTBotTestUtil.CONTEXTUALPALETTE_STEP,
+                PositionConstants.EAST);
 
         // set data on step1 Task
         diagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
@@ -399,7 +414,8 @@ public class DataWizardIT {
         BotExpressionEditorDialog editDefaultValueExpression = editDataWizardPage.editDefaultValueExpression();
         BotTableWidget variableList = editDefaultValueExpression.selectVariableTab().variableList();
 
-        assertThat(variableList.containsItem("varS1_1" + " -- " + "Text")).overridingErrorMessage("Error: Task data can't be initialized by itself").isFalse();
+        assertThat(variableList.containsItem("varS1_1" + " -- " + "Text"))
+                .overridingErrorMessage("Error: Task data can't be initialized by itself").isFalse();
         assertThat(variableList.containsItem("varS1_2" + " -- " + "Integer")).overridingErrorMessage(
                 "Error: Task data can't be initialized by a sibling task data").isFalse();
 
@@ -409,9 +425,11 @@ public class DataWizardIT {
                 "Error: Task data can't be initialized by task data").isFalse();
 
         assertThat(variableList.containsItem("procVar_1" + " -- " + "Text")).overridingErrorMessage(
-                "Error:  Task data sould be initialized by Process data", variableList.getSWTBotWidget().rowCount()).isTrue();
+                "Error:  Task data sould be initialized by Process data", variableList.getSWTBotWidget().rowCount())
+                .isTrue();
         assertThat(variableList.containsItem("procVar_2" + " -- " + "Integer")).overridingErrorMessage(
-                "Error:  Task data sould be initialized by Process data", variableList.getSWTBotWidget().rowCount()).isTrue();
+                "Error:  Task data sould be initialized by Process data", variableList.getSWTBotWidget().rowCount())
+                .isTrue();
 
         editDefaultValueExpression.cancel();
         editDataWizardPage.cancel();

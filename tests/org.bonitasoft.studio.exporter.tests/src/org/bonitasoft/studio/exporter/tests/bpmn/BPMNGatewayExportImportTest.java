@@ -34,7 +34,7 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.XORGateway;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
-import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -65,7 +65,7 @@ public class BPMNGatewayExportImportTest {
     private static InclusiveGateway incGatewayAfterReimport;
     private static XORGateway xorGatewayAfterReimport;
 
-    private SWTGefBot bot = new SWTGefBot();
+    private final SWTGefBot bot = new SWTGefBot();
 
     private static boolean isInitalized = false;
 
@@ -93,37 +93,42 @@ public class BPMNGatewayExportImportTest {
     }
 
     private void prepareTest() throws IOException {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "diagramToTestGateways-6.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "Request_For_Advance_Payment",
-                BPMNGatewayExportImportTest.class, false);
-        SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
-        SWTBotGefEditPart step1Part = editor1.getEditPart("Gate1").parent();
-        MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
-        IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
-        File bpmnFileExported = File.createTempFile("testGateway", ".bpmn");
+        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
+                .setArchive(
+                        BPMNGatewayExportImportTest.class.getResource("diagramToTestGateways-6.0.bos"))
+                .finish();
+
+        final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
+        final SWTBotGefEditPart step1Part = editor1.getEditPart("Gate1").parent();
+        final MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
+        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
+        final File bpmnFileExported = File.createTempFile("testGateway", ".bpmn");
         final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
         assertTrue("Error during export", transformed);
 
-        ResourceSet resourceSet1 = new ResourceSetImpl();
-        final Map<String, Object> extensionToFactoryMap = resourceSet1.getResourceFactoryRegistry().getExtensionToFactoryMap();
+        final ResourceSet resourceSet1 = new ResourceSetImpl();
+        final Map<String, Object> extensionToFactoryMap = resourceSet1.getResourceFactoryRegistry()
+                .getExtensionToFactoryMap();
         final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
         extensionToFactoryMap.put("bpmn", diResourceFactoryImpl);
-        Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
+        final Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
         resource2.load(Collections.emptyMap());
 
         final DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
 
         Display.getDefault().syncExec(new Runnable() {
 
+            @Override
             public void run() {
                 try {
                     mainProcessAfterReimport = BPMNTestUtil.importBPMNFile(model2);
-                } catch (MalformedURLException e) {
+                } catch (final MalformedURLException e) {
                     e.printStackTrace();
                 }
             }
         });
-        Lane lane = (Lane) ((Pool) mainProcessAfterReimport.getElements().get(0)).getElements().get(0);
-        for (Element element : lane.getElements()) {
+        final Lane lane = (Lane) ((Pool) mainProcessAfterReimport.getElements().get(0)).getElements().get(0);
+        for (final Element element : lane.getElements()) {
             if (element instanceof ANDGateway) {
                 andGatewayAfterReimport = (ANDGateway) element;
             }

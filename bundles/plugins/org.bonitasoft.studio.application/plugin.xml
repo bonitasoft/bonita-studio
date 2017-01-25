@@ -117,14 +117,19 @@
                   name="org.bonitasoft.studio.application.separator2"
                   visible="true">
             </separator>
-            <command
-                  commandId="org.bonitasoft.studio.application.importCommand"
-                  disabledIcon="icons/menuIcons/import_disabled.png"
-                  hoverIcon="icons/menuIcons/import_hover.png"
-                  icon="icons/menuIcons/import.png"
+            <menu
                   id="org.bonitasoft.studio.menu.import"
-                  style="push">
-            </command>
+                  label="%importLabel">
+               <command
+                     commandId="org.bonitasoft.studio.importer.bos.command"
+                     icon="icons/menuIcons/import.png"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.bonitasoft.studio.importer.other.command"
+                     style="push">
+               </command>
+            </menu>
             <separator
                   name="org.bonitasoft.studio.application.separator5"
                   visible="true">

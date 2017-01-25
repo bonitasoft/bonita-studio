@@ -23,7 +23,7 @@ import org.bonitasoft.studio.commands.test.ExtractAsSubprocessTest;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.configuration.test.swtbot.TestProcessDependencies;
+import org.bonitasoft.studio.configuration.test.swtbot.ProcessDependenciesConfigurationIT;
 import org.bonitasoft.studio.connectors.test.swtbot.ConnectorEditedInAsingleCommandIT;
 import org.bonitasoft.studio.diagram.test.ConvertActivityTypeWithBoundariesIT;
 import org.bonitasoft.studio.diagram.test.NewRunTest;
@@ -101,7 +101,7 @@ import org.junit.runners.Suite;
         MigrationReporTest.class,
         TestTimer.class,
         ConnectorEditedInAsingleCommandIT.class,
-        TestProcessDependencies.class,
+        ProcessDependenciesConfigurationIT.class,
         ContractIT.class,
         RefactorWidgetIT.class,
         TestFormValidatorIT.class,

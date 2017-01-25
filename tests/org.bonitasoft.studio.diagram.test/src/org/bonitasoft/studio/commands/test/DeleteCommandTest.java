@@ -17,39 +17,34 @@ package org.bonitasoft.studio.commands.test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class DeleteCommandTest   {
+public class DeleteCommandTest {
 
-    private SWTGefBot bot = new SWTGefBot();
-    
-    @Before
-    public void setUp() throws Exception {
-        bot.saveAllEditors();
-        bot.closeAllEditors();
-    }
+    private final SWTGefBot bot = new SWTGefBot();
 
-    @After
-    public void tearDown() throws Exception {
-        bot.activeEditor().saveAndClose();
-        bot.closeAllEditors();
-    }
+    @Rule
+    public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     @Test
     public void deleteElementsInDiagram() throws Exception {
         SWTBotTestUtil.pressEnter();
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "Elements2Delete-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "Elements2Delete", this.getClass(), false);
+
+        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
+                .setArchive(DeleteCommandTest.class.getResource("Elements2Delete-1.0.bos"))
+                .finish();
+
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
         SWTBotGefEditPart part = editor1.getEditPart("Step1").parent();
         part.select();

@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.model.process.InputMappingAssignationType;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.BotCallActivityInputMappingPropertySection;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
@@ -32,34 +33,36 @@ import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class CallActivityMappingIT {
-    
+
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     @Test
     public void testInputMappings() throws IOException {
-        SWTBotTestUtil.importProcessWIthPathFromClass(
-                bot,
-                "ITTest-CallActivityMapping-1.0.bos",
-                SWTBotTestUtil.IMPORTER_TITLE_BONITA,
-                "TTest-CallActivityMapping",
-                this.getClass(),
-                false);
+        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
+                .setArchive(
+                        CallActivityMappingIT.class.getResource("ITTest-CallActivityMapping-1.0.bos"))
+                .finish();
+
         final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotProcessDiagramPerspective(bot);
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step With Known Called Process");
-        final BotCallActivityInputMappingPropertySection botCallActivityMappingPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart()
+        final BotCallActivityInputMappingPropertySection botCallActivityMappingPropertySection = botProcessDiagramPerspective
+                .getDiagramPropertiesPart()
                 .selectExecutionTab().selectDataToSendTab();
         botCallActivityMappingPropertySection.addInputMapping();
         assertThat(SWTBotTestUtil.listExpressionProposal(bot, 0)).containsOnly("processData1 -- " + String.class.getName(),
                 "processData2 -- " + String.class.getName(), "stepData1 -- " + String.class.getName());
 
-        final String[] availableCalledProcessContractInput = bot.ccomboBoxWithId(SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_CALLEDTARGET, 0).items();
+        final String[] availableCalledProcessContractInput = bot
+                .ccomboBoxWithId(SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_CALLEDTARGET, 0).items();
         assertThat(availableCalledProcessContractInput).containsOnly("contractInput1", "contractInput2");
 
-        botCallActivityMappingPropertySection.updateInputMapping(0, null, null, InputMappingAssignationType.DATA, "processData1");
-        final String[] availableCalledProcessData = bot.ccomboBoxWithId(SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_CALLEDTARGET, 0).items();
+        botCallActivityMappingPropertySection.updateInputMapping(0, null, null, InputMappingAssignationType.DATA,
+                "processData1");
+        final String[] availableCalledProcessData = bot
+                .ccomboBoxWithId(SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_CALLEDTARGET, 0).items();
         assertThat(availableCalledProcessData).containsOnly("processData1", "processData2");
 
         botCallActivityMappingPropertySection.deleteInputMapping(0);

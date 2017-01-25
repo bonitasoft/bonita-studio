@@ -34,17 +34,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestProcessDependencies {
+public class ProcessDependenciesConfigurationIT {
 
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     @Test
     public void testImportAndRunProcessWithLotOfDependencies() throws IOException, ExecutionException {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "DiagramWithLotOfDependencies-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "MyDiagram1",
-                getClass(), false);
+        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
+                .setArchive(ProcessDependenciesConfigurationIT.class.getResource("DiagramWithLotOfDependencies-1.0.bos"))
+                .finish();
 
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(), status.isOK());
@@ -52,9 +53,10 @@ public class TestProcessDependencies {
 
     @Test
     public void should_have_connector_dependencies() throws Exception {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "CustomConnectorWithoutDependencies-1.0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA,
-                "CustomConnectorWithoutDependencies",
-                getClass(), false);
+        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
+                .setArchive(
+                        ProcessDependenciesConfigurationIT.class.getResource("CustomConnectorWithoutDependencies-1.0.bos"))
+                .finish();
 
         final BotConfigureDialog configureBot = new BotApplicationWorkbenchWindow(bot).configure();
         final List<String> items = configureBot.selectProcessDependencies().selectTreeView().items();

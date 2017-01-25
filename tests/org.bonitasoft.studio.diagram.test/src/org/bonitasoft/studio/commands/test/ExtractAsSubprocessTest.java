@@ -27,6 +27,7 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.bonitasoft.studio.test.swtbot.util.conditions.EditorOpenCondition;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -41,12 +42,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ExtractAsSubprocessTest {
 
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     public class OneMoreEditor extends DefaultCondition {
 
         private final SWTGefBot bot;
@@ -61,7 +61,8 @@ public class ExtractAsSubprocessTest {
             this.size = size;
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
          * @see org.eclipse.swtbot.swt.finder.waits.ICondition#test()
          */
         @Override
@@ -72,7 +73,8 @@ public class ExtractAsSubprocessTest {
             return bot.editors().size() > size;
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
          * @see org.eclipse.swtbot.swt.finder.waits.ICondition#getFailureMessage()
          */
         @Override
@@ -82,11 +84,11 @@ public class ExtractAsSubprocessTest {
 
     }
 
-    private final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-
+    private final DiagramRepositoryStore store = RepositoryManager.getInstance()
+            .getRepositoryStore(DiagramRepositoryStore.class);
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         bot.closeAllEditors();
     }
 
@@ -96,7 +98,6 @@ public class ExtractAsSubprocessTest {
         bot.closeAllEditors();
     }
 
-
     @Test
     public void testExtractAsSubprocess() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
@@ -104,17 +105,16 @@ public class ExtractAsSubprocessTest {
         final SWTBotGefEditPart stepPart = editor1.getEditPart("Step1").parent();
         final SWTBotGefEditPart startPart = editor1.getEditPart("Start1").parent();
         editor1.select(stepPart, startPart);
-        final SWTBotGefEditPart poolPart = stepPart.parent(/*Compartment*/).parent().parent().parent();
+        final SWTBotGefEditPart poolPart = stepPart.parent(/* Compartment */).parent().parent().parent();
         editor1.clickContextMenu("Extract subprocess");
         editor1.select(poolPart);
-        final Pool pool = (Pool) ((IGraphicalEditPart)poolPart.part()).resolveSemanticElement();
+        final Pool pool = (Pool) ((IGraphicalEditPart) poolPart.part()).resolveSemanticElement();
         assertEquals("Not same number of nodes in main as expected", 1, pool.getElements().size());
         assertEquals("Not same number of transitions in main as expected", 0, pool.getConnections().size());
-        final Pool subprocessPool = (Pool) ((MainProcess)pool.eContainer()).getElements().get(1);
+        final Pool subprocessPool = (Pool) ((MainProcess) pool.eContainer()).getElements().get(1);
         assertEquals("Not same number of nodes as expected", 2, subprocessPool.getElements().size());
         assertEquals("Not same number of transitions as expected", 1, subprocessPool.getConnections().size());
     }
-
 
     @Test
     public void testExtractAsSubprocessFromLane() throws Exception {
@@ -126,14 +126,14 @@ public class ExtractAsSubprocessTest {
         final SWTBotGefEditPart stepPart = editor1.getEditPart("Step1").parent();
         final SWTBotGefEditPart startPart = editor1.getEditPart("Start1").parent();
         editor1.select(stepPart, startPart);
-        final SWTBotGefEditPart lanePart = stepPart.parent(/*Compartment*/).parent();
+        final SWTBotGefEditPart lanePart = stepPart.parent(/* Compartment */).parent();
         editor1.clickContextMenu("Extract subprocess");
         editor1.select(lanePart);
-        final Lane lane = (Lane) ((IGraphicalEditPart)lanePart.part()).resolveSemanticElement();
+        final Lane lane = (Lane) ((IGraphicalEditPart) lanePart.part()).resolveSemanticElement();
         final Pool pool = (Pool) lane.eContainer();
         assertEquals("Not same number of nodes in main as expected", 1, lane.getElements().size());
         assertEquals("Not same number of transitions in main as expected", 0, pool.getConnections().size());
-        final Pool subprocessPool = (Pool) ((MainProcess)pool.eContainer()).getElements().get(1);
+        final Pool subprocessPool = (Pool) ((MainProcess) pool.eContainer()).getElements().get(1);
         assertEquals("Not same number of nodes as expected", 2, subprocessPool.getElements().size());
         assertEquals("Not same number of transitions as expected", 1, subprocessPool.getConnections().size());
     }
@@ -145,12 +145,11 @@ public class ExtractAsSubprocessTest {
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
         final IGraphicalEditPart step1Part = (IGraphicalEditPart) editor1.getEditPart("Step1").parent().part();
         final IGraphicalEditPart step2Part = (IGraphicalEditPart) editor1.getEditPart("Step2").parent().part();
-        final List<IGraphicalEditPart> list = new ArrayList<IGraphicalEditPart>();
+        final List<IGraphicalEditPart> list = new ArrayList<>();
         list.add(step2Part);
         list.add(step1Part);
         assertEquals("Util method does not work", 5, GMFTools.addMissingConnectionsAndBoundaries(list).size());
     }
-
 
     @Test
     public void testExtractSubprocessWithBoundary() throws Exception {
@@ -167,21 +166,22 @@ public class ExtractAsSubprocessTest {
         bot.sleep(100);
         editor1.clickContextMenu("Extract subprocess");
 
-        final Lane lane = (Lane) ((IGraphicalEditPart)poolPart.part()).resolveSemanticElement();
+        final Lane lane = (Lane) ((IGraphicalEditPart) poolPart.part()).resolveSemanticElement();
         //use a waitUntil in order to wait UI operation to finish
         bot.waitUntil(new DefaultCondition() {
 
-			@Override
+            @Override
             public boolean test() throws Exception {
-				return 2 == lane.getElements().size();
-			}
+                return 2 == lane.getElements().size();
+            }
 
-			@Override
+            @Override
             public String getFailureMessage() {
-				return "Not same number of nodes in main as expected";
-			}
-		});
-        assertEquals("Not same number of transitions in main as expected", 1, ((Pool)lane.eContainer()).getConnections().size());
+                return "Not same number of nodes in main as expected";
+            }
+        });
+        assertEquals("Not same number of transitions in main as expected", 1,
+                ((Pool) lane.eContainer()).getConnections().size());
         final Pool subprocessPool = (Pool) ModelHelper.getMainProcess(lane).getElements().get(1);
         assertEquals("Not same number of nodes as expected", 2, subprocessPool.getElements().size());
         assertEquals("Not same number of transitions as expected", 2, subprocessPool.getConnections().size());
@@ -200,32 +200,33 @@ public class ExtractAsSubprocessTest {
         bot.sleep(100);
         editor1.clickContextMenu("Extract subprocess");
 
-        final Lane lane = (Lane) ((IGraphicalEditPart)poolPart.part()).resolveSemanticElement();
+        final Lane lane = (Lane) ((IGraphicalEditPart) poolPart.part()).resolveSemanticElement();
 
         //use a waitUntil in order to wait UI operation to finish
         bot.waitUntil(new DefaultCondition() {
 
-			@Override
+            @Override
             public boolean test() throws Exception {
-				return 2 == lane.getElements().size();
-			}
+                return 2 == lane.getElements().size();
+            }
 
-			@Override
+            @Override
             public String getFailureMessage() {
-				return "Not same number of nodes in main as expected";
-			}
-		});
-        assertEquals("Not same number of transitions in main as expected", 1,((Pool)lane.eContainer()).getConnections().size());
+                return "Not same number of nodes in main as expected";
+            }
+        });
+        assertEquals("Not same number of transitions in main as expected", 1,
+                ((Pool) lane.eContainer()).getConnections().size());
         final Pool subprocessPool = (Pool) ModelHelper.getMainProcess(lane).getElements().get(1);
         assertEquals("Not same number of nodes as expected", 2, subprocessPool.getElements().size());
         assertEquals("Not same number of transitions as expected", 2, subprocessPool.getConnections().size());
     }
 
-    /**
-     * @throws IOException
-     */
-    public void importProcess() throws IOException {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "BoundaryProcess_1_0.bos", SWTBotTestUtil.IMPORTER_TITLE_BONITA, "BoundaryProcess", this.getClass(), false);
+    private void importProcess() throws IOException {
+        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
+                .setArchive(ExtractAsSubprocessTest.class.getResource("BoundaryProcess_1_0.bos"))
+                .finish();
+
         bot.waitUntil(new EditorOpenCondition(store.getChild("BoundaryProcess-1.0.proc").getResource()));
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
     }

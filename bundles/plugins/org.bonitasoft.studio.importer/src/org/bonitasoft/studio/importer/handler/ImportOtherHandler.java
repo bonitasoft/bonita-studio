@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * @author Romain Bioteau
  */
-public class ImportHandler extends AbstractHandler {
+public class ImportOtherHandler extends AbstractHandler {
 
     /*
      * (non-Javadoc)

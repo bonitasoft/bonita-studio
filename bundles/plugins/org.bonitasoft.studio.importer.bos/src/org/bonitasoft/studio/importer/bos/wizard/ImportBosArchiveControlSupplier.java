@@ -37,6 +37,8 @@ import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -179,45 +181,52 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 .setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
         fileBrowserComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
+        final IObservableValue filePathObserveValue = PojoObservables.observeValue(this, "filePath");
+        filePathObserveValue.addValueChangeListener(this::parseArchive);
         textWidget = new TextWidget.Builder()
                 .withLabel(Messages.selectFileToImport)
-                .widthHint(400)
+                .widthHint(500)
                 .alignLeft()
                 .alignMiddle()
                 .labelAbove()
                 .withTargetToModelStrategy(updateValueStrategy()
                         .withValidator(pathValidator(Messages.selectFileToImport).overrideMessage(Messages.invalidFilePath))
                         .create())
-                .bindTo(PojoObservables.observeValue(this, "filePath"))
+                .bindTo(filePathObserveValue)
                 .inContext(dbc)
                 .readOnly()
                 .withButton(Messages.browseButton_label)
-                .onClickButton(this::parseArchive)
+                .onClickButton(this::browseFile)
                 .createIn(fileBrowserComposite);
         textWidget.focusButton();
 
         return parent;
     }
 
-    protected void parseArchive(Event e) {
+    protected void browseFile(Event e) {
         final Optional<String> file = Optional.ofNullable(openFileDialog(Display.getDefault().getActiveShell()));
         if (file.isPresent()) {
             final String filePath = file.get();
             textWidget.setText(filePath);
-            if (new File(file.get()).exists()) {
+            if (new File(filePath).exists()) {
                 savePath(filePath);
-                final File myFile = new File(filePath);
-                archiveModel = parseArchive(myFile.getAbsolutePath());
-                if (archiveModel != null) {
-                    importActionSelector.setArchiveModel(archiveModel);
-                    viewer.setInput(archiveModel);
-                    openTree();
-                }
             } else {
                 descriptionLabel.setText("");
                 viewer.setInput(null);
             }
         }
+    }
+
+    protected void parseArchive(ValueChangeEvent e) {
+        Optional.ofNullable((String) e.diff.getNewValue()).ifPresent(filePath -> {
+            final File myFile = new File(filePath);
+            archiveModel = parseArchive(myFile.getAbsolutePath());
+            if (archiveModel != null) {
+                importActionSelector.setArchiveModel(archiveModel);
+                viewer.setInput(archiveModel);
+                openTree();
+            }
+        });
     }
 
     private ImportArchiveModel parseArchive(String path) {

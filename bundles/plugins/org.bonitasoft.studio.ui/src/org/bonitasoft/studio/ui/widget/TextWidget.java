@@ -21,6 +21,7 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -121,20 +122,13 @@ public class TextWidget extends EditableControlWidget {
         textContainer.setLayout(GridLayoutFactory.fillDefaults().margins(1, 3).create());
         textContainer.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).span(labelAbove ? 2 : 1, 1).create());
-        textContainer.setBackground(
-                readOnly ? Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND)
-                        : Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        textContainer.setEnabled(!readOnly);
+        configureEnablement(textContainer);
         textContainer.addListener(SWT.Paint, e -> drawBorder(textContainer, e));
 
-        final int textStyle = readOnly ? SWT.READ_ONLY : SWT.NONE;
-
-        text = new Text(textContainer, SWT.SINGLE | textStyle);
+        text = new Text(textContainer, SWT.SINGLE);
         text.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.CENTER).create());
-        text.setEnabled(!readOnly);
-
-        text.setBackground(
-                readOnly ? Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND)
-                        : Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        configureEnablement(text);
         text.addListener(SWT.FocusIn, event -> redraw(textContainer));
         text.addListener(SWT.FocusOut, event -> redraw(textContainer));
 
@@ -142,6 +136,13 @@ public class TextWidget extends EditableControlWidget {
         button.ifPresent(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BOTTOM)::applyTo);
 
         return textContainer;
+    }
+
+    public void configureEnablement(Control control) {
+        final Color backgroundColor = Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
+        final Color whiteColor = Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
+        control.setBackground(readOnly ? backgroundColor : whiteColor);
+        control.setEnabled(!readOnly);
     }
 
     public void setText(String text) {
