@@ -24,7 +24,7 @@ public class ProductVersion {
     //OEM Variable to be use for redirect urls
     public static final String REDIRECT_URL_PRODUCT_ID = "bos";
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
-    public static final String CURRENT_VERSION = "7.4.1";
+    public static final String CURRENT_VERSION = "7.4.2";
 
     public static final String CURRENT_YEAR = "2017";
 
