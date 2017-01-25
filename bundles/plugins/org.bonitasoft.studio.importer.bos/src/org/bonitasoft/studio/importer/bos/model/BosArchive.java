@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -28,10 +29,13 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.json.JSONException;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.io.ByteStreams;
 
 public class BosArchive extends ZipFile {
 
@@ -91,9 +95,17 @@ public class BosArchive extends ZipFile {
             file.setToOpen(openAll || resourcesToOpen.contains(file.getFileName()));
             store.addFile(file);
         } else if (segments.size() == 1 && !directStoreChild) {
-            store.addFile(new ImportFileModel(Joiner.on('/').join(concat(parentSegments, segments)), store));
+            final ImportFileModel file = new ImportFileModel(Joiner.on('/').join(concat(parentSegments, segments)), store);
+            if (shouldReadNameInJSON(store, file)) {
+                final String name = extractNameFromJSON(file);
+                file.setDisplayName(String.format("%s (%s)", name, file.getFileName()));
+                file.getParent().ifPresent(parent -> parent
+                        .setDisplayName(String.format("%s (%s)", name, parent.getFolderName())));
+            }
+            store.addFile(file);
         } else if (segments.size() > 1 && directStoreChild) { // Folder
             final Iterable<String> folderParentSegments = concat(parentSegments, segments.subList(0, 1));
+
             final ImportFolderFileStoreModel folder = new ImportFolderFileStoreModel(
                     Joiner.on('/').join(folderParentSegments), store);
             parseFolder(store.addFolder(folder), segments.subList(1, segments.size()),
@@ -107,6 +119,32 @@ public class BosArchive extends ZipFile {
                     Lists.newArrayList(folderParentSegments),
                     resourcesToOpen, false);
         }
+    }
+
+    private boolean shouldReadNameInJSON(AbstractFolderModel store, final ImportFileModel file) {
+        return isAWebRepositoryStore(store)
+                && file.getFileName().startsWith(file.getParent().get().getFolderName())
+                && file.getFileName().endsWith(".json");
+    }
+
+    private boolean isAWebRepositoryStore(AbstractFolderModel store) {
+        return store.getParentRepositoryStore().filter(repoWithName("web_page").or(repoWithName("web_fragments")))
+                .isPresent();
+    }
+
+    private Predicate<IRepositoryStore<IRepositoryFileStore>> repoWithName(String name) {
+        return repo -> name.equals(repo.getName());
+    }
+
+    private String extractNameFromJSON(AbstractFileModel file) {
+        final ZipEntry entry = getEntry(file.getPath());
+        try (InputStream is = getInputStream(entry)) {
+            return new org.json.JSONObject(new String(ByteStreams.toByteArray(is), Charsets.UTF_8))
+                    .getString("name");
+        } catch (final IOException | JSONException e) {
+            BonitaStudioLog.error(e);
+        }
+        return file.getFileName();
     }
 
     protected IStatus validate() {

@@ -12,6 +12,7 @@ public abstract class AbstractImportModel {
     protected ConflictStatus status = ConflictStatus.NONE;
     protected Optional<AbstractFolderModel> parent;
     protected String path;
+    protected Optional<String> displayName = Optional.empty();
 
     public AbstractImportModel(String path, AbstractFolderModel parent) {
         requireNonNull(path);
@@ -25,6 +26,10 @@ public abstract class AbstractImportModel {
 
     public String getPath() {
         return path;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = Optional.ofNullable(displayName);
     }
 
     public ConflictStatus getStatus() {
@@ -43,7 +48,7 @@ public abstract class AbstractImportModel {
     }
 
     protected Optional<IRepositoryStore<IRepositoryFileStore>> getParentRepositoryStore() {
-        Optional<AbstractFolderModel> folder = getParent();
+        final Optional<AbstractFolderModel> folder = getParent();
         return folder.flatMap(this::getParentStoreModel);
     }
 

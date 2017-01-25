@@ -48,7 +48,7 @@ public abstract class AbstractFileModel extends AbstractImportModel implements I
 
     @Override
     public String getText() {
-        return getFileName();
+        return displayName.orElse(getFileName());
     }
 
     @Override
