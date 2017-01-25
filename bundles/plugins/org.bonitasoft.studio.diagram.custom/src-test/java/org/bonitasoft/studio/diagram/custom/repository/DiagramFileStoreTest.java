@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.diagram.custom.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -26,6 +27,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
@@ -91,7 +93,7 @@ public class DiagramFileStoreTest {
     }
 
     @Test
-    public void should_have_related_fileStores_for_process_config_and_app_resources() throws Exception {
+    public void should_have_related_fileStores_for_process_config() throws Exception {
         //Given
         doReturn(repository).when(diagramFileStore).getRepository();
         doReturn(Collections.singletonList(aPoolInAResourceWithUUID("aProcessUUID"))).when(diagramFileStore).getProcesses();
@@ -104,7 +106,43 @@ public class DiagramFileStoreTest {
         final Set<IRepositoryFileStore> relatedFileStore = diagramFileStore.getRelatedFileStore();
 
         //Then
-        assertThat(relatedFileStore).contains(appResFStore, processConfFStore);
+        assertThat(relatedFileStore).contains(processConfFStore);
+    }
+
+    @Test
+    public void should_have_related_fileStores_for_app_resources() throws Exception {
+        //Given
+        doReturn(repository).when(diagramFileStore).getRepository();
+        doReturn(Collections.singletonList(aLegacyPoolInAResourceWithUUID("aProcessUUID"))).when(diagramFileStore)
+                .getProcesses();
+        when(repository.getRepositoryStore(ProcessConfigurationRepositoryStore.class)).thenReturn(processConfStore);
+        when(repository.getRepositoryStore(ApplicationResourceRepositoryStore.class)).thenReturn(appResourcesStore);
+        when(processConfStore.getChild("aProcessUUID.conf")).thenReturn(processConfFStore);
+        when(appResourcesStore.getChild("aProcessUUID")).thenReturn(appResFStore);
+
+        //When
+        final Set<IRepositoryFileStore> relatedFileStore = diagramFileStore.getRelatedFileStore();
+
+        //Then
+        assertThat(relatedFileStore).contains(appResFStore);
+    }
+
+    @Test
+    public void should_not_have_related_fileStores_for_app_resources_if_not_a_legacy_process() throws Exception {
+        //Given
+        doReturn(repository).when(diagramFileStore).getRepository();
+        doReturn(Collections.singletonList(aPoolInAResourceWithUUID("aProcessUUID"))).when(diagramFileStore)
+                .getProcesses();
+        when(repository.getRepositoryStore(ProcessConfigurationRepositoryStore.class)).thenReturn(processConfStore);
+        when(repository.getRepositoryStore(ApplicationResourceRepositoryStore.class)).thenReturn(appResourcesStore);
+        when(processConfStore.getChild("aProcessUUID.conf")).thenReturn(processConfFStore);
+        when(appResourcesStore.getChild("aProcessUUID")).thenReturn(appResFStore);
+
+        //When
+        final Set<IRepositoryFileStore> relatedFileStore = diagramFileStore.getRelatedFileStore();
+
+        //Then
+        assertThat(relatedFileStore).doesNotContain(appResFStore);
     }
 
     @Test
@@ -140,6 +178,15 @@ public class DiagramFileStoreTest {
     private Pool aPoolInAResourceWithUUID(final String uuid) throws IOException {
         final XMIResourceImpl xmiResourceImpl = new XMIResourceImpl();
         final Pool pool = aPool().build();
+        xmiResourceImpl.getContents().add(pool);
+        xmiResourceImpl.setID(pool, uuid);
+        return pool;
+    }
+
+    private Pool aLegacyPoolInAResourceWithUUID(final String uuid) throws IOException {
+        final XMIResourceImpl xmiResourceImpl = new XMIResourceImpl();
+        final Pool pool = aPool().havingFormMapping(aFormMapping().withType(FormMappingType.LEGACY))
+                .build();
         xmiResourceImpl.getContents().add(pool);
         xmiResourceImpl.setID(pool, uuid);
         return pool;
