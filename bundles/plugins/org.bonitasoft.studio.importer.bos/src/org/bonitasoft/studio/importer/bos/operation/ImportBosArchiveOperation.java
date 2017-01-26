@@ -33,6 +33,7 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
+import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.model.ImportFileStoreModel;
@@ -51,6 +52,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.osgi.util.NLS;
 
 public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
@@ -74,6 +76,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     public ImportBosArchiveOperation(File selectedFile, SkippableProgressMonitorJobsDialog progressManager,
             ImportArchiveModel root, boolean launchValidationafterImport) {
+        progressDialog = progressManager;
         archive = selectedFile;
         currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         this.archiveModel = Optional.ofNullable(root);
@@ -93,13 +96,14 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Assert.isNotNull(archive);
         Assert.isNotNull(currentRepository);
-
+        monitor.beginTask(Messages.retrivingDataToImport, IProgressMonitor.UNKNOWN);
         status = new MultiStatus(CommonRepositoryPlugin.PLUGIN_ID, 0, null, null);
         currentRepository.disableBuild();
         currentRepository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
         final boolean disablePopup = FileActionDialog.getDisablePopup();
         final ImportArchiveModel importArchiveModel = archiveModel
                 .orElseGet(parseArchive(archive, currentRepository, monitor));
+        monitor.worked(1);
         try {
             FileActionDialog.setDisablePopup(true);
             doImport(importArchiveModel, monitor);
@@ -117,8 +121,14 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     }
 
     private void doImport(ImportArchiveModel importArchiveModel, IProgressMonitor monitor) {
+        monitor.beginTask(Messages.importBosArchive,
+                (int) importArchiveModel.getStores().stream().flatMap(ImportStoreModel::importableUnits).count());
         importArchiveModel.getStores().stream().flatMap(ImportStoreModel::importableUnits)
-                .forEach(unit -> importUnit(unit, importArchiveModel.getBosArchive(), monitor));
+                .forEach(unit -> {
+                    monitor.subTask(NLS.bind(Messages.importing, unit.getName()));
+                    importUnit(unit, importArchiveModel.getBosArchive(), monitor);
+                    monitor.worked(1);
+                });
     }
 
     private void importUnit(ImportableUnit unit, BosArchive bosArchive, IProgressMonitor monitor) {

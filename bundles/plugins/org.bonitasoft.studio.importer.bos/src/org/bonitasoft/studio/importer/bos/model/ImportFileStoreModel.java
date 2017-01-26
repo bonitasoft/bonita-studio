@@ -33,4 +33,9 @@ public class ImportFileStoreModel extends AbstractFileModel implements Importabl
                 .orElse(null);
     }
 
+    @Override
+    public String getName() {
+        return getText();
+    }
+
 }

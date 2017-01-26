@@ -23,4 +23,6 @@ public interface ImportableUnit {
 
     IRepositoryFileStore doImport(ZipFile zipFile, IProgressMonitor monitor);
 
+    String getName();
+
 }

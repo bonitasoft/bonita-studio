@@ -61,4 +61,9 @@ public class ImportFolderFileStoreModel extends AbstractFolderModel implements I
         return importArchiveData;
     }
 
+    @Override
+    public String getName() {
+        return getText();
+    }
+
 }
