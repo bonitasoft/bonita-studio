@@ -31,7 +31,6 @@ public class Messages extends NLS {
     public static String importButtonLabel;
     public static String errorWhileImporting_message;
     public static String errorWhileImporting_title;
-    public static String importProcessProgressDialog;
     public static String importFileTitle;
     public static String importFileDescription;
     public static String selectFileToImport;
@@ -50,5 +49,8 @@ public class Messages extends NLS {
     public static String importBosArchiveTitle;
     public static String overwriteMessage;
     public static String keepMessage;
+    public static String archiveAnalysis;
+    public static String retrivingDataToImport;
+    public static String importing;
 
 }

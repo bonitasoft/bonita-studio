@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -46,13 +44,13 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.base.Predicate;
 
-
 public class ImportStatusDialog extends MessageDialog {
 
     private final IStatus importStatus;
 
     public ImportStatusDialog(final Shell parentShell, final IStatus importStatus, final boolean canOpen) {
-        super(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle, null, org.bonitasoft.studio.importer.i18n.Messages.importStatusMsg,
+        super(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle, null,
+                org.bonitasoft.studio.importer.i18n.Messages.importStatusMsg,
                 NONE,
                 getLabels(canOpen), 0);
         this.importStatus = importStatus;
@@ -66,6 +64,7 @@ public class ImportStatusDialog extends MessageDialog {
     protected Point getInitialSize() {
         return getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
     }
+
     protected static String[] getLabels(final boolean canOpen) {
         if (canOpen) {
             return new String[] { Messages.seeDetails, IDialogConstants.OK_LABEL, Messages.copyToClipboard };
@@ -99,9 +98,12 @@ public class ImportStatusDialog extends MessageDialog {
             @Override
             public Image getImage(Object element) {
                 switch (((IStatus) element).getSeverity()) {
-                    case IStatus.ERROR: return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
-                    case IStatus.WARNING: return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
-                    case IStatus.INFO: return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
+                    case IStatus.ERROR:
+                        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
+                    case IStatus.WARNING:
+                        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
+                    case IStatus.INFO:
+                        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
                     default:
                         break;
                 }
@@ -144,7 +146,9 @@ public class ImportStatusDialog extends MessageDialog {
         if (Messages.copyToClipboard.equals(label)) {
             final Button copyButton = super.createButton(parent, IDialogConstants.NO_ID, label, defaultButton);
             copyButton.addSelectionListener(new SelectionAdapter() {
-                /* (non-Javadoc)
+
+                /*
+                 * (non-Javadoc)
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override

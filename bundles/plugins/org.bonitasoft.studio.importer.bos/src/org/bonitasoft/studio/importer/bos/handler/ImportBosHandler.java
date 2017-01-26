@@ -45,7 +45,7 @@ public class ImportBosHandler {
 
     private void importArchive(Shell activeShell, ImportArchiveModel model, File archive,
             RepositoryAccessor repositoryAccessor) {
-        final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(activeShell);
+        SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(activeShell);
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(archive, progressManager, model);
         try {
             progressManager.run(true, false, operation);

@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
@@ -24,6 +25,7 @@ public class ImportConflictsChecker {
     }
 
     public ImportArchiveModel checkConflicts(BosArchive bosArchive, IProgressMonitor monitor) throws IOException {
+        monitor.beginTask(Messages.archiveAnalysis, IProgressMonitor.UNKNOWN);
         ImportArchiveModel importModel = bosArchive.toImportModel(currentRepository);
         performAnalysis(importModel);
         return importModel;

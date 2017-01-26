@@ -23,7 +23,6 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
-import org.bonitasoft.studio.importer.bos.model.AbstractImportModel;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.ParseBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.provider.ActionLabelProvider;
@@ -284,8 +283,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         final AbstractFolderModel parent = (AbstractFolderModel) item.getData();
         parent.getFolders().stream().forEach(f -> provider.updateElement(parent, parent.getFolders().indexOf(f)));
         Stream.of(item.getItems())
-                .filter(i -> i.getData() instanceof AbstractImportModel)
-                .filter(i -> ((AbstractImportModel) i.getData()).isConflicting())
+                .filter(i -> i.getData() instanceof AbstractFolderModel)
+                .filter(i -> ((AbstractFolderModel) i.getData()).isConflicting())
                 .forEach(this::openItem);
     }
 
