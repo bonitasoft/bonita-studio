@@ -44,33 +44,38 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ContractIT  {
+public class ContractIT {
 
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     @Test
     public void create_expense_report_step_contract() {
-        final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot).createNewDiagram();
-        final ContractContainer contractContainer = (ContractContainer) botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1")
+        final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot)
+                .createNewDiagram();
+        final ContractContainer contractContainer = (ContractContainer) botProcessDiagramPerspective
+                .activeProcessDiagramEditor().selectElement("Step1")
                 .getSelectedSemanticElement();
         createExpenseReport(botProcessDiagramPerspective, contractContainer);
     }
 
     @Test
     public void create_expense_report_process_contract() {
-        final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot).createNewDiagram();
-        final BotGefProcessDiagramEditor activeProcessDiagramEditor = botProcessDiagramPerspective.activeProcessDiagramEditor();
-        final ContractContainer contractContainer = (ContractContainer) activeProcessDiagramEditor.getSelectedSemanticElement();
+        final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot)
+                .createNewDiagram();
+        final BotGefProcessDiagramEditor activeProcessDiagramEditor = botProcessDiagramPerspective
+                .activeProcessDiagramEditor();
+        final ContractContainer contractContainer = (ContractContainer) activeProcessDiagramEditor
+                .getSelectedSemanticElement();
         createExpenseReport(botProcessDiagramPerspective, contractContainer);
 
     }
 
-    protected void createExpenseReport(final BotProcessDiagramPerspective botProcessDiagramPerspective, final ContractContainer contractContainer) {
+    protected void createExpenseReport(final BotProcessDiagramPerspective botProcessDiagramPerspective,
+            final ContractContainer contractContainer) {
         final BotContractPropertySection contractTabBot = botProcessDiagramPerspective
                 .getDiagramPropertiesPart()
                 .selectExecutionTab()
@@ -78,16 +83,17 @@ public class ContractIT  {
         final BotContractInputTab inputTab = contractTabBot.selectInputTab();
         final BotContractInputRow contractInputRow = inputTab.add();
 
-        contractInputRow.setName("expenseReport").setDescription("An expense report").setType("COMPLEX (java.util.Map)");
+        contractInputRow.setName("expenseReport").setType("COMPLEX (java.util.Map)").setDescription("An expense report");
 
         BotContractInputRow childRow = contractInputRow.getChildRow(0);
-        childRow.setName("expenseLines").clickMultiple().setType("COMPLEX (java.util.Map)");
+        childRow.setName("expenseLines").setType("COMPLEX (java.util.Map)").clickMultiple();
 
         childRow = childRow.getChildRow(0);
         childRow.setName("nature").setDescription("The nature of the expense");
 
         childRow = inputTab.add();
-        childRow.setName("amount").setType("DECIMAL (java.lang.Double)").setDescription("The amount of the expense VAT included in euros");
+        childRow.setName("amount").setType("DECIMAL (java.lang.Double)")
+                .setDescription("The amount of the expense VAT included in euros");
 
         childRow = inputTab.add();
         childRow.setName("expenseDate").setType("DATE (java.util.Date)").setDescription("When the expense was done");
@@ -132,20 +138,25 @@ public class ContractIT  {
         final EList<ContractInput> rootInputs = contract.getInputs();
         assertThat(rootInputs).hasSize(1);
         final ContractInput expenseReportInput = rootInputs.get(0);
-        ContractInputAssert.assertThat(expenseReportInput).hasName("expenseReport").hasDescription("An expense report").hasType(ContractInputType.COMPLEX);
+        ContractInputAssert.assertThat(expenseReportInput).hasName("expenseReport").hasDescription("An expense report")
+                .hasType(ContractInputType.COMPLEX);
         assertThat(expenseReportInput.getInputs()).hasSize(1);
         final ContractInput expenseLineInput = find(expenseReportInput.getInputs(), withContractInputName("expenseLines"));
-        ContractInputAssert.assertThat(find(expenseReportInput.getInputs(), withContractInputName("expenseLines"))).hasType(ContractInputType.COMPLEX)
+        ContractInputAssert.assertThat(find(expenseReportInput.getInputs(), withContractInputName("expenseLines")))
+                .hasType(ContractInputType.COMPLEX)
                 .isMultiple();
         final List<ContractInput> expenseLineInputs = expenseLineInput.getInputs();
         assertThat(expenseLineInputs).hasSize(3);
-        ContractInputAssert.assertThat(find(expenseLineInputs, withContractInputName("nature"))).hasType(ContractInputType.TEXT)
+        ContractInputAssert.assertThat(find(expenseLineInputs, withContractInputName("nature")))
+                .hasType(ContractInputType.TEXT)
                 .isNotMultiple()
                 .hasDescription("The nature of the expense");
-        ContractInputAssert.assertThat(find(expenseLineInputs, withContractInputName("amount"))).hasType(ContractInputType.DECIMAL)
+        ContractInputAssert.assertThat(find(expenseLineInputs, withContractInputName("amount")))
+                .hasType(ContractInputType.DECIMAL)
                 .isNotMultiple()
                 .hasDescription("The amount of the expense VAT included in euros");
-        ContractInputAssert.assertThat(find(expenseLineInputs, withContractInputName("expenseDate"))).hasType(ContractInputType.DATE)
+        ContractInputAssert.assertThat(find(expenseLineInputs, withContractInputName("expenseDate")))
+                .hasType(ContractInputType.DATE)
                 .isNotMultiple()
                 .hasDescription("When the expense was done");
     }

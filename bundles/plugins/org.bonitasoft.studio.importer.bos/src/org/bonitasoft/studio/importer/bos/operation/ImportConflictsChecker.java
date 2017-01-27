@@ -3,15 +3,12 @@ package org.bonitasoft.studio.importer.bos.operation;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
-import java.util.zip.Checksum;
-import java.util.zip.ZipEntry;
 
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
@@ -22,7 +19,6 @@ import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.model.ImportAction;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.gef.tools.AbstractTool.Input;
 
 public class ImportConflictsChecker {
 

@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.bonitasoft.studio.importer.bos.wizard;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.pathValidator;
 
@@ -17,9 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
@@ -29,7 +26,6 @@ import org.bonitasoft.studio.importer.bos.provider.ActionLabelProvider;
 import org.bonitasoft.studio.importer.bos.provider.ArchiveTreeContentProvider;
 import org.bonitasoft.studio.importer.bos.provider.ImportActionEditingSupport;
 import org.bonitasoft.studio.importer.bos.provider.ImportModelLabelProvider;
-import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
@@ -48,6 +44,7 @@ import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
@@ -66,40 +63,51 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     private static final String BOS_EXTENSION = "*.bos";
     private static final String LAST_IMPORT_PATH = null;
 
-    private TreeViewer viewer;
+    protected TreeViewer viewer;
     private String filePath;
-    private ButtonWidget importAllButton;
-    private ButtonWidget keepAllButton;
+    protected ButtonWidget importAllButton;
+    protected ButtonWidget keepAllButton;
     private ArchiveTreeContentProvider provider;
 
-    private ImportArchiveModel archiveModel;
-    private TextWidget textWidget;
-    private Section treeSection;
-    private Label descriptionLabel;
+    protected ImportArchiveModel archiveModel;
+    protected TextWidget textWidget;
+    protected Section treeSection;
+    protected Label descriptionLabel;
     private Color errorColor;
     private Color successColor;
     private ImportActionSelector importActionSelector;
+
+    protected RepositoryAccessor repositoryAccessor;
+    protected IWizardContainer wizardContainer;
+
+    public ImportBosArchiveControlSupplier(RepositoryAccessor repositoryAccessor) {
+        this.repositoryAccessor = repositoryAccessor;
+    }
 
     /**
      * @see org.bonitasoft.studio.ui.wizard.ControlSupplier#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.core.databinding.DataBindingContext)
      */
     @Override
-    public Control createControl(Composite parent, DataBindingContext ctx) {
+    public Control createControl(Composite parent, IWizardContainer container, DataBindingContext ctx) {
+        this.wizardContainer = container;
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().create());
         final LocalResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), mainComposite);
         this.errorColor = resourceManager.createColor(ColorConstants.ERROR_RGB);
         this.successColor = resourceManager.createColor(ColorConstants.SUCCESS_RGB);
-        this.doCreateFileBrowser(mainComposite, ctx);
-
-        this.doCreateFileTree(mainComposite, ctx);
+        doCreateFileBrowser(mainComposite, ctx);
+        doCreateAdditionalControl(mainComposite, ctx);
+        doCreateFileTree(mainComposite, ctx);
 
         return mainComposite;
     }
 
-    private void doCreateFileTree(Composite parent, DataBindingContext dbc) {
+    protected void doCreateAdditionalControl(Composite mainComposite, DataBindingContext ctx) {
+        // should be overwritten in subclasses
+    }
 
+    private void doCreateFileTree(Composite parent, DataBindingContext dbc) {
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
         composite.setLayoutData(
@@ -177,7 +185,6 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     }
 
     private Composite doCreateFileBrowser(Composite parent, DataBindingContext dbc) {
-
         final Composite fileBrowserComposite = new Composite(parent, SWT.NONE);
         fileBrowserComposite
                 .setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
@@ -231,29 +238,23 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         });
     }
 
-    private ImportArchiveModel parseArchive(String path) {
+    protected ImportArchiveModel parseArchive(String path) {
         final File selectedFile = new File(path);
-        final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(
-                Display.getDefault().getActiveShell());
-        final ParseBosArchiveOperation operation = new ParseBosArchiveOperation(selectedFile,
-                RepositoryManager.getInstance().getCurrentRepository());
+        final ParseBosArchiveOperation operation = newParseOperation(selectedFile);
         try {
-            progressManager.run(true, false, operation);
+            wizardContainer.run(true, false, operation);
         } catch (final InvocationTargetException | InterruptedException e) {
-            final Throwable t = e instanceof InvocationTargetException
-                    ? ((InvocationTargetException) e).getTargetException() : e;
-            BonitaStudioLog.error("Import has failed for file " + selectedFile.getName(), e);
-            String message = Messages.errorWhileImporting_message;
-            if (t != null && !isNullOrEmpty(t.getMessage())) {
-                message = t.getMessage();
-            }
-            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title, message, e)
-                    .open();
+            throw new RuntimeException("Failed to parse BOS Archive", e);
         }
         return operation.getImportArchiveModel();
     }
 
-    private void openTree() {
+    protected ParseBosArchiveOperation newParseOperation(final File selectedFile) {
+        return new ParseBosArchiveOperation(selectedFile,
+                repositoryAccessor.getCurrentRepository());
+    }
+
+    protected void openTree() {
         treeSection.setExpanded(true);
         if (archiveModel.isConflicting()) {
             final TreeItem[] items = viewer.getTree().getItems();
@@ -319,4 +320,5 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
+
 }

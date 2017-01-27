@@ -79,7 +79,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         progressDialog = progressManager;
         archive = selectedFile;
         currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-        this.archiveModel = Optional.ofNullable(root);
+        archiveModel = Optional.ofNullable(root);
         this.launchValidationafterImport = launchValidationafterImport;
     }
 

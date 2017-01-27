@@ -36,6 +36,7 @@ public class TextWidget extends EditableControlWidget {
         private Optional<String> placeholder = Optional.empty();
         private Optional<String> labelButton = Optional.empty();
         private Optional<Listener> buttonListner = Optional.empty();
+        private Optional<Integer> delay = Optional.empty();
 
         /**
          * Adds a placeholder to the resulting {@link Text}
@@ -61,6 +62,11 @@ public class TextWidget extends EditableControlWidget {
             return this;
         }
 
+        public Builder withDelay(int delay) {
+            this.delay = Optional.of(delay);
+            return this;
+        }
+
         @Override
         public TextWidget createIn(Composite container) {
             final TextWidget control = new TextWidget(container, labelAbove, horizontalLabelAlignment,
@@ -72,11 +78,16 @@ public class TextWidget extends EditableControlWidget {
             placeholder.ifPresent(control::setPlaceholder);
 
             if (ctx != null && modelObservable != null) {
-                control.bindControl(ctx, control.observeText(SWT.Modify), modelObservable, targetToModelStrategy,
+                control.bindControl(ctx,
+                        delay.map(time -> control.observeText(time, SWT.Modify))
+                                .orElse(control.observeText(SWT.Modify)),
+                        modelObservable,
+                        targetToModelStrategy,
                         modelToTargetStrategy);
             }
             return control;
         }
+
     }
 
     private Text text;
@@ -90,6 +101,10 @@ public class TextWidget extends EditableControlWidget {
 
     public ISWTObservableValue observeText(int event) {
         return SWTObservables.observeText(text, event);
+    }
+
+    public ISWTObservableValue observeText(int delay, int event) {
+        return SWTObservables.observeDelayedValue(delay, SWTObservables.observeText(text, event));
     }
 
     public void setPlaceholder(String placeholder) {
@@ -116,6 +131,10 @@ public class TextWidget extends EditableControlWidget {
         this.text.setFocus();
     }
 
+    public String getText() {
+        return text.getText();
+    }
+
     @Override
     protected Control createControl() {
         final Composite textContainer = new Composite(this, SWT.NONE);
@@ -137,6 +156,10 @@ public class TextWidget extends EditableControlWidget {
         button.ifPresent(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BOTTOM)::applyTo);
 
         return textContainer;
+    }
+
+    public void addTextListener(int eventType, Listener listener) {
+        text.addListener(eventType, listener);
     }
 
     public void configureEnablement(Control control) {

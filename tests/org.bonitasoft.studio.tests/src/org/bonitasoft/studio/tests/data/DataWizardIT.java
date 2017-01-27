@@ -374,15 +374,16 @@ public class DataWizardIT {
     public void testDatacantBeInitializeByItself() {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
-        diagramPerspective.activeProcessDiagramEditor().selectDiagram();
+        BotGefProcessDiagramEditor activeProcessDiagramEditor = diagramPerspective.activeProcessDiagramEditor();
+        activeProcessDiagramEditor.selectDiagram();
         diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab().setName("DataInit");
 
-        final EObject selectedSemanticElement = diagramPerspective.activeProcessDiagramEditor().selectElement("Step1")
+        final EObject selectedSemanticElement = activeProcessDiagramEditor.selectElement("Step1")
                 .getSelectedSemanticElement();
         final AbstractProcess proc = ModelHelper.getParentProcess(selectedSemanticElement);
 
         // add data to Process
-        diagramPerspective.activeProcessDiagramEditor().selectElement(proc.getName());
+        activeProcessDiagramEditor.selectElement(proc.getName());
         BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab()
                 .selectPoolDataTab();
         BotAddDataWizardPage addData = botDataPropertySection.addData();

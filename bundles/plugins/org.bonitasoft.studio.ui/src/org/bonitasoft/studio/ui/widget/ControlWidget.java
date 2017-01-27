@@ -43,6 +43,7 @@ public abstract class ControlWidget extends Composite {
             boolean labelAbove, int horizontalLabelAlignment, int verticalLabelAlignment, int labelHint, String labelValue,
             String message) {
         super(parent, SWT.NONE);
+        buttonLabel = Optional.empty();
         init(parent, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, labelValue, message);
     }
 
@@ -90,6 +91,10 @@ public abstract class ControlWidget extends Composite {
             final Label a = new Label(this, SWT.NONE);
             a.setLayoutData(GridDataFactory.swtDefaults().hint(labelHint, SWT.DEFAULT).exclude(labelAbove).create());
         });
+    }
+
+    public IStatus getStatus() {
+        return status;
     }
 
     protected abstract Control createControl();

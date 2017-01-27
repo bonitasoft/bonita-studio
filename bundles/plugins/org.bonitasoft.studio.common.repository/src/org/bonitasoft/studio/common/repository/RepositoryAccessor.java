@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.common.repository;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 
@@ -78,6 +80,14 @@ public class RepositoryAccessor {
 
     public IWorkspace getWorkspace() {
         return getCurrentRepository().getProject().getWorkspace();
+    }
+
+    public Repository getRepository(String targetRepository) {
+        return repositoryManagerInstance.getRepository(targetRepository);
+    }
+
+    public List<IRepository> getAllRepositories() {
+        return repositoryManagerInstance.getAllRepositories();
     }
 
 }

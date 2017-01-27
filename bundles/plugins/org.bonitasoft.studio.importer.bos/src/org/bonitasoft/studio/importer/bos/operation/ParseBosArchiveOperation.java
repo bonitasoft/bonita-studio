@@ -16,25 +16,31 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 public class ParseBosArchiveOperation implements IRunnableWithProgress {
 
     private IStatus status;
-    private File archiveFile;
+    private final File archiveFile;
     private ImportArchiveModel archiveModel;
-    protected Repository currentRepository;
+    protected Repository repository;
 
     public ParseBosArchiveOperation(File archiveFile, Repository repository) {
         Objects.requireNonNull(archiveFile);
         Assert.isTrue(archiveFile.exists());
         Objects.requireNonNull(repository);
         this.archiveFile = archiveFile;
-        currentRepository = repository;
+        this.repository = repository;
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        ImportConflictsChecker parser = new ImportConflictsChecker(currentRepository);
+        final boolean isOpen = repository.getProject().isOpen();
+        repository.open(monitor);
+        final ImportConflictsChecker parser = new ImportConflictsChecker(repository);
         try {
             archiveModel = parser.checkConflicts(new BosArchive(archiveFile), monitor);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new InvocationTargetException(e);
+        } finally {
+            if (!isOpen) {
+                repository.close();
+            }
         }
     }
 

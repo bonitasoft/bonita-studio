@@ -2,9 +2,6 @@ package org.bonitasoft.studio.importer.bos.model;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.Optional;
-
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.swt.graphics.Image;
 
@@ -53,11 +50,11 @@ public abstract class AbstractFileModel extends AbstractImportModel implements I
 
     @Override
     public Image getImage() {
-        final Optional<IRepositoryStore<IRepositoryFileStore>> repositoryStore = getParentRepositoryStore();
-        return repositoryStore.map(store -> {
-            final IRepositoryFileStore fileStore = store.createRepositoryFileStore(getFileName());
-            return fileStore != null ? fileStore.getIcon() : store.getIcon();
-        }).orElse(null);
+        return getParentRepositoryStore().map(IRepositoryStore::getIcon).orElse(null);
+    }
+
+    public void resetStatus() {
+        this.status = ConflictStatus.NONE;
     }
 
 }

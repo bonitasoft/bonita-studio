@@ -6,6 +6,7 @@ import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.Image;
@@ -22,10 +23,7 @@ public class ImportFolderFileStoreModel extends AbstractFolderModel implements I
      */
     @Override
     public Image getImage() {
-        return getParentRepositoryStore().map(store -> {
-            final IRepositoryFileStore fileStore = store.createRepositoryFileStore(getFolderName());
-            return fileStore != null ? fileStore.getIcon() : store.getIcon();
-        }).orElse(null);
+        return getParentRepositoryStore().map(IRepositoryStore::getIcon).orElse(null);
     }
 
     /*

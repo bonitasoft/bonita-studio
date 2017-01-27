@@ -80,7 +80,8 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         final String oldVersion = diagram.getVersion();
 
         final String partName = editor.getPartName();
-        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
 
         final List<Form> forms = computeFormsToReopen(editor);
         final DuplicateDiagramOperation operation = new DuplicateDiagramOperation();
@@ -120,8 +121,10 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
     protected void cleanOldFileStores(final DiagramFileStore diagramFileStore) {
         final List<Pool> allPools = ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL);
 
-        final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
-        final ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+        final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance()
+                .getRepositoryStore(ApplicationResourceRepositoryStore.class);
+        final ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance()
+                .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
         for (final Pool p : allPools) {
             IRepositoryFileStore fileStore = resourceStore.getChild(ModelHelper.getEObjectID(p));
             if (fileStore != null) {
@@ -144,7 +147,8 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         final IResource diagramResource = EditorUtil.retrieveResourceFromEditorInput(editorInput);
 
         if (activeWorkbenchWindow != null && activeWorkbenchWindow.getActivePage() != null) {
-            final IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
+            final IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .getEditorReferences();
             // look for the resource in other editors
             for (final IEditorReference iEditorReference : editors) {
                 try {
@@ -153,7 +157,8 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
                     if (diagramResource != null && diagramResource.equals(iResource)) {
                         final IWorkbenchPart part = iEditorReference.getPart(false);
                         if (part != null && part instanceof DiagramDocumentEditor) {
-                            final EObject root = ((DiagramDocumentEditor) part).getDiagramEditPart().resolveSemanticElement();
+                            final EObject root = ((DiagramDocumentEditor) part).getDiagramEditPart()
+                                    .resolveSemanticElement();
                             if (root instanceof Form) {
                                 formsToReopen.add(EcoreUtil.copy((Form) root));
                             }

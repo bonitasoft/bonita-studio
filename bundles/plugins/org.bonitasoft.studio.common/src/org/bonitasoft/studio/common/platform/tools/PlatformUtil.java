@@ -15,6 +15,8 @@
 
 package org.bonitasoft.studio.common.platform.tools;
 
+import static org.assertj.core.api.Assertions.filter;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -125,74 +127,50 @@ public class PlatformUtil {
     public static void openIntroIfNoOtherEditorOpen() {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         if (workbench != null) {
-            final Display display = workbench.getDisplay();
-            display.asyncExec(new Runnable() {
-
-                @Override
-                public void run() {
-                    final IWorkbenchPage activePage = workbench.getActiveWorkbenchWindow().getActivePage();
-                    if (activePage != null) {
-                        /* Open intro if there is no other editor opened */
-                        final IEditorReference[] editors = activePage.getEditorReferences();
-                        if (editors.length == 0) {// if there is no other editor opened
-                            final String productId = Platform.getProduct().getId();
-                            if (isABonitaProduct(productId)) {// and that we are in BOS or BOS-SP
-                                openIntro();
-                            } else {
-                                closeIntro();
-                            }
+            workbench.getDisplay().syncExec(() -> Optional.ofNullable(PlatformUI.getWorkbench())
+                    .map(IWorkbench::getActiveWorkbenchWindow)
+                    .map(IWorkbenchWindow::getActivePage)
+                    .map(page -> page.getEditorReferences().length)
+                    .filter(nbEditors -> nbEditors == 0)
+                    .ifPresent(nbEditors -> {
+                        // and that we are in BOS or BOS-SP
+                        if (isABonitaProduct(Platform.getProduct().getId())) {
+                            showIntroPart();
+                        } else {
+                            hideIntroPart();
                         }
-                    }
-                }
-            });
+                    }));
         }
     }
 
-    /**
-     * Open the intro
-     */
     public static void openIntro() {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         if (workbench != null) {
-            final Display display = workbench.getDisplay();
-            display.asyncExec(openIntroRunnable(workbench));
+            workbench.getDisplay().asyncExec(PlatformUtil::showIntroPart);
         }
     }
 
-    public static Runnable openIntroRunnable(final IWorkbench workbench) {
-        return new Runnable() {
+    public static void showIntroPart() {
+        Optional.ofNullable(PlatformUI.getWorkbench())
+                .map(IWorkbench::getActiveWorkbenchWindow)
+                .map(IWorkbenchWindow::getActivePage)
+                .ifPresent(PlatformUtil::showIntroPart);
+    }
 
-            @Override
-            public void run() {
-                final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-                if (window != null && window.getActivePage() != null) {
-                    final IWorkbenchPage activePage = window.getActivePage();
-                    final IIntroManager introManager = workbench.getIntroManager();
-                    //colse intro to reload content if already opened
-                    if (introManager.getIntro() != null) {
-                        introManager.closeIntro(introManager.getIntro());
-                    } else if (activePage != null) {
-                        final IViewPart view = activePage.findView(INTROVIEW_ID);
-                        if (view != null) {
-                            activePage.hideView(view);
-                        }
-                    }
-                    final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
-                    if (model != null
-                            && introManager.getIntro() != null
-                            && ((CustomizableIntroPart) introManager.getIntro()).getControl() != null) {
-                        model.getPresentation().navigateHome();
-                    }
-                    introManager.showIntro(
-                            window,
-                            false);
-                    if (window != null) {
-                        PlatformUtil.maximizeWindow(window.getActivePage());
-                    }
-                }
-            }
-
-        };
+    public static void showIntroPart(IWorkbenchPage page) {
+        final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
+        //colse intro to reload content if already opened
+        hideIntroPart();
+        final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
+        if (model != null
+                && introManager.getIntro() != null
+                && ((CustomizableIntroPart) introManager.getIntro()).getControl() != null) {
+            model.getPresentation().navigateHome();
+        }
+        introManager.showIntro(
+                page.getWorkbenchWindow(),
+                false);
+        PlatformUtil.maximizeWindow(page);
     }
 
     /**

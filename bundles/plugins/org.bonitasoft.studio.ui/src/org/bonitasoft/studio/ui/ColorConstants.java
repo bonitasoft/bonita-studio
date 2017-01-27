@@ -15,5 +15,6 @@ public interface ColorConstants {
     static final RGB ERROR_RGB = new RGB(214, 77, 77);
     static final RGB WARNING_RGB = new RGB(155, 170, 20);
     static final RGB SUCCESS_RGB = new RGB(60, 130, 40);
+    static final RGB BLUE_RGB = new RGB(0, 0, 200);
 
 }

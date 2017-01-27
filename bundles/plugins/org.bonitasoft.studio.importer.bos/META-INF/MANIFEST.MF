@@ -8,10 +8,12 @@ Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.importer.bos.factory,
  org.bonitasoft.studio.importer.bos.i18n,
+ org.bonitasoft.studio.importer.bos.handler,
  org.bonitasoft.studio.importer.bos.model,
  org.bonitasoft.studio.importer.bos.operation,
  org.bonitasoft.studio.importer.bos.status,
- org.bonitasoft.studio.importer.bos.validator
+ org.bonitasoft.studio.importer.bos.validator,
+ org.bonitasoft.studio.importer.bos.wizard
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.bonitasoft.studio.importer;bundle-version="1.0.0",
