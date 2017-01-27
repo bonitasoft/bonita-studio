@@ -52,5 +52,6 @@ public class Messages extends NLS {
     public static String archiveAnalysis;
     public static String retrivingDataToImport;
     public static String importing;
+    public static Object bosArchiveName;
 
 }

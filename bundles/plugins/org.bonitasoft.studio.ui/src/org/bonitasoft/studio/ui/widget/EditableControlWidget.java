@@ -140,4 +140,8 @@ public abstract class EditableControlWidget extends ControlWidget {
     protected void redraw(final Control toRedraw) {
         toRedraw.getDisplay().asyncExec(toRedraw::redraw);
     }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
