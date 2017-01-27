@@ -19,8 +19,10 @@ import java.util.zip.ZipException;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.BosArchiveTest;
+import org.bonitasoft.studio.importer.bos.model.ImportAction;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.model.ImportStoreModel;
 import org.eclipse.core.resources.IFolder;
@@ -44,18 +46,22 @@ public class ImportConflictsCheckerTest {
 
         assertThat(isConflicting(libStore)).isFalse();
         assertThat(isConflicting(diagramsStore)).isTrue();
-        assertThat(isConflicting(diagramsStore, "Customer Support-2.0.proc")).isTrue();
-        assertThat(isConflicting(diagramsStore, "Customer Support - Set Up-2.0.proc")).isFalse();
+        assertThat(findFile(diagramsStore, "Customer Support-2.0.proc").isConflicting())
+                .as("File with different checksum should be in conflict").isTrue();
+        assertThat(findFile(diagramsStore, "Customer Support - Set Up-2.0.proc").isConflicting())
+                .as("File with same checksum should not be in conflict").isFalse();
+        assertThat(findFile(diagramsStore, "Customer Support - Set Up-2.0.proc").getImportAction())
+                .as("File with same checksum should have KEEP import policy").isEqualTo(ImportAction.KEEP);
     }
 
     private boolean isConflicting(Optional<ImportStoreModel> store) throws Exception {
         return store.orElseThrow(() -> new Exception("store not found")).isConflicting();
     }
 
-    private boolean isConflicting(Optional<ImportStoreModel> store, String fileName) throws Exception {
+    private AbstractFileModel findFile(Optional<ImportStoreModel> store, String fileName) throws Exception {
         return store.orElseThrow(() -> new Exception("store not found")).getFiles().stream()
                 .filter(file -> Objects.equals(file.getFileName(), fileName)).findFirst()
-                .orElseThrow(() -> new Exception(fileName + " diagram not found")).isConflicting();
+                .orElseThrow(() -> new Exception(fileName + " diagram not found"));
     }
 
     private Repository createRepository() throws CoreException {
