@@ -36,6 +36,7 @@ public class WizardBuilder<T> {
     private FinishHandler<T> finishHandler;
     private final ImageDescriptor imageDescriptor = ImageDescriptor.createFromFile(WizardBuilder.class, "defaultPage.png");//$NON-NLS-N$
     private Optional<T> finishResult = Optional.empty();
+    private boolean needProgress = false;
 
     private WizardBuilder() {
     }
@@ -49,6 +50,11 @@ public class WizardBuilder<T> {
      */
     public WizardBuilder<T> withTitle(String title) {
         this.windowTitle = title;
+        return this;
+    }
+
+    public WizardBuilder<T> needProgress() {
+        this.needProgress = true;
         return this;
     }
 
@@ -85,6 +91,7 @@ public class WizardBuilder<T> {
             }
         };
         pages.stream().forEachOrdered(page -> wizard.addPage(page.asPage()));
+        wizard.setNeedsProgressMonitor(needProgress);
         wizard.setWindowTitle(windowTitle);
         wizard.setDefaultPageImageDescriptor(imageDescriptor);
         return wizard;

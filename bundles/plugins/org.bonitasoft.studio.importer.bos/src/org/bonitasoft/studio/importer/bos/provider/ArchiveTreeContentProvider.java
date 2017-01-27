@@ -1,5 +1,7 @@
 package org.bonitasoft.studio.importer.bos.provider;
 
+import java.util.stream.Collectors;
+
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractImportModel;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;

@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.databinding.ControlMessageSupport;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -36,13 +37,13 @@ public abstract class EditableControlWidget extends ControlWidget {
     private LocalResourceManager resourceManager;
     private Color errorColor;
     private Color warningColor;
+    private Binding valueBinding;
 
     protected EditableControlWidget(Composite parent, boolean labelAbove, int horizontalLabelAlignment,
             int verticalLabelAlignment, int labelHint,
             boolean readOnly, String labelValue, String message) {
-        super(parent, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, labelValue, message);
-        initEditable(parent, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, readOnly, labelValue,
-                message);
+        this(parent, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, readOnly, labelValue, message,
+                Optional.empty());
     }
 
     protected EditableControlWidget(Composite parent, boolean labelAbove, int horizontalLabelAlignment,
@@ -111,8 +112,9 @@ public abstract class EditableControlWidget extends ControlWidget {
             IObservableValue modelObservable,
             UpdateValueStrategy targetToModel,
             UpdateValueStrategy modelToTarget) {
-        return new ControlMessageSupport(ctx.bindValue(controlObservable, modelObservable,
-                targetToModel, modelToTarget)) {
+        valueBinding = ctx.bindValue(controlObservable, modelObservable,
+                targetToModel, modelToTarget);
+        return new ControlMessageSupport(valueBinding) {
 
             @Override
             protected void statusChanged(IStatus status) {
@@ -129,6 +131,10 @@ public abstract class EditableControlWidget extends ControlWidget {
             }
 
         };
+    }
+
+    public Binding getValueBinding() {
+        return valueBinding;
     }
 
     protected void redraw(final Control toRedraw) {

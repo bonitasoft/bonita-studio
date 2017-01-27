@@ -25,6 +25,7 @@ public class ImportArchiveModel {
     }
 
     public List<ImportStoreModel> getStores() {
+        Collections.sort(stores, (f1, f2) -> f1.getFolderName().compareTo(f2.getFolderName()));
         return Collections.unmodifiableList(stores);
     }
 
@@ -34,5 +35,12 @@ public class ImportArchiveModel {
 
     public BosArchive getBosArchive() {
         return bosArchive;
+    }
+
+    /**
+     * set all the conflict status to none
+     */
+    public void resetStatus() {
+        stores.stream().forEach(store -> store.resetStatus());
     }
 }

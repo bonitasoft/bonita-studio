@@ -1,6 +1,7 @@
 package org.bonitasoft.studio.importer.bos.model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -44,12 +45,33 @@ public abstract class AbstractFolderModel extends AbstractImportModel implements
     }
 
     public Object[] getChildren() {
-        return Stream.concat(getFolders().stream(), getFiles().stream()).toArray();
+        return Stream.concat(getFolders().stream(),
+                getFiles()
+                        .stream()
+                        .sorted(conflictingFirst()))
+                .toArray();
+    }
+
+    private Comparator<? super AbstractFileModel> conflictingFirst() {
+        return (f1, f2) -> {
+            if (f1.isConflicting() && !f2.isConflicting()) {
+                return -1;
+            } else if (f2.isConflicting() && !f1.isConflicting()) {
+                return 1;
+            }
+            return f1.getFileName().compareTo(f2.getFileName());
+        };
     }
 
     @Override
     public String getText() {
         return displayName.orElse(getFolderName());
+    }
+
+    public void resetStatus() {
+        this.status = ConflictStatus.NONE;
+        getFolders().stream().forEach(folder -> folder.resetStatus());
+        getFiles().stream().forEach(file -> file.resetStatus());
     }
 
 }

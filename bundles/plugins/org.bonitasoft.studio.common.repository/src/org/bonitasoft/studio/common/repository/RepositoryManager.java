@@ -94,7 +94,8 @@ public class RepositoryManager {
 
     public Repository createRepository(final String name, final boolean migrationEnabled) {
         try {
-            final IRepositoryFactory repositoryFactory = (IRepositoryFactory) repositoryImplementationElement.createExecutableExtension(CLASS);
+            final IRepositoryFactory repositoryFactory = (IRepositoryFactory) repositoryImplementationElement
+                    .createExecutableExtension(CLASS);
             return repositoryFactory.newRepository(name, migrationEnabled);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
@@ -102,6 +103,10 @@ public class RepositoryManager {
         return null;
     }
 
+    /**
+     * @deprecated See {@link RepositoryAccessor}
+     */
+    @Deprecated
     public static RepositoryManager getInstance() {
         if (RepositoryManager.INSTANCE == null) {
             synchronized (RepositoryManager.class) {

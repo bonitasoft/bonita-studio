@@ -93,7 +93,7 @@ public class WizardPageBuilder {
             public void createControl(Composite parent) {
                 ctx = context.orElse(new DataBindingContext());
                 NoMessageWizardPageSupport.create(this, ctx);
-                setControl(controlSupplier.createControl(parent, ctx));
+                setControl(controlSupplier.createControl(parent, getWizard().getContainer(), ctx));
             }
 
             /*

@@ -83,7 +83,7 @@ public class WizardBuilderTest {
                         .withTitle("Page1")
                         .withDescription("Desc1")
                         .withDatabindingContext(new DataBindingContext())
-                        .withControl((parent, ctx) -> {
+                        .withControl((parent, wizardContainer, ctx) -> {
 
                             final Composite container = new Composite(parent, SWT.NONE);
                             container.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 10).create());

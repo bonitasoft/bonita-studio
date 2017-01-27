@@ -36,7 +36,7 @@ public class OpenIntroAddon {
         Object part = event.getProperty(UIEvents.EventTags.ELEMENT);
         if (part instanceof MPart) {
             if (((MPart) part).getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
-                PlatformUtil.openIntroIfNoOtherEditorOpen();
+               PlatformUtil.openIntroIfNoOtherEditorOpen();
             }
         }
     }

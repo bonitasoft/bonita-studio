@@ -26,6 +26,7 @@ import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -39,7 +40,7 @@ public class NewApplicationPage implements ControlSupplier {
     }
 
     @Override
-    public Control createControl(Composite parent, DataBindingContext ctx) {
+    public Control createControl(Composite parent, IWizardContainer container, DataBindingContext ctx) {
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.swtDefaults().create());
 
