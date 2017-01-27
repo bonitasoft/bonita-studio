@@ -187,7 +187,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     private Composite doCreateFileBrowser(Composite parent, DataBindingContext dbc) {
         final Composite fileBrowserComposite = new Composite(parent, SWT.NONE);
         fileBrowserComposite
-                .setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
+                .setLayout(GridLayoutFactory.fillDefaults().create());
         fileBrowserComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         final IObservableValue filePathObserveValue = PojoObservables.observeValue(this, "filePath");
@@ -208,7 +208,6 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 .onClickButton(this::browseFile)
                 .createIn(fileBrowserComposite);
         textWidget.focusButton();
-
         return parent;
     }
 
@@ -231,6 +230,11 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
             final File myFile = new File(filePath);
             archiveModel = parseArchive(myFile.getAbsolutePath());
             if (archiveModel != null) {
+                textWidget
+                        .setMessage(String.format("%s %s (%s)",
+                                Messages.bosArchiveName,
+                                myFile.getName(),
+                                archiveModel.getBosArchive().getVersion()));
                 importActionSelector.setArchiveModel(archiveModel);
                 viewer.setInput(archiveModel);
                 openTree();

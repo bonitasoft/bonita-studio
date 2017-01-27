@@ -43,6 +43,8 @@ public class BosArchive extends ZipFile {
     private static final String VERSION = "version";
     private static final String TO_OPEN = "toOpen";
     private static final Properties FALLBACK_PROPERTIES = new Properties();
+    private String version;
+
     static {
         FALLBACK_PROPERTIES.put(VERSION, "6.0.0");
     }
@@ -162,6 +164,7 @@ public class BosArchive extends ZipFile {
     private IStatus validateArchiveCompatibility() throws IOException {
         final Properties manifest = readManifest();
         String version = manifest.getProperty(VERSION);
+        this.version = version;
         if (version.contains("-")) {
             version = version.split("-")[0];
         }
@@ -217,5 +220,9 @@ public class BosArchive extends ZipFile {
 
     public List<IRepositoryStore<? extends IRepositoryFileStore>> allRepositoryStores() {
         return RepositoryManager.getInstance().getCurrentRepository().getAllStores();
+    }
+
+    public String getVersion() {
+        return version;
     }
 }
