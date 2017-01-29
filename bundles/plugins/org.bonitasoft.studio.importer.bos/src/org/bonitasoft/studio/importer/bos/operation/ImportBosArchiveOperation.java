@@ -17,11 +17,13 @@ package org.bonitasoft.studio.importer.bos.operation;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -132,22 +134,27 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     }
 
     private void importUnit(ImportableUnit unit, BosArchive bosArchive, IProgressMonitor monitor) {
-        final IRepositoryFileStore repositoryFileStore = unit.doImport(bosArchive,
-                monitor);
-        if (repositoryFileStore == null && unit instanceof ImportFileStoreModel
-                && ((ImportFileStoreModel) unit).getFileName().endsWith(".proc")) {
-            status.add(ValidationStatus
-                    .error(String.format("Failed to import %s", ((ImportFileStoreModel) unit).getFileName())));
-        }
-        if (repositoryFileStore != null) {
-            importedFileStores.add(repositoryFileStore);
-        }
-        if (repositoryFileStore != null && repositoryFileStore.getName().endsWith(".proc")) {
-            importedProcesses.add(repositoryFileStore);
-        }
-        if (repositoryFileStore != null && unit instanceof ImportFileStoreModel
-                && ((ImportFileStoreModel) unit).shouldOpen()) {
-            fileStoresToOpen.add(repositoryFileStore);
+        IRepositoryFileStore repositoryFileStore;
+        try (ZipFile zipFile = bosArchive.getZipFile();) {
+            repositoryFileStore = unit.doImport(zipFile,
+                    monitor);
+            if (repositoryFileStore == null && unit instanceof ImportFileStoreModel
+                    && ((ImportFileStoreModel) unit).getFileName().endsWith(".proc")) {
+                status.add(ValidationStatus
+                        .error(String.format("Failed to import %s", ((ImportFileStoreModel) unit).getFileName())));
+            }
+            if (repositoryFileStore != null) {
+                importedFileStores.add(repositoryFileStore);
+            }
+            if (repositoryFileStore != null && repositoryFileStore.getName().endsWith(".proc")) {
+                importedProcesses.add(repositoryFileStore);
+            }
+            if (repositoryFileStore != null && unit instanceof ImportFileStoreModel
+                    && ((ImportFileStoreModel) unit).shouldOpen()) {
+                fileStoresToOpen.add(repositoryFileStore);
+            }
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

@@ -37,7 +37,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
 
-public class BosArchive extends ZipFile {
+public class BosArchive {
 
     private static final String MANIFEST_ENTRY = "/MANIFEST";
     private static final String VERSION = "version";
@@ -50,10 +50,10 @@ public class BosArchive extends ZipFile {
     }
 
     private boolean openAll = false;
+    private final File archiveFile;
 
-    public BosArchive(File archiveFile)
-            throws IOException {
-        super(archiveFile);
+    public BosArchive(File archiveFile) {
+        this.archiveFile = archiveFile;
     }
 
     public ImportArchiveModel toImportModel(Repository repository) throws IOException {
@@ -64,7 +64,13 @@ public class BosArchive extends ZipFile {
         final Set<String> resourcesToOpen = getResourcesToOpen();
 
         final ImportArchiveModel archiveModel = new ImportArchiveModel(this);
-        stream().filter(e -> !e.isDirectory()).forEach(e -> parseEntry(e, archiveModel, repository, resourcesToOpen));
+        try (ZipFile zipFile = new ZipFile(archiveFile)) {
+            zipFile.stream().filter(e -> !e.isDirectory())
+                    .forEach(e -> parseEntry(e, archiveModel, repository, resourcesToOpen));
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+
         return archiveModel;
     }
 
@@ -139,14 +145,22 @@ public class BosArchive extends ZipFile {
     }
 
     private String extractNameFromJSON(AbstractFileModel file) {
-        final ZipEntry entry = getEntry(file.getPath());
-        try (InputStream is = getInputStream(entry)) {
+        try (ZipFile zipFile = new ZipFile(archiveFile);
+                InputStream is = zipFile.getInputStream(zipFile.getEntry(file.getPath()))) {
             return new org.json.JSONObject(new String(ByteStreams.toByteArray(is), Charsets.UTF_8))
                     .getString("name");
         } catch (final IOException | JSONException e) {
             BonitaStudioLog.error(e);
         }
         return file.getFileName();
+    }
+
+    public ZipEntry getEntry(String name) {
+        try (ZipFile zipFile = new ZipFile(archiveFile)) {
+            return zipFile.getEntry(name);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected IStatus validate() {
@@ -176,16 +190,20 @@ public class BosArchive extends ZipFile {
     }
 
     private Properties readManifest() throws IOException {
-        return stream()
-                .filter(entry -> entry.getName().endsWith(MANIFEST_ENTRY))
-                .findFirst()
-                .flatMap(this::loadManifestProperties)
-                .orElse(FALLBACK_PROPERTIES);
+        try (ZipFile zipFile = new ZipFile(archiveFile)) {
+            return zipFile.stream()
+                    .filter(entry -> entry.getName().endsWith(MANIFEST_ENTRY))
+                    .findFirst()
+                    .flatMap(this::loadManifestProperties)
+                    .orElse(FALLBACK_PROPERTIES);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Optional<Properties> loadManifestProperties(ZipEntry manifestEntry) {
         final Properties properties = new Properties();
-        try (InputStream inputStream = getInputStream(manifestEntry)) {
+        try (ZipFile zipFile = new ZipFile(archiveFile); InputStream inputStream = zipFile.getInputStream(manifestEntry)) {
             properties.load(inputStream);
         } catch (final IOException e) {
             BonitaStudioLog.error("Failed to load manifest fron archive", e);
@@ -205,8 +223,12 @@ public class BosArchive extends ZipFile {
     }
 
     private IStatus validateZipStructure() {
-        if (stream().noneMatch(this::matchRepositoryFormat)) {
-            return ValidationStatus.error("Not a valid BOS archive structure");
+        try (ZipFile zipFile = new ZipFile(archiveFile)) {
+            if (zipFile.stream().noneMatch(this::matchRepositoryFormat)) {
+                return ValidationStatus.error("Not a valid BOS archive structure");
+            }
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
         }
         return ValidationStatus.ok();
     }
@@ -224,5 +246,9 @@ public class BosArchive extends ZipFile {
 
     public String getVersion() {
         return version;
+    }
+
+    public ZipFile getZipFile() throws IOException {
+        return new ZipFile(archiveFile);
     }
 }

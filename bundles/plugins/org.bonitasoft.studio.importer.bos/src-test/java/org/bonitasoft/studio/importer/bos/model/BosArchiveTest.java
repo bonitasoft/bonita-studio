@@ -59,13 +59,6 @@ public class BosArchiveTest {
     }
 
     @Test
-    public void should_fail_when_archiveFile_is_not_a_zip_archive() throws Exception {
-        expectedException.expect(IOException.class);
-
-        newBosArchive(new File(""));
-    }
-
-    @Test
     public void should_fail_when_archiveFile_version_is_incompatible() throws Exception {
         final BosArchive bosArchive = newBosArchive(loadArchiveFile("/archiveWithIncompatibleManifest.bos"));
 
