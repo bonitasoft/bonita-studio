@@ -143,7 +143,8 @@ public class GroovyViewer implements IDocumentListener {
             final IEclipseContext activeLeaf = context.getActiveLeaf();
             activeLeaf
                     .set("localContexts",
-                            Lists.newLinkedList(Lists.newArrayList("org.eclipse.ui.contexts.window", "org.eclipse.ui.contexts.dialogAndWindow",
+                            Lists.newLinkedList(Lists.newArrayList("org.eclipse.ui.contexts.window",
+                                    "org.eclipse.ui.contexts.dialogAndWindow",
                                     "org.eclipse.ui.textEditorScope", "org.eclipse.jdt.ui.javaEditorScope",
                                     "org.codehaus.groovy.eclipse.editor.groovyEditorScope")));
             final DummyEditorSite site = new DummyEditorSite(mainComposite.getShell(), editor);
@@ -155,7 +156,7 @@ public class GroovyViewer implements IDocumentListener {
             BonitaStudioLog.error(e1);
         }
 
-       final StyledText styledText = getSourceViewer().getTextWidget();
+        final StyledText styledText = getSourceViewer().getTextWidget();
         styledText.setTextLimit(MAX_SCRIPT_LENGTH);
         getSourceViewer().addTextListener(new ITextListener() {
 
@@ -178,22 +179,22 @@ public class GroovyViewer implements IDocumentListener {
 
         styledText.setData(BONITA_KEYWORDS_DATA_KEY, getProvidedVariables(null, null));
         styledText.addFocusListener(new FocusListener() {
-            
-            
+
             @Override
             public void focusLost(FocusEvent e) {
-                IEclipseContext context = (IEclipseContext) styledText.getShell().getData("org.eclipse.e4.ui.shellContext");
-                if(context != null){
+                IEclipseContext context = (IEclipseContext) styledText.getShell()
+                        .getData("org.eclipse.e4.ui.dialogShellContext");
+                if (context != null) {
                     context.deactivate();
                 }
             }
-            
+
             @Override
             public void focusGained(FocusEvent e) {
                 IEclipseContext context = (IEclipseContext) styledText.getShell().getData("org.eclipse.e4.ui.shellContext");
-                if(context != null){
+                if (context != null) {
                     context.activate();
-                }   
+                }
             }
         });
         mainComposite.getShell().addDisposeListener(new DisposeListener() {
@@ -204,7 +205,6 @@ public class GroovyViewer implements IDocumentListener {
             }
         });
     }
-
 
     public IDocument getDocument() {
         return editor.getDocumentProvider().getDocument(input);
@@ -283,12 +283,15 @@ public class GroovyViewer implements IDocumentListener {
             }
         }
         unknownElementsIndexer = new UnknownElementsIndexer(knowVariables, getGroovyCompilationUnit());
-        unknownElementsIndexer.addJobChangeListener(new UpdateUnknownReferencesListener(getDocument(), getSourceViewer().getAnnotationModel()));
+        unknownElementsIndexer.addJobChangeListener(
+                new UpdateUnknownReferencesListener(getDocument(), getSourceViewer().getAnnotationModel()));
     }
 
     public List<ScriptVariable> getProvidedVariables(final EObject context, final ViewerFilter[] filters) {
-        final List<ScriptVariable> providedScriptVariable = GroovyUtil.getBonitaVariables(context, filters, isPageFlowContext);
-        final IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
+        final List<ScriptVariable> providedScriptVariable = GroovyUtil.getBonitaVariables(context, filters,
+                isPageFlowContext);
+        final IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance()
+                .getExpressionProvider(ExpressionConstants.DAO_TYPE);
         if (daoExpressionProvider != null) {
             final List<Expression> expressions = newArrayList(daoExpressionProvider.getExpressions(null));
             Collections.sort(expressions, new ExpressionComparator());

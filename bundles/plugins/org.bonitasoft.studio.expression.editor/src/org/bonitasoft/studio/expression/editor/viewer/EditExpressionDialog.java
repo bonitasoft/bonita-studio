@@ -180,7 +180,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
                 expressionType = ExpressionConstants.SCRIPT_TYPE;
             }
         }
-        final IExpressionProvider currentProvider = ExpressionEditorService.getInstance().getExpressionProvider(expressionType);
+        final IExpressionProvider currentProvider = ExpressionEditorService.getInstance()
+                .getExpressionProvider(expressionType);
         if (currentProvider != null && expressionTypeViewer != null) {
             expressionTypeViewer.setSelection(new StructuredSelection(currentProvider));
         }
@@ -189,12 +190,12 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
     private void configureContext() {
         final IEclipseContext e4Context = ((Workbench) PlatformUI.getWorkbench()).getContext();
+        getShell().setData("org.eclipse.e4.ui.dialogShellContext", e4Context.getActiveLeaf());
         while (!Objects.equals(e4Context.getActiveLeaf(), e4Context)) {
             e4Context.getActiveLeaf().deactivate();
         }
         getShell().setData("org.eclipse.e4.ui.shellContext", e4Context.createChild("expressionDialogContext"));
     }
-
 
     private boolean isSupportedConstantType(final String returnType) {
         return returnType.equals(String.class.getName()) ||
@@ -237,7 +238,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
     protected void createExpressionTypePanel(final Composite parentForm) {
         final Composite parentComposite = new Composite(parentForm, SWT.NONE);
-        parentComposite.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
+        parentComposite
+                .setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
         parentComposite.setLayout(new GridLayout(1, false));
 
         final Label expressionTypeLabel = new Label(parentComposite, SWT.NONE);
@@ -358,8 +360,6 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         if (currentExpressionEditor != null) {
             dataBindingContext = new EMFDataBindingContext();
 
-
-
             currentExpressionEditor.createExpressionEditor(contentComposite, dataBindingContext, isPassword);
             contentComposite.layout(true, true);
             if (helpControl != null) {
@@ -384,7 +384,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             selectionToExpressionType.setConverter(convert);
 
             if (domain != null) {
-                domain.getCommandStack().execute(SetCommand.create(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__TYPE, type));
+                domain.getCommandStack().execute(
+                        SetCommand.create(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__TYPE, type));
             } else {
                 inputExpression.setType(type);
             }
@@ -394,7 +395,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             if (expressionNameResolver != null) {
                 inputExpression.setName(expressionNameResolver.getName(inputExpression));
             }
-            currentExpressionEditor.bindExpression(dataBindingContext, context, inputExpression, viewerTypeFilters, expressionViewer);
+            currentExpressionEditor.bindExpression(dataBindingContext, context, inputExpression, viewerTypeFilters,
+                    expressionViewer);
             currentExpressionEditor.addListener(new Listener() {
 
                 @Override
@@ -436,7 +438,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         if (FileActionDialog.getDisablePopup()) {
             return true;
         }
-        if (MessageDialog.openQuestion(getShell(), Messages.handleShellCloseEventTitle, Messages.handleShellCloseEventMessage)) {
+        if (MessageDialog.openQuestion(getShell(), Messages.handleShellCloseEventTitle,
+                Messages.handleShellCloseEventMessage)) {
             return super.canHandleShellCloseEvent();
         }
         return false;
