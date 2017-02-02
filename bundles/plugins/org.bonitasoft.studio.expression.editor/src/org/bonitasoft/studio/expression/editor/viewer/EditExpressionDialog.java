@@ -190,7 +190,6 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
     private void configureContext() {
         final IEclipseContext e4Context = ((Workbench) PlatformUI.getWorkbench()).getContext();
-        getShell().setData("org.eclipse.e4.ui.dialogShellContext", e4Context.getActiveLeaf());
         while (!Objects.equals(e4Context.getActiveLeaf(), e4Context)) {
             e4Context.getActiveLeaf().deactivate();
         }
