@@ -38,7 +38,7 @@ public class Messages extends NLS {
     public static String invalidFilePath;
     public static String importProcessTitle;
     public static String importDetails;
-    public static String importAll;
+    public static String overwriteAll;
     public static String keepAll;
     public static String archiveColumn;
     public static String actionColumn;
@@ -49,9 +49,12 @@ public class Messages extends NLS {
     public static String importBosArchiveTitle;
     public static String overwriteMessage;
     public static String keepMessage;
-    public static String archiveAnalysis;
+    public static String parsingArchive;
     public static String retrivingDataToImport;
     public static String importing;
-    public static Object bosArchiveName;
+    public static String bosArchiveName;
+    public static String skipped;
+    public static String alreadyPresent;
+    public static String errorOccuredWhileParsingBosArchive;
 
 }

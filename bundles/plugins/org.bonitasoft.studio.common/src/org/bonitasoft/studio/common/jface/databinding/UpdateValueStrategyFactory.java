@@ -22,7 +22,9 @@ import org.eclipse.core.databinding.validation.IValidator;
 
 /**
  * @author Romain Bioteau
+ * @deprecated use {@link org.bonitasoft.studio.ui.databinding.UpdateValueStrategyFactory} instead
  */
+@Deprecated
 public class UpdateValueStrategyFactory {
 
     private final UpdateValueStrategy updateValueStrategy;

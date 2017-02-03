@@ -30,7 +30,20 @@ public class ImportArchiveModel {
     }
 
     public boolean isConflicting() {
-        return getStores().stream().anyMatch(ImportStoreModel::isConflicting);
+        return stores.stream().anyMatch(ImportStoreModel::isConflicting);
+    }
+
+    public boolean sameContentAsTarget() {
+        return stores.stream().allMatch(ImportStoreModel::hasSameContent);
+    }
+
+    public ConflictStatus getStatus() {
+        if (isConflicting()) {
+            return ConflictStatus.CONFLICTING;
+        } else if (sameContentAsTarget()) {
+            return ConflictStatus.SAME_CONTENT;
+        }
+        return ConflictStatus.NONE;
     }
 
     public BosArchive getBosArchive() {

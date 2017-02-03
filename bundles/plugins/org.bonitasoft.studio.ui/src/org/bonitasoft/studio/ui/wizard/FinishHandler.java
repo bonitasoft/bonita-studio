@@ -16,9 +16,11 @@ package org.bonitasoft.studio.ui.wizard;
 
 import java.util.Optional;
 
+import org.eclipse.jface.wizard.IWizardContainer;
+
 @FunctionalInterface
 public interface FinishHandler<T> {
 
-    Optional<T> finish() throws FinishHandlerException;
+    Optional<T> finish(IWizardContainer wizardContainer);
 
 }

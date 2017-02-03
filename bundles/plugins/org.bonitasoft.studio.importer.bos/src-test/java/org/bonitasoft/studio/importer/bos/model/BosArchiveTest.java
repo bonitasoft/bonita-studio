@@ -31,6 +31,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -81,7 +82,7 @@ public class BosArchiveTest {
         final BosArchive bosArchive = newBosArchive(loadArchiveFile("/customer_support_2.0.bos"));
 
         final ImportArchiveModel importArchiveModel = bosArchive
-                .toImportModel(createRepository());
+                .toImportModel(createRepository(), new NullProgressMonitor());
 
         assertThat(importArchiveModel).isNotNull();
         assertThat(

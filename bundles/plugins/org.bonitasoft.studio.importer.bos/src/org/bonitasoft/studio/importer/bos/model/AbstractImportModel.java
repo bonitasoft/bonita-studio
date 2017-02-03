@@ -41,10 +41,20 @@ public abstract class AbstractImportModel {
         if (parent.isPresent() && isConflicting() && !parent.get().isConflicting()) {
             parent.get().setStatus(status);
         }
+        if (parent.isPresent() && hasSameContent()) {
+            if (parent.get().getFiles().stream().allMatch(AbstractFileModel::hasSameContent)
+                    && parent.get().getFolders().stream().allMatch(AbstractFolderModel::hasSameContent)) {
+                parent.get().setStatus(status);
+            }
+        }
     }
 
     public boolean isConflicting() {
         return status == ConflictStatus.CONFLICTING;
+    }
+
+    public boolean hasSameContent() {
+        return status == ConflictStatus.SAME_CONTENT;
     }
 
     protected Optional<IRepositoryStore<IRepositoryFileStore>> getParentRepositoryStore() {

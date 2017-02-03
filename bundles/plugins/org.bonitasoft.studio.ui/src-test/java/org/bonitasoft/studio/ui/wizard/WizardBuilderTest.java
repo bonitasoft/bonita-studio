@@ -143,7 +143,7 @@ public class WizardBuilderTest {
 
                             return container;
                         }))
-                .onFinish(() -> Optional.of(MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
+                .onFinish(container -> Optional.of(MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
                         String.format("Create %s ?", person.getName()),
                         "A new person will be added into the contact list.")))/* .open(rule.getShell()) */;
 

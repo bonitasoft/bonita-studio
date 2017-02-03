@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
+import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -62,7 +64,7 @@ public class WizardBuilder<T> {
      * Add Wizard page to this {@link Wizard} using {@link WizardPageBuilder}
      */
     public WizardBuilder<T> havingPage(WizardPageBuilder... pageBuilders) {
-        Stream.of(pageBuilders).forEach(p -> pages.add(p));
+        Stream.of(pageBuilders).forEach(pages::add);
         return this;
     }
 
@@ -83,9 +85,10 @@ public class WizardBuilder<T> {
             @Override
             public boolean performFinish() {
                 try {
-                    finishResult = finishHandler.finish();
+                    finishResult = finishHandler.finish(getContainer());
                     return finishResult.isPresent();
-                } catch (final FinishHandlerException e) {
+                } catch (final Throwable t) {
+                    new ExceptionDialogHandler().openErrorDialog(getShell(), Messages.errorOccuredDuringFinish, t);
                     return false;
                 }
             }

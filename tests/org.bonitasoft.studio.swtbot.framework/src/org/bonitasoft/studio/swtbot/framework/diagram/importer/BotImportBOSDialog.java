@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
+// import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -27,6 +28,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 
 public class BotImportBOSDialog extends BotWizardDialog {
 
@@ -46,18 +48,37 @@ public class BotImportBOSDialog extends BotWizardDialog {
         return this;
     }
 
+    public SWTBotTree tree() {
+        final SWTBotTree tree = bot.tree();
+        bot.waitUntil(Conditions.widgetIsEnabled(tree), 10000);
+        return tree;
+    }
+
+    public void keepAll() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.keepAll)), 5000);
+        bot.button(Messages.keepAll).click();
+    }
+
+    public void overwriteAll() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.overwriteAll)), 5000);
+        bot.button(Messages.overwriteAll).click();
+    }
+
+    public void importArchive() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.importButtonLabel)), 10000);
+        bot.button(Messages.importButtonLabel).click();
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle), 120000);
+        final SWTBotShell activeShell = bot.activeShell();
+        bot.button(IDialogConstants.OK_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
+    }
+
     private String toAbsoluteFilePath(URL bosURLInClasspath) throws IOException {
         return new File(FileLocator.toFileURL(bosURLInClasspath).getFile()).getAbsolutePath();
     }
 
     @Override
     public void finish() {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.importButtonLabel)), 10000);
-        bot.button(Messages.importButtonLabel).click();
-        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle), 60000);
-        final SWTBotShell activeShell = bot.activeShell();
-        bot.button(IDialogConstants.OK_LABEL).click();
-        bot.waitUntil(Conditions.shellCloses(activeShell));
+        importArchive();
     }
-
 }

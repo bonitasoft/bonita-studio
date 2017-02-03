@@ -8,32 +8,43 @@
  *******************************************************************************/
 package org.bonitasoft.studio.importer.bos.wizard;
 
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.pathValidator;
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
+import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.ParseBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.provider.ActionLabelProvider;
 import org.bonitasoft.studio.importer.bos.provider.ArchiveTreeContentProvider;
 import org.bonitasoft.studio.importer.bos.provider.ImportActionEditingSupport;
 import org.bonitasoft.studio.importer.bos.provider.ImportModelLabelProvider;
+import org.bonitasoft.studio.importer.bos.provider.ImportModelStyler;
 import org.bonitasoft.studio.ui.ColorConstants;
+import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
+import org.bonitasoft.studio.ui.validator.MultiValidator;
+import org.bonitasoft.studio.ui.validator.PathValidator;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -65,7 +76,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     protected TreeViewer viewer;
     private String filePath;
-    protected ButtonWidget importAllButton;
+    protected ButtonWidget overwriteButton;
     protected ButtonWidget keepAllButton;
     private ArchiveTreeContentProvider provider;
 
@@ -75,13 +86,18 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     protected Label descriptionLabel;
     private Color errorColor;
     private Color successColor;
-    private ImportActionSelector importActionSelector;
+    protected ImportActionSelector importActionSelector;
 
     protected RepositoryAccessor repositoryAccessor;
     protected IWizardContainer wizardContainer;
+    protected ConflictStatus archiveStatus;
+    private IObservableValue archiveStatusObservable;
+    protected final ExceptionDialogHandler exceptionDialogHandler;
 
-    public ImportBosArchiveControlSupplier(RepositoryAccessor repositoryAccessor) {
+    public ImportBosArchiveControlSupplier(RepositoryAccessor repositoryAccessor,
+            ExceptionDialogHandler exceptionDialogHandler) {
         this.repositoryAccessor = repositoryAccessor;
+        this.exceptionDialogHandler = exceptionDialogHandler;
     }
 
     /**
@@ -91,7 +107,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     public Control createControl(Composite parent, IWizardContainer container, DataBindingContext ctx) {
         this.wizardContainer = container;
         final Composite mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+        mainComposite.setLayout(
+                GridLayoutFactory.fillDefaults().margins(10, 10).spacing(LayoutConstants.getSpacing().x, 25).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().create());
         final LocalResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), mainComposite);
         this.errorColor = resourceManager.createColor(ColorConstants.ERROR_RGB);
@@ -112,18 +129,39 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         composite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
         composite.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 400).create());
-        createTreeHeader(composite);
+        createTreeHeader(composite, dbc);
         treeSection.setClient(createTree(treeSection));
     }
 
-    private void createTreeHeader(Composite parent) {
+    private void createTreeHeader(Composite parent, DataBindingContext ctx) {
         treeSection = new Section(parent, Section.TREE_NODE);
         treeSection.setLayout(GridLayoutFactory.fillDefaults().create());
         treeSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         treeSection.setText(Messages.importDetails);
         treeSection.setExpanded(false);
         descriptionLabel = new Label(treeSection, SWT.WRAP);
+        archiveStatusObservable = PojoObservables.observeValue(this, "archiveStatus");
+
+        ctx.bindValue(SWTObservables.observeText(descriptionLabel), archiveStatusObservable,
+                neverUpdateValueStrategy().create(), updateValueStrategy().withValidator(this::archiveStatusValidator)
+                        .withConverter(createArchiveStatusConverter()).create());
         treeSection.setDescriptionControl(descriptionLabel);
+    }
+
+    protected IStatus archiveStatusValidator(Object value) {
+        return Objects.equals(value, ConflictStatus.SAME_CONTENT) ? ValidationStatus.error("Archive content already exists.")
+                : ValidationStatus.ok();
+    }
+
+    protected Converter createArchiveStatusConverter() {
+        return new Converter(ConflictStatus.class, String.class) {
+
+            @Override
+            public Object convert(Object fromObject) {
+                return Objects.equals(fromObject, ConflictStatus.CONFLICTING) ? getConflictMessage()
+                        : Messages.noConflictMessage;
+            }
+        };
     }
 
     private Composite createTree(Composite parent) {
@@ -148,7 +186,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         final TreeViewerColumn archiveColumn = new TreeViewerColumn(viewer, SWT.NONE);
         archiveColumn.getColumn().setText(Messages.archiveColumn);
         archiveColumn.setLabelProvider(new DelegatingStyledCellLabelProvider(new ImportModelLabelProvider(
-                new ImportModelLabelProvider.ConflictStyler())));
+                new ImportModelStyler())));
 
         final TreeViewerColumn actionColumn = new TreeViewerColumn(viewer, SWT.NONE);
         actionColumn.getColumn().setText(Messages.actionColumn);
@@ -161,15 +199,15 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.TOP).create());
 
         importActionSelector = new ImportActionSelector(viewer);
-        importAllButton = new ButtonWidget.Builder()
-                .withLabel(Messages.importAll)
+        overwriteButton = new ButtonWidget.Builder()
+                .withLabel(Messages.overwriteAll)
                 .alignLeft()
                 .fill()
                 .grabHorizontalSpace()
                 .minimumWidth(BUTTON_WIDTH)
                 .onClick(importActionSelector::selectOverwriteAll)
                 .createIn(buttonsComposite);
-        importAllButton.disable();
+        overwriteButton.disable();
 
         keepAllButton = new ButtonWidget.Builder()
                 .withLabel(Messages.keepAll)
@@ -199,8 +237,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 .alignMiddle()
                 .labelAbove()
                 .withTargetToModelStrategy(updateValueStrategy()
-                        .withValidator(pathValidator(Messages.selectFileToImport).overrideMessage(Messages.invalidFilePath))
-                        .create())
+                        .withValidator(new MultiValidator.Builder()
+                                .havingValidators(getEmptyInputValidator(""), getPathValidator()).create()))
                 .bindTo(filePathObserveValue)
                 .inContext(dbc)
                 .readOnly()
@@ -223,6 +261,14 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 viewer.setInput(null);
             }
         }
+    }
+
+    private EmptyInputValidator getEmptyInputValidator(String inputName) {
+        return new EmptyInputValidator(inputName);
+    }
+
+    private PathValidator getPathValidator() {
+        return new PathValidator.Builder().withMessage(Messages.invalidFilePath).create();
     }
 
     protected void parseArchive(ValueChangeEvent e) {
@@ -248,7 +294,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         try {
             wizardContainer.run(true, false, operation);
         } catch (final InvocationTargetException | InterruptedException e) {
-            throw new RuntimeException("Failed to parse BOS Archive", e);
+            exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(),
+                    Messages.errorOccuredWhileParsingBosArchive, e);
         }
         return operation.getImportArchiveModel();
     }
@@ -260,6 +307,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     protected void openTree() {
         treeSection.setExpanded(true);
+        archiveStatusObservable.setValue(archiveModel.getStatus());
         if (archiveModel.isConflicting()) {
             final TreeItem[] items = viewer.getTree().getItems();
             for (int i = 0; i < items.length; i++) {
@@ -270,17 +318,28 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                     openItem(item);
                 }
             }
-            descriptionLabel.setText(Messages.conflictMessage);
             treeSection.getDescriptionControl().setForeground(errorColor);
             keepAllButton.enable();
-            importAllButton.enable();
+            overwriteButton.enable();
+        } else if (archiveModel.sameContentAsTarget()) {
+            descriptionLabel.setText(getAlreadyPresentMessage());
+            treeSection.getDescriptionControl().setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
+            keepAllButton.disable();
+            overwriteButton.disable();
         } else {
-            descriptionLabel.setText(Messages.noConflictMessage);
             treeSection.getDescriptionControl().setForeground(successColor);
             keepAllButton.disable();
-            importAllButton.disable();
+            overwriteButton.disable();
         }
         descriptionLabel.getParent().layout();
+    }
+
+    protected String getAlreadyPresentMessage() {
+        return Messages.alreadyPresent;
+    }
+
+    protected String getConflictMessage() {
+        return Messages.conflictMessage;
     }
 
     private void openItem(TreeItem item) {
@@ -317,6 +376,10 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         return archiveModel;
     }
 
+    public void setArchiveModel(ImportArchiveModel archiveModel) {
+        this.archiveModel = archiveModel;
+    }
+
     public String getFilePath() {
         return filePath;
     }
@@ -325,4 +388,11 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         this.filePath = filePath;
     }
 
+    public ConflictStatus getArchiveStatus() {
+        return archiveStatus;
+    }
+
+    public void setArchiveStatus(ConflictStatus archiveStatus) {
+        this.archiveStatus = archiveStatus;
+    }
 }

@@ -51,7 +51,7 @@ public class NewApplicationHandler {
                         .withTitle(Messages.newApplicationTitle)
                         .withDescription(Messages.newApplicationDescription)
                         .withControl(new NewApplicationPage(applicationNode)))
-                .onFinish(() -> createApplicationFileStore(applicationNode, repositoryAccessor));
+                .onFinish(container -> createApplicationFileStore(applicationNode, repositoryAccessor));
     }
 
     protected Optional<ApplicationFileStore> createApplicationFileStore(ApplicationNode applicationNode,

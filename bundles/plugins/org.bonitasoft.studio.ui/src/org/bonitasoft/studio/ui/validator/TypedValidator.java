@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.ui.validator;
 
+import java.util.Optional;
+
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 
@@ -21,9 +23,9 @@ public abstract class TypedValidator<T, S extends IStatus> implements IValidator
 
     @Override
     public final S validate(final Object value) {
-        return doValidate((T) value);
+        return doValidate(Optional.ofNullable((T) value));
     }
 
-    protected abstract S doValidate(final T value);
+    protected abstract S doValidate(final Optional<T> value);
 
 }

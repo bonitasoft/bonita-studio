@@ -18,6 +18,10 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 
 public class UpdateStrategyFactory {
 
+    private UpdateStrategyFactory() {
+
+    }
+
     public static UpdateValueStrategyFactory updateValueStrategy() {
         return new UpdateValueStrategyFactory(UpdateValueStrategy.POLICY_UPDATE);
     }
