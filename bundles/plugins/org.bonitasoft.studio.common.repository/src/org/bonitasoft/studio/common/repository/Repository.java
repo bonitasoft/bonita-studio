@@ -28,6 +28,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -52,6 +53,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
+import org.bonitasoft.studio.common.repository.ui.ShellNameController;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;
 import org.eclipse.core.resources.IContainer;
@@ -83,7 +85,6 @@ import org.eclipse.jdt.internal.core.ClasspathValidation;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.xml.sax.InputSource;
 
@@ -222,7 +223,7 @@ public class Repository implements IRepository, IJavaContainer {
                     project.open(NULL_PROGRESS_MONITOR);//Open anyway
                 }
             }
-            updateStudioShellText();
+            Display.getDefault().asyncExec(this::updateStudioShellText);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
@@ -237,25 +238,12 @@ public class Repository implements IRepository, IJavaContainer {
         return this;
     }
 
-    protected void updateStudioShellText() {
-        Display.getDefault().asyncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-                    final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-                    final String currentName = shell.getText();
-                    final int index = currentName.indexOf(" - ");
-                    String newName = index > 0 ? currentName.substring(0, index)
-                            : currentName;
-                    if (!getName()
-                            .equals(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME)) {
-                        newName = newName + " - " + getName();
-                    }
-                    shell.setText(newName);
-                }
-            }
-        });
+    private void updateStudioShellText() {
+        if (PlatformUI.isWorkbenchRunning()) {
+            Optional.ofNullable(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell())
+                    .map(ShellNameController::new)
+                    .ifPresent(controller -> controller.update(RepositoryManager.getInstance().getCurrentRepository()));
+        }
     }
 
     /*

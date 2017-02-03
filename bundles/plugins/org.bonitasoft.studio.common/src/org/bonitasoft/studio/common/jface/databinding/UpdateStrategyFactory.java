@@ -18,25 +18,32 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 
 /**
  * @author Romain Bioteau
+ * @deprecated use {@link org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory} instead
  */
+@Deprecated
 public class UpdateStrategyFactory {
 
+    @Deprecated
     public static UpdateValueStrategyFactory updateValueStrategy() {
         return new UpdateValueStrategyFactory(UpdateValueStrategy.POLICY_UPDATE);
     }
 
+    @Deprecated
     public static UpdateSetStrategyFactory updateSetStrategy() {
         return new UpdateSetStrategyFactory(UpdateValueStrategy.POLICY_UPDATE);
     }
 
+    @Deprecated
     public static UpdateValueStrategyFactory neverUpdateValueStrategy() {
         return new UpdateValueStrategyFactory(UpdateValueStrategy.POLICY_NEVER);
     }
 
+    @Deprecated
     public static UpdateValueStrategyFactory onRequestUpdateValueStrategy() {
         return new UpdateValueStrategyFactory(UpdateValueStrategy.POLICY_ON_REQUEST);
     }
 
+    @Deprecated
     public static UpdateValueStrategyFactory convertUpdateValueStrategy() {
         return new UpdateValueStrategyFactory(UpdateValueStrategy.POLICY_CONVERT);
     }

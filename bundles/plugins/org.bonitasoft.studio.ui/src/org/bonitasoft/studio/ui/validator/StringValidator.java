@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IStatus;
 
 public abstract class StringValidator extends TypedValidator<String, IStatus> {
 
-    protected final String message;
+    protected final Optional<String> message;
     private final int severity;
 
     public StringValidator(final String message) {
@@ -29,7 +29,7 @@ public abstract class StringValidator extends TypedValidator<String, IStatus> {
     }
 
     public StringValidator(String message, int severity) {
-        this.message = message;
+        this.message = Optional.ofNullable(message);
         this.severity = severity;
     }
 
@@ -38,19 +38,19 @@ public abstract class StringValidator extends TypedValidator<String, IStatus> {
      * @see org.bonitasoft.studio.ui.validator.TypedValidator#doValidate(java.lang.Object)
      */
     @Override
-    protected final IStatus doValidate(String value) {
+    protected final IStatus doValidate(Optional<String> value) {
         return isValid(value) ? ValidationStatus.ok() : createFailureStatus(formatMessage(value));
     }
 
-    protected String formatMessage(String value) {
-        return Optional.ofNullable(message).orElse("").replace("%v", Optional.ofNullable(value).orElse("null"));
+    protected String formatMessage(Optional<String> value) {
+        return message.orElse("").replace("%v", value.orElse("null"));
     }
 
     /**
      * @param the value to validate
      * @return true if the value is valid, false otherwise
      */
-    protected abstract boolean isValid(String value);
+    protected abstract boolean isValid(Optional<String> value);
 
     protected IStatus createFailureStatus(String message) {
         switch (severity) {

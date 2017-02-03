@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.importer.handler;
 
+import java.util.Optional;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -24,16 +26,25 @@ import org.eclipse.swt.widgets.Shell;
 public class DefaultImportStatusDialogHandler implements ImportStatusDialogHandler {
 
     protected final IStatus importStatus;
+    protected Optional<String> customSuccessMessage = Optional.empty();
+    protected Optional<String> customErrorMessage = Optional.empty();
 
     public DefaultImportStatusDialogHandler(final IStatus importStatus) {
         this.importStatus = importStatus;
+    }
+
+    public DefaultImportStatusDialogHandler(final IStatus importStatus, String customSuccessMessage,
+            String customErrorMessage) {
+        this.importStatus = importStatus;
+        this.customSuccessMessage = Optional.ofNullable(customSuccessMessage);
+        this.customErrorMessage = Optional.ofNullable(customErrorMessage);
     }
 
     @Override
     public void open(final Shell parentShell) {
         if (importStatus.isOK()) {
             MessageDialog.openInformation(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle,
-                    org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage);
+                    customSuccessMessage.orElse(org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage));
         } else if (importStatus.getSeverity() == IStatus.WARNING) {
             MessageDialog.openWarning(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle,
                     importStatus.getMessage());
@@ -44,6 +55,7 @@ public class DefaultImportStatusDialogHandler implements ImportStatusDialogHandl
 
     protected void openError(final Shell parentShell) {
         new ImportStatusDialog(parentShell, importStatus,
+                customErrorMessage.orElse(org.bonitasoft.studio.importer.i18n.Messages.importStatusMsg),
                 false).open();
     }
 

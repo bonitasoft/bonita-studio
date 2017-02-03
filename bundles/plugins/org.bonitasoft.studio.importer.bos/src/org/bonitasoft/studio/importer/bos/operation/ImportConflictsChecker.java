@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.zip.CRC32;
@@ -22,6 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public class ImportConflictsChecker {
 
+    private static final String LEGACY_BDM_FILENAME = "bdm.zip";
     private final Repository currentRepository;
 
     public ImportConflictsChecker(Repository currentRepository) {
@@ -30,14 +32,17 @@ public class ImportConflictsChecker {
     }
 
     public ImportArchiveModel checkConflicts(BosArchive bosArchive, IProgressMonitor monitor) throws IOException {
-        monitor.beginTask(Messages.archiveAnalysis, IProgressMonitor.UNKNOWN);
-        final ImportArchiveModel importModel = bosArchive.toImportModel(currentRepository);
-        performAnalysis(bosArchive, importModel);
+        final ImportArchiveModel importModel = bosArchive.toImportModel(currentRepository, monitor);
+        performAnalysis(bosArchive, importModel, monitor);
         return importModel;
     }
 
-    private void performAnalysis(BosArchive bosArchive, ImportArchiveModel importModel) {
-        importModel.getStores().stream().forEach(store -> compareStore(store, bosArchive));
+    private void performAnalysis(BosArchive bosArchive, ImportArchiveModel importModel, IProgressMonitor monitor) {
+        monitor.beginTask(Messages.analyseBosArchive, importModel.getStores().size());
+        importModel.getStores().stream().forEach(store -> {
+            compareStore(store, bosArchive);
+            monitor.worked(1);
+        });
     }
 
     private void compareStore(AbstractFolderModel importedStore, BosArchive bosArchive) {
@@ -67,7 +72,7 @@ public class ImportConflictsChecker {
     private void compareFiles(BosArchive bosArchive, File[] filesFromCurrentRepo, List<AbstractFileModel> filesFromArchive) {
         filesFromArchive.stream().forEach(fileFromArchive -> Stream.of(filesFromCurrentRepo)
                 .filter(File::isFile)
-                .filter(sameFileName(fileFromArchive))
+                .filter(conflictingFileName(fileFromArchive))
                 .findFirst()
                 .ifPresent(fileFromCurrentRepo -> compareChecksums(bosArchive, fileFromArchive, fileFromCurrentRepo)));
 
@@ -78,7 +83,23 @@ public class ImportConflictsChecker {
             fileFromArchive.setStatus(ConflictStatus.CONFLICTING);
         } else {
             fileFromArchive.setImportAction(ImportAction.KEEP);
+            fileFromArchive.setStatus(ConflictStatus.SAME_CONTENT);
         }
+    }
+
+    //Handle the case of legacy bdm name in archive
+    private Predicate<File> conflictingFileName(AbstractFileModel fileFromArchive) {
+        return fileFromArchive.getParent()
+                .map(AbstractFolderModel::getFolderName)
+                .filter("bdm"::equals)
+                .flatMap(filename -> Optional
+                        .ofNullable(sameFileName(fileFromArchive).or(isLegacyBDM(fileFromArchive.getFileName()))))
+                .orElse(sameFileName(fileFromArchive));
+    }
+
+    private Predicate<File> isLegacyBDM(String fileName) {
+        return fileInCurrentRepo -> Objects.equals(fileInCurrentRepo.getName(),
+                fileName) || fileName.equals(LEGACY_BDM_FILENAME);
     }
 
     private Predicate<File> sameFileName(AbstractFileModel fileFromArchive) {

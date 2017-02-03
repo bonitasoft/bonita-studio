@@ -71,8 +71,8 @@ public class RegExpValidator extends StringValidator {
      * @see org.bonitasoft.studio.ui.validator.SimpleValidator#isValid(java.lang.String)
      */
     @Override
-    protected boolean isValid(String value) {
-        return Optional.of(value).filter(v -> Pattern.matches(regex, v)).isPresent();
+    protected boolean isValid(Optional<String> value) {
+        return value.filter(v -> Pattern.matches(regex, v)).isPresent();
     }
 
 }

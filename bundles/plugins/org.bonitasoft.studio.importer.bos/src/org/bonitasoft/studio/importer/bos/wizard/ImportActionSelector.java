@@ -49,6 +49,7 @@ public class ImportActionSelector {
 
     private void applyImportAction(ImportAction importAction) {
         archiveModel.getStores().stream()
+                .filter(folder -> folder.isConflicting())
                 .forEach(folder -> applyImportAction(folder, importAction));
         viewer.refresh();
     }
@@ -56,8 +57,11 @@ public class ImportActionSelector {
     private void applyImportAction(AbstractFolderModel folder, ImportAction importAction) {
         folder.getFiles().stream()
                 .filter(AbstractFileModel::isConflicting)
-                .forEach(f -> f.setImportAction(importAction));
+                .forEach(f -> {
+                    f.setImportAction(importAction);
+                });
         folder.getFolders().stream()
+                .filter(f -> folder.isConflicting())
                 .forEach(f -> applyImportAction(f, importAction));
     }
 

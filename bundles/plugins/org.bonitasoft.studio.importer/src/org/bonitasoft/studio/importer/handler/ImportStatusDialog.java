@@ -48,9 +48,9 @@ public class ImportStatusDialog extends MessageDialog {
 
     private final IStatus importStatus;
 
-    public ImportStatusDialog(final Shell parentShell, final IStatus importStatus, final boolean canOpen) {
+    public ImportStatusDialog(final Shell parentShell, final IStatus importStatus, String message, final boolean canOpen) {
         super(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle, null,
-                org.bonitasoft.studio.importer.i18n.Messages.importStatusMsg,
+                message,
                 NONE,
                 getLabels(canOpen), 0);
         this.importStatus = importStatus;

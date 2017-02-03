@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
@@ -56,7 +57,7 @@ public class BosArchive {
         this.archiveFile = archiveFile;
     }
 
-    public ImportArchiveModel toImportModel(Repository repository) throws IOException {
+    public ImportArchiveModel toImportModel(Repository repository, IProgressMonitor monitor) throws IOException {
         final IStatus validationStatus = validate();
         if (!validationStatus.isOK()) {
             throw new IOException(Messages.unvalidBossArchive);
@@ -65,12 +66,16 @@ public class BosArchive {
 
         final ImportArchiveModel archiveModel = new ImportArchiveModel(this);
         try (ZipFile zipFile = new ZipFile(archiveFile)) {
+            monitor.beginTask(org.bonitasoft.studio.importer.bos.i18n.Messages.parsingArchive,
+                    (int) zipFile.stream().filter(e -> !e.isDirectory()).count());
             zipFile.stream().filter(e -> !e.isDirectory())
-                    .forEach(e -> parseEntry(e, archiveModel, repository, resourcesToOpen));
+                    .forEach(e -> {
+                        parseEntry(e, archiveModel, repository, resourcesToOpen);
+                        monitor.worked(1);
+                    });
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
-
         return archiveModel;
     }
 

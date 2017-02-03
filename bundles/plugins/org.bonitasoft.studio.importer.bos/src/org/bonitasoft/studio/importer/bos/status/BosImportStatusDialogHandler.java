@@ -36,10 +36,18 @@ public class BosImportStatusDialogHandler extends DefaultImportStatusDialogHandl
         this.store = store;
     }
 
+    public BosImportStatusDialogHandler(final IStatus importStatus, final DiagramRepositoryStore store,
+            String successMessage, String errorMessage) {
+        super(importStatus, successMessage, errorMessage);
+        this.store = store;
+    }
+
     @Override
     protected void openError(final Shell parentShell) {
         final ImportStatusDialog messageDialog = new ImportStatusDialog(parentShell, importStatus,
-                importStatus instanceof BosArchiveImportStatus && !((BosArchiveImportStatus) importStatus).getProcessesWithErrors().isEmpty());
+                customErrorMessage.orElse(org.bonitasoft.studio.importer.i18n.Messages.importStatusMsg),
+                importStatus instanceof BosArchiveImportStatus
+                        && !((BosArchiveImportStatus) importStatus).getProcessesWithErrors().isEmpty());
         final int result = messageDialog.open();
         if (importStatus instanceof BosArchiveImportStatus && result == IDialogConstants.OPEN_ID) {
             openDiagrams((BosArchiveImportStatus) importStatus);

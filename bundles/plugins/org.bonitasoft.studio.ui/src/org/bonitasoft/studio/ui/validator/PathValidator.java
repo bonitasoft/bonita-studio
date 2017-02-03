@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Bonitasoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +14,15 @@
  */
 package org.bonitasoft.studio.ui.validator;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 import org.eclipse.core.runtime.IStatus;
 
-public class EmptyInputValidator extends StringValidator {
+public class PathValidator extends StringValidator {
 
-    public static class Builder implements ValidatorBuilder<EmptyInputValidator> {
+    public static class Builder implements ValidatorBuilder<PathValidator> {
 
         private String message;
         private int severity = IStatus.ERROR;
@@ -46,27 +48,19 @@ public class EmptyInputValidator extends StringValidator {
         }
 
         @Override
-        public EmptyInputValidator create() {
-            return new EmptyInputValidator(message, severity);
+        public PathValidator create() {
+            return new PathValidator(message, severity);
         }
 
     }
 
-    protected EmptyInputValidator(String errorMessage, int severity) {
-        super(errorMessage, severity);
+    public PathValidator(final String message, int severity) {
+        super(message, severity);
     }
 
-    protected EmptyInputValidator(String errorMessage) {
-        super(errorMessage);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.validator.SimpleValidator#validate(java.lang.String)
-     */
     @Override
     protected boolean isValid(Optional<String> value) {
-        return !value.orElse("").trim().isEmpty();
+        return value.map(path -> Paths.get(new File(path).toURI()).toFile().exists()).orElse(false);
     }
 
 }

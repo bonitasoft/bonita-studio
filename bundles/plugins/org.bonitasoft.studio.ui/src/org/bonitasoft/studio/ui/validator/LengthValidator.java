@@ -27,9 +27,6 @@ public class LengthValidator extends StringValidator {
         private int minLength;
         private int maxLength;
 
-        public Builder() {
-        }
-
         public Builder withMessage(String message) {
             this.message = message;
             return this;
@@ -81,8 +78,8 @@ public class LengthValidator extends StringValidator {
      * @see org.bonitasoft.studio.ui.validator.SimpleValidator#isValid(java.lang.String)
      */
     @Override
-    protected boolean isValid(String value) {
-        final int length = Optional.ofNullable(value).orElse("").trim().length();
+    protected boolean isValid(Optional<String> value) {
+        final int length = value.orElse("").trim().length();
         return length >= minLength && length <= maxLength;
     }
 
@@ -91,7 +88,7 @@ public class LengthValidator extends StringValidator {
      * @see org.bonitasoft.studio.ui.validator.SimpleValidator#formatMessage(java.lang.String)
      */
     @Override
-    protected String formatMessage(String value) {
+    protected String formatMessage(Optional<String> value) {
         return super.formatMessage(value).replace("%min", String.valueOf(minLength)).replace("%max",
                 String.valueOf(maxLength));
     }
