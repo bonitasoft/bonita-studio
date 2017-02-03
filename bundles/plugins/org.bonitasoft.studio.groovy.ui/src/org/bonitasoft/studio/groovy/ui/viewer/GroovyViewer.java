@@ -107,6 +107,8 @@ public class GroovyViewer implements IDocumentListener {
 
     private UnknownElementsIndexer unknownElementsIndexer;
 
+    private IEclipseContext groovyEditorContext;
+
     public GroovyViewer(final Composite mainComposite) {
         this(mainComposite, null, null);
     }
@@ -139,15 +141,9 @@ public class GroovyViewer implements IDocumentListener {
         }
         try {
             editor.getDocumentProvider().connect(input);
-            final IEclipseContext context = ((Workbench) PlatformUI.getWorkbench()).getContext();
-            final IEclipseContext activeLeaf = context.getActiveLeaf();
-            activeLeaf
-                    .set("localContexts",
-                            Lists.newLinkedList(Lists.newArrayList("org.eclipse.ui.contexts.window", "org.eclipse.ui.contexts.dialogAndWindow",
-                                    "org.eclipse.ui.textEditorScope", "org.eclipse.jdt.ui.javaEditorScope",
-                                    "org.codehaus.groovy.eclipse.editor.groovyEditorScope")));
+            groovyEditorContext = createGroovyEditorContext();
             final DummyEditorSite site = new DummyEditorSite(mainComposite.getShell(), editor);
-            activeLeaf.set(ISources.ACTIVE_SITE_NAME, site);
+            groovyEditorContext.set(ISources.ACTIVE_SITE_NAME, site);
             editor.init(site, this.input);
             editor.doSave(Repository.NULL_PROGRESS_MONITOR);
             editor.createPartControl(mainComposite);
@@ -155,7 +151,7 @@ public class GroovyViewer implements IDocumentListener {
             BonitaStudioLog.error(e1);
         }
 
-       final StyledText styledText = getSourceViewer().getTextWidget();
+        final StyledText styledText = getSourceViewer().getTextWidget();
         styledText.setTextLimit(MAX_SCRIPT_LENGTH);
         getSourceViewer().addTextListener(new ITextListener() {
 
@@ -178,22 +174,15 @@ public class GroovyViewer implements IDocumentListener {
 
         styledText.setData(BONITA_KEYWORDS_DATA_KEY, getProvidedVariables(null, null));
         styledText.addFocusListener(new FocusListener() {
-            
-            
+
             @Override
             public void focusLost(FocusEvent e) {
-                IEclipseContext context = (IEclipseContext) styledText.getShell().getData("org.eclipse.e4.ui.shellContext");
-                if(context != null){
-                    context.deactivate();
-                }
+                groovyEditorContext.deactivate();
             }
-            
+
             @Override
             public void focusGained(FocusEvent e) {
-                IEclipseContext context = (IEclipseContext) styledText.getShell().getData("org.eclipse.e4.ui.shellContext");
-                if(context != null){
-                    context.activate();
-                }   
+                groovyEditorContext.activate();
             }
         });
         mainComposite.getShell().addDisposeListener(new DisposeListener() {
@@ -205,6 +194,18 @@ public class GroovyViewer implements IDocumentListener {
         });
     }
 
+    private IEclipseContext createGroovyEditorContext() {
+        final IEclipseContext context = ((Workbench) PlatformUI.getWorkbench()).getContext();
+        final IEclipseContext activeLeaf = context.getActiveLeaf();
+        IEclipseContext groovyEditorContext = activeLeaf.createChild("groovyEditorContext");
+        groovyEditorContext
+                .set("localContexts",
+                        Lists.newLinkedList(Lists.newArrayList("org.eclipse.ui.contexts.window",
+                                "org.eclipse.ui.contexts.dialogAndWindow",
+                                "org.eclipse.ui.textEditorScope", "org.eclipse.jdt.ui.javaEditorScope",
+                                "org.codehaus.groovy.eclipse.editor.groovyEditorScope")));
+        return groovyEditorContext;
+    }
 
     public IDocument getDocument() {
         return editor.getDocumentProvider().getDocument(input);
@@ -283,12 +284,15 @@ public class GroovyViewer implements IDocumentListener {
             }
         }
         unknownElementsIndexer = new UnknownElementsIndexer(knowVariables, getGroovyCompilationUnit());
-        unknownElementsIndexer.addJobChangeListener(new UpdateUnknownReferencesListener(getDocument(), getSourceViewer().getAnnotationModel()));
+        unknownElementsIndexer.addJobChangeListener(
+                new UpdateUnknownReferencesListener(getDocument(), getSourceViewer().getAnnotationModel()));
     }
 
     public List<ScriptVariable> getProvidedVariables(final EObject context, final ViewerFilter[] filters) {
-        final List<ScriptVariable> providedScriptVariable = GroovyUtil.getBonitaVariables(context, filters, isPageFlowContext);
-        final IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
+        final List<ScriptVariable> providedScriptVariable = GroovyUtil.getBonitaVariables(context, filters,
+                isPageFlowContext);
+        final IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance()
+                .getExpressionProvider(ExpressionConstants.DAO_TYPE);
         if (daoExpressionProvider != null) {
             final List<Expression> expressions = newArrayList(daoExpressionProvider.getExpressions(null));
             Collections.sort(expressions, new ExpressionComparator());
