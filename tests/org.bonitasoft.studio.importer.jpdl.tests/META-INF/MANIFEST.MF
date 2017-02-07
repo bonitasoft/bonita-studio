@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tests for jPDL import
 Bundle-SymbolicName: org.bonitasoft.studio.importer.jpdl.tests
-Bundle-Version: 7.4.2.qualifier
+Bundle-Version: 7.4.3.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
