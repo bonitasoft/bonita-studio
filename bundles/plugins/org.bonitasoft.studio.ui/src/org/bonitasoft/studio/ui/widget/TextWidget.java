@@ -74,7 +74,6 @@ public class TextWidget extends EditableControlWidget {
                     message, labelButton);
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             buttonListner.ifPresent(control::onCLickButton);
-            labelButton.ifPresent(control::setButtonLabel);
             placeholder.ifPresent(control::setPlaceholder);
 
             if (ctx != null && modelObservable != null) {
@@ -109,12 +108,6 @@ public class TextWidget extends EditableControlWidget {
 
     public void setPlaceholder(String placeholder) {
         text.setMessage(placeholder);
-    }
-
-    public void setButtonLabel(String buttonLabel) {
-        if (buttonLabel != null) {
-            button.ifPresent(b -> b.setText(buttonLabel));
-        }
     }
 
     public void onCLickButton(Listener listener) {
@@ -152,9 +145,12 @@ public class TextWidget extends EditableControlWidget {
         text.addListener(SWT.FocusIn, event -> redraw(textContainer));
         text.addListener(SWT.FocusOut, event -> redraw(textContainer));
 
-        button = buttonLabel.map(label -> new Button(this, SWT.None));
-        button.ifPresent(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BOTTOM)::applyTo);
-
+        button = buttonLabel.map(label -> {
+            final Button b = new Button(this, SWT.PUSH);
+            b.setText(label);
+            return b;
+        });
+        button.ifPresent(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL)::applyTo);
         return textContainer;
     }
 

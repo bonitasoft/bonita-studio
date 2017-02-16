@@ -495,7 +495,8 @@ public class BPMNToProc extends ToProcProcessor {
         return location;
     }
 
-    private void createProcessWithLanes(final EList<TFlowElement> flowElements, final List<TLane> lanes) throws ProcBuilderException {
+    private void createProcessWithLanes(final EList<TFlowElement> flowElements, final List<TLane> lanes)
+            throws ProcBuilderException {
         int nbActivities = 0;
         for (final TLane tLane : lanes) {
             final Dimension sizeFor = getSizeFor(tLane.getId());
@@ -684,8 +685,9 @@ public class BPMNToProc extends ToProcProcessor {
 
         for (final TArtifact tArtifact : artifacts) {
             if (!(tArtifact instanceof TTextAnnotation)) {
-                if (!(tArtifact instanceof TAssociation && (sourceRefs.contains(((TAssociation) tArtifact).getSourceRef().getLocalPart())
-                        || sourceRefs.contains(((TAssociation) tArtifact).getTargetRef().getLocalPart())))) {
+                if (!(tArtifact instanceof TAssociation
+                        && (sourceRefs.contains(((TAssociation) tArtifact).getSourceRef().getLocalPart())
+                                || sourceRefs.contains(((TAssociation) tArtifact).getTargetRef().getLocalPart())))) {
                     status.add(new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, tArtifact.eClass().getName() + ": "
                             + tArtifact.getId()));
                     BonitaStudioLog.log("can't create element for " + tArtifact);
@@ -1073,7 +1075,8 @@ public class BPMNToProc extends ToProcProcessor {
             if (edge != null) {
                 final BPMNLabel label = edge.getBPMNLabel();
                 if (label != null && label.getBounds() != null) {
-                    final SequenceFlowLabelLocationCalculator locationCalculator = new SequenceFlowLabelLocationCalculator(edge, label);
+                    final SequenceFlowLabelLocationCalculator locationCalculator = new SequenceFlowLabelLocationCalculator(
+                            edge, label);
                     builder.setLabelPositionOnSequenceFlowOrEvent(locationCalculator.computeLabelLocation());
                 }
             }
@@ -1119,9 +1122,12 @@ public class BPMNToProc extends ToProcProcessor {
                 }
             }
         } else {
-            final String sourceRef = sequenceFlow.getSourceRef() != null ? sequenceFlow.getSourceRef() : "<Unspecified source>";
-            final String targetRef = sequenceFlow.getTargetRef() != null ? sequenceFlow.getTargetRef() : "<Unspecified Target>";
-            BonitaStudioLog.log("The model is not clean. There is a missing id on a SequenceFlow from " + sourceRef + "to " + targetRef);
+            final String sourceRef = sequenceFlow.getSourceRef() != null ? sequenceFlow.getSourceRef()
+                    : "<Unspecified source>";
+            final String targetRef = sequenceFlow.getTargetRef() != null ? sequenceFlow.getTargetRef()
+                    : "<Unspecified Target>";
+            BonitaStudioLog.log(
+                    "The model is not clean. There is a missing id on a SequenceFlow from " + sourceRef + "to " + targetRef);
         }
         return isDefault;
     }
@@ -1158,7 +1164,8 @@ public class BPMNToProc extends ToProcProcessor {
      * @param process
      * @throws ProcBuilderException
      */
-    private int processActivities(final List<TFlowElement> flowElements, final boolean fromSubProcess) throws ProcBuilderException {
+    private int processActivities(final List<TFlowElement> flowElements, final boolean fromSubProcess)
+            throws ProcBuilderException {
         int activityNumber = 0;
         if (flowElements != null) {
             for (final TFlowElement flowElement : flowElements) {
@@ -1283,7 +1290,8 @@ public class BPMNToProc extends ToProcProcessor {
             final TExpression completionConditionExpression = ((TMultiInstanceLoopCharacteristics) loopCharacteristics)
                     .getCompletionCondition();
             if (completionConditionExpression != null) {
-                builder.addCompletionConditionExpression(getBonitaExpressionFromBPMNExpression(completionConditionExpression));
+                builder.addCompletionConditionExpression(
+                        getBonitaExpressionFromBPMNExpression(completionConditionExpression));
             }
             final TExpression cardinalityExpression = ((TMultiInstanceLoopCharacteristics) loopCharacteristics)
                     .getLoopCardinality();
@@ -1295,7 +1303,8 @@ public class BPMNToProc extends ToProcProcessor {
             final TExpression expression = ((TStandardLoopCharacteristics) loopCharacteristics).getLoopCondition();
             builder.addLoopCondition(getBonitaExpressionFromBPMNExpression(expression),
                     String.valueOf(((TStandardLoopCharacteristics) loopCharacteristics).getLoopMaximum()),
-                    ((TStandardLoopCharacteristics) loopCharacteristics).isTestBefore() ? TestTimeType.BEFORE : TestTimeType.AFTER);
+                    ((TStandardLoopCharacteristics) loopCharacteristics).isTestBefore() ? TestTimeType.BEFORE
+                            : TestTimeType.AFTER);
         }
     }
 
@@ -1370,7 +1379,8 @@ public class BPMNToProc extends ToProcProcessor {
                     }
                 }
             }
-            builder.addCallActivityTargetProcess(calledElementName != null ? calledElementName : calledElementID, ""/* "1.0" */);
+            builder.addCallActivityTargetProcess(calledElementName != null ? calledElementName : calledElementID,
+                    ""/* "1.0" */);
         }
     }
 
@@ -1453,14 +1463,14 @@ public class BPMNToProc extends ToProcProcessor {
                 processBonitaConnector(name, id, tServiceTask, operationRefName);
             } else if ("##WebService".equals(tServiceTask.getImplementation())) {
                 // TODO: handle default implem for web services as Service tasks
-                builder.addConnector(id, name, "webservice", "1.0.0", ConnectorEvent.ON_FINISH, true);
+                builder.addConnector(id, name, "webservice", "1.0.1", ConnectorEvent.ON_FINISH, true);
             }
         }
     }
 
     protected void processBonitaConnector(final String name, final String id,
             final TServiceTask tServiceTask, final String operationRefName)
-                    throws ProcBuilderException {
+            throws ProcBuilderException {
         final String connectorId = operationRefName.replaceFirst("Exec", "");
         final String version = "1.0.0";// FIXME where is stored version now??
         // Need to parse the filename of xsd
@@ -1919,7 +1929,7 @@ public class BPMNToProc extends ToProcProcessor {
 
     protected void createBonitaData(final TFlowElement flowElement,
             final boolean isMultiple, final QName itemDef, final boolean isTransient)
-                    throws ProcBuilderException {
+            throws ProcBuilderException {
         final TItemDefinition itemDefinition = getItemDefinition(itemDef);
         String id = null;
         DataType dataType = null;
@@ -1957,7 +1967,8 @@ public class BPMNToProc extends ToProcProcessor {
                                 // "");
                                 final TDataInput dataInput = getDataInputById((TActivity) flowElement, entryValue);
                                 if (dataInput != null) {
-                                    final TProperty property = getPropertyByItemSubjectRef((TActivity) flowElement, dataInput.getItemSubjectRef());
+                                    final TProperty property = getPropertyByItemSubjectRef((TActivity) flowElement,
+                                            dataInput.getItemSubjectRef());
                                     if (property != null) {
                                         final TExpression fromExpression = assignment.getFrom();
                                         defaultValueContent = retrieveDefaultValueContent(fromExpression);

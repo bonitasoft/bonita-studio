@@ -232,8 +232,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         filePathObserveValue.addValueChangeListener(this::parseArchive);
         textWidget = new TextWidget.Builder()
                 .withLabel(Messages.selectFileToImport)
-                .widthHint(500)
-                .alignLeft()
+                .grabHorizontalSpace()
+                .fill()
                 .alignMiddle()
                 .labelAbove()
                 .withTargetToModelStrategy(updateValueStrategy()
@@ -250,16 +250,17 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     }
 
     protected void browseFile(Event e) {
-        final Optional<String> file = Optional.ofNullable(openFileDialog(Display.getDefault().getActiveShell()));
-        if (file.isPresent()) {
-            final String filePath = file.get();
-            textWidget.setText(filePath);
-            if (new File(filePath).exists()) {
-                savePath(filePath);
-            } else {
-                descriptionLabel.setText("");
-                viewer.setInput(null);
-            }
+        Optional.ofNullable(openFileDialog(Display.getDefault().getActiveShell()))
+                .ifPresent(this::updateFilePath);
+    }
+
+    private void updateFilePath(String filePath) {
+        textWidget.setText(filePath);
+        if (new File(filePath).exists()) {
+            savePath(filePath);
+        } else {
+            descriptionLabel.setText("");
+            viewer.setInput(null);
         }
     }
 

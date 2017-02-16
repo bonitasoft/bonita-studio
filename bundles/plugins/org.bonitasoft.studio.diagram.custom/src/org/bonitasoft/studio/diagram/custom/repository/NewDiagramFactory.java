@@ -92,7 +92,8 @@ public class NewDiagramFactory {
         monitor.beginTask(Messages.newDiagram, 7);
 
         final String diagramIdentifier = getNewProcessIdentifier();
-        final Map<Class<?>, EObject> domainElements = createlModel(processFactory, diagramIdentifier, ElementInitializers.getInstance(), monitor);
+        final Map<Class<?>, EObject> domainElements = createlModel(processFactory, diagramIdentifier,
+                ElementInitializers.getInstance(), ModelVersion.CURRENT_VERSION, monitor);
         final Diagram diagram = createViews(domainElements, monitor);
 
         final MainProcess mainProcess = (MainProcess) domainElements.get(MainProcess.class);
@@ -111,26 +112,30 @@ public class NewDiagramFactory {
         final Node poolNode = processViewProvider.createPool_2007(domainElements.get(Pool.class), diagram, -1, true,
                 ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
 
-        final Node laneNode = processViewProvider.createLane_3007(domainElements.get(Lane.class), (View) poolNode.getPersistedChildren().get(1), -1, true,
+        final Node laneNode = processViewProvider.createLane_3007(domainElements.get(Lane.class),
+                (View) poolNode.getPersistedChildren().get(1), -1, true,
                 ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
         monitor.worked(1);
 
         final View laneCompartmentView = (View) laneNode.getPersistedChildren().get(1);
-        final Node stepShape = processViewProvider.createTask_3005(domainElements.get(Task.class), laneCompartmentView, -1, true,
+        final Node stepShape = processViewProvider.createTask_3005(domainElements.get(Task.class), laneCompartmentView, -1,
+                true,
                 ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
         final Bounds taskLayoutConstraint = (Bounds) stepShape.getLayoutConstraint();
         taskLayoutConstraint.setX(160);
         taskLayoutConstraint.setY(60);
         monitor.worked(1);
 
-        final Node startEventShape = processViewProvider.createStartEvent_3002(domainElements.get(StartEvent.class), laneCompartmentView, -1, true,
+        final Node startEventShape = processViewProvider.createStartEvent_3002(domainElements.get(StartEvent.class),
+                laneCompartmentView, -1, true,
                 ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
         final Bounds stepLayoutConstraint = (Bounds) startEventShape.getLayoutConstraint();
         stepLayoutConstraint.setX(60);
         stepLayoutConstraint.setY(68);
         monitor.worked(1);
 
-        final Connector edge = (Connector) processViewProvider.createSequenceFlow_4001(domainElements.get(SequenceFlow.class), diagram, -1, true,
+        final Connector edge = (Connector) processViewProvider.createSequenceFlow_4001(
+                domainElements.get(SequenceFlow.class), diagram, -1, true,
                 ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
         edge.setSource(startEventShape);
         edge.setTarget(stepShape);
@@ -169,7 +174,8 @@ public class NewDiagramFactory {
         return newProcessName;
     }
 
-    protected void createDefaultProcessArtifact(final TransactionalEditingDomain editingDomain, final MainProcess diagram, final IProgressMonitor monitor) {
+    protected void createDefaultProcessArtifact(final TransactionalEditingDomain editingDomain, final MainProcess diagram,
+            final IProgressMonitor monitor) {
         final Pool pool = (Pool) diagram.getElements().get(0);
         final String processUUID = ModelHelper.getEObjectID(pool);
         final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getRepositoryStore(
@@ -180,8 +186,10 @@ public class NewDiagramFactory {
         createDefaultActorMapping(conf);
         confFile.save(conf);
 
-        final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
-        final LookNFeelRepositoryStore lookNFeelStore = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance()
+                .getRepositoryStore(ApplicationResourceRepositoryStore.class);
+        final LookNFeelRepositoryStore lookNFeelStore = RepositoryManager.getInstance()
+                .getRepositoryStore(LookNFeelRepositoryStore.class);
         final ApplicationResourceFileStore artifact = resourceStore.getChild(processUUID);
         if (artifact == null) {
             final String themeId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
@@ -190,7 +198,8 @@ public class NewDiagramFactory {
             final CompoundCommand templateCommand = WebTemplatesUtil.createAddTemplateCommand(editingDomain, pool, file);
             // add an empty application folder
             editingDomain.getCommandStack().execute(templateCommand);
-            final org.eclipse.emf.common.command.Command createDefaultResourceFolders = WebTemplatesUtil.createDefaultResourceFolders(editingDomain, pool);
+            final org.eclipse.emf.common.command.Command createDefaultResourceFolders = WebTemplatesUtil
+                    .createDefaultResourceFolders(editingDomain, pool);
             if (createDefaultResourceFolders != null) {
                 editingDomain.getCommandStack().execute(createDefaultResourceFolders);
             }
@@ -250,7 +259,7 @@ public class NewDiagramFactory {
     }
 
     private List<AbstractProcess> getAllProcess(final DiagramRepositoryStore diagramStore) {
-        final List<AbstractProcess> l = new ArrayList<AbstractProcess>();
+        final List<AbstractProcess> l = new ArrayList<>();
         for (final DiagramFileStore diagramFileStore : diagramStore.getChildren()) {
             final MainProcess m = diagramFileStore.getContent();
             l.addAll(ModelHelper.getAllProcesses(m));
@@ -268,7 +277,7 @@ public class NewDiagramFactory {
     }
 
     protected List<Actor> createInitialActors(final ProcessFactory factory) {
-        final List<Actor> actors = new ArrayList<Actor>();
+        final List<Actor> actors = new ArrayList<>();
         final Actor initiator = factory.createActor();
         initiator.setInitiator(true);
         initiator.setName("Employee actor");
@@ -277,15 +286,19 @@ public class NewDiagramFactory {
         return actors;
     }
 
-    protected Map<Class<?>, EObject> createlModel(final ProcessFactory processFactory, final String diagramIdentifier, final ElementInitializers initializers,
+    protected Map<Class<?>, EObject> createlModel(final ProcessFactory processFactory,
+            final String diagramIdentifier,
+            final ElementInitializers initializers,
+            final String modelVersion,
             final IProgressMonitor monitor) {
-        final Map<Class<?>, EObject> domainElements = new HashMap<Class<?>, EObject>();
-        final String diagramName = NamingUtils.convertToValidURI(org.bonitasoft.studio.diagram.custom.i18n.Messages.newFilePrefix + diagramIdentifier);
+        final Map<Class<?>, EObject> domainElements = new HashMap<>();
+        final String diagramName = NamingUtils
+                .convertToValidURI(org.bonitasoft.studio.diagram.custom.i18n.Messages.newFilePrefix + diagramIdentifier);
         final MainProcess mainProcess = processFactory.createMainProcess();
         mainProcess.setName(diagramName);
         mainProcess.setVersion(BASE_VERSION);
         mainProcess.setBonitaVersion(ProductVersion.CURRENT_VERSION);
-        mainProcess.setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
+        mainProcess.setBonitaModelVersion(modelVersion);
         mainProcess.setEnableValidation(preferenceStore.getBoolean(BonitaPreferenceConstants.PREF_ENABLE_VALIDATION));
         mainProcess.setConfigId(getConfigurationId(mainProcess));
         ModelHelper.addDataTypes(mainProcess);
@@ -337,7 +350,8 @@ public class NewDiagramFactory {
     }
 
     public void setDefaultPoolWidth(final int defaultWidth) {
-        final IPreferenceStore store = (IPreferenceStore) ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT.getPreferenceStore();
+        final IPreferenceStore store = (IPreferenceStore) ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT
+                .getPreferenceStore();
         store.setDefault(POOL_DEFAULT_WIDTH, defaultWidth);
     }
 

@@ -14381,5 +14381,8 @@
   <releases xmi:id="_V5DkcKwLEeaAKfvw_yYhbg" date="2016-11-16T10:43:27.494+0100" label="7.4.0-004">
     <changes xsi:type="history:MigrationChange" xmi:id="_V5DkcawLEeaAKfvw_yYhbg" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateRestConnectorVersionTo100"/>
   </releases>
+  <releases xmi:id="_NyHXsO3kEeafiZdzQoO6tA" date="2017-02-08T10:43:27.494+0100" label="7.5.0-001">
+    <changes xsi:type="history:MigrationChange" xmi:id="_NyHXse3kEeafiZdzQoO6tA" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateWebServiceConnectorVersionTo110"/>
+  </releases>
   <releases xmi:id="_15TmyGnREeaTLbmqFFisdA"/>
 </history:History>

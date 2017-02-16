@@ -64,10 +64,18 @@ public abstract class EditableControlWidget extends ControlWidget {
 
         messageLabel = new CLabel(this, SWT.NONE);
         messageLabel
-                .setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.FILL)
-                        .span(buttonLabel.isPresent() ? 2 : 1, 1).create());
+                .setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.TOP)
+                        .span(messageLabelHorizontalSpan(labelAbove), 1).create());
         messageLabel.setForeground(getStatusColor(status));
         messageLabel.setText(message);
+    }
+
+    private int messageLabelHorizontalSpan(boolean labelAbove) {
+        return buttonLabel.isPresent() ? horizontalSpanWithButton(labelAbove) : 1;
+    }
+
+    private int horizontalSpanWithButton(boolean labelAbove) {
+        return labelAbove ? 3 : 2;
     }
 
     @Override
@@ -143,5 +151,6 @@ public abstract class EditableControlWidget extends ControlWidget {
 
     public void setMessage(String message) {
         this.message = message;
+        getDisplay().asyncExec(this::layout);
     }
 }
