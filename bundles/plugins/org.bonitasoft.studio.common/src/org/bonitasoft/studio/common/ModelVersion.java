@@ -14,30 +14,34 @@
  */
 package org.bonitasoft.studio.common;
 
+import java.io.File;
+import java.net.URL;
+
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.edapt.common.ResourceUtils;
+import org.eclipse.emf.edapt.spi.history.History;
+
 /**
  * @author Romain Bioteau
  */
 public class ModelVersion {
 
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
-    public static final String CURRENT_VERSION = "7.4.0-004";
+    public static final String CURRENT_VERSION = lastModelVersion();
 
-    public static boolean sameVersion(final String version) {
-        return CURRENT_VERSION.equals(version);
-
-    }
-
-    public static boolean sameMinorVersion(final String version) {
-        if (version == null) {
-            return false;
+    private static String lastModelVersion() {
+        try {
+            final URL resource = Platform.getBundle("org.bonitasoft.studio-models").getResource("process.history");
+            final URI historyURI = URI.createFileURI(new File(FileLocator.toFileURL(resource).getFile()).getAbsolutePath());
+            final History history = ResourceUtils.loadElement(historyURI);
+            return history.getLatestRelease().getLabel();
+        } catch (final Throwable t) {
+            BonitaStudioLog.error("Failed to load model version from process history", Activator.PLUGIN_ID);
+            return VERSION_6_0_0_ALPHA;
         }
-        final String minor = CURRENT_VERSION.substring(0, CURRENT_VERSION.lastIndexOf("."));
-        final String[] split = version.split("\\.");
-        String testedVersion = version;
-        if (split.length > 2) {
-            testedVersion = split[0] + "." + split[1];
-        }
-        return minor.equals(testedVersion);
     }
 
 }

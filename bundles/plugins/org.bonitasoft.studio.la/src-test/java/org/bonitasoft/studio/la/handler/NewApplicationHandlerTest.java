@@ -44,10 +44,10 @@ public class NewApplicationHandlerTest {
 
     @Test
     public void should_open_a_new_application_wizard() throws Exception {
-        NewApplicationHandler newApplicationHandler = spy(new NewApplicationHandler());
-        RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
-        ApplicationFileStore applicationFileStore = mock(ApplicationFileStore.class);
-        WizardBuilder<ApplicationFileStore> wizardBuilder = mock(WizardBuilder.class);
+        final NewApplicationHandler newApplicationHandler = spy(new NewApplicationHandler());
+        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        final ApplicationFileStore applicationFileStore = mock(ApplicationFileStore.class);
+        final WizardBuilder<ApplicationFileStore> wizardBuilder = mock(WizardBuilder.class);
         doReturn(wizardBuilder).when(newApplicationHandler).createWizard(notNull(WizardBuilder.class),
                 any(RepositoryAccessor.class));
         when(wizardBuilder.open(any(Shell.class), eq(Messages.create))).thenReturn(Optional.of(applicationFileStore));
@@ -59,9 +59,9 @@ public class NewApplicationHandlerTest {
 
     @Test
     public void should_create_a_new_application_wizard() throws Exception {
-        NewApplicationHandler newApplicationHandler = spy(new NewApplicationHandler());
-        RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
-        WizardBuilder<ApplicationFileStore> builder = spy(WizardBuilder.newWizard());
+        final NewApplicationHandler newApplicationHandler = spy(new NewApplicationHandler());
+        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        final WizardBuilder<ApplicationFileStore> builder = spy(WizardBuilder.newWizard());
         newApplicationHandler.createWizard(builder, repositoryAccessor);
 
         verify(builder).withTitle(Messages.createNewApplication);
@@ -71,20 +71,20 @@ public class NewApplicationHandlerTest {
 
     @Test
     public void should_create_an_applicationFileStore_onFinish() throws Exception {
-        NewApplicationHandler newApplicationHandler = new NewApplicationHandler();
-        RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
-        ApplicationRepositoryStore applicationStore = mock(ApplicationRepositoryStore.class);
-        ApplicationFileStore applicationFileStore = mock(ApplicationFileStore.class);
+        final NewApplicationHandler newApplicationHandler = new NewApplicationHandler();
+        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        final ApplicationRepositoryStore applicationStore = mock(ApplicationRepositoryStore.class);
+        final ApplicationFileStore applicationFileStore = mock(ApplicationFileStore.class);
         when(applicationStore.createRepositoryFileStore("testAppToken.xml")).thenReturn(applicationFileStore);
         when(repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)).thenReturn(applicationStore);
 
-        ApplicationNode applicationNode = newApplication("testAppToken", "My App Display Name", "0.1").create();
-        Optional<ApplicationFileStore> fileStore = newApplicationHandler.createApplicationFileStore(
+        final ApplicationNode applicationNode = newApplication("testAppToken", "My App Display Name", "0.1").create();
+        final Optional<ApplicationFileStore> fileStore = newApplicationHandler.createApplicationFileStore(
                 applicationNode,
                 repositoryAccessor);
 
         assertThat(fileStore).isPresent();
-        ArgumentCaptor<ApplicationNodeContainer> captor = ArgumentCaptor.forClass(ApplicationNodeContainer.class);
+        final ArgumentCaptor<ApplicationNodeContainer> captor = ArgumentCaptor.forClass(ApplicationNodeContainer.class);
         verify(applicationFileStore).save(captor.capture());
         assertThat(captor.getValue().getApplications()).extracting("token").contains("testAppToken");
     }
