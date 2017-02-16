@@ -43,6 +43,7 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.emf.tools.RemoveDanglingReferences;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -54,6 +55,7 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -285,9 +287,9 @@ public class DiagramRepositoryStore extends
             FileUtil.copy(is, fos);
             final Map<String, String[]> featureValueFromEObjectType = new EMFResourceUtil(
                     tmpFile).getFeatureValueFromEObjectType(
-                    "process:MainProcess",
-                    ProcessPackage.Literals.ELEMENT__NAME,
-                    ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
+                            "process:MainProcess",
+                            ProcessPackage.Literals.ELEMENT__NAME,
+                            ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
             if (featureValueFromEObjectType.size() == 1) {
                 final String[] next = featureValueFromEObjectType.values()
                         .iterator().next();
@@ -414,6 +416,8 @@ public class DiagramRepositoryStore extends
                     .isConfigurationIdValid(diagram)) {
                 return openError(fileName);
             }
+            //Sanitize model
+            new RemoveDanglingReferences(diagram).execute();
             updateConfigurationId(diagramResource, diagram);
             return new FileInputStream(new File(diagramResource.getURI()
                     .toFileString()));
@@ -422,7 +426,7 @@ public class DiagramRepositoryStore extends
                 copyIs.close();
             }
             if (diagramResource != null) {
-                diagramResource.delete(Collections.EMPTY_MAP);
+                diagramResource.delete(Collections.emptyMap());
             }
         }
     }
@@ -444,7 +448,7 @@ public class DiagramRepositoryStore extends
                     "Unknown"));
         }
         try {
-            diagramResource.save(Collections.EMPTY_MAP);
+            diagramResource.save(ProcessDiagramEditorUtil.getSaveOptions());
         } catch (final IOException e) {
             BonitaStudioLog.error(e);
         }
@@ -487,9 +491,9 @@ public class DiagramRepositoryStore extends
     private String getModelVersion(final Resource resource) {
         final Map<String, String[]> featureValueFromEObjectType = new EMFResourceUtil(
                 new File(resource.getURI().toFileString()))
-                .getFeatureValueFromEObjectType(
-                        "process:MainProcess",
-                        ProcessPackage.Literals.MAIN_PROCESS__BONITA_MODEL_VERSION);
+                        .getFeatureValueFromEObjectType(
+                                "process:MainProcess",
+                                ProcessPackage.Literals.MAIN_PROCESS__BONITA_MODEL_VERSION);
         String modelVersion = null;
         for (final Entry<String, String[]> e : featureValueFromEObjectType
                 .entrySet()) {
