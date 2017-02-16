@@ -64,7 +64,9 @@ public abstract class ControlWidget extends Composite {
         control = createControl();
     }
 
-    private void init(Composite parent, boolean labelAbove, int horizontalLabelAlignment,
+    private void init(Composite parent,
+            boolean labelAbove,
+            int horizontalLabelAlignment,
             int verticalLabelAlignment,
             int labelHint,
             String labelValue,
@@ -87,10 +89,9 @@ public abstract class ControlWidget extends Composite {
 
         control = createControl();
 
-        labelText.ifPresent(text -> { //Create a filler label
-            final Label a = new Label(this, SWT.NONE);
-            a.setLayoutData(GridDataFactory.swtDefaults().hint(labelHint, SWT.DEFAULT).exclude(labelAbove).create());
-        });
+        //Create a filler label
+        labelText.map(text -> new Label(this, SWT.NONE))
+                .ifPresent(GridDataFactory.swtDefaults().hint(labelHint, SWT.DEFAULT).exclude(labelAbove)::applyTo);
     }
 
     public IStatus getStatus() {

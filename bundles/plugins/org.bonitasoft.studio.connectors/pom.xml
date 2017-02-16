@@ -435,8 +435,8 @@
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-webservice-impl</artifactId>
-                                    <version>1.0.13</version>
-                                    <classifier>connector</classifier>
+                                    <version>1.1.0</version>
+                                    <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
                                  <!--REST CONNECTORS -->
