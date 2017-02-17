@@ -34,7 +34,7 @@
       <editor
             class="org.bonitasoft.studio.la.ui.editor.ApplicationEditor"
             contributorClass="org.bonitasoft.studio.la.ui.editor.ApplicationEditorActionBarContributor"
-            default="true"
+            default="false"
             extensions="xml"
             icon="icons/applicationStore.gif"
             id="org.bonitasoft.studio.la.editor"
@@ -53,7 +53,7 @@
             file-extensions="xml"
             id="org.bonitasoft.studio.la.applicationDescriptor"
             name="Application Descriptor"
-            priority="high">
+            priority="normal">
          <describer
                class="org.bonitasoft.studio.la.ui.editor.ApplicationContentDescriber">
          </describer>
