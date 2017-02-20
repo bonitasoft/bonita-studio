@@ -14,7 +14,7 @@
 		<tychoExtrasVersion>0.22.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>7.4.3-SNAPSHOT</bundle.version>
-		<ui.designer.version>1.4.32</ui.designer.version>
+		<ui.designer.version>1.4.33</ui.designer.version>
 		<engine.version>7.4.3-SNAPSHOT</engine.version>
 		<filters.version>7.4.3-SNAPSHOT</filters.version>
 		<theme.builder.version>1.1.0</theme.builder.version>
