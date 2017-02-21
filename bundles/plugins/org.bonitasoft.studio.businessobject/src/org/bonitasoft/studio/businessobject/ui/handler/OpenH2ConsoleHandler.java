@@ -73,7 +73,8 @@ public class OpenH2ConsoleHandler {
     }
 
     protected String javaBinaryLocation() {
-        return Paths.get(JavaRuntime.getDefaultVMInstall().getInstallLocation().getAbsolutePath(), "bin", "java")
+        String binaryName = Platform.getOS().toLowerCase().contains("win") ? "java.exe" : "java";
+        return Paths.get(JavaRuntime.getDefaultVMInstall().getInstallLocation().getAbsolutePath(), "bin", binaryName)
                 .toString();
     }
 
