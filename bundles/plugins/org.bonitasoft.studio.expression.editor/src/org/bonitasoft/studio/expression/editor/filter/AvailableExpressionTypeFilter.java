@@ -58,7 +58,7 @@ public class AvailableExpressionTypeFilter extends ViewerFilter {
 
     protected Set<String> allowedExpressionTypes() {
         Set<String> allowedExpressionTypes = Sets.newHashSet(getContentTypes());
-		if (allowedExpressionTypes .contains(ExpressionConstants.VARIABLE_TYPE)) {
+        if (allowedExpressionTypes.contains(ExpressionConstants.VARIABLE_TYPE)) {
             allowedExpressionTypes.add(ExpressionConstants.JAVA_TYPE);
             allowedExpressionTypes.add(ExpressionConstants.XPATH_TYPE);
             allowedExpressionTypes.add(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE);
@@ -68,5 +68,9 @@ public class AvailableExpressionTypeFilter extends ViewerFilter {
 
     public Set<String> getContentTypes() {
         return contentTypes;
+    }
+
+    public void addType(String expressionType) {
+        contentTypes.add(expressionType);
     }
 }

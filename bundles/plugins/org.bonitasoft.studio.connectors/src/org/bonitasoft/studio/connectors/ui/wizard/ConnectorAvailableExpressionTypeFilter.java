@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
@@ -53,14 +52,15 @@ public class ConnectorAvailableExpressionTypeFilter extends
                 final Set<String> contentTypes = allowedExpressionTypes();
                 contentTypes.add(ExpressionConstants.CONTRACT_INPUT_TYPE);
                 return isExpressionAllowed(element) ||
-                		((element instanceof Expression) && ExpressionConstants.CONTRACT_INPUT_TYPE.equals(((Expression) element).getType())) ||
-                		((element instanceof IExpressionProvider) && ExpressionConstants.CONTRACT_INPUT_TYPE.equals(((IExpressionProvider) element).getExpressionType())) ;
+                        ((element instanceof Expression)
+                                && ExpressionConstants.CONTRACT_INPUT_TYPE.equals(((Expression) element).getType()))
+                        ||
+                        ((element instanceof IExpressionProvider) && ExpressionConstants.CONTRACT_INPUT_TYPE
+                                .equals(((IExpressionProvider) element).getExpressionType()));
             }
         }
         return super.select(viewer, context, element);
     }
-    
-    
 
     /**
      * @param connector
