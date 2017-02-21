@@ -15,17 +15,25 @@
 package org.bonitasoft.studio.businessobject.ui.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.eclipse.core.externaltools.internal.IExternalToolConstants;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.debug.core.ILaunchConfigurationType;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,19 +49,31 @@ public class OpenH2ConsoleHandlerTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
-    @Mock
-    private Runtime runtime;
+
     @Mock
     private RepositoryAccessor repositoryAccessor;
+
     @Mock
-    private Process process;
+    private ILaunchManager launchManager;
+
     @Spy
     private OpenH2ConsoleHandler openH2ConsoleHandler;
+
+    @Mock
+    private ILaunchConfigurationType lanchConfigurationType;
+
+    @Mock
+    private ILaunchConfigurationWorkingCopy workingCopy;
 
     @Before
     public void setUp() throws Exception {
         doReturn("/test/h2_db").when(openH2ConsoleHandler).pathToDBFolder(repositoryAccessor);
         doReturn(rootFile()).when(openH2ConsoleHandler).rootFile(repositoryAccessor);
+        doReturn(launchManager).when(openH2ConsoleHandler).getLaunchManager();
+        doReturn("/usr/bin/java").when(openH2ConsoleHandler).javaBinaryLocation();
+        when(launchManager.getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE))
+                .thenReturn(lanchConfigurationType);
+        when(lanchConfigurationType.newInstance(any(IContainer.class), notNull(String.class))).thenReturn(workingCopy);
     }
 
     @Test
@@ -69,40 +89,30 @@ public class OpenH2ConsoleHandlerTest {
 
     @Test
     public void should_throw_FileNotFoundException_if_h2_jar_is_missing() throws Exception {
-        doReturn(new File(OpenH2ConsoleHandlerTest.class.getResource("/workspaceWithoutH2").toURI().toURL().getFile())).when(openH2ConsoleHandler)
+        doReturn(new File(OpenH2ConsoleHandlerTest.class.getResource("/workspaceWithoutH2").toURI().toURL().getFile()))
+                .when(openH2ConsoleHandler)
                 .rootFile(repositoryAccessor);
-        
+
         expectedException.expect(FileNotFoundException.class);
 
         openH2ConsoleHandler.locateH2jar(repositoryAccessor);
     }
 
     @Test
-    public void should_destroy_processes_on_shutdown() throws Exception {
-        doReturn(runtime).when(openH2ConsoleHandler).getRuntime();
-        doReturn(process).when(runtime).exec(anyString());
+    public void should_build_java_command() throws Exception {
+        final File logFile = new File("");
+        doReturn(logFile).when(openH2ConsoleHandler).logFile();
         doReturn(rootFile()).when(openH2ConsoleHandler).rootFile(repositoryAccessor);
         doReturn("h2.jar").when(openH2ConsoleHandler).locateH2jar(repositoryAccessor);
 
         openH2ConsoleHandler.execute(repositoryAccessor);
 
-        verify(runtime).addShutdownHook(notNull(Thread.class));
-    }
-
-    @Test
-    public void should_execute_java_command() throws Exception {
-        doReturn(runtime).when(openH2ConsoleHandler).getRuntime();
-        doReturn(rootFile()).when(openH2ConsoleHandler).rootFile(repositoryAccessor);
-        doReturn("h2.jar").when(openH2ConsoleHandler).locateH2jar(repositoryAccessor);
-
-        openH2ConsoleHandler.execute(repositoryAccessor);
-        
-        final ArgumentCaptor<String[]> argument = ArgumentCaptor.forClass(String[].class);
-        verify(runtime).exec(argument.capture());
-
-        assertThat(argument.getValue()).contains("-webPort", "java", "-jar", "h2.jar", "-browser", "-tcp", "-user", "sa",
-                "-url", "jdbc:h2:file:/test/h2_db/business_data.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;AUTO_SERVER=TRUE;", "-driver",
-                "org.h2.Driver");
+        verify(workingCopy).setAttribute(IExternalToolConstants.ATTR_LOCATION, "/usr/bin/java");
+        final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        verify(workingCopy).setAttribute(eq(IExternalToolConstants.ATTR_TOOL_ARGUMENTS), captor.capture());
+        assertThat(captor.getValue()).contains("-jar h2.jar -browser -webPort",
+                "-tcp -user sa -url jdbc:h2:file:/test/h2_db/business_data.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;AUTO_SERVER=TRUE; -driver org.h2.Driver");
+        verify(workingCopy).launch("run", Repository.NULL_PROGRESS_MONITOR);
     }
 
 }

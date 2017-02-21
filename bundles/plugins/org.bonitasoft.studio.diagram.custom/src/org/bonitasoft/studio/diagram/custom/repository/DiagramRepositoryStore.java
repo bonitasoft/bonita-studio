@@ -43,6 +43,7 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.emf.tools.RemoveDanglingReferences;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
@@ -55,6 +56,7 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -437,6 +439,8 @@ public class DiagramRepositoryStore extends
                     .isConfigurationIdValid(diagram)) {
                 return openError(fileName);
             }
+            //Sanitize model
+            new RemoveDanglingReferences(diagram).execute();
             updateConfigurationId(diagramResource, diagram);
             return new FileInputStream(new File(diagramResource.getURI()
                     .toFileString()));
@@ -445,7 +449,7 @@ public class DiagramRepositoryStore extends
                 copyIs.close();
             }
             if (diagramResource != null) {
-                diagramResource.delete(Collections.EMPTY_MAP);
+                diagramResource.delete(Collections.emptyMap());
             }
         }
     }
@@ -467,7 +471,7 @@ public class DiagramRepositoryStore extends
                     "Unknown"));
         }
         try {
-            diagramResource.save(Collections.EMPTY_MAP);
+            diagramResource.save(ProcessDiagramEditorUtil.getSaveOptions());
         } catch (final IOException e) {
             BonitaStudioLog.error(e);
         }
