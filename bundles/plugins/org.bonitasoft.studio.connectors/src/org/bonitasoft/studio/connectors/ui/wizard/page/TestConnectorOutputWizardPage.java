@@ -76,7 +76,7 @@ AbstractConnectorOutputWizardPage {
 			outputExpressionViewer.getControl().setLayoutData( GridDataFactory.fillDefaults().grab(true, false).create());
 			outputExpressionViewer.addFilter(connectorOutputFilter);
 			outputExpressionViewer.setContext(getConnector());
-			outputExpressionViewer.setMessage(Messages.connectorExpressionViewerMessage, IStatus.INFO);
+			outputExpressionViewer.setMessage(Messages.connectorExpressionViewerMessage);
 			outputExpressionViewer.setExternalDataBindingContext(context);
 			outputExpressionViewer.setInput(output);
             outputExpressionViewer.addExpressionValidator(new IExpressionValidator() {

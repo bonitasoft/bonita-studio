@@ -174,7 +174,7 @@ public class TestDatabaseConnectorOutputWizardPage extends DatabaseConnectorOutp
 		outputExpressionViewer.getControl().setLayoutData( GridDataFactory.fillDefaults().grab(true, false).create());
 		outputExpressionViewer.addFilter(rightFilter);
 		outputExpressionViewer.setContext(getConnector());
-		outputExpressionViewer.setMessage(Messages.connectorExpressionViewerMessage, IStatus.INFO);
+		outputExpressionViewer.setMessage(Messages.connectorExpressionViewerMessage);
 		outputExpressionViewer.setExternalDataBindingContext(context);
 		outputExpressionViewer.setProposalsFiltering(false);
         outputExpressionViewer.addExpressionValidator(new IExpressionValidator() {

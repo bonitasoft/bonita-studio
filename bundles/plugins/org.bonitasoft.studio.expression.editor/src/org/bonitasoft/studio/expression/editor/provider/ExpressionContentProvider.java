@@ -14,11 +14,10 @@
  */
 package org.bonitasoft.studio.expression.editor.provider;
 
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.emf.ecore.EObject;
 
@@ -28,32 +27,24 @@ import org.eclipse.emf.ecore.EObject;
 public class ExpressionContentProvider implements IExpressionNatureProvider {
 
     private static ExpressionContentProvider INSTANCE;
-    private final ExpressionEditorService expressionEditorService;
+    private final ExpressionProviderService expressionProviderService;
 
-    private ExpressionContentProvider(final ExpressionEditorService expressionEditorService) {
-        this.expressionEditorService = expressionEditorService;
+    private ExpressionContentProvider(final ExpressionProviderService expressionProviderService) {
+        this.expressionProviderService = expressionProviderService;
     }
 
     public static ExpressionContentProvider getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new ExpressionContentProvider(ExpressionEditorService.getInstance());
+            INSTANCE = new ExpressionContentProvider(ExpressionProviderService.getInstance());
         }
         return INSTANCE;
     }
 
     @Override
     public Expression[] getExpressions(final EObject context) {
-        final SortedSet<Expression> expressionsSet = new TreeSet<Expression>(new ExpressionComparator());
-        if (context != null && expressionEditorService != null) {
-            final Set<IExpressionProvider> providers = expressionEditorService.getExpressionProviders();
-            for (final IExpressionProvider provider : providers) {
-                if (provider.isRelevantFor(context)) {
-                    final Set<Expression> expressions = provider.getExpressions(context);
-                    if (expressions != null) {
-                        expressionsSet.addAll(expressions);
-                    }
-                }
-            }
+        final SortedSet<Expression> expressionsSet = new TreeSet<>(new ExpressionComparator());
+        if (context != null && expressionProviderService != null) {
+            return expressionProviderService.getRelevantExpressions(context).toArray(new Expression[expressionsSet.size()]);
         }
         return expressionsSet.toArray(new Expression[expressionsSet.size()]);
 

@@ -28,7 +28,6 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
@@ -88,7 +87,7 @@ public class StepSummarySectionContribution extends AbstractPropertySectionContr
         expressionViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
         expressionViewer.setExpressionNameResolver(new DefaultExpressionNameResolver("descriptionAfterCompletion"));
         expressionViewer.setInput(eObject) ;
-        expressionViewer.setMessage(Messages.stepSummaryHint,IStatus.INFO) ;
+        expressionViewer.setMessage(Messages.stepSummaryHint) ;
         expressionViewer.addExpressionValidator(new ExpressionLengthValidator(maxLength));
         refreshDataBindingContext();
     }

@@ -25,19 +25,21 @@ import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInp
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
+import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.JavaModelException;
 
 public class RootContractInputGenerator {
 
     private final String rootContractInputName;
-    private List<? extends FieldToContractInputMapping> children = new ArrayList<FieldToContractInputMapping>();
-    private final List<Operation> mappingOperations = new ArrayList<Operation>();
+    private List<? extends FieldToContractInputMapping> children = new ArrayList<>();
+    private final List<Operation> mappingOperations = new ArrayList<>();
     private ContractInput contractInput;
     private final RepositoryAccessor repositoryAccessor;
     private final FieldToContractInputMappingOperationBuilder operationBuilder;
@@ -45,7 +47,8 @@ public class RootContractInputGenerator {
     private Expression initialValueExpression;
     private boolean allAttributesGenerated = true;
 
-    public RootContractInputGenerator(final String rootContractInputName, final List<? extends FieldToContractInputMapping> children,
+    public RootContractInputGenerator(final String rootContractInputName,
+            final List<? extends FieldToContractInputMapping> children,
             final RepositoryAccessor repositoryAccessor, final FieldToContractInputMappingOperationBuilder operationBuilder,
             final FieldToContractInputMappingExpressionBuilder expressionBuilder) {
         this.rootContractInputName = rootContractInputName;
@@ -55,34 +58,40 @@ public class RootContractInputGenerator {
         this.expressionBuilder = expressionBuilder;
     }
 
-    public void buildForInstanciation(final BusinessObjectData data) throws OperationCreationException {
-        build(data, true);
+    public void buildForInstanciation(final BusinessObjectData data, IProgressMonitor monitor)
+            throws OperationCreationException {
+        build(data, true, monitor);
     }
 
-    public void build(final BusinessObjectData data) throws OperationCreationException {
-        build(data, false);
+    public void build(final BusinessObjectData data, IProgressMonitor monitor) throws OperationCreationException {
+        build(data, false, monitor);
     }
-    
-    private void build(final BusinessObjectData data, final boolean isOnPool) throws OperationCreationException {
+
+    private void build(final BusinessObjectData data, final boolean isOnPool, IProgressMonitor monitor)
+            throws OperationCreationException {
         contractInput = ProcessFactory.eINSTANCE.createContractInput();
         contractInput.setName(rootContractInputName);
         contractInput.setType(ContractInputType.COMPLEX);
         contractInput.setMultiple(data.isMultiple());
+        monitor.beginTask("", children.size());
         for (final FieldToContractInputMapping mapping : children) {
             if (mapping.isGenerated()) {
                 mapping.toContractInput(contractInput);
                 if (!contractInput.isMultiple()) {
-                    mappingOperations.add(operationBuilder.toOperation(data, mapping));
+                    mappingOperations.add(operationBuilder.toOperation(data, mapping, monitor));
                 }
             } else {
                 allAttributesGenerated = false;
             }
         }
         if (contractInput.isMultiple()) {
-            mappingOperations.add(operationBuilder.toOperation(data, createParentMapping(data, rootContractInputName)));
+            mappingOperations
+                    .add(operationBuilder.toOperation(data, createParentMapping(data, rootContractInputName), monitor));
         }
+        monitor.beginTask(Messages.saving, IProgressMonitor.UNKNOWN);
         try {
-            initialValueExpression = expressionBuilder.toExpression(data, createParentMapping(data, rootContractInputName), isOnPool);
+            initialValueExpression = expressionBuilder.toExpression(data, createParentMapping(data, rootContractInputName),
+                    isOnPool);
         } catch (JavaModelException | BusinessObjectInstantiationException e) {
             throw new OperationCreationException("Failed to create initial value expression", e);
         }
@@ -93,8 +102,9 @@ public class RootContractInputGenerator {
         relationField.setCollection(data.isMultiple());
         relationField.setName(inputName);
         relationField.setType(Type.COMPOSITION);
-        relationField.setReference(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class).getBusinessObjectByQualifiedName(
-                data.getClassName()));
+        relationField.setReference(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)
+                .getBusinessObjectByQualifiedName(
+                        data.getClassName()));
         final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(relationField);
         for (final FieldToContractInputMapping child : children) {
             mapping.addChild(child);

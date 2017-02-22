@@ -498,8 +498,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
 						ExpressionConstants.SCRIPT_TYPE,
 						ExpressionConstants.PARAMETER_TYPE,
 						ExpressionConstants.VARIABLE_TYPE }));
-		elementExpressionViewer.setMessage(Messages.targetEventMessageHint,
-				IStatus.INFO);
+		elementExpressionViewer.setMessage(Messages.targetEventMessageHint);
 		elementExpressionViewer.setMandatoryField(Messages.eventNameLabel,
 				databindingContext);
 		elementExpressionViewer.setContext(element);
@@ -547,8 +546,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
 						ExpressionConstants.VARIABLE_TYPE }));
 		processExpressionViewer.setMandatoryField(Messages.processNameLabel,
 				databindingContext);
-		processExpressionViewer.setMessage(Messages.targetProcessMessageHint,
-				IStatus.INFO);
+		processExpressionViewer.setMessage(Messages.targetProcessMessageHint);
 		final IExpressionNatureProvider provider = new ProcessNamesExpressionNatureProviderForMessage();
 		processExpressionViewer.setExpressionNatureProvider(provider);
 		processExpressionViewer.setContext(element);

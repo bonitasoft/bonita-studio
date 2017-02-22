@@ -18,6 +18,7 @@ import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,12 +57,14 @@ import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.ISharedImages;
@@ -103,6 +106,7 @@ public class ContractInputGenerationWizard extends Wizard {
             final GroovySourceViewerFactory sourceViewerFactory) {
         setWindowTitle(Messages.contractInputGenerationTitle);
         setDefaultPageImageDescriptor(Pics.getWizban());
+        setNeedsProgressMonitor(true);
         this.contractContainer = contractContainer;
         generationOptions = new GenerationOptions();
         this.editingDomain = editingDomain;
@@ -121,7 +125,8 @@ public class ContractInputGenerationWizard extends Wizard {
     public void addPages() {
         selectedDataObservable = new WritableValue();
         rootNameObservable = new WritableValue();
-        fieldToContractInputMappingsObservable = new WritableList(new ArrayList<FieldToContractInputMapping>(), FieldToContractInputMapping.class);
+        fieldToContractInputMappingsObservable = new WritableList(new ArrayList<FieldToContractInputMapping>(),
+                FieldToContractInputMapping.class);
         availableBusinessData = availableBusinessData();
         if (!availableBusinessData.isEmpty()) {
             selectedDataObservable.setValue(availableBusinessData.get(0));
@@ -132,20 +137,25 @@ public class ContractInputGenerationWizard extends Wizard {
             }
         }
         availableDocuments = ModelHelper.getParentPool(contractContainer).getDocuments();
-        selectBusinessDataWizardPage = contractInputWizardPagesFactory.createSelectBusinessDataWizardPage(contractContainer.getContract(),
+        selectBusinessDataWizardPage = contractInputWizardPagesFactory.createSelectBusinessDataWizardPage(
+                contractContainer.getContract(),
                 availableBusinessData, availableDocuments,
                 selectedDataObservable,
                 rootNameObservable,
                 repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
         addPage(selectBusinessDataWizardPage);
-        contractInputFromBusinessObjectWizardPage = contractInputWizardPagesFactory.createCreateContratInputFromBusinessObjectWizardPage(
-                contractContainer.getContract(), generationOptions, selectedDataObservable, rootNameObservable, fieldToContractInputMappingFactory,
-                fieldToContractInputMappingsObservable, repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
+        contractInputFromBusinessObjectWizardPage = contractInputWizardPagesFactory
+                .createCreateContratInputFromBusinessObjectWizardPage(
+                        contractContainer.getContract(), generationOptions, selectedDataObservable, rootNameObservable,
+                        fieldToContractInputMappingFactory,
+                        fieldToContractInputMappingsObservable,
+                        repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
         contractInputFromBusinessObjectWizardPage.setTitle();
         addPage(contractInputFromBusinessObjectWizardPage);
         if (contractContainer instanceof Pool) {
             generatedScriptPreviewPage = contractInputWizardPagesFactory.createGeneratedScriptPreviewPage(rootNameObservable,
-                    fieldToContractInputMappingsObservable, selectedDataObservable, repositoryAccessor, operationBuilder, expressionBuilder,
+                    fieldToContractInputMappingsObservable, selectedDataObservable, repositoryAccessor, operationBuilder,
+                    expressionBuilder,
                     sourceViewerFactory);
             generatedScriptPreviewPage.setDescription();
             addPage(generatedScriptPreviewPage);
@@ -177,7 +187,7 @@ public class ContractInputGenerationWizard extends Wizard {
     public boolean performFinish() {
         final Object selectedData = selectedDataObservable.getValue();
         if (selectedData instanceof BusinessObjectData) {
-            return perFormFinishForBusinessObjectData();
+            return performFinishForBusinessObjectData();
         }
         if (selectedData instanceof Document) {
             return performFinishForDocument();
@@ -185,23 +195,20 @@ public class ContractInputGenerationWizard extends Wizard {
         return true;
     }
 
-    private boolean perFormFinishForBusinessObjectData() {
+    private boolean performFinishForBusinessObjectData() {
         final BusinessObjectData data = (BusinessObjectData) selectedDataObservable.getValue();
         final RootContractInputGenerator contractInputGenerator = getRootContractGenerator();
         final int returnCode = openInfoDialog();
         if (returnCode == MessageDialogWithToggle.OK || returnCode == ContractInputGenerationInfoDialogFactory.NOT_OPENED) {
             try {
-                if (contractContainer instanceof Pool) {
-                    contractInputGenerator.buildForInstanciation(data);
-                } else {
-                    contractInputGenerator.build(data);
-                }
-            } catch (final OperationCreationException e) {
+                getContainer().run(true, false, buildContractOperationFromData(data, contractInputGenerator));
+            } catch (InvocationTargetException | InterruptedException e) {
                 BonitaStudioLog.error("Failed to create Operations from contract", e);
-                new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e).open();
+                new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage,
+                        e.getCause())
+                                .open();
                 return false;
             }
-            editingDomain.getCommandStack().execute(createCommand(contractInputGenerator, data));
             openWarningDialog(contractInputGenerator.isAllAttributesGenerated());
             return true;
         }
@@ -211,26 +218,70 @@ public class ContractInputGenerationWizard extends Wizard {
         return false;
     }
 
+    private IRunnableWithProgress buildContractOperationFromData(final BusinessObjectData data,
+            final RootContractInputGenerator contractInputGenerator) {
+        return new IRunnableWithProgress() {
+
+            @Override
+            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                try {
+                    if (contractContainer instanceof Pool) {
+                        contractInputGenerator.buildForInstanciation(data, monitor);
+                    } else {
+                        contractInputGenerator.build(data, monitor);
+                    }
+                    editingDomain.getCommandStack().execute(createCommand(contractInputGenerator, data));
+                } catch (final OperationCreationException e) {
+                    throw new InvocationTargetException(e);
+                }
+            }
+        };
+    }
+
     private boolean performFinishForDocument() {
         final Document document = (Document) selectedDataObservable.getValue();
-        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
-        input.setType(ContractInputType.FILE);
-        input.setMultiple(document.isMultiple());
-        input.setName((String) rootNameObservable.getValue());
-        final CompoundCommand cc = new CompoundCommand();
-        cc.append(AddCommand.create(editingDomain, contractContainer.getContract(), ProcessPackage.Literals.CONTRACT__INPUTS, input));
-        if (contractContainer instanceof Task) {
-            createDocumentUpdateOperation(document, input, cc);
-        } else {
-            cc.append(SetCommand.create(editingDomain, document, ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE, DocumentType.CONTRACT));
-            cc.append(SetCommand.create(editingDomain, document, ProcessPackage.Literals.DOCUMENT__CONTRACT_INPUT, input));
+        if (!(contractContainer instanceof Task)) {
             infoDialogFactory.openUpdateDocumentInitalContentWarning(document.getName(), getShell());
         }
-        editingDomain.getCommandStack().execute(cc);
+        try {
+            getContainer().run(true, false, buildContractOperationFromDocument(document));
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error("Failed to create operation for document.", e);
+            return false;
+        }
         return true;
     }
 
-    private void createDocumentUpdateOperation(final Document document, final ContractInput input, final CompoundCommand cc) {
+    private IRunnableWithProgress buildContractOperationFromDocument(final Document document) {
+        return new IRunnableWithProgress() {
+
+            @Override
+            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                monitor.beginTask("", IProgressMonitor.UNKNOWN);
+                final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
+                input.setType(ContractInputType.FILE);
+                input.setMultiple(document.isMultiple());
+                input.setName((String) rootNameObservable.getValue());
+                final CompoundCommand cc = new CompoundCommand();
+                cc.append(AddCommand.create(editingDomain, contractContainer.getContract(),
+                        ProcessPackage.Literals.CONTRACT__INPUTS,
+                        input));
+                if (contractContainer instanceof Task) {
+                    createDocumentUpdateOperation(document, input, cc);
+                } else {
+                    cc.append(SetCommand.create(editingDomain, document, ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE,
+                            DocumentType.CONTRACT));
+                    cc.append(
+                            SetCommand.create(editingDomain, document, ProcessPackage.Literals.DOCUMENT__CONTRACT_INPUT,
+                                    input));
+                }
+                editingDomain.getCommandStack().execute(cc);
+            }
+        };
+    }
+
+    private void createDocumentUpdateOperation(final Document document, final ContractInput input,
+            final CompoundCommand cc) {
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
         final Expression rightOperand = ExpressionHelper.createExpressionFromEObject(input);
         final Expression leftOperand = ExpressionHelper.createDocumentReferenceExpression(document);
@@ -243,7 +294,8 @@ public class ContractInputGenerationWizard extends Wizard {
         operation.setLeftOperand(leftOperand);
         operation.setRightOperand(rightOperand);
         operation.setOperator(operator);
-        cc.append(AddCommand.create(editingDomain, contractContainer, ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS, operation));
+        cc.append(AddCommand.create(editingDomain, contractContainer,
+                ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS, operation));
         infoDialogFactory.openUpdateDocumentOperationWarning(document.getName(), getShell());
     }
 
@@ -253,7 +305,8 @@ public class ContractInputGenerationWizard extends Wizard {
             contractInputGenerator = generatedScriptPreviewPage.getRootContractInputGenerator();
         } else {
             contractInputGenerator = new RootContractInputGenerator((String) rootNameObservable.getValue(),
-                    contractInputFromBusinessObjectWizardPage.getMappings(), repositoryAccessor, operationBuilder, expressionBuilder);
+                    contractInputFromBusinessObjectWizardPage.getMappings(), repositoryAccessor, operationBuilder,
+                    expressionBuilder);
         }
         return contractInputGenerator;
     }
@@ -263,15 +316,16 @@ public class ContractInputGenerationWizard extends Wizard {
                 generationOptions.isAutogeneratedScript());
     }
 
-    protected CompoundCommand createCommand(final RootContractInputGenerator contractInputGenerator, final BusinessObjectData data
-            ) {
+    protected CompoundCommand createCommand(final RootContractInputGenerator contractInputGenerator,
+            final BusinessObjectData data) {
         final CompoundCommand cc = new CompoundCommand();
         cc.append(AddCommand.create(editingDomain, contractContainer.getContract(), ProcessPackage.Literals.CONTRACT__INPUTS,
                 contractInputGenerator.getRootContractInput()));
 
         if (contractContainer instanceof OperationContainer
                 && generationOptions.isAutogeneratedScript()) {
-            cc.appendIfCanExecute(AddCommand.create(editingDomain, contractContainer, ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS,
+            cc.appendIfCanExecute(AddCommand.create(editingDomain, contractContainer,
+                    ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS,
                     contractInputGenerator.getMappingOperations()));
         }
         if (contractContainer instanceof Pool && generationOptions.isAutogeneratedScript()) {
@@ -284,8 +338,10 @@ public class ContractInputGenerationWizard extends Wizard {
 
     protected void openWarningDialog(final boolean allAttributesGenerated) {
         if (!allAttributesGenerated) {
-            final String message = contractContainer instanceof Task ? Messages.notAllAttributesGeneratedTaskMsg : Messages.notAllAttributesGeneratedMsg;
-            final String title = contractContainer instanceof Task ? Messages.notAllAttributesGeneratedTaskTitle : Messages.notAllAttributesGeneratedTitle;
+            final String message = contractContainer instanceof Task ? Messages.notAllAttributesGeneratedTaskMsg
+                    : Messages.notAllAttributesGeneratedMsg;
+            final String title = contractContainer instanceof Task ? Messages.notAllAttributesGeneratedTaskTitle
+                    : Messages.notAllAttributesGeneratedTitle;
             MessageDialog.openWarning(getShell(), title, message);
         }
     }

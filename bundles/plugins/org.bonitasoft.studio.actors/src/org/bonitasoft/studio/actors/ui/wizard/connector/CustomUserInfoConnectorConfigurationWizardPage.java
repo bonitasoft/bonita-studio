@@ -24,7 +24,6 @@ import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnector
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitchBuilder;
 import org.bonitasoft.studio.expression.editor.viewer.CheckBoxExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -72,11 +71,11 @@ public class CustomUserInfoConnectorConfigurationWizardPage extends AbstractConn
 
         final Composite valueComposite = createComposite(cuiComposite, 2, 0);
         final ExpressionViewer valueViewer = componentSwitchBuilder.createTextControl(valueComposite, cuiValueInput);
-        valueViewer.setMessage(Messages.typeValueToFilter, IStatus.INFO);
+        valueViewer.setMessage(Messages.typeValueToFilter);
         componentSwitchBuilder.createCheckboxControl(valueComposite, cuiPartialMatchInput);
 
         final CheckBoxExpressionViewer viewer = componentSwitchBuilder.createCheckboxControl(pageComposite, automaticAssignInput);
-        viewer.setMessage(Messages.assignOnlyIfOneUser, IStatus.INFO);
+        viewer.setMessage(Messages.assignOnlyIfOneUser);
 
         return mainComposite;
     }

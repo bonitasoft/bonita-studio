@@ -31,7 +31,7 @@ import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.data.ui.wizard.CreateVariableProposalListener;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
@@ -198,7 +198,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 
     private void fillViewerData(final EObject context, final ViewerFilter[] filters) {
         final Set<Data> input = new HashSet<>();
-        final IExpressionProvider provider = ExpressionEditorService.getInstance()
+        final IExpressionProvider provider = ExpressionProviderService.getInstance()
                 .getExpressionProvider(ExpressionConstants.VARIABLE_TYPE);
         final Set<Expression> expressions = provider.getExpressions(context);
         final Set<Expression> filteredExpressions = new HashSet<>();
