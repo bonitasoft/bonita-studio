@@ -58,12 +58,14 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
@@ -102,7 +104,8 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
             final ViewerFilter storageExpressionFilter, final boolean isPageFlowContext) {
         parent = mainComposite;
         container = new Composite(mainComposite, SWT.NONE);
-        container.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(0, 20, 0, 0).create());
+        container.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(0, 20, 0, 0).create());
         operationComposite = new Composite(container, SWT.NONE);
         operationComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).spacing(0, 5).create());
         operationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -127,22 +130,29 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
         operationListlistener = new IListChangeListener() {
 
             @Override
-            public void handleListChange(ListChangeEvent event) {
-                final IObservableList observableList = event.getObservableList();
-                while (operationViewers.size() != observableList.size()) {
-                    if (operationViewers.size() > observableList.size()) {
-                        removeLineUI(operationViewers.size() - 1);
-                    } else if (operationViewers.size() < observableList.size()) {
-                        addLineUI((Operation) observableList.get(operationViewers.size()));
+            public void handleListChange(final ListChangeEvent event) {
+                BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+
+                    @Override
+                    public void run() {
+                        final IObservableList observableList = event.getObservableList();
+                        while (operationViewers.size() != observableList.size()) {
+                            if (operationViewers.size() > observableList.size()) {
+                                removeLineUI(operationViewers.size() - 1);
+                            } else if (operationViewers.size() < observableList.size()) {
+                                addLineUI((Operation) observableList.get(operationViewers.size()));
+                            }
+                        }
+                        for (final Object operation : observableList) {
+                            final int operationIndex = observableList.indexOf(operation);
+                            operationViewers.get(operationIndex).setOperation((Operation) operation);
+                            operationViewers.get(operationIndex).setEObject(getEObject());
+                        }
+                        updateOrderButtons();
+                        refresh();
                     }
-                }
-                for (final Object operation : observableList) {
-                    final int operationIndex = observableList.indexOf(operation);
-                    operationViewers.get(operationIndex).setOperation((Operation) operation);
-                    operationViewers.get(operationIndex).setEObject(getEObject());
-                }
-                updateOrderButtons();
-                refresh();
+                });
+
             }
         };
     }
@@ -199,7 +209,8 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
                 storageExp = ExpressionFactory.eINSTANCE.createExpression();
                 if (getEditingDomain() != null) {
                     cc.append(
-                            SetCommand.create(getEditingDomain(), action, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND, storageExp));
+                            SetCommand.create(getEditingDomain(), action, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND,
+                                    storageExp));
                 } else {
                     action.setLeftOperand(storageExp);
                 }
@@ -209,7 +220,8 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
                 Expression actionExp;
                 actionExp = ExpressionFactory.eINSTANCE.createExpression();
                 if (actionExpressionFilter instanceof AvailableExpressionTypeFilter) {
-                    final Set<String> possibleContentTypes = ((AvailableExpressionTypeFilter) actionExpressionFilter).getContentTypes();
+                    final Set<String> possibleContentTypes = ((AvailableExpressionTypeFilter) actionExpressionFilter)
+                            .getContentTypes();
                     if (!possibleContentTypes.contains(ExpressionConstants.CONSTANT_TYPE)) {
                         if (!possibleContentTypes.isEmpty()) {
                             actionExp.setType(possibleContentTypes.iterator().next());
@@ -218,7 +230,8 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
                 }
                 if (getEditingDomain() != null) {
                     cc.append(
-                            SetCommand.create(getEditingDomain(), action, ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND, actionExp));
+                            SetCommand.create(getEditingDomain(), action,
+                                    ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND, actionExp));
                 } else {
                     action.setRightOperand(actionExp);
                 }
@@ -307,7 +320,8 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
     }
 
     protected OperationViewer createOperationViewer() {
-        final OperationViewer viewer = new OperationViewer(operationComposite, widgetFactory, editingDomain, actionExpressionFilter,
+        final OperationViewer viewer = new OperationViewer(operationComposite, widgetFactory, editingDomain,
+                actionExpressionFilter,
                 storageExpressionFilter, isPageFlowContext);
         viewer.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
         if (eObjectContext != null) {
@@ -350,7 +364,6 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
                 getOperations().remove(removes.indexOf(e.getSource()));
             }
         });
-        opViewer.layout(true, true);
         return remove;
     }
 

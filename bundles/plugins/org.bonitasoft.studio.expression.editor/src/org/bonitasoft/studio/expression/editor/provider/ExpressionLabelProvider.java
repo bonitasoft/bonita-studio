@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.expression.editor.provider;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.autocompletion.ExpressionProposal;
 import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -36,12 +36,13 @@ public class ExpressionLabelProvider extends LabelProvider implements IExpressio
             expression = ((ExpressionProposal) expression).getExpression();
         }
         if (expression instanceof Expression) {
-            for (final IExpressionProvider provider : ExpressionEditorService.getInstance().getExpressionProviders()) {
-                if (provider.getExpressionType().equals(((Expression) expression).getType())) {
-                    return provider.getIcon((Expression) expression);
-                }
+            final IExpressionProvider provider = ExpressionProviderService.getInstance()
+                    .getExpressionProvider(((Expression) expression).getType());
+            if (provider != null) {
+                return provider.getIcon((Expression) expression);
             }
-            if (ExpressionConstants.CONSTANT_TYPE.equals(((Expression) expression).getType()) && ((Expression) expression).getContent() != null
+            if (ExpressionConstants.CONSTANT_TYPE.equals(((Expression) expression).getType())
+                    && ((Expression) expression).getContent() != null
                     && !((Expression) expression).getContent().isEmpty()) {
                 return Pics.getImage(PicsConstants.constant);
             }
@@ -56,12 +57,13 @@ public class ExpressionLabelProvider extends LabelProvider implements IExpressio
             expression = ((ExpressionProposal) expression).getExpression();
         }
         if (expression instanceof Expression) {
-            for (final IExpressionProvider provider : ExpressionEditorService.getInstance().getExpressionProviders()) {
-                if (provider.getExpressionType().equals(((Expression) expression).getType())) {
-                    return provider.getProposalLabel((Expression) expression);
-                }
+            final IExpressionProvider provider = ExpressionProviderService.getInstance()
+                    .getExpressionProvider(((Expression) expression).getType());
+            if (provider != null) {
+                return provider.getProposalLabel((Expression) expression);
             }
-            if (ExpressionConstants.CONSTANT_TYPE.equals(((Expression) expression).getType()) && !((Expression) expression).getContent().isEmpty()) {
+            if (ExpressionConstants.CONSTANT_TYPE.equals(((Expression) expression).getType())
+                    && !((Expression) expression).getContent().isEmpty()) {
                 return ((Expression) expression).getName();
             }
 

@@ -22,7 +22,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
@@ -180,7 +180,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
                 expressionType = ExpressionConstants.SCRIPT_TYPE;
             }
         }
-        final IExpressionProvider currentProvider = ExpressionEditorService.getInstance()
+        final IExpressionProvider currentProvider = ExpressionProviderService.getInstance()
                 .getExpressionProvider(expressionType);
         if (currentProvider != null && expressionTypeViewer != null) {
             expressionTypeViewer.setSelection(new StructuredSelection(currentProvider));
@@ -340,7 +340,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
     }
 
     protected void showContent(final String type) {
-        final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(type);
+        final IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider(type);
 
         Assert.isNotNull(provider);
 

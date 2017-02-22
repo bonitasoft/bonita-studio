@@ -170,10 +170,10 @@ public class TimerConditionWizardPage extends WizardPage {
 		conditionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
 		if(enableCycles){
-			conditionViewer.setMessage(Messages.startTimerConditionHint, IStatus.INFO);
+			conditionViewer.setMessage(Messages.startTimerConditionHint);
 			conditionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.CONSTANT_TYPE}));
 		}else{
-			conditionViewer.setMessage(Messages.timerConditionHint, IStatus.INFO);
+			conditionViewer.setMessage(Messages.timerConditionHint);
 			conditionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE}));
 		}
         conditionViewer.addExpressionValidator(new IExpressionValidator() {

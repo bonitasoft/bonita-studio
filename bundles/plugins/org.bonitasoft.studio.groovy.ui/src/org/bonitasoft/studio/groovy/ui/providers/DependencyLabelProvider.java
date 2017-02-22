@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.groovy.ui.providers;
 
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -39,7 +39,7 @@ public class DependencyLabelProvider extends LabelProvider {
     @Override
     public Image getImage(final Object element) {
         if (element instanceof Expression) {
-            final IExpressionProvider expressionProvider = ExpressionEditorService.getInstance().getExpressionProvider(((Expression) element).getType());
+            final IExpressionProvider expressionProvider = ExpressionProviderService.getInstance().getExpressionProvider(((Expression) element).getType());
             if (expressionProvider != null) {
                 return expressionProvider.getTypeIcon();
             }

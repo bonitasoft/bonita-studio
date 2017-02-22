@@ -30,7 +30,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionComparator;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.ICustomExpressionNatureProvider;
@@ -291,7 +291,7 @@ public class GroovyViewer implements IDocumentListener {
     public List<ScriptVariable> getProvidedVariables(final EObject context, final ViewerFilter[] filters) {
         final List<ScriptVariable> providedScriptVariable = GroovyUtil.getBonitaVariables(context, filters,
                 isPageFlowContext);
-        final IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance()
+        final IExpressionProvider daoExpressionProvider = ExpressionProviderService.getInstance()
                 .getExpressionProvider(ExpressionConstants.DAO_TYPE);
         if (daoExpressionProvider != null) {
             final List<Expression> expressions = newArrayList(daoExpressionProvider.getExpressions(null));

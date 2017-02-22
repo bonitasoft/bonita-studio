@@ -25,7 +25,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.document.i18n.Messages;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
@@ -163,7 +163,7 @@ public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
     }
 
     private void retrieveAndFillDocumentSet(final EObject context, final Set<Document> simpleDocuments, final Set<Document> multipleDocuments) {
-        final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE);
+        final IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE);
         final Set<Expression> expressions = provider.getExpressions(context);
         for (final Expression e1 : expressions) {
             final Document document = (Document) e1.getReferencedElements().get(0);

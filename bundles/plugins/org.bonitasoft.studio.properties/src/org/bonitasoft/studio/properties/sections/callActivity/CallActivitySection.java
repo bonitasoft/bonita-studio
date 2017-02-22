@@ -27,7 +27,6 @@ import org.bonitasoft.studio.properties.sections.general.ProcessNamesExpressionN
 import org.bonitasoft.studio.properties.sections.general.ProcessVersionsExpressionNatureProvider;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
@@ -110,7 +109,7 @@ public class CallActivitySection extends AbstractBonitaDescriptionSection {
         versionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         versionViewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.PARAMETER_TYPE));
-        versionViewer.setMessage(Messages.calledProcessVersionHint, IStatus.INFO);
+        versionViewer.setMessage(Messages.calledProcessVersionHint);
         versionViewer.setExpressionNatureProvider(new ProcessVersionsExpressionNatureProvider());
 
         final IObservableValue callActivityVersionObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),

@@ -35,7 +35,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -55,7 +55,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
     @Mock
     private RepositoryAccessor repositoryAccessor;
     @Mock
-    private ExpressionEditorService expressionEditorService;
+    private ExpressionProviderService expressionEditorService;
     @Mock
     private GroovyCompilationUnit groovyCompilationUnit;
 

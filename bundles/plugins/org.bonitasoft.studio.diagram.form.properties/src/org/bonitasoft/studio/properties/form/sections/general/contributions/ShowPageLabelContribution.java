@@ -28,7 +28,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormPackage;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
@@ -99,7 +98,7 @@ IExtensibleGridPropertySectionContribution {
                 ViewerProperties.singleSelection().observe(pageLabelExpresssionViewer),
                 EMFEditProperties.value(editingDomain, FormPackage.Literals.FORM__PAGE_LABEL).observe(element));
 
-        pageLabelExpresssionViewer.setMessage(Messages.GeneralSection_EnablePageLabel_tooltip,IStatus.INFO);
+        pageLabelExpresssionViewer.setMessage(Messages.GeneralSection_EnablePageLabel_tooltip);
         pageLabelExpresssionViewer.getControl().setLayoutData(gData);
 
         Button allowHTMLButton = widgetFactory.createButton(composite, Messages.GeneralSection_allowHTML, SWT.CHECK);

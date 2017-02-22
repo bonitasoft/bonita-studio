@@ -37,7 +37,6 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.resources.ResourcePropertySection;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
@@ -186,7 +185,7 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
         confirmationMessageLabel.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 4, 1));
         confirmationMessage = new ExpressionViewer(templates, SWT.BORDER, getWidgetFactory(), getEditingDomain(), ProcessPackage.Literals.PAGE_FLOW__CONFIRMATION_MESSAGE);
         confirmationMessage.getControl().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 4, 1));
-        confirmationMessage.setMessage(Messages.confirmationMessageTooltip,IStatus.INFO);
+        confirmationMessage.setMessage(Messages.confirmationMessageTooltip);
 
     }
 

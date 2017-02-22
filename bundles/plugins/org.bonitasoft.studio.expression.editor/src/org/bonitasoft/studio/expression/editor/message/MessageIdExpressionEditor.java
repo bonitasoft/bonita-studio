@@ -21,7 +21,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
@@ -112,7 +112,7 @@ public class MessageIdExpressionEditor extends SelectionAwareExpressionEditor im
 
             @Override
             public Image getImage(Object element) {
-                return ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.MESSAGE_ID_TYPE).getTypeIcon();
+                return ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.MESSAGE_ID_TYPE).getTypeIcon();
             }
         });
 
@@ -135,7 +135,7 @@ public class MessageIdExpressionEditor extends SelectionAwareExpressionEditor im
         IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
 
         Set<String> input = new HashSet<String>();
-        IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.MESSAGE_ID_TYPE);
+        IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.MESSAGE_ID_TYPE);
         for (Expression e : provider.getExpressions(context)) {
             input.add(e.getName());
         }
