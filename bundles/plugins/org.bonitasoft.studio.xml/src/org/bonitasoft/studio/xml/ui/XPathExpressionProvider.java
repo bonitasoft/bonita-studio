@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -43,7 +43,7 @@ public class XPathExpressionProvider implements IExpressionProvider {
 	 */
 	public Set<Expression> getExpressions(EObject context) {
 		Set<Expression> exprSet = new HashSet<Expression>();
-		IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.VARIABLE_TYPE) ;
+		IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.VARIABLE_TYPE) ;
 		if(provider != null){
 			for(Expression exp : provider.getExpressions(context)){
 				if(exp.getReferencedElements().get(0) instanceof XMLData){
@@ -86,7 +86,7 @@ public class XPathExpressionProvider implements IExpressionProvider {
 	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#isRelevantFor(org.eclipse.emf.ecore.EObject)
 	 */
 	public boolean isRelevantFor(EObject context) {
-		IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.VARIABLE_TYPE) ;
+		IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.VARIABLE_TYPE) ;
 		if(provider != null){
 			for(Expression exp : provider.getExpressions(context)){
 				if(exp.getReferencedElements().get(0) instanceof XMLData){

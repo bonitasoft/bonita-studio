@@ -44,6 +44,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Composite;
 import org.junit.Rule;
 import org.junit.Test;
@@ -100,22 +101,29 @@ public class GeneratedScriptPreviewPageTest {
         final WritableValue rootNameObservable = new WritableValue();
         rootNameObservable.setValue(data.getName() + "Input");
         final WritableList fieldToContactInputMappingsObservable = new WritableList();
-        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(SimpleFieldBuilder.aStringField(
-                "firstName").build());
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.aStringField(
+                        "firstName").build());
         fieldToContactInputMappingsObservable.add(mapping);
 
         final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
         when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
-                BusinessObjectBuilder.aBO("org.company.Employee").withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
+                BusinessObjectBuilder.aBO("org.company.Employee")
+                        .withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
         when(sourceViewerFactory.createSourceViewer(any(Composite.class), any(Boolean.class))).thenReturn(groovyViewer);
         when(groovyViewer.getSourceViewer()).thenReturn(sourceViewer);
         when(groovyViewer.getDocument()).thenReturn(document);
-        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class), anyBoolean())).thenReturn(
-                aGroovyScriptExpression().build());
+        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class),
+                anyBoolean())).thenReturn(
+                        aGroovyScriptExpression().build());
 
-        final GeneratedScriptPreviewPage previewPage = new GeneratedScriptPreviewPage(rootNameObservable, fieldToContactInputMappingsObservable,
+        final GeneratedScriptPreviewPage previewPage = new GeneratedScriptPreviewPage(rootNameObservable,
+                fieldToContactInputMappingsObservable,
                 selectedDataObservable, repositoryAccessor, operationBuilder, expressionBuilder, sourceViewerFactory);
+        final IWizard wizard = mock(IWizard.class);
+        when(wizard.getContainer()).thenReturn(new TestWizardContainer(realmWithDisplay.getShell()));
+        previewPage.setWizard(wizard);
         previewPage.createControl(realmWithDisplay.createComposite());
         previewPage.setVisible(true);
 

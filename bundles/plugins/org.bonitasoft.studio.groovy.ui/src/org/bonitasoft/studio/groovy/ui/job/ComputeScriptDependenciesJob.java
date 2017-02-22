@@ -25,7 +25,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
@@ -123,7 +123,7 @@ public class ComputeScriptDependenciesJob extends Job {
                 deps.add(EcoreUtil.copy(daoExpression));
                 continue variablesloop;
             }
-            for (final IExpressionProvider provider : ExpressionEditorService.getInstance().getExpressionProviders()) {
+            for (final IExpressionProvider provider : ExpressionProviderService.getInstance().getExpressionProviders()) {
                 if (provider.isRelevantFor(context)) {
                     for (final Expression exp : provider.getExpressions(context)) {
                         if (exp.getName().equals(name)) {
@@ -142,7 +142,7 @@ public class ComputeScriptDependenciesJob extends Job {
     }
 
     private Expression getDAOExpression(final String name) {
-        final IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
+        final IExpressionProvider daoExpressionProvider = ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
         if (daoExpressionProvider == null) {
             return null;
         }

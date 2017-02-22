@@ -29,7 +29,6 @@ import org.bonitasoft.studio.model.form.HtmlWidget;
 import org.bonitasoft.studio.model.form.IFrameWidget;
 import org.bonitasoft.studio.model.form.MessageInfo;
 import org.bonitasoft.studio.model.form.Widget;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
@@ -82,7 +81,7 @@ public class HintGridPropertySectionContribution implements
                 ViewerProperties.singleSelection().observe(hintViewer),
                 EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__HELP_MESSAGE).observe(element));
 
-        hintViewer.setMessage(Messages.UserAidsSection_Hint_tooltip, IStatus.INFO);
+        hintViewer.setMessage(Messages.UserAidsSection_Hint_tooltip);
 
     }
 

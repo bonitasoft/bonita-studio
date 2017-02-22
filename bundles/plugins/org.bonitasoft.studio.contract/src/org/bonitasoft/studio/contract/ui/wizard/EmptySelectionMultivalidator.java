@@ -26,6 +26,8 @@ import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author aurelie
@@ -69,20 +71,28 @@ public class EmptySelectionMultivalidator extends MultiValidator {
 
     private void validateMandatoryFieldsNotSelected(final StringBuilder sb,
             final List<FieldToContractInputMapping> mappings, final IObservableSet checkedElements) {
-        for (final FieldToContractInputMapping mapping : mappings) {
-            if (!checkedElements.contains(mapping) && !mapping.isGenerated() && !mapping.getField().isNullable()) {
-                if (mapping.getParent() != null) {
-                    sb.append(mapping.getParent().getField().getName());
-                    sb.append(".");
-                }
-                sb.append(mapping.getField().getName());
-                sb.append(", ");
-            } else {
-                if (checkedElements.contains(mapping) && mapping.isGenerated()) {
-                    validateMandatoryFieldsNotSelected(sb, mapping.getChildren(), checkedElements);
+        BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+
+            @Override
+            public void run() {
+                for (final FieldToContractInputMapping mapping : mappings) {
+                    if (!checkedElements.contains(mapping) && !mapping.isGenerated() && !mapping.getField().isNullable()) {
+                        if (mapping.getParent() != null) {
+                            sb.append(mapping.getParent().getField().getName());
+                            sb.append(".");
+                        }
+                        sb.append(mapping.getField().getName());
+                        sb.append(", ");
+                    } else {
+                        if (checkedElements.contains(mapping) && mapping.isGenerated()) {
+                            validateMandatoryFieldsNotSelected(sb, mapping.getChildren(), checkedElements);
+                        }
+                    }
                 }
             }
-        }
+
+        });
+
     }
 
     public void setMappings(final List<FieldToContractInputMapping> mappings) {

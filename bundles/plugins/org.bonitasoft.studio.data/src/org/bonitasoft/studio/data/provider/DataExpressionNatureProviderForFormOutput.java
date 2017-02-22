@@ -20,7 +20,7 @@ package org.bonitasoft.studio.data.provider;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.emf.ecore.EObject;
@@ -41,7 +41,7 @@ public class DataExpressionNatureProviderForFormOutput implements IExpressionNat
     @Override
     public Expression[] getExpressions(final EObject context) {
         final Set<Expression> expressions = dataExpressionProvider.getExpressions(context);
-		expressions.addAll(ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE).getExpressions(context));
+		expressions.addAll(ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE).getExpressions(context));
 		return expressions.toArray(new Expression[expressions.size()]);
 	}
 

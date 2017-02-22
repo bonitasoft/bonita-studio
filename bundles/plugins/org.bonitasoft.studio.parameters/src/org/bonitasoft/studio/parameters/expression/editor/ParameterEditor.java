@@ -23,7 +23,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
@@ -108,8 +108,9 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
 
     private void createTableViewer(final Composite parent) {
 
-        Label filler = new Label(mainComposite, SWT.NONE);
-        filler.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, -LayoutConstants.getSpacing().y + 1).create());
+        final Label filler = new Label(mainComposite, SWT.NONE);
+        filler.setLayoutData(
+                GridDataFactory.fillDefaults().span(2, 1).indent(0, -LayoutConstants.getSpacing().y + 1).create());
 
         viewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER
                 | SWT.SINGLE | SWT.V_SCROLL);
@@ -177,8 +178,8 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
     }
 
     private void fillViewerInput(final EObject context) {
-        final Set<Parameter> input = new HashSet<Parameter>();
-        final IExpressionProvider provider = ExpressionEditorService.getInstance()
+        final Set<Parameter> input = new HashSet<>();
+        final IExpressionProvider provider = ExpressionProviderService.getInstance()
                 .getExpressionProvider(ExpressionConstants.PARAMETER_TYPE);
         for (final Expression e : provider.getExpressions(context)) {
             if (editorInputExpression.isReturnTypeFixed()) {
@@ -203,7 +204,8 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
 
     @Override
     public void bindExpression(final EMFDataBindingContext dataBindingContext,
-            final EObject context, final Expression inputExpression, final ViewerFilter[] filters, final ExpressionViewer expressionViewer) {
+            final EObject context, final Expression inputExpression, final ViewerFilter[] filters,
+            final ExpressionViewer expressionViewer) {
         final EObject finalContext = context;
         addExpressionButton.addSelectionListener(new SelectionAdapter() {
 

@@ -25,7 +25,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
@@ -153,7 +153,7 @@ public class FormFieldExpressionEditor extends SelectionAwareExpressionEditor im
             ExpressionViewer expressionViewer) {
         this.inputExpression = inputExpression;
         Set<Widget> input = new HashSet<Widget>();
-        IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.FORM_FIELD_TYPE);
+        IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.FORM_FIELD_TYPE);
         final Set<Expression> filteredExpressions = new HashSet<Expression>();
         final Set<Expression> expressions = provider.getExpressions(context);
         if (expressions != null) {

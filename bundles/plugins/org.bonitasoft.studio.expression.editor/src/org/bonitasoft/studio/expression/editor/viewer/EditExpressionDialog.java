@@ -22,7 +22,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
@@ -59,7 +59,6 @@ import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -177,7 +176,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
                 expressionType = ExpressionConstants.SCRIPT_TYPE;
             }
         }
-        final IExpressionProvider currentProvider = ExpressionEditorService.getInstance().getExpressionProvider(expressionType);
+        final IExpressionProvider currentProvider = ExpressionProviderService.getInstance()
+                .getExpressionProvider(expressionType);
         if (currentProvider != null && expressionTypeViewer != null) {
             expressionTypeViewer.setSelection(new StructuredSelection(currentProvider));
         }
@@ -233,7 +233,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
     protected void createExpressionTypePanel(final Composite parentForm) {
         final Composite parentComposite = new Composite(parentForm, SWT.NONE);
-        parentComposite.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
+        parentComposite
+                .setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
         parentComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
 
         final Label expressionTypeLabel = new Label(parentComposite, SWT.NONE);
@@ -335,7 +336,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
     }
 
     protected void showContent(final String type) {
-        final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(type);
+        final IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider(type);
 
         Assert.isNotNull(provider);
 
@@ -377,7 +378,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             selectionToExpressionType.setConverter(convert);
 
             if (domain != null) {
-                domain.getCommandStack().execute(SetCommand.create(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__TYPE, type));
+                domain.getCommandStack().execute(
+                        SetCommand.create(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__TYPE, type));
             } else {
                 inputExpression.setType(type);
             }
@@ -387,7 +389,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             if (expressionNameResolver != null) {
                 inputExpression.setName(expressionNameResolver.getName(inputExpression));
             }
-            currentExpressionEditor.bindExpression(dataBindingContext, context, inputExpression, viewerTypeFilters, expressionViewer);
+            currentExpressionEditor.bindExpression(dataBindingContext, context, inputExpression, viewerTypeFilters,
+                    expressionViewer);
             currentExpressionEditor.addListener(new Listener() {
 
                 @Override
@@ -429,7 +432,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         if (FileActionDialog.getDisablePopup()) {
             return true;
         }
-        if (MessageDialog.openQuestion(getShell(), Messages.handleShellCloseEventTitle, Messages.handleShellCloseEventMessage)) {
+        if (MessageDialog.openQuestion(getShell(), Messages.handleShellCloseEventTitle,
+                Messages.handleShellCloseEventMessage)) {
             return super.canHandleShellCloseEvent();
         }
         return false;

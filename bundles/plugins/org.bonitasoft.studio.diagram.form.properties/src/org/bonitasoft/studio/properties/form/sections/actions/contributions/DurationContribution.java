@@ -4,7 +4,6 @@ import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.form.DurationFormField;
 import org.bonitasoft.studio.model.form.FormPackage;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -46,7 +45,7 @@ public class DurationContribution extends InitialValueContribution {
         sec = widgetFactory.createButton(panel, Messages.secondsLabel, SWT.CHECK);
         sec.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
 
-        expressionViewer.setMessage(Messages.data_tooltip_long,IStatus.INFO);
+        expressionViewer.setMessage(Messages.data_tooltip_long);
         bindDurationWidget();
 
     }

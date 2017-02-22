@@ -36,7 +36,6 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
@@ -369,7 +368,7 @@ public class PatternExpressionViewer extends Composite {
     public void setHint(final String hint) {
         hintDecoration.setDescriptionText(hint);
         hintDecoration.show();
-        expressionViewer.setMessage(hint, IStatus.INFO);
+        expressionViewer.setMessage(hint);
     }
 
     public void setEMFBindingContext(final EMFDataBindingContext context) {

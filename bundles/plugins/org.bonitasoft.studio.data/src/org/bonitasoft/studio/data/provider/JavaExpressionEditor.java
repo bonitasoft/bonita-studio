@@ -26,7 +26,7 @@ import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.data.i18n.Messages;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
@@ -45,7 +45,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gef.LayerConstants;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -109,9 +108,10 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).create());
 
-        Label filler = (new Label(mainComposite, SWT.NONE));
-        filler.setLayoutData(GridDataFactory.fillDefaults().indent(0, -LayoutConstants.getSpacing().y+1).span(2, 1).create());
-        
+        final Label filler = (new Label(mainComposite, SWT.NONE));
+        filler.setLayoutData(
+                GridDataFactory.fillDefaults().indent(0, -LayoutConstants.getSpacing().y + 1).span(2, 1).create());
+
         viewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
 
         final TableLayout layout = new TableLayout();
@@ -248,7 +248,8 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
     }
 
     @Override
-    public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context, final Expression inputExpression,
+    public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context,
+            final Expression inputExpression,
             final ViewerFilter[] filters,
             final ExpressionViewer expressionViewer) {
         this.dataBindingContext = dataBindingContext;
@@ -256,8 +257,9 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
         setContentProvider(new PojoBrowserContentProvider());
         javaTreeviewer.setContentProvider(getContentProvider());
 
-        final Set<Data> input = new HashSet<Data>();
-        final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.VARIABLE_TYPE);
+        final Set<Data> input = new HashSet<>();
+        final IExpressionProvider provider = ExpressionProviderService.getInstance()
+                .getExpressionProvider(ExpressionConstants.VARIABLE_TYPE);
         for (final Expression e : provider.getExpressions(context)) {
             if (acceptExpression(expressionViewer, e, context, filters)) {
                 final Data data = (Data) e.getReferencedElements().get(0);
@@ -268,10 +270,14 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
         }
         viewer.setInput(input);
 
-        final IObservableValue contentObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
-        final IObservableValue nameObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
-        final IObservableValue returnTypeObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
-        final IObservableValue referenceObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
+        final IObservableValue contentObservable = EMFObservables.observeValue(inputExpression,
+                ExpressionPackage.Literals.EXPRESSION__CONTENT);
+        final IObservableValue nameObservable = EMFObservables.observeValue(inputExpression,
+                ExpressionPackage.Literals.EXPRESSION__NAME);
+        final IObservableValue returnTypeObservable = EMFObservables.observeValue(inputExpression,
+                ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
+        final IObservableValue referenceObservable = EMFObservables.observeValue(inputExpression,
+                ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
 
         final UpdateValueStrategy selectionToName = new UpdateValueStrategy();
         final IConverter nameConverter = new Converter(Data.class, String.class) {
@@ -279,11 +285,13 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
             @Override
             public Object convert(final Object data) {
                 if (data instanceof Data) {
-                    return ((Data) data).getName() + " - " + NamingUtils.getSimpleName(((JavaObjectData) data).getClassName()) + "#"
+                    return ((Data) data).getName() + " - "
+                            + NamingUtils.getSimpleName(((JavaObjectData) data).getClassName()) + "#"
                             + editorInputExpression.getContent();
                 } else if (data instanceof IMethod) {
                     final JavaObjectData data2 = (JavaObjectData) editorInputExpression.getReferencedElements().get(0);
-                    return data2.getName() + " - " + NamingUtils.getSimpleName(data2.getClassName()) + "#" + ((IMethod) data).getElementName();
+                    return data2.getName() + " - " + NamingUtils.getSimpleName(data2.getClassName()) + "#"
+                            + ((IMethod) data).getElementName();
                 }
                 return null;
             }
@@ -383,7 +391,8 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
                 final Data d = ((List<Data>) dataList).get(0);
                 final Collection<Data> inputData = (Collection<Data>) viewer.getInput();
                 for (final Data data : inputData) {
-                    if (data.getName().equals(d.getName()) && data.getDataType().getName().equals(d.getDataType().getName())) {
+                    if (data.getName().equals(d.getName())
+                            && data.getDataType().getName().equals(d.getDataType().getName())) {
                         return data;
                     }
                 }
@@ -392,10 +401,12 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 
         };
         referencedDataToSelection.setConverter(referencetoDataConverter);
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), referenceObservable, selectionToReferencedData,
+        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), referenceObservable,
+                selectionToReferencedData,
                 referencedDataToSelection);
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), nameObservable, selectionToName, new UpdateValueStrategy(
-                UpdateValueStrategy.POLICY_NEVER));
+        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), nameObservable, selectionToName,
+                new UpdateValueStrategy(
+                        UpdateValueStrategy.POLICY_NEVER));
         final IViewerObservableValue javaViewerSingleSelection = ViewersObservables.observeSingleSelection(javaTreeviewer);
         dataBindingContext.bindValue(javaViewerSingleSelection, nameObservable, selectionToName, new UpdateValueStrategy(
                 UpdateValueStrategy.POLICY_NEVER));
@@ -407,7 +418,8 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 
             @Override
             protected IStatus validate() {
-                return javaViewerSingleSelection.getValue() instanceof IMethod ? ValidationStatus.ok() : ValidationStatus.error("");
+                return javaViewerSingleSelection.getValue() instanceof IMethod ? ValidationStatus.ok()
+                        : ValidationStatus.error("");
             }
         };
         dataBindingContext.addValidationStatusProvider(validationStatusProvider);
@@ -426,7 +438,8 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
         super.dispose();
     }
 
-    private boolean acceptExpression(final ExpressionViewer viewer, final Expression e, final EObject context, final ViewerFilter[] filters) {
+    private boolean acceptExpression(final ExpressionViewer viewer, final Expression e, final EObject context,
+            final ViewerFilter[] filters) {
         if (filters != null) {
             for (final ViewerFilter f : filters) {
                 if (!f.select(viewer, context, e)) {

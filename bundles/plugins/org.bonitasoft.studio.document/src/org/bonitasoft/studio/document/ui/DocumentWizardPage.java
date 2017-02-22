@@ -211,7 +211,7 @@ public class DocumentWizardPage extends WizardPage {
         documentMimeTypeViewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE));
         documentMimeTypeViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         documentMimeTypeViewer.setExample(Messages.hintMimeTypeDocument);
-        documentMimeTypeViewer.setMessage(Messages.explanationMimeTypeDocument, IStatus.INFO);
+        documentMimeTypeViewer.setMessage(Messages.explanationMimeTypeDocument);
         documentMimeTypeViewer.setInput(document);
         return documentMimeTypeViewer;
     }
@@ -367,7 +367,7 @@ public class DocumentWizardPage extends WizardPage {
         final GroovyOnlyExpressionViewer multipleInitialContentExpressionViewer = new GroovyOnlyExpressionViewer(scriptComposite, SWT.READ_ONLY | SWT.BORDER);
         multipleInitialContentExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         multipleInitialContentExpressionViewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONTRACT_INPUT_TYPE));
-        multipleInitialContentExpressionViewer.setMessage(Messages.documentListScriptToolTip, IStatus.INFO);
+        multipleInitialContentExpressionViewer.setMessage(Messages.documentListScriptToolTip);
         multipleInitialContentExpressionViewer.setInput(context);
 
         emfDataBindingContext.bindValue(ViewerProperties.singleSelection().observe(multipleInitialContentExpressionViewer),

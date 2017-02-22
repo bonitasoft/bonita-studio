@@ -20,7 +20,7 @@ package org.bonitasoft.studio.groovy.ui.wizard;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.groovy.ScriptVariable;
@@ -51,7 +51,7 @@ public class ProcessVariableLabelProvider extends LabelProvider implements ITabl
             return Messages.SelectProcessVariableLabel;
         }
         if (element instanceof String) {
-            IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider((String) element);
+            IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider((String) element);
             return labelProvider.getText(provider);
         }
         if (element instanceof ScriptVariable) {
@@ -70,7 +70,7 @@ public class ProcessVariableLabelProvider extends LabelProvider implements ITabl
                 if (category.endsWith(ExpressionConstants.VARIABLE_TYPE)) {
                     category = ExpressionConstants.VARIABLE_TYPE;
                 }
-                IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(category);
+                IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider(category);
                 return labelProvider.getImage(provider);
             }
         }
@@ -84,7 +84,7 @@ public class ProcessVariableLabelProvider extends LabelProvider implements ITabl
             return Messages.SelectProcessVariableLabel;
         }
         if (element instanceof String) {
-            IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider((String) element);
+            IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider((String) element);
             String text = labelProvider.getText(provider);
             if (text != null && !text.isEmpty()) {
                 return text;
