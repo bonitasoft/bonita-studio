@@ -5,29 +5,37 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.jface;
 
+import org.bonitasoft.studio.common.Messages;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class MessageDialogWithPrompt extends MessageDialogWithToggle {
+
+    private String detailsMessage;
 
     public MessageDialogWithPrompt(Shell parentShell, String dialogTitle,
             Image image, String message, int dialogImageType,
@@ -46,7 +54,7 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
     public static MessageDialogWithPrompt open(int kind, Shell parent, String title,
             String message, String toggleMessage, boolean toggleState,
             IPreferenceStore store, String key, int style) {
-        MessageDialogWithPrompt dialog = new MessageDialogWithPrompt(parent,
+        final MessageDialogWithPrompt dialog = new MessageDialogWithPrompt(parent,
                 title, null, // accept the default window icon
                 message, kind, getButtonLabelsFor(kind), 0,
                 toggleMessage, toggleState);
@@ -56,6 +64,33 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
         dialog.setPrefKey(key);
         dialog.open();
         return dialog;
+    }
+
+    public static MessageDialogWithPrompt openWithDetails(int kind,
+            Shell parent,
+            String title,
+            String message,
+            String toggleMessage,
+            String detailMessage,
+            boolean toggleState,
+            IPreferenceStore store,
+            String key,
+            int style) {
+        final MessageDialogWithPrompt dialog = new MessageDialogWithPrompt(parent,
+                title, null, // accept the default window icon
+                message, kind, getButtonLabelsFor(kind), 0,
+                toggleMessage, toggleState);
+        style &= SWT.SHEET;
+        dialog.setShellStyle(dialog.getShellStyle() | style);
+        dialog.setPrefStore(store);
+        dialog.setPrefKey(key);
+        dialog.setDetails(detailMessage);
+        dialog.open();
+        return dialog;
+    }
+
+    public void setDetails(String detailsMessage) {
+        this.detailsMessage = detailsMessage;
     }
 
     private static String[] getButtonLabelsFor(int kind) {
@@ -90,12 +125,13 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
         return dialogButtonLabels;
     }
 
+    @Override
     protected void buttonPressed(int buttonId) {
         super.buttonPressed(buttonId);
 
-        boolean toggleState = getToggleState();
-        IPreferenceStore prefStore = getPrefStore();
-        String prefKey = getPrefKey();
+        final boolean toggleState = getToggleState();
+        final IPreferenceStore prefStore = getPrefStore();
+        final String prefKey = getPrefKey();
         if (buttonId != IDialogConstants.CANCEL_ID
                 && prefStore != null && prefKey != null) {
             switch (buttonId) {
@@ -112,4 +148,50 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected Control createCustomArea(final Composite parent) {
+        if (detailsMessage != null) {
+            parent.setLayout(GridLayoutFactory.swtDefaults().numColumns(2).create());
+            //Above Image filler
+            final Image image = getImage();
+            if (image != null) {
+                final Label filler = new Label(parent, SWT.NULL);
+                filler.setImage(image);
+                GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING)
+                        .applyTo(filler);
+                filler.setVisible(false);
+            }
+
+            final Section section = new Section(parent,
+                    Section.TWISTIE | Section.NO_TITLE_FOCUS_BOX | Section.CLIENT_INDENT);
+            section.setText(Messages.moreDetails);
+            section.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+            final Composite client = new Composite(section, SWT.NONE);
+            client.setLayoutData(GridDataFactory.fillDefaults().create());
+            client.setLayout(GridLayoutFactory.fillDefaults().create());
+
+            final Label detailsLabel = new Label(client, SWT.NONE);
+            detailsLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+            detailsLabel.setText(detailsMessage);
+            section.setClient(client);
+            section.addExpansionListener(new ExpansionAdapter() {
+
+                /*
+                 * (non-Javadoc)
+                 * @see org.eclipse.ui.forms.events.ExpansionAdapter#expansionStateChanged(org.eclipse.ui.forms.events.ExpansionEvent)
+                 */
+                @Override
+                public void expansionStateChanged(ExpansionEvent e) {
+                    parent.getShell().pack();
+                }
+            });
+            return section;
+        }
+        return super.createCustomArea(parent);
+    }
 }

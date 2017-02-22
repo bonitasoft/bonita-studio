@@ -228,7 +228,8 @@ public class BOSEngineManager {
     }
 
     protected void executePostStartupContributions() throws Exception {
-        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(POSTSTARTUP_CONTIBUTION_ID);
+        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(POSTSTARTUP_CONTIBUTION_ID);
         IEngineAction contrib = null;
         for (final IConfigurationElement elem : elements) {
             try {
@@ -269,22 +270,25 @@ public class BOSEngineManager {
         return TenantAPIAccessor.getLoginAPI();
     }
 
-    public APISession loginDefaultTenant(final IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException, ServerAPIException,
+    public APISession loginDefaultTenant(final IProgressMonitor monitor)
+            throws LoginException, BonitaHomeNotSetException, ServerAPIException,
             UnknownAPITypeException {
         return loginTenant(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD, false, monitor);
     }
 
-    public APISession loginTenant(final String login, final String password, final IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException,
+    public APISession loginTenant(final String login, final String password, final IProgressMonitor monitor)
+            throws LoginException, BonitaHomeNotSetException,
             ServerAPIException, UnknownAPITypeException {
         return loginTenant(login, password, true, monitor);
     }
 
-    protected APISession loginTenant(final String login, final String password, final boolean waitForOrganization, final IProgressMonitor monitor)
+    protected APISession loginTenant(final String login, final String password, final boolean waitForOrganization,
+            final IProgressMonitor monitor)
             throws LoginException,
             BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
         if (!isRunning()) {
             if (monitor != null) {
-                monitor.subTask(Messages.waitingForEngineToStart);
+                monitor.setTaskName(Messages.waitingForEngineToStart);
             }
             start();
         }
@@ -297,6 +301,9 @@ public class BOSEngineManager {
                 BonitaStudioLog.debug("Login successful.", EnginePlugin.PLUGIN_ID);
             }
 
+        }
+        if (monitor != null) {
+            monitor.done();
         }
         return session;
     }
@@ -332,22 +339,26 @@ public class BOSEngineManager {
         return new NonLockingJarFileClassLoader("Bonita Engine CLassloader", urls.toArray(new URL[] {}));
     }
 
-    public IdentityAPI getIdentityAPI(final APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException,
+    public IdentityAPI getIdentityAPI(final APISession session)
+            throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException,
             UnknownAPITypeException {
         return TenantAPIAccessor.getIdentityAPI(session);
     }
 
-    public CommandAPI getCommandAPI(final APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException,
+    public CommandAPI getCommandAPI(final APISession session)
+            throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException,
             UnknownAPITypeException {
         return TenantAPIAccessor.getCommandAPI(session);
     }
 
-    public ProfileAPI getProfileAPI(final APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException,
+    public ProfileAPI getProfileAPI(final APISession session)
+            throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException,
             UnknownAPITypeException {
         return TenantAPIAccessor.getProfileAPI(session);
     }
 
-    public PageAPI getPageAPI(final APISession session) throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+    public PageAPI getPageAPI(final APISession session)
+            throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
         return TenantAPIAccessor.getCustomPageAPI(session);
     }
 
@@ -358,35 +369,44 @@ public class BOSEngineManager {
     }
 
     public PlatformSession loginPlatform()
-            throws InvalidPlatformCredentialsException, PlatformLoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+            throws InvalidPlatformCredentialsException, PlatformLoginException, BonitaHomeNotSetException,
+            ServerAPIException, UnknownAPITypeException {
         return PlatformAPIAccessor.getPlatformLoginAPI().login(PLATFORM_USER, PLATFORM_PASSWORD);
     }
 
     public void logoutPlatform(PlatformSession session)
-            throws PlatformLogoutException, SessionNotFoundException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+            throws PlatformLogoutException, SessionNotFoundException, BonitaHomeNotSetException, ServerAPIException,
+            UnknownAPITypeException {
         PlatformAPIAccessor.getPlatformLoginAPI().logout(session);
     }
 
-    public PlatformAPI getPlatformAPI(PlatformSession session) throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+    public PlatformAPI getPlatformAPI(PlatformSession session)
+            throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
         return PlatformAPIAccessor.getPlatformAPI(session);
     }
 
-    public APISession createSession(final AbstractProcess process, final String configurationId, final IProgressMonitor monitor) throws Exception {
+    public APISession createSession(final AbstractProcess process, final String configurationId,
+            final IProgressMonitor monitor) throws Exception {
         final Configuration configuration = BarExporter.getInstance().getConfiguration(process, configurationId);
         APISession session;
         try {
-            session = BOSEngineManager.getInstance().loginTenant(configuration.getUsername(), configuration.getPassword(), monitor);
+            session = BOSEngineManager.getInstance().loginTenant(configuration.getUsername(), configuration.getPassword(),
+                    monitor);
         } catch (final Exception e1) {
-            throw new Exception(Messages.bind(Messages.loginFailed, new String[] { configuration.getUsername(), process.getName(), process.getVersion() }), e1);
+            throw new Exception(Messages.bind(Messages.loginFailed,
+                    new String[] { configuration.getUsername(), process.getName(), process.getVersion() }), e1);
         }
         if (session == null) {
-            throw new Exception(Messages.bind(Messages.loginFailed, new String[] { configuration.getUsername(), process.getName(), process.getVersion() }));
+            throw new Exception(Messages.bind(Messages.loginFailed,
+                    new String[] { configuration.getUsername(), process.getName(), process.getVersion() }));
         }
         return session;
     }
 
-    public byte[] getTenantConfigResourceContent(String resourceName) throws InvalidPlatformCredentialsException, PlatformLoginException,
-            BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformLogoutException, SessionNotFoundException, FileNotFoundException {
+    public byte[] getTenantConfigResourceContent(String resourceName)
+            throws InvalidPlatformCredentialsException, PlatformLoginException,
+            BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformLogoutException,
+            SessionNotFoundException, FileNotFoundException {
         PlatformSession loginPlatform = null;
         try {
             loginPlatform = loginPlatform();
@@ -405,7 +425,8 @@ public class BOSEngineManager {
     }
 
     public void updateTenantConfigResourceContent(String resourceName, byte[] content)
-            throws InvalidPlatformCredentialsException, PlatformLoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException,
+            throws InvalidPlatformCredentialsException, PlatformLoginException, BonitaHomeNotSetException,
+            ServerAPIException, UnknownAPITypeException,
             UpdateException, PlatformLogoutException, SessionNotFoundException {
         PlatformSession loginPlatform = null;
         try {
