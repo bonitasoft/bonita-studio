@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -43,56 +41,76 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupport {
 
-    private DataBindingContext dbc;
+    private final DataBindingContext dbc;
 
-    private IObservableValue packageNameObservableValue;
+    private final IObservableValue packageNameObservableValue;
 
-    private BusinessObjectModel businessObjectModel;
+    private final BusinessObjectModel businessObjectModel;
 
-    private IViewerObservableValue businessObjectObservableValue;
+    private final IViewerObservableValue businessObjectObservableValue;
+
+    private final CellEditor cellEditor;
+
+    private final IObservableValue panelTextObservable;
 
     /**
      * @param viewer
      * @param dbc
      */
-    public BusinessObjectNameEditingSupport(BusinessObjectModel businessObjectModel, IViewerObservableValue businessObjectObservableValue,
-            IObservableValue packageNameObservableValue, ColumnViewer viewer, DataBindingContext dbc) {
+    public BusinessObjectNameEditingSupport(BusinessObjectModel businessObjectModel,
+            IViewerObservableValue businessObjectObservableValue,
+            IObservableValue packageNameObservableValue,
+            IObservableValue panelTextObservable,
+            ColumnViewer viewer,
+            DataBindingContext dbc) {
         super(viewer, dbc);
         this.dbc = dbc;
         this.packageNameObservableValue = packageNameObservableValue;
         this.businessObjectModel = businessObjectModel;
+        this.panelTextObservable = panelTextObservable;
         this.businessObjectObservableValue = businessObjectObservableValue;
+        this.cellEditor = createCellEditor();
     }
 
-    @Override
-    protected CellEditor getCellEditor(Object element) {
-        TextCellEditor textCellEditor = new TextCellEditor((Composite) getViewer().getControl());
-        Text textControl = (Text) textCellEditor.getControl();
+    private CellEditor createCellEditor() {
+        final TextCellEditor textCellEditor = new TextCellEditor((Composite) getViewer().getControl());
+        final Text textControl = (Text) textCellEditor.getControl();
         textControl.setTextLimit(BusinessObjectNameCellEditorValidator.MAX_TABLE_NAME_LENGTH + 5);
         return textCellEditor;
     }
 
     @Override
+    protected CellEditor getCellEditor(Object element) {
+        return cellEditor;
+    }
+
+    @Override
     protected IObservableValue doCreateElementObservable(final Object element, ViewerCell cell) {
-        IObservableValue observeValue = PojoObservables.observeValue(element, "qualifiedName");
+        final IObservableValue observeValue = PojoObservables.observeValue(element, "qualifiedName");
         observeValue.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
         observeValue.addValueChangeListener(new IValueChangeListener() {
 
             @Override
             public void handleValueChange(ValueChangeEvent event) {
-                BusinessObject businessObject = (BusinessObject) businessObjectObservableValue.getValue();
-                String oldName = (String) event.diff.getOldValue();
-                String newName = (String) event.diff.getNewValue();
-                for (Query q : businessObject.getQueries()) {
+                final BusinessObject businessObject = (BusinessObject) businessObjectObservableValue.getValue();
+                final String oldName = (String) event.diff.getOldValue();
+                final String newName = (String) event.diff.getNewValue();
+                for (final Query q : businessObject.getQueries()) {
                     if (q.getReturnType().equals(oldName)) {
                         q.setReturnType(newName);
                     }
                 }
 
+            }
+        });
+        observeValue.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(ValueChangeEvent event) {
+                panelTextObservable.setValue(NamingUtils.getSimpleName((String) event.diff.getNewValue()));
             }
         });
         return observeValue;
@@ -110,8 +128,8 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
      */
     @Override
     protected Binding createBinding(IObservableValue target, IObservableValue model) {
-        UpdateValueStrategy targetToModel = new UpdateValueStrategy(UpdateValueStrategy.POLICY_CONVERT);
-        BusinessObject value = (BusinessObject) businessObjectObservableValue.getValue();
+        final UpdateValueStrategy targetToModel = new UpdateValueStrategy(UpdateValueStrategy.POLICY_CONVERT);
+        final BusinessObject value = (BusinessObject) businessObjectObservableValue.getValue();
         targetToModel.setAfterGetValidator(new BusinessObjectNameCellEditorValidator(businessObjectModel, value));
         targetToModel.setConverter(new Converter(String.class, String.class) {
 
@@ -120,7 +138,7 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
                 return packageNameObservableValue.getValue() + "." + fromObject.toString();
             }
         });
-        UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
+        final UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
         modelToTarget.setConverter(new Converter(String.class, String.class) {
 
             @Override
