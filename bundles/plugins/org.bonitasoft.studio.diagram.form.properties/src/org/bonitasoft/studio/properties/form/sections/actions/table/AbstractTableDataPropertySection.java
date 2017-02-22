@@ -35,7 +35,6 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.InitialValueExpressionFilter;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.OutputSectionContribution;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
@@ -243,7 +242,7 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
         tableHorizontalHeadersComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
         tableHorizontalHeaders = new ExpressionViewer(tableHorizontalHeadersComposite,SWT.BORDER, widgetFactory, getEditingDomain(), FormPackage.Literals.ABSTRACT_TABLE__HORIZONTAL_HEADER_EXPRESSION) ;
         tableHorizontalHeaders.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.SCRIPT_TYPE}));
-        tableHorizontalHeaders.setMessage(Messages.data_tooltip_tableHeaders,IStatus.INFO) ;
+        tableHorizontalHeaders.setMessage(Messages.data_tooltip_tableHeaders) ;
         tableHorizontalHeaders.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
 
 
@@ -260,7 +259,7 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
         tableVerticalHeadersComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
         tableVerticalHeaders = new ExpressionViewer(tableVerticalHeadersComposite,SWT.BORDER, widgetFactory, getEditingDomain(), FormPackage.Literals.ABSTRACT_TABLE__VERTICAL_HEADER_EXPRESSION) ;
         tableVerticalHeaders.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.SCRIPT_TYPE}));
-        tableVerticalHeaders.setMessage(Messages.data_tooltip_tableHeaders,IStatus.INFO) ;
+        tableVerticalHeaders.setMessage(Messages.data_tooltip_tableHeaders) ;
         tableVerticalHeaders.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).align(SWT.FILL, SWT.CENTER).create());
 
         leftHeaderButton = widgetFactory.createButton(tableVerticalHeadersComposite, "", SWT.TOGGLE);//$NON-NLS-1$

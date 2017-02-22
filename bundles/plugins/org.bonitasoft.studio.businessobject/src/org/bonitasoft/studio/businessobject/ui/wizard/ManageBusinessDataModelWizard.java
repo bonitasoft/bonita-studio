@@ -30,7 +30,6 @@ import org.bonitasoft.engine.bdm.validator.ValidationStatus;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.jface.dialog.ProblemsDialog;
@@ -38,7 +37,6 @@ import org.bonitasoft.studio.common.jface.dialog.TypedLabelProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
-import org.bonitasoft.studio.engine.ui.dialog.ProcessEnablementProblemsDialog;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
@@ -99,9 +97,11 @@ public class ManageBusinessDataModelWizard extends Wizard {
             boolean confirm = true;
             if (!newBdm) {
                 final IPreferenceStore preferenceStore = getPreferenceStore();
-                final MessageDialogWithToggle confirmDialog = MessageDialogWithPrompt.openOkCancelConfirm(getShell(), Messages.bdmCompatibilityTitle,
+                final MessageDialogWithToggle confirmDialog = MessageDialogWithPrompt.openOkCancelConfirm(getShell(),
+                        Messages.bdmCompatibilityTitle,
                         Messages.bdmCompatibilityMsg,
-                        Messages.clearExistingBusinessData, preferenceStore.getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL),
+                        Messages.clearExistingBusinessData,
+                        preferenceStore.getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL),
                         preferenceStore,
                         EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL);
                 confirm = confirmDialog.getReturnCode() == Dialog.OK;
@@ -116,7 +116,6 @@ public class ManageBusinessDataModelWizard extends Wizard {
         return false;
     }
 
-
     private boolean validateAndSaveBDM() {
         try {
             getContainer().run(true, false, new IRunnableWithProgress() {
@@ -127,14 +126,15 @@ public class ManageBusinessDataModelWizard extends Wizard {
                         fStore.delete();
                     } else {
                         monitor.beginTask(Messages.validatingBDM, IProgressMonitor.UNKNOWN);
-                       final ValidationStatus validate = new  BusinessObjectModelValidator().validate(businessObjectModel);
-                        if(!validate.getErrors().isEmpty()){
+                        final ValidationStatus validate = new BusinessObjectModelValidator().validate(businessObjectModel);
+                        if (!validate.getErrors().isEmpty()) {
                             Display.getDefault().asyncExec(new Runnable() {
-                                
-                                
+
                                 @Override
                                 public void run() {
-                                    new ProblemsDialog<String>(getShell(), Messages.modelValidationFailedTitle,Messages.modelValidationFailedMsg, MessageDialog.ERROR, new String[]{IDialogConstants.OK_LABEL}) {
+                                    new ProblemsDialog<String>(getShell(), Messages.modelValidationFailedTitle,
+                                            Messages.modelValidationFailedMsg, MessageDialog.ERROR,
+                                            new String[] { IDialogConstants.OK_LABEL }) {
 
                                         @Override
                                         protected TypedLabelProvider<String> getTypedLabelProvider() {
@@ -160,7 +160,7 @@ public class ManageBusinessDataModelWizard extends Wizard {
                                 }
                             });
                             throw new InterruptedException();
-                        }else{
+                        } else {
                             monitor.setTaskName(Messages.saving);
                             fStore.save(businessObjectModel);
                             monitor.done();
@@ -169,7 +169,8 @@ public class ManageBusinessDataModelWizard extends Wizard {
                 }
             });
         } catch (final InvocationTargetException e) {
-            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.modelValidationFailedTitle, e.getCause().getMessage());
+            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.modelValidationFailedTitle,
+                    e.getCause().getMessage());
             BonitaStudioLog.error(e);
             return false;
         } catch (final InterruptedException e) {
@@ -188,9 +189,10 @@ public class ManageBusinessDataModelWizard extends Wizard {
                 }
             });
         } catch (final InvocationTargetException e) {
-            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.installFailedTitle, Messages.installFailedMessage,
+            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.installFailedTitle,
+                    Messages.installFailedMessage,
                     handleTargetExceptionStacktrace(e))
-            .open();
+                            .open();
             return false;
         } catch (final InterruptedException e) {
             return false;
@@ -210,7 +212,8 @@ public class ManageBusinessDataModelWizard extends Wizard {
             }
         }
         if (index > -1) {
-            targetException.setStackTrace(Arrays.copyOfRange(targetException.getStackTrace(), index, targetException.getStackTrace().length));
+            targetException.setStackTrace(
+                    Arrays.copyOfRange(targetException.getStackTrace(), index, targetException.getStackTrace().length));
         }
         return targetException;
     }
@@ -219,9 +222,11 @@ public class ManageBusinessDataModelWizard extends Wizard {
         return EnginePlugin.getDefault().getPreferenceStore();
     }
 
-    protected void validateUniqueConstraint(final UniqueConstraint uc, final BusinessObject bo) throws InvocationTargetException {
+    protected void validateUniqueConstraint(final UniqueConstraint uc, final BusinessObject bo)
+            throws InvocationTargetException {
         if (uc.getFieldNames() == null || uc.getFieldNames().isEmpty()) {
-            throw new InvocationTargetException(new Exception(Messages.bind(Messages.atLeastOneAttributeShouldBelongToConstraint, uc.getName())));
+            throw new InvocationTargetException(
+                    new Exception(Messages.bind(Messages.atLeastOneAttributeShouldBelongToConstraint, uc.getName())));
         }
         for (final String fName : uc.getFieldNames()) {
             boolean exists = false;
@@ -232,14 +237,16 @@ public class ManageBusinessDataModelWizard extends Wizard {
                 }
             }
             if (!exists) {
-                throw new InvocationTargetException(new Exception(Messages.bind(Messages.attributeInConstraintNotExists, fName, uc.getName())));
+                throw new InvocationTargetException(
+                        new Exception(Messages.bind(Messages.attributeInConstraintNotExists, fName, uc.getName())));
             }
         }
     }
 
     protected void validateIndex(final Index index, final BusinessObject bo) throws InvocationTargetException {
         if (index.getFieldNames() == null || index.getFieldNames().isEmpty()) {
-            throw new InvocationTargetException(new Exception(Messages.bind(Messages.atLeastOneAttributeShouldBelongToIndex, index.getName())));
+            throw new InvocationTargetException(
+                    new Exception(Messages.bind(Messages.atLeastOneAttributeShouldBelongToIndex, index.getName())));
         }
         for (final String fName : index.getFieldNames()) {
             boolean exists = false;
@@ -250,7 +257,8 @@ public class ManageBusinessDataModelWizard extends Wizard {
                 }
             }
             if (!exists) {
-                throw new InvocationTargetException(new Exception(Messages.bind(Messages.attributeInIndexNotExists, fName, index.getName())));
+                throw new InvocationTargetException(
+                        new Exception(Messages.bind(Messages.attributeInIndexNotExists, fName, index.getName())));
             }
         }
     }

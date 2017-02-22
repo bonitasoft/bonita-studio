@@ -24,7 +24,6 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -55,13 +54,15 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
 
     private ControlDecoration checkBoxDecoration;
 
-    public CheckBoxExpressionViewer(final Composite composite, final Label expressionModeLabel, final int style, final EReference expressionReference) {
+    public CheckBoxExpressionViewer(final Composite composite, final Label expressionModeLabel, final int style,
+            final EReference expressionReference) {
         super(composite, style, expressionReference);
         this.expressionModeLabel = expressionModeLabel;
     }
 
     @Override
-    protected void createControl(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
+    protected void createControl(final Composite composite, final int style,
+            final TabbedPropertySheetWidgetFactory widgetFactory) {
         mc = new MagicComposite(composite, SWT.INHERIT_DEFAULT);
         mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
         checkBoxControl = new Button(mc, SWT.CHECK);
@@ -69,7 +70,8 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
             widgetFactory.adapt(checkBoxControl, true, true);
         }
         checkBoxControl
-                .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(SWT.DEFAULT, 30).indent(16, 0).align(SWT.BEGINNING, SWT.CENTER).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(SWT.DEFAULT, 30).indent(16, 0)
+                        .align(SWT.BEGINNING, SWT.CENTER).create());
 
         control = new Composite(mc, SWT.INHERIT_DEFAULT);
         if (widgetFactory != null) {
@@ -132,7 +134,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
     private void switchToExpressionMode() {
         mc.hide(checkBoxControl);
         mc.show(control);
-        if(expressionModeLabel != null){
+        if (expressionModeLabel != null) {
             mc.show(expressionModeLabel);
         }
         refreshDecoration();
@@ -140,7 +142,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
 
     private void switchToCheckBoxMode() {
         mc.hide(control);
-        if(expressionModeLabel != null){
+        if (expressionModeLabel != null) {
             mc.hide(expressionModeLabel);
         }
         mc.show(checkBoxControl);
@@ -209,7 +211,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
     @Override
     protected void internalRefresh() {
         super.internalRefresh();
-        final String description = getMessage(IStatus.INFO);
+        final String description = getMessage();
         if (description != null) {
             checkBoxControl.setToolTipText(description);
         }
@@ -237,13 +239,13 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
     }
 
     @Override
-    public void setMessage(final String message, final int messageKind) {
-        super.setMessage(message, messageKind);
+    public void setMessage(final String message) {
+        super.setMessage(message);
         refreshDecoration();
     }
 
     private void refreshDecoration() {
-        final String message = getMessage(IStatus.INFO);
+        final String message = getMessage();
         if (checkBoxControl.isVisible() && message != null && !message.isEmpty()) {
             checkBoxDecoration.setDescriptionText(message);
             checkBoxDecoration.show();

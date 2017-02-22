@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,7 +32,6 @@ import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.MultipleValuatedFormField;
 import org.bonitasoft.studio.model.form.RadioFormField;
 import org.bonitasoft.studio.model.form.SelectFormField;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
@@ -49,9 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
- *
  * @author Baptiste Mesta
- *
  */
 public class DefaultValueContribution implements IExtensibleGridPropertySectionContribution {
 
@@ -63,12 +58,14 @@ public class DefaultValueContribution implements IExtensibleGridPropertySectionC
 
     protected EMFDataBindingContext dataBindingContext;
 
-    protected final HiddenExpressionTypeFilter filterVariableType = new HiddenExpressionTypeFilter(new String[] { ExpressionConstants.VARIABLE_TYPE,
-            ExpressionConstants.SEARCH_INDEX_TYPE });
+    protected final HiddenExpressionTypeFilter filterVariableType = new HiddenExpressionTypeFilter(
+            new String[] { ExpressionConstants.VARIABLE_TYPE,
+                    ExpressionConstants.SEARCH_INDEX_TYPE });
 
     private InitialValueExpressionFilter expressionFilter;
 
-    public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory, final ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory,
+            final ExtensibleGridPropertySection extensibleGridPropertySection) {
         final GridLayout layout = new GridLayout(2, false);
 
         layout.marginHeight = InitialValueContribution.MARGIN_HEIGHT;
@@ -79,7 +76,7 @@ public class DefaultValueContribution implements IExtensibleGridPropertySectionC
         defaultExpressionViewer = new ExpressionViewer(composite, SWT.BORDER, widgetFactory, editingDomain,
                 FormPackage.Literals.MULTIPLE_VALUATED_FORM_FIELD__DEFAULT_EXPRESSION, true);
         defaultExpressionViewer.addFilter(getExpressionViewerFilter());
-        defaultExpressionViewer.setMessage(getInitialInformationMessage(), IStatus.INFO);
+        defaultExpressionViewer.setMessage(getInitialInformationMessage());
         defaultExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         bindWidgets();
@@ -161,13 +158,15 @@ public class DefaultValueContribution implements IExtensibleGridPropertySectionC
             if (input == null) {
                 input = ExpressionFactory.eINSTANCE.createExpression();
                 editingDomain.getCommandStack().execute(
-                        SetCommand.create(editingDomain, widget, FormPackage.Literals.MULTIPLE_VALUATED_FORM_FIELD__DEFAULT_EXPRESSION, input));
+                        SetCommand.create(editingDomain, widget,
+                                FormPackage.Literals.MULTIPLE_VALUATED_FORM_FIELD__DEFAULT_EXPRESSION, input));
             }
             defaultExpressionViewer.setInput(widget);
             dataBindingContext.bindValue(
                     ViewerProperties.singleSelection().observe(defaultExpressionViewer),
-                    EMFEditProperties.value(editingDomain, FormPackage.Literals.MULTIPLE_VALUATED_FORM_FIELD__DEFAULT_EXPRESSION).observe(widget));
-            defaultExpressionViewer.setEditingDomain(editingDomain);
+                    EMFEditProperties
+                            .value(editingDomain, FormPackage.Literals.MULTIPLE_VALUATED_FORM_FIELD__DEFAULT_EXPRESSION)
+                            .observe(widget));
 
         }
     }

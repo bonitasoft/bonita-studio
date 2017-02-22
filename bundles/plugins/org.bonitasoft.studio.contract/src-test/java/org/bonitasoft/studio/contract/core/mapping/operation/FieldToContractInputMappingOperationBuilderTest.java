@@ -41,13 +41,14 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.filter.ExpressionReturnTypeFilter;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
 import org.bonitasoft.studio.model.expression.assertions.OperatorAssert;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInputType;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -66,7 +67,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
     @Mock
     private RepositoryAccessor repositoryAccessor;
     @Mock
-    private ExpressionEditorService expressionEditorService;
+    private ExpressionProviderService expressionEditorService;
     @Mock
     private FieldToContractInputMappingExpressionBuilder expressionBuilder;
 
@@ -76,7 +77,8 @@ public class FieldToContractInputMappingOperationBuilderTest {
     }
 
     @Test
-    public void should_create_an_operation_for_a_given_simple_contact_input_and_a_primitive_business_data_field() throws Exception {
+    public void should_create_an_operation_for_a_given_simple_contact_input_and_a_primitive_business_data_field()
+            throws Exception {
         final FieldToContractInputMappingOperationBuilder inputToOperation = createFixture();
 
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
@@ -84,7 +86,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final BusinessObjectData data = aBusinessData().withName("myEmployee").build();
         when(expressionBuilder.toExpression(data, mapping, false)).thenReturn(anExpression().build());
         final Operation operation = inputToOperation.toOperation(data,
-                mapping);
+                mapping, new NullProgressMonitor());
 
         OperatorAssert.assertThat(operation.getOperator())
                 .hasType(ExpressionConstants.JAVA_METHOD_OPERATOR)
@@ -100,7 +102,8 @@ public class FieldToContractInputMappingOperationBuilderTest {
     }
 
     @Test
-    public void should_create_an_operation_for_a_given_complex_contact_input_and_a_primitive_business_data_field() throws Exception {
+    public void should_create_an_operation_for_a_given_complex_contact_input_and_a_primitive_business_data_field()
+            throws Exception {
         final FieldToContractInputMappingOperationBuilder inputToOperation = createFixture();
 
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
@@ -111,7 +114,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final BusinessObjectData data = aBusinessData().withName("myEmployee").build();
         when(expressionBuilder.toExpression(data, mapping, false)).thenReturn(anExpression().build());
         final Operation operation = inputToOperation.toOperation(data,
-                mapping);
+                mapping, new NullProgressMonitor());
 
         OperatorAssert.assertThat(operation.getOperator())
                 .hasType(ExpressionConstants.JAVA_METHOD_OPERATOR)
@@ -126,7 +129,8 @@ public class FieldToContractInputMappingOperationBuilderTest {
     }
 
     @Test
-    public void should_create_an_operation_for_a_given_complex_contact_input_and_a_composite_reference_business_data_field() throws Exception {
+    public void should_create_an_operation_for_a_given_complex_contact_input_and_a_composite_reference_business_data_field()
+            throws Exception {
         final FieldToContractInputMappingOperationBuilder inputToOperation = createFixture();
 
         final RelationField address = aCompositionField("address", aBO("Address").build());
@@ -135,7 +139,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final BusinessObjectData businessObjectData = aBusinessData().withName("myEmployee").build();
         when(expressionBuilder.toExpression(businessObjectData, mapping, false)).thenReturn(anExpression().build());
         final Operation operation = inputToOperation.toOperation(businessObjectData,
-                mapping);
+                mapping, new NullProgressMonitor());
 
         OperatorAssert.assertThat(operation.getOperator())
                 .hasType(ExpressionConstants.JAVA_METHOD_OPERATOR)
@@ -154,11 +158,12 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final FieldToContractInputMappingOperationBuilder inputToOperation = createFixture();
         when(expressionReturnTypeFilter.compatibleReturnTypes(anyString(), anyString())).thenReturn(false);
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
-        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class), anyBoolean())).thenReturn(
-                anExpression().build());
+        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class),
+                anyBoolean())).thenReturn(
+                        anExpression().build());
         thrown.expect(OperationCreationException.class);
         inputToOperation.toOperation(aBusinessData().withName("myEmployee").build(),
-                aSimpleMapping(lastNameField).build());
+                aSimpleMapping(lastNameField).build(), new NullProgressMonitor());
     }
 
     @Test
@@ -172,11 +177,12 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final MappingOperationScriptBuilder fakeScriptBuilder = mock(MappingOperationScriptBuilder.class);
         when(fakeScriptBuilder.toScript()).thenThrow(BusinessObjectInstantiationException.class);
         doReturn(fakeScriptBuilder).when(mapping).getScriptBuilder(any(BusinessObjectData.class));
-        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class), anyBoolean())).thenReturn(
-                anExpression().build());
+        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class),
+                anyBoolean())).thenReturn(
+                        anExpression().build());
         thrown.expect(OperationCreationException.class);
         inputToOperation.toOperation(aBusinessData().withName("myEmployee").build(),
-                mapping);
+                mapping, new NullProgressMonitor());
     }
 
     @Test
@@ -185,10 +191,11 @@ public class FieldToContractInputMappingOperationBuilderTest {
 
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
         final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
-        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class), anyBoolean())).thenReturn(
-                anExpression().build());
+        when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class),
+                anyBoolean())).thenReturn(
+                        anExpression().build());
         final Operation operation = inputToOperation.toOperation(aBusinessData().multiple().withName("employees").build(),
-                mapping);
+                mapping, new NullProgressMonitor());
 
         OperatorAssert.assertThat(operation.getOperator())
                 .hasType(ExpressionConstants.JAVA_METHOD_OPERATOR)

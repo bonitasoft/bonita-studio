@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
@@ -29,16 +30,19 @@ import javax.inject.Singleton;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.expression.editor.provider.ExpressionComparator;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * @author Romain Bioteau
  */
 @Singleton
-public class ExpressionEditorService {
+public class ExpressionProviderService {
 
     private static final String PROVIDER_CLASS_ATTRIBUTE = "providerClass";
     private static final String EXPRESSION_PROVIDER_ID = "org.bonitasoft.studio.expression.expressionProvider";
@@ -47,37 +51,40 @@ public class ExpressionEditorService {
     private static final String EXPRESSION_FILTER_PRIORITY_ATTRIBUTE = "priority";
     private static final String EXPRESSION_FILTER_ID_ATTRIBUTE = "id";
 
-    private static ExpressionEditorService INSTANCE;
+    private static ExpressionProviderService INSTANCE;
 
-    private Set<IExpressionProvider> expressionProviders;
-    private final Map<String, List<ViewerFilter>> expressionFilters = new HashMap<String, List<ViewerFilter>>();
+    private final Map<String, List<ViewerFilter>> expressionFilters = new HashMap<>();
     private final ExtensionContextInjectionFactory extensionContextInjectionFactory;
+    private Map<String, IExpressionProvider> expressionProviderByType;
 
-    public static ExpressionEditorService getInstance() {
+    public static ExpressionProviderService getInstance() {
         return INSTANCE;
     }
 
-    ExpressionEditorService() {
+    ExpressionProviderService() {
         INSTANCE = this;
         extensionContextInjectionFactory = new ExtensionContextInjectionFactory();
     }
 
     @PostConstruct
     protected void init(final IEclipseContext context) {
-        expressionProviders = new HashSet<IExpressionProvider>();
-        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(EXPRESSION_PROVIDER_ID);
+        expressionProviderByType = new HashMap<>();
+        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(EXPRESSION_PROVIDER_ID);
         for (final IConfigurationElement element : elements) {
             try {
-                expressionProviders.add(extensionContextInjectionFactory.make(element, PROVIDER_CLASS_ATTRIBUTE, IExpressionProvider.class, context));
+                final IExpressionProvider provider = extensionContextInjectionFactory.make(element, PROVIDER_CLASS_ATTRIBUTE,
+                        IExpressionProvider.class, context);
+                expressionProviderByType.put(provider.getExpressionType(), provider);
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);
             }
         }
-        context.set(ExpressionEditorService.class, this);
+        context.set(ExpressionProviderService.class, this);
     }
 
     public Set<IExpressionProvider> getExpressionProviders() {
-        return expressionProviders;
+        return new HashSet<>(expressionProviderByType.values());
     }
 
     /**
@@ -88,9 +95,10 @@ public class ExpressionEditorService {
      */
     public List<ViewerFilter> getExpressionFilters(final String id) {
         if (expressionFilters.get(id) == null) {
-            final List<ViewerFilter> filters = new ArrayList<ViewerFilter>();
-            final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(EXPRESSION_FILTER_ID);
-            final List<IConfigurationElement> sortedConfigElems = new ArrayList<IConfigurationElement>();
+            final List<ViewerFilter> filters = new ArrayList<>();
+            final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
+                    .getConfigurationElements(EXPRESSION_FILTER_ID);
+            final List<IConfigurationElement> sortedConfigElems = new ArrayList<>();
             for (final IConfigurationElement elem : elements) {
                 sortedConfigElems.add(elem);
             }
@@ -119,7 +127,8 @@ public class ExpressionEditorService {
             for (final IConfigurationElement element : sortedConfigElems) {
                 if (element.getAttribute(EXPRESSION_FILTER_ID_ATTRIBUTE).equals(id)) {
                     try {
-                        final ViewerFilter filter = (ViewerFilter) element.createExecutableExtension(EXPRESSION_FILTER_CLASS_ATTRIBUTE);
+                        final ViewerFilter filter = (ViewerFilter) element
+                                .createExecutableExtension(EXPRESSION_FILTER_CLASS_ATTRIBUTE);
                         filters.add(filter);
                     } catch (final Exception e) {
                         BonitaStudioLog.error(e);
@@ -133,11 +142,20 @@ public class ExpressionEditorService {
     }
 
     public synchronized IExpressionProvider getExpressionProvider(final String type) {
-        for (final IExpressionProvider provider : getExpressionProviders()) {
-            if (provider.getExpressionType().equals(type)) {
-                return provider;
+        return expressionProviderByType.get(type);
+    }
+
+    public Set<Expression> getRelevantExpressions(EObject context) {
+        final Set<Expression> expressionsSet = new TreeSet<>(new ExpressionComparator());
+        for (final IExpressionProvider provider : expressionProviderByType.values()) {
+            if (provider.isRelevantFor(context)) {
+                final Set<Expression> expressions = provider.getExpressions(context);
+                if (expressions != null) {
+                    expressionsSet.addAll(expressions);
+                }
             }
         }
-        return null;
+        return expressionsSet;
     }
+
 }

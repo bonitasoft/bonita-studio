@@ -26,7 +26,6 @@ import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.HiddenWidget;
 import org.bonitasoft.studio.model.form.LabelPosition;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
@@ -84,7 +83,7 @@ public class ExamplePropertySectionContribution implements
                             SetCommand.create(editingDomain, element, FormPackage.Literals.FORM_FIELD__EXAMPLE_MESSAGE,
                                     ExpressionFactory.eINSTANCE.createExpression()));
         }
-        exampleMessageViewer.setMessage(Messages.UserAidsSection_Example_Tooltip, IStatus.INFO);
+        exampleMessageViewer.setMessage(Messages.UserAidsSection_Example_Tooltip);
         exampleMessageViewer.setInput(element);
         dataBindingContext.bindValue(
                 ViewerProperties.singleSelection().observe(exampleMessageViewer),

@@ -10,7 +10,6 @@ import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -50,7 +49,7 @@ public class DateFormFielContribution extends InitialValueContribution{
     @Override
     protected void doCreateControl(final TabbedPropertySheetWidgetFactory widgetFactory) {
         super.doCreateControl(widgetFactory);
-        expressionViewer.setMessage(Messages.data_tooltip_date, IStatus.INFO);
+        expressionViewer.setMessage(Messages.data_tooltip_date);
     }
 
     private void bindDateWidget() {

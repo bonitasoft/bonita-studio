@@ -33,7 +33,6 @@ import org.bonitasoft.studio.model.process.SendTask;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.observable.Realm;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -114,7 +113,7 @@ public class ExpectedDurationPropertySectionContribution implements IExtensibleG
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
         final ExpressionViewer viewer = new ExpressionViewer(composite, SWT.BORDER , widgetFactory);
         viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create());
-        viewer.setMessage(Messages.dueDateCalculationHint, IStatus.INFO);
+        viewer.setMessage(Messages.dueDateCalculationHint);
         viewer.setExpressionNameResolver(new DefaultExpressionNameResolver("dueDateCalculation"));
         viewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.PARAMETER_TYPE));
         context.bindValue(ViewersObservables.observeInput(viewer),  ViewersObservables.observeSingleSelection(selectionProvider));

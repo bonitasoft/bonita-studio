@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.contract.ui.wizard;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,9 +40,11 @@ import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IEventConsumer;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -73,9 +76,11 @@ public class GeneratedScriptPreviewPage extends WizardPage {
     /**
      * @param pageName
      */
-    public GeneratedScriptPreviewPage(final WritableValue rootNameObservable, final WritableList fieldToContactInputMappingsObservable,
+    public GeneratedScriptPreviewPage(final WritableValue rootNameObservable,
+            final WritableList fieldToContactInputMappingsObservable,
             final WritableValue selectedDataObservable, final RepositoryAccessor repositoryAccessor,
-            final FieldToContractInputMappingOperationBuilder operationBuilder, final FieldToContractInputMappingExpressionBuilder expressionBuilder,
+            final FieldToContractInputMappingOperationBuilder operationBuilder,
+            final FieldToContractInputMappingExpressionBuilder expressionBuilder,
             final GroovySourceViewerFactory sourceViewerFactory) {
         super(GeneratedScriptPreviewPage.class.getName());
         setTitle(Messages.generatedScriptPreviewTitle);
@@ -91,15 +96,19 @@ public class GeneratedScriptPreviewPage extends WizardPage {
 
     public void setDescription() {
         if (selectedDataObservable.getValue() != null) {
-            setDescription(Messages.bind(Messages.setGeneratedScriptPreviewPageDescription, ((Element) selectedDataObservable.getValue()).getName()));
-            EMFObservables.observeDetailValue(Realm.getDefault(), selectedDataObservable, ProcessPackage.Literals.ELEMENT__NAME).addValueChangeListener(
-                    new IValueChangeListener() {
+            setDescription(Messages.bind(Messages.setGeneratedScriptPreviewPageDescription,
+                    ((Element) selectedDataObservable.getValue()).getName()));
+            EMFObservables
+                    .observeDetailValue(Realm.getDefault(), selectedDataObservable, ProcessPackage.Literals.ELEMENT__NAME)
+                    .addValueChangeListener(
+                            new IValueChangeListener() {
 
-                        @Override
-                        public void handleValueChange(final ValueChangeEvent event) {
-                            setDescription(Messages.bind(Messages.setGeneratedScriptPreviewPageDescription, event.diff.getNewValue()));
-                        }
-                    });
+                                @Override
+                                public void handleValueChange(final ValueChangeEvent event) {
+                                    setDescription(Messages.bind(Messages.setGeneratedScriptPreviewPageDescription,
+                                            event.diff.getNewValue()));
+                                }
+                            });
         }
     }
 
@@ -131,7 +140,8 @@ public class GeneratedScriptPreviewPage extends WizardPage {
         final GroovyHelpLinkFactory groovyHelpLinkFactory = new GroovyHelpLinkFactory();
         final Composite groovyHelpComposite = new Composite(mainComposite, SWT.NONE);
         groovyHelpComposite.setLayout(new FillLayout(SWT.VERTICAL));
-        groovyHelpComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.END, SWT.CENTER).create());
+        groovyHelpComposite.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.END, SWT.CENTER).create());
         groovyHelpLinkFactory.createGroovyHelpLink(groovyHelpComposite);
     }
 
@@ -162,27 +172,35 @@ public class GeneratedScriptPreviewPage extends WizardPage {
     @Override
     public void setVisible(final boolean visible) {
         super.setVisible(visible);
-        generateExpressionScript();
+        try {
+            getContainer().run(true, false, new IRunnableWithProgress() {
+
+                @Override
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    generateExpressionScript(monitor);
+                }
+            });
+            document.set(generatedExpression.getContent());
+            if (generatedExpression.getName() != null) {
+                scriptNameText.setText(generatedExpression.getName());
+            }
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error("Failed to create Operations from contract", e);
+            new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e)
+                    .open();
+        }
     }
 
-    /**
-     * @param dbc
-     * @param viewer
-     */
-    protected void generateExpressionScript() {
+    protected void generateExpressionScript(IProgressMonitor monitor) throws InvocationTargetException {
         if (selectedDataObservable.getValue() != null) {
             rootContractInputGenerator = createRootContractInputGenerator();
             if (!fieldToContractInputMappingsObservable.isEmpty()) {
                 try {
-                    rootContractInputGenerator.buildForInstanciation((BusinessObjectData) selectedDataObservable.getValue());
+                    rootContractInputGenerator.buildForInstanciation((BusinessObjectData) selectedDataObservable.getValue(),
+                            monitor);
                     generatedExpression = rootContractInputGenerator.getInitialValueExpression();
-                    document.set(generatedExpression.getContent());
-                    if (generatedExpression.getName() != null) {
-                        scriptNameText.setText(generatedExpression.getName());
-                    }
                 } catch (final OperationCreationException e) {
-                    BonitaStudioLog.error("Failed to create Operations from contract", e);
-                    new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e).open();
+                    throw new InvocationTargetException(e);
                 }
             }
         }

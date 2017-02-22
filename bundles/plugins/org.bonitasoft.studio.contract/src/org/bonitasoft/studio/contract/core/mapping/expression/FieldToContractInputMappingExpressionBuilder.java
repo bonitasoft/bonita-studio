@@ -30,7 +30,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.contract.core.mapping.operation.MappingOperationScriptBuilder;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.groovy.GroovyCompilationUnitFactory;
 import org.bonitasoft.studio.groovy.ScriptVariable;
@@ -47,11 +47,11 @@ import com.google.common.base.Joiner;
 @Creatable
 public class FieldToContractInputMappingExpressionBuilder {
 
-    private final ExpressionEditorService expressionEditorService;
+    private final ExpressionProviderService expressionEditorService;
     private final RepositoryAccessor repositoryAccessor;
 
     @Inject
-    public FieldToContractInputMappingExpressionBuilder(final RepositoryAccessor repositoryAccessor, final ExpressionEditorService expressionEditorService) {
+    public FieldToContractInputMappingExpressionBuilder(final RepositoryAccessor repositoryAccessor, final ExpressionProviderService expressionEditorService) {
         this.repositoryAccessor = repositoryAccessor;
         this.expressionEditorService = expressionEditorService;
     }

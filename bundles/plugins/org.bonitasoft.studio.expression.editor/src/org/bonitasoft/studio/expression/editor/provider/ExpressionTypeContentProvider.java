@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -45,10 +45,10 @@ public class ExpressionTypeContentProvider implements IStructuredContentProvider
     public Object[] getElements(Object context) {
         Set<IExpressionProvider> expressionTypes = new HashSet<IExpressionProvider>() ;
         if(context == null){
-            expressionTypes.add(ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.CONSTANT_TYPE));
-            expressionTypes.add(ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.SCRIPT_TYPE));
+            expressionTypes.add(ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.CONSTANT_TYPE));
+            expressionTypes.add(ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.SCRIPT_TYPE));
         }else{
-            for(IExpressionProvider provider : ExpressionEditorService.getInstance().getExpressionProviders()){
+            for(IExpressionProvider provider : ExpressionProviderService.getInstance().getExpressionProviders()){
                 if(provider.getExpressionEditor(null, (EObject) context) != null && provider.isRelevantFor((EObject)context)){
                     expressionTypes.add(provider) ;
                 }

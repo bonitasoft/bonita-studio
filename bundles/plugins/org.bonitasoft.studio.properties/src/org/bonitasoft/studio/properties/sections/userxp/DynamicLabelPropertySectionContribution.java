@@ -28,7 +28,6 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
@@ -70,7 +69,7 @@ public class DynamicLabelPropertySectionContribution extends AbstractPropertySec
         expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.SCRIPT_TYPE}));
         expressionViewer.setExpressionNameResolver(new DefaultExpressionNameResolver("displayName"));
         expressionViewer.setInput(eObject) ;
-        expressionViewer.setMessage(Messages.dynamicLabelHint,IStatus.INFO) ;
+        expressionViewer.setMessage(Messages.dynamicLabelHint) ;
         expressionViewer.addExpressionValidator(new ExpressionLengthValidator(MAX_LENGTH));
         refreshDataBindingContext();
     }

@@ -248,7 +248,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 		maximumLoopExpressionViewer.addFilter(new AvailableExpressionTypeFilter(
 				new String[] { ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
 						ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.SCRIPT_TYPE }));
-		maximumLoopExpressionViewer.setMessage(Messages.optionalLabel, IStatus.INFO);
+		maximumLoopExpressionViewer.setMessage(Messages.optionalLabel);
 		maximumLoopExpressionViewer.addFilter(new OnlyProcessDataViewerFilter());
         maximumLoopExpressionViewer.setExpressionNameResolver(new DefaultExpressionNameResolver("maximumLoop"));
 		context.bindValue(ViewersObservables.observeInput(maximumLoopExpressionViewer), selectionObservable);
@@ -335,7 +335,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 				org.bonitasoft.engine.expression.ExpressionConstants.NUMBER_OF_INSTANCES.getEngineConstantName(),
 				org.bonitasoft.engine.expression.ExpressionConstants.NUMBER_OF_TERMINATED_INSTANCES
 						.getEngineConstantName() }));
-		completionConditionViewer.setMessage(Messages.multiInstance_completionConditionDescription, IStatus.INFO);
+		completionConditionViewer.setMessage(Messages.multiInstance_completionConditionDescription);
 
 		final IObservableValue selectionObservable = ViewersObservables.observeSingleSelection(selectionProvider);
 		context.bindValue(ViewersObservables.observeInput(completionConditionViewer), selectionObservable);

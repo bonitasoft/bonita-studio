@@ -24,6 +24,7 @@ import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.Platform;
@@ -50,7 +51,7 @@ public class CreateDeployExportBusinessObjectIT {
 
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
-    
+
     private Keyboard keyboard;
 
     @Rule
@@ -71,7 +72,8 @@ public class CreateDeployExportBusinessObjectIT {
         tmpFile = temporaryFolder.newFile("bdm.zip");
 
         bdmStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        final BusinessObjectModelFileStore businessObjectModelFileStore = bdmStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        final BusinessObjectModelFileStore businessObjectModelFileStore = bdmStore
+                .getChild(BusinessObjectModelFileStore.BOM_FILENAME);
         if (businessObjectModelFileStore != null) {
             businessObjectModelFileStore.delete();
         }
@@ -118,7 +120,8 @@ public class CreateDeployExportBusinessObjectIT {
 
         SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        bot.waitUntil(Conditions.shellCloses(activeShell), 50000);
+        bot.waitUntil(Conditions.shellIsActive(Messages.bdmDeployedTitle), 30000);
+        bot.button(IDialogConstants.OK_LABEL).click();
 
         // Edit business object
         bot.menu("Development").menu("Business Data Model").menu("Manage...").click();
@@ -140,11 +143,13 @@ public class CreateDeployExportBusinessObjectIT {
         // Add custom query
         final Map<String, String> queryParam = new HashMap<>();
         queryParam.put("maxSalary", Double.class.getName());
-        addCustomQuery("Employee", "findByMaxSalary", "SELECT e FROM Employee e WHERE e.salary < :maxSalary", queryParam, "Multiple (java.util.List)", 0);
+        addCustomQuery("Employee", "findByMaxSalary", "SELECT e FROM Employee e WHERE e.salary < :maxSalary", queryParam,
+                "Multiple (java.util.List)", 0);
 
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.waitUntil(Conditions.shellCloses(activeShell), 30000);
+        bot.waitUntil(Conditions.shellIsActive(Messages.bdmDeployedTitle), 30000);
+        bot.button(IDialogConstants.OK_LABEL).click();
 
         // Validate model content
         validateBDMContent();
@@ -159,7 +164,8 @@ public class CreateDeployExportBusinessObjectIT {
         assertThat(fStore).isNotNull();
         final BusinessObjectModel businessObjectModel = fStore.getContent();
         assertThat(businessObjectModel).isNotNull();
-        assertThat(businessObjectModel.getBusinessObjects()).extracting("qualifiedName").containsOnly("org.model.test.Employee");
+        assertThat(businessObjectModel.getBusinessObjects()).extracting("qualifiedName")
+                .containsOnly("org.model.test.Employee");
         final BusinessObject employeeBusinessObject = businessObjectModel.getBusinessObjects().get(0);
         assertThat(employeeBusinessObject.getFields())
                 .extracting("name", "type")
@@ -206,12 +212,14 @@ public class CreateDeployExportBusinessObjectIT {
                 .containsExactly(tuple("NAMEINDEX", Arrays.asList("lastName", "firstName")));
 
         assertThat(employeeBusinessObject.getQueries()).extracting("name", "content", "returnType")
-                .containsExactly(tuple("findByMaxSalary", "SELECT e FROM Employee e WHERE e.salary < :maxSalary", List.class.getName()));
+                .containsExactly(tuple("findByMaxSalary", "SELECT e FROM Employee e WHERE e.salary < :maxSalary",
+                        List.class.getName()));
         assertThat(employeeBusinessObject.getQueries().get(0).getQueryParameters()).extracting("name", "className")
                 .containsExactly(tuple("maxSalary", Double.class.getName()));
     }
 
-    protected void addCustomQuery(final String boName, final String queryName, final String content, final Map<String, String> queryParam,
+    protected void addCustomQuery(final String boName, final String queryName, final String content,
+            final Map<String, String> queryParam,
             final String returnType, final int queryIndex) {
         bot.tabItem("Queries").activate();
         bot.radio("Custom").click();
@@ -283,7 +291,8 @@ public class CreateDeployExportBusinessObjectIT {
         bot.comboBoxInGroup("Details for " + attributeName).setSelection(relationType);
     }
 
-    protected void addAttribute(final String boName, final String attributeName, final String type, final int attributeIndex) {
+    protected void addAttribute(final String boName, final String attributeName, final String type,
+            final int attributeIndex) {
         bot.tabItem("Attributes").activate();
         bot.buttonInGroup("Add", boName).click();
         final SWTBotTable attributeTable = bot.tableInGroup(boName);
@@ -296,7 +305,8 @@ public class CreateDeployExportBusinessObjectIT {
         keyboard.pressShortcut(Keystrokes.CR);
     }
 
-    protected void addConstraint(final String boName, final String constraintName, final String[] selectFields, final int constraintIndex) {
+    protected void addConstraint(final String boName, final String constraintName, final String[] selectFields,
+            final int constraintIndex) {
         bot.tabItem("Unique constraints").activate();
         bot.buttonInGroup("Add", boName).click();
         final SWTBotTable table = bot.tableInGroup(boName);
@@ -342,7 +352,8 @@ public class CreateDeployExportBusinessObjectIT {
         bot.button(IDialogConstants.OK_LABEL).click();
     }
 
-    protected void editIndex(final String boName, final String indexName, final String[] selectFields, final int indexIndex) {
+    protected void editIndex(final String boName, final String indexName, final String[] selectFields,
+            final int indexIndex) {
         bot.tabItem("Indexes").activate();
         final SWTBotTable table = bot.tableInGroup(boName);
         table.click(indexIndex, 1);

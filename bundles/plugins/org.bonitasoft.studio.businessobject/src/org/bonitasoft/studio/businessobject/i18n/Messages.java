@@ -320,9 +320,13 @@ public class Messages extends NLS {
 
     public static String missingCountQuery;
 
-	public static String queryReturnTypeWarning;
+    public static String queryReturnTypeWarning;
 
-	public static String modelValidationFailedMsg;
+    public static String modelValidationFailedMsg;
+    public static String bdmDeployedTitle;
+    public static String bdmDeployedMessage;
+    public static String doNotShowMeAgain;
+    public static String bdmDeployDetails;
 
     private Messages() {
     }
