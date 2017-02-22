@@ -22,11 +22,13 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
+import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.filter.ExpressionReturnTypeFilter;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jdt.core.JavaModelException;
 
@@ -43,8 +45,10 @@ public class FieldToContractInputMappingOperationBuilder {
         this.expressionBuilder = expressionBuilder;
     }
 
-    public Operation toOperation(final BusinessObjectData data, final FieldToContractInputMapping mapping)
+    public Operation toOperation(final BusinessObjectData data, final FieldToContractInputMapping mapping,
+            IProgressMonitor monitor)
             throws OperationCreationException {
+        monitor.setTaskName(String.format(Messages.creatingMappingOperation, mapping.getField().getName()));
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
         operation.setLeftOperand(ExpressionHelper.createVariableExpression(data));
         operation.setOperator(operator(mapping, data));
@@ -54,9 +58,11 @@ public class FieldToContractInputMappingOperationBuilder {
             throw new OperationCreationException("Failed to create right operand expression", e);
         }
         if (!typesMatches(operation)) {
-            throw new OperationCreationException(String.format("Expected setter parameter type (%s) does not match expression type (%s)"
-                    , operation.getOperator().getInputTypes().get(0), operation.getRightOperand().getReturnType()));
+            throw new OperationCreationException(
+                    String.format("Expected setter parameter type (%s) does not match expression type (%s)",
+                            operation.getOperator().getInputTypes().get(0), operation.getRightOperand().getReturnType()));
         }
+        monitor.worked(1);
         return operation;
     }
 

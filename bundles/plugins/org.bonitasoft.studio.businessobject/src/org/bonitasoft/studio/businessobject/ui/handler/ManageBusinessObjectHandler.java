@@ -14,14 +14,19 @@
  */
 package org.bonitasoft.studio.businessobject.ui.handler;
 
+import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.ManageBusinessDataModelWizard;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
@@ -29,9 +34,10 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ManageBusinessObjectHandler extends AbstractBusinessObjectHandler {
+
+    private static final String DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG = "DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG";
 
     /*
      * (non-Javadoc)
@@ -41,8 +47,27 @@ public class ManageBusinessObjectHandler extends AbstractBusinessObjectHandler {
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         final ManageBusinessDataModelWizard newBusinessDataModelWizard = createWizard();
         final CustomWizardDialog dialog = createWizardDialog(newBusinessDataModelWizard, IDialogConstants.FINISH_LABEL);
+        if (dialog.open() == IDialogConstants.OK_ID) {
+            openSuccessDialog();
+            return IDialogConstants.OK_ID;
+        }
+        return IDialogConstants.CANCEL_ID;
+    }
 
-        return dialog.open() == IDialogConstants.OK_ID;
+    protected void openSuccessDialog() {
+        final IPreferenceStore preferenceStore = BusinessObjectPlugin.getDefault().getPreferenceStore();
+        if (!preferenceStore.getBoolean(DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG)) {
+            MessageDialogWithPrompt.openWithDetails(MessageDialog.INFORMATION,
+                    getShell(),
+                    Messages.bdmDeployedTitle,
+                    Messages.bdmDeployedMessage,
+                    Messages.doNotShowMeAgain,
+                    Messages.bdmDeployDetails,
+                    false,
+                    preferenceStore,
+                    DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG,
+                    SWT.NONE);
+        }
     }
 
     @Override

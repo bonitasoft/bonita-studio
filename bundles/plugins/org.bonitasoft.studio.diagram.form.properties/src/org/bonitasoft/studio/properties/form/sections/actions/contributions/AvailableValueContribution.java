@@ -32,7 +32,6 @@ import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.jface.dialogs.Dialog;
@@ -77,9 +76,9 @@ public class AvailableValueContribution extends InitialValueContribution {
 
         expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         if (widget instanceof SuggestBox) {
-            expressionViewer.setMessage(Messages.data_tooltip_list + " (" + Messages.mapUnsupported + ")", IStatus.INFO);
+            expressionViewer.setMessage(Messages.data_tooltip_list + " (" + Messages.mapUnsupported + ")");
         } else {
-            expressionViewer.setMessage(Messages.data_tooltip_list, IStatus.INFO);
+            expressionViewer.setMessage(Messages.data_tooltip_list);
         }
 
         new ToolItem(expressionViewer.getToolbar(), SWT.SEPARATOR | SWT.VERTICAL);

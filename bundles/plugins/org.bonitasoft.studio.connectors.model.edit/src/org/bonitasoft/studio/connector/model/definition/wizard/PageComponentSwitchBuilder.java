@@ -54,7 +54,6 @@ import org.bonitasoft.studio.model.expression.TableExpression;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
@@ -171,7 +170,7 @@ public class PageComponentSwitchBuilder {
     private void handleDescription(final Text object, final ExpressionViewer viewer) {
         final String desc = messageProvider.getFieldDescription(definition, object.getId());
         if (desc != null && !desc.isEmpty()) {
-            viewer.setMessage(desc, IStatus.INFO);
+            viewer.setMessage(desc);
         }
     }
 
@@ -289,7 +288,7 @@ public class PageComponentSwitchBuilder {
             viewer.setInput(parameter);
             final String desc = getDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {
-                viewer.setMessage(desc, IStatus.INFO);
+                viewer.setMessage(desc);
             }
             if (((Expression) parameter.getExpression()).getName() == null) {
                 final Expression falseExp = (Expression) parameter.getExpression();
@@ -422,7 +421,7 @@ public class PageComponentSwitchBuilder {
             viewer.setInput(parameter);
             final String desc = getDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {
-                viewer.setMessage(desc, IStatus.INFO);
+                viewer.setMessage(desc);
             }
             context.bindValue(ViewersObservables.observeSingleSelection(viewer),
                     EMFObservables.observeValue(parameter,
@@ -613,7 +612,7 @@ public class PageComponentSwitchBuilder {
             viewer.setInput(parameter);
             final String desc = getDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {
-                viewer.setMessage(desc, IStatus.INFO);
+                viewer.setMessage(desc);
             }
             context.bindValue(ViewersObservables.observeSingleSelection(viewer),
                     EMFObservables.observeValue(parameter,

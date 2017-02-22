@@ -31,7 +31,6 @@ import org.bonitasoft.studio.model.form.ImageWidget;
 import org.bonitasoft.studio.model.form.Info;
 import org.bonitasoft.studio.model.form.Table;
 import org.bonitasoft.studio.model.form.Widget;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
@@ -82,7 +81,7 @@ public class TooltipGridPropertySectionContribution implements
                 ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.SCRIPT_TYPE }));
 
         tooltipViewer.setInput(element);
-        tooltipViewer.setMessage(Messages.UserAidsSection_Tooltip_tooltip, IStatus.INFO);
+        tooltipViewer.setMessage(Messages.UserAidsSection_Tooltip_tooltip);
         dataBindingContext.bindValue(
                 ViewerProperties.singleSelection().observe(tooltipViewer),
                 EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__TOOLTIP).observe(element));

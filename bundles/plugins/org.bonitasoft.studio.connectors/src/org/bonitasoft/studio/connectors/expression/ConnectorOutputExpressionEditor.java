@@ -26,7 +26,7 @@ import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
@@ -162,7 +162,7 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
             ExpressionViewer expressionViewer) {
         this.inputExpression = inputExpression;
         Set<Output> input = new HashSet<Output>();
-        IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
+        IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
         for (Expression e : provider.getExpressions(context)) {
             if (inputExpression.isReturnTypeFixed()) {
                 if (e.getReturnType().equals(inputExpression.getReturnType())) {
