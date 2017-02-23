@@ -5,8 +5,9 @@
     modelPluginID="org.bonitasoft.studio.model" templateDirectory="org.bonitasoft.studio-models/EMFTemplates/"
     dynamicTemplates="true" redirection="" forceOverwrite="true" modelName="Process"
     editPluginClass="org.bonitasoft.studio.model.edit.ProcessEditPlugin" nonNLSMarkers="true"
-    importerID="org.eclipse.emf.importer.ecore" complianceLevel="7.0" copyrightFields="false"
-    editPluginID="org.bonitasoft.studio.model.edit" runtimeVersion="2.9" language="">
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="7.0" copyrightFields="false" editPluginID="org.bonitasoft.studio.model.edit"
+    runtimeVersion="2.9" language="">
   <foreignModel>ActorMapping.ecore</foreignModel>
   <foreignModel>configuration.ecore</foreignModel>
   <foreignModel>connector-configuration.ecore</foreignModel>
