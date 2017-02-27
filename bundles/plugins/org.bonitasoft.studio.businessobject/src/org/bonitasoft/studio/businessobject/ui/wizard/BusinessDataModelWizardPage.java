@@ -14,9 +14,15 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard;
 
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.Query;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.control.AttributesTabItemControl;
@@ -26,11 +32,13 @@ import org.bonitasoft.studio.businessobject.ui.wizard.control.UniqueConstraintTa
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.BusinessObjectNameEditingSupport;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
+import org.bonitasoft.studio.common.jface.databinding.observables.GroupTextProperty;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
@@ -51,11 +59,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
-import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
@@ -74,10 +78,6 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
-import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import org.bonitasoft.engine.bdm.model.Query;
-
 /**
  * @author Romain Bioteau
  */
@@ -95,9 +95,11 @@ public class BusinessDataModelWizardPage extends WizardPage {
 
     private IObservableList fieldsList;
 
-    private Group businessObjectDescriptionGroup;
-
     private Label helpLabel;
+
+    private TableViewerColumn businessObjectNameColumn;
+
+    private TableViewer boTableViewer;
 
     protected BusinessDataModelWizardPage(final BusinessObjectModel businessObjectModel) {
         super(BusinessDataModelWizardPage.class.getName());
@@ -139,23 +141,23 @@ public class BusinessDataModelWizardPage extends WizardPage {
 
     protected void createBusinessObjectDescription(final Composite mainComposite, final DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue) {
-        businessObjectDescriptionGroup = new Group(mainComposite, SWT.NONE);
+        final Group businessObjectDescriptionGroup = new Group(mainComposite, SWT.NONE);
         businessObjectDescriptionGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(1, 2).create());
         businessObjectDescriptionGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         businessObjectDescriptionGroup.setText(Messages.selectABusinessObjectToEdit);
-        viewerObservableValue.addValueChangeListener(new IValueChangeListener() {
 
-            @Override
-            public void handleValueChange(final ValueChangeEvent event) {
-                final Object newValue = event.diff.getNewValue();
-                if (newValue != null) {
-                    businessObjectDescriptionGroup
-                            .setText(NamingUtils.getSimpleName(((BusinessObject) newValue).getQualifiedName()));
-                } else {
-                    businessObjectDescriptionGroup.setText(Messages.selectABusinessObjectToEdit);
-                }
-            }
-        });
+        final IObservableValue observeDetailValue = PojoObservables.observeDetailValue(viewerObservableValue,
+                "qualifiedName", String.class);
+        final ISWTObservableValue groupTextObservable = new GroupTextProperty().observe(businessObjectDescriptionGroup);
+        businessObjectNameColumn.setEditingSupport(new BusinessObjectNameEditingSupport(businessObjectModel,
+                viewerObservableValue, PojoObservables.observeValue(
+                        this, "packageName"),
+                groupTextObservable,
+                boTableViewer, ctx));
+        ctx.bindValue(observeDetailValue,
+                groupTextObservable,
+                updateValueStrategy().withConverter(toPaneDescripitonlTitle()).create(),
+                neverUpdateValueStrategy().create());
 
         createDescription(ctx, viewerObservableValue, businessObjectDescriptionGroup);
 
@@ -273,7 +275,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
         deleteButton.setText(Messages.delete);
         deleteButton.setEnabled(false);
 
-        final TableViewer boTableViewer = new TableViewer(group, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+        boTableViewer = new TableViewer(group, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
         boTableViewer.getControl()
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, SWT.DEFAULT).create());
         boTableViewer.getTable().setLinesVisible(true);
@@ -283,40 +285,10 @@ public class BusinessDataModelWizardPage extends WizardPage {
         boTableViewer.getTable().setLayout(tableLayout);
         boTableViewer.setContentProvider(new ObservableListContentProvider());
 
-        final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(boTableViewer);
-        boTableViewer.getColumnViewerEditor().addEditorActivationListener(new ColumnViewerEditorActivationListener() {
+        final IViewerObservableValue observeBusinessObjectSingleSelection = ViewersObservables
+                .observeSingleSelection(boTableViewer);
 
-            @Override
-            public void beforeEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) {
-
-            }
-
-            @Override
-            public void beforeEditorActivated(final ColumnViewerEditorActivationEvent event) {
-
-            }
-
-            @Override
-            public void afterEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) {
-                final ISelection selection = boTableViewer.getSelection();
-                if (selection != null && ((IStructuredSelection) selection).getFirstElement() != null) {
-                    businessObjectDescriptionGroup.setText(
-                            NamingUtils.getSimpleName(((BusinessObject) ((IStructuredSelection) selection).getFirstElement())
-                                    .getQualifiedName()));
-                    boTableViewer.refresh();
-                } else {
-                    businessObjectDescriptionGroup.setText(Messages.selectABusinessObjectToEdit);
-                }
-
-            }
-
-            @Override
-            public void afterEditorActivated(final ColumnViewerEditorActivationEvent event) {
-
-            }
-        });
-
-        createBusinessObjectNameColumn(ctx, observeSingleSelection, boTableViewer);
+        businessObjectNameColumn = createBusinessObjectNameColumn(ctx, observeBusinessObjectSingleSelection, boTableViewer);
 
         final UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
         enableStrategy.setConverter(new Converter(Object.class, Boolean.class) {
@@ -327,7 +299,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
             }
         });
 
-        ctx.bindValue(SWTObservables.observeEnabled(deleteButton), observeSingleSelection,
+        ctx.bindValue(SWTObservables.observeEnabled(deleteButton), observeBusinessObjectSingleSelection,
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 enableStrategy);
 
@@ -336,10 +308,6 @@ public class BusinessDataModelWizardPage extends WizardPage {
         boTableViewer.setInput(businessObjectObserveList);
         addButton.addSelectionListener(new SelectionAdapter() {
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 addBusinessObject(boTableViewer, businessObjectObserveList);
@@ -349,17 +317,26 @@ public class BusinessDataModelWizardPage extends WizardPage {
 
         deleteButton.addSelectionListener(new SelectionAdapter() {
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                deleteBusinessObject(boTableViewer, observeSingleSelection, businessObjectObserveList);
+                deleteBusinessObject(boTableViewer, observeBusinessObjectSingleSelection, businessObjectObserveList);
             }
 
         });
-        return observeSingleSelection;
+        return observeBusinessObjectSingleSelection;
+    }
+
+    private IConverter toPaneDescripitonlTitle() {
+        return new Converter(String.class, String.class) {
+
+            @Override
+            public Object convert(Object fromObject) {
+                if (fromObject != null) {
+                    return NamingUtils.getSimpleName((String) fromObject);
+                }
+                return Messages.selectABusinessObjectToEdit;
+            }
+        };
     }
 
     protected void createPackageName(final DataBindingContext ctx, final Composite parent) {
@@ -466,7 +443,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
         }
     }
 
-    protected void createBusinessObjectNameColumn(final DataBindingContext ctx,
+    protected TableViewerColumn createBusinessObjectNameColumn(final DataBindingContext ctx,
             final IViewerObservableValue businessObjectSingleSelection,
             final TableViewer boTableViewer) {
         final TableViewerColumn columnViewer = new TableViewerColumn(boTableViewer, SWT.FILL);
@@ -486,17 +463,14 @@ public class BusinessDataModelWizardPage extends WizardPage {
                 return super.getText(element);
             }
         });
-        columnViewer.setEditingSupport(new BusinessObjectNameEditingSupport(businessObjectModel,
-                businessObjectSingleSelection, PojoObservables.observeValue(
-                        this, "packageName"),
-                columnViewer.getViewer(), ctx));
 
         final TableColumnSorter sorter = new TableColumnSorter(boTableViewer);
         sorter.setColumn(column);
+        return columnViewer;
     }
 
     protected String generateObjectName() {
-        final Set<String> existingNames = new HashSet<String>();
+        final Set<String> existingNames = new HashSet<>();
         for (final BusinessObject businessObject : businessObjectModel.getBusinessObjects()) {
             existingNames.add(businessObject.getQualifiedName());
         }
