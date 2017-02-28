@@ -50,6 +50,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -64,7 +65,8 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
 
     private final BusinessObjectModel bom;
 
-    public IndexesTabItemControl(final TabFolder parent, final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+    public IndexesTabItemControl(final TabFolder parent, final DataBindingContext ctx,
+            final IViewerObservableValue viewerObservableValue,
             final IObservableList fieldsList,
             final BusinessObjectModel bom) {
         super(parent, SWT.NONE);
@@ -84,8 +86,10 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
         final Button addButton = createAddButton(ctx, viewerObservableValue, buttonsComposite);
         final Button deleteButton = createDeleteButton(buttonsComposite);
 
-        final TableViewer indexesTableViewer = new TableViewer(this, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
-        indexesTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 300).create());
+        final TableViewer indexesTableViewer = new TableViewer(this,
+                SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
+        indexesTableViewer.getControl()
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 300).create());
         indexesTableViewer.getTable().setEnabled(viewerObservableValue.getValue() != null);
         indexesTableViewer.getTable().setLinesVisible(true);
         indexesTableViewer.getTable().setHeaderVisible(true);
@@ -104,9 +108,11 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
                 return fromObject != null;
             }
         });
-        ctx.bindValue(SWTObservables.observeEnabled(indexesTableViewer.getTable()), viewerObservableValue, null, enableStrategy);
+        ctx.bindValue(SWTObservables.observeEnabled(indexesTableViewer.getTable()), viewerObservableValue, null,
+                enableStrategy);
 
-        final IViewerObservableValue constaintObserveSingleSelection = ViewersObservables.observeSingleSelection(indexesTableViewer);
+        final IViewerObservableValue constaintObserveSingleSelection = ViewersObservables
+                .observeSingleSelection(indexesTableViewer);
         ctx.bindValue(SWTObservables.observeEnabled(deleteButton), constaintObserveSingleSelection, null, enableStrategy);
 
         enableStrategy = new UpdateValueStrategy();
@@ -129,7 +135,8 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
         createIndexNameColumn(ctx, indexesTableViewer, viewerObservableValue);
         createIndexFieldsColumn(ctx, indexesTableViewer, viewerObservableValue);
 
-        final IObservableList indexesObserveDetailList = PojoObservables.observeDetailList(viewerObservableValue, "indexes", Index.class);
+        final IObservableList indexesObserveDetailList = PojoObservables.observeDetailList(viewerObservableValue, "indexes",
+                Index.class);
         indexesTableViewer.setInput(indexesObserveDetailList);
 
         addButton.addSelectionListener(new SelectionAdapter() {
@@ -157,7 +164,8 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
         });
     }
 
-    protected void createIndexNameColumn(final DataBindingContext ctx, final TableViewer indexesTableViewer, final IViewerObservableValue viewerObservableValue) {
+    protected void createIndexNameColumn(final DataBindingContext ctx, final TableViewer indexesTableViewer,
+            final IViewerObservableValue viewerObservableValue) {
         final TableViewerColumn nameColumnViewer = new TableViewerColumn(indexesTableViewer, SWT.LEFT);
         final TableColumn column = nameColumnViewer.getColumn();
         column.setText(Messages.name + " *");
@@ -178,7 +186,8 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
         nameColumnViewer.setEditingSupport(new IndexNameEditingSupport(nameColumnViewer.getViewer(), ctx, bom));
     }
 
-    protected void createIndexFieldsColumn(final DataBindingContext ctx, final TableViewer viewer, final IViewerObservableValue viewerObservableValue) {
+    protected void createIndexFieldsColumn(final DataBindingContext ctx, final TableViewer viewer,
+            final IViewerObservableValue viewerObservableValue) {
         final TableViewerColumn indexesFieldsColumnViewer = new TableViewerColumn(viewer, SWT.LEFT);
         final TableColumn column = indexesFieldsColumnViewer.getColumn();
         column.setText(Messages.attributes);
@@ -198,7 +207,8 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
             }
         });
         indexesFieldsColumnViewer
-                .setEditingSupport(new IndexFieldsEditingSupport(viewerObservableValue, indexesFieldsColumnViewer.getViewer()));
+                .setEditingSupport(
+                        new IndexFieldsEditingSupport(viewerObservableValue, indexesFieldsColumnViewer.getViewer()));
     }
 
     protected void addIndex(final IViewerObservableValue viewerObservableValue, final IObservableList indexesObservableList,
@@ -206,7 +216,8 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
         final Index index = new Index();
         index.setName(generateIndexName(viewerObservableValue));
         indexesObservableList.add(index);
-        indexesTableViewer.editElement(index, 0);
+
+        Display.getDefault().asyncExec(() -> indexesTableViewer.editElement(index, 0));
     }
 
     protected void deleteIndex(final IObservableList indexListObservable, final TableViewer indexesTableViewer) {
@@ -215,8 +226,8 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
     }
 
     protected String generateIndexName(final IViewerObservableValue viewerObservableValue) {
-        final Set<String> existingNames = new HashSet<String>();
-        final List<Index> indexes = new ArrayList<Index>();
+        final Set<String> existingNames = new HashSet<>();
+        final List<Index> indexes = new ArrayList<>();
         for (final BusinessObject businessObject : bom.getBusinessObjects()) {
             indexes.addAll(businessObject.getIndexes());
 

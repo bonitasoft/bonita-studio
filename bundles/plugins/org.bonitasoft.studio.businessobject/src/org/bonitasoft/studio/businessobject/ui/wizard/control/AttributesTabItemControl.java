@@ -40,7 +40,8 @@ import org.bonitasoft.studio.businessobject.ui.wizard.provider.RelationKindLabel
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.eclipse.core.databinding.Binding;
+import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
+import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
@@ -54,9 +55,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.internal.databinding.validation.StringToIntegerValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -79,7 +78,6 @@ import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -92,8 +90,14 @@ import org.eclipse.swt.widgets.TableColumn;
 public class AttributesTabItemControl extends AbstractTabItemControl {
 
     private final IObservableList fieldsList;
-
+    private IViewerObservableValue attributeSelectionObservable;
     private final BusinessObjectModel businessObjectModel;
+    private Group detailGroup;
+    private StackLayout stackLayout;
+    private Composite relationFieldContent;
+    private Composite stringFieldContent;
+    private Composite emptyContent;
+    private Composite textFieldContent;
 
     public AttributesTabItemControl(final TabFolder parent, final DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue,
@@ -109,114 +113,111 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).create());
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(5, 0).create());
 
-        final IViewerObservableValue attributeSelectionObservable = createAttributeTableControl(ctx, viewerObservableValue);
-        createAttributeDetailControl(ctx, attributeSelectionObservable, viewerObservableValue);
+        attributeSelectionObservable = createAttributeTableControl(ctx, viewerObservableValue);
+        createAttributeDetailControl(ctx, viewerObservableValue);
     }
 
     private void createAttributeDetailControl(final DataBindingContext ctx,
-            final IViewerObservableValue attributeSelectionObservable,
             final IViewerObservableValue viewerObservableValue) {
-        final Group detailGroup = new Group(this, SWT.NONE);
+        detailGroup = new Group(this, SWT.NONE);
         detailGroup.setText(Messages.details);
         detailGroup.setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 80).indent(0, 10).span(2, 1).create());
-        final StackLayout stackLayout = new StackLayout();
+                GridDataFactory.fillDefaults().grab(true, false).indent(0, 10).span(2, 1)
+                        .create());
+        stackLayout = new StackLayout();
         detailGroup.setLayout(stackLayout);
 
-        final Composite relationFieldContent = createRelationFieldDetailContent(detailGroup, ctx,
-                attributeSelectionObservable, viewerObservableValue);
-        final Composite stringFieldContent = createStringFieldDetailContent(detailGroup, ctx, attributeSelectionObservable);
-        final Composite emptyContent = createNoDetailsContent(detailGroup);
+        relationFieldContent = createRelationFieldDetailContent(detailGroup, ctx, viewerObservableValue);
+        stringFieldContent = createStringFieldDetailContent(detailGroup, ctx);
+        emptyContent = createNoDetailsContent(detailGroup);
+        textFieldContent = createTextFieldContent(detailGroup);
         stackLayout.topControl = emptyContent;
-        attributeSelectionObservable.addValueChangeListener(new IValueChangeListener() {
+        attributeSelectionObservable.addValueChangeListener(this::changeType);
+    }
 
-            @Override
-            public void handleValueChange(final ValueChangeEvent event) {
-                final Field selectedField = (Field) event.diff.getNewValue();
-                if (selectedField != null) {
-                    detailGroup.setText(Messages.bind(Messages.detailsFor, selectedField.getName()));
-                } else {
-                    detailGroup.setText(Messages.details);
-                    stackLayout.topControl = emptyContent;
-                }
-                if (selectedField instanceof RelationField) {
-                    stackLayout.topControl = relationFieldContent;
-                } else if (selectedField instanceof SimpleField) {
-                    if (((SimpleField) selectedField).getType() == FieldType.STRING) {
-                        stackLayout.topControl = stringFieldContent;
-                    } else {
-                        stackLayout.topControl = emptyContent;
-                    }
-                }
-                detailGroup.layout();
+    private Composite createTextFieldContent(Group detailGroup) {
+        final Composite composite = new Composite(detailGroup, SWT.NONE);
+        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        final Label textLabel = new Label(composite, SWT.NONE);
+        textLabel.setText(Messages.textDetails);
+
+        return composite;
+    }
+
+    private void changeType(ValueChangeEvent event) {
+        final Field selectedField = (Field) event.diff.getNewValue();
+        if (selectedField != null) {
+            detailGroup.setText(Messages.bind(Messages.detailsFor, selectedField.getName()));
+        } else {
+            detailGroup.setText(Messages.details);
+            stackLayout.topControl = emptyContent;
+        }
+        if (selectedField instanceof RelationField) {
+            stackLayout.topControl = relationFieldContent;
+        } else if (selectedField instanceof SimpleField) {
+            if (((SimpleField) selectedField).getType() == FieldType.STRING) {
+                stackLayout.topControl = stringFieldContent;
+            } else if (((SimpleField) selectedField).getType() == FieldType.TEXT) {
+                stackLayout.topControl = textFieldContent;
+            } else {
+                stackLayout.topControl = emptyContent;
             }
-        });
-
+        }
+        detailGroup.layout();
     }
 
     private Composite createNoDetailsContent(final Group detailGroup) {
         final Composite composite = new Composite(detailGroup, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         final Label noDetailLabel = new Label(composite, SWT.NONE);
-        noDetailLabel.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
+        noDetailLabel.setLayoutData(GridDataFactory.fillDefaults().create());
         noDetailLabel.setText(Messages.noDetailsAvailable);
         return composite;
     }
 
-    private Composite createStringFieldDetailContent(final Group detailGroup, final DataBindingContext ctx,
-            final IViewerObservableValue attributeSelectionObservable) {
+    private Composite createStringFieldDetailContent(final Group detailGroup, final DataBindingContext ctx) {
         final Composite composite = new Composite(detailGroup, SWT.NONE);
+        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).spacing(15, 5).create());
 
-        final Label lengthLabel = new Label(composite, SWT.NONE);
-        lengthLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
-        lengthLabel.setText(Messages.length);
-
-        final ControlDecoration controlDecoration = new ControlDecoration(lengthLabel, SWT.RIGHT);
-        controlDecoration.setDescriptionText(Messages.stringLengthTooltip);
-        controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
-        controlDecoration.setMarginWidth(-2);
-
-        final Combo lengthCombo = new Combo(composite, SWT.BORDER);
-        lengthCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        lengthCombo.setItems(getStringLengthValues());
-
-        final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-        final StringToNumberConverter converter = StringToNumberConverter.toInteger(false);
-        targetToModel.setConverter(converter);
-        targetToModel.setAfterGetValidator(new StringToIntegerValidator(converter));
-        targetToModel.setBeforeSetValidator(new IValidator() {
-
-            @Override
-            public IStatus validate(final Object value) {
-                if (value == null || value.toString().isEmpty()) {
-                    final Object selectedField = attributeSelectionObservable.getValue();
-                    if (selectedField instanceof SimpleField
-                            && ((SimpleField) selectedField).getType() == FieldType.STRING) {
-                        return ValidationStatus.error(Messages.lengthCannotBeEmpty);
-                    }
-                }
-                return ValidationStatus.ok();
-            }
-        });
-        final UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
-        modelToTarget.setConverter(NumberToStringConverter.fromInteger(false));
-        final Binding lengthValueBinding = ctx.bindValue(SWTObservables.observeText(lengthCombo),
-                PojoObservables.observeDetailValue(attributeSelectionObservable, "length", Integer.class),
-                targetToModel, modelToTarget);
-        attributeSelectionObservable.addValueChangeListener(new IValueChangeListener() {
-
-            @Override
-            public void handleValueChange(final ValueChangeEvent event) {
-                lengthValueBinding.updateModelToTarget();
-            }
-        });
+        final ComboWidget stringFieldCombo = new ComboWidget.Builder()
+                .withLabel(Messages.length)
+                .withItems(getStringLengthValues())
+                .labelAbove()
+                .alignMiddle()
+                .withMessage(Messages.stringLengthTooltip)
+                .bindTo(PojoObservables.observeDetailValue(attributeSelectionObservable, "length", Integer.class))
+                .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
+                        .withConverter(StringToNumberConverter.toInteger(false))
+                        .withValidator(this::stringLengthValidator)
+                        .create())
+                .withModelToTargetStrategy(UpdateStrategyFactory.updateValueStrategy()
+                        .withConverter(NumberToStringConverter.fromInteger(false))
+                        .create())
+                .inContext(ctx)
+                .createIn(composite);
+        attributeSelectionObservable.addValueChangeListener(e -> stringFieldCombo.getValueBinding().updateModelToTarget());
         return composite;
     }
 
+    private IStatus stringLengthValidator(final Object value) {
+        if (value == null || value.toString().isEmpty()) {
+            return ValidationStatus.error(Messages.lengthCannotBeEmpty);
+        }
+        try {
+            final int parseInt = Integer.parseInt((String) value);
+            if (parseInt <= 0) {
+                return ValidationStatus.error(Messages.lengthIsNotAPositiveNumber);
+            }
+        } catch (final NumberFormatException e) {
+            return ValidationStatus.error(Messages.lengthIsNotANumber);
+        }
+        return ValidationStatus.ok();
+    }
+
     protected String[] getStringLengthValues() {
-        final List<String> values = new ArrayList<String>();
+        final List<String> values = new ArrayList<>();
         values.add("64");
         values.add("128");
         values.add("255");
@@ -225,7 +226,6 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     }
 
     private Composite createRelationFieldDetailContent(final Group detailGroup, final DataBindingContext ctx,
-            final IViewerObservableValue attributeSelectionObservable,
             final IViewerObservableValue viewerObservableValue) {
         final Composite composite = new Composite(detailGroup, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -296,7 +296,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
             final IViewerObservableValue viewerObservableValue) {
         final Composite buttonsComposite = new Composite(this, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).indent(0, 20).create());
-        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
+        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(0, 3).create());
 
         final Button addButton = createAddButton(ctx, viewerObservableValue, buttonsComposite);
 
@@ -526,7 +526,6 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         field.setLength(255);
         field.setCollection(Boolean.FALSE);
         field.setNullable(Boolean.TRUE);
-
         fieldsList.add(field);
         observeAttributeSelection.setValue(field);
         featuresTableViewer.getControl().getDisplay().asyncExec(new Runnable() {
@@ -570,7 +569,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     }
 
     protected String generateAttributeName(final IViewerObservableValue viewerObseravble) {
-        final Set<String> existingNames = new HashSet<String>();
+        final Set<String> existingNames = new HashSet<>();
         final BusinessObject businessObject = (BusinessObject) viewerObseravble.getValue();
         for (final Field feature : businessObject.getFields()) {
             existingNames.add(feature.getName());

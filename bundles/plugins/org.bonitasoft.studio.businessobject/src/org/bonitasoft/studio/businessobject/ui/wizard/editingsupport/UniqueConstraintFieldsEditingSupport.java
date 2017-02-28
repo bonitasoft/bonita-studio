@@ -16,6 +16,7 @@ package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,8 +24,6 @@ import java.util.Set;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.UniqueConstraint;
 import org.bonitasoft.engine.bdm.model.field.Field;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.dialog.ElementCheckboxSelectionDialog;
 import org.bonitasoft.studio.businessobject.ui.wizard.provider.FieldLabelProvider;
@@ -66,31 +65,22 @@ public class UniqueConstraintFieldsEditingSupport extends EditingSupport {
                 if (fields == null) {
                     fields = new ArrayList<Field>();
                 }
-                List<Field> boFields = new ArrayList<Field>();
-                for (Field f : fields) {
-                    if (f.isCollection() == null || !f.isCollection()) {
-                        if (f instanceof SimpleField) {
-                            boFields.add(f);
-                        } else if (f instanceof RelationField && ((RelationField) f).getReference() != null) {
-                            boFields.add(f);
-                        }
-                    }
-                }
+
+                IndexableFieldFilter indexableFieldFilter = new IndexableFieldFilter();
+                List<Field> boFields = indexableFieldFilter.selectIndexableFields(businessObject);
+
                 dialog.setElements(boFields.toArray());
-                @SuppressWarnings("unchecked")
-                List<String> values = (List<String>) UniqueConstraintFieldsEditingSupport.this.getValue(element);
-                if (values != null) {
-                    Set<Object> selectedFields = new HashSet<Object>();
-                    for (Field f : businessObject.getFields()) {
-                        if (values.contains(f.getName())) {
-                            selectedFields.add(f);
-                        }
-                    }
-                    dialog.setSelectedElements(selectedFields);
-                }
+                List<String> values = UniqueConstraintFieldsEditingSupport.this.getValue(element);
+
+                Set<Object> selectedFields = new HashSet<Object>();
+                businessObject.getFields().stream()
+                        .filter(f -> values.contains(f.getName()))
+                        .forEach(f -> selectedFields.add(f));
+
+                dialog.setSelectedElements(selectedFields);
 
                 dialog.setTitle(Messages.selectUniqueConstraintFieldsTitle);
-                dialog.setMessage(Messages.selectUniqueConstraintFieldsMessage);
+                dialog.setMessage(Messages.selectUniqueConstraintFieldsMessage + "\n\n" + Messages.warningTextConstraint);
                 if (dialog.open() == Dialog.OK) {
                     return dialog.getResult();
                 }
@@ -113,8 +103,9 @@ public class UniqueConstraintFieldsEditingSupport extends EditingSupport {
      * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
      */
     @Override
-    protected Object getValue(Object element) {
-        return ((UniqueConstraint) element).getFieldNames();
+    protected List<String> getValue(Object element) {
+        List<String> fieldNames = ((UniqueConstraint) element).getFieldNames();
+        return fieldNames == null ? Collections.emptyList() : fieldNames;
     }
 
     /*

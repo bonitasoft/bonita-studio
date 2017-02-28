@@ -280,7 +280,7 @@ public class CreateDeployExportBusinessObjectIT {
         final SWTBotTable attributeTable = bot.tableInGroup(boName);
         final int attributeIndex = attributeTable.indexOf(attributeName, 0);
         attributeTable.select(attributeIndex);
-        bot.comboBoxInGroup("Details for " + attributeName).setText(length);
+        bot.ccomboBoxInGroup("Details for " + attributeName).setText(length);
     }
 
     protected void setRelationType(final String boName, final String attributeName, final String relationType) {
