@@ -16,13 +16,12 @@ package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.Index;
 import org.bonitasoft.engine.bdm.model.field.Field;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.dialog.IndexFieldsSelectionDialog;
 import org.bonitasoft.studio.businessobject.ui.wizard.provider.FieldLabelProvider;
@@ -58,40 +57,22 @@ public class IndexFieldsEditingSupport extends EditingSupport {
             @Override
             protected Object openDialogBox(Control cellEditorWindow) {
                 BusinessObject businessObject = (BusinessObject) viewerObservableValue.getValue();
-                List<Field> fields = businessObject.getFields();
-                if (fields == null) {
-                    fields = new ArrayList<Field>();
-                }
-                List<Field> boFields = new ArrayList<Field>();
-                for (Field f : fields) {
-                    if (f.isCollection() == null || !f.isCollection()) {
-                        if (f instanceof SimpleField) {
-                            boFields.add(f);
-                        } else if (f instanceof RelationField && ((RelationField) f).getReference() != null) {
-                            boFields.add(f);
-                        }
-                    }
-                }
-                @SuppressWarnings("unchecked")
-                List<String> values = (List<String>) IndexFieldsEditingSupport.this.getValue(element);
+
+                IndexableFieldFilter indexableFieldFilter = new IndexableFieldFilter();
+                List<Field> boFields = indexableFieldFilter.selectIndexableFields(businessObject);
+
+                List<String> values = IndexFieldsEditingSupport.this.getValue(element);
                 List<Field> selectedFields = new ArrayList<Field>();
-                if (values != null) {
-                    for (String fieldName : values) {
-                        for (Field f : businessObject.getFields()) {
-                            if (fieldName.equals(f.getName())) {
-                                selectedFields.add(f);
-                            }
-                        }
-                    }
-                }
+                values.stream()
+                        .forEach(fieldName -> businessObject.getFields()
+                                .stream()
+                                .filter(f -> fieldName.equals(f.getName()))
+                                .forEach(f -> selectedFields.add(f)));
+
                 IndexFieldsSelectionDialog dialog = new IndexFieldsSelectionDialog(cellEditorWindow.getShell(),
-                        new FieldLabelProvider(),
-                        selectedFields,
-                        boFields,
-                        true,
-                        true);
+                        new FieldLabelProvider(), selectedFields, boFields, true, true);
                 dialog.setTitle(Messages.bind(Messages.selectIndexFieldsTitle, ((Index) element).getName()));
-                dialog.setMessage(Messages.selectIndexFieldsMessages);
+                dialog.setMessage(Messages.selectIndexFieldsMessages + "\n" + Messages.warningTextIndex);
                 if (dialog.open() == Dialog.OK) {
                     return dialog.getResult();
                 }
@@ -114,8 +95,9 @@ public class IndexFieldsEditingSupport extends EditingSupport {
      * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
      */
     @Override
-    protected Object getValue(Object element) {
-        return ((Index) element).getFieldNames();
+    protected List<String> getValue(Object element) {
+        List<String> fieldNames = ((Index) element).getFieldNames();
+        return fieldNames == null ? Collections.emptyList() : fieldNames;
     }
 
     /*

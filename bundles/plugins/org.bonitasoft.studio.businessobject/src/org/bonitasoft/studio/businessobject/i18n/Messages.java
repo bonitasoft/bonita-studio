@@ -327,6 +327,11 @@ public class Messages extends NLS {
     public static String bdmDeployedMessage;
     public static String doNotShowMeAgain;
     public static String bdmDeployDetails;
+    public static String textDetails;
+    public static String warningTextConstraint;
+    public static String warningTextIndex;
+    public static String lengthIsNotAPositiveNumber;
+    public static String lengthIsNotANumber;
 
     private Messages() {
     }

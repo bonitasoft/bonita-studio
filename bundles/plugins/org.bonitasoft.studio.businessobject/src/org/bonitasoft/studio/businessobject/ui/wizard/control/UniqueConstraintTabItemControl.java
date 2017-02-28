@@ -15,10 +15,14 @@
 package org.bonitasoft.studio.businessobject.ui.wizard.control;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.UniqueConstraint;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.UniqueConstraintFieldsEditingSupport;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.UniqueConstraintNameEditingSupport;
@@ -47,12 +51,9 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TableColumn;
-
-import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import org.bonitasoft.engine.bdm.model.UniqueConstraint;
 
 /**
  * @author Romain Bioteau
@@ -65,7 +66,8 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
 
     private final BusinessObjectModel bom;
 
-    public UniqueConstraintTabItemControl(final TabFolder parent, final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+    public UniqueConstraintTabItemControl(final TabFolder parent, final DataBindingContext ctx,
+            final IViewerObservableValue viewerObservableValue,
             final IObservableList fieldsList,
             final BusinessObjectModel bom) {
         super(parent, SWT.NONE);
@@ -85,8 +87,10 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
         final Button addButton = createAddButton(ctx, viewerObservableValue, buttonsComposite);
         final Button deleteButton = createDeleteButton(buttonsComposite);
 
-        final TableViewer constraintsTableViewer = new TableViewer(this, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
-        constraintsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 300).create());
+        final TableViewer constraintsTableViewer = new TableViewer(this,
+                SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
+        constraintsTableViewer.getControl()
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 300).create());
         constraintsTableViewer.getTable().setEnabled(viewerObservableValue.getValue() != null);
         constraintsTableViewer.getTable().setLinesVisible(true);
         constraintsTableViewer.getTable().setHeaderVisible(true);
@@ -105,9 +109,11 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
                 return fromObject != null;
             }
         });
-        ctx.bindValue(SWTObservables.observeEnabled(constraintsTableViewer.getTable()), viewerObservableValue, null, enableStrategy);
+        ctx.bindValue(SWTObservables.observeEnabled(constraintsTableViewer.getTable()), viewerObservableValue, null,
+                enableStrategy);
 
-        final IViewerObservableValue constaintObserveSingleSelection = ViewersObservables.observeSingleSelection(constraintsTableViewer);
+        final IViewerObservableValue constaintObserveSingleSelection = ViewersObservables
+                .observeSingleSelection(constraintsTableViewer);
         ctx.bindValue(SWTObservables.observeEnabled(deleteButton), constaintObserveSingleSelection, null, enableStrategy);
 
         enableStrategy = new UpdateValueStrategy();
@@ -130,7 +136,8 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
         createUniqueConstraintNameColumn(ctx, constraintsTableViewer, viewerObservableValue);
         createUniqueConstraintFieldsColumn(ctx, constraintsTableViewer, viewerObservableValue);
 
-        final IObservableList uniqueConstraintObserveDetailList = PojoObservables.observeDetailList(viewerObservableValue, "uniqueConstraints", List.class);
+        final IObservableList uniqueConstraintObserveDetailList = PojoObservables.observeDetailList(viewerObservableValue,
+                "uniqueConstraints", List.class);
         constraintsTableViewer.setInput(uniqueConstraintObserveDetailList);
 
         addButton.addSelectionListener(new SelectionAdapter() {
@@ -159,22 +166,25 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
 
     }
 
-    protected void deleteUniqueConstraint(final IObservableList uniqueConstraintListObservable, final TableViewer constraintsTableViewer) {
+    protected void deleteUniqueConstraint(final IObservableList uniqueConstraintListObservable,
+            final TableViewer constraintsTableViewer) {
         final IStructuredSelection selection = (IStructuredSelection) constraintsTableViewer.getSelection();
         uniqueConstraintListObservable.removeAll(selection.toList());
     }
 
-    protected void addUniqueConstraint(final IViewerObservableValue viewerObservableValue, final IObservableList uniqueConstraintObservableList,
+    protected void addUniqueConstraint(final IViewerObservableValue viewerObservableValue,
+            final IObservableList uniqueConstraintObservableList,
             final TableViewer constraintsTableViewer) {
         final UniqueConstraint uc = new UniqueConstraint();
         uc.setName(generateConstraintName());
+        uc.setFieldNames(Collections.emptyList());
         uniqueConstraintObservableList.add(uc);
-        constraintsTableViewer.editElement(uc, 0);
+        Display.getDefault().asyncExec(() -> constraintsTableViewer.editElement(uc, 0));
     }
 
     protected String generateConstraintName() {
-        final Set<String> existingNames = new HashSet<String>();
-        final List<UniqueConstraint> constraints = new ArrayList<UniqueConstraint>();
+        final Set<String> existingNames = new HashSet<>();
+        final List<UniqueConstraint> constraints = new ArrayList<>();
         for (final BusinessObject businessObject : bom.getBusinessObjects()) {
             constraints.addAll(businessObject.getUniqueConstraints());
         }
@@ -203,7 +213,8 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
                 return super.getText(element);
             }
         });
-        nameColumnViewer.setEditingSupport(new UniqueConstraintNameEditingSupport(viewerObservableValue, nameColumnViewer.getViewer(), ctx));
+        nameColumnViewer.setEditingSupport(
+                new UniqueConstraintNameEditingSupport(viewerObservableValue, nameColumnViewer.getViewer(), ctx));
     }
 
     protected void createUniqueConstraintFieldsColumn(final DataBindingContext ctx, final TableViewer constraintsTableViewer,
@@ -227,6 +238,7 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
             }
         });
         constraintFieldsColumnViewer
-                .setEditingSupport(new UniqueConstraintFieldsEditingSupport(viewerObservableValue, constraintFieldsColumnViewer.getViewer()));
+                .setEditingSupport(new UniqueConstraintFieldsEditingSupport(viewerObservableValue,
+                        constraintFieldsColumnViewer.getViewer()));
     }
 }

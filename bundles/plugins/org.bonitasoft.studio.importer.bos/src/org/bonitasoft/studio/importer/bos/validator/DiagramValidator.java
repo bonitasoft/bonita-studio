@@ -56,5 +56,4 @@ public class DiagramValidator implements BosImporterValidator {
         }
         return statusBuilder;
     }
-
 }
