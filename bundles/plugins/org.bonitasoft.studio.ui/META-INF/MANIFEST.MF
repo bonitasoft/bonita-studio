@@ -1,7 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: UI Toolkit Plug In
-Bundle-SymbolicName: org.bonitasoft.studio.ui
+Bundle-Localization: plugin
+Bundle-SymbolicName: org.bonitasoft.studio.ui;singleton:=true
 Bundle-Version: 7.5.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
@@ -14,10 +15,29 @@ Require-Bundle: org.eclipse.jface;bundle-version="3.10.1",
  org.eclipse.e4.core.di,
  org.junit;bundle-version="4.11.0";resolution:=optional,
  org.bonitasoft.studio.tests-utils;bundle-version="7.4.0";resolution:=optional,
- assertj-core;bundle-version="1.5.0";resolution:=optional
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
+ org.eclipse.ui.workbench,
+ org.eclipse.e4.ui.workbench.swt,
+ org.eclipse.e4.core.contexts,
+ org.eclipse.e4.ui.model.workbench,
+ org.eclipse.jdt.ui,
+ org.eclipse.ui.editors;bundle-version="3.8.200",
+ org.eclipse.wst.xml.ui,
+ org.eclipse.jface.text;bundle-version="3.9.1",
+ org.codehaus.groovy.eclipse.ui,
+ org.eclipse.jdt.core;bundle-version="3.10.0",
+ com.google.guava;bundle-version="11.0.1",
+ org.eclipse.core.resources,
+ org.eclipse.team.core,
+ org.eclipse.e4.ui.workbench.renderers.swt,
+ org.eclipse.ui.ide;bundle-version="3.10.1",
+ org.eclipse.ui
 Export-Package: org.bonitasoft.studio.ui,
  org.bonitasoft.studio.ui.databinding,
  org.bonitasoft.studio.ui.dialog,
+ org.bonitasoft.studio.ui.editors,
  org.bonitasoft.studio.ui.validator,
  org.bonitasoft.studio.ui.widget,
  org.bonitasoft.studio.ui.wizard
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.bonitasoft.studio.ui.UIPlugin
