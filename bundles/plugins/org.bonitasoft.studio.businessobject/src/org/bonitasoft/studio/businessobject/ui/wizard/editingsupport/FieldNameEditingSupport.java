@@ -43,7 +43,8 @@ public class FieldNameEditingSupport extends ObservableValueEditingSupport {
 
     private final IObservableValue viewerObservableValue;
 
-    public FieldNameEditingSupport(final IObservableValue viewerObservableValue, final ColumnViewer viewer, final DataBindingContext dbc) {
+    public FieldNameEditingSupport(final IObservableValue viewerObservableValue, final ColumnViewer viewer,
+            final DataBindingContext dbc) {
         super(viewer, dbc);
         this.dbc = dbc;
         this.viewerObservableValue = viewerObservableValue;
@@ -78,9 +79,9 @@ public class FieldNameEditingSupport extends ObservableValueEditingSupport {
     protected Binding createBinding(final IObservableValue target, final IObservableValue model) {
         final UpdateValueStrategy targetToModel = new UpdateValueStrategy(
                 UpdateValueStrategy.POLICY_CONVERT);
-        targetToModel.setAfterGetValidator(new FieldNameCellEditorValidator((BusinessObject) viewerObservableValue.getValue(),
-                (Field) ((BeanObservableValueDecorator) model).getObserved()));
+        targetToModel
+                .setAfterGetValidator(new FieldNameCellEditorValidator((BusinessObject) viewerObservableValue.getValue(),
+                        (Field) ((BeanObservableValueDecorator) model).getObserved()));
         return dbc.bindValue(target, model, targetToModel, null);
     }
-
 }
