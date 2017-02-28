@@ -66,7 +66,7 @@ public class ComboWidget extends EditableControlWidget {
     protected Control createControl() {
         final Composite container = new Composite(this, SWT.NONE);
         container.setLayout(GridLayoutFactory.fillDefaults().margins(1, 3).create());
-        container.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        container.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(labelAbove ? 2 : 1, 1).create());
         container.setBackground(
                 readOnly ? Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND)
                         : Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
@@ -78,7 +78,7 @@ public class ComboWidget extends EditableControlWidget {
         }
 
         combo = new CCombo(container, SWT.SINGLE | textStyle);
-        combo.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        combo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         combo.addListener(SWT.FocusIn, event -> redraw(container));
         combo.addListener(SWT.FocusOut, event -> redraw(container));
         combo.setEditable(!readOnly);
