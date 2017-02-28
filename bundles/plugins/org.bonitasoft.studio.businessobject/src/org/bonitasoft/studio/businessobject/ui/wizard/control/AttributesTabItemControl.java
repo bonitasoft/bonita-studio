@@ -216,7 +216,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     }
 
     protected String[] getStringLengthValues() {
-        final List<String> values = new ArrayList<String>();
+        final List<String> values = new ArrayList<>();
         values.add("64");
         values.add("128");
         values.add("255");
@@ -341,14 +341,27 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         createMultipleColumn(featuresTableViewer);
         createMandatoryColumn(featuresTableViewer);
 
-        featuresTableViewer.setInput(fieldsList);
+        //Resetting viewer input to avoid BS-16262
+        viewerObservableValue.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(ValueChangeEvent event) {
+                featuresTableViewer.setInput(fieldsList);
+            }
+        });
         fieldsList.addListChangeListener(new IListChangeListener() {
 
             @Override
             public void handleListChange(final ListChangeEvent event) {
                 final IObservableList observableList = event.getObservableList();
                 if (observableList != null && !observableList.isEmpty()) {
-                    featuresTableViewer.getTable().select(0);
+                    featuresTableViewer.getControl().getDisplay().asyncExec(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            featuresTableViewer.getTable().select(0);
+                        }
+                    });
                 }
             }
         });
@@ -570,7 +583,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     }
 
     protected String generateAttributeName(final IViewerObservableValue viewerObseravble) {
-        final Set<String> existingNames = new HashSet<String>();
+        final Set<String> existingNames = new HashSet<>();
         final BusinessObject businessObject = (BusinessObject) viewerObseravble.getValue();
         for (final Field feature : businessObject.getFields()) {
             existingNames.add(feature.getName());
