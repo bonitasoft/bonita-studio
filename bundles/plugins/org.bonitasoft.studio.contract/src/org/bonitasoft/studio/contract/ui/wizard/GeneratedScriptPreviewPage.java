@@ -172,36 +172,38 @@ public class GeneratedScriptPreviewPage extends WizardPage {
     @Override
     public void setVisible(final boolean visible) {
         super.setVisible(visible);
-        try {
-            getContainer().run(true, false, new IRunnableWithProgress() {
+        final BusinessObjectData data = (BusinessObjectData) selectedDataObservable.getValue();
+        if (data != null) {
+            try {
+                getContainer().run(false, false, new IRunnableWithProgress() {
 
-                @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    generateExpressionScript(monitor);
+                    @Override
+                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                        generateExpressionScript(data, monitor);
+                    }
+                });
+                document.set(generatedExpression.getContent());
+                if (generatedExpression.getName() != null) {
+                    scriptNameText.setText(generatedExpression.getName());
                 }
-            });
-            document.set(generatedExpression.getContent());
-            if (generatedExpression.getName() != null) {
-                scriptNameText.setText(generatedExpression.getName());
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error("Failed to create Operations from contract", e);
+                new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e)
+                        .open();
             }
-        } catch (InvocationTargetException | InterruptedException e) {
-            BonitaStudioLog.error("Failed to create Operations from contract", e);
-            new BonitaErrorDialog(getShell(), Messages.errorTitle, Messages.contractFromDataCreationErrorMessage, e)
-                    .open();
         }
     }
 
-    protected void generateExpressionScript(IProgressMonitor monitor) throws InvocationTargetException {
-        if (selectedDataObservable.getValue() != null) {
-            rootContractInputGenerator = createRootContractInputGenerator();
-            if (!fieldToContractInputMappingsObservable.isEmpty()) {
-                try {
-                    rootContractInputGenerator.buildForInstanciation((BusinessObjectData) selectedDataObservable.getValue(),
-                            monitor);
-                    generatedExpression = rootContractInputGenerator.getInitialValueExpression();
-                } catch (final OperationCreationException e) {
-                    throw new InvocationTargetException(e);
-                }
+    protected void generateExpressionScript(BusinessObjectData data, IProgressMonitor monitor)
+            throws InvocationTargetException {
+        rootContractInputGenerator = createRootContractInputGenerator();
+        if (!fieldToContractInputMappingsObservable.isEmpty()) {
+            try {
+                rootContractInputGenerator.buildForInstanciation(data,
+                        monitor);
+                generatedExpression = rootContractInputGenerator.getInitialValueExpression();
+            } catch (final OperationCreationException e) {
+                throw new InvocationTargetException(e);
             }
         }
     }
