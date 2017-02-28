@@ -210,10 +210,10 @@ public class CreateContractInputFromBusinessObjectWizardPageTest {
         final WritableSet checkedElements = new WritableSet();
         final SelectionAdapter listener = page.createMandatoryAttributesSelectionListener(checkedElements);
         listener.widgetSelected(mock(SelectionEvent.class));
-        assertThat(checkedElements.size()).isEqualTo(3);
+        assertThat(checkedElements.size()).isEqualTo(2);
         assertThat(checkedElements.contains(rootMappingMandatoryField)).isTrue();
         assertThat(checkedElements.contains(rootMappingOptionalField)).isFalse();
-        assertThat(checkedElements.contains(childMappingOptional)).isTrue();
+        assertThat(checkedElements.contains(childMappingOptional)).isFalse();
         assertThat(checkedElements.contains(childMappingMandatory)).isTrue();
     }
 
