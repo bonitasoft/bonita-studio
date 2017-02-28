@@ -297,15 +297,11 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-
-                    @Override
-                    public void run() {
-                        checkedElements.clear();
-                        List<FieldToContractInputMapping> selectedMappings = new ArrayList<>();
-                        generateMandatoryAttributes(selectedMappings, mappings);
-                        checkedElements.addAll(selectedMappings);
-                    }
+                BusyIndicator.showWhile(Display.getDefault(), () -> {
+                    checkedElements.clear();
+                    List<FieldToContractInputMapping> selectedMappings = new ArrayList<>();
+                    generateMandatoryAttributes(selectedMappings, mappings);
+                    checkedElements.addAll(selectedMappings);
                 });
 
             }
@@ -316,20 +312,11 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                     if (!mapping.getField().isNullable()) {
                         selectedMappings.add(mapping);
                         mapping.setGenerated(true);
-                        generateAllMappings(mapping.getChildren());
-                        selectAllChildren(selectedMappings, mapping);
+                        generateMandatoryAttributes(selectedMappings, mapping.getChildren());
                     } else if (mapping.isGenerated()) {
                         mapping.setGenerated(false);
                         doNotGenerateAnyMapping(mapping.getChildren());
                     }
-                }
-            }
-
-            protected void selectAllChildren(List<FieldToContractInputMapping> selectedMappings,
-                    FieldToContractInputMapping mapping) {
-                for (final FieldToContractInputMapping child : mapping.getChildren()) {
-                    selectedMappings.add(child);
-                    selectAllChildren(selectedMappings, child);
                 }
             }
         };
