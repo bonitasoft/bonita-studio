@@ -11,6 +11,7 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.documents;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+
 /**
  * Documents property section.
  * 

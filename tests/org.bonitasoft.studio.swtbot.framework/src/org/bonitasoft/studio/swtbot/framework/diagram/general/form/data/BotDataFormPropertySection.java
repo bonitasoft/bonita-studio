@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.diagram.general.form.data;
 
-
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.composite.BotDocInitialValueComposite;
@@ -57,8 +56,6 @@ public class BotDataFormPropertySection extends BotBase {
     public BotDocInitialValueComposite getBotDocInitialValueComposite() {
         return new BotDocInitialValueComposite(bot);
     }
-
-
 
     /**
      * Select output variable.

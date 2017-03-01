@@ -22,9 +22,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.operations.BotOper
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
-
 public class BotExecutionDiagramPropertiesView extends BotPropertiesView {
-
 
     public BotExecutionDiagramPropertiesView(final SWTGefBot bot, SWTBotView botView) {
         super(bot, botView);

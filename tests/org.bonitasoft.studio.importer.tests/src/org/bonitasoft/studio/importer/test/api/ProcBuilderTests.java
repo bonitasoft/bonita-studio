@@ -66,6 +66,7 @@ public class ProcBuilderTests {
         categories.add("R&D");
         categories.add("Service");
         final File diagramFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), diagamFileName);
+        diagramFile.deleteOnExit();
         final URI targetURI = URI.createFileURI(diagramFile.getAbsolutePath());
 
         initProcBuilderWithDefaultContent(diagramName, poolName, description, categories, diagramFile);
@@ -110,6 +111,7 @@ public class ProcBuilderTests {
         categories.add("R&D");
         categories.add("Service");
         final File diagramFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), diagamFileName);
+        diagramFile.deleteOnExit();
         final URI targetURI = URI.createFileURI(diagramFile.getAbsolutePath());
         initProcBuilderWithDefaultContent(diagramName, poolName, description, categories, diagramFile);
 
@@ -128,6 +130,6 @@ public class ProcBuilderTests {
         final DeployProcessOperation deployProcessOperation = new DeployProcessOperation();
         deployProcessOperation.addProcessToDeploy(p);
         StatusAssert.assertThat(deployProcessOperation.run(Repository.NULL_PROGRESS_MONITOR)).isOK();
+        diagramResource.unload();
     }
-
 }

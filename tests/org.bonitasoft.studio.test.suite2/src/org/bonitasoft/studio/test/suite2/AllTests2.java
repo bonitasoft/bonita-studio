@@ -71,10 +71,9 @@ import org.junit.runners.Suite;
 
 import junit.framework.TestSuite;
 
-
 @RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
-        TestBugs.class,//must be the first (to check for zoomContributionItem at startup)
+        TestBugs.class, //must be the first (to check for zoomContributionItem at startup)
         TestProcessZoo.class,
         TestProvidedDefinitionAndImplementation.class,
         TestProvidedActorFilterDefinitionAndImplementation.class,
@@ -122,7 +121,8 @@ public class AllTests2 extends TestSuite {
         BonitaStudioLog.info("AllTests2", "org.bonitasoft.studio.test.suite2");
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
         WebBrowserUIPlugin.getInstance().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         FileActionDialog.setDisablePopup(true);

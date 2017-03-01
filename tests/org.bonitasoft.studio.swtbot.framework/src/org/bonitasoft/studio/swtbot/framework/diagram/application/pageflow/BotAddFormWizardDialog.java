@@ -14,7 +14,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**
  * Add form dialog.
- *
+ * 
  * @author Joachim Segala
  */
 public class BotAddFormWizardDialog extends BotWizardDialog {

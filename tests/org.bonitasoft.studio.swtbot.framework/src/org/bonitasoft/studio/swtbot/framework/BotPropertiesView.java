@@ -33,14 +33,16 @@ public class BotPropertiesView extends BotBase {
     }
 
     public void selectTab(String text) {
-        final WaitForObjectCondition<TabbedPropertyList> waitForTabbedPropertyList = Conditions.waitForWidget(widgetOfType(TabbedPropertyList.class),
+        final WaitForObjectCondition<TabbedPropertyList> waitForTabbedPropertyList = Conditions.waitForWidget(
+                widgetOfType(TabbedPropertyList.class),
                 botView.getWidget());
         bot.waitUntil(waitForTabbedPropertyList);
         if (waitForTabbedPropertyList.getAllMatches().isEmpty()) {
             throw new WidgetNotFoundException("No TabbedPropertyList found.");
         }
         final TabbedPropertyList tabbedPropertyList = waitForTabbedPropertyList.get(0);
-        final TabbedPropertyListBot tabbedPropertyListBot = new TabbedPropertyListBot(tabbedPropertyList, botView.getWidget(), bot);
+        final TabbedPropertyListBot tabbedPropertyListBot = new TabbedPropertyListBot(tabbedPropertyList,
+                botView.getWidget(), bot);
         tabbedPropertyListBot.selectTab(text);
     }
 

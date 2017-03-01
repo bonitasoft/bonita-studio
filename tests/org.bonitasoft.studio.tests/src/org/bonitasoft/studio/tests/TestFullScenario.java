@@ -58,8 +58,6 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.junit.Test;
 
-import junit.framework.TestCase;
-
 public class TestFullScenario {
 
     private class CountProcessesResourceVisitor implements IResourceVisitor {

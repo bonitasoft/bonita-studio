@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009-2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.tests.form;
 
@@ -48,13 +45,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-
 /**
  * @author Aurelien Pupier
- *
  */
 public class TestCommands {
-
 
     private FormDiagramEditor formEditor;
 
@@ -73,6 +67,7 @@ public class TestCommands {
 
     /**
      * Test that the deleteRowCommand was executed
+     * 
      * @throws Exception
      */
     @Test
@@ -101,12 +96,14 @@ public class TestCommands {
 
     /**
      * Test that the DeleteColumnCOmmand was succesfully executed and that there is one column less.
+     * 
      * @throws Exception
      */
     @Test
     public void testDeleteColumnCommand() throws Exception {
         final int oldNcolumn = ((Form) formEditor.getDiagram().getElement()).getNColumn();
-        assertThat(oldNcolumn).isGreaterThanOrEqualTo(2).overridingErrorMessage("The example need to have more than 2 columns.");
+        assertThat(oldNcolumn).isGreaterThanOrEqualTo(2)
+                .overridingErrorMessage("The example need to have more than 2 columns.");
 
         final RemoveColumnCommand rCol = new RemoveColumnCommand(formEditor.getDiagramEditPart(), 1);
         IStatus status = rCol.execute(null, formEditor);
@@ -134,7 +131,7 @@ public class TestCommands {
     }
 
     @Test
-    public void testAddColumnCommand() throws Exception{
+    public void testAddColumnCommand() throws Exception {
         final int oldNcolumn = ((Form) formEditor.getDiagram().getElement()).getNColumn();
         //assertTrue("The example need to have more than 2 columns.", oldNcolumn >= 2);
         final AddColumnCommand aCol = new AddColumnCommand((FormEditPart) formEditor.getDiagramEditPart(), 1);
@@ -144,25 +141,25 @@ public class TestCommands {
     }
 
     @Test
-    public void testAddRowCommand() throws Exception{
+    public void testAddRowCommand() throws Exception {
         final AddRowCommand aCol = new AddRowCommand((FormEditPart) formEditor.getDiagramEditPart(), 1);
         final IStatus status = aCol.execute(null, formEditor);
         assertThat(status.isOK()).isTrue();
     }
 
     @Test
-    public void testCompositionOfCommand() throws Exception{
+    public void testCompositionOfCommand() throws Exception {
         final FormEditPart formEditPart = (FormEditPart) formEditor.getDiagramEditPart();
         final List<AbstractTransactionalCommand> cs = new ArrayList<AbstractTransactionalCommand>();
-        cs.add(new RemoveColumnCommand(formEditPart,1));
+        cs.add(new RemoveColumnCommand(formEditPart, 1));
         cs.add(new AddColumnCommand(formEditPart, 0));
         cs.add(new RemoveRowCommand(formEditPart, 1));
         cs.add(new AddRowCommand(formEditPart, 1));
-        for(final AbstractTransactionalCommand c : cs){
+        for (final AbstractTransactionalCommand c : cs) {
             OperationHistoryFactory.getOperationHistory().execute(c, null, formEditPart);
         }
 
-        /*Do all the undo then redo all*/
+        /* Do all the undo then redo all */
         new UndoCommandHandler().execute(null);
         new UndoCommandHandler().execute(null);
         new UndoCommandHandler().execute(null);

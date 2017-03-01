@@ -42,16 +42,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestRenameDiagram  {
+public class TestRenameDiagram {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     @Test
     public void testFirstSaveRenaming() {
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, true);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, true);
         SWTBotTestUtil.createNewDiagram(bot);
         SWTBotEditor botEditor = bot.activeEditor();
         SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
@@ -79,7 +80,8 @@ public class TestRenameDiagram  {
 
             @Override
             public String getFailureMessage() {
-                return "The editor title (" + bot.activeEditor().getTitle() + ") doesn't match the new name of the diagram " + editorTitle + "\n" +
+                return "The editor title (" + bot.activeEditor().getTitle() + ") doesn't match the new name of the diagram "
+                        + editorTitle + "\n" +
                         "Please attach Studio log from .metadata/.logs folder on [BS-9265]";
             }
         });
@@ -115,7 +117,8 @@ public class TestRenameDiagram  {
 
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-        final MainProcess diagram = (MainProcess) ((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement();
+        final MainProcess diagram = (MainProcess) ((IGraphicalEditPart) gmfEditor.mainEditPart().part())
+                .resolveSemanticElement();
         final String originalName = diagram.getName();
         bot.menu("Diagram").menu("Rename...").click();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
@@ -135,7 +138,8 @@ public class TestRenameDiagram  {
 
         final boolean tmpDisablePopup = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .getDefaultBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, true);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, true);
 
         SWTBotTestUtil.createNewDiagram(bot);
         SWTBotTestUtil.changeDiagramName(bot, "NewDiagramName");
@@ -143,7 +147,8 @@ public class TestRenameDiagram  {
         // TimeOUt if a the pop up has been reopened (see BS-9819)
         bot.waitWhile(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
 
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, tmpDisablePopup);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, tmpDisablePopup);
     }
 
     @Test
@@ -152,7 +157,8 @@ public class TestRenameDiagram  {
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
         final SWTBotEditor diagramEditor = bot.activeEditor();
-        botProcessDiagramPerspective.getDiagramPropertiesPart().selectApplicationTab().selectPageflowTab().addForm().finish();
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectApplicationTab().selectPageflowTab().addForm()
+                .finish();
         diagramEditor.show();
         diagramEditor.setFocus();
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectDiagram();

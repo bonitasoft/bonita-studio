@@ -16,8 +16,6 @@ package org.bonitasoft.studio.engine.test;
 
 import java.net.URL;
 
-import junit.framework.TestCase;
-
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -27,6 +25,8 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 /**
  * @author Romain Bioteau
@@ -45,7 +45,8 @@ public class TestSubprocessEventExport extends TestCase {
         initialPa = drs.getChild("MyDiagram3-1.0.proc");
         for (final AbstractProcess process : initialPa.getProcesses()) {
             if (process.getName().equals("Pool3")) {
-                assertNotNull("Missing Event Subprocess @ Studio Engine Export", ModelHelper.findElement(process, "SignalEventProc", true));
+                assertNotNull("Missing Event Subprocess @ Studio Engine Export",
+                        ModelHelper.findElement(process, "SignalEventProc", true));
             }
         }
     }

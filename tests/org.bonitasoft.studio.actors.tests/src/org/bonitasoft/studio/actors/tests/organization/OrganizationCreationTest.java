@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2012-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.actors.tests.organization;
 
@@ -44,14 +41,13 @@ import org.junit.runner.RunWith;
 
 /**
  * @author aurelie Zara
- *
  */
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class OrganizationCreationTest {
 
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     @Test
     public void testAddOrganization() {
         final String firstName1 = "Coralie";
@@ -87,21 +83,21 @@ public class OrganizationCreationTest {
         bot.button(Messages.add).click();
         bot.button(Messages.add).click();
         bot.button(IDialogConstants.NEXT_LABEL).click();
-        final String user1 = Messages.defaultUserName+1;
-        final String user2 = Messages.defaultUserName+2;
-        final String user3 = Messages.defaultUserName+3;
-        addNewUSer(user1,firstName1, lastName1,"", membershipList1);
+        final String user1 = Messages.defaultUserName + 1;
+        final String user2 = Messages.defaultUserName + 2;
+        final String user3 = Messages.defaultUserName + 3;
+        addNewUSer(user1, firstName1, lastName1, "", membershipList1);
         final SWTBotTable table = bot.table();
         assertEquals("First Name " + firstName1 + " in table should be edited",
                 firstName1, table.cell(0, Messages.firstName));
         assertEquals("Last Name " + lastName1 + " in table should be edited",
                 lastName1, table.cell(0, Messages.lastName));
-        addNewUSer(user2,firstName2, lastName2,user1, membershipList2);
+        addNewUSer(user2, firstName2, lastName2, user1, membershipList2);
         assertEquals("First Name " + firstName2 + " in table should be edited",
                 firstName2, table.cell(1, Messages.firstName));
         assertEquals("Last Name " + lastName2 + " in table should be edited",
                 lastName2, table.cell(1, Messages.lastName));
-        addNewUSer(user3,firstName3, lastName3,user2, membershipList2);
+        addNewUSer(user3, firstName3, lastName3, user2, membershipList2);
         assertEquals("First Name " + firstName3 + " in table should be edited",
                 firstName3, table.cell(2, Messages.firstName));
         assertEquals("Last Name " + lastName3 + " in table should be edited",
@@ -109,47 +105,47 @@ public class OrganizationCreationTest {
 
         bot.table().select(0);
         bot.comboBoxWithLabel(Messages.manager).setSelection(user3);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),10000);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 10000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        bot.waitUntil(Conditions.shellIsActive(Messages.organizationValidationFailed),10000);
+        bot.waitUntil(Conditions.shellIsActive(Messages.organizationValidationFailed), 10000);
         bot.button(IDialogConstants.OK_LABEL).click();
 
         bot.table().select(0);
         bot.comboBoxWithLabel(Messages.manager).setSelection("");
 
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),10000);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 10000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
         bot.waitUntil(Conditions.shellCloses(shell));
 
-        final OrganizationRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
-        final OrganizationFileStore fileStore = store.getChild(organizationName+"."+OrganizationRepositoryStore.ORGANIZATION_EXT);
+        final OrganizationRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(OrganizationRepositoryStore.class);
+        final OrganizationFileStore fileStore = store
+                .getChild(organizationName + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
         final Organization orga = fileStore.getContent();
         assertNotNull(orga);
-        int nbRootGroup = 0 ;
-        for(final Group g : orga.getGroups().getGroup()){
-            if(g.getParentPath() == null){
+        int nbRootGroup = 0;
+        for (final Group g : orga.getGroups().getGroup()) {
+            if (g.getParentPath() == null) {
                 nbRootGroup++;
             }
         }
-        assertEquals("There should be two root groups",2, nbRootGroup);
+        assertEquals("There should be two root groups", 2, nbRootGroup);
 
-        synchronizeOrganization(organizationName,user1);
-        synchronizeOrganization("ACME","walter.bates");
-
+        synchronizeOrganization(organizationName, user1);
+        synchronizeOrganization("ACME", "walter.bates");
 
     }
 
-    private void addNewUSer(final String username,final String firstName, final String lastName,final String manager,
+    private void addNewUSer(final String username, final String firstName, final String lastName, final String manager,
             final List<String[]> memberShip) {
         bot.button(Messages.add).click();
         bot.tabItem(Messages.general).activate();
         final SWTBotText usernameText = bot.textWithLabel(Messages.userName + " *");
         usernameText.setText("");
         usernameText.setText(username);
-        //bot.sleep(1000);
-        if(manager != null && !manager.isEmpty()){
+        if (manager != null && !manager.isEmpty()) {
             bot.comboBoxWithLabel(Messages.manager).setSelection(manager);
         }
         bot.textWithLabel(Messages.firstName).typeText(firstName);
@@ -166,11 +162,11 @@ public class OrganizationCreationTest {
         }
     }
 
-    private void synchronizeOrganization(final String organizationName,final String username) {
+    private void synchronizeOrganization(final String organizationName, final String username) {
         SWTBotActorFilterUtil.activateSynchronizeOrganizationWizard(bot);
         bot.table().select(organizationName);
         bot.button(IDialogConstants.NEXT_LABEL).click();
-        if (username!=null){
+        if (username != null) {
             bot.textWithLabel(Messages.userName).setText(username);
         }
         bot.button(Messages.synchronize).click();
@@ -184,7 +180,7 @@ public class OrganizationCreationTest {
      * @throws InterruptedException
      */
     @Test
-    public void addNewUsersInACMETest() throws InterruptedException  {
+    public void addNewUsersInACMETest() throws InterruptedException {
 
         //SWTBotTestUtil.createNewDiagram(bot);
         // open shell "Manage organization"
@@ -196,17 +192,15 @@ public class OrganizationCreationTest {
 
         // Set Description of the new Organisation
         final int idxBonita = table.indexOf("ACME  (" + Messages.active + ")", 0);
-        Assert.assertTrue("Error: No ACME found in the table", idxBonita!=-1);
+        Assert.assertTrue("Error: No ACME found in the table", idxBonita != -1);
 
         // go to the next shell
         table.click(idxBonita, 0);
 
-        for(int i=0;i<3;i++){
-            Thread.sleep(1000);
-            Assert.assertTrue("Error: The NEXT label button is unavailable", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+        for (int i = 0; i < 3; i++) {
+            bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)), 1000);
             bot.button(IDialogConstants.NEXT_LABEL).click();
         }
-
 
         // in the user shell, get table of user list
         table = bot.table();
@@ -219,34 +213,31 @@ public class OrganizationCreationTest {
 
         addButton.click();
 
-        Assert.assertEquals("Error : wrong number of added users", nbUsers+1, table.rowCount());
+        Assert.assertEquals("Error : wrong number of added users", nbUsers + 1, table.rowCount());
 
         bot.textWithLabel(Messages.userName + " *").setText("elton.john");
         bot.textWithLabel(Messages.password + " *").setText("bpm");
 
-
         bot.comboBoxWithLabel(Messages.manager).setSelection("william.jobs");
-        Assert.assertEquals("Error: Manager is not selected","william.jobs", bot.comboBoxWithLabel(Messages.manager).getText());
+        Assert.assertEquals("Error: Manager is not selected", "william.jobs",
+                bot.comboBoxWithLabel(Messages.manager).getText());
 
         bot.tabItem("General").activate();
         bot.textWithLabel(Messages.firstName).setText("Elton");
         bot.textWithLabel(Messages.lastName).setText("John");
 
-        Assert.assertEquals("Error: First name user is not setted","Elton", bot.textWithLabel(Messages.firstName).getText());
-        Assert.assertEquals("Error: Last name user is not setted","John", bot.textWithLabel(Messages.lastName).getText());
-
+        Assert.assertEquals("Error: First name user is not setted", "Elton",
+                bot.textWithLabel(Messages.firstName).getText());
+        Assert.assertEquals("Error: Last name user is not setted", "John", bot.textWithLabel(Messages.lastName).getText());
 
         bot.tabItem(Messages.membership + " *").activate();
-        //bot.button(Messages.addMembership).click();
         bot.comboBoxWithLabel("Group").setSelection("/acme");
         bot.comboBoxWithLabel("Role").setSelection("member");
-
         // Finish the user add
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.waitUntil(Conditions.shellIsActive(Messages.organizationHasBeenModifiedTitle));
         bot.button(IDialogConstants.NO_LABEL).click();
     }
-
 
 }

@@ -307,7 +307,6 @@ public class SWTBotTestUtil implements SWTBotConstants {
             tree.expandNode(poolName).select(eventName);
         } else {
             tree.expandNode(poolName).expandNode(laneName);
-            //tree.expandNode(laneName);
             if (eventName != null) {
                 tree.getTreeItem(eventName);
             }
@@ -322,9 +321,6 @@ public class SWTBotTestUtil implements SWTBotConstants {
         tree.setFocus();
         bot.waitUntil(Conditions.widgetIsEnabled(tree.getTreeItem(widgetName)));
         tree.select(widgetName);
-        //tree.getTreeItem(widgetName).select(widgetName);
-
-        //tree.getTreeItem(widgetName).click();
     }
 
     /**
@@ -630,10 +626,6 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-
-        //      AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart(taskName).part()).resolveSemanticElement());
-        //      AbstractProcess diag = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart(proc.getName()).part()).resolveSemanticElement());
-        //      AbstractProcess diag = ModelHelper.getMainProcess(((IGraphicalEditPart)gmfEditor.getEditPart("Step1").part()).resolveSemanticElement());
 
         gmfEditor.mainEditPart().click();
 
@@ -954,7 +946,6 @@ public class SWTBotTestUtil implements SWTBotConstants {
         bot.textWithLabel("Name").setText(scriptName);
         bot.styledText().setText(scriptText);
         bot.button(IDialogConstants.OK_LABEL).click();
-        //Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
         bot.button(IDialogConstants.NEXT_LABEL).click();
 
         // 4th page

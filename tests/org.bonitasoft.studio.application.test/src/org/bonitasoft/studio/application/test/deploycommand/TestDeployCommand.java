@@ -70,24 +70,9 @@ public class TestDeployCommand {
     @Test
     public void testDeployCommandWithSubProcessLoop() throws Exception {
         /* import the two process for the test */
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        final URL fileURL = FileLocator.toFileURL(TestDeployCommand.class.getResource("ProcessForSubProcessLoopTest-1-1.0.bos")); //$NON-NLS-1$
-        op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
-        op.run(new NullProgressMonitor());
-        for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
-            f.open();
-        }
-        final ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .getActiveEditor();
+        final ProcessDiagramEditor processEditor = importBos("ProcessForSubProcessLoopTest-1-1.0.bos");
         final MainProcess mainProcess = (MainProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
-
-        final URL fileURL2 = FileLocator.toFileURL(TestDeployCommand.class.getResource("ProcessForSubProcessLoopTest-2-1.0.bos")); //$NON-NLS-1$
-        op.setArchiveFile(FileLocator.toFileURL(fileURL2).getFile());
-        op.run(new NullProgressMonitor());
-        for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
-            f.open();
-        }
+        importBos("ProcessForSubProcessLoopTest-2-1.0.bos");
 
         /* And deploy it twice */
         final AbstractProcess selectedProcess = (AbstractProcess) mainProcess.getElements().get(0);
@@ -114,7 +99,8 @@ public class TestDeployCommand {
 
         /* Rename the parent */
         final Pool parentProcess = (Pool) mainProcess.getElements().get(0);
-        TransactionalEditingDomain domain = GMFEditingDomainFactory.getInstance().getEditingDomain(parentProcess.eResource().getResourceSet());
+        TransactionalEditingDomain domain = GMFEditingDomainFactory.getInstance()
+                .getEditingDomain(parentProcess.eResource().getResourceSet());
         if (domain == null) {
             domain = TransactionUtil.getEditingDomain(parentProcess);
         }
@@ -133,7 +119,8 @@ public class TestDeployCommand {
             session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
             final ProcessManagementAPI processAPI = BOSEngineManager.getInstance().getProcessAPI(session);
             final int nbProcess = (int) processAPI.getNumberOfProcessDeploymentInfos();
-            final List<ProcessDeploymentInfo> infos = processAPI.getProcessDeploymentInfos(0, nbProcess, ProcessDeploymentInfoCriterion.DEFAULT);
+            final List<ProcessDeploymentInfo> infos = processAPI.getProcessDeploymentInfos(0, nbProcess,
+                    ProcessDeploymentInfoCriterion.DEFAULT);
             boolean found = false;
             for (final ProcessDeploymentInfo info : infos) {
                 if (info.getName().equals(parentProcess.getName()) && info.getVersion().equals(parentProcess.getVersion())) {
@@ -150,21 +137,6 @@ public class TestDeployCommand {
         }
     }
 
-    private ProcessDiagramEditor importBos(final String processResourceName)
-            throws IOException, InvocationTargetException, InterruptedException {
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        final URL fileURL = FileLocator.toFileURL(TestDeployCommand.class.getResource(processResourceName)); //$NON-NLS-1$
-        op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
-        op.run(new NullProgressMonitor());
-        for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
-            f.open();
-        }
-        final ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .getActiveEditor();
-        return processEditor;
-    }
-
     @Test
     public void testTwiceDeploymentWithCallActiviesInstances() throws Exception {
         final ProcessDiagramEditor processEditor = importBos("TestTwiceDeployWithSubProc-1.0.bos");
@@ -175,7 +147,8 @@ public class TestDeployCommand {
         runAndStartProcess(mainProcess, "ChildTestTwiceDeployWithSubProc", "1.0");
     }
 
-    protected void runAndStartProcess(final MainProcess mainProcess, final String processName, final String processVersion) throws Exception {
+    protected void runAndStartProcess(final MainProcess mainProcess, final String processName, final String processVersion)
+            throws Exception {
         Pool toDeploy = null;
         for (final Element e : mainProcess.getElements()) {
             if (e instanceof Pool && e.getName().equals(processName) && ((Pool) e).getVersion().equals(processVersion)) {
@@ -202,6 +175,20 @@ public class TestDeployCommand {
                 return processApi.searchProcessInstances(searchOptions).getCount() > 0;
             }
         }.evaluate();
+    }
+
+    private ProcessDiagramEditor importBos(final String processResourceName)
+            throws IOException, InvocationTargetException, InterruptedException {
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final URL fileURL = FileLocator.toFileURL(TestDeployCommand.class.getResource(processResourceName)); //$NON-NLS-1$
+        op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
+        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.run(new NullProgressMonitor());
+        for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
+            f.open();
+        }
+        return (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .getActiveEditor();
     }
 
 }

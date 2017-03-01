@@ -56,10 +56,11 @@ public class TestDocument {
 
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
-    
+
     @Before
-    public void cleanRepo() throws Exception{
-        final DiagramRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+    public void cleanRepo() throws Exception {
+        final DiagramRepositoryStore repositoryStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         for (final DiagramFileStore fStore : repositoryStore.getChildren()) {
             fStore.delete();
         }
@@ -113,7 +114,8 @@ public class TestDocument {
     @Test
     public void testUploadFile() {
         final String fileName = "Idea.jpg";
-        final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+        final DocumentRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(DocumentRepositoryStore.class);
         store.importInputStream(fileName, this.getClass().getResourceAsStream(fileName));
         final BotDocumentsPropertySection botDocumentsPropertySection = createDiagramAndGoToDocumentSection();
         final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
@@ -194,7 +196,8 @@ public class TestDocument {
         botAddDocumentDialog.finish();
     }
 
-    private void assertErrorMessageAndFinishDisabled(final BotAddDocumentDialog botAddDocumentDialog, final boolean errorMessageShowed) {
+    private void assertErrorMessageAndFinishDisabled(final BotAddDocumentDialog botAddDocumentDialog,
+            final boolean errorMessageShowed) {
         Assertions.assertThat(errorMessageShowed).isTrue();
         Assertions.assertThat(botAddDocumentDialog.isFinishEnabled()).isFalse();
         Assertions.assertThat(botAddDocumentDialog.isFinishAndAddEnabled()).isFalse();
@@ -208,15 +211,18 @@ public class TestDocument {
     public void testDocumentOperationSwitch() {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
-        final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective.getDiagramPropertiesPart();
-        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab().selectDocumentsTab();
+        final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective
+                .getDiagramPropertiesPart();
+        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab()
+                .selectDocumentsTab();
         final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
         botAddDocumentDialog.setName("doc1");
         botAddDocumentDialog.finish();
 
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
 
-        final BotOperationsPropertySection botOperationsPropertySection = botProcessDiagramPropertiesViewFolder.selectExecutionTab().selectOperationTab();
+        final BotOperationsPropertySection botOperationsPropertySection = botProcessDiagramPropertiesViewFolder
+                .selectExecutionTab().selectOperationTab();
         botOperationsPropertySection.addOperation();
         final BotOperationComposite botOperationComposite = botOperationsPropertySection.getOperation(0);
         botOperationComposite.selectLeftOperand("doc1", String.class.getName());
@@ -233,8 +239,10 @@ public class TestDocument {
     protected BotDocumentsPropertySection createDiagramAndGoToDocumentSection() {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
-        final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective.getDiagramPropertiesPart();
-        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab().selectDocumentsTab();
+        final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective
+                .getDiagramPropertiesPart();
+        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab()
+                .selectDocumentsTab();
         return botDocumentsPropertySection;
     }
 
@@ -292,8 +300,10 @@ public class TestDocument {
     public void test_UpdateReturnTypeInLeftOperandOperation_when_refactor_document() throws Exception {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
-        final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective.getDiagramPropertiesPart();
-        BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab().selectDocumentsTab();
+        final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective
+                .getDiagramPropertiesPart();
+        BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab()
+                .selectDocumentsTab();
 
         final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
         botAddDocumentDialog.setName("doc1");
@@ -303,7 +313,8 @@ public class TestDocument {
         // create form with FileWidget
 
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
-        final BotPageflowPropertySection botOperationsPropertySection = botProcessDiagramPropertiesViewFolder.selectApplicationTab().selectPageflowTab();
+        final BotPageflowPropertySection botOperationsPropertySection = botProcessDiagramPropertiesViewFolder
+                .selectApplicationTab().selectPageflowTab();
         final BotAddFormWizardDialog botAddFormWizardDialog = botOperationsPropertySection.addForm();
 
         if (botAddFormWizardDialog.canFlipToNextPage()) {
@@ -324,7 +335,8 @@ public class TestDocument {
         botGef.selectWidget("Doc1");
 
         // select Data Section in General Tab
-        BotDataFormPropertySection dataSection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
+        BotDataFormPropertySection dataSection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab()
+                .selectDataTab();
         Assertions.assertThat(dataSection.getOutputOperation().getLeftOperand()).isEqualTo("doc1");
 
         // close form editor
@@ -332,7 +344,8 @@ public class TestDocument {
 
         // change name of the document
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Pool");
-        botDocumentsPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectDocumentsTab();
+        botDocumentsPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab()
+                .selectDocumentsTab();
 
         final BotEditDocumentDialog editDocDialog = botDocumentsPropertySection.editDocument("doc1");
         editDocDialog.setName("docEdited");
@@ -340,7 +353,8 @@ public class TestDocument {
 
         // check name has been changed in the Doc1 Widget in the form Data output
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
-        final BotPageflowPropertySection pageFlowPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart().selectApplicationTab()
+        final BotPageflowPropertySection pageFlowPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart()
+                .selectApplicationTab()
                 .selectPageflowTab();
         pageFlowPropertySection.editForm("Step1");
 

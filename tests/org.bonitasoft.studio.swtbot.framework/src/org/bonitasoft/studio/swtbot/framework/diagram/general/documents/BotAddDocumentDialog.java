@@ -249,7 +249,8 @@ public class BotAddDocumentDialog extends BotWizardDialog {
      * Click on Finish && Add
      */
     public BotAddDocumentDialog finishAndAdd() {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton)), 5000);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton)),
+                5000);
         bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton).click();
         return new BotAddDocumentDialog(bot);
     }

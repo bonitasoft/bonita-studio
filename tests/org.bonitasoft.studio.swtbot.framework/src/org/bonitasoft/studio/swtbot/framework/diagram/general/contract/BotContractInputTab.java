@@ -75,5 +75,4 @@ public class BotContractInputTab extends BotBase {
         return new BotContractInputRow(bot, new SWTBotTreeItem(treeItem));
     }
 
-
 }

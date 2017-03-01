@@ -70,7 +70,8 @@ public class BotProcessDiagramPerspective extends BotBase {
 
             @Override
             public String getFailureMessage() {
-                return "No active form editor. Active editor id = " + BotProcessDiagramPerspective.this.bot.activeEditor().getReference().getId();
+                return "No active form editor. Active editor id = "
+                        + BotProcessDiagramPerspective.this.bot.activeEditor().getReference().getId();
             }
         });
         return new BotGefFormDiagramEditor(bot);

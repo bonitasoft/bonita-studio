@@ -25,9 +25,7 @@ import static org.bonitasoft.studio.properties.i18n.Messages.addForm;
 import static org.bonitasoft.studio.properties.i18n.Messages.addFormTitle;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -46,7 +44,6 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
@@ -61,7 +58,6 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.hamcrest.BaseMatcher;
@@ -82,7 +78,7 @@ public class DiagramTests {
     private static final String PAGEFLOW_LABEL = "Pageflow";
 
     @Test
-    public void testDiagramTest() throws ExecutionException {
+    public void testDiagramTest() {
         SWTBotTestUtil.createNewDiagram(bot);
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
@@ -90,7 +86,6 @@ public class DiagramTests {
         gmfEditor.click(200, 200);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButton("Save")));
         bot.toolbarButton("Save").click();
-        //bot.menu("Diagram").menu("Save").click();
         final IGraphicalEditPart part = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
         final MainProcess model = (MainProcess) part.resolveSemanticElement();
         final Pool pool = (Pool) model.getElements().get(0);
@@ -104,11 +99,11 @@ public class DiagramTests {
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
         final ProcessDiagramEditor processEditor = (ProcessDiagramEditor) gmfEditor.getReference().getEditor(false);
-        //gmfEditor
         final SWTBotGefEditPart part = getPartRecursively(gmfEditor.rootEditPart(), "Step1");
         part.select();
         IGraphicalEditPart graphicalEditPart = (IGraphicalEditPart) part.part();
-        final ActivitySwitchEditPolicy convertPolicy = (ActivitySwitchEditPolicy) graphicalEditPart.getEditPolicy(ActivitySwitchEditPolicy.SWITCH_TYPE_ROLE);
+        final ActivitySwitchEditPolicy convertPolicy = (ActivitySwitchEditPolicy) graphicalEditPart
+                .getEditPolicy(ActivitySwitchEditPolicy.SWITCH_TYPE_ROLE);
         final Class<?> beforeClass = graphicalEditPart.resolveSemanticElement().getClass();
         final SlideMenuBarFigure toolbarFigure = convertPolicy.getToolbarFigure();
         final int x = toolbarFigure.getBounds().x + toolbarFigure.getBounds().width / 2;
@@ -116,7 +111,6 @@ public class DiagramTests {
         gmfEditor.click(x, y);
         y += toolbarFigure.getBounds().height; // move cursor down to first sub item
         gmfEditor.click(x, y);
-        //bot.activeEditor().save();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButton("Save")));
         bot.toolbarButton("Save").click();
         graphicalEditPart = (IGraphicalEditPart) processEditor.getDiagramGraphicalViewer().getSelectedEditParts().get(0);
@@ -128,7 +122,8 @@ public class DiagramTests {
     @Test
     public void should_undo_redo_after_lane_creation() throws Exception {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
-        final BotGefProcessDiagramEditor activeProcessDiagramEditor = botApplicationWorkbenchWindow.createNewDiagram().activeProcessDiagramEditor();
+        final BotGefProcessDiagramEditor activeProcessDiagramEditor = botApplicationWorkbenchWindow.createNewDiagram()
+                .activeProcessDiagramEditor();
         final EObject mainProcess = activeProcessDiagramEditor.selectDiagram().getSelectedSemanticElement();
         final List<Pool> allPools = ModelHelper.getAllElementOfTypeIn(mainProcess, Pool.class);
         final Pool pool = allPools.get(0);
@@ -201,7 +196,7 @@ public class DiagramTests {
         final SWTBotTable table = bot.tableWithId(SWTBotConstants.SWTBOT_ID_PROCESS_DATA_LIST);
         Assert.assertEquals("Error: wrong number of variable created", 3, table.rowCount());
 
-        final Vector<String> taskNameList = new Vector<String>(Arrays.asList(new String[] { "Step1", "Step2", "Step3", "Step4" }));
+        final String[] taskNameList = { "Step1", "Step2", "Step3", "Step4" };
         // Create 3 human tasks
         int i = 400;
         for (final String taskName : taskNameList) {
@@ -296,7 +291,8 @@ public class DiagramTests {
 
                         @Override
                         public boolean test() throws Exception {
-                            return bot.textWithId(ExpressionViewer.SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 2).getText().equals("theInteger");
+                            return bot.textWithId(ExpressionViewer.SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 2).getText()
+                                    .equals("theInteger");
                         }
 
                         @Override
@@ -334,7 +330,7 @@ public class DiagramTests {
 
         final SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
 
-        final String[] varTab = new String[] { "Var Text", "Var Boolean", "Var Integer" };
+        final String[] varTab = { "Var Text", "Var Boolean", "Var Integer" };
         for (final String s : varTab) {
 
             formEditor.getEditPart(s).click();

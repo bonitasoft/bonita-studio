@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -35,7 +33,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
 
 public class DataDependenciesMigrationIT {
 
@@ -84,10 +81,12 @@ public class DataDependenciesMigrationIT {
     protected MainProcess importBar(final String barName) throws IOException, Exception {
         final URL fileURL2 = FileLocator.toFileURL(DataDependenciesMigrationIT.class.getResource(barName)); //$NON-NLS-1$
         final File migratedProcess = BarImporterTestUtil.migrateBar(fileURL2);
+        migratedProcess.deleteOnExit();
         assertNotNull("Fail to migrate bar file", migratedProcess);
         assertNotNull("Fail to migrate bar file", migratedProcess.exists());
         final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProcess);
         final MainProcess mainProcess = BarImporterTestUtil.getMainProcess(resource);
+        new File(resource.getURI().toFileString()).deleteOnExit();
         return mainProcess;
     }
 }

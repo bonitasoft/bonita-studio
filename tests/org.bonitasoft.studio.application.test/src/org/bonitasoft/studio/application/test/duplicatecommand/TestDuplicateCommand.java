@@ -1,17 +1,14 @@
 /**
  * Copyright (C) 2011 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -106,7 +103,8 @@ public class TestDuplicateCommand extends TestCase {
         if (initialPa == null) {
             /* import the process for the test */
             final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-            final URL fileURL1 = FileLocator.toFileURL(TestDuplicateCommand.class.getResource("TestDuplicateWithWebTemplates-1.0.bos")); //$NON-NLS-1$
+            final URL fileURL1 = FileLocator
+                    .toFileURL(TestDuplicateCommand.class.getResource("TestDuplicateWithWebTemplates-1.0.bos")); //$NON-NLS-1$
             op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
             op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
             op.run(new NullProgressMonitor());
@@ -145,6 +143,8 @@ public class TestDuplicateCommand extends TestCase {
         assertTrue("Confirmation template not duplicated", newPathFile.exists());
         assertFalse("Confirmation template have the same name: " + oldPathFile.getAbsolutePath(),
                 oldPathFile.getAbsolutePath().equals(newPathFile.getAbsolutePath()));
+        oldPathFile.deleteOnExit();
+        newPathFile.deleteOnExit();
     }
 
     @Test
@@ -161,7 +161,11 @@ public class TestDuplicateCommand extends TestCase {
 
         assertNotNull("Login page not duplicated", newPathFile);
         assertTrue("Login page not duplicated", newPathFile.exists());
-        assertFalse("Login Page is the same: " + oldPathFile, oldPathFile.getAbsolutePath().equals(newPathFile.getAbsolutePath()));
+        assertFalse("Login Page is the same: " + oldPathFile,
+                oldPathFile.getAbsolutePath().equals(newPathFile.getAbsolutePath()));
+
+        oldPathFile.deleteOnExit();
+        newPathFile.deleteOnExit();
     }
 
     @Test
@@ -195,7 +199,11 @@ public class TestDuplicateCommand extends TestCase {
 
         assertNotNull("Resource folder not duplicated", newPathFile);
         assertTrue("Resource folder not duplicated", newPathFile.exists());
-        assertFalse("Resource folder is the same: " + oldPathFile, oldPathFile.getAbsolutePath().equals(newPathFile.getAbsolutePath()));
+        assertFalse("Resource folder is the same: " + oldPathFile,
+                oldPathFile.getAbsolutePath().equals(newPathFile.getAbsolutePath()));
+
+        oldPathFile.deleteOnExit();
+        newPathFile.deleteOnExit();
     }
 
 }

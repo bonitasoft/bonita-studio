@@ -39,19 +39,18 @@ public class BotProcessDiagramPropertiesViewFolder extends BotBase {
         view.show();
         return new BotGeneralDiagramPropertiesView(bot, view);
     }
-    
-    public BotDataDiagramPropertiesView selectDataTab(){
+
+    public BotDataDiagramPropertiesView selectDataTab() {
         final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA);
         view.show();
         return new BotDataDiagramPropertiesView(bot, view);
     }
-    
-    public BotExecutionDiagramPropertiesView selectExecutionTab(){
+
+    public BotExecutionDiagramPropertiesView selectExecutionTab() {
         final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION);
         view.show();
         return new BotExecutionDiagramPropertiesView(bot, view);
     }
-    
 
     /**
      * Select the application tab.

@@ -32,10 +32,10 @@ import org.junit.runner.RunWith;
 public class TestAddValidatorToProcessAndRun {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public LegacySWTGefBotRule botRule = new LegacySWTGefBotRule(bot);
-    
+
     @Test
     public void addValidatorOnFieldAndRun() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);

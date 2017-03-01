@@ -30,7 +30,6 @@ public class BotPageflowPropertySection extends BotBase {
         return new BotAddFormWizardDialog(bot);
     }
 
-
     public void editForm(final String formName) {
         selectForm(formName);
         bot.button(Messages.editForm).click();

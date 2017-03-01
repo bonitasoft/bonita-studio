@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -56,7 +54,6 @@ import org.junit.Test;
 
 /**
  * @Author Aurelie Zara
- *
  *         This test has dependency on Postgres database:
  *         - the running machine need to be authorized in pg_hba.conf (IP network mask)
  *         - the provided .bos hardly point to the machine containing the postgresSQL
@@ -81,7 +78,8 @@ public class TestDatabaseConnectorResulset {
     public void testDatabaseConnectorResultset() throws Exception {
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        final URL fileURL1 = FileLocator.toFileURL(TestDatabaseConnectorResulset.class.getResource("testDatabaseResultSet-2.0.bos")); //$NON-NLS-1$
+        final URL fileURL1 = FileLocator
+                .toFileURL(TestDatabaseConnectorResulset.class.getResource("testDatabaseResultSet-2.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(new NullProgressMonitor());
@@ -91,7 +89,8 @@ public class TestDatabaseConnectorResulset {
         final MainProcess mainProcess = (MainProcess) op.getFileStoresToOpen().get(0).getContent();
 
         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
-        final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
+        final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions)
+                .getResult();
 
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
         runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
@@ -106,7 +105,8 @@ public class TestDatabaseConnectorResulset {
             @Override
             public boolean isTestGreen() throws Exception {
 
-                newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks, processDef.getId(), session.getUserId());
+                newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks, processDef.getId(),
+                        session.getUserId());
 
                 return newTask != null;
             }
@@ -114,7 +114,8 @@ public class TestDatabaseConnectorResulset {
 
         String errorMessageDetailled = "";
         if (!evaluateAsync) {
-            final Collection<HumanTaskInstance> actualTask = processApi.getPendingHumanTaskInstances(session.getUserId(), 0, 20,
+            final Collection<HumanTaskInstance> actualTask = processApi.getPendingHumanTaskInstances(session.getUserId(), 0,
+                    20,
                     ActivityInstanceCriterion.DEFAULT);
             errorMessageDetailled += "\n processUUID searched: " + processDef.getId();
             for (final TaskInstance taskInstance : actualTask) {
@@ -122,7 +123,8 @@ public class TestDatabaseConnectorResulset {
             }
 
         }
-        assertTrue("a new task should have started for testDatabaseResultSet task:\n" + errorMessageDetailled, evaluateAsync);
+        assertTrue("a new task should have started for testDatabaseResultSet task:\n" + errorMessageDetailled,
+                evaluateAsync);
         assertNotNull("a new task should have started", newTask);
         assertEquals("This task does not belong to new process", processDef.getId(), newTask.getProcessDefinitionId());
         assertTrue("the current task should not be \"closed\"", !newTask.getName().equals("closed"));

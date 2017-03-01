@@ -60,7 +60,9 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.ui.PlatformUI;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.omg.spec.bpmn.di.BPMNDiagram;
 import org.omg.spec.bpmn.di.BPMNPlane;
 import org.omg.spec.bpmn.di.BPMNShape;
@@ -94,6 +96,9 @@ import org.omg.spec.dd.di.Shape;
  * @author Aurelien Pupier
  */
 public class BPMNImportExportTest {
+
+    @Rule
+    public TemporaryFolder tmpFolder = new TemporaryFolder();
 
     @Test
     public void testImportExportWithAll() throws MalformedURLException, IOException, InterruptedException {
@@ -138,19 +143,22 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBPMN2SampleDiagramInterchangeChoreo() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleDiagramInterchangeChoreo()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Diagram Interchange/Examples - DI - Choreography.bpmn";
         doTest(bpmnFileName, true, true, false);
     }
 
     @Test
-    public void testImportExportBPMN2SampleDiagramInterchangeExpSubProc() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleDiagramInterchangeExpSubProc()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Diagram Interchange/Examples - DI - Expanded Sub-Process.bpmn";
         doTest(bpmnFileName);
     }
 
     @Test
-    public void testImportExportBPMN2SampleDiagramInterchangeLanesAndNestedLanes() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleDiagramInterchangeLanesAndNestedLanes()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Diagram Interchange/Examples - DI - Lanes and Nested Lanes.bpmn";
         doTest(bpmnFileName, true, true, false);
         //we don't support nested lanes
@@ -158,55 +166,64 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBPMN2SampleDiagramInterchangeVerticalCollaboration() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleDiagramInterchangeVerticalCollaboration()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Diagram Interchange/Examples - DI - Vertical Collaboration.bpmn";
         doTest(bpmnFileName, true, true, false);
     }
 
     @Test
-    public void testImportExportBPMN2SampleDiagramInterchangecollapsedSubProc() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleDiagramInterchangecollapsedSubProc()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Diagram Interchange/Examples - DI -Collapsed Sub-Process.bpmn";
         doTest(bpmnFileName);
     }
 
     @Test
-    public void testImportExportBPMN2SampleHardwareretailer() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleHardwareretailer()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Hardware Retailer/triso - Hardware Retailer v2.bpmn";
         doTest(bpmnFileName);
     }
 
     @Test
-    public void testImportExportBPMN2SampleIncidentManagementCollChor() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleIncidentManagementCollChor()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Incident Management/Incident Management - coll chor.bpmn";
         doTest(bpmnFileName, true, true, false);
     }
 
     @Test
-    public void testImportExportBPMN2SampleIncidentManagementLevel1() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleIncidentManagementLevel1()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Incident Management/Incident Management level 1.bpmn";
         doTest(bpmnFileName, true, true, false);
     }
 
     @Test
-    public void testImportExportBPMN2SampleIncidentManagementAccounManager() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleIncidentManagementAccounManager()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Incident Management/Incident Management(Account Manager Only).bpmn";
         doTest(bpmnFileName, true, true, false);
     }
 
     @Test
-    public void testImportExportBPMN2SampleIncidentManagementProcEngine() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleIncidentManagementProcEngine()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Incident Management/Incident Management(Process Engine Executable).bpmn";
         doTest(bpmnFileName);
     }
 
     @Test
-    public void testImportExportBPMN2SampleIncidentManagementProcEngineOnly() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleIncidentManagementProcEngineOnly()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Incident Management/Incident Management(Process Engine Only).bpmn";
         doTest(bpmnFileName);
     }
 
     @Test
-    public void testImportExportBPMN2SampleIncidentManagementWholeCollab() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleIncidentManagementWholeCollab()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Incident Management/Incident Management(Whole Collab).bpmn";
         doTest(bpmnFileName, true, true, false);
     }
@@ -218,37 +235,43 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBPMN2SamplModelsDiagramCallActivity() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SamplModelsDiagramCallActivity()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Models & Diagrams/Call Activity.bpmn";
         doTest(bpmnFileName);
     }
 
     @Test
-    public void testImportExportBPMN2SamplModelsDiagramCollapsedSubProc() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SamplModelsDiagramCollapsedSubProc()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Models & Diagrams/Collapsed SubProcess.bpmn";
         doTest(bpmnFileName);
     }
 
     @Test
-    public void testImportExportBPMN2SamplModelsDiagramExpandedSubProcess() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SamplModelsDiagramExpandedSubProcess()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Models & Diagrams/Expanded SubProcess.bpmn";
         doTest(bpmnFileName);
     }
 
     @Test
-    public void testImportExportBPMN2SamplModelsDiagramLaneset() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SamplModelsDiagramLaneset()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Models & Diagrams/Laneset.bpmn";
         doTest(bpmnFileName);
     }
 
     @Test
-    public void testImportExportBPMN2SamplModelsDiagramPool() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SamplModelsDiagramPool()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Models & Diagrams/Pool.bpmn";
         doTest(bpmnFileName);
     }
 
     @Test
-    public void testImportExportBPMN2SamplModelsDiagramProcess() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SamplModelsDiagramProcess()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Models & Diagrams/Process.bpmn";
         doTest(bpmnFileName);
     }
@@ -260,7 +283,8 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBPMN2SampleOrderFullFillment() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleOrderFullFillment()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Order Fulfillment/Procurement Processes with Error Handling - Stencil Trisotech 3 pages.bpmn";
         doTest(bpmnFileName, false, false, true);
     }
@@ -285,7 +309,8 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBruceSampleMyTaskMyPoolCorrected() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBruceSampleMyTaskMyPoolCorrected()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "brucesample/myTaskMyPool-corrected.bpmn";
         doTest(bpmnFileName);
     }
@@ -303,7 +328,8 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBruceSampleOurProcNoPoolCorrected() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBruceSampleOurProcNoPoolCorrected()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "brucesample/ourProcNoPool-corrected.bpmn";
         doTest(bpmnFileName);
     }
@@ -315,7 +341,8 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBruceSampleOurReusableCorrected() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBruceSampleOurReusableCorrected()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "brucesample/ourReusable-corected.bpmn";
         doTest(bpmnFileName);
     }
@@ -327,7 +354,8 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBruceSampleOurSubsCorrected() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBruceSampleOurSubsCorrected()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "brucesample/ourSubs-corrected.bpmn";
         doTest(bpmnFileName);
     }
@@ -339,13 +367,15 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBruceSampleOurSubsNoPoolCorrected() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBruceSampleOurSubsNoPoolCorrected()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "brucesample/ourSubsNoPool-corrected.bpmn";
         doTest(bpmnFileName);
     }
 
     @Test
-    public void testImportExportPositionsForSeveralPoolWithoutLanes() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportPositionsForSeveralPoolWithoutLanes()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "Interchange Demo.bpmn";
         doTest(bpmnFileName);
     }
@@ -360,26 +390,26 @@ public class BPMNImportExportTest {
         doTest(bpmnFileName, true, true, true);
     }
 
-    protected void doTest(final String bpmnFileName, final boolean checkActivities, final boolean checkEvents, final boolean checkMessageFlow)
-            throws IOException, MalformedURLException, InterruptedException {
+    protected void doTest(final String bpmnFileName, final boolean checkActivities, final boolean checkEvents,
+            final boolean checkMessageFlow) throws IOException, MalformedURLException {
         final File destFile = BPMNTestUtil.importFileWithName(BPMNImportExportTest.class, bpmnFileName);
+        Resource resource = null;
         try {
             final ResourceSet resourceSet = new ResourceSetImpl();
             CustomDiagramEditingDomainFactory.getInstance().createEditingDomain(resourceSet);
-            final Resource resource = resourceSet.getResource(BPMNTestUtil.toEMFURI(destFile), true);
+            resource = resourceSet.getResource(BPMNTestUtil.toEMFURI(destFile), true);
             final MainProcess mainProcess = (MainProcess) resource.getContents().get(0);
 
-            checkSemantic(bpmnFileName,
-                    checkActivities,
-                    checkEvents,
-                    checkMessageFlow,
-                    mainProcess);
+            checkSemantic(bpmnFileName, checkActivities, checkEvents, checkMessageFlow, mainProcess);
 
             /* Check graphic */
             checkGraphic(bpmnFileName, mainProcess);
         } finally {
             if (destFile != null) {
                 destFile.delete();
+            }
+            if (resource != null) {
+                resource.unload();
             }
         }
     }
@@ -391,19 +421,22 @@ public class BPMNImportExportTest {
         final Diagram diagramFor = ModelHelper.getDiagramFor(mainProcess);
         DiagramEditPart dep;
         try {
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
         } catch (final Exception ex) {
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
         }
         final MainProcessEditPart mped = (MainProcessEditPart) dep;
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
-        final File bpmnFileExported = File.createTempFile("withAllExported", ".bpmn");
+        final File bpmnFileExported = tmpFolder.newFile("withAllExported.bpmn");
         final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
         Assert.assertTrue("Error during export", transformed);
 
         //compare bpmn before import and after import/export
         final ResourceSet resourceSet1 = new ResourceSetImpl();
-        final Map<String, Object> extensionToFactoryMap = resourceSet1.getResourceFactoryRegistry().getExtensionToFactoryMap();
+        final Map<String, Object> extensionToFactoryMap = resourceSet1.getResourceFactoryRegistry()
+                .getExtensionToFactoryMap();
         final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
         extensionToFactoryMap.put("bpmn", diResourceFactoryImpl);
         final URL bpmnResource = FileLocator.toFileURL(BPMNImportExportTest.class.getResource(bpmnFileName));
@@ -421,8 +454,8 @@ public class BPMNImportExportTest {
             final DocumentRoot model1 = (DocumentRoot) resource1.getContents().get(0);
             final DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
             int nbProcess1 = 0;
-            final Set<String> processNames = new HashSet<String>();
-            final List<String> activityNames = new ArrayList<String>();
+            final Set<String> processNames = new HashSet<>();
+            final List<String> activityNames = new ArrayList<>();
             int nbActivity1 = 0;
             int nbBoundaryEvent1 = 0;
             int nbTsignal1 = 0;
@@ -436,8 +469,9 @@ public class BPMNImportExportTest {
             for (final TRootElement rootElement : model1.getDefinitions().getRootElement()) {
                 if (rootElement instanceof TProcess) {
                     nbProcess1++;
-                    final String processName = ((TProcess) rootElement).getName() != null ? ((TProcess) rootElement).getName() : ((TProcess) rootElement)
-                            .getId();
+                    final String processName = ((TProcess) rootElement).getName() != null
+                            ? ((TProcess) rootElement).getName() : ((TProcess) rootElement)
+                                    .getId();
                     processNames.add(processName);
                     for (final TArtifact tArtifact : ((TProcess) rootElement).getArtifact()) {
                         if (tArtifact instanceof TTextAnnotation) {
@@ -468,7 +502,7 @@ public class BPMNImportExportTest {
                             if ((((TThrowEvent) tFlowElement).getEventDefinition() == null
                                     || ((TThrowEvent) tFlowElement).getEventDefinition().isEmpty())
                                     && (((TThrowEvent) tFlowElement).getEventDefinitionRef() == null
-                                    || ((TThrowEvent) tFlowElement).getEventDefinitionRef().isEmpty())) {
+                                            || ((TThrowEvent) tFlowElement).getEventDefinitionRef().isEmpty())) {
                                 //empty event definitions are imported as abstract tasks
                                 nbActivity1++;
                             }
@@ -501,8 +535,9 @@ public class BPMNImportExportTest {
             for (final TRootElement rootElement : model2.getDefinitions().getRootElement()) {
                 if (rootElement instanceof TProcess) {
                     nbProcess2++;
-                    final String processName = ((TProcess) rootElement).getName() != null ? ((TProcess) rootElement).getName() : ((TProcess) rootElement)
-                            .getId();
+                    final String processName = ((TProcess) rootElement).getName() != null
+                            ? ((TProcess) rootElement).getName() : ((TProcess) rootElement)
+                                    .getId();
                     processNames.remove(processName);
                     for (final TArtifact tArtifact : ((TProcess) rootElement).getArtifact()) {
                         if (tArtifact instanceof TTextAnnotation) {
@@ -541,9 +576,9 @@ public class BPMNImportExportTest {
             }
 
             /* Check id unicity */
-            final Collection<String> ids = new HashSet<String>();
-            final Collection<String> duplicatedIds = new HashSet<String>();
-            final Collection<EObject> noIds = new HashSet<EObject>();
+            final Collection<String> ids = new HashSet<>();
+            final Collection<String> duplicatedIds = new HashSet<>();
+            final Collection<EObject> noIds = new HashSet<>();
             for (final Iterator<EObject> iterator = model2.eAllContents(); iterator.hasNext();) {
                 final EObject object = iterator.next();
                 if (object instanceof TBaseElement) {
@@ -584,13 +619,11 @@ public class BPMNImportExportTest {
                 resource2.unload();
             }
         }
-        //	assertEquals("We don't find the same number of TTextAnnotation defined", nbTextannotation1, nbTextannotation2);
-
-        //TODO: check link between signal thrown and caught
     }
 
     protected String getFlowElementName(final TActivity tFlowElement) {
-        return tFlowElement.getName() != null && !tFlowElement.getName().isEmpty() ? tFlowElement.getName() : tFlowElement.getId();
+        return tFlowElement.getName() != null && !tFlowElement.getName().isEmpty() ? tFlowElement.getName()
+                : tFlowElement.getId();
     }
 
     private int findNbActivitiesInSubProc(final TSubProcess tSubProc) {
@@ -615,22 +648,20 @@ public class BPMNImportExportTest {
         final ResourceSet resourceSet1 = new ResourceSetImpl();
         final Resource resource1 = resourceSet1.createResource(BPMNTestUtil.toEMFURI(new File(bpmnResource.getFile())));
         resource1.load(Collections.emptyMap());
-        final DocumentRoot model1 = (DocumentRoot) resource1.getContents().get(0);
+        new File(resource1.getURI().toFileString()).deleteOnExit();
 
         final Diagram diagramFor = ModelHelper.getDiagramFor(mainProcess);
         DiagramEditPart dep;
         try {
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
         } catch (final Exception ex) {
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
         }
         final MainProcessEditPart mped = (MainProcessEditPart) dep;
 
         checkAllEditPartsAreVisible(mped);
-
-        //		if(model1.getDefinitions().getBPMNDiagram().size() != 0){
-        //			checkRelativeGraphicPosition(mainProcess, model1, dep, mped);
-        //		}
     }
 
     protected void checkRelativeGraphicPosition(final MainProcess mainProcess,
@@ -658,12 +689,11 @@ public class BPMNImportExportTest {
 
                 /* Compare */
                 final int offset = Math.abs(bpmnLocation.x - activityPart.getFigure().getBounds().x);
-                final String message =
-                        "\nbpmn location: " + bpmnLocation
-                                + "\n part location " + activityPart.getFigure().getBounds()
-                                + activityPart.resolveSemanticElement()
-                                + ": "
-                                + "\ncurrent editpat : " + activityPart;
+                final String message = "\nbpmn location: " + bpmnLocation
+                        + "\n part location " + activityPart.getFigure().getBounds()
+                        + activityPart.resolveSemanticElement()
+                        + ": "
+                        + "\ncurrent editpat : " + activityPart;
                 assertTrue("Too much offset " + offset + " for :\n" + message, offset < 80);
 
             }
@@ -686,13 +716,15 @@ public class BPMNImportExportTest {
                             return flowElementDirectlyInProcess.getId();
                         }
                         if (flowElementDirectlyInProcess instanceof TSubProcess) {
-                            for (final TFlowElement flowElementInSubProcess : ((TSubProcess) flowElementDirectlyInProcess).getFlowElement()) {
+                            for (final TFlowElement flowElementInSubProcess : ((TSubProcess) flowElementDirectlyInProcess)
+                                    .getFlowElement()) {
                                 if (flowElementInSubProcess instanceof TFlowNode) {
                                     if (name.equals(flowElementInSubProcess.getName())) {
                                         return flowElementInSubProcess.getId();
                                     }
                                     if (flowElementInSubProcess instanceof TSubProcess) {
-                                        for (final TFlowElement flowElementInSubSubProcess : ((TSubProcess) flowElementInSubProcess).getFlowElement()) {
+                                        for (final TFlowElement flowElementInSubSubProcess : ((TSubProcess) flowElementInSubProcess)
+                                                .getFlowElement()) {
                                             if (flowElementInSubSubProcess instanceof TFlowNode) {
                                                 if (name.equals(flowElementInSubSubProcess.getName())) {
                                                     return flowElementInSubSubProcess.getId();
@@ -712,7 +744,6 @@ public class BPMNImportExportTest {
 
     private void checkAllEditPartsAreVisible(final IGraphicalEditPart mped) {
         final Rectangle parentBounds = mped.getFigure().getBounds();
-        //Rectangle childrenBounds = mped.getChildrenBounds();
         if (parentBounds != null) {
             for (final Object childEditPart : mped.getChildren()) {
                 if (childEditPart instanceof IGraphicalEditPart) {
@@ -733,7 +764,6 @@ public class BPMNImportExportTest {
      */
     private Point getLocationFor(final TDefinitions tDefinition, final String id) {
         /* need to have location relatively to the container */
-        //for(TDefinitions tDefinition : tDefinitions){
         for (final BPMNDiagram rootElement : tDefinition.getBPMNDiagram()) {
             for (final DiagramElement diagramElement : rootElement.getBPMNPlane().getDiagramElement()) {
                 if (diagramElement instanceof BPMNShape) {
@@ -743,7 +773,8 @@ public class BPMNImportExportTest {
                             || localPart.equals(id)
                             || NamingUtils.convertToId("subProc_" + localPart).equals(id)
                             || ("subProc_" + localPart).equals(id)) {
-                        final Point containerLocation = getContainerLocationFor(tDefinition, tDefinition.getRootElement(), id);
+                        final Point containerLocation = getContainerLocationFor(tDefinition, tDefinition.getRootElement(),
+                                id);
                         final Bounds bounds = ((Shape) diagramElement).getBounds();
                         return new Point(bounds.getX() - containerLocation.x,
                                 bounds.getY() - containerLocation.y);
@@ -751,11 +782,11 @@ public class BPMNImportExportTest {
                 }
             }
         }
-        //}
         return null;
     }
 
-    protected Point getContainerLocationFor(final TDefinitions tDefinitions, final List<TRootElement> rootElements, final String id) {
+    protected Point getContainerLocationFor(final TDefinitions tDefinitions, final List<TRootElement> rootElements,
+            final String id) {
         /* Retrieve container */
         String containerId = null;
         final Iterator<TRootElement> rootElementsIterator = rootElements.iterator();
@@ -797,10 +828,13 @@ public class BPMNImportExportTest {
                             for (final TLaneSet laneSet : ((TProcess) rootElement).getLaneSet()) {
                                 /* ... in all Lanes ... */
                                 for (final TLane lane : laneSet.getLane()) {
-                                    final Point tempContainerLocationOfTArtifact = getLocationFor(tDefinitions, lane.getId());
+                                    final Point tempContainerLocationOfTArtifact = getLocationFor(tDefinitions,
+                                            lane.getId());
                                     if (containerLocationOfTArtifact != null) {
-                                        containerLocationOfTArtifact.x = Math.min(containerLocationOfTArtifact.x, tempContainerLocationOfTArtifact.x);
-                                        containerLocationOfTArtifact.y = Math.min(containerLocationOfTArtifact.y, tempContainerLocationOfTArtifact.y);
+                                        containerLocationOfTArtifact.x = Math.min(containerLocationOfTArtifact.x,
+                                                tempContainerLocationOfTArtifact.x);
+                                        containerLocationOfTArtifact.y = Math.min(containerLocationOfTArtifact.y,
+                                                tempContainerLocationOfTArtifact.y);
                                     } else {
                                         containerLocationOfTArtifact = new Point();
                                         containerLocationOfTArtifact.x = tempContainerLocationOfTArtifact.x;
@@ -811,7 +845,6 @@ public class BPMNImportExportTest {
                             if (containerLocationOfTArtifact != null) {
                                 return containerLocationOfTArtifact.getCopy().translate(-25, -25);
                             }
-                            //break;
                         }
                     }
                 }
@@ -849,12 +882,13 @@ public class BPMNImportExportTest {
             for (final TFlowElement subProcFlowElement : subProcess.getFlowElement()) {
                 if (id.equals(subProcFlowElement.getId())) {
                     if (subProcess.isTriggeredByEvent()) {
-                        return getContainerLocationFor(tDefinitions, tDefinitions.getRootElement(), subProcess.getId()).getCopy();
-                    } else {
-                        return getAbsoluteLocationFor(tDefinitions, subProcess.getId()).getCopy().translate(-25, -25);
+                        return getContainerLocationFor(tDefinitions, tDefinitions.getRootElement(), subProcess.getId())
+                                .getCopy();
                     }
+                    return getAbsoluteLocationFor(tDefinitions, subProcess.getId()).getCopy().translate(-25, -25);
                 } else if (subProcFlowElement instanceof TSubProcess) {
-                    final Point containerLocation = getContainerLocationFor((TSubProcess) subProcFlowElement, id, tDefinitions);
+                    final Point containerLocation = getContainerLocationFor((TSubProcess) subProcFlowElement, id,
+                            tDefinitions);
                     if (containerLocation != null) {
                         return containerLocation.getCopy();
                     }

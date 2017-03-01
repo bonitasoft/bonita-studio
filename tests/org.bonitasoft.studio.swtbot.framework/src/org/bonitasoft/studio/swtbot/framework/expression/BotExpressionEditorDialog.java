@@ -46,11 +46,13 @@ public class BotExpressionEditorDialog extends BotDialog {
         bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(Text.class)));
         return new BotConstantExpressionEditor(bot, this);
     }
-    public BotConditionExpressionEditor selectConditionExpressionType(){
-    	bot.tableWithLabel(Messages.expressionTypeLabel).select("Comparison");
-    	bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(StyledText.class)));
-    	return new BotConditionExpressionEditor(bot,this);
+
+    public BotConditionExpressionEditor selectConditionExpressionType() {
+        bot.tableWithLabel(Messages.expressionTypeLabel).select("Comparison");
+        bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(StyledText.class)));
+        return new BotConditionExpressionEditor(bot, this);
     }
+
     public BotFormFieldExpressionEditor selectFormFieldType() {
         bot.tableWithLabel(Messages.expressionTypeLabel).select("Form field");
         bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(Table.class)));
@@ -58,7 +60,8 @@ public class BotExpressionEditorDialog extends BotDialog {
     }
 
     public BotContractInputExpressionEditor selectContractInputType() {
-        bot.tableWithLabel(Messages.expressionTypeLabel).select(org.bonitasoft.studio.contract.i18n.Messages.contractInputTypeLabel);
+        bot.tableWithLabel(Messages.expressionTypeLabel)
+                .select(org.bonitasoft.studio.contract.i18n.Messages.contractInputTypeLabel);
         bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(Table.class)));
         return new BotContractInputExpressionEditor(bot, this);
     }

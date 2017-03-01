@@ -32,10 +32,6 @@ public class BotAddConnectorDialog extends BotWizardDialog {
         super(bot, Messages.connectors);
     }
 
-    //public void selectConnectorCategory(final String pCategory) {
-    //    bot.tree().select(pCategory);
-    //}
-
     public BotAddConnectorDialog(final SWTGefBot bot, final String expectedWizardTitle) {
         super(bot, expectedWizardTitle);
     }
@@ -74,7 +70,6 @@ public class BotAddConnectorDialog extends BotWizardDialog {
      */
     public void searchConnector(final String pConnectorId) {
         bot.text().setText(pConnectorId);
-
     }
 
     /**
@@ -220,6 +215,5 @@ public class BotAddConnectorDialog extends BotWizardDialog {
     public void setCommandSeparator(final String commandSep) {
         bot.textWithLabel("Command separator").setText(commandSep);
     }
-
 
 }

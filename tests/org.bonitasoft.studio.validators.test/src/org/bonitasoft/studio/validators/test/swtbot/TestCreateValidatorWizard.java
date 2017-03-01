@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.validators.test.swtbot;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -43,7 +42,7 @@ import org.junit.runner.RunWith;
 public class TestCreateValidatorWizard {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public LegacySWTGefBotRule botRule = new LegacySWTGefBotRule(bot);
 
@@ -53,7 +52,7 @@ public class TestCreateValidatorWizard {
      * @throws OperationCanceledException
      */
     @Test
-    public void testCreateValidatorOnField() throws JavaModelException, OperationCanceledException, InterruptedException{
+    public void testCreateValidatorOnField() throws JavaModelException, OperationCanceledException, InterruptedException {
         openNewValidatorWizardDialog();
 
         final SWTBotShell newShell = bot.activeShell();
@@ -66,14 +65,13 @@ public class TestCreateValidatorWizard {
         assertFalse(dialogBot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         dialogBot.textWithLabel("Class *").setText(className);
         assertFalse(dialogBot.button(IDialogConstants.FINISH_LABEL).isEnabled());
-        dialogBot.textWithLabel(Messages.createValidatorWizardPage_packageLabel+" *").setText(packageName);
+        dialogBot.textWithLabel(Messages.createValidatorWizardPage_packageLabel + " *").setText(packageName);
 
         dialogBot.comboBox().setSelection("Field");
 
         dialogBot.button(IDialogConstants.FINISH_LABEL).click();
 
-       // bot.waitUntil(Conditions.shellCloses(newShell), 10000);
-        final Matcher<IEditorReference> matcher = WidgetMatcherFactory.withPartName(className+".java");
+        final Matcher<IEditorReference> matcher = WidgetMatcherFactory.withPartName(className + ".java");
         bot.waitUntil(Conditions.waitForEditor(matcher));
 
         check(packageName, className, displayName, "IFormFieldValidator");
@@ -85,7 +83,7 @@ public class TestCreateValidatorWizard {
      * @throws OperationCanceledException
      */
     @Test
-    public void testCreateValidatorOnForm() throws JavaModelException, OperationCanceledException, InterruptedException{
+    public void testCreateValidatorOnForm() throws JavaModelException, OperationCanceledException, InterruptedException {
         openNewValidatorWizardDialog();
 
         final SWTBotShell newShell = bot.activeShell();
@@ -97,32 +95,32 @@ public class TestCreateValidatorWizard {
         assertFalse(dialogBot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         dialogBot.textWithLabel("Class *").setText(className);
         assertFalse(dialogBot.button(IDialogConstants.FINISH_LABEL).isEnabled());
-        dialogBot.textWithLabel(Messages.createValidatorWizardPage_packageLabel+" *").setText(packageName);
+        dialogBot.textWithLabel(Messages.createValidatorWizardPage_packageLabel + " *").setText(packageName);
 
         dialogBot.comboBox().setSelection("Page");
         dialogBot.button(IDialogConstants.FINISH_LABEL).click();
 
-        final Matcher<IEditorReference> matcher = WidgetMatcherFactory.withPartName(className+".java");
+        final Matcher<IEditorReference> matcher = WidgetMatcherFactory.withPartName(className + ".java");
         bot.waitUntil(Conditions.waitForEditor(matcher));
-       // bot.waitUntil(Conditions.shellCloses(newShell), 10000);
 
         check(packageName, className, displayName, "IFormPageValidator");
     }
 
+    protected void check(final String packageName, final String className, final String displayName,
+            final String interfaceName) throws OperationCanceledException {
 
+        final ValidatorDescriptorRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
+        assertNotNull("The validator descriptor is not created",
+                store.getValidatorDescriptor(packageName + "." + className));
+        assertEquals("The displayName is not the good one", displayName,
+                store.getValidatorDescriptor(packageName + "." + className).getName());
 
+        final ValidatorSourceRepositorySotre sourceStore = RepositoryManager.getInstance()
+                .getRepositoryStore(ValidatorSourceRepositorySotre.class);
 
-    protected void check(final String packageName, final String className, final String displayName, final String interfaceName)  throws JavaModelException, OperationCanceledException, InterruptedException {
-
-        final ValidatorDescriptorRepositoryStore store =  RepositoryManager.getInstance().getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
-        assertNotNull("The validator descriptor is not created",store.getValidatorDescriptor(packageName+"."+className));
-        assertEquals("The displayName is not the good one", displayName, store.getValidatorDescriptor(packageName+"."+className).getName());
-
-        final ValidatorSourceRepositorySotre sourceStore = RepositoryManager.getInstance().getRepositoryStore(ValidatorSourceRepositorySotre.class);
-
-        assertNotNull("The validator class is not created", sourceStore.getChild(packageName+"."+className));
+        assertNotNull("The validator class is not created", sourceStore.getChild(packageName + "." + className));
     }
-
 
     protected void openNewValidatorWizardDialog() {
         bot.menu("Development").menu("6.x Validators").menu("New validator...").click();
@@ -130,4 +128,3 @@ public class TestCreateValidatorWizard {
     }
 
 }
-

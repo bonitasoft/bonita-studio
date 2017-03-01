@@ -19,7 +19,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -43,14 +44,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class BarExporterTest {
 
     final public static String EditorTitleRegex = "(.*)\\s\\((.*)\\)";
 
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule gefBotRule = new SWTGefBotRule(bot);
 
@@ -62,7 +62,8 @@ public class BarExporterTest {
         final String editorTitle = activeEditor.getTitle();
         assertFalse("Error: first diagram name is empty.", editorTitle.isEmpty());
 
-        final BotExecutionDiagramPropertiesView executionTab = new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab();
+        final BotExecutionDiagramPropertiesView executionTab = new BotProcessDiagramPropertiesViewFolder(bot)
+                .selectExecutionTab();
         executionTab.selectInstantiationFormTab().selectLegacy();
         new BotGefProcessDiagramEditor(bot).selectElement("Step1");
         executionTab.selectFormTab().selectLegacy();
@@ -109,7 +110,7 @@ public class BarExporterTest {
         diagramTreeItem.getNode(0).select();
         diagramTreeItem.getNode(0).uncheck();
 
-        final Vector<String> poolTitleList = new Vector<String>(3);
+        final List<String> poolTitleList = new ArrayList<String>(3);
         final int poolTitleListSize = poolTitleList.size();
 
         // check the selected pools
@@ -124,11 +125,11 @@ public class BarExporterTest {
         }
         // create tmp directory to write diagrams
         final File tmpBarFolder = new File(ProjectUtil.getBonitaStudioWorkFolder(), "testExportBar");
+        tmpBarFolder.deleteOnExit();
         tmpBarFolder.mkdirs();
         //set the path where files are saved
         final String tmpBarFolderPath = tmpBarFolder.getAbsolutePath();
         bot.comboBoxWithLabel(Messages.destinationPath + " *").setText(tmpBarFolderPath);
-        //		String tmpBarFolderPath = bot.comboBoxWithLabel(Messages.destinationPath+" *").getText();
 
         // click 'Finish' button to close 'Build' shell
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
@@ -146,7 +147,7 @@ public class BarExporterTest {
             final String tmpPoolTitle = poolTitleList.get(i);
             final String poolFileName = getItemName(tmpPoolTitle) + "--" + getItemVersion(tmpPoolTitle) + ".bar";
             final File poolFile = new File(tmpBarFolderPath, poolFileName);
-
+            poolFile.deleteOnExit();
             assertTrue("Error: The Pool export must exist", poolFile.exists());
             assertTrue("Error: The Pool export must be a file", poolFile.isFile());
         }

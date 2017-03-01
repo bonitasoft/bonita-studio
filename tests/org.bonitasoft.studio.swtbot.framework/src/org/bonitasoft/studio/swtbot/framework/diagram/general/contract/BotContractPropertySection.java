@@ -33,5 +33,4 @@ public class BotContractPropertySection extends BotBase {
         return new BotContractConstraintTab(bot);
     }
 
-
 }

@@ -21,13 +21,11 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotDocum
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
-
 public class BotDataDiagramPropertiesView extends BotPropertiesView {
 
     public BotDataDiagramPropertiesView(final SWTGefBot bot, SWTBotView botView) {
         super(bot, botView);
     }
-
 
     public BotDataPropertySection selectLocalDataTab() {
         selectTab(SWTBotConstants.VIEWS_PROPERTIES_TASK_DATA_VARIABLES);

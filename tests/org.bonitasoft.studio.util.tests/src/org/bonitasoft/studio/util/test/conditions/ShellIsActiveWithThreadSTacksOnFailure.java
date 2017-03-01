@@ -23,13 +23,13 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
  */
 public class ShellIsActiveWithThreadSTacksOnFailure extends DefaultCondition {
 
-	private final String	text;
+    private final String text;
 
     public ShellIsActiveWithThreadSTacksOnFailure(final String text) {
-		Assert.isNotNull(text, "The shell text was null"); //$NON-NLS-1$
-		Assert.isLegal(!StringUtils.isEmpty(text), "The shell text was empty"); //$NON-NLS-1$
-		this.text = text;
-	}
+        Assert.isNotNull(text, "The shell text was null"); //$NON-NLS-1$
+        Assert.isLegal(!StringUtils.isEmpty(text), "The shell text was empty"); //$NON-NLS-1$
+        this.text = text;
+    }
 
     public String getFailureMessage() {
         final StringBuilder dump = new StringBuilder();
@@ -55,20 +55,20 @@ public class ShellIsActiveWithThreadSTacksOnFailure extends DefaultCondition {
 
         return "The shell '" + text + "' did not activate.\n" //$NON-NLS-1$ //$NON-NLS-2$
                 + dump.toString();
-	}
+    }
 
     public boolean test() throws Exception {
-		try {
-			final SWTBotShell shell = bot.shell(text);
-			return UIThreadRunnable.syncExec(new BoolResult() {
+        try {
+            final SWTBotShell shell = bot.shell(text);
+            return UIThreadRunnable.syncExec(new BoolResult() {
 
                 public Boolean run() {
-					return shell.widget.isVisible() || shell.widget.isFocusControl();
-				}
-			});
-		} catch (final WidgetNotFoundException e) {
-		}
-		return false;
-	}
+                    return shell.widget.isVisible() || shell.widget.isFocusControl();
+                }
+            });
+        } catch (final WidgetNotFoundException e) {
+        }
+        return false;
+    }
 
 }

@@ -51,8 +51,9 @@ import org.eclipse.ui.IEditorReference;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.TDefinitions;
@@ -65,18 +66,16 @@ import org.omg.spec.bpmn.model.util.ModelResourceFactoryImpl;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class BPMNExportTests {
 
-    final String resFileLocation = System.getProperty("user.home") + File.separator + "TestExportToBPMNDiagram-1.0.bpmn";
     private DiagramEditPart dep;
     private final SWTGefBot bot = new SWTGefBot();
 
-    @Before
-    public void setUp() throws Exception {
-        new File(resFileLocation).delete();
-    }
+    @Rule
+    public TemporaryFolder tmpFolder = new TemporaryFolder();
 
     @Test
     public void testExportToBPMN() throws Exception {
-        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
+        new BotApplicationWorkbenchWindow(bot)
+                .importBOSArchive()
                 .setArchive(BPMNExportTests.class.getResource("TestExportToBPMNDiagram_1_0.bos"))
                 .finish();
 
@@ -84,25 +83,20 @@ public class BPMNExportTests {
                 .getPart(false)).getDiagram().getElement();
         final Diagram diagramFor = ModelHelper.getDiagramFor(mainProcess);
 
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, new Shell());
-                } catch (final Exception ex) {
-                    dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, new Shell());
-                }
+        Display.getDefault().syncExec(() -> {
+            try {
+                dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, new Shell());
+            } catch (final Exception ex) {
+                dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, new Shell());
             }
         });
 
         final MainProcessEditPart mped = (MainProcessEditPart) dep;
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
-        final File bpmnFileExported = File.createTempFile("withAllExported", ".bpmn");
+        final File bpmnFileExported = tmpFolder.newFile("withAllExported.bpmn");
         final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
         assertTrue("Export failed", transformed);
 
-        //
         final BufferedReader reader = new BufferedReader(new FileReader(bpmnFileExported));
         String line = ""; //$NON-NLS-1$
         boolean correctEncoding = false;
@@ -154,23 +148,16 @@ public class BPMNExportTests {
         final SWTBotMenu processMenu = bot.menu("Diagram");
         final SWTBotMenu exportAsMenu = processMenu.menu("Export as").click();
         final MenuItem mi = exportAsMenu.widget;
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                mi.getMenu().notifyListeners(SWT.Show, new Event());
-                final MenuItem[] mis = mi.getMenu().getItems();
-                for (final MenuItem mi : mis) {
-                    final String menuText = mi.getText();
-                    menuBPMN2found = menuBPMN2found || "BPMN 2.0...".equals(menuText);
-                }
-
+        Display.getDefault().syncExec(() -> {
+            mi.getMenu().notifyListeners(SWT.Show, new Event());
+            final MenuItem[] mis = mi.getMenu().getItems();
+            for (final MenuItem menuItem : mis) {
+                final String menuText = menuItem.getText();
+                menuBPMN2found = menuBPMN2found || "BPMN 2.0...".equals(menuText);
             }
         });
 
         assertTrue("BPMN 2.0 menu is not present", menuBPMN2found);
-        /* Can't do it with swtbot so use duirect API, not very nice but should work locally and on the CI */
-        //exportAsMenu.menu("BPMN 2.0...");//check that th emenu exists
     }
 
     @Test
@@ -200,18 +187,13 @@ public class BPMNExportTests {
 
         final SWTBotMenu exportAsMenu = processMenu.menu("Export as").click();
         final MenuItem mi = exportAsMenu.widget;
-        Display.getDefault().syncExec(new Runnable() {
+        Display.getDefault().syncExec(() -> {
+            mi.getMenu().notifyListeners(SWT.Show, new Event());
+            final MenuItem[] mis = mi.getMenu().getItems();
 
-            @Override
-            public void run() {
-                mi.getMenu().notifyListeners(SWT.Show, new Event());
-                final MenuItem[] mis = mi.getMenu().getItems();
-
-                for (final MenuItem mi : mis) {
-                    final String menuText = mi.getText();
-                    menuBPMN2found = menuBPMN2found || "BPMN 2.0...".equals(menuText);
-                }
-
+            for (final MenuItem menuItem : mis) {
+                final String menuText = menuItem.getText();
+                menuBPMN2found = menuBPMN2found || "BPMN 2.0...".equals(menuText);
             }
         });
 

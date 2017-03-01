@@ -61,19 +61,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class MultiInstantiationIT  implements SWTBotConstants {
+public class MultiInstantiationIT implements SWTBotConstants {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule swtGefBotRule = new SWTGefBotRule(bot);
 
     @Test
     public void testStandardLoop() {
-        final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot).createNewDiagram();
-        final MultiInstantiable multiInstantiable = (MultiInstantiable) botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1")
+        final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot)
+                .createNewDiagram();
+        final MultiInstantiable multiInstantiable = (MultiInstantiable) botProcessDiagramPerspective
+                .activeProcessDiagramEditor().selectElement("Step1")
                 .getSelectedSemanticElement();
         final BotReccurencePropertySection iterationTabBot = botProcessDiagramPerspective
                 .getDiagramPropertiesPart()
@@ -95,7 +96,8 @@ public class MultiInstantiationIT  implements SWTBotConstants {
 
         MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.STANDARD);
         MultiInstantiableAssert.assertThat(multiInstantiable).hasTestBefore(false);
-        ExpressionAssert.assertThat(multiInstantiable.getLoopCondition()).hasName("condition").hasContent("instanceCount < 5")
+        ExpressionAssert.assertThat(multiInstantiable.getLoopCondition()).hasName("condition")
+                .hasContent("instanceCount < 5")
                 .hasType(ExpressionConstants.SCRIPT_TYPE)
                 .hasReturnType(Boolean.class.getName());
         ExpressionAssert.assertThat(multiInstantiable.getLoopMaximum()).hasName("3").hasContent("3")
@@ -105,8 +107,10 @@ public class MultiInstantiationIT  implements SWTBotConstants {
 
     @Test
     public void testMultiInstantiationUI() {
-        final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot).createNewDiagram();
-        final MultiInstantiable multiInstantiable = (MultiInstantiable) botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1")
+        final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot)
+                .createNewDiagram();
+        final MultiInstantiable multiInstantiable = (MultiInstantiable) botProcessDiagramPerspective
+                .activeProcessDiagramEditor().selectElement("Step1")
                 .getSelectedSemanticElement();
         final BotReccurencePropertySection iterationTabBot = botProcessDiagramPerspective
                 .getDiagramPropertiesPart()
@@ -153,12 +157,14 @@ public class MultiInstantiationIT  implements SWTBotConstants {
             }
         });
 
-        botNumberBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("completion").setScriptContent("true").ok();
+        botNumberBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("completion")
+                .setScriptContent("true").ok();
         bot.waitUntil(new AssertionCondition() {
 
             @Override
             protected void makeAssert() throws Exception {
-                ExpressionAssert.assertThat(multiInstantiable.getCompletionCondition()).hasName("completion").hasContent("true")
+                ExpressionAssert.assertThat(multiInstantiable.getCompletionCondition()).hasName("completion")
+                        .hasContent("true")
                         .hasType(ExpressionConstants.SCRIPT_TYPE)
                         .hasReturnType(Boolean.class.getName());
             }
@@ -168,29 +174,37 @@ public class MultiInstantiationIT  implements SWTBotConstants {
 
     @Test
     public void testMultiInstanceCardinality() throws ExecutionException {
-        final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot).createNewDiagram();
+        final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot)
+                .createNewDiagram();
         final BotGefProcessDiagramEditor drawDiagram = botProcessDiagramPerspective.activeProcessDiagramEditor();
-        final MultiInstantiable multiInstantiable = (MultiInstantiable) drawDiagram.selectElement("Step1").getSelectedSemanticElement();
+        final MultiInstantiable multiInstantiable = (MultiInstantiable) drawDiagram.selectElement("Step1")
+                .getSelectedSemanticElement();
         final AbstractProcess proc = ModelHelper.getParentProcess(multiInstantiable);
         drawDiagram.selectElement(proc.getName());
 
-        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectPoolDataTab()
+        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab()
+                .selectPoolDataTab()
                 .addData();
-        BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("nbTicketsAvailable").setType("Integer").editDefaultValueExpression();
+        BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("nbTicketsAvailable").setType("Integer")
+                .editDefaultValueExpression();
         botExpressionEditorDialog.selectConstantType().setValue("20").ok();
         addDataBot.finish();
 
-        final BotActorDefinitionPropertySection botActorDefinitionPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab()
+        final BotActorDefinitionPropertySection botActorDefinitionPropertySection = botProcessDiagramPerspective
+                .getDiagramPropertiesPart().selectGeneralTab()
                 .selectActorsDefinitionTab();
 
         botActorDefinitionPropertySection.selectActor("Employee actor").setSetAsInitiator();
 
         drawDiagram.selectElement("Step1");
-        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectActorAssignementTab().useBelowActor().selectActor("Employee actor");
-        final BotNumberBasedStackPanel botNumberBasedStackPanel = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab()
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectActorAssignementTab()
+                .useBelowActor().selectActor("Employee actor");
+        final BotNumberBasedStackPanel botNumberBasedStackPanel = botProcessDiagramPerspective.getDiagramPropertiesPart()
+                .selectGeneralTab()
                 .selectIterationTab().selectParallelType().definedNumberOfInstances();
         botNumberBasedStackPanel.editNumberOfInstances().selectConstantType().setValue("15").ok();
-        botNumberBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("isThereTickets").setScriptContent("nbTicketsAvailable == 0").ok();
+        botNumberBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("isThereTickets")
+                .setScriptContent("nbTicketsAvailable == 0").ok();
 
         addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab()
                 .addData();
@@ -198,7 +212,8 @@ public class MultiInstantiationIT  implements SWTBotConstants {
         botExpressionEditorDialog.selectConstantType().setValue("0").ok();
         addDataBot.finish();
 
-        final BotPageflowPropertySection botPageflowPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart().selectApplicationTab()
+        final BotPageflowPropertySection botPageflowPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart()
+                .selectApplicationTab()
                 .selectPageflowTab();
         final BotAddFormWizardDialog botDialog = botPageflowPropertySection.addForm();
         if (botDialog.canFlipToNextPage()) {
@@ -209,18 +224,22 @@ public class MultiInstantiationIT  implements SWTBotConstants {
 
         botProcessDiagramPerspective.activeFormDiagramEditor().selectWidget("Nb Tickets Available");
 
-        final BotGeneralPropertySection botGeneralPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectGeneralTab();
+        final BotGeneralPropertySection botGeneralPropertySection = botProcessDiagramPerspective.getFormPropertiesPart()
+                .selectGeneralTab().selectGeneralTab();
         botGeneralPropertySection.setFieldType("Message");
 
-        final BotDataFormPropertySection botDataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
+        final BotDataFormPropertySection botDataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart()
+                .selectGeneralTab().selectDataTab();
         botDataPropertySection.editInitialValue().selectScriptTab().setName("nbTicketsAvailable")
-                .setScriptContent("\"Only \"+nbTicketsAvailable+\" tickets available.\"").setReturnType(String.class.getName()).ok();
+                .setScriptContent("\"Only \"+nbTicketsAvailable+\" tickets available.\"")
+                .setReturnType(String.class.getName()).ok();
 
         botProcessDiagramPerspective.activeFormDiagramEditor().selectWidget("Nb Tickets");
         botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectGeneralTab().setFieldType("Text field")
                 .setDisplayName("Nbr de Tickets à reserver");
 
-        final BotDataFormPropertySection dataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
+        final BotDataFormPropertySection dataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart()
+                .selectGeneralTab().selectDataTab();
         dataPropertySection.editInitialValue().selectConstantType().setValue("0").ok();
         dataPropertySection.selectOutputVariable("nbTickets", Integer.class.getName());
         dataPropertySection.getOutputOperation().editRightOperand().selectScriptTab().setName("nbTickets")
@@ -239,15 +258,19 @@ public class MultiInstantiationIT  implements SWTBotConstants {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final BotGefProcessDiagramEditor drawDiagram = botProcessDiagramPerspective.activeProcessDiagramEditor();
-        final MultiInstantiable multiInstantiable = (MultiInstantiable) drawDiagram.selectElement("Step1").getSelectedSemanticElement();
+        final MultiInstantiable multiInstantiable = (MultiInstantiable) drawDiagram.selectElement("Step1")
+                .getSelectedSemanticElement();
         final AbstractProcess proc = ModelHelper.getParentProcess(multiInstantiable);
         drawDiagram.selectElement(proc.getName());
 
-        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectPoolDataTab()
+        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab()
+                .selectPoolDataTab()
                 .addData();
-        final BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object").setClassname("java.util.List")
+        final BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object")
+                .setClassname("java.util.List")
                 .editDefaultValueExpression();
-        botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]")
+        botExpressionEditorDialog.selectScriptTab().setName("vipScript")
+                .setScriptContent("[\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]")
                 .setReturnType("java.util.List").ok();
         addDataBot.finish();
 
@@ -261,7 +284,8 @@ public class MultiInstantiationIT  implements SWTBotConstants {
 
         botApplicationWorkbenchWindow.save();
 
-        final BotReccurencePropertySection iterationTab = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab()
+        final BotReccurencePropertySection iterationTab = botProcessDiagramPerspective.getDiagramPropertiesPart()
+                .selectGeneralTab()
                 .selectIterationTab();
 
         // select the multi-instantiate radio buton
@@ -300,15 +324,19 @@ public class MultiInstantiationIT  implements SWTBotConstants {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final BotGefProcessDiagramEditor drawDiagram = botProcessDiagramPerspective.activeProcessDiagramEditor();
-        final MultiInstantiable multiInstantiable = (MultiInstantiable) drawDiagram.selectElement("Step1").getSelectedSemanticElement();
+        final MultiInstantiable multiInstantiable = (MultiInstantiable) drawDiagram.selectElement("Step1")
+                .getSelectedSemanticElement();
         final AbstractProcess proc = ModelHelper.getParentProcess(multiInstantiable);
         drawDiagram.selectElement(proc.getName());
 
-        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectPoolDataTab()
+        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab()
+                .selectPoolDataTab()
                 .addData();
-        final BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object").setClassname("java.util.List")
+        final BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object")
+                .setClassname("java.util.List")
                 .editDefaultValueExpression();
-        botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]")
+        botExpressionEditorDialog.selectScriptTab().setName("vipScript")
+                .setScriptContent("[\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]")
                 .setReturnType("java.util.List").ok();
         addDataBot = (BotAddDataWizardPage) addDataBot.finishAndAdd();
         addDataBot.setName("vip2").setType("Java Object").setClassname("java.util.List")
@@ -323,13 +351,15 @@ public class MultiInstantiationIT  implements SWTBotConstants {
         addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab()
                 .addData();
         addDataBot = (BotAddDataWizardPage) addDataBot.setName("vipName").setType("Text").finishAndAdd();
-        addDataBot.setName("nbTickets").setType("Integer").editDefaultValueExpression().selectConstantType().setValue("0").ok();
+        addDataBot.setName("nbTickets").setType("Integer").editDefaultValueExpression().selectConstantType().setValue("0")
+                .ok();
         addDataBot.finish();
 
         botApplicationWorkbenchWindow.save();
 
         // Set properties of Multi-Instance
-        final BotReccurencePropertySection iterationTab = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab()
+        final BotReccurencePropertySection iterationTab = botProcessDiagramPerspective.getDiagramPropertiesPart()
+                .selectGeneralTab()
                 .selectIterationTab();
 
         // select the multi-instantiate radio buton
@@ -346,9 +376,11 @@ public class MultiInstantiationIT  implements SWTBotConstants {
         // Check references of input collection, input data, outputdata and output result exist
         assertNotNull("Error: Input Collection used in the MultiInstantiation is not referenced in the Model.",
                 multiInstantiable.getCollectionDataToMultiInstantiate());
-        assertNotNull("Error: Input Data used in the MultiInstantiation is not referenced in the Model.", multiInstantiable.getIteratorExpression());
+        assertNotNull("Error: Input Data used in the MultiInstantiation is not referenced in the Model.",
+                multiInstantiable.getIteratorExpression());
         assertEquals("vipName", multiInstantiable.getIteratorExpression().getName());
-        assertNotNull("Error: Output Data used in the MultiInstantiation is not referenced in the Model.", multiInstantiable.getOutputData());
+        assertNotNull("Error: Output Data used in the MultiInstantiation is not referenced in the Model.",
+                multiInstantiable.getOutputData());
         assertNotNull("Error: Output Result used in the MultiInstantiation is not referenced in the Model.",
                 multiInstantiable.getListDataContainingOutputResults());
 
@@ -373,10 +405,12 @@ public class MultiInstantiationIT  implements SWTBotConstants {
 
             @Override
             protected void makeAssert() throws Exception {
-                assertNull("Error: Input Collection is still referenced in the MultiInstantiation Model after being removed.",
+                assertNull(
+                        "Error: Input Collection is still referenced in the MultiInstantiation Model after being removed.",
                         multiInstantiable.getCollectionDataToMultiInstantiate());
                 assertTrue(multiInstantiable.getIteratorExpression().getName().equals("vipName"));
-                assertNull("Error: Output Data is still referenced in the MultiInstantiation Model after being removed.", multiInstantiable.getOutputData());
+                assertNull("Error: Output Data is still referenced in the MultiInstantiation Model after being removed.",
+                        multiInstantiable.getOutputData());
                 assertNull("Error: Output Result is still referenced in the MultiInstantiation Model after being removed.",
                         multiInstantiable.getListDataContainingOutputResults());
             }
@@ -402,18 +436,22 @@ public class MultiInstantiationIT  implements SWTBotConstants {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final BotGefProcessDiagramEditor drawDiagram = botProcessDiagramPerspective.activeProcessDiagramEditor();
-        final MultiInstantiable multiInstantiable = (MultiInstantiable) drawDiagram.selectElement("Step1").getSelectedSemanticElement();
+        final MultiInstantiable multiInstantiable = (MultiInstantiable) drawDiagram.selectElement("Step1")
+                .getSelectedSemanticElement();
         final AbstractProcess proc = ModelHelper.getParentProcess(multiInstantiable);
         drawDiagram.selectElement(proc.getName());
 
-        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectPoolDataTab()
+        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab()
+                .selectPoolDataTab()
                 .addData();
-        BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("nbTicketsAvailable").setType("Integer").editDefaultValueExpression();
+        BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("nbTicketsAvailable").setType("Integer")
+                .editDefaultValueExpression();
         botExpressionEditorDialog.selectConstantType().setValue("20").ok();
         addDataBot = (BotAddDataWizardPage) addDataBot.finishAndAdd();
         botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object").setClassname("java.util.List")
                 .editDefaultValueExpression();
-        botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]")
+        botExpressionEditorDialog.selectScriptTab().setName("vipScript")
+                .setScriptContent("[\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]")
                 .setReturnType("java.util.List").ok();
         addDataBot = (BotAddDataWizardPage) addDataBot.finishAndAdd();
         addDataBot.setName("alreadyVip").setType("Java Object").setClassname("java.util.List")
@@ -422,12 +460,14 @@ public class MultiInstantiationIT  implements SWTBotConstants {
                 .setReturnType("java.util.List").ok();
         addDataBot.finish();
 
-        final BotActorDefinitionPropertySection botActorDefinitionPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab()
+        final BotActorDefinitionPropertySection botActorDefinitionPropertySection = botProcessDiagramPerspective
+                .getDiagramPropertiesPart().selectGeneralTab()
                 .selectActorsDefinitionTab();
         botActorDefinitionPropertySection.selectActor("Employee actor").setSetAsInitiator();
 
         drawDiagram.selectElement("Step1");
-        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectActorAssignementTab().useBelowActor().selectActor("Employee actor");
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectActorAssignementTab()
+                .useBelowActor().selectActor("Employee actor");
 
         addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab()
                 .addData();
@@ -441,7 +481,8 @@ public class MultiInstantiationIT  implements SWTBotConstants {
 
         // Set properties of Multi-Instance
         // Set properties of Multi-Instance
-        final BotReccurencePropertySection iterationTab = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab()
+        final BotReccurencePropertySection iterationTab = botProcessDiagramPerspective.getDiagramPropertiesPart()
+                .selectGeneralTab()
                 .selectIterationTab();
 
         // select the multi-instantiate radio buton
@@ -456,11 +497,13 @@ public class MultiInstantiationIT  implements SWTBotConstants {
         botDataBasedStackPanel.selectListOfAppenedResults("alreadyVip -- java.util.List");
 
         // Edit the Completion condition
-        botDataBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("isOK").setScriptContent("(vip.isEmpty())||(nbTicketsAvailable==0)")
+        botDataBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("isOK")
+                .setScriptContent("(vip.isEmpty())||(nbTicketsAvailable==0)")
                 .ok();
 
         // Add operation to update the number of available tickets
-        final BotOperationsPropertySection operationTab = botProcessDiagramPerspective.getDiagramPropertiesPart().selectExecutionTab().selectOperationTab();
+        final BotOperationsPropertySection operationTab = botProcessDiagramPerspective.getDiagramPropertiesPart()
+                .selectExecutionTab().selectOperationTab();
         operationTab.addOperation();
         final BotOperationComposite botOperationComposite = operationTab.getOperation(0);
         botOperationComposite.selectLeftOperand("vip", "java.util.List");

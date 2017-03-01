@@ -70,7 +70,8 @@ public class TestConditions {
     private APISession session;
 
     @Before
-    public void setUp() throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, LoginException {
+    public void setUp()
+            throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, LoginException {
         session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
     }
 
@@ -96,23 +97,26 @@ public class TestConditions {
         assertEquals("the current task should be Step3", "Step3", newTask.getName());
     }
 
-    private boolean isNewTaskCreated(final List<HumanTaskInstance> tasks, final ProcessDefinition processDef) throws Exception {
+    private boolean isNewTaskCreated(final List<HumanTaskInstance> tasks, final ProcessDefinition processDef)
+            throws Exception {
         final boolean evaluateAsync = new TestAsyncThread(30, 1000) {
 
             @Override
             public boolean isTestGreen() throws Exception {
-                newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks, processDef.getId(), session.getUserId());
+                newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks, processDef.getId(),
+                        session.getUserId());
                 return newTask != null;
             }
         }.evaluate();
         return evaluateAsync;
     }
 
-    private String computeClearErrorMessageIfNoNewTaskFound(final ProcessAPI processApi, final ProcessDefinition processDef, final boolean evaluateAsync) {
+    private String computeClearErrorMessageIfNoNewTaskFound(final ProcessAPI processApi, final ProcessDefinition processDef,
+            final boolean evaluateAsync) {
         String errorMessageDetailled = "";
         if (!evaluateAsync) {
-            final Collection<HumanTaskInstance> actualTask = processApi.getPendingHumanTaskInstances(session.getUserId(), 0, 20,
-                    ActivityInstanceCriterion.DEFAULT);
+            final Collection<HumanTaskInstance> actualTask = processApi.getPendingHumanTaskInstances(session.getUserId(), 0,
+                    20, ActivityInstanceCriterion.DEFAULT);
             errorMessageDetailled += "\n processUUID searched: " + processDef.getId();
             for (final TaskInstance taskInstance : actualTask) {
                 errorMessageDetailled += "\n" + taskInstance.getParentProcessInstanceId();
@@ -121,7 +125,8 @@ public class TestConditions {
         return errorMessageDetailled;
     }
 
-    private ProcessDefinition startDeployedProcess(final ProcessAPI processApi) throws ProcessDefinitionNotFoundException, ProcessActivationException,
+    private ProcessDefinition startDeployedProcess(final ProcessAPI processApi)
+            throws ProcessDefinitionNotFoundException, ProcessActivationException,
             ProcessExecutionException, InterruptedException {
         final long processId = processApi.getProcessDefinitionId("Pool3", "1.0");
         int i = 0;
@@ -148,7 +153,8 @@ public class TestConditions {
 
     private List<HumanTaskInstance> getPendingTasks(final ProcessAPI processApi) throws SearchException {
         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
-        final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
+        final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions)
+                .getResult();
         return tasks;
     }
 

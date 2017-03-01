@@ -65,7 +65,8 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         FileActionDialog.setDisablePopup(true);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
     }
 
     @Override
@@ -81,7 +82,8 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         final BotProcessDiagramPerspective diagramPerspective = workbenchWindow.createNewDiagram();
         BotGefProcessDiagramEditor diagramEditor = diagramPerspective.activeProcessDiagramEditor();
         diagramEditor.selectDiagram();
-        diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab().setName("ExportImportWithoutMigrationIT");
+        diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab()
+                .setName("ExportImportWithoutMigrationIT");
         diagramEditor = diagramPerspective.activeProcessDiagramEditor().selectDiagram();
         final EObject originalSemanticElement = diagramEditor.getSelectedSemanticElement();
         assertThat(originalSemanticElement).isInstanceOf(MainProcess.class);
@@ -93,7 +95,8 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         final File bosFile = new File(destFolder, "ExportImportWithoutMigrationIT-1.0.bos");
         exportBosArchiveOperation.setDestinationPath(bosFile.getAbsolutePath());
 
-        final DiagramRepositoryStore diagramRepositoryStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore diagramRepositoryStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         DiagramFileStore diagramFileStore = diagramRepositoryStore.getDiagram("ExportImportWithoutMigrationIT",
                 "1.0");
         assertThat(diagramFileStore).isNotNull();

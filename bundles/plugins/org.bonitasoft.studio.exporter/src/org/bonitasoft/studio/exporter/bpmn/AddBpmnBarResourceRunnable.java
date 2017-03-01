@@ -51,7 +51,7 @@ public class AddBpmnBarResourceRunnable implements RunnableWithResult<List<BarRe
 
     private final BusinessArchiveBuilder builder;
     private final AbstractProcess process;
-    final List<BarResource> res = new ArrayList<BarResource>();
+    final List<BarResource> res = new ArrayList<>();
 
     public AddBpmnBarResourceRunnable(final BusinessArchiveBuilder builder, final AbstractProcess process) {
         this.builder = builder;
@@ -109,7 +109,8 @@ public class AddBpmnBarResourceRunnable implements RunnableWithResult<List<BarRe
     protected MainProcessEditPart createMainEditPart(Diagram diagramFor, final Resource eResourceuseless) {
         final ResourceSet rSet = new ResourceSetImpl();
 
-        final TransactionalEditingDomain editingDomain = CustomDiagramEditingDomainFactory.getInstance().createEditingDomain(rSet);
+        final TransactionalEditingDomain editingDomain = CustomDiagramEditingDomainFactory.getInstance()
+                .createEditingDomain(rSet);
         final Resource resource = rSet.createResource(diagramFor.eResource().getURI());
         try {
             resource.load(rSet.getLoadOptions());

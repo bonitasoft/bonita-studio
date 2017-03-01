@@ -34,7 +34,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestConditionExpression implements SWTBotConstants {
 
@@ -44,7 +43,7 @@ public class TestConditionExpression implements SWTBotConstants {
     private final String unvalidErrorMessage = "wrong XText validation, underline error should be displayed";
 
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     @Before
     public void initialiseTest() {
         SWTBotTestUtil.createNewDiagram(bot);
@@ -81,11 +80,13 @@ public class TestConditionExpression implements SWTBotConstants {
         testUnvalidConditionExpression("\"myString\"<myString1", ExpressionConstants.CONDITION_TYPE, true, true);
     }
 
-    private void testUnvalidConditionExpression(final String condition, final String expressionType, final boolean leftError, final boolean rightError)
+    private void testUnvalidConditionExpression(final String condition, final String expressionType, final boolean leftError,
+            final boolean rightError)
             throws OperationCanceledException, InterruptedException {
         SWTBotTestUtil.initializeComparisonExpression(bot, condition);
         final Point p1 = getLeftExpressionColumnLength(condition);
-        StyleRange styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0, p1.x);
+        StyleRange styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0,
+                p1.x);
         if (leftError) {
             assertTrue(unvalidErrorMessage + " expression = " + condition, styles.underline);
         } else {
@@ -102,10 +103,12 @@ public class TestConditionExpression implements SWTBotConstants {
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
 
-    private void testValidConditionExpression(final String condition, final String expressionType) throws OperationCanceledException, InterruptedException {
+    private void testValidConditionExpression(final String condition, final String expressionType)
+            throws OperationCanceledException, InterruptedException {
         SWTBotTestUtil.initializeComparisonExpression(bot, condition);
         final Point p1 = getLeftExpressionColumnLength(condition);
-        StyleRange styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0, p1.x);
+        StyleRange styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0,
+                p1.x);
         assertFalse(validErrorMessage, styles.underline);
         final Point p2 = getRighExpressionColumnLength(condition);
         bot.sleep(500);

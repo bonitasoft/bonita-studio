@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2012-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connectors.test.swtbot;
 
@@ -50,75 +47,67 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ConnectorImplementationTest implements SWTBotConstants{
+public class ConnectorImplementationTest implements SWTBotConstants {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     @Before
     public void createDefinition() {
         final String id = "testEdit";
         final String version = "1.0.0";
-        ConnectorDefinition connector = ConnectorDefinitionFactory.eINSTANCE
-                .createConnectorDefinition();
+        ConnectorDefinition connector = ConnectorDefinitionFactory.eINSTANCE.createConnectorDefinition();
         connector.setId(id);
         connector.setVersion(version);
-        String defId = NamingUtils.toConnectorDefinitionFilename(
-                connector.getId(), connector.getVersion(), false);
+        String defId = NamingUtils.toConnectorDefinitionFilename(connector.getId(), connector.getVersion(), false);
         String defFileName = defId + "." + "def";
         ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager
-                .getInstance().getRepositoryStore(
-                        ConnectorDefRepositoryStore.class);
-        IRepositoryFileStore fileStore = store
-                .createRepositoryFileStore(defFileName);
+                .getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        IRepositoryFileStore fileStore = store.createRepositoryFileStore(defFileName);
         fileStore.save(connector);
     }
 
     @Test
     public void createConnectorImplementation() throws Exception {
-    	final int nbEditorsBefore = bot.editors().size();
+        final int nbEditorsBefore = bot.editors().size();
         final String id = "testImplementation";
         final String definition = "testEdit";
         final String className = "MyConnectorImpl";
         final String packageName = "org.bonita.connector.test";
         SWTBotConnectorTestUtil.activateConnectorImplementationShell(bot);
-     
-        assertFalse("Finish button should be disabled",
-                bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
-      
+
+        assertFalse("Finish button should be disabled", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+
         selectDefinition(definition);
-        
 
         bot.textWithLabel("Implementation id *").setText(id);
-      
+
         bot.textWithLabel("Class name *").setText(className);
         bot.textWithLabel("Package *").setText(packageName);
         bot.button(IDialogConstants.FINISH_LABEL).click();
         ConnectorImplRepositoryStore store = (ConnectorImplRepositoryStore) RepositoryManager
-                .getInstance().getRepositoryStore(
-                        ConnectorImplRepositoryStore.class);
-        ConnectorImplementation connectorImpl = store.getImplementation(id,
-                "1.0.0");
-        assertNotNull("connectorImplementation" + id + " was not created",
-                connectorImpl);
-        assertEquals("connectorImplementation id should be " + id,
-                connectorImpl.getImplementationId(), id);
-        
-        
+                .getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+        ConnectorImplementation connectorImpl = store.getImplementation(id, "1.0.0");
+        assertNotNull("connectorImplementation" + id + " was not created", connectorImpl);
+        assertEquals("connectorImplementation id should be " + id, connectorImpl.getImplementationId(), id);
+
         bot.waitUntil(new ICondition() {
 
+            @Override
             public boolean test() throws Exception {
-                return nbEditorsBefore +1 == bot.editors().size();
+                return nbEditorsBefore + 1 == bot.editors().size();
             }
 
+            @Override
             public void init(SWTBot bot) {
             }
 
+            @Override
             public String getFailureMessage() {
                 return "Editor for implementation has not been opened.";
             }
         }, 30000);
         int length = bot.activeEditor().toTextEditor().getText().length();
-        Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, Repository.NULL_PROGRESS_MONITOR); 
+        Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
         Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, Repository.NULL_PROGRESS_MONITOR);
         bot.sleep(1000);
         StyleRange[] styles = bot.activeEditor().toTextEditor().getStyles(0, 0, length);
@@ -133,10 +122,9 @@ public class ConnectorImplementationTest implements SWTBotConstants{
         final String className = "MyConnectorImpl";
         final String packageName = "org.bonita.connector.";
         SWTBotConnectorTestUtil.activateConnectorImplementationShell(bot);
-        
+
         selectDefinition(definition);
-        
-        
+
         bot.textWithLabel("Implementation id *").setText(id);
         bot.textWithLabel("Class name *").setText(className);
         bot.textWithLabel("Package *").setText(packageName);
@@ -152,22 +140,24 @@ public class ConnectorImplementationTest implements SWTBotConstants{
         final String packageName = "org.bonita.connector";
         SWTBotConnectorTestUtil.activateConnectorImplementationShell(bot);
         selectDefinition(definition);
-        bot.textWithLabel(Messages.implementationId+" *").setText(id);
+        bot.textWithLabel(Messages.implementationId + " *").setText(id);
         bot.textWithLabel("Package *").setText(packageName);
-        bot.textWithLabel(Messages.classNameLabel+" *").setText("MyConnector.Implsfgsdf");
+        bot.textWithLabel(Messages.classNameLabel + " *").setText("MyConnector.Implsfgsdf");
         bot.waitUntil(new DefaultCondition() {
-			
-			public boolean test() throws Exception {
-				return !bot.button(IDialogConstants.FINISH_LABEL).isEnabled();
-			}
-			
-			public String getFailureMessage() {
-				return "finish button should be disabled";
-			}
-		});
+
+            @Override
+            public boolean test() throws Exception {
+                return !bot.button(IDialogConstants.FINISH_LABEL).isEnabled();
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "finish button should be disabled";
+            }
+        });
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
-    
+
     @Test
     public void testConnectorImplementationEdition() {
         final int nbEditorsBefore = bot.editors().size();
@@ -177,22 +167,25 @@ public class ConnectorImplementationTest implements SWTBotConstants{
         final String definition = "testEdit";
         final String className = "MyConnectorImpl2";
         final String packageName = "org.bonita.connector.test";
-        
+
         selectDefinition(definition);
-        
+
         bot.textWithLabel("Implementation id *").setText(id);
         bot.textWithLabel("Class name *").setText(className);
         bot.textWithLabel("Package *").setText(packageName);
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.waitUntil(new ICondition() {
 
+            @Override
             public boolean test() throws Exception {
-                return nbEditorsBefore +1 == bot.editors().size();
+                return nbEditorsBefore + 1 == bot.editors().size();
             }
 
+            @Override
             public void init(SWTBot bot) {
             }
 
+            @Override
             public String getFailureMessage() {
                 return "Editor for implementation has not been opened.";
             }
@@ -229,24 +222,27 @@ public class ConnectorImplementationTest implements SWTBotConstants{
         removeImplementation(id2);
     }
 
-	protected void selectDefinition(final String definition) {
-		bot.treeWithId(SWTBOT_ID_EXPLORER_LEFT_TREE).select(0);
+    protected void selectDefinition(final String definition) {
+        bot.treeWithId(SWTBOT_ID_EXPLORER_LEFT_TREE).select(0);
         bot.waitUntil(new ICondition() {
-			
-			public boolean test() throws Exception {
-				return  bot.tableWithId(SWTBOT_ID_EXPLORER_RIGHT_TABLE).rowCount() > 0;
-			}
-			
-			public void init(SWTBot bot) {
-			}
-			
-			public String getFailureMessage() {
-				return "No items found in right table of connector explorer";
-			}
-		});
+
+            @Override
+            public boolean test() throws Exception {
+                return bot.tableWithId(SWTBOT_ID_EXPLORER_RIGHT_TABLE).rowCount() > 0;
+            }
+
+            @Override
+            public void init(SWTBot bot) {
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "No items found in right table of connector explorer";
+            }
+        });
         bot.tableWithId(SWTBOT_ID_EXPLORER_RIGHT_TABLE).select(definition);
         bot.button(IDialogConstants.NEXT_LABEL).click();
-	}
+    }
 
     @Test
     public void testConnectorImplEditionWithSameDefandClassName() {
@@ -257,22 +253,25 @@ public class ConnectorImplementationTest implements SWTBotConstants{
         final String className = "MyactorFilterImpl";
         final String packageName = "org.bonita.actorFilter.test";
         SWTBotConnectorTestUtil.activateConnectorImplementationShell(bot);
-        
+
         selectDefinition(definition);
-      
+
         bot.textWithLabel("Implementation id *").setText(id);
         bot.textWithLabel("Class name *").setText(className);
         bot.textWithLabel("Package *").setText(packageName);
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.waitUntil(new ICondition() {
 
+            @Override
             public boolean test() throws Exception {
                 return nbEditorsBefore + 1 == bot.editors().size();
             }
 
+            @Override
             public void init(SWTBot bot) {
             }
 
+            @Override
             public String getFailureMessage() {
                 return "Editor for implementation has not been opened.";
             }
@@ -285,14 +284,17 @@ public class ConnectorImplementationTest implements SWTBotConstants{
         bot.textWithLabel("Package *").setText(packageName);
         bot.waitUntil(new ICondition() {
 
+            @Override
             public boolean test() throws Exception {
                 return !bot.button(IDialogConstants.FINISH_LABEL).isEnabled();
             }
 
+            @Override
             public void init(SWTBot bot) {
 
             }
 
+            @Override
             public String getFailureMessage() {
                 return "Finish button should be disabled";
             }
@@ -302,29 +304,29 @@ public class ConnectorImplementationTest implements SWTBotConstants{
         removeImplementation(id);
     }
 
-    private void removeImplementation(String implId){
+    private void removeImplementation(String implId) {
         ConnectorImplRepositoryStore store = (ConnectorImplRepositoryStore) RepositoryManager
                 .getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
-        ConnectorImplementation impl=store.getImplementation(implId,"1.0.0");
-        String fileName = impl.eResource().getURI().lastSegment() ;
-        IRepositoryFileStore file = store.getChild(fileName) ;
-        if(FileActionDialog.confirmDeletionQuestion(fileName)){
-            file.delete() ;
-            String className = impl.getImplementationClassname() ;
-            IRepositoryFileStore sourceFile = store.getChild(className) ;
-            String abstarctClassName = ClassGenerator.getAbstractClassName(className) ;
-            IRepositoryFileStore abstractFile =store.getChild(abstarctClassName) ;
-            if(sourceFile != null && FileActionDialog.confirmDeletionQuestion(sourceFile.getName())){
-                sourceFile.delete() ;
-                if(abstractFile != null ){
-                    abstractFile.delete() ;
+        ConnectorImplementation impl = store.getImplementation(implId, "1.0.0");
+        String fileName = impl.eResource().getURI().lastSegment();
+        IRepositoryFileStore file = store.getChild(fileName);
+        if (FileActionDialog.confirmDeletionQuestion(fileName)) {
+            file.delete();
+            String className = impl.getImplementationClassname();
+            IRepositoryFileStore sourceFile = store.getChild(className);
+            String abstarctClassName = ClassGenerator.getAbstractClassName(className);
+            IRepositoryFileStore abstractFile = store.getChild(abstarctClassName);
+            if (sourceFile != null && FileActionDialog.confirmDeletionQuestion(sourceFile.getName())) {
+                sourceFile.delete();
+                if (abstractFile != null) {
+                    abstractFile.delete();
                 }
             }
         }
     }
 
     @After
-    public void removeDefinitionAndCloseAllEditors(){
+    public void removeDefinitionAndCloseAllEditors() {
         ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager
                 .getInstance().getRepositoryStore(
                         ConnectorDefRepositoryStore.class);
@@ -334,9 +336,9 @@ public class ConnectorImplementationTest implements SWTBotConstants{
         bot.closeAllEditors();
     }
 
-    private void containsError(StyleRange[] styles){
-    	for (StyleRange style:styles){
-    		assertFalse("connector impl contains errors",style.underline);
-    	}
+    private void containsError(StyleRange[] styles) {
+        for (StyleRange style : styles) {
+            assertFalse("connector impl contains errors", style.underline);
+        }
     }
 }

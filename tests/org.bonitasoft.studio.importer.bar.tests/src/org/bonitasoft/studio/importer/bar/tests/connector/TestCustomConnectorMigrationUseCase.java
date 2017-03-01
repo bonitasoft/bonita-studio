@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.importer.bar.tests.connector;
 
@@ -41,77 +39,78 @@ import org.junit.Test;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class TestCustomConnectorMigrationUseCase {
 
-	private static boolean disablepopup;
+    private static boolean disablepopup;
 
-	@BeforeClass
-	public static void disablePopup() {
-		disablepopup = FileActionDialog.getDisablePopup();
-		FileActionDialog.setDisablePopup(true);
-	}
+    @BeforeClass
+    public static void disablePopup() {
+        disablepopup = FileActionDialog.getDisablePopup();
+        FileActionDialog.setDisablePopup(true);
+    }
 
-	@AfterClass
-	public static void resetdisablePopup() {
-		FileActionDialog.setDisablePopup(disablepopup);
-	}
+    @AfterClass
+    public static void resetdisablePopup() {
+        FileActionDialog.setDisablePopup(disablepopup);
+    }
 
-	@Test
-	public void testCustomonnectorMigration() throws Exception {
-		final URL url = TestCustomConnectorMigrationUseCase.class
-				.getResource("CustomConnectorMigrationUseCase--1.0.bar");
-		final File migratedProc = BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil
-				.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil
-				.getMainProcess(resource);
+    @Test
+    public void testCustomonnectorMigration() throws Exception {
+        final URL url = TestCustomConnectorMigrationUseCase.class
+                .getResource("CustomConnectorMigrationUseCase--1.0.bar");
+        final File migratedProc = BarImporterTestUtil.migrateBar(url);
+        migratedProc.deleteOnExit();
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
 
-		final ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-		assertNotNull(defStore.getDefinition("MyConnectorId","1.0.0"));
-		
-		final ConnectorImplRepositoryStore implStore = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
-		ConnectorImplementation implementation = implStore.getImplementation("MyConnectorId-impl","1.0.0");
-		assertNotNull(implementation);
-		
-		final ConnectorSourceRepositoryStore sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
-		assertNotNull(sourceStore.getChild(implementation.getImplementationClassname()));
-		
-		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
-				mainProc, ProcessPackage.Literals.CONNECTOR);
-		assertEquals("Invalid number of connector", 1, connectors.size());
-	}
-	
-	@Test
-	public void testCustomonnectorMigrationWithGetterCustom() throws Exception {
-		final URL url = TestCustomConnectorMigrationUseCase.class
-				.getResource("fab--1.0.bar");
-		final File migratedProc = BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil
-				.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil
-				.getMainProcess(resource);
+        final ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
+        assertNotNull(defStore.getDefinition("MyConnectorId", "1.0.0"));
 
-		final ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-		assertNotNull(defStore.getDefinition("fabulous_connector","1.0.0"));
-		
-		final ConnectorImplRepositoryStore implStore = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
-		ConnectorImplementation implementation = implStore.getImplementation("fabulous_connector-impl","1.0.0");
-		assertNotNull(implementation);
-		
-		final ConnectorSourceRepositoryStore sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
-		assertNotNull(sourceStore.getChild(implementation.getImplementationClassname()));
-		
-		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
-				mainProc, ProcessPackage.Literals.CONNECTOR);
-		assertEquals("Invalid number of connector", 1, connectors.size());
-	}
+        final ConnectorImplRepositoryStore implStore = (ConnectorImplRepositoryStore) RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorImplRepositoryStore.class);
+        ConnectorImplementation implementation = implStore.getImplementation("MyConnectorId-impl", "1.0.0");
+        assertNotNull(implementation);
 
-	
+        final ConnectorSourceRepositoryStore sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorSourceRepositoryStore.class);
+        assertNotNull(sourceStore.getChild(implementation.getImplementationClassname()));
+
+        final List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
+        assertEquals("Invalid number of connector", 1, connectors.size());
+        resource.unload();
+    }
+
+    @Test
+    public void testCustomonnectorMigrationWithGetterCustom() throws Exception {
+        final URL url = TestCustomConnectorMigrationUseCase.class
+                .getResource("fab--1.0.bar");
+        final File migratedProc = BarImporterTestUtil.migrateBar(url);
+        migratedProc.deleteOnExit();
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+
+        final ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
+        assertNotNull(defStore.getDefinition("fabulous_connector", "1.0.0"));
+
+        final ConnectorImplRepositoryStore implStore = (ConnectorImplRepositoryStore) RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorImplRepositoryStore.class);
+        ConnectorImplementation implementation = implStore.getImplementation("fabulous_connector-impl", "1.0.0");
+        assertNotNull(implementation);
+
+        final ConnectorSourceRepositoryStore sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorSourceRepositoryStore.class);
+        assertNotNull(sourceStore.getChild(implementation.getImplementationClassname()));
+
+        final List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
+        assertEquals("Invalid number of connector", 1, connectors.size());
+        resource.unload();
+    }
 
 }

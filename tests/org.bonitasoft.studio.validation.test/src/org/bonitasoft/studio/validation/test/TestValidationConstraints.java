@@ -45,7 +45,8 @@ public class TestValidationConstraints extends ValidationTestBase {
 
     @Test
     public void testAssignableConstraint() throws Exception {
-        final MainProcess diagram = getDiagramFromArchive("TestAssignableConstraint-1.0.bos", "TestAssignableConstraint", "1.0");
+        final MainProcess diagram = getDiagramFromArchive("TestAssignableConstraint-1.0.bos", "TestAssignableConstraint",
+                "1.0");
         final Pool processWithErrors = getProcess(diagram, "ConstraintFailure", "1.0");
         IStatus[] status = getStatuses(batchValidator.validate(processWithErrors));
         List<IConstraintStatus> assignableStatus = getStatusForConstraint(status, AssignableConstraint.ID);
