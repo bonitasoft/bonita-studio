@@ -64,13 +64,6 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
         // check with standard error message (see commented below to set your own message).
         Assertions.assertThat(actual.getChildren()).contains(children);
 
-        // uncomment the 4 lines below if you want to build your own error message :
-        // WritableAssertionInfo assertionInfo = new WritableAssertionInfo();
-        // String errorMessage = "my error message";
-        // assertionInfo.overridingErrorMessage(errorMessage);
-        // Iterables.instance().assertContains(assertionInfo, actual.getTeamMates(), teamMates);
-
-        // return the current assertion for method chaining
         return this;
     }
 
@@ -109,7 +102,8 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        final String errorMessage = format("\nExpected <%s> code to be:\n  <%s>\n but was:\n  <%s>", actual, code, actual.getCode());
+        final String errorMessage = format("\nExpected <%s> code to be:\n  <%s>\n but was:\n  <%s>", actual, code,
+                actual.getCode());
 
         // check
         if (actual.getCode() != code) {
@@ -132,7 +126,8 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        final String errorMessage = format("\nExpected <%s> exception to be:\n  <%s>\n but was:\n  <%s>", actual, exception, actual.getException());
+        final String errorMessage = format("\nExpected <%s> exception to be:\n  <%s>\n but was:\n  <%s>", actual, exception,
+                actual.getException());
 
         // check
         if (!actual.getException().equals(exception)) {
@@ -155,7 +150,8 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        final String errorMessage = format("\nExpected <%s> message to be:\n  <%s>\n but was:\n  <%s>", actual, message, actual.getMessage());
+        final String errorMessage = format("\nExpected <%s> message to be:\n  <%s>\n but was:\n  <%s>", actual, message,
+                actual.getMessage());
 
         // check
         if (!actual.getMessage().equals(message)) {
@@ -221,7 +217,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        final String errorMessage = format("Expected actual IStatus to be oK but was not.", actual);
+        final String errorMessage = format("Expected actual IStatus to be oK but was not: %s", actual);
 
         // check
         if (!actual.isOK()) {
@@ -266,7 +262,8 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        final String errorMessage = format("\nExpected <%s> plugin to be:\n  <%s>\n but was:\n  <%s>", actual, plugin, actual.getPlugin());
+        final String errorMessage = format("\nExpected <%s> plugin to be:\n  <%s>\n but was:\n  <%s>", actual, plugin,
+                actual.getPlugin());
 
         // check
         if (!actual.getPlugin().equals(plugin)) {
@@ -289,7 +286,8 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        final String errorMessage = format("\nExpected <%s> severity to be:\n  <%s>\n but was:\n  <%s>", actual, severity, actual.getSeverity());
+        final String errorMessage = format("\nExpected <%s> severity to be:\n  <%s>\n but was:\n  <%s>", actual, severity,
+                actual.getSeverity());
 
         // check
         if (actual.getSeverity() != severity) {

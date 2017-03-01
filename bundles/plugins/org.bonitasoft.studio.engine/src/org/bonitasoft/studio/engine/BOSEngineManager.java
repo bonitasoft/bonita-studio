@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.xbean.classloader.NonLockingJarFileClassLoader;
+import org.bonitasoft.engine.api.ApplicationAPI;
 import org.bonitasoft.engine.api.CommandAPI;
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.LoginAPI;
@@ -360,6 +361,11 @@ public class BOSEngineManager {
     public PageAPI getPageAPI(final APISession session)
             throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
         return TenantAPIAccessor.getCustomPageAPI(session);
+    }
+
+    public ApplicationAPI getApplicationAPI(final APISession session)
+            throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+        return TenantAPIAccessor.getLivingApplicationAPI(session);
     }
 
     public TenantAdministrationAPI getTenantAdministrationAPI(final APISession session)
