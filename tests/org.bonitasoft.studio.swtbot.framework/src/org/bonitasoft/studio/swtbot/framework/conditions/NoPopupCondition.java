@@ -23,6 +23,7 @@ public class NoPopupCondition extends DefaultCondition {
 
     @Override
     public String getFailureMessage() {
-        return String.format("Shell with text '%s' has still focus. Close all dialogs and wizard inside your test.", shellText);
+        return String.format("Shell with text '%s' has still focus. Close all dialogs and wizard inside your test.",
+                shellText);
     }
 }

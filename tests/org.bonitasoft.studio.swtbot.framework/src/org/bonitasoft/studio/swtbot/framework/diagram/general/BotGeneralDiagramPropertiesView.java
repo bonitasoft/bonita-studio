@@ -48,6 +48,7 @@ public class BotGeneralDiagramPropertiesView extends BotPropertiesView {
     public void selectPortalTab() {
         selectTab("Portal");
     }
+
     /**
      * Select the pool tab.
      *

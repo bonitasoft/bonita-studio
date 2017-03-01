@@ -28,20 +28,21 @@ import org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBotControl;
 import org.eclipse.ui.internal.views.properties.tabbed.view.TabbedPropertyList;
 import org.eclipse.ui.internal.views.properties.tabbed.view.TabbedPropertyList.ListElement;
 
-
 public class TabbedPropertyListBot extends AbstractSWTBotControl<TabbedPropertyList> {
 
     private final Widget parent;
     private final SWTBot bot;
 
-    public TabbedPropertyListBot(TabbedPropertyList tabbedPropertyList, Widget parent, SWTBot bot) throws WidgetNotFoundException {
+    public TabbedPropertyListBot(TabbedPropertyList tabbedPropertyList, Widget parent, SWTBot bot)
+            throws WidgetNotFoundException {
         super(tabbedPropertyList);
         this.parent = parent;
         this.bot = bot;
     }
 
     public TabbedPropertyListBot selectTab(String text) {
-        final WaitForObjectCondition<ListElement> waitForTabs = Conditions.waitForWidget(widgetOfType(ListElement.class), parent);
+        final WaitForObjectCondition<ListElement> waitForTabs = Conditions.waitForWidget(widgetOfType(ListElement.class),
+                parent);
         bot.waitUntil(waitForTabs);
         final List<ListElement> tabs = waitForTabs.getAllMatches();
         for (final ListElement tab : tabs) {

@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.properties.sections.forms.adapters;
 
@@ -43,6 +41,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 public class WidgetAddedOrRemoved extends AdapterImpl {
+
     private final Form form;
     private final DefaultElementNameProvider elementNameProvider;
 
@@ -69,12 +68,15 @@ public class WidgetAddedOrRemoved extends AdapterImpl {
     }
 
     private void handleRemoveFormWidgetNotification() {
-        if (form.getHtmlTemplate() != null && form.getHtmlTemplate().getPath() != null && !form.getHtmlTemplate().getPath().isEmpty()) {
+        if (form.getHtmlTemplate() != null && form.getHtmlTemplate().getPath() != null
+                && !form.getHtmlTemplate().getPath().isEmpty()) {
             // there is a template
             Display.getDefault().syncExec(new Runnable() {
+
                 @Override
                 public void run() {
-                    MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.widgetRemovedWarning_title, Messages.widgetRemovedWarning_msg);
+                    MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                            Messages.widgetRemovedWarning_title, Messages.widgetRemovedWarning_msg);
                 }
             });
         }
@@ -85,18 +87,18 @@ public class WidgetAddedOrRemoved extends AdapterImpl {
         if (ModelHelper.formIsCustomized(form)) {
             BonitaStudioLog.info("Updating Custom Form Template. Adding widget: " + widget.getName(), Activator.PLUGIN_ID);
             final File file = WebTemplatesUtil.getFile(form.getHtmlTemplate().getPath());
-            FileInputStream fis;
-            try {
-                fis = new FileInputStream(file);
-                final File tempFile = File.createTempFile("tempForm", ".html");
+            File tempFile = null;
+            try (FileInputStream fis = new FileInputStream(file)) {
+                tempFile = File.createTempFile("tempForm", ".html");
                 final FileWriter fileWriter = new FileWriter(tempFile);
                 addDivForAddedWidget(widget, fis, fileWriter);
-                fis.close();
                 fileWriter.close();
                 FileUtil.copy(tempFile, file);
                 WebTemplatesUtil.refreshFile(form.getHtmlTemplate().getPath());
             } catch (final Exception e) {
                 handleExceptionWhileAddingWidgetInTemplate(e);
+            } finally {
+                tempFile.delete();
             }
         }
     }
@@ -104,15 +106,19 @@ public class WidgetAddedOrRemoved extends AdapterImpl {
     private void handleExceptionWhileAddingWidgetInTemplate(final Exception e) {
         BonitaStudioLog.error(e);
         Display.getDefault().syncExec(new Runnable() {
+
             @Override
             public void run() {
-                new BonitaErrorDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.Error, "Unexpected error", e).open();
+                new BonitaErrorDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.Error,
+                        "Unexpected error", e).open();
             }
         });
     }
 
-    private void addDivForAddedWidget(final Widget widget, final FileInputStream fis, final FileWriter fileWriter) throws IOException {
-        final HtmlTemplateGenerator generator = (HtmlTemplateGenerator) ExporterService.getInstance().getExporterService(SERVICE_TYPE.HtmlTemplateGenerator);
+    private void addDivForAddedWidget(final Widget widget, final FileInputStream fis, final FileWriter fileWriter)
+            throws IOException {
+        final HtmlTemplateGenerator generator = (HtmlTemplateGenerator) ExporterService.getInstance()
+                .getExporterService(SERVICE_TYPE.HtmlTemplateGenerator);
         String label = elementNameProvider.getNameFor(widget);
         label = NamingUtils.convertToId(label);
         int number = NamingUtils.getMaxElements(form, label);

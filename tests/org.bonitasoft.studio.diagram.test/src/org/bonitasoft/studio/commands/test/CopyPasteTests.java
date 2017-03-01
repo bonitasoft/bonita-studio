@@ -41,9 +41,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class CopyPasteTests  {
+public class CopyPasteTests {
 
     private final SWTGefBot bot = new SWTGefBot();
 
@@ -59,8 +58,8 @@ public class CopyPasteTests  {
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
-        //bot.viewByTitle("Details").bot().text(0).typeText("Test");
-        final NextElementEditPolicy policy = (NextElementEditPolicy) part.part().getEditPolicy(NextElementEditPolicy.NEXT_ELEMENT_ROLE);
+        final NextElementEditPolicy policy = (NextElementEditPolicy) part.part()
+                .getEditPolicy(NextElementEditPolicy.NEXT_ELEMENT_ROLE);
         final IFigure textAnnotationFigure = policy.getTextAnnotationFigure();
         final Point location = textAnnotationFigure.getBounds().getCenter().getCopy();
         textAnnotationFigure.translateToAbsolute(location);
@@ -79,7 +78,8 @@ public class CopyPasteTests  {
         waitForcloseAction(editor2);
 
         final BotOpenDiagramDialog botOpenDiagramDialog = new BotApplicationWorkbenchWindow(bot).open();
-        botOpenDiagramDialog.selectDiagram(diagram1.getName(), diagram1.getVersion()).delete().selectDiagram(diagram2.getName(), diagram2.getVersion()).open();
+        botOpenDiagramDialog.selectDiagram(diagram1.getName(), diagram1.getVersion()).delete()
+                .selectDiagram(diagram2.getName(), diagram2.getVersion()).open();
         editor2 = bot.gefEditor(bot.activeEditor().getTitle());
         part = editor2.getEditPart("Step1").parent();
         editor2.drag(part, 100, 100);
@@ -104,13 +104,12 @@ public class CopyPasteTests  {
 
     private void waitForSaveAction(final SWTBotGefEditor editor) {
         bot.waitUntil(new DefaultCondition() {
-            
-            
+
             @Override
             public boolean test() throws Exception {
                 return !editor.isDirty();
             }
-            
+
             @Override
             public String getFailureMessage() {
                 return "not save yet";
@@ -131,11 +130,13 @@ public class CopyPasteTests  {
         editor1.clickContextMenu("Paste");
         final Lane lane = (Lane) ((IGraphicalEditPart) lanePart.part()).resolveSemanticElement();
         assertEquals("Not same number of nodes as expected", 4, lane.getElements().size());
-        assertEquals("Not same number of transitions as expected", 2, ModelHelper.getParentProcess(lane).getConnections().size());
+        assertEquals("Not same number of transitions as expected", 2,
+                ModelHelper.getParentProcess(lane).getConnections().size());
     }
 
     private MainProcess getLabelFromEditor(final SWTBotGefEditor editor1) {
-        return (MainProcess) ((ProcessDiagramEditor) editor1.getReference().getEditor(false)).getDiagramEditPart().resolveSemanticElement();
+        return (MainProcess) ((ProcessDiagramEditor) editor1.getReference().getEditor(false)).getDiagramEditPart()
+                .resolveSemanticElement();
     }
 
     @Test
@@ -157,7 +158,8 @@ public class CopyPasteTests  {
             editor2.clickContextMenu("Paste");
             final Lane lane = (Lane) ((IGraphicalEditPart) lanePart.part()).resolveSemanticElement();
             assertEquals("Not same number of nodes as expected", 4, lane.getElements().size());
-            assertEquals("Not same number of transitions as expected", 2, ModelHelper.getParentProcess(lane).getConnections().size());
+            assertEquals("Not same number of transitions as expected", 2,
+                    ModelHelper.getParentProcess(lane).getConnections().size());
         }
     }
 
@@ -183,7 +185,8 @@ public class CopyPasteTests  {
             editor2.clickContextMenu("Paste");
             final Lane lane = (Lane) ((IGraphicalEditPart) lanePart2.part()).resolveSemanticElement();
             assertEquals("Not same number of nodes as expected", 4, lane.getElements().size());
-            assertEquals("Not same number of transitions as expected", 2, ((Pool) lane.eContainer()).getConnections().size());
+            assertEquals("Not same number of transitions as expected", 2,
+                    ((Pool) lane.eContainer()).getConnections().size());
         }
     }
 
@@ -193,7 +196,6 @@ public class CopyPasteTests  {
         SWTBotTestUtil.createNewDiagram(bot);
         final String title = bot.activeEditor().getTitle();
         final SWTBotGefEditor editor1 = bot.gefEditor(title);
-        //   editor1.click(100, 100);
         final SWTBotGefEditPart stepPart = editor1.getEditPart("Step1").parent();
         final SWTBotGefEditPart poolPart = stepPart.parent().parent();
         SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, editor1, "Step1");

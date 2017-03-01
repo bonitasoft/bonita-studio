@@ -14,7 +14,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**
  * Connectors property section.
- *
+ * 
  * @author Joachim Segala
  */
 public class BotConnectorsPropertySection extends BotBase {

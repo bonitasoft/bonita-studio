@@ -51,9 +51,11 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.omg.spec.bpmn.di.util.DiResourceFactoryImpl;
 import org.omg.spec.bpmn.model.DocumentRoot;
@@ -62,22 +64,18 @@ import org.omg.spec.bpmn.model.DocumentRoot;
 public class BPMNExportImportMessageDataTest {
 
     private static MainProcess mainProcessAfterReimport;
-    private static boolean isInitalized = false;
     private static ThrowMessageEvent throwMessageEvent;
     private static CatchMessageEvent catchMessageEvent;
 
     private final SWTGefBot bot = new SWTGefBot();
 
+    private Resource resource;
+
+    @Rule
+    public TemporaryFolder tmpFolder = new TemporaryFolder();
+
     @Rule
     public final SWTGefBotRule rule = new SWTGefBotRule(bot);
-
-    @Before
-    public void init() throws Exception {
-        if (!isInitalized) {
-            prepareTest();
-        }
-        isInitalized = true;
-    }
 
     @Test
     public void testDataDefined() {
@@ -111,17 +109,18 @@ public class BPMNExportImportMessageDataTest {
         assertEquals("Event name of catch not well defined", message.getName(), eventId);
     }
 
-    protected void prepareTest() throws IOException {
-        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
-                .setArchive(
-                        BPMNExportImportMessageDataTest.class.getResource("MessageDataTestValue-1.0.bos"))
+    @Before
+    public void prepareTest() throws IOException {
+        new BotApplicationWorkbenchWindow(bot)
+                .importBOSArchive()
+                .setArchive(BPMNExportImportMessageDataTest.class.getResource("MessageDataTestValue-1.0.bos"))
                 .finish();
 
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
         final SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
         final MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
-        final File bpmnFileExported = File.createTempFile("testMessageDataTestValue", ".bpmn");
+        final File bpmnFileExported = tmpFolder.newFile("testMessageDataTestValue.bpmn");
         final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
         assertTrue("Error during export", transformed);
 
@@ -130,20 +129,16 @@ public class BPMNExportImportMessageDataTest {
                 .getExtensionToFactoryMap();
         final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
         extensionToFactoryMap.put("bpmn", diResourceFactoryImpl);
-        final Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
-        resource2.load(Collections.emptyMap());
+        resource = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
+        resource.load(Collections.emptyMap());
 
-        final DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
+        final DocumentRoot model2 = (DocumentRoot) resource.getContents().get(0);
 
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    mainProcessAfterReimport = BPMNTestUtil.importBPMNFile(model2);
-                } catch (final MalformedURLException e) {
-                    e.printStackTrace();
-                }
+        Display.getDefault().syncExec(() -> {
+            try {
+                mainProcessAfterReimport = BPMNTestUtil.importBPMNFile(model2);
+            } catch (final MalformedURLException e) {
+                e.printStackTrace();
             }
         });
 
@@ -162,4 +157,10 @@ public class BPMNExportImportMessageDataTest {
             }
         }
     }
+
+    @After
+    public void clean() {
+        resource.unload();
+    }
+
 }

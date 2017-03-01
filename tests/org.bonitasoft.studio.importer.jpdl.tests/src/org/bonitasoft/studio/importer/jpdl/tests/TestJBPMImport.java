@@ -1,27 +1,21 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.importer.jpdl.tests;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
-
-import junit.framework.TestCase;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -52,13 +46,14 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
+import junit.framework.TestCase;
+
 /**
  * @author Mickael Istria
- *
  */
 public class TestJBPMImport extends TestCase {
 
-    public org.eclipse.emf.common.util.URI toEMFURI(File file) throws MalformedURLException {
+    public org.eclipse.emf.common.util.URI toEMFURI(File file) {
         org.eclipse.emf.common.util.URI res = org.eclipse.emf.common.util.URI.createFileURI(file.getAbsolutePath());
         return res;
     }
@@ -72,55 +67,57 @@ public class TestJBPMImport extends TestCase {
         fail("Could not find JBPM3 Import Factory");
     }
 
-    public void testSimpleProcess() throws Exception{
-        URL srcUrl = getClass().getResource("testSimpleProcess1/processdefinition.xml") ;
+    public void testSimpleProcess() throws Exception {
+        URL srcUrl = getClass().getResource("testSimpleProcess1/processdefinition.xml");
         File destFile = new JBPM3ToProc().createDiagram(srcUrl, new NullProgressMonitor());
-
+        destFile.deleteOnExit();
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
-        MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
+        MainProcess mainProcess = (MainProcess) resource.getContents().get(0);
 
         assertNbItems(mainProcess, 1, 1, 1, 0, 2, 2, 1, 9, 2);
         Activity mailNode = findActivity(mainProcess, "mail-node1");
         assertEquals("No mail connector found", "email", mailNode.getConnectors().get(0).getDefinitionId());
 
         final AbstractProcess process = (AbstractProcess) mainProcess.getElements().get(0);
-        final ProcessConfigurationRepositoryStore store = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
-        final String fileName = ModelHelper.getEObjectID(process)+".conf";
+        final ProcessConfigurationRepositoryStore store = (ProcessConfigurationRepositoryStore) RepositoryManager
+                .getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+        final String fileName = ModelHelper.getEObjectID(process) + ".conf";
         ProcessConfigurationFileStore fileStore = store.getChild(fileName);
-        if(fileStore==null){
+        if (fileStore == null) {
             fileStore = store.createRepositoryFileStore(fileName);
             fileStore.save(ConfigurationFactory.eINSTANCE.createConfiguration());
         }
         final Configuration configuration = fileStore.getContent();
-        final ConfigurationSynchronizer configurationSynchronizer = new ConfigurationSynchronizer(process,configuration);
+        final ConfigurationSynchronizer configurationSynchronizer = new ConfigurationSynchronizer(process, configuration);
         configurationSynchronizer.synchronize();
-        assertFalse("Configuration should not be valid",configurationSynchronizer.isConfigurationValid());
+        assertFalse("Configuration should not be valid", configurationSynchronizer.isConfigurationValid());
+        resource.unload();
 
     }
 
-    public void testWebSale() throws Exception{
-        URL srcUrl = getClass().getResource("websale/processdefinition.xml") ;
+    public void testWebSale() throws Exception {
+        URL srcUrl = getClass().getResource("websale/processdefinition.xml");
         File destFile = new JBPM3ToProc().createDiagram(srcUrl, new NullProgressMonitor());
-
+        destFile.deleteOnExit();
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
-        MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
+        MainProcess mainProcess = (MainProcess) resource.getContents().get(0);
 
         assertNbItems(mainProcess, 1, 1, 3, 0, 2, 2, 0, 10, 0);
+        resource.unload();
     }
-
 
     /**
      * @param string
      * @return
      */
     private Activity findActivity(MainProcess process, String string) {
-        Pool pool = (Pool)process.getElements().get(0);
+        Pool pool = (Pool) process.getElements().get(0);
         for (Element child : pool.getElements()) {
             if (child instanceof Activity &&
                     (child.getName().equals(string) || child.getName().equals(string))) {
-                return (Activity)child;
+                return (Activity) child;
             }
         }
         return null;
@@ -138,8 +135,9 @@ public class TestJBPMImport extends TestCase {
      * @param nbFlows
      * @param nbConditions
      */
-    private void assertNbItems(MainProcess mainProcess, int nbStartEvent, int nbEndEvent, int nbTasks, int nbSubprocess, int nbAutomatedActivity, int nbAndGateways, int nbXorGateways, int nbFlows, int nbConditions) {
-        Pool pool = (Pool)mainProcess.getElements().get(0);
+    private void assertNbItems(MainProcess mainProcess, int nbStartEvent, int nbEndEvent, int nbTasks, int nbSubprocess,
+            int nbAutomatedActivity, int nbAndGateways, int nbXorGateways, int nbFlows, int nbConditions) {
+        Pool pool = (Pool) mainProcess.getElements().get(0);
         for (Element item : pool.getElements()) {
             if (item instanceof StartEvent) {
                 nbStartEvent--;
@@ -160,8 +158,9 @@ public class TestJBPMImport extends TestCase {
         for (Connection connection : pool.getConnections()) {
             if (connection instanceof SequenceFlow) {
                 nbFlows--;
-                SequenceFlow flow = (SequenceFlow)connection;
-                if (flow.getCondition() != null &&  flow.getCondition().getContent() != null && flow.getCondition().getContent().trim().length() > 0) {
+                SequenceFlow flow = (SequenceFlow) connection;
+                if (flow.getCondition() != null && flow.getCondition().getContent() != null
+                        && flow.getCondition().getContent().trim().length() > 0) {
                     nbConditions--;
                 }
             }

@@ -34,7 +34,7 @@ import org.junit.runner.RunWith;
 public class DeleteWidgetWithContextMenuIT {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
@@ -51,7 +51,8 @@ public class DeleteWidgetWithContextMenuIT {
                 }
             }
         });
-        final BotGefFormDiagramEditor activeFormDiagramEditor = new BotProcessDiagramPerspective(bot).activeFormDiagramEditor();
+        final BotGefFormDiagramEditor activeFormDiagramEditor = new BotProcessDiagramPerspective(bot)
+                .activeFormDiagramEditor();
         final EObject form = activeFormDiagramEditor.selectForm().getSelectedSemanticElement();
         assertThat(form).isInstanceOf(Form.class);
         assertThat(((Form) form).getWidgets()).hasSize(9);

@@ -28,7 +28,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -43,6 +45,9 @@ public class BosArchiveProcessorTest {
     @Mock
     private ImportBosArchiveOperation ibo;
 
+    @Rule
+    public TemporaryFolder tmpFolder = new TemporaryFolder();
+
     @Before
     public void init() throws Exception {
         Mockito.doCallRealMethod().when(bap).getStatus();
@@ -55,7 +60,7 @@ public class BosArchiveProcessorTest {
     public void testGetStatusOkBasic() throws MalformedURLException, IOException, Exception {
         mockStatus(IStatus.OK);
 
-        bap.createDiagram(File.createTempFile("test", "test").toURI().toURL(), new NullProgressMonitor());
+        bap.createDiagram(tmpFolder.newFile("test").toURI().toURL(), new NullProgressMonitor());
 
         assertThat(bap.getStatus().isOK()).isTrue();
     }
@@ -64,7 +69,7 @@ public class BosArchiveProcessorTest {
     public void testGetStatusErrorForValidationOKForRun() throws MalformedURLException, IOException, Exception {
         mockStatus(IStatus.ERROR);
 
-        bap.createDiagram(File.createTempFile("test", "test").toURI().toURL(), new NullProgressMonitor());
+        bap.createDiagram(tmpFolder.newFile("test").toURI().toURL(), new NullProgressMonitor());
 
         assertThat(bap.getStatus().isOK()).isFalse();
     }
@@ -73,7 +78,7 @@ public class BosArchiveProcessorTest {
     public void testGetStatusErrorForValidationErrorForRun() throws MalformedURLException, IOException, Exception {
         mockStatus(IStatus.ERROR);
 
-        bap.createDiagram(File.createTempFile("test", "test").toURI().toURL(), new NullProgressMonitor());
+        bap.createDiagram(tmpFolder.newFile("test").toURI().toURL(), new NullProgressMonitor());
 
         assertThat(bap.getStatus().isOK()).isFalse();
     }
@@ -82,7 +87,7 @@ public class BosArchiveProcessorTest {
     public void testGetStatusOkForValidationErrorForRun() throws MalformedURLException, IOException, Exception {
         mockStatus(IStatus.ERROR);
 
-        bap.createDiagram(File.createTempFile("test", "test").toURI().toURL(), new NullProgressMonitor());
+        bap.createDiagram(tmpFolder.newFile("test").toURI().toURL(), new NullProgressMonitor());
 
         assertThat(bap.getStatus().isOK()).isFalse();
     }

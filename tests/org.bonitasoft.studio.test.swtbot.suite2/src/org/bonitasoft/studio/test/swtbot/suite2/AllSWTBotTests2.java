@@ -117,7 +117,8 @@ public class AllSWTBotTests2 {
     public static void setUp() {
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
         WebBrowserUIPlugin.getInstance().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         FileActionDialog.setDisablePopup(true);

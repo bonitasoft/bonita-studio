@@ -160,6 +160,7 @@ public class JBPM3ToProc extends ToProcProcessor {
 
         builder = new ProcBuilder(progressMonitor);
         result = File.createTempFile(diagramName, ".proc") ;
+        result.deleteOnExit();
         builder.createDiagram(diagramName, diagramName, "1.0", result);
         try {
             importFromJBPM(processDef);

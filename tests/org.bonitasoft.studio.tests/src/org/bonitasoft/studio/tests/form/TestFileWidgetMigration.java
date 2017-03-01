@@ -43,7 +43,8 @@ public class TestFileWidgetMigration {
 
     private final String diagramName = "MyDiagram7-1.0";
     private final String mainProcessName = "MyDiagram7";
-    private final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+    private final DiagramRepositoryStore store = RepositoryManager.getInstance()
+            .getRepositoryStore(DiagramRepositoryStore.class);
 
     @Before
     public void before() {

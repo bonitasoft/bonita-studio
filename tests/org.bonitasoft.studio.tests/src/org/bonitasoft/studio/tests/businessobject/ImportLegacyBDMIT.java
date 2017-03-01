@@ -56,11 +56,14 @@ public class ImportLegacyBDMIT {
     public void should_import_a_legacy_bdm_and_convert_it_to_xml_file() throws Exception {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
-        operation.setArchiveFile(new File(FileLocator.toFileURL(ImportLegacyBDMIT.class.getResource("/legacyBDM.bos")).getFile()).getAbsolutePath());
+        operation.setArchiveFile(
+                new File(FileLocator.toFileURL(ImportLegacyBDMIT.class.getResource("/legacyBDM.bos")).getFile())
+                        .getAbsolutePath());
         operation.run(Repository.NULL_PROGRESS_MONITOR);
 
         StatusAssert.assertThat(operation.getStatus()).isOK();
-        assertThat(defStore.getResource().getFile(BusinessObjectModelFileStore.ZIP_FILENAME).getLocation().toFile().exists()).isFalse();
+        assertThat(defStore.getResource().getFile(BusinessObjectModelFileStore.ZIP_FILENAME).getLocation().toFile().exists())
+                .isFalse();
         assertThat(defStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME)).isNotNull();
         final BusinessObjectModel model = defStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME).getContent();
         assertThat(model).isNotNull();

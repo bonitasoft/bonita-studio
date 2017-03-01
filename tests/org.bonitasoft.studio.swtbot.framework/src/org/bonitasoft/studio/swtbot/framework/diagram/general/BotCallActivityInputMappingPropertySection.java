@@ -22,7 +22,6 @@ import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 
-
 public class BotCallActivityInputMappingPropertySection extends BotBase {
 
     public BotCallActivityInputMappingPropertySection(final SWTGefBot bot) {
@@ -39,14 +38,16 @@ public class BotCallActivityInputMappingPropertySection extends BotBase {
         return this;
     }
 
-    public BotCallActivityInputMappingPropertySection updateInputMapping(final int index, final String processData, final String returnType,
+    public BotCallActivityInputMappingPropertySection updateInputMapping(final int index, final String processData,
+            final String returnType,
             final InputMappingAssignationType assignationType,
             final String calledProcessElement) {
         if (processData != null) {
             SWTBotTestUtil.selectExpressionProposal(bot, processData, returnType, index);
         }
         if (assignationType != null) {
-            final SWTBotCombo assignationTypeCombo = bot.comboBoxWithId(SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_ASSIGNATIONTYPE, index);
+            final SWTBotCombo assignationTypeCombo = bot
+                    .comboBoxWithId(SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_ASSIGNATIONTYPE, index);
             switch (assignationType) {
                 case CONTRACT_INPUT:
                     assignationTypeCombo.setSelection(Messages.assignToContractInput);
@@ -59,7 +60,8 @@ public class BotCallActivityInputMappingPropertySection extends BotBase {
             }
         }
         if (calledProcessElement != null) {
-            bot.ccomboBoxWithId(SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_CALLEDTARGET, index).setText(calledProcessElement);
+            bot.ccomboBoxWithId(SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_CALLEDTARGET, index)
+                    .setText(calledProcessElement);
         }
         return this;
     }

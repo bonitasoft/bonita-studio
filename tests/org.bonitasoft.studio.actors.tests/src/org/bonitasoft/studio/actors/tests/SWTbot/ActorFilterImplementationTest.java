@@ -51,7 +51,7 @@ import org.junit.runner.RunWith;
 public class ActorFilterImplementationTest implements SWTBotConstants {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     protected void selectDefinition(final String definition) {
         bot.treeWithId(SWTBOT_ID_EXPLORER_LEFT_TREE).select(0);
         bot.waitUntil(new ICondition() {

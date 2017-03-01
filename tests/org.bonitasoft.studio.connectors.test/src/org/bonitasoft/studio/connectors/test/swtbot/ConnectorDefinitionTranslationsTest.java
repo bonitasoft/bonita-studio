@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connectors.test.swtbot;
 
@@ -45,13 +42,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ConnectorDefinitionTranslationsTest  {
+public class ConnectorDefinitionTranslationsTest {
 
     private SWTGefBot bot = new SWTGefBot();
-    
-    private void openConnectorDefinitionWizardPage(String id,String categoryId) throws Exception {
+
+    private void openConnectorDefinitionWizardPage(String id, String categoryId) throws Exception {
         final String packageLang = "java.lang.";
         final String packageUtil = "java.util.";
         SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
@@ -95,7 +91,7 @@ public class ConnectorDefinitionTranslationsTest  {
     @Before
     public void connectorEditionWizardPage() throws Exception {
         final String connectorDefId = "testTranslationWizardPage";
-        final String categoryId="categoryEWP";
+        final String categoryId = "categoryEWP";
         final String pageId = "pageTest";
         final String widgetId0 = "widgetTest0";
         final String widgetId1 = "widgetTest1";
@@ -103,19 +99,19 @@ public class ConnectorDefinitionTranslationsTest  {
         final String widgetId3 = "widgetTest3";
         final String widgetId4 = "widgetTest4";
         final String widgetId5 = "widgetTest5";
-        openConnectorDefinitionWizardPage(connectorDefId,categoryId);
+        openConnectorDefinitionWizardPage(connectorDefId, categoryId);
         bot.button("Add...").click();
         assertFalse("button Apply should be disabled", bot.button("Apply")
                 .isEnabled());
         bot.textWithLabel("Page id *").setText(pageId);
         assertTrue("button Apply should be disabled", bot.button("Apply")
                 .isEnabled());
-		createWidget(widgetId0, "Text", 0);
-		createWidget(widgetId1, "Password", 1);
-		createWidget(widgetId2, "Checkbox", 3);
-		createWidget(widgetId3, "Select", 4);
-		createWidget(widgetId4, "Radio group", 5);
-		createWidget(widgetId5, "Group", 7);
+        createWidget(widgetId0, "Text", 0);
+        createWidget(widgetId1, "Password", 1);
+        createWidget(widgetId2, "Checkbox", 3);
+        createWidget(widgetId3, "Select", 4);
+        createWidget(widgetId4, "Radio group", 5);
+        createWidget(widgetId5, "Group", 7);
         bot.button("Apply").click();
     }
 
@@ -129,8 +125,7 @@ public class ConnectorDefinitionTranslationsTest  {
         bot.table().getTableItem(line).check();
         bot.button(IDialogConstants.FINISH_LABEL).click();
         ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager
-                .getInstance().getRepositoryStore(
-                        ConnectorDefRepositoryStore.class);
+                .getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         DefinitionResourceProvider resourceProvider = DefinitionResourceProvider
                 .getInstance(store, ConnectorPlugin.getDefault().getBundle());
         List<File> resources = resourceProvider
@@ -194,13 +189,16 @@ public class ConnectorDefinitionTranslationsTest  {
         }
         bot.waitUntil(new ICondition() {
 
+            @Override
             public boolean test() throws Exception {
-                return nbEditorsBefore +1 == bot.editors().size();
+                return nbEditorsBefore + 1 == bot.editors().size();
             }
 
+            @Override
             public void init(SWTBot bot) {
             }
 
+            @Override
             public String getFailureMessage() {
                 return "Editor for new diagram has not been opened.";
             }
@@ -224,7 +222,5 @@ public class ConnectorDefinitionTranslationsTest  {
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.button(IDialogConstants.OK_LABEL).click();
     }
-
-
 
 }

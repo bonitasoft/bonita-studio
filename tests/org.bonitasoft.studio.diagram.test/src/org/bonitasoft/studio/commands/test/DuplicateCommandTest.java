@@ -72,7 +72,8 @@ public class DuplicateCommandTest {
         final int nbProcessesBefore = drs.getAllProcesses().size();
 
         final String processName = botEditor.getTitle().substring(0, botEditor.getTitle().lastIndexOf("(") - 1);
-        final String processVersion = botEditor.getTitle().substring(botEditor.getTitle().lastIndexOf("(") + 1, botEditor.getTitle().lastIndexOf(")"))
+        final String processVersion = botEditor.getTitle().substring(botEditor.getTitle().lastIndexOf("(") + 1,
+                botEditor.getTitle().lastIndexOf(")"))
                 + " duplicated";
 
         if (sourceDirty) {
@@ -113,14 +114,18 @@ public class DuplicateCommandTest {
 
         final MainProcess newDiagram = drs.getDiagram(processName, processVersion).getContent();
         final List<Pool> pools = ModelHelper.getAllItemsOfType(newDiagram, ProcessPackage.Literals.POOL);
-        final ProcessConfigurationRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+        final ProcessConfigurationRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
         for (final Pool p : pools) {
             final String id = ModelHelper.getEObjectID(p);
-            final ProcessConfigurationFileStore file = store.getChild(id + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
-            assertNotNull("Process configuration is missing after duplicate for " + p.getName() + " (" + p.getVersion() + ")", file);
+            final ProcessConfigurationFileStore file = store
+                    .getChild(id + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
+            assertNotNull(
+                    "Process configuration is missing after duplicate for " + p.getName() + " (" + p.getVersion() + ")",
+                    file);
             final Configuration conf = file.getContent();
-            assertTrue("Actor mapping is missing in process configuraiton after duplicate for " + p.getName() + " (" + p.getVersion() + ")",
-                    !conf.getActorMappings().getActorMapping().isEmpty());
+            assertTrue("Actor mapping is missing in process configuraiton after duplicate for " + p.getName() + " ("
+                    + p.getVersion() + ")", !conf.getActorMappings().getActorMapping().isEmpty());
         }
     }
 

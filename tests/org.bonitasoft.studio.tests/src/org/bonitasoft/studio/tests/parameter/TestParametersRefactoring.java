@@ -57,10 +57,12 @@ public class TestParametersRefactoring {
 
     private final String parameterName = "parameter1";
 
-    private final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+    private final DiagramRepositoryStore store = RepositoryManager.getInstance()
+            .getRepositoryStore(DiagramRepositoryStore.class);
 
     @Test
-    public void testParametersRefactoring() throws IOException, InvocationTargetException, InterruptedException, ExecutionException {
+    public void testParametersRefactoring()
+            throws IOException, InvocationTargetException, InterruptedException, ExecutionException {
         final MainProcess mainProcess = importDiagramAndOpen();
         final List<Pool> pools = ModelHelper.getChildrenProcess(mainProcess);
         assertEquals("2 pools should have been imported", 2, pools.size());
@@ -79,7 +81,8 @@ public class TestParametersRefactoring {
 
     public MainProcess importDiagramAndOpen() throws IOException, InvocationTargetException, InterruptedException {
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        final URL fileURL1 = FileLocator.toFileURL(TestParametersRefactoring.class.getResource("testParametersRefactoring-1.0.bos")); //$NON-NLS-1$
+        final URL fileURL1 = FileLocator
+                .toFileURL(TestParametersRefactoring.class.getResource("testParametersRefactoring-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
@@ -99,7 +102,8 @@ public class TestParametersRefactoring {
         return operations;
     }
 
-    private void refactorParameter(final List<Pool> pools, final List<Parameter> pool1Parameters, final List<Parameter> pool2Parameters,
+    private void refactorParameter(final List<Pool> pools, final List<Parameter> pool1Parameters,
+            final List<Parameter> pool2Parameters,
             final List<Operation> pool1Operations,
             final List<Operation> pool2Operations) throws InvocationTargetException, InterruptedException {
         final Parameter parameterToRefactor = pool1Parameters.get(0);
@@ -116,17 +120,25 @@ public class TestParametersRefactoring {
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         service.busyCursorWhile(op);
         localeConfiguration = getLocalConfiguration(pools.get(0));
-        assertEquals("refactoring first parameter also changed second parameter", secondParameterOldName, pool1Parameters.get(1).getName());
-        assertEquals("parameter reference has not beeen refactored", newParameterName, pool1Operations.get(0).getRightOperand().getName());
-        assertEquals("second parameter reference should not have changed", secondParameterOldName, pool1Operations.get(1).getRightOperand().getName());
-        assertEquals("parameter with same name in second pool should not have changed", parameterWithSameNameName, parameterWithSameName.getName());
-        assertEquals("parameter reference in second pool should not have been refactored", parameterWithSameNameName, pool2Operations.get(0).getRightOperand()
-                .getName());
-        assertEquals("parameter name in configuration has not been refactored", newParameterName, localeConfiguration.getParameters().get(0).getName());
-        assertEquals("refactored parameter has no value anymore", parameterValue, localeConfiguration.getParameters().get(0).getValue());
+        assertEquals("refactoring first parameter also changed second parameter", secondParameterOldName,
+                pool1Parameters.get(1).getName());
+        assertEquals("parameter reference has not beeen refactored", newParameterName,
+                pool1Operations.get(0).getRightOperand().getName());
+        assertEquals("second parameter reference should not have changed", secondParameterOldName,
+                pool1Operations.get(1).getRightOperand().getName());
+        assertEquals("parameter with same name in second pool should not have changed", parameterWithSameNameName,
+                parameterWithSameName.getName());
+        assertEquals("parameter reference in second pool should not have been refactored", parameterWithSameNameName,
+                pool2Operations.get(0).getRightOperand()
+                        .getName());
+        assertEquals("parameter name in configuration has not been refactored", newParameterName,
+                localeConfiguration.getParameters().get(0).getName());
+        assertEquals("refactored parameter has no value anymore", parameterValue,
+                localeConfiguration.getParameters().get(0).getValue());
     }
 
-    private void removeParameter(final List<Pool> pools, final List<Parameter> pool1Parameters, final List<Operation> operations)
+    private void removeParameter(final List<Pool> pools, final List<Parameter> pool1Parameters,
+            final List<Operation> operations)
             throws InvocationTargetException,
             InterruptedException {
         final RemoveParametersOperation op = new RemoveParametersOperation(pool1Parameters.get(0), pools.get(0));
@@ -139,14 +151,17 @@ public class TestParametersRefactoring {
         assertEquals("parameter has not been removed correctly in ", 1, localeConfiguration.getParameters().size());
     }
 
-    private void undoParameterRefactoring(final List<Pool> pools, final List<Parameter> pool1Parameters, final List<Operation> operations)
+    private void undoParameterRefactoring(final List<Pool> pools, final List<Parameter> pool1Parameters,
+            final List<Operation> operations)
             throws ExecutionException {
         final UndoCommandHandler undoCommand = new UndoCommandHandler();
         undoCommand.execute(new ExecutionEvent());
         assertEquals("undo was not performed correctly", parameterName, pool1Parameters.get(0).getName());
         final Configuration localeConfiguration = getLocalConfiguration(pools.get(0));
-        assertEquals("undo was not performed correctly in local configuration", parameterName, localeConfiguration.getParameters().get(0).getName());
-        assertEquals("undo was not performed correctly on parameter reference", parameterName, operations.get(0).getRightOperand().getName());
+        assertEquals("undo was not performed correctly in local configuration", parameterName,
+                localeConfiguration.getParameters().get(0).getName());
+        assertEquals("undo was not performed correctly on parameter reference", parameterName,
+                operations.get(0).getRightOperand().getName());
     }
 
     @After

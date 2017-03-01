@@ -56,8 +56,7 @@ public class ConvertActivityTypeWithBoundariesIT {
 
     @Test
     public void testConvertWithRemovedMessageBoundary() throws Exception {
-        final MainProcess diagram = importAndConvertStep1ToServiceTask(
-                "TestConvertActivityWithMessageBoundary-1.0.bos");
+        final MainProcess diagram = importAndConvertStep1ToServiceTask("TestConvertActivityWithMessageBoundary-1.0.bos");
         final Pool pool = (Pool) diagram.getElements().get(0);
         Assertions.assertThat(pool.getConnections()).hasSize(0);
         final ServiceTask serviceTask = (ServiceTask) pool.getElements().get(1);

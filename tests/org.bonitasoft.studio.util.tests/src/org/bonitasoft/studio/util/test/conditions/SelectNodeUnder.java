@@ -13,10 +13,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.util.test.conditions;
-import org.eclipse.swtbot.swt.finder.SWTBot;
+
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
-
 
 public class SelectNodeUnder implements ICondition {
 

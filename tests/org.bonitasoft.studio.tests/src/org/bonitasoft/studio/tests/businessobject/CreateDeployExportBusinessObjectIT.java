@@ -38,6 +38,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -76,6 +77,13 @@ public class CreateDeployExportBusinessObjectIT {
                 .getChild(BusinessObjectModelFileStore.BOM_FILENAME);
         if (businessObjectModelFileStore != null) {
             businessObjectModelFileStore.delete();
+        }
+    }
+
+    @After
+    public void clean() {
+        if (tmpFile != null) {
+            tmpFile.delete();
         }
     }
 

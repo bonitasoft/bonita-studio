@@ -42,9 +42,9 @@ public class TestTextAreaInConnectorWizard {
     final String textArea = "Text area editor";
     final String name = "testTextAreaConnector";
     final String version = "1.0.0";
-    
+
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
@@ -67,22 +67,21 @@ public class TestTextAreaInConnectorWizard {
 
         viewById = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION);
         viewById.show();
-        new BotPropertiesView(bot, viewById)
-                .selectTab(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_IN);
+        new BotPropertiesView(bot, viewById).selectTab(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_IN);
         bot.button("Add...").click();
-        Assert.assertFalse(IDialogConstants.NEXT_LABEL + " should be disabled", bot
-                .button(IDialogConstants.NEXT_LABEL).isEnabled());
-        Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
-                .button(IDialogConstants.FINISH_LABEL).isEnabled());
+        Assert.assertFalse(IDialogConstants.NEXT_LABEL + " should be disabled",
+                bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+        Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled",
+                bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         bot.text().setText(connectorId);
         bot.table().select(connectorId);
-        Assert.assertTrue(IDialogConstants.NEXT_LABEL + " should be disabled", bot
-                .button(IDialogConstants.NEXT_LABEL).isEnabled());
-        Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
-                .button(IDialogConstants.FINISH_LABEL).isEnabled());
+        Assert.assertTrue(IDialogConstants.NEXT_LABEL + " should be disabled",
+                bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+        Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled",
+                bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         bot.button(IDialogConstants.NEXT_LABEL).click();
-        Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
-                .button(IDialogConstants.FINISH_LABEL).isEnabled());
+        Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled",
+                bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         bot.textWithLabel("Name *").setText(name);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
         bot.button(IDialogConstants.NEXT_LABEL).click();
@@ -91,7 +90,8 @@ public class TestTextAreaInConnectorWizard {
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        final IGraphicalEditPart mainPart = (IGraphicalEditPart) bot.gefEditor(bot.activeEditor().getTitle()).mainEditPart().part();
+        final IGraphicalEditPart mainPart = (IGraphicalEditPart) bot.gefEditor(bot.activeEditor().getTitle()).mainEditPart()
+                .part();
         final MainProcess diagram = (MainProcess) mainPart.resolveSemanticElement();
         bot.waitUntil(new AssertionCondition() {
 
@@ -145,13 +145,16 @@ public class TestTextAreaInConnectorWizard {
         bot.textWithLabel("Display name").setText("text");
         bot.waitUntil(new ICondition() {
 
+            @Override
             public boolean test() throws Exception {
                 return containsWidget(textArea);
             }
 
+            @Override
             public void init(final SWTBot bot) {
             }
 
+            @Override
             public String getFailureMessage() {
                 return "combobox doesn't contain TextArea";
             }

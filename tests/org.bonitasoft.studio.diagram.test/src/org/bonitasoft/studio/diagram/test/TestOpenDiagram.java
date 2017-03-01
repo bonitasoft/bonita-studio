@@ -29,7 +29,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestOpenDiagram  {
+public class TestOpenDiagram {
 
     private boolean askRename;
     private boolean disablePopup;
@@ -38,7 +38,8 @@ public class TestOpenDiagram  {
     @After
     public void tearDown() throws Exception {
         bot.saveAllEditors();
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, askRename);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, askRename);
         FileActionDialog.setDisablePopup(disablePopup);
     }
 
@@ -46,8 +47,10 @@ public class TestOpenDiagram  {
     public void setUp() throws Exception {
         disablePopup = FileActionDialog.getDisablePopup();
         FileActionDialog.setDisablePopup(true);
-        askRename = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
+        askRename = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
     }
 
     @Test
@@ -55,16 +58,19 @@ public class TestOpenDiagram  {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectDiagram();
-        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab().setName("OpenDiagramDelete1");
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab()
+                .setName("OpenDiagramDelete1");
 
         // set editor dirty
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
-        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectGeneralTab().setTaskType(activityType_serviceTask);
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectGeneralTab()
+                .setTaskType(activityType_serviceTask);
 
         final BotOpenDiagramDialog openDialog = botApplicationWorkbenchWindow.open();
         final BotTreeWidget diagramList = openDialog.diagramList();
 
-        assertThat(diagramList.getSWTBotWidget().hasItems()).overridingErrorMessage("Error: no item in the table of Open Diagram Shell").isTrue();
+        assertThat(diagramList.getSWTBotWidget().hasItems())
+                .overridingErrorMessage("Error: no item in the table of Open Diagram Shell").isTrue();
         final int nbItems = diagramList.getSWTBotWidget().rowCount();
         final String diagramName = "OpenDiagramDelete1" + " (1.0)";
         diagramList.select(diagramName);

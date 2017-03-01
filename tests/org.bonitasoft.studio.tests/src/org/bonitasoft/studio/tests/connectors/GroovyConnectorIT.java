@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -32,17 +30,16 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.junit.Test;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class GroovyConnectorIT {
 
     @Test
     public void should_groovy_connector_configuration_be_converted_at_export() throws Exception {
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        final URL fileURL1 = FileLocator.toFileURL(TestDatabaseConnectorResulset.class.getResource("GroovyConnectorTest-1.0.bos")); //$NON-NLS-1$
+        final URL fileURL1 = FileLocator
+                .toFileURL(TestDatabaseConnectorResulset.class.getResource("GroovyConnectorTest-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(new NullProgressMonitor());
@@ -52,7 +49,8 @@ public class GroovyConnectorIT {
         final MainProcess mainProcess = (MainProcess) op.getFileStoresToOpen().get(0).getContent();
 
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-        final Status status = (Status) runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
+        final Status status = (Status) runProcessCommand
+                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
         assertThat(status.isOK()).isTrue();
 
     }

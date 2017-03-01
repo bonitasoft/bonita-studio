@@ -5,17 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.importer.bar.tests;
-
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -44,89 +41,89 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.Shape;
 import org.eclipse.ui.PartInitException;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class BarImporterTestUtil {
 
     /**
-     *
      * @param resourceURL
      * @return the temporary migrated proc file
      * @throws Exception
      */
     public static File migrateBar(final URL resourceURL) throws Exception {
-        final File archive = new File( FileLocator.toFileURL(resourceURL).getFile());
-        final ToProcProcessor processor =  new BarImporterFactory().createProcessor(archive.getName());
+        final File archive = new File(FileLocator.toFileURL(resourceURL).getFile());
+        final ToProcProcessor processor = new BarImporterFactory().createProcessor(archive.getName());
         assertNotNull("Failed to create processor", processor);
         return processor.createDiagram(archive.toURI().toURL(), Repository.NULL_PROGRESS_MONITOR);
     }
 
     /**
-     *
      * @param migratedProc
      * @return the loaded EMF resource
      */
     public static Resource assertIsLoadable(final File migratedProc) {
         final ResourceSet resourceSet = new ResourceSetImpl();
         final Resource resource = resourceSet.createResource(URI.createFileURI(migratedProc.getAbsolutePath()));
-        if(resource == null){
-            fail("Can't create an EMF resource for "+migratedProc.getAbsolutePath());
+        if (resource == null) {
+            fail("Can't create an EMF resource for " + migratedProc.getAbsolutePath());
         }
-        try{
+        try {
             resource.load(Collections.emptyMap());
-        }catch (final Exception e) {
-            fail("Resource is not loadable :\n"+e.getMessage());
+        } catch (final Exception e) {
+            fail("Resource is not loadable :\n" + e.getMessage());
         }
         return resource;
     }
 
-
     public static MainProcess getMainProcess(final Resource resource) {
-        if(resource.getContents().size() > 1){
+        if (resource.getContents().size() > 1) {
             final EObject mainProcess = resource.getContents().get(0);
-            if(mainProcess instanceof MainProcess){
+            if (mainProcess instanceof MainProcess) {
                 return (MainProcess) mainProcess;
-            }else{
-                fail("MainProcess is not at the correct in index in the resource contents");
             }
+            fail("MainProcess is not at the correct in index in the resource contents");
         }
-        boolean mainProcFound = false ;
-        for(final EObject c : resource.getContents()){
-            if(c instanceof MainProcess){
+        boolean mainProcFound = false;
+        for (final EObject c : resource.getContents()) {
+            if (c instanceof MainProcess) {
                 mainProcFound = true;
                 break;
             }
         }
-        assertTrue("MainProcess not found in resource :"+resource.getURI(),mainProcFound);
+        assertTrue("MainProcess not found in resource :" + resource.getURI(), mainProcFound);
         return null;
     }
 
     /**
      * Validate that all views of the gmf diagrams are bound to a semantic element
+     * 
      * @param resource
      * @throws PartInitException
      */
     public static void assertViewsAreConsistent(final Resource resource) throws PartInitException {
-        final MainProcess mainproc =  getMainProcess(resource);
+        final MainProcess mainproc = getMainProcess(resource);
         final Diagram diagram = ModelHelper.getDiagramFor(mainproc);
         assertNotNull("Diagram view not found", diagram);
         final List<Shape> shapes = ModelHelper.getAllItemsOfType(diagram, NotationPackage.Literals.SHAPE);
-        for(final Shape shape : shapes){
-            assertNotNull("A view (id="+EMFCoreUtil.getProxyID(shape)+", type="+shape.getType()+") is not bound to a semantic element",shape.eGet(NotationPackage.Literals.VIEW__ELEMENT,false));
+        for (final Shape shape : shapes) {
+            assertNotNull(
+                    "A view (id=" + EMFCoreUtil.getProxyID(shape) + ", type=" + shape.getType()
+                            + ") is not bound to a semantic element",
+                    shape.eGet(NotationPackage.Literals.VIEW__ELEMENT, false));
         }
 
-        for(final Form f : ModelHelper.getAllFormsContainedIn(mainproc)){
+        for (final Form f : ModelHelper.getAllFormsContainedIn(mainproc)) {
             final Diagram formDiagram = ModelHelper.getDiagramFor(f);
             assertNotNull("Form Diagram view not found", formDiagram);
             final List<Shape> formViews = ModelHelper.getAllItemsOfType(diagram, NotationPackage.Literals.SHAPE);
-            for(final Shape shape : formViews){
-                assertNotNull("A view (id="+EMFCoreUtil.getProxyID(shape)+", type="+shape.getType()+") is not bound to a semantic element",shape.eGet(NotationPackage.Literals.VIEW__ELEMENT,false));
+            for (final Shape shape : formViews) {
+                assertNotNull(
+                        "A view (id=" + EMFCoreUtil.getProxyID(shape) + ", type=" + shape.getType()
+                                + ") is not bound to a semantic element",
+                        shape.eGet(NotationPackage.Literals.VIEW__ELEMENT, false));
             }
         }
     }
-
 
 }

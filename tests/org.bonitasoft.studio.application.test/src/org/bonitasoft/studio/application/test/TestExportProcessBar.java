@@ -20,8 +20,6 @@ import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import junit.framework.TestCase;
-
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -33,6 +31,8 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
+
+import junit.framework.TestCase;
 
 /**
  * @author Aurelien Pupier
@@ -49,7 +49,8 @@ public class TestExportProcessBar extends TestCase {
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
         /* Retrieve the AbstractProcess */
-        final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         final DiagramFileStore diagram = store.getDiagram("TestExportProcessBarWithDocument", "1.0");
         assertNotNull(diagram);
         final MainProcess diagramElement = diagram.getContent();
@@ -69,6 +70,9 @@ public class TestExportProcessBar extends TestCase {
 
         final File generatedBarFile = ebo.getGeneratedBars().get(0);
 
+        targetFolder.deleteOnExit();
+        generatedBarFile.deleteOnExit();
+
         /* Check that attachment is in the bar */
         final ZipInputStream generatedBarStream = new ZipInputStream(new FileInputStream(generatedBarFile));
         ZipEntry barEntry;
@@ -80,7 +84,6 @@ public class TestExportProcessBar extends TestCase {
         }
         generatedBarStream.close();
         fail("There is no attachment in the genrated bar.");
-
     }
 
     public void testExportProcessBarApplicationResources() throws Exception {
@@ -95,7 +98,8 @@ public class TestExportProcessBar extends TestCase {
         op.run(Repository.NULL_PROGRESS_MONITOR);
         assertTrue(op.getStatus().isOK());
         /* Retrieve the AbstractProcess */
-        final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         final DiagramFileStore diagram = store.getDiagram("TestExportBarWithApplicationResources", "1.0");
         assertNotNull(diagram);
         final MainProcess diagramElement = diagram.getContent();
@@ -106,6 +110,7 @@ public class TestExportProcessBar extends TestCase {
         final File targetFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + "testExportBar");
         PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
         targetFolder.mkdirs();
+        targetFolder.deleteOnExit();
 
         final ExportBarOperation ebo = new ExportBarOperation();
         ebo.addProcessToDeploy(proc);
@@ -115,6 +120,7 @@ public class TestExportProcessBar extends TestCase {
         assertTrue("Export in bar has failed.", ebo.getStatus().isOK());
 
         final File generatedBarFile = ebo.getGeneratedBars().get(0);
+        generatedBarFile.deleteOnExit();
 
         /* Check that attachment is in the bar */
         final ZipInputStream generatedBarStream = new ZipInputStream(new FileInputStream(generatedBarFile));

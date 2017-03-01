@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.actors.tests.exporter;
 
@@ -44,22 +41,24 @@ import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class SWTBotActorFilterExportTests  {
+public class SWTBotActorFilterExportTests {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
     private void exportActorFilter(final String connector, final String fileName,
             final boolean hasDependencies, final boolean hasSources) throws Exception {
-        final File f = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
-        final String exportPath = f.getAbsolutePath();
         SWTBotActorFilterUtil.activateExportActorFilterShell(bot);
         bot.table().select(connector);
-        assertFalse("Finish button should be disabled",
-                bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+        assertFalse("Finish button should be disabled", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         if (hasSources) {
             bot.checkBoxWithLabel("Include sources").select();
         } else {
@@ -70,12 +69,14 @@ public class SWTBotActorFilterExportTests  {
         } else {
             bot.checkBoxWithLabel("Add dependencies").deselect();
         }
-        bot.textWithLabel("Destination *").setText(exportPath);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),5000);
+        bot.textWithLabel("Destination *").setText(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure(org.bonitasoft.studio.common.repository.Messages.exportLabel), 15000);
+        bot.waitUntil(
+                new ShellIsActiveWithThreadSTacksOnFailure(org.bonitasoft.studio.common.repository.Messages.exportLabel),
+                15000);
         bot.button(IDialogConstants.OK_LABEL).click();
-        checkExportedFile(exportPath,fileName, hasDependencies, hasSources);
+        checkExportedFile(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath(), fileName, hasDependencies, hasSources);
     }
 
     @Test
@@ -107,21 +108,22 @@ public class SWTBotActorFilterExportTests  {
         exportActorFilter(userActorFilter, fileName, false, true);
     }
 
-    private void checkExportedFile(final String path,final String fileName, final boolean hasDependencies,
+    private void checkExportedFile(final String path, final String fileName, final boolean hasDependencies,
             final boolean hasSources) throws Exception {
-        final File zipFile = new File(path+File.separator+fileName);
+        final File zipFile = new File(path + File.separator + fileName);
         assertTrue("actor filter zip file was not created", zipFile.exists());
         final File destDir = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
+        destDir.deleteOnExit();
         final IProgressMonitor monitor = new NullProgressMonitor();
-        try{
-        	PlatformUtil.unzipZipFiles(zipFile, destDir, monitor);
-        }catch(final Exception e){
-        	if(e instanceof IOException){
-        		assertTrue("IO error while unzip file "+zipFile.getName(), false);
-        	}
-        	if(e instanceof ZipException){
-        		assertTrue("ZIP error while unzip file "+zipFile.getName(), false);
-        	}
+        try {
+            PlatformUtil.unzipZipFiles(zipFile, destDir, monitor);
+        } catch (final Exception e) {
+            if (e instanceof IOException) {
+                assertTrue("IO error while unzip file " + zipFile.getName(), false);
+            }
+            if (e instanceof ZipException) {
+                assertTrue("ZIP error while unzip file " + zipFile.getName(), false);
+            }
         }
         assertTrue("actor filter zip file was not unzipped correctly",
                 destDir.exists());
@@ -149,6 +151,7 @@ public class SWTBotActorFilterExportTests  {
             assertFalse("connector zip should not contain source files",
                     sourceDir.exists());
         }
+        sourceDir.deleteOnExit();
     }
 
     private void testDescriptorFileExistence(final File destDir) throws IOException {
@@ -168,10 +171,12 @@ public class SWTBotActorFilterExportTests  {
                 .getProperty(ExportActorFilterArchiveOperation.TYPE);
         assertFalse("type is missing in the descriptor",
                 (type == null || type.isEmpty()));
+        descriptor.deleteOnExit();
     }
 
     private void testDefinitionFileExistence(final File destDir) {
         final FilenameFilter defFilter = new FilenameFilter() {
+
             @Override
             public boolean accept(final File dir, final String name) {
                 return name.endsWith("."
@@ -216,6 +221,7 @@ public class SWTBotActorFilterExportTests  {
             assertTrue("classpath should contain at least one dependency",
                     depfiles.length >= 1);
         }
+        classpathDir.deleteOnExit();
     }
 
     private void testMessageFilesExistence(final File destDir) {
@@ -238,5 +244,4 @@ public class SWTBotActorFilterExportTests  {
         PlatformUtil.delete(ProjectUtil.getBonitaStudioWorkFolder(), null);
         ProjectUtil.getBonitaStudioWorkFolder().mkdir();
     }
-
 }

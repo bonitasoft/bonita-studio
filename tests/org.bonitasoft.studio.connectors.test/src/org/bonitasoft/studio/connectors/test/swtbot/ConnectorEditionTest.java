@@ -38,14 +38,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ConnectorEditionTest  {
+public class ConnectorEditionTest {
 
     private SWTGefBot bot = new SWTGefBot();
-    
-    public void removeConnectorDefinition(final String name,final String version) {
-        SWTBotConnectorTestUtil.activateConnectorDefEditionShell( bot);
+
+    public void removeConnectorDefinition(final String name, final String version) {
+        SWTBotConnectorTestUtil.activateConnectorDefEditionShell(bot);
         bot.tree().setFocus();
         bot.waitUntil(new SelectNodeUnder(bot, name + " (" + version + ")", "Uncategorized"), 10000, 1000);
 
@@ -54,7 +53,7 @@ public class ConnectorEditionTest  {
                 .getNode(name + " (" + version + ")"));
         bot.tree().select("Uncategorized").expandNode("Uncategorized").select(name + " (" + version + ")");
         bot.button("Delete").click();
-        if (!FileActionDialog.getDisablePopup()){
+        if (!FileActionDialog.getDisablePopup()) {
             bot.waitUntil(Conditions.shellIsActive("Delete?"));
             bot.button(IDialogConstants.YES_LABEL).click();
         }
@@ -64,7 +63,8 @@ public class ConnectorEditionTest  {
     @Before
     public void setUp() throws Exception {
         FileActionDialog.setDisablePopup(true);
-        ConnectorEditPlugin.getPlugin().getPreferenceStore().setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
+        ConnectorEditPlugin.getPlugin().getPreferenceStore()
+                .setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
     }
 
     @Test
@@ -73,9 +73,9 @@ public class ConnectorEditionTest  {
         final String version = "1.0.0";
         final String id2 = "testEdit2";
         SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
-        SWTBotConnectorTestUtil.createConnectorDefinition(bot,id, version);
+        SWTBotConnectorTestUtil.createConnectorDefinition(bot, id, version);
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        SWTBotConnectorTestUtil.activateConnectorDefEditionShell( bot);
+        SWTBotConnectorTestUtil.activateConnectorDefEditionShell(bot);
         bot.tree().setFocus();
         bot.waitUntil(new SelectNodeUnder(bot, id + " (" + version + ")", "Uncategorized"), 10000);
         bot.button(Messages.Edit).click();
@@ -83,9 +83,8 @@ public class ConnectorEditionTest  {
         assertEquals(bot.textWithLabel("Version *").getText(), version);
         bot.textWithLabel("Definition id *").setText(id2);
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        final ConnectorDefRepositoryStore store = RepositoryManager
-                .getInstance().getRepositoryStore(
-                        ConnectorDefRepositoryStore.class);
+        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
         final ConnectorDefinition connectorDef = store.getDefinition(id, version);
         final ConnectorDefinition connectorDef2 = store.getDefinition(id2, version);
         assertNull("the connectorDef with previous id shouldn't exist anymore",
@@ -101,9 +100,9 @@ public class ConnectorEditionTest  {
         final String version = "1.0.0";
         final String version2 = "1.0.1";
         SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
-        SWTBotConnectorTestUtil.createConnectorDefinition(bot,id, version);
+        SWTBotConnectorTestUtil.createConnectorDefinition(bot, id, version);
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        SWTBotConnectorTestUtil.activateConnectorDefEditionShell( bot);
+        SWTBotConnectorTestUtil.activateConnectorDefEditionShell(bot);
         bot.tree().setFocus();
         bot.waitUntil(new SelectNodeUnder(bot, id + " (" + version + ")", "Uncategorized"), 10000);
         bot.button(Messages.Edit).click();
@@ -128,33 +127,28 @@ public class ConnectorEditionTest  {
         final String version = "1.0.0";
 
         SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
-        SWTBotConnectorTestUtil.createConnectorDefinition(bot,id, version);
+        SWTBotConnectorTestUtil.createConnectorDefinition(bot, id, version);
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        SWTBotConnectorTestUtil.activateConnectorDefEditionShell( bot);
+        SWTBotConnectorTestUtil.activateConnectorDefEditionShell(bot);
         bot.tree().setFocus();
         bot.waitUntil(new SelectNodeUnder(bot, id + " (" + version + ")", "Uncategorized"), 10000);
         bot.button(Messages.Edit).click();
         bot.treeWithLabel(Messages.categoryLabel).select(0);
         bot.button(IDialogConstants.FINISH_LABEL).click();
         final ConnectorDefRepositoryStore store = RepositoryManager
-                .getInstance().getRepositoryStore(
-                        ConnectorDefRepositoryStore.class);
+                .getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         final ConnectorDefinition connectorDef = store.getDefinition(id, version);
-        assertEquals("category size should be equal to 1", 1,connectorDef.getCategory().size());
+        assertEquals("category size should be equal to 1", 1, connectorDef.getCategory().size());
         final DefinitionResourceProvider messageProvider = DefinitionResourceProvider
                 .getInstance(store, ConnectorPlugin.getDefault().getBundle());
-        SWTBotConnectorTestUtil.activateConnectorDefEditionShell( bot);
+        SWTBotConnectorTestUtil.activateConnectorDefEditionShell(bot);
         final Category category = connectorDef.getCategory().get(0);
-        String categoryLabel = messageProvider.getCategoryLabel(category);
-        if(categoryLabel == null){
-            categoryLabel = category.getId();
-        }
-        final String connectorLabel =  new ConnectorDefinitionTreeLabelProvider(messageProvider).getText(connectorDef);
-        assertNotNull(
-                "could not find " + connectorLabel,
+        String categoryLabel = messageProvider.getCategoryLabel(category) == null ? category.getId()
+                : messageProvider.getCategoryLabel(category);
+        final String connectorLabel = new ConnectorDefinitionTreeLabelProvider(messageProvider).getText(connectorDef);
+        assertNotNull("could not find " + connectorLabel,
                 bot.tree().getTreeItem(categoryLabel).expand().getNode(connectorLabel));
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
-
 
 }

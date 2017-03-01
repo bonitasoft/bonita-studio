@@ -75,17 +75,22 @@ public class TestDocumentRefactor {
 
         assertEquals("There are too many documents. The old one might not be removed.", 1, process.getDocuments().size());
         assertEquals("Document has not been renamed", newDocumentName, process.getDocuments().get(0).getName());
-        assertEquals("Document name has not been updated correctly in expression of right operand operation", newDocumentName, scriptUsingDocument.getContent());
-        assertEquals("Document name has not been updated correctly in expression of right operand operation", newDocumentName, ((Document) scriptUsingDocument
-                .getReferencedElements().get(0)).getName());
+        assertEquals("Document name has not been updated correctly in expression of right operand operation",
+                newDocumentName, scriptUsingDocument.getContent());
+        assertEquals("Document name has not been updated correctly in expression of right operand operation",
+                newDocumentName, ((Document) scriptUsingDocument
+                        .getReferencedElements().get(0)).getName());
 
         editingDomain.getCommandStack().undo();
 
         assertEquals("There are too many documents. The old one might not be removed.", 1, process.getDocuments().size());
-        assertEquals("Document has not been renamed after undo", initialDocumentName, process.getDocuments().get(0).getName());
-        assertEquals("Document name has not been updated correctly in expression of right operand operation after undo", initialDocumentName,
+        assertEquals("Document has not been renamed after undo", initialDocumentName,
+                process.getDocuments().get(0).getName());
+        assertEquals("Document name has not been updated correctly in expression of right operand operation after undo",
+                initialDocumentName,
                 scriptUsingDocument.getContent());
-        assertEquals("Document name has not been updated correctly in expression of right operand operation after undo", initialDocumentName,
+        assertEquals("Document name has not been updated correctly in expression of right operand operation after undo",
+                initialDocumentName,
                 ((Document) scriptUsingDocument
                         .getReferencedElements().get(0)).getName());
 
@@ -104,7 +109,8 @@ public class TestDocumentRefactor {
     }
 
     private TransactionalEditingDomain createEditingDomain() {
-        final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+        final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
+                ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
 
         // command stack that will notify this editor as commands are executed

@@ -27,6 +27,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
@@ -38,10 +39,10 @@ import org.junit.runner.RunWith;
  * @author Aurelie Zara
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestLoadSaveConnectorConfiguration  {
+public class TestLoadSaveConnectorConfiguration {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     @Before
     public void initTest() {
         FileActionDialog.setDisablePopup(true);
@@ -71,7 +72,8 @@ public class TestLoadSaveConnectorConfiguration  {
 
     @Test
     public void testSaveLoadConnectorConfiguration() {
-        final ConnectorConfRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
+        final ConnectorConfRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorConfRepositoryStore.class);
         final int initialSize = store.getChildren().size();
         final String connectorDefId = "testLoadConnectorDefinition";
         final String version = "1.0.0";
@@ -83,26 +85,22 @@ public class TestLoadSaveConnectorConfiguration  {
         SWTBotTestUtil.createNewDiagram(bot);
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
         createData(dataName);
-        //SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorDefId,version, new String[]{"Uncategorized"},name);
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION).show();
         SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_OUT);
         bot.button("Add...").click();
         bot.text().setText(connectorDefId);
         bot.table().select(connectorDefId);
         bot.button(IDialogConstants.NEXT_LABEL).click();
-        //SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorLabel,connectorVersion,dbCategoryLabel, connectorName);
         bot.textWithLabel("Name *").setText(name);
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.textWithLabel("text").setText("hello world");
-        bot.sleep(1000); // Due to delayed observable on databinding
+        bot.waitUntil(Conditions.waitForWidget(WidgetMatcherFactory.withMnemonic(IDialogConstants.NEXT_LABEL)), 1000);
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.sleep(1000); // Due to delayed observable on databinding
         SWTBotTestUtil.selectExpressionProposal(bot, dataName, String.class.getName(), 0);
 
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        bot.table().select(
-                name + " -- " + connectorDefId + " (" + version
-                        + ") -- ON_FINISH");
+        bot.table().select(name + " -- " + connectorDefId + " (" + version + ") -- ON_FINISH");
         bot.button("Edit...").click();
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.toolbarButton("Save").click();
@@ -112,8 +110,6 @@ public class TestLoadSaveConnectorConfiguration  {
         //add a new connector and load previous configuration connector
         SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_OUT);
         bot.button("Add...").click();
-        //bot.tree().setFocus();
-        //bot.tree().expandNode("Uncategorized").select(connectorDefId + " (" + version + ")");
         bot.text().setText(connectorDefId);
         bot.table().select(connectorDefId);
         bot.button(IDialogConstants.NEXT_LABEL).click();
@@ -124,15 +120,18 @@ public class TestLoadSaveConnectorConfiguration  {
         wizardTree.setFocus();
         bot.waitUntil(new ICondition() {
 
+            @Override
             public boolean test() throws Exception {
                 wizardTree.getTreeItem(saveName).select();
                 return wizardTree.selectionCount() > 0;
             }
 
+            @Override
             public void init(final SWTBot bot) {
 
             }
 
+            @Override
             public String getFailureMessage() {
                 return "Cannot select tree item";
             }
@@ -153,15 +152,18 @@ public class TestLoadSaveConnectorConfiguration  {
         bot.tree().setFocus();
         bot.waitUntil(new ICondition() {
 
+            @Override
             public boolean test() throws Exception {
                 bot.tree().getTreeItem(saveName).select();
                 return bot.tree().selectionCount() > 0;
             }
 
+            @Override
             public void init(final SWTBot bot) {
 
             }
 
+            @Override
             public String getFailureMessage() {
                 return "Cannot select tree item";
             }
@@ -170,13 +172,16 @@ public class TestLoadSaveConnectorConfiguration  {
         bot.button("Remove").click();
         bot.waitUntil(new ICondition() {
 
+            @Override
             public boolean test() throws Exception {
                 return bot.tree().getAllItems().length == initialSize;
             }
 
+            @Override
             public void init(final SWTBot bot) {
             }
 
+            @Override
             public String getFailureMessage() {
                 return "Fail to delete configuration";
             }

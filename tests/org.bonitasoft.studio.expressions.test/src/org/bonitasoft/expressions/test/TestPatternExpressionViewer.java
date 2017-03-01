@@ -54,11 +54,13 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
     private static final String DATA_NAME_1 = "myData1";
     private static final String DATA_NAME_2 = "myData2";
     private static final String DATA_NAME_3 = "myData3";
-    private static final String QUERY = "SELECT ${" + DATA_NAME_1 + "} from MyTable WHERE ${" + DATA_NAME_2 + "}='" + DATA_NAME_3 + "'";
+    private static final String QUERY = "SELECT ${" + DATA_NAME_1 + "} from MyTable WHERE ${" + DATA_NAME_2 + "}='"
+            + DATA_NAME_3 + "'";
     private static final String JDBC_DB_CONNECTOR_ID = "database-jdbc";
     private static final String DB_CATEGORY_ID = "database";
     private static final String GENERIC_DB_CATEGORY_ID = "generic";
-    private static final String GROOVY_SQL_QUERY = "\"SELECT \"+" + DATA_NAME_1 + "+\" from MyTable WHERE \"+" + DATA_NAME_2 + "+\"='\"+" + DATA_NAME_3
+    private static final String GROOVY_SQL_QUERY = "\"SELECT \"+" + DATA_NAME_1 + "+\" from MyTable WHERE \"+" + DATA_NAME_2
+            + "+\"='\"+" + DATA_NAME_3
             + "+\"'\"";
 
     private final SWTGefBot bot = new SWTGefBot();
@@ -85,7 +87,8 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
     }
 
     private void checkGroovyExpressionModel() {
-        final DiagramEditPart diagramEp = (DiagramEditPart) bot.gefEditor(bot.activeEditor().getTitle()).mainEditPart().part();
+        final DiagramEditPart diagramEp = (DiagramEditPart) bot.gefEditor(bot.activeEditor().getTitle()).mainEditPart()
+                .part();
         final MainProcess diagram = (MainProcess) diagramEp.resolveSemanticElement();
         final List<Connector> connectors = ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.CONNECTOR);
         boolean found = false;
@@ -107,7 +110,8 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
     }
 
     private void checkPatternExpressionModel() {
-        final DiagramEditPart diagramEp = (DiagramEditPart) bot.gefEditor(bot.activeEditor().getTitle()).mainEditPart().part();
+        final DiagramEditPart diagramEp = (DiagramEditPart) bot.gefEditor(bot.activeEditor().getTitle()).mainEditPart()
+                .part();
         final MainProcess diagram = (MainProcess) diagramEp.resolveSemanticElement();
         final List<Connector> connectors = ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.CONNECTOR);
         boolean found = false;
@@ -120,9 +124,12 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
                         assertEquals("Invalid expression content", QUERY, exp.getContent());
                         assertEquals("Invalid expression return type", String.class.getName(), exp.getReturnType());
                         assertEquals("Invalid number of dependencies", 2, exp.getReferencedElements().size());
-                        final org.bonitasoft.engine.expression.Expression engineExp = EngineExpressionUtil.createExpression(exp);
-                        assertEquals("Invalid expression convertion from studio to engine", "SELECT ${" + DATA_NAME_1 + "} from MyTable WHERE ${" + DATA_NAME_2
-                                + "}='" + DATA_NAME_3 + "'", engineExp.getContent());
+                        final org.bonitasoft.engine.expression.Expression engineExp = EngineExpressionUtil
+                                .createExpression(exp);
+                        assertEquals("Invalid expression convertion from studio to engine",
+                                "SELECT ${" + DATA_NAME_1 + "} from MyTable WHERE ${" + DATA_NAME_2
+                                        + "}='" + DATA_NAME_3 + "'",
+                                engineExp.getContent());
                     }
                 }
             }
@@ -138,7 +145,6 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
         bot.text().setText(connectorLabel);
         bot.table().select(0);
         bot.button(IDialogConstants.NEXT_LABEL).click();
-        //SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorLabel,connectorVersion,dbCategoryLabel, connectorName);
         bot.textWithLabel("Name *").setText(connectorName);
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.button(IDialogConstants.NEXT_LABEL).click();
@@ -177,7 +183,8 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
         final String[] res = new String[categoryIds.length];
         for (int i = 0; i < categoryIds.length; i++) {
             final String categoryIdToSearch = categoryIds[i];
-            final ConnectorDefRepositoryStore defSore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+            final ConnectorDefRepositoryStore defSore = RepositoryManager.getInstance()
+                    .getRepositoryStore(ConnectorDefRepositoryStore.class);
             for (final Category c : defSore.getResourceProvider().getAllCategories()) {
                 if (c.getId().equals(categoryIdToSearch)) {
                     res[i] = defSore.getResourceProvider().getCategoryLabel(c);
@@ -189,7 +196,8 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
     }
 
     private String getConnectorVersion(final String connectorId) {
-        final ConnectorDefRepositoryStore defSore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorDefRepositoryStore defSore = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
         for (final ConnectorDefinition def : defSore.getDefinitions()) {
             if (def.getId().equals(connectorId)) {
                 return def.getVersion();
@@ -199,7 +207,8 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
     }
 
     private String getConnectorLabel(final String connectorId) {
-        final ConnectorDefRepositoryStore defSore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorDefRepositoryStore defSore = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
         for (final ConnectorDefinition def : defSore.getDefinitions()) {
             if (def.getId().equals(connectorId)) {
                 return defSore.getResourceProvider().getConnectorDefinitionLabel(def);
@@ -208,7 +217,8 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
         return null;
     }
 
-    private void editGroovyEditor(final int buttonIndex, final String inputName, final String inputtype, final String scriptName, final String groovyScript) {
+    private void editGroovyEditor(final int buttonIndex, final String inputName, final String inputtype,
+            final String scriptName, final String groovyScript) {
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON, buttonIndex).click();
         bot.table().select("Script");
         bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")), 10000);
@@ -217,7 +227,8 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
         assertFalse("return type combobox should be disabled", bot.comboBoxWithLabel("Return type").isEnabled());
         assertEquals("return type should be" + inputtype, bot.comboBoxWithLabel("Return type").getText(), inputtype);
         bot.button(IDialogConstants.OK_LABEL).click();
-        assertEquals("wrong value for " + inputName, bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0).getText(), scriptName);
+        assertEquals("wrong value for " + inputName, bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0).getText(),
+                scriptName);
     }
 
     private void createData(final String dataName) {

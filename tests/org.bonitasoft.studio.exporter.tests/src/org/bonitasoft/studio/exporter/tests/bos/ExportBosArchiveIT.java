@@ -52,7 +52,8 @@ public class ExportBosArchiveIT {
 
     @Test
     public void should_not_export_ui_designer_metadata() throws Exception {
-        final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(WebPageRepositoryStore.class);
+        final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository()
+                .getRepositoryStore(WebPageRepositoryStore.class);
 
         final CreateFormOperation createFormOperation = new CreateFormOperation(
                 new PageDesignerURLFactory(InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)));
@@ -100,7 +101,8 @@ public class ExportBosArchiveIT {
         bot.toolbarButton("Export").click();
         bot.waitUntil(Conditions.shellIsActive(Messages.ExportButtonLabel));
 
-        final SWTBotCombo destComboBot = bot.comboBoxWithLabel(org.bonitasoft.studio.common.repository.Messages.destinationPath + " *");
+        final SWTBotCombo destComboBot = bot
+                .comboBoxWithLabel(org.bonitasoft.studio.common.repository.Messages.destinationPath + " *");
         final String defaultPath = destComboBot.getText();
         assertTrue("Invalid default file name", defaultPath.endsWith(".bos"));
         final File destFile = new File(defaultPath);
@@ -122,7 +124,8 @@ public class ExportBosArchiveIT {
 
     @After
     public void tearDown() throws Exception {
-        final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(WebPageRepositoryStore.class);
+        final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository()
+                .getRepositoryStore(WebPageRepositoryStore.class);
         for (final WebPageFileStore fs : repositoryStore.getChildren()) {
             fs.delete();
         }

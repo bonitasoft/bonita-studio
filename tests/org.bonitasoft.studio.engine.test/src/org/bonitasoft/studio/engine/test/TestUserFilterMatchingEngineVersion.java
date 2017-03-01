@@ -25,7 +25,6 @@ import java.util.List;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.flownode.HumanTaskInstance;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
-import org.bonitasoft.engine.bpm.process.ProcessInstance;
 import org.bonitasoft.engine.identity.User;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
@@ -65,12 +64,14 @@ public class TestUserFilterMatchingEngineVersion {
         session = BOSEngineManager.getInstance().loginTenant("william.jobs", "bpm", Repository.NULL_PROGRESS_MONITOR);
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
-        final User williamJobsUser = BOSEngineManager.getInstance().getIdentityAPI(session).getUserByUserName("william.jobs");
+        final User williamJobsUser = BOSEngineManager.getInstance().getIdentityAPI(session)
+                .getUserByUserName("william.jobs");
         final Long williamJobsID = williamJobsUser.getId();
         final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(williamJobsID, searchOptions).getResult();
 
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        final URL fileURL1 = FileLocator.toFileURL(TestUserFilterMatchingEngineVersion.class.getResource("DiagramToTestUserFIlter-1.0.bos")); //$NON-NLS-1$
+        final URL fileURL1 = FileLocator
+                .toFileURL(TestUserFilterMatchingEngineVersion.class.getResource("DiagramToTestUserFIlter-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
@@ -79,7 +80,8 @@ public class TestUserFilterMatchingEngineVersion {
             f.open();
         }
 
-        final ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+        final ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench()
+                .getActiveWorkbenchWindow().getActivePage()
                 .getActiveEditor();
         final MainProcess mainProcess = (MainProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
         assertEquals("DiagramToTestUserFIlter", mainProcess.getName());
@@ -95,13 +97,14 @@ public class TestUserFilterMatchingEngineVersion {
         final long processId = processApi.getProcessDefinitionId("PoolToTestUserFilter", "1.0");
         final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
         assertNotNull("processDef should not be null", processDef);
-        final ProcessInstance processInstance = processApi.startProcess(processId);
+        processApi.startProcess(processId);
 
         final boolean evaluateAsync = new TestAsyncThread(30, 1000) {
 
             @Override
             public boolean isTestGreen() throws Exception {
-                newTask = EngineAPIUtil.findNewAssignedTaskForSpecifiedProcessDefAndUser(session, tasks, processId, williamJobsID);
+                newTask = EngineAPIUtil.findNewAssignedTaskForSpecifiedProcessDefAndUser(session, tasks, processId,
+                        williamJobsID);
 
                 return newTask != null;
             }

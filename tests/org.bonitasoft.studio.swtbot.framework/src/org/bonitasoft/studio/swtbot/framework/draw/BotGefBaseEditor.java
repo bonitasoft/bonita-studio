@@ -52,8 +52,6 @@ public class BotGefBaseEditor extends BotBase {
         element.parent().select();//call select on parent of LabelEditpart
         bot.waitUntil(new DefaultCondition() {
 
-
-
             @Override
             public boolean test() throws Exception {
                 for (final SWTBotGefEditPart ep : gmfEditor.selectedEditParts()) {

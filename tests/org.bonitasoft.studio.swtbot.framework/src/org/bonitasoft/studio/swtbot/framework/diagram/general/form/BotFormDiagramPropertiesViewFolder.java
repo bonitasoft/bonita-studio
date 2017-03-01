@@ -15,7 +15,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**
  * Diagram properties view folder.
- *
+ * 
  * @author Joachim Segala
  */
 public class BotFormDiagramPropertiesViewFolder extends BotBase {
@@ -35,11 +35,9 @@ public class BotFormDiagramPropertiesViewFolder extends BotBase {
         return new BotGeneralFormPropertiesView(bot, view);
     }
 
-
     public void selectAppearanceTab() {
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPEARANCE).show();
     }
-
 
     public void selectValidationStatusTab() {
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_VALIDATION_STATUS).show();

@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.importer.test.bonita4;
 
@@ -23,8 +20,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 import org.bonitasoft.studio.importer.bonita4.XPDLToProc;
 import org.bonitasoft.studio.model.process.ANDGateway;
@@ -47,9 +42,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.junit.Test;
 
+import junit.framework.TestCase;
+
 /**
  * @author Mickael Istria
- *
  */
 public class TestImportXPDL extends TestCase {
 
@@ -65,12 +61,12 @@ public class TestImportXPDL extends TestCase {
         destFile.deleteOnExit();
         URL xpdlResource = FileLocator.toFileURL(getClass().getResource("carpool.xpdl"));
         XPDLToProc xpdlToProc = new XPDLToProc();
-        destFile = xpdlToProc.createDiagram(xpdlResource,  new NullProgressMonitor());
+        destFile = xpdlToProc.createDiagram(xpdlResource, new NullProgressMonitor());
 
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
-        MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
-        Pool process = (Pool)mainProcess.getElements().get(0);
+        MainProcess mainProcess = (MainProcess) resource.getContents().get(0);
+        Pool process = (Pool) mainProcess.getElements().get(0);
 
         int steps = 0;
         int transitions = 0;
@@ -82,10 +78,10 @@ public class TestImportXPDL extends TestCase {
                 steps++;
             }
             if (item instanceof Task) {
-                tasks.add((Task)item);
+                tasks.add((Task) item);
             }
             if (item instanceof Activity) {
-                connectors += ((Activity)item).getConnectors().size();
+                connectors += ((Activity) item).getConnectors().size();
             }
         }
         for (Element item : process.getConnections()) {
@@ -106,7 +102,7 @@ public class TestImportXPDL extends TestCase {
         for (Task task : tasks) {
             assertEquals("Task has no group", group, task.getActor());
         }
-        destFile.delete();
+        resource.unload();
     }
 
     @Test
@@ -120,7 +116,7 @@ public class TestImportXPDL extends TestCase {
 
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
-        MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
+        MainProcess mainProcess = (MainProcess) resource.getContents().get(0);
         Pool pool = (Pool) mainProcess.getElements().get(0);
 
         int steps = 0;
@@ -134,13 +130,13 @@ public class TestImportXPDL extends TestCase {
                 steps++;
             }
             if (item instanceof Task) {
-                tasks.add((Task)item);
+                tasks.add((Task) item);
             }
             if (item instanceof Activity) {
-                connectors += ((Activity)item).getConnectors().size();
+                connectors += ((Activity) item).getConnectors().size();
             }
             if (item.getName().equals("Approval")) {
-                approval = (Activity)item;
+                approval = (Activity) item;
             }
         }
         for (Element item : pool.getConnections()) {
@@ -167,9 +163,9 @@ public class TestImportXPDL extends TestCase {
         assertEquals("Not the same number of connectors as expected", 2, connectors);
         assertEquals("Not the same number of deadlines as expected", 0, deadlines);
         for (Task task : tasks) {
-            assertNotNull("Task has no group",  task.getActor());
+            assertNotNull("Task has no group", task.getActor());
         }
-        destFile.delete();
+        resource.unload();
     }
 
     @Test
@@ -179,12 +175,12 @@ public class TestImportXPDL extends TestCase {
         destFile.deleteOnExit();
         URL xpdlResource = FileLocator.toFileURL(getClass().getResource("WebSale.xpdl"));
         XPDLToProc xpdlToProc = new XPDLToProc();
-        destFile = xpdlToProc.createDiagram(xpdlResource,  new NullProgressMonitor());
+        destFile = xpdlToProc.createDiagram(xpdlResource, new NullProgressMonitor());
 
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
-        MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
-        Pool process = (Pool)mainProcess.getElements().get(0);
+        MainProcess mainProcess = (MainProcess) resource.getContents().get(0);
+        Pool process = (Pool) mainProcess.getElements().get(0);
 
         int steps = 0;
         int transitions = 0;
@@ -197,13 +193,13 @@ public class TestImportXPDL extends TestCase {
                 steps++;
             }
             if (item instanceof Task) {
-                tasks.add((Task)item);
+                tasks.add((Task) item);
             }
             if (item instanceof Activity) {
-                connectors += ((Activity)item).getConnectors().size();
+                connectors += ((Activity) item).getConnectors().size();
             }
             if (item.getName().equals("SalesReview")) {
-                approval = (Activity)item;
+                approval = (Activity) item;
             }
         }
         for (Element item : process.getConnections()) {
@@ -231,9 +227,9 @@ public class TestImportXPDL extends TestCase {
         assertEquals("Not the same number of deadlines as expected", 0, deadlines);
 
         for (Task task : tasks) {
-            assertNotNull("Task has no group",task.getActor());
+            assertNotNull("Task has no group", task.getActor());
         }
-        destFile.delete();
+        resource.unload();
     }
 
     @Test
@@ -247,40 +243,39 @@ public class TestImportXPDL extends TestCase {
 
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
-        MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
-        Pool process = (Pool)mainProcess.getElements().get(0);
+        MainProcess mainProcess = (MainProcess) resource.getContents().get(0);
+        Pool process = (Pool) mainProcess.getElements().get(0);
 
         CallActivity subprocess = null;
         List<ANDGateway> gateways = new ArrayList<ANDGateway>();
         for (Element item : process.getElements()) {
             if (item instanceof CallActivity) {
-                subprocess = (CallActivity)item;
+                subprocess = (CallActivity) item;
             }
             if (item instanceof ANDGateway) {
-                gateways.add((ANDGateway)item);
+                gateways.add((ANDGateway) item);
             }
         }
         assertEquals("Wrong subflow name", "subflow", subprocess.getCalledActivityName().getContent());
         assertEquals("Wrong number of gateways", 2, gateways.size());
-        destFile.delete();
+        resource.unload();
     }
-    
+
     @Test
-    public void testImportWithWhiteSpace() throws IOException{
-    	File destFile = new File("destImportWithWhiteSpace" + System.currentTimeMillis() + ".proc");
+    public void testImportWithWhiteSpace() throws IOException {
+        File destFile = new File("destImportWithWhiteSpace" + System.currentTimeMillis() + ".proc");
         destFile.createNewFile();
         destFile.deleteOnExit();
         URL xpdlResource = FileLocator.toFileURL(getClass().getResource("Approval Workflow.xpdl"));
         XPDLToProc xpdlToProc = new XPDLToProc();
-        destFile = xpdlToProc.createDiagram(xpdlResource,  new NullProgressMonitor());
-        
+        destFile = xpdlToProc.createDiagram(xpdlResource, new NullProgressMonitor());
+
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
-        MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
-        
-        assertNotNull("xpdl diagram \"Approval workflow\" was not exported correctly",mainProcess);
-        destFile.delete();
+        MainProcess mainProcess = (MainProcess) resource.getContents().get(0);
+
+        assertNotNull("xpdl diagram \"Approval workflow\" was not exported correctly", mainProcess);
+        resource.unload();
     }
 
-  
 }

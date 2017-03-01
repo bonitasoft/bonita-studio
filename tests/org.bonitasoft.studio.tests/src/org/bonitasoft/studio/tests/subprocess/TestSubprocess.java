@@ -1,17 +1,14 @@
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -58,7 +55,6 @@ import org.junit.Test;
 /**
  * @author Mickael Istria
  * @author Aurelie Zara
- *
  */
 public class TestSubprocess {
 
@@ -66,7 +62,8 @@ public class TestSubprocess {
 
     private APISession session;
 
-    private final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+    private final DiagramRepositoryStore store = RepositoryManager.getInstance()
+            .getRepositoryStore(DiagramRepositoryStore.class);
 
     @Before
     public void setUp() throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
@@ -95,7 +92,8 @@ public class TestSubprocess {
         final MainProcess mainProcess = store.getChild("InvokeActivityToAdmin-1.0.proc").getContent();
         assertEquals("InvokeActivityToAdmin", mainProcess.getName());
         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
-        final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
+        final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions)
+                .getResult();
 
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
         runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
@@ -111,14 +109,16 @@ public class TestSubprocess {
             @Override
             public boolean isTestGreen() throws Exception {
 
-                newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks, processDef.getId(), session.getUserId());
+                newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks, processDef.getId(),
+                        session.getUserId());
 
                 return newTask != null;
             }
         }.evaluate();
         String errorMessageDetailled = "";
         if (!evaluateAsync) {
-            final Collection<HumanTaskInstance> actualTask = processApi.getPendingHumanTaskInstances(session.getUserId(), 0, 20,
+            final Collection<HumanTaskInstance> actualTask = processApi.getPendingHumanTaskInstances(session.getUserId(), 0,
+                    20,
                     ActivityInstanceCriterion.DEFAULT);
             errorMessageDetailled += "\n processUUID searched: " + processDef.getId();
             for (final TaskInstance taskInstance : actualTask) {
@@ -126,20 +126,17 @@ public class TestSubprocess {
             }
 
         }
-        assertTrue("Subprocess should have started a new task for admin.current task:\n" + errorMessageDetailled, evaluateAsync);
+        assertTrue("Subprocess should have started a new task for admin.current task:\n" + errorMessageDetailled,
+                evaluateAsync);
         assertNotNull("Subprocess should have started a new task for admin", newTask);
         assertEquals("This task does not belong to new process", processDef.getId(), newTask.getProcessDefinitionId());
 
         // ajout du test testDynamicSuprocess � la suite car d�pendant de celui-ci, difficile de le rendre ind�pendant.
 
-        // BOSEngineManager.getInstance().logoutDefaultTenant(session);
-        // session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
-
         final SearchOptions searchOptions2 = new SearchOptionsBuilder(0, 10).done();
-        final List<HumanTaskInstance> previoustasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions2).getResult();
+        final List<HumanTaskInstance> previoustasks = processApi
+                .searchPendingTasksForUser(session.getUserId(), searchOptions2).getResult();
         final int nbPreviousTasks = previoustasks.size();
-        // BOSEngineManager.getInstance().logoutDefaultTenant(session);
-        // Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
         final URL fileURL3 = FileLocator.toFileURL(TestSubprocess.class.getResource("DynamicSubprocess-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL3).getFile());
@@ -148,7 +145,6 @@ public class TestSubprocess {
         final MainProcess mainProcess2 = store.getChild("DynamicSubprocess-1.0.proc").getContent();
         assertEquals("DynamicSubprocess", mainProcess2.getName());
 
-
         runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess2.getElements().get(0)));
 
         assertTrue(new TestAsyncThread(12, 1000) {
@@ -156,7 +152,8 @@ public class TestSubprocess {
             @Override
             public boolean isTestGreen() throws Exception {
                 final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
-                final List<HumanTaskInstance> currentTasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
+                final List<HumanTaskInstance> currentTasks = processApi
+                        .searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
                 final int nbCurrentTasks = currentTasks.size();
                 return nbCurrentTasks != nbPreviousTasks + 1;
             }
@@ -181,7 +178,8 @@ public class TestSubprocess {
         assertEquals("InvokeCalculator", mainProcess.getName());
 
         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
-        final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
+        final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions)
+                .getResult();
 
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
         runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
@@ -196,7 +194,8 @@ public class TestSubprocess {
 
                 @Override
                 public boolean isTestGreen() throws Exception {
-                    newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks, processDef.getId(), session.getUserId());
+                    newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks,
+                            processDef.getId(), session.getUserId());
                     return newTask != null;
                 }
             }.evaluate();
@@ -204,16 +203,20 @@ public class TestSubprocess {
             e.printStackTrace();
         }
         assertTrue("There is no new task", isANewTask);
-        assertTrue("This task is not the expected one, name does not contain [check]", newTask.getName().toLowerCase().contains("check"));
-        assertEquals("Sum should be 2", 2, processApi.getProcessDataInstance("more", newTask.getParentProcessInstanceId()).getValue());
-        assertEquals("Diff should be 0", 0, processApi.getProcessDataInstance("less", newTask.getParentProcessInstanceId()).getValue());
+        assertTrue("This task is not the expected one, name does not contain [check]",
+                newTask.getName().toLowerCase().contains("check"));
+        assertEquals("Sum should be 2", 2,
+                processApi.getProcessDataInstance("more", newTask.getParentProcessInstanceId()).getValue());
+        assertEquals("Diff should be 0", 0,
+                processApi.getProcessDataInstance("less", newTask.getParentProcessInstanceId()).getValue());
     }
 
     @Test
     public void testTwiceDeploymentOfSubprocessEvent() throws Exception {
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
         final SearchOptions searchOptions2 = new SearchOptionsBuilder(0, 10).done();
-        final List<HumanTaskInstance> previoustasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions2).getResult();
+        final List<HumanTaskInstance> previoustasks = processApi
+                .searchPendingTasksForUser(session.getUserId(), searchOptions2).getResult();
         final int nbPreviousTasks = previoustasks.size();
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
 
@@ -231,7 +234,8 @@ public class TestSubprocess {
             @Override
             public boolean isTestGreen() throws Exception {
                 final SearchOptions searchOptions2 = new SearchOptionsBuilder(0, 10).done();
-                final List<HumanTaskInstance> currentTasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions2).getResult();
+                final List<HumanTaskInstance> currentTasks = processApi
+                        .searchPendingTasksForUser(session.getUserId(), searchOptions2).getResult();
                 final int nbCurrentTasks = currentTasks.size();
                 return nbCurrentTasks != nbPreviousTasks + 1;
             }
@@ -246,11 +250,11 @@ public class TestSubprocess {
             @Override
             public boolean isTestGreen() throws Exception {
                 final SearchOptions searchOptions2 = new SearchOptionsBuilder(0, 10).done();
-                final List<HumanTaskInstance> currentTasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions2).getResult();
+                final List<HumanTaskInstance> currentTasks = processApi
+                        .searchPendingTasksForUser(session.getUserId(), searchOptions2).getResult();
                 final int nbCurrentTasks = currentTasks.size();
                 return nbCurrentTasks != nbPreviousTasks + 2;
             }
         }.evaluate());
-
     }
 }

@@ -38,5 +38,4 @@ public class BotDocInitialValueComposite extends BotBase {
         return localBot.textWithId(SWTBotConstants.SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0).getText();
     }
 
-
 }

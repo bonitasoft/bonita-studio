@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.application.test.wizards;
 
@@ -38,63 +35,35 @@ import org.eclipse.ui.PlatformUI;
  * @author Aurelien Pupier
  */
 
-public class TestOpenProcessWizard extends SWTBotEclipseTestCase{
-	
-	private SWTBot bot;
-	private SWTBotShell target;
-	public OpenDiagramWizard wizard;
+public class TestOpenProcessWizard extends SWTBotEclipseTestCase {
 
-//	@Before
-//	public void before() {
-//		bot = new SWTBot();
-//		target = bot.shell(Messages.openProcessWizardPage_title);
-//		target.activate();
-//		try {
-//			new NewProcessCommandHandler().execute(null);
-//		} catch (ExecutionException e) {
-//			BonitaStudioLog.log(e);
-//		}
-//		//PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
-//	}
-	
+    private SWTBot bot;
+    private SWTBotShell target;
+    public OpenDiagramWizard wizard;
 
-	public void testShow() throws Throwable {
-		assertThat(wizard, is(notNullValue()));
-		bot.button(IDialogConstants.CANCEL_LABEL).click();
-		assertThat(Conditions.shellCloses(target).test(), is(true));
-	}
-	
-	public void not_close_wizard_when_click_finish_and_no_process_is_selected() throws Throwable {
-		assertThat(bot.button(/*Messages.OpenProcessButtonLabel*/IDialogConstants.FINISH_LABEL).isEnabled(), is(false));
-	}
-	
-//	@Test
-//	public void openProcessEditor() throws Throwable {
-//		
-//		SWTBotButton openButton = bot.button("Open");
-//		assertThat(openButton.isEnabled(), is(false));
-//		bot.tree().select(1);
-//		//check that the button is enabled to open a process when a process is selected
-//		assertThat(openButton.isEnabled(), is(true));
-//		
-//		openButton.click();
-//		
-//	}
-	
-	
-	
-	protected void openWizard(){
-		Display.getDefault().asyncExec(new Runnable() {
-			
-			public void run() {
-				IWizard newWizard = new OpenDiagramWizard();
-				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-				WizardDialog dialog = new WizardDialog(shell, newWizard);
-				dialog.open();
-				
-			}
-		});
-		bot.waitUntil(org.eclipse.swtbot.eclipse.finder.waits.Conditions.shellIsActive(Messages.openProcessWizardPage_title));
-	}
-	
+    public void testShow() throws Throwable {
+        assertThat(wizard, is(notNullValue()));
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
+        assertThat(Conditions.shellCloses(target).test(), is(true));
+    }
+
+    public void not_close_wizard_when_click_finish_and_no_process_is_selected() throws Throwable {
+        assertThat(bot.button(/* Messages.OpenProcessButtonLabel */IDialogConstants.FINISH_LABEL).isEnabled(), is(false));
+    }
+
+    protected void openWizard() {
+        Display.getDefault().asyncExec(new Runnable() {
+
+            public void run() {
+                IWizard newWizard = new OpenDiagramWizard();
+                Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+                WizardDialog dialog = new WizardDialog(shell, newWizard);
+                dialog.open();
+
+            }
+        });
+        bot.waitUntil(
+                org.eclipse.swtbot.eclipse.finder.waits.Conditions.shellIsActive(Messages.openProcessWizardPage_title));
+    }
+
 }

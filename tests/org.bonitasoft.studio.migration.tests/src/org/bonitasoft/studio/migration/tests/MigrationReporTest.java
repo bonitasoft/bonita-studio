@@ -40,8 +40,9 @@ import org.junit.Test;
 public class MigrationReporTest {
 
     private SWTGefBot bot = new SWTGefBot();
-    
-    private final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+
+    private final DiagramRepositoryStore store = RepositoryManager.getInstance()
+            .getRepositoryStore(DiagramRepositoryStore.class);
 
     @BeforeClass
     public static void disablePopup() {
@@ -57,7 +58,8 @@ public class MigrationReporTest {
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
         store.getChild("MonDiagramme1-1.0.proc").open();
-        assertEquals("Invalid perspective for process with migration report", "org.bonitasoft.studio.migration.perspective.process",
+        assertEquals("Invalid perspective for process with migration report",
+                "org.bonitasoft.studio.migration.perspective.process",
                 BonitaPerspectivesUtils.getPerspectiveId(bot.activeEditor().getReference().getEditor(false)));
     }
 
