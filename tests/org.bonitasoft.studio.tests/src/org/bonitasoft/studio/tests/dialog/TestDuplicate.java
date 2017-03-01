@@ -148,7 +148,9 @@ public class TestDuplicate {
         assertThat(duplicatedResources).isNotNull();
 
         File originalConfirmationFile = WebTemplatesUtil.getFile(originalProcess.getConfirmationTemplate().getPath());
+        originalConfirmationFile.deleteOnExit();
         File duplicatedConfirmationFile = WebTemplatesUtil.getFile(duplicatedProcess.getConfirmationTemplate().getPath());
+        duplicatedConfirmationFile.deleteOnExit();
         assertThat(originalConfirmationFile).hasContentEqualTo(duplicatedConfirmationFile);
 
         final List<PageFlow> pageFlows = ModelHelper.getAllItemsOfType(originalProcess, ProcessPackage.Literals.PAGE_FLOW);

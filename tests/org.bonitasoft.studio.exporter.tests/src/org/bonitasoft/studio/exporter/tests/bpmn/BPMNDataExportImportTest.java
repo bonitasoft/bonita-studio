@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.exporter.tests.bpmn;
 
@@ -42,7 +39,6 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.XMLData;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
@@ -58,11 +54,10 @@ import org.omg.spec.bpmn.model.TProcess;
 import org.omg.spec.bpmn.model.TProperty;
 import org.omg.spec.bpmn.model.TRootElement;
 
-
 public class BPMNDataExportImportTest {
 
     @Test
-    public void testProcessTextData() throws ExecutionException, IOException{
+    public void testProcessTextData() throws IOException {
         final String structureRef = "java.lang.String";
         final Data data = createTextDataSample(structureRef);
         final String dataType = DataTypeLabels.stringDataType;
@@ -75,7 +70,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testProcessIntegerData() throws ExecutionException, IOException{
+    public void testProcessIntegerData() throws IOException {
         final String structureRef = "java.lang.Integer";
         final Data data = createIntegerDataSample(structureRef);
         final String dataType = DataTypeLabels.integerDataType;
@@ -88,7 +83,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testProcessDoubleData() throws ExecutionException, IOException{
+    public void testProcessDoubleData() throws IOException {
         final Data data = createDoubleDataSample();
         final String dataType = DataTypeLabels.doubleDataType;
 
@@ -111,7 +106,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testProcessBooleanData() throws ExecutionException, IOException{
+    public void testProcessBooleanData() throws IOException {
         final String structureRef = "java.lang.Boolean";
         final Data data = createBooleanDataSample(structureRef);
         final String dataType = DataTypeLabels.booleanDataType;
@@ -124,7 +119,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testProcessDateData() throws ExecutionException, IOException{
+    public void testProcessDateData() throws IOException {
         final Data data = ProcessFactory.eINSTANCE.createData();
         final Expression textDefaultValue = ExpressionFactory.eINSTANCE.createExpression();
         final String structureRef = "java.util.Date";
@@ -144,7 +139,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testProcessJavaData() throws ExecutionException, IOException{
+    public void testProcessJavaData() throws IOException {
         final String structureRef = "java.util.List";
         final JavaObjectData data = createJavaDataSample(structureRef);
         final String dataType = DataTypeLabels.javaDataType;
@@ -158,7 +153,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testProcessXMLData() throws ExecutionException, IOException{
+    public void testProcessXMLData() throws IOException {
         final String structureRef = "java.util.List";
         final XMLData data = ProcessFactory.eINSTANCE.createXMLData();
         final Expression xmlDefaultValue = ExpressionFactory.eINSTANCE.createExpression();
@@ -175,10 +170,10 @@ public class BPMNDataExportImportTest {
 
         final DocumentRoot model2 = exportToBPMNProcessWithData(data, dataType);
         checkDataExistAtProcessLevelWithGoodStructure("xmlDataTestType", model2);
-        for(final TRootElement rootElement : model2.getDefinitions().getRootElement()){
-            if(rootElement instanceof TItemDefinition
-                    && rootElement.getId().equals("zzz")){
-                assertEquals("Namespace has been lost", nameSpace, ((TItemDefinition) rootElement).getStructureRef().getNamespaceURI());
+        for (final TRootElement rootElement : model2.getDefinitions().getRootElement()) {
+            if (rootElement instanceof TItemDefinition && rootElement.getId().equals("zzz")) {
+                assertEquals("Namespace has been lost", nameSpace,
+                        ((TItemDefinition) rootElement).getStructureRef().getNamespaceURI());
             }
         }
 
@@ -188,14 +183,14 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepTransientTextData() throws ExecutionException, IOException{
+    public void testStepTransientTextData() throws IOException {
         final String structureRef = "java.lang.String";
         final Data data = createTextDataSample(structureRef);
         data.setTransient(true);
         final String dataType = DataTypeLabels.stringDataType;
 
         final DocumentRoot model2 = exportToBPMNProcessWithStepData(data, dataType);
-        checkPropertyExistWithGoodStructure(data.getDefaultValue(),  model2);
+        checkPropertyExistWithGoodStructure(data.getDefaultValue(), model2);
 
         final MainProcess mainProcess = BPMNTestUtil.importBPMNFile(model2);
 
@@ -203,7 +198,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepTransientXMLData() throws ExecutionException, IOException{
+    public void testStepTransientXMLData() throws IOException {
         final String structureRef = "java.util.List";
         final XMLData data = ProcessFactory.eINSTANCE.createXMLData();
         final Expression xmlDefaultValue = ExpressionFactory.eINSTANCE.createExpression();
@@ -220,11 +215,11 @@ public class BPMNDataExportImportTest {
         final String dataType = DataTypeLabels.xmlDataType;
 
         final DocumentRoot model2 = exportToBPMNProcessWithStepData(data, dataType);
-        checkPropertyExistWithGoodStructure(data.getDefaultValue(),  model2);
-        for(final TRootElement rootElement : model2.getDefinitions().getRootElement()){
-            if(rootElement instanceof TItemDefinition
-                    && rootElement.getId().equals("zzz")){
-                assertEquals("Namespace has been lost", nameSpace, ((TItemDefinition) rootElement).getStructureRef().getNamespaceURI());
+        checkPropertyExistWithGoodStructure(data.getDefaultValue(), model2);
+        for (final TRootElement rootElement : model2.getDefinitions().getRootElement()) {
+            if (rootElement instanceof TItemDefinition && rootElement.getId().equals("zzz")) {
+                assertEquals("Namespace has been lost", nameSpace,
+                        ((TItemDefinition) rootElement).getStructureRef().getNamespaceURI());
             }
         }
 
@@ -234,7 +229,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepTransientTextDataWithScriptInitialValue() throws ExecutionException, IOException{
+    public void testStepTransientTextDataWithScriptInitialValue() throws IOException {
         final String structureRef = "java.lang.String";
         final Data data = ProcessFactory.eINSTANCE.createData();
         final Expression textDefaultValue = ExpressionFactory.eINSTANCE.createExpression();
@@ -248,7 +243,7 @@ public class BPMNDataExportImportTest {
         final String dataType = DataTypeLabels.stringDataType;
 
         final DocumentRoot model2 = exportToBPMNProcessWithStepData(data, dataType);
-        checkPropertyExistWithGoodStructure(data.getDefaultValue(),  model2);
+        checkPropertyExistWithGoodStructure(data.getDefaultValue(), model2);
 
         final MainProcess mainProcess = BPMNTestUtil.importBPMNFile(model2);
 
@@ -256,13 +251,13 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepTransientFloatData() throws ExecutionException, IOException{
+    public void testStepTransientFloatData() throws IOException {
         final Data data = createDoubleDataSample();
         data.setTransient(true);
         final String dataType = DataTypeLabels.floatDataType;
 
         final DocumentRoot model2 = exportToBPMNProcessWithStepData(data, dataType);
-        checkPropertyExistWithGoodStructure(data.getDefaultValue(),  model2);
+        checkPropertyExistWithGoodStructure(data.getDefaultValue(), model2);
 
         final MainProcess mainProcess = BPMNTestUtil.importBPMNFile(model2);
 
@@ -270,80 +265,80 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepTransientIntegerData() throws ExecutionException, IOException{
+    public void testStepTransientIntegerData() throws IOException {
         final String structureRef = "java.lang.Long";
         final Data data = createIntegerDataSample(structureRef);
         final String dataType = DataTypeLabels.integerDataType;
         data.setTransient(true);
 
         final DocumentRoot model2 = exportToBPMNProcessWithStepData(data, dataType);
-        checkPropertyExistWithGoodStructure(data.getDefaultValue(),  model2);
+        checkPropertyExistWithGoodStructure(data.getDefaultValue(), model2);
 
         final MainProcess mainProcess = BPMNTestUtil.importBPMNFile(model2);
         compareStepTransientData(data, mainProcess);
     }
 
     @Test
-    public void testStepTransientJavaData() throws ExecutionException, IOException{
+    public void testStepTransientJavaData() throws IOException {
         final String structureRef = "java.util.List";
         final JavaObjectData initialData = createJavaDataSample(structureRef);
         initialData.setTransient(true);
         final String dataType = DataTypeLabels.javaDataType;
 
         final DocumentRoot model2 = exportToBPMNProcessWithStepData(initialData, dataType);
-        checkPropertyExistWithGoodStructure(initialData.getDefaultValue(),  model2);
+        checkPropertyExistWithGoodStructure(initialData.getDefaultValue(), model2);
 
         final MainProcess mainProcess = BPMNTestUtil.importBPMNFile(model2);
         compareStepTransientData(initialData, mainProcess);
     }
 
     @Test
-    public void testStepTransientBooleanData() throws ExecutionException, IOException{
+    public void testStepTransientBooleanData() throws IOException {
         final String structureRef = "java.lang.Boolean";
         final Data initialData = createBooleanDataSample(structureRef);
         initialData.setTransient(true);
         final String dataType = DataTypeLabels.booleanDataType;
 
         final DocumentRoot model2 = exportToBPMNProcessWithStepData(initialData, dataType);
-        checkPropertyExistWithGoodStructure(initialData.getDefaultValue(),  model2);
+        checkPropertyExistWithGoodStructure(initialData.getDefaultValue(), model2);
 
         final MainProcess mainProcess = BPMNTestUtil.importBPMNFile(model2);
         compareStepTransientData(initialData, mainProcess);
     }
 
     @Test
-    public void testStepBooleanData() throws ExecutionException, IOException{
+    public void testStepBooleanData() throws IOException {
         final String structureRef = "java.lang.Boolean";
         final Data initialData = createBooleanDataSample(structureRef);
         final String dataType = DataTypeLabels.booleanDataType;
 
         final DocumentRoot model2 = exportToBPMNProcessWithStepData(initialData, dataType);
-        checkDataExistAtProcessLevelWithGoodStructureButNotInitialized(structureRef,  model2);
+        checkDataExistAtProcessLevelWithGoodStructureButNotInitialized(structureRef, model2);
 
         final MainProcess mainProcess = BPMNTestUtil.importBPMNFile(model2);
         compareStepData(initialData, mainProcess);
     }
 
-    public void testStepJavaData() throws ExecutionException, IOException{
+    public void testStepJavaData() throws IOException {
         final String structureRef = "java.util.List";
         final JavaObjectData initialData = createJavaDataSample(structureRef);
         final String dataType = DataTypeLabels.javaDataType;
 
         final DocumentRoot model2 = exportToBPMNProcessWithStepData(initialData, dataType);
-        checkDataExistAtProcessLevelWithGoodStructureButNotInitialized(structureRef,  model2);
+        checkDataExistAtProcessLevelWithGoodStructureButNotInitialized(structureRef, model2);
 
         final MainProcess mainProcess = BPMNTestUtil.importBPMNFile(model2);
         compareStepData(initialData, mainProcess);
     }
 
     @Test
-    public void testStepIntegerData() throws ExecutionException, IOException{
+    public void testStepIntegerData() throws IOException {
         final String structureRef = "java.lang.Integer";
         final Data initialData = createIntegerDataSample(structureRef);
         final String dataType = DataTypeLabels.integerDataType;
 
         final DocumentRoot model2 = exportToBPMNProcessWithStepData(initialData, dataType);
-        checkDataExistAtProcessLevelWithGoodStructureButNotInitialized(structureRef,  model2);
+        checkDataExistAtProcessLevelWithGoodStructureButNotInitialized(structureRef, model2);
 
         final MainProcess mainProcess = BPMNTestUtil.importBPMNFile(model2);
         compareStepData(initialData, mainProcess);
@@ -354,8 +349,8 @@ public class BPMNDataExportImportTest {
     }
 
     protected void compareStepTransientData(final Data data, final MainProcess mainProcess) {
-        for(final Element element : ModelHelper.getAllProcesses(mainProcess).get(0).getElements()){
-            if(element instanceof Task){
+        for (final Element element : ModelHelper.getAllProcesses(mainProcess).get(0).getElements()) {
+            if (element instanceof Task) {
                 final Data reImportedData = ((Task) element).getData().get(0);
                 compareDatas(data, reImportedData, true);
             }
@@ -413,39 +408,47 @@ public class BPMNDataExportImportTest {
     }
 
     private void compareDatas(final Data initialData, final Data reImportedData, final boolean checkDefaultValue) {
-        assertEquals("Not the same type of data (Java)", initialData instanceof JavaObjectData, reImportedData instanceof JavaObjectData);
+        assertEquals("Not the same type of data (Java)", initialData instanceof JavaObjectData,
+                reImportedData instanceof JavaObjectData);
         assertEquals("Not the same type of data (XML)", initialData instanceof XMLData, reImportedData instanceof XMLData);
 
-
-        if(initialData instanceof JavaObjectData){
-            assertEquals("Java classname not correct",((JavaObjectData) initialData).getClassName(), ((JavaObjectData)reImportedData).getClassName());
+        if (initialData instanceof JavaObjectData) {
+            assertEquals("Java classname not correct", ((JavaObjectData) initialData).getClassName(),
+                    ((JavaObjectData) reImportedData).getClassName());
         }
-        if(initialData instanceof XMLData){
-            assertEquals("Namespace not correct",((XMLData) initialData).getNamespace(), ((XMLData) reImportedData).getNamespace());
-            assertEquals("Namespace not correct",((XMLData) initialData).getType(), ((XMLData) reImportedData).getType());
+        if (initialData instanceof XMLData) {
+            assertEquals("Namespace not correct", ((XMLData) initialData).getNamespace(),
+                    ((XMLData) reImportedData).getNamespace());
+            assertEquals("Namespace not correct", ((XMLData) initialData).getType(), ((XMLData) reImportedData).getType());
         }
 
-        if(checkDefaultValue){
+        if (checkDefaultValue) {
             final Expression initialDefaultValueExpression = initialData.getDefaultValue();
             final Expression reImportedDefaultValueExpression = reImportedData.getDefaultValue();
-            assertEquals("Return type is not correct",initialDefaultValueExpression.getReturnType(),reImportedDefaultValueExpression.getReturnType());
-            assertEquals("Type is not correct",initialDefaultValueExpression.getType(),reImportedDefaultValueExpression.getType());
-            assertEquals("Interpreter is not correct",initialDefaultValueExpression.getInterpreter(),reImportedDefaultValueExpression.getInterpreter());
-            assertEquals("Content is not correct",initialDefaultValueExpression.getContent(),reImportedDefaultValueExpression.getContent());
+            assertEquals("Return type is not correct", initialDefaultValueExpression.getReturnType(),
+                    reImportedDefaultValueExpression.getReturnType());
+            assertEquals("Type is not correct", initialDefaultValueExpression.getType(),
+                    reImportedDefaultValueExpression.getType());
+            assertEquals("Interpreter is not correct", initialDefaultValueExpression.getInterpreter(),
+                    reImportedDefaultValueExpression.getInterpreter());
+            assertEquals("Content is not correct", initialDefaultValueExpression.getContent(),
+                    reImportedDefaultValueExpression.getContent());
         }
-        assertEquals("Datatype is not correct",initialData.getDataType().getName(), reImportedData.getDataType().getName());
-        assertEquals("Interpreter is not correct",initialData.getDefaultValue().getInterpreter(), reImportedData.getDefaultValue().getInterpreter());
+        assertEquals("Datatype is not correct", initialData.getDataType().getName(), reImportedData.getDataType().getName());
+        assertEquals("Interpreter is not correct", initialData.getDefaultValue().getInterpreter(),
+                reImportedData.getDefaultValue().getInterpreter());
     }
 
     private void checkPropertyExistWithGoodStructure(final Expression defaultValueExpression, final DocumentRoot model2) {
-        for(final TRootElement rootElement : model2.getDefinitions().getRootElement()){
-            if(rootElement instanceof TProcess){
+        for (final TRootElement rootElement : model2.getDefinitions().getRootElement()) {
+            if (rootElement instanceof TProcess) {
                 for (final TFlowElement fe : ((TProcess) rootElement).getFlowElement()) {
-                    if(fe instanceof TActivity){
+                    if (fe instanceof TActivity) {
                         final TProperty property = ((TActivity) fe).getProperty().get(0);
                         property.getItemSubjectRef().getLocalPart();
-                        final TAssignment assignment = ((TActivity) fe).getDataInputAssociation().get(0).getAssignment().get(0);
-                        assertEquals(defaultValueExpression.getContent(),assignment.getFrom().getMixed().get(0).getValue());
+                        final TAssignment assignment = ((TActivity) fe).getDataInputAssociation().get(0).getAssignment()
+                                .get(0);
+                        assertEquals(defaultValueExpression.getContent(), assignment.getFrom().getMixed().get(0).getValue());
                     }
                 }
             }
@@ -456,39 +459,43 @@ public class BPMNDataExportImportTest {
         String dataObjectItemSubjectRef = "";
         String dataInputItemSubjectRef = "";
         TItemDefinition itemDef = null;
-        for(final TRootElement rootElement : model2.getDefinitions().getRootElement()){
-            if(rootElement instanceof TProcess){
+        for (final TRootElement rootElement : model2.getDefinitions().getRootElement()) {
+            if (rootElement instanceof TProcess) {
                 for (final TFlowElement fe : ((TProcess) rootElement).getFlowElement()) {
-                    if(fe instanceof TDataObject){
+                    if (fe instanceof TDataObject) {
                         dataObjectItemSubjectRef = ((TDataObject) fe).getItemSubjectRef().getLocalPart();
                         break;
                     }
                 }
-                dataInputItemSubjectRef = ((TProcess) rootElement).getIoSpecification().getDataInput().get(0).getItemSubjectRef().getLocalPart();
-            } else if(rootElement instanceof TItemDefinition){
+                dataInputItemSubjectRef = ((TProcess) rootElement).getIoSpecification().getDataInput().get(0)
+                        .getItemSubjectRef().getLocalPart();
+            } else if (rootElement instanceof TItemDefinition) {
                 itemDef = (TItemDefinition) rootElement;
             }
         }
 
-        assertTrue("A reference name is not good", dataObjectItemSubjectRef.equals(dataInputItemSubjectRef) && dataObjectItemSubjectRef.equals(itemDef.getId()));
+        assertTrue("A reference name is not good", dataObjectItemSubjectRef.equals(dataInputItemSubjectRef)
+                && dataObjectItemSubjectRef.equals(itemDef.getId()));
         assertEquals("The exported type is not the good one", structureRef, itemDef.getStructureRef().getLocalPart());
     }
 
-    protected void checkDataExistAtProcessLevelWithGoodStructureButNotInitialized(final String structureRef, final DocumentRoot model2) {
+    protected void checkDataExistAtProcessLevelWithGoodStructureButNotInitialized(final String structureRef,
+            final DocumentRoot model2) {
         String dataObjectItemSubjectRef = "";
         TItemDefinition itemDef = null;
-        for(final TRootElement rootElement : model2.getDefinitions().getRootElement()){
-            if(rootElement instanceof TProcess){
+        for (final TRootElement rootElement : model2.getDefinitions().getRootElement()) {
+            if (rootElement instanceof TProcess) {
                 for (final TFlowElement fe : ((TProcess) rootElement).getFlowElement()) {
-                    if(fe instanceof TDataObject){
+                    if (fe instanceof TDataObject) {
                         dataObjectItemSubjectRef = ((TDataObject) fe).getItemSubjectRef().getLocalPart();
                         break;
                     }
                 }
-                assertTrue("We shouldn't have data initialized at process level because there were step data",((TProcess) rootElement).getIoSpecification().getDataInput().isEmpty());
-            } else if(rootElement instanceof TItemDefinition
+                assertTrue("We shouldn't have data initialized at process level because there were step data",
+                        ((TProcess) rootElement).getIoSpecification().getDataInput().isEmpty());
+            } else if (rootElement instanceof TItemDefinition
                     && !rootElement.getId().equals("bonitaConnectorInput")
-                    && !rootElement.getId().equals("bonitaConnectorOutput")){
+                    && !rootElement.getId().equals("bonitaConnectorOutput")) {
                 itemDef = (TItemDefinition) rootElement;
             }
         }
@@ -497,26 +504,28 @@ public class BPMNDataExportImportTest {
         assertEquals("The exported type is not the good one", structureRef, itemDef.getStructureRef().getLocalPart());
     }
 
-    private DocumentRoot exportToBPMNProcessWithStepData(final Data data, String dataType) throws ExecutionException, IOException {
+    private DocumentRoot exportToBPMNProcessWithStepData(final Data data, String dataType) throws IOException {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
         final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
         newDiagramFileStore.open();
         final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
-        for(final Element element : abstractProcess.getElements()){
-            if(element instanceof Lane){
-                for(final Element child : ((Lane) element).getElements()){
-                    if(child instanceof Task){
+        for (final Element element : abstractProcess.getElements()) {
+            if (element instanceof Lane) {
+                for (final Element child : ((Lane) element).getElements()) {
+                    if (child instanceof Task) {
                         final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(child);
-                        editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, child, ProcessPackage.Literals.DATA_AWARE__DATA, data));
+                        editingDomain.getCommandStack().execute(
+                                AddCommand.create(editingDomain, child, ProcessPackage.Literals.DATA_AWARE__DATA, data));
                     }
                 }
             }
         }
         dataType = NamingUtils.convertToId(dataType);
-        for(final DataType dt : newDiagramFileStore.getContent().getDatatypes()){
-            if(dataType.equals(dt.getName())){
+        for (final DataType dt : newDiagramFileStore.getContent().getDatatypes()) {
+            if (dataType.equals(dt.getName())) {
                 final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(data);
-                editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, data, ProcessPackage.Literals.DATA__DATA_TYPE, dt));
+                editingDomain.getCommandStack()
+                        .execute(SetCommand.create(editingDomain, data, ProcessPackage.Literals.DATA__DATA_TYPE, dt));
                 break;
             }
         }
@@ -524,24 +533,24 @@ public class BPMNDataExportImportTest {
         return BPMNTestUtil.exportToBpmn(newDiagramFileStore);
     }
 
-
-    protected DocumentRoot exportToBPMNProcessWithData(final Data data, String dataType) throws ExecutionException, IOException {
+    protected DocumentRoot exportToBPMNProcessWithData(final Data data, String dataType) throws IOException {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
         final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
         newDiagramFileStore.open();
         final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
         final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(abstractProcess);
-        editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, abstractProcess, ProcessPackage.Literals.DATA_AWARE__DATA, data));
+        editingDomain.getCommandStack()
+                .execute(AddCommand.create(editingDomain, abstractProcess, ProcessPackage.Literals.DATA_AWARE__DATA, data));
         dataType = NamingUtils.convertToId(dataType);
-        for(final DataType dt : newDiagramFileStore.getContent().getDatatypes()){
-            if(dataType.equals(dt.getName())){
-                editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, data, ProcessPackage.Literals.DATA__DATA_TYPE, dt));
+        for (final DataType dt : newDiagramFileStore.getContent().getDatatypes()) {
+            if (dataType.equals(dt.getName())) {
+                editingDomain.getCommandStack()
+                        .execute(SetCommand.create(editingDomain, data, ProcessPackage.Literals.DATA__DATA_TYPE, dt));
                 break;
             }
         }
         newDiagramFileStore.getOpenedEditor().doSave(Repository.NULL_PROGRESS_MONITOR);
         return BPMNTestUtil.exportToBpmn(newDiagramFileStore);
     }
-
 
 }

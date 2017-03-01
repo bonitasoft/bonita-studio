@@ -85,7 +85,8 @@ public class BotGefProcessDiagramEditor extends BotGefBaseEditor {
         final SWTBotGefEditPart element = gep.parent();
         element.select();
         final IGraphicalEditPart graphicalEditPart = (IGraphicalEditPart) element.part();
-        final NextElementEditPolicy nextElementEditPolicy = (NextElementEditPolicy) graphicalEditPart.getEditPolicy(NextElementEditPolicy.NEXT_ELEMENT_ROLE);
+        final NextElementEditPolicy nextElementEditPolicy = (NextElementEditPolicy) graphicalEditPart
+                .getEditPolicy(NextElementEditPolicy.NEXT_ELEMENT_ROLE);
 
         final IFigure toolbarFigure = nextElementEditPolicy.getFigure(pContextualPaletteId);
         final Point dropLocation = computeTargetLocation(pSourceElement, pOrientation);
@@ -106,8 +107,10 @@ public class BotGefProcessDiagramEditor extends BotGefBaseEditor {
      * @param pTargetAnchorPosition (Anchor on target element)
      */
     public void addSequenceFlowBetween(final String pFromElement, final String pToElement, final int pTargetAnchorPosition) {
-        final int nbConnection = ModelHelper.getAllItemsOfType(((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement(),
-                ProcessPackage.Literals.SEQUENCE_FLOW).size();
+        final int nbConnection = ModelHelper
+                .getAllItemsOfType(((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement(),
+                        ProcessPackage.Literals.SEQUENCE_FLOW)
+                .size();
         final IGraphicalEditPart gep = (IGraphicalEditPart) gmfEditor.getEditPart(pToElement).parent().part();
         final IFigure figure = gep.getFigure();
         Point targetLocation = null;
@@ -132,13 +135,16 @@ public class BotGefProcessDiagramEditor extends BotGefBaseEditor {
         figure.translateToAbsolute(targetLocation);
         gmfEditor.mainEditPart().part().getViewer().findObjectAt(targetLocation);
 
-        selectElementInContextualPaletteAndDragIt(pFromElement, BotQAConstants.CONTEXTUAL_PALETTE_SEQUENCE_FLOW, targetLocation);
+        selectElementInContextualPaletteAndDragIt(pFromElement, BotQAConstants.CONTEXTUAL_PALETTE_SEQUENCE_FLOW,
+                targetLocation);
         bot.waitUntil(new ICondition() {
 
             @Override
             public boolean test() throws Exception {
-                return nbConnection + 1 == ModelHelper.getAllItemsOfType(((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement(),
-                        ProcessPackage.Literals.SEQUENCE_FLOW).size();
+                return nbConnection + 1 == ModelHelper
+                        .getAllItemsOfType(((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement(),
+                                ProcessPackage.Literals.SEQUENCE_FLOW)
+                        .size();
             }
 
             @Override
@@ -180,14 +186,16 @@ public class BotGefProcessDiagramEditor extends BotGefBaseEditor {
 
     }
 
-    private void selectElementInContextualPaletteAndDragIt(final String pFromElement, final int pContextualPaletteId, final Point pDropLocation) {
+    private void selectElementInContextualPaletteAndDragIt(final String pFromElement, final int pContextualPaletteId,
+            final Point pDropLocation) {
         SWTBotGefEditPart element;
         final SWTBotGefEditPart gep = gmfEditor.getEditPart(pFromElement);
         Assert.assertNotNull("Error: No Edit Part \'" + pFromElement + "\' found.", gep);
         element = gep.parent();
         element.select();
         final IGraphicalEditPart graphicalEditPart = (IGraphicalEditPart) element.part();
-        final NextElementEditPolicy nextElementEditPolicy = (NextElementEditPolicy) graphicalEditPart.getEditPolicy(NextElementEditPolicy.NEXT_ELEMENT_ROLE);
+        final NextElementEditPolicy nextElementEditPolicy = (NextElementEditPolicy) graphicalEditPart
+                .getEditPolicy(NextElementEditPolicy.NEXT_ELEMENT_ROLE);
 
         final IFigure toolbarFigure = nextElementEditPolicy.getFigure(pContextualPaletteId);
         final Point location = toolbarFigure.getBounds().getCenter().getCopy();
@@ -389,9 +397,8 @@ public class BotGefProcessDiagramEditor extends BotGefBaseEditor {
         if (lanes.size() == 1) {
             final IGraphicalEditPart graphicalEditPart = (IGraphicalEditPart) lanes.get(0).part();
             return graphicalEditPart.getFigure().getBounds().getTopLeft().getCopy();
-        } else {
-            return new Point(0, 0);
         }
+        return new Point(0, 0);
     }
 
     private List<SWTBotGefEditPart> getLaneInPool(final SWTBotGefEditPart pGef, final String pLabel) {
@@ -405,8 +412,7 @@ public class BotGefProcessDiagramEditor extends BotGefBaseEditor {
                 if (d.equals(pLabel)) {
                     descendants.add(child);
                 }
-            }
-            else {
+            } else {
                 descendants.addAll(getLaneInPool(child, pLabel));
             }
         }
@@ -470,12 +476,6 @@ public class BotGefProcessDiagramEditor extends BotGefBaseEditor {
 
                         }
                     });
-                    //                    inFlow.focus();
-                    //                    inFlow.select();
-                    //                    inFlow.target().select();
-                    //                    inFlow.focus();
-                    //                    inFlow.select();
-                    //                    inFlow.focus();
                     return this;
                 }
             }

@@ -66,7 +66,7 @@ public class DataRefactorIT {
     private TransactionalEditingDomain editingDomain;
 
     @Test
-    public void testNameRefactorWithGlobalDataReferencedInMultiInstanciation() throws InvocationTargetException, InterruptedException {
+    public void testNameRefactorWithGlobalDataReferencedInMultiInstanciation() {
         final String newDataName = "newDataName";
         final AbstractProcess process = initTestForGlobalDataRefactor(newDataName);
 
@@ -79,15 +79,17 @@ public class DataRefactorIT {
         processData.setName(newDataName);
 
         assertEquals("There are too many datas. The old one migth not be removed.", 2, process.getData().size());
-        assertEquals("Data name has not been updated correctly in multinstantiation", newDataName, activity.getCollectionDataToMultiInstantiate()
-                .getName());
-        assertEquals("Data name has not been updated correctly in multinstantiation", newDataName, activity.getListDataContainingOutputResults()
-                .getName());
+        assertEquals("Data name has not been updated correctly in multinstantiation", newDataName,
+                activity.getCollectionDataToMultiInstantiate()
+                        .getName());
+        assertEquals("Data name has not been updated correctly in multinstantiation", newDataName,
+                activity.getListDataContainingOutputResults()
+                        .getName());
 
     }
 
     @Test
-    public void testNameRefactorWithLocalDataReferencedInMultiInstanciation() throws InvocationTargetException, InterruptedException {
+    public void testNameRefactorWithLocalDataReferencedInMultiInstanciation() {
         final String newDataName = "newDataName";
         final AbstractProcess process = initTestForLocalDataRefactor(newDataName);
 
@@ -100,11 +102,13 @@ public class DataRefactorIT {
         localData.setName(newDataName);
 
         assertEquals("There are too many datas. The old one migth not be removed.", 2, process.getData().size());
-        assertEquals("Data name has not been updated correctly in multinstantiation", newDataName, activity.getOutputData().getName());
+        assertEquals("Data name has not been updated correctly in multinstantiation", newDataName,
+                activity.getOutputData().getName());
     }
 
     @Test
-    public void testNameRefactorWithLocalDataReferencedInVariableExpression() throws InvocationTargetException, InterruptedException {
+    public void testNameRefactorWithLocalDataReferencedInVariableExpression()
+            throws InvocationTargetException, InterruptedException {
         final String newDataName = "newDataName";
         final AbstractProcess process = initTestForLocalDataRefactor(newDataName);
 
@@ -124,7 +128,8 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testRenameAndModifyTypeWithReferenceInScriptOperation() throws InvocationTargetException, InterruptedException {
+    public void testRenameAndModifyTypeWithReferenceInScriptOperation()
+            throws InvocationTargetException, InterruptedException {
         final String newDataName = "newDataName";
         final String newDataType = DataTypeLabels.integerDataType;
         final AbstractProcess process = initTestForGlobalDataRefactor(newDataName, newDataType);
@@ -157,12 +162,16 @@ public class DataRefactorIT {
         assertEquals("Data has not been renamed", newDataName, process.getData().get(0).getName());
         assertEquals("Data name has not been updated correctly in expression", newDataName,
                 ((Element) variableExpression.getReferencedElements().get(0)).getName());
-        assertEquals("Data name has not been updated correctly in expression of left operand operation", newDataName, variableExpression.getName());
-        assertEquals("Data name has not been updated correctly in expression of left operand operation", newDataName, variableExpression.getContent());
+        assertEquals("Data name has not been updated correctly in expression of left operand operation", newDataName,
+                variableExpression.getName());
+        assertEquals("Data name has not been updated correctly in expression of left operand operation", newDataName,
+                variableExpression.getContent());
 
-        assertEquals("Data name has not been updated correctly in expression of right operand operation", newDataName, scriptUsingData.getContent());
-        assertEquals("Data name has not been updated correctly in expression of right operand operation", newDataName, ((Data) scriptUsingData
-                .getReferencedElements().get(0)).getName());
+        assertEquals("Data name has not been updated correctly in expression of right operand operation", newDataName,
+                scriptUsingData.getContent());
+        assertEquals("Data name has not been updated correctly in expression of right operand operation", newDataName,
+                ((Data) scriptUsingData
+                        .getReferencedElements().get(0)).getName());
 
         editingDomain.getCommandStack().undo();
 
@@ -170,15 +179,19 @@ public class DataRefactorIT {
         assertEquals("Data has not been renamed after undo", initialDataName, process.getData().get(0).getName());
         assertEquals("Data name has not been updated correctly in expression", initialDataName,
                 ((Element) variableExpression.getReferencedElements().get(0)).getName());
-        assertEquals("Data name has not been updated correctly in expression of left operand operation after undo", initialDataName,
+        assertEquals("Data name has not been updated correctly in expression of left operand operation after undo",
+                initialDataName,
                 variableExpression.getName());
-        assertEquals("Data name has not been updated correctly in expression of left operand operation after undo", initialDataName,
+        assertEquals("Data name has not been updated correctly in expression of left operand operation after undo",
+                initialDataName,
                 variableExpression.getContent());
 
-        assertEquals("Data name has not been updated correctly in expression of right operand operation after undo", initialDataName,
+        assertEquals("Data name has not been updated correctly in expression of right operand operation after undo",
+                initialDataName,
                 scriptUsingData.getContent());
-        assertEquals("Data name has not been updated correctly in expression of right operand operation after undo", initialDataName, ((Data) scriptUsingData
-                .getReferencedElements().get(0)).getName());
+        assertEquals("Data name has not been updated correctly in expression of right operand operation after undo",
+                initialDataName, ((Data) scriptUsingData
+                        .getReferencedElements().get(0)).getName());
     }
 
     @Test
@@ -194,17 +207,21 @@ public class DataRefactorIT {
         refactorDataOperation.run(new NullProgressMonitor());
 
         assertEquals("Data has not been renamed", newDataName, process.getData().get(0).getName());
-        assertEquals("Data name has not been updated correctly in expression of right operand operation", newDataName, scriptUsingData.getContent());
-        assertEquals("Data name has not been updated correctly in expression of right operand operation", newDataName, ((Data) scriptUsingData
-                .getReferencedElements().get(0)).getName());
+        assertEquals("Data name has not been updated correctly in expression of right operand operation", newDataName,
+                scriptUsingData.getContent());
+        assertEquals("Data name has not been updated correctly in expression of right operand operation", newDataName,
+                ((Data) scriptUsingData
+                        .getReferencedElements().get(0)).getName());
 
         editingDomain.getCommandStack().undo();
 
         assertEquals("Data has not been renamed after undo", initialDataName, process.getData().get(0).getName());
-        assertEquals("Data name has not been updated correctly in expression of right operand operation after undo", initialDataName,
+        assertEquals("Data name has not been updated correctly in expression of right operand operation after undo",
+                initialDataName,
                 scriptUsingData.getContent());
-        assertEquals("Data name has not been updated correctly in expression of right operand operation after undo", initialDataName, ((Data) scriptUsingData
-                .getReferencedElements().get(0)).getName());
+        assertEquals("Data name has not been updated correctly in expression of right operand operation after undo",
+                initialDataName, ((Data) scriptUsingData
+                        .getReferencedElements().get(0)).getName());
 
     }
 
@@ -212,7 +229,8 @@ public class DataRefactorIT {
             final Activity activity) {
         final Connector groovyScriptConnector = ProcessFactory.eINSTANCE.createConnector();
 
-        final ConnectorConfiguration groovyScriptConnectorConfiguration = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
+        final ConnectorConfiguration groovyScriptConnectorConfiguration = ConnectorConfigurationFactory.eINSTANCE
+                .createConnectorConfiguration();
         final ConnectorParameter connectorParameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
         final Expression scriptUsingData = ExpressionFactory.eINSTANCE.createExpression();
         scriptUsingData.setType(ExpressionConstants.SCRIPT_TYPE);
@@ -347,16 +365,19 @@ public class DataRefactorIT {
         refactorDataOperation.run(new NullProgressMonitor());
         assertEquals("The data has not been removed", 1, process.getData().size());
         assertEquals("Referenced Data has been removed from script", 0, scriptUsingData.getReferencedElements().size());
-        assertEquals("Referenced Data has been removed from Operations", 0, variableExpression.getReferencedElements().size());
+        assertEquals("Referenced Data has been removed from Operations", 0,
+                variableExpression.getReferencedElements().size());
 
         editingDomain.getCommandStack().undo();
         assertEquals("The data has not been readded on undo", 2, process.getData().size());
         assertEquals("Referenced Data has been removed from script", 1, scriptUsingData.getReferencedElements().size());
-        assertEquals("Referenced Data has been removed from Operations", 1, variableExpression.getReferencedElements().size());
+        assertEquals("Referenced Data has been removed from Operations", 1,
+                variableExpression.getReferencedElements().size());
     }
 
     @Test
-    public void testDeleteSeveralDataWithReferenceInScriptAndOperations() throws InvocationTargetException, InterruptedException {
+    public void testDeleteSeveralDataWithReferenceInScriptAndOperations()
+            throws InvocationTargetException, InterruptedException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
         final Activity activity = (Activity) process.getElements().get(0);
@@ -387,13 +408,15 @@ public class DataRefactorIT {
         refactorDataOperation.run(new NullProgressMonitor());
         assertEquals("The data has not been removed", 0, process.getData().size());
         assertEquals("Referenced Data has been removed from script", 0, scriptUsingData.getReferencedElements().size());
-        assertEquals("Referenced Data has been removed from Operations", 0, variableExpression.getReferencedElements().size());
+        assertEquals("Referenced Data has been removed from Operations", 0,
+                variableExpression.getReferencedElements().size());
         //TODO: when handled, check that the script has removed both data from the script
 
         editingDomain.getCommandStack().undo();
         assertEquals("The data has not been readded on undo", 2, process.getData().size());
         assertEquals("Referenced Data has been removed from script", 2, scriptUsingData.getReferencedElements().size());
-        assertEquals("Referenced Data has been removed from Operations", 1, variableExpression.getReferencedElements().size());
+        assertEquals("Referenced Data has been removed from Operations", 1,
+                variableExpression.getReferencedElements().size());
     }
 
     @Test
@@ -407,13 +430,17 @@ public class DataRefactorIT {
 
         refactorDataOperation.run(new NullProgressMonitor());
         assertEquals("The data has not been removed", 0, process.getData().size());
-        assertEquals("Referenced Data has been removed from Operations", 0, variableExpression.getReferencedElements().size());
-        assertEquals("Referenced Data has been removed from Operations", 0, variableExpression2.getReferencedElements().size());
+        assertEquals("Referenced Data has been removed from Operations", 0,
+                variableExpression.getReferencedElements().size());
+        assertEquals("Referenced Data has been removed from Operations", 0,
+                variableExpression2.getReferencedElements().size());
 
         editingDomain.getCommandStack().undo();
         assertEquals("The data has not been readded on undo", 2, process.getData().size());
-        assertEquals("Referenced Data has been removed from Operations", 1, variableExpression.getReferencedElements().size());
-        assertEquals("Referenced Data has been removed from Operations", 1, variableExpression2.getReferencedElements().size());
+        assertEquals("Referenced Data has been removed from Operations", 1,
+                variableExpression.getReferencedElements().size());
+        assertEquals("Referenced Data has been removed from Operations", 1,
+                variableExpression2.getReferencedElements().size());
     }
 
     private Expression addOperationOnFirstActivity(final AbstractProcess process, final Data data) {
@@ -476,7 +503,8 @@ public class DataRefactorIT {
         refactorDataOperation.run(new NullProgressMonitor());
         assertEquals("The data has n been duplicated", 2, process.getData().size());
         assertEquals("Referenced Data has been removed from script", 1, patternExpr.getReferencedElements().size());
-        assertEquals("Referenced Data has not been renamed", newDataName, ((Data) patternExpr.getReferencedElements().get(0)).getName());
+        assertEquals("Referenced Data has not been renamed", newDataName,
+                ((Data) patternExpr.getReferencedElements().get(0)).getName());
         assertEquals("Pattern expression", "${" + newDataName + "}", patternExpr.getContent());
 
         editingDomain.getCommandStack().undo();
@@ -488,7 +516,8 @@ public class DataRefactorIT {
     private Expression createConnectorWithPatternExpression(final AbstractProcess process) {
         final Connector mailConnector = ProcessFactory.eINSTANCE.createConnector();
 
-        final ConnectorConfiguration groovyScriptConnectorConfiguration = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
+        final ConnectorConfiguration groovyScriptConnectorConfiguration = ConnectorConfigurationFactory.eINSTANCE
+                .createConnectorConfiguration();
         final ConnectorParameter connectorParameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
         final Expression patternExpr = ExpressionFactory.eINSTANCE.createExpression();
         patternExpr.setType(ExpressionConstants.PATTERN_TYPE);
@@ -514,14 +543,18 @@ public class DataRefactorIT {
 
         refactorDataOperation.run(new NullProgressMonitor());
         assertEquals("The old data might not have been updated", 2, process.getData().size());
-        assertEquals("The data has not been renamed in condition", newDataName + " == \"plop\"", conditionExpression.getContent());
-        assertEquals("The data has not been removed from dependency", newDataName, ((Data) conditionExpression.getReferencedElements().get(0)).getName());
+        assertEquals("The data has not been renamed in condition", newDataName + " == \"plop\"",
+                conditionExpression.getContent());
+        assertEquals("The data has not been removed from dependency", newDataName,
+                ((Data) conditionExpression.getReferencedElements().get(0)).getName());
 
         editingDomain.getCommandStack().undo();
 
         assertEquals("The old data might not have been updated", 2, process.getData().size());
-        assertEquals("The data has not been renamed in condition", initialDataName + " == \"plop\"", conditionExpression.getContent());
-        assertEquals("The data dependency has not been back on undo", initialDataName, ((Data) conditionExpression.getReferencedElements().get(0)).getName());
+        assertEquals("The data has not been renamed in condition", initialDataName + " == \"plop\"",
+                conditionExpression.getContent());
+        assertEquals("The data dependency has not been back on undo", initialDataName,
+                ((Data) conditionExpression.getReferencedElements().get(0)).getName());
     }
 
     private Expression createSequenceFlowWithConditionExpression(
@@ -539,7 +572,8 @@ public class DataRefactorIT {
     }
 
     private TransactionalEditingDomain createEditingDomain() {
-        final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+        final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
+                ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
 
         // command stack that will notify this editor as commands are executed
@@ -605,7 +639,8 @@ public class DataRefactorIT {
         return initTestForDataRefactor(newDataName, newDataType, processData);
     }
 
-    private AbstractProcess initTestForDataRefactor(final String newDataName, final String newDataType, final Data dataToRefactor) {
+    private AbstractProcess initTestForDataRefactor(final String newDataName, final String newDataType,
+            final Data dataToRefactor) {
         final AbstractProcess process = createProcessWithData();
         if (newDataName != null) {
             refactorDataOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
@@ -614,7 +649,8 @@ public class DataRefactorIT {
         }
         refactorDataOperation.setDataContainer(process);
         if (newDataName != null) {
-            final Data newProcessData = createNewProcessData(newDataName, ModelHelper.getDataTypeForID(process, newDataType), dataToRefactor);
+            final Data newProcessData = createNewProcessData(newDataName, ModelHelper.getDataTypeForID(process, newDataType),
+                    dataToRefactor);
             refactorDataOperation.addItemToRefactor(newProcessData, dataToRefactor);
         } else {
             refactorDataOperation.addItemToRefactor(null, dataToRefactor);

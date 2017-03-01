@@ -68,7 +68,8 @@ public class DeployBDROperationIT {
         if (fileStore != null) {
             fileStore.delete();
         }
-        businessObjectDefinitionFileStore = defStore.importInputStream("bdm.zip", DeployBDROperationIT.class.getResourceAsStream("/bdm.zip"));
+        businessObjectDefinitionFileStore = defStore.importInputStream("bdm.zip",
+                DeployBDROperationIT.class.getResourceAsStream("/bdm.zip"));
         managerEx = BOSEngineManager.getInstance();
     }
 

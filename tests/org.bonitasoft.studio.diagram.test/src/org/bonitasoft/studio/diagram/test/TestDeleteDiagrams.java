@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.diagram.test;
 
@@ -45,14 +43,14 @@ import org.junit.runner.RunWith;
  * @author aurelie zara
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestDeleteDiagrams  {
+public class TestDeleteDiagrams {
 
     private final int nbDiagrams = 4;
     // Before and After
     private static boolean disablePopup;
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     @BeforeClass
     public static void setUpBeforeClass() {
         disablePopup = FileActionDialog.getDisablePopup();
@@ -64,7 +62,6 @@ public class TestDeleteDiagrams  {
         FileActionDialog.setDisablePopup(disablePopup);
     }
 
-
     @After
     public void tearDown() {
         bot.saveAllEditors();
@@ -73,7 +70,8 @@ public class TestDeleteDiagrams  {
     @Test
     public void testDeleteDiagrams() {
 
-        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
 
         final int nbDiagramsInRepository = diagramStore.getChildren().size();
 
@@ -93,7 +91,8 @@ public class TestDeleteDiagrams  {
         bot.waitUntil(Conditions.shellIsActive(Messages.DeleteDiagramWizardPage_title), 10000);
 
         final SWTBotTree tree = bot.tree();
-        assertEquals("the list of diagrams should contain 4 items", nbDiagramsInRepository + nbDiagrams, tree.getAllItems().length);
+        assertEquals("the list of diagrams should contain 4 items", nbDiagramsInRepository + nbDiagrams,
+                tree.getAllItems().length);
 
         final TableCollection selection = tree.selection();
         assertEquals("only " + currentDiagramName + " should be selected in the tree viewer", 1, selection.rowCount());
@@ -115,7 +114,6 @@ public class TestDeleteDiagrams  {
             @Override
             public void init(final SWTBot bot) {
 
-
             }
 
             @Override
@@ -124,8 +122,8 @@ public class TestDeleteDiagrams  {
             }
         }, 40000, 100);
 
-        assertEquals("deleted diagrams are still in repository", nbDiagramsInRepository + 1, diagramStore.getChildren().size());
-
+        assertEquals("deleted diagrams are still in repository", nbDiagramsInRepository + 1,
+                diagramStore.getChildren().size());
 
     }
 

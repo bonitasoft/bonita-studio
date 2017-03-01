@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,7 +32,6 @@ import org.junit.Test;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class MigrationReportPDFExportTest {
 
@@ -52,9 +49,13 @@ public class MigrationReportPDFExportTest {
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
 
-        DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        final PDFMigrationReportWriter writer = new PDFMigrationReportWriter(store.getDiagram("MonDiagramme1", "1.0").getMigrationReport());
-        final File targetFile = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath() + File.separatorChar + "test.pdf");
+        DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+        final PDFMigrationReportWriter writer = new PDFMigrationReportWriter(
+                store.getDiagram("MonDiagramme1", "1.0").getMigrationReport());
+        final File targetFile = new File(
+                ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath() + File.separatorChar + "test.pdf");
+        targetFile.deleteOnExit();
         writer.execute(targetFile.getAbsolutePath());
         assertTrue(targetFile.exists());
         assertTrue(targetFile.length() > 0);

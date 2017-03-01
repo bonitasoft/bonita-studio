@@ -41,7 +41,7 @@ import org.junit.runner.RunWith;
 public class OpenNameAndVersionForDiagramDialogTest {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     private static final int VALIDATION_DELAY = 100;
 
     @Before
@@ -59,12 +59,12 @@ public class OpenNameAndVersionForDiagramDialogTest {
                 pool.setVersion("1.0");
                 mp.getElements().add(pool);
 
-                final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+                final DiagramRepositoryStore store = RepositoryManager.getInstance()
+                        .getRepositoryStore(DiagramRepositoryStore.class);
                 final IRepositoryFileStore fileStore = store.createRepositoryFileStore(NamingUtils.toDiagramFilename(mp));
                 fileStore.save(mp);
-                final OpenNameAndVersionForDiagramDialog dialog = new OpenNameAndVersionForDiagramDialog(shell, mp, RepositoryManager.getInstance()
-                        .getRepositoryStore(
-                                DiagramRepositoryStore.class));
+                final OpenNameAndVersionForDiagramDialog dialog = new OpenNameAndVersionForDiagramDialog(shell, mp,
+                        RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class));
                 dialog.open();
             }
         });

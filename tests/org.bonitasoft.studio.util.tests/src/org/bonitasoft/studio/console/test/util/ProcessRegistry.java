@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.console.test.util;
 
@@ -37,7 +34,6 @@ import org.eclipse.core.runtime.Platform;
 
 /**
  * @author Aurelien Pupier
- * 
  */
 public class ProcessRegistry {
 
@@ -69,29 +65,6 @@ public class ProcessRegistry {
         t.setPath("/error/templtae");
         t.setWarPath("war/error/templtae");
         process.setErrorTemplate(t);
-        // Event start = ProcessFactory.eINSTANCE.createStartEvent();
-        // start.setName("start");
-        // Task task = ProcessFactory.eINSTANCE.createTask();
-        // task.setName("lol");
-        // task.setActorType(ActorType.USER);
-        // task.setUser("john");
-        // SequenceFlow transition =
-        // ProcessFactory.eINSTANCE.createSequenceFlow();
-        // transition.setName("transition");
-        // transition.setSource(start);
-        // transition.setTarget(task);
-        // Event end = ProcessFactory.eINSTANCE.createEndEvent();
-        // end.setName("end");
-        // SequenceFlow transition2 =
-        // ProcessFactory.eINSTANCE.createSequenceFlow();
-        // transition2.setName("transition2");
-        // transition2.setSource(task);
-        // transition2.setTarget(end);
-        // process.getElements().add(task);
-        // process.getElements().add(start);
-        // process.getElements().add(end);
-        // process.getConnections().add(transition);
-        // process.getConnections().add(transition2);
         return process;
     }
 
@@ -102,40 +75,40 @@ public class ProcessRegistry {
      */
     public static MainProcess getTestExampleProcess(String procFileName) throws Exception {
         URL fileUrl = Platform.getBundle("org.bonitasoft.studio.util.tests").getEntry("procExamplesTest/" + procFileName);
-        DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         DiagramFileStore fileStore = store.importInputStream(procFileName, fileUrl.openStream());
-        return  fileStore.getContent();
+        return fileStore.getContent();
     }
 
-
-    public static AbstractProcess createBasicProcessWithForm(){
+    public static AbstractProcess createBasicProcessWithForm() {
         AbstractProcess process = createBasicProcess();
         Form form = FormFactory.eINSTANCE.createForm();
         form.setName("myForm1");
         form.setNColumn(6);
         form.setNLine(4);
-        createWidget(form,FormFactory.eINSTANCE.createTextFormField() , "textbox1", 0, 0);
-        createWidget(form,FormFactory.eINSTANCE.createCheckBoxSingleFormField() , "checkBox1", 0, 1);
-        createWidget(form,FormFactory.eINSTANCE.createCheckBoxMultipleFormField() , "checkBoxM2", 0, 2);
-        createWidget(form,FormFactory.eINSTANCE.createDateFormField() , "date1", 1, 0);
-        createWidget(form,FormFactory.eINSTANCE.createFileWidget() , "file1", 0, 3);
-        createWidget(form,FormFactory.eINSTANCE.createHiddenWidget() , "hidden1", 1, 2);
-        createWidget(form,FormFactory.eINSTANCE.createImageWidget() , "image1", 2, 0);
-        createWidget(form,FormFactory.eINSTANCE.createListFormField() , "list1", 2, 1);
-        createWidget(form,FormFactory.eINSTANCE.createMessageInfo() , "message1", 2, 4);
-        createWidget(form,FormFactory.eINSTANCE.createTextInfo() , "textInfo1", 2, 3);
-        createWidget(form,FormFactory.eINSTANCE.createPasswordFormField() , "password1", 3, 0);
-        createWidget(form,FormFactory.eINSTANCE.createRadioFormField() , "radio1", 3, 1);
-        createWidget(form,FormFactory.eINSTANCE.createTextAreaFormField() , "textArea1", 3, 2);
-        createWidget(form,FormFactory.eINSTANCE.createSelectFormField() , "select1", 3, 3);
-        createWidget(form,FormFactory.eINSTANCE.createSubmitFormButton() , "submit1", 3, 4);
+        createWidget(form, FormFactory.eINSTANCE.createTextFormField(), "textbox1", 0, 0);
+        createWidget(form, FormFactory.eINSTANCE.createCheckBoxSingleFormField(), "checkBox1", 0, 1);
+        createWidget(form, FormFactory.eINSTANCE.createCheckBoxMultipleFormField(), "checkBoxM2", 0, 2);
+        createWidget(form, FormFactory.eINSTANCE.createDateFormField(), "date1", 1, 0);
+        createWidget(form, FormFactory.eINSTANCE.createFileWidget(), "file1", 0, 3);
+        createWidget(form, FormFactory.eINSTANCE.createHiddenWidget(), "hidden1", 1, 2);
+        createWidget(form, FormFactory.eINSTANCE.createImageWidget(), "image1", 2, 0);
+        createWidget(form, FormFactory.eINSTANCE.createListFormField(), "list1", 2, 1);
+        createWidget(form, FormFactory.eINSTANCE.createMessageInfo(), "message1", 2, 4);
+        createWidget(form, FormFactory.eINSTANCE.createTextInfo(), "textInfo1", 2, 3);
+        createWidget(form, FormFactory.eINSTANCE.createPasswordFormField(), "password1", 3, 0);
+        createWidget(form, FormFactory.eINSTANCE.createRadioFormField(), "radio1", 3, 1);
+        createWidget(form, FormFactory.eINSTANCE.createTextAreaFormField(), "textArea1", 3, 2);
+        createWidget(form, FormFactory.eINSTANCE.createSelectFormField(), "select1", 3, 3);
+        createWidget(form, FormFactory.eINSTANCE.createSubmitFormButton(), "submit1", 3, 4);
         process.getForm().add(form);
 
         return process;
 
     }
 
-    private static void createWidget(Form form, Widget w, String name,int y, int x){
+    private static void createWidget(Form form, Widget w, String name, int y, int x) {
         w.setName("widget1");
         WidgetLayoutInfo wlayout = FormFactory.eINSTANCE.createWidgetLayoutInfo();
         wlayout.setLine(y);

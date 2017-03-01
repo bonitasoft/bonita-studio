@@ -26,7 +26,7 @@ public class BotExportBOSDialog extends BotWizardDialog {
     public BotExportBOSDialog(final SWTGefBot bot) {
         super(bot, org.bonitasoft.studio.exporter.Messages.ExportButtonLabel);
     }
-    
+
     public BotExportBOSDialog selectAll() {
         bot.button(Messages.selectAll).click();
         return this;
@@ -36,12 +36,12 @@ public class BotExportBOSDialog extends BotWizardDialog {
         bot.comboBoxWithLabel(Messages.destinationPath + " *").setText(path);
         return this;
     }
-    
+
     @Override
     public void finish() {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        bot.waitUntil(Conditions.shellIsActive(Messages.exportLabel),15000);
+        bot.waitUntil(Conditions.shellIsActive(Messages.exportLabel), 15000);
         final SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));

@@ -48,7 +48,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestWebPurchase implements SWTBotConstants {
 
@@ -56,7 +55,7 @@ public class TestWebPurchase implements SWTBotConstants {
     private String diagramTitle = null;
 
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
@@ -122,14 +121,16 @@ public class TestWebPurchase implements SWTBotConstants {
     }
 
     private void stepGateWayXor(final SWTBotGefEditor gmfEditor) {
-        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Start1", SWTBotTestUtil.CONTEXTUALPALETTE_GATEWAY, PositionConstants.EAST);
+        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Start1",
+                SWTBotTestUtil.CONTEXTUALPALETTE_GATEWAY, PositionConstants.EAST);
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.comboBoxWithLabel(Messages.gatewayType).setSelection(Messages.gatwetypeXor);
         SWTBotTestUtil.configureSequenceFlow(bot, "sequenceFlow1", "Web Purchase", false, null, null);
     }
 
     private void stepSalesReview(final SWTBotGefEditor gmfEditor) {
-        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Gateway1", SWTBotTestUtil.CONTEXTUALPALETTE_STEP, PositionConstants.EAST);
+        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Gateway1",
+                SWTBotTestUtil.CONTEXTUALPALETTE_STEP, PositionConstants.EAST);
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.textWithLabel("Name").setText("Sales Review");
         bot.sleep(1000);
@@ -151,7 +152,8 @@ public class TestWebPurchase implements SWTBotConstants {
         createSalesReviewForm(gmfEditor);
         bot.editorByTitle(diagramTitle).show();
         bot.editorByTitle(diagramTitle).setFocus();
-        SWTBotTestUtil.configureSequenceFlow(bot, "customerOrder", "Web Purchase", false, "true", ExpressionConstants.SCRIPT_TYPE);
+        SWTBotTestUtil.configureSequenceFlow(bot, "customerOrder", "Web Purchase", false, "true",
+                ExpressionConstants.SCRIPT_TYPE);
     }
 
     protected void selectDataVariablesTabbedPropertyView() {
@@ -194,7 +196,8 @@ public class TestWebPurchase implements SWTBotConstants {
     private void stepMoreInfo(final SWTBotGefEditor gmfEditor) {
         bot.editorByTitle(diagramTitle).show();
         bot.editorByTitle(diagramTitle).setFocus();
-        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Sales Review", SWTBotTestUtil.CONTEXTUALPALETTE_STEP, PositionConstants.SOUTH);
+        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Sales Review",
+                SWTBotTestUtil.CONTEXTUALPALETTE_STEP, PositionConstants.SOUTH);
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.textWithLabel("Name").setText("More Info");
         bot.sleep(1000);
@@ -210,9 +213,11 @@ public class TestWebPurchase implements SWTBotConstants {
         createMoreInfoForm(gmfEditor);
         bot.editorByTitle(diagramTitle).show();
         bot.editorByTitle(diagramTitle).setFocus();
-        SWTBotTestUtil.configureSequenceFlow(bot, "add a comment", "Web Purchase", false, "decision==\"More info\"", ExpressionConstants.SCRIPT_TYPE);
+        SWTBotTestUtil.configureSequenceFlow(bot, "add a comment", "Web Purchase", false, "decision==\"More info\"",
+                ExpressionConstants.SCRIPT_TYPE);
         SWTBotTestUtil.addSequenceFlow(bot, gmfEditor, "More Info", "Gateway1", PositionConstants.SOUTH);
-        SWTBotTestUtil.configureSequenceFlow(bot, "sequenceFlow2", "Web Purchase", false, "true", ExpressionConstants.SCRIPT_TYPE);
+        SWTBotTestUtil.configureSequenceFlow(bot, "sequenceFlow2", "Web Purchase", false, "true",
+                ExpressionConstants.SCRIPT_TYPE);
     }
 
     private void createMoreInfoForm(final SWTBotGefEditor gmfEditor) {
@@ -243,8 +248,8 @@ public class TestWebPurchase implements SWTBotConstants {
     private void stepPay(final SWTBotGefEditor gmfEditor) {
         bot.editorByTitle(diagramTitle).show();
         bot.editorByTitle(diagramTitle).setFocus();
-        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Sales Review", SWTBotTestUtil.CONTEXTUALPALETTE_STEP, PositionConstants.EAST);
-        //        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Sales Review",SWTBotTestUtil.CONTEXTUALPALETTE_STEP,new Point(550,100));
+        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Sales Review",
+                SWTBotTestUtil.CONTEXTUALPALETTE_STEP, PositionConstants.EAST);
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
@@ -264,7 +269,8 @@ public class TestWebPurchase implements SWTBotConstants {
         createPayForm(gmfEditor);
         bot.editorByTitle(diagramTitle).show();
         bot.editorByTitle(diagramTitle).setFocus();
-        SWTBotTestUtil.configureSequenceFlow(bot, "if approved", "Web Purchase", false, "decision==\"Approve\"", ExpressionConstants.SCRIPT_TYPE);
+        SWTBotTestUtil.configureSequenceFlow(bot, "if approved", "Web Purchase", false, "decision==\"Approve\"",
+                ExpressionConstants.SCRIPT_TYPE);
     }
 
     private void createPayForm(final SWTBotGefEditor gmfEditor) {
@@ -305,30 +311,36 @@ public class TestWebPurchase implements SWTBotConstants {
 
     private void stepReject(final SWTBotGefEditor gmfEditor) {
         SWTBotTestUtil
-                .selectElementInContextualPaletteAndDragIt(gmfEditor, "Sales Review", SWTBotTestUtil.CONTEXTUALPALETTE_STEP, PositionConstants.SOUTH_EAST);
+                .selectElementInContextualPaletteAndDragIt(gmfEditor, "Sales Review", SWTBotTestUtil.CONTEXTUALPALETTE_STEP,
+                        PositionConstants.SOUTH_EAST);
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.textWithLabel("Name").setText("Reject");
         bot.sleep(1000);
-        SWTBotTestUtil.configureSequenceFlow(bot, "if not approved", "Web Purchase", false, "decision==\"Reject\"", ExpressionConstants.SCRIPT_TYPE);
+        SWTBotTestUtil.configureSequenceFlow(bot, "if not approved", "Web Purchase", false, "decision==\"Reject\"",
+                ExpressionConstants.SCRIPT_TYPE);
     }
 
     private void stepExpressDelivery(final SWTBotGefEditor gmfEditor) {
-        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Pay", SWTBotTestUtil.CONTEXTUALPALETTE_STEP, PositionConstants.EAST);
+        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Pay", SWTBotTestUtil.CONTEXTUALPALETTE_STEP,
+                PositionConstants.EAST);
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.textWithLabel("Name").setText("Express Delivery");
         bot.sleep(500);
-        SWTBotTestUtil.configureSequenceFlow(bot, "if yes", "Web Purchase", false, "chooseExpressDelivery", ExpressionConstants.VARIABLE_TYPE);
+        SWTBotTestUtil.configureSequenceFlow(bot, "if yes", "Web Purchase", false, "chooseExpressDelivery",
+                ExpressionConstants.VARIABLE_TYPE);
     }
 
     private void stepArchive(final SWTBotGefEditor gmfEditor) {
-        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Pay", SWTBotTestUtil.CONTEXTUALPALETTE_STEP, PositionConstants.SOUTH_EAST);
+        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Pay", SWTBotTestUtil.CONTEXTUALPALETTE_STEP,
+                PositionConstants.SOUTH_EAST);
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.textWithLabel("Name").setText("Archive");
         bot.sleep(500);
-        SWTBotTestUtil.configureSequenceFlow(bot, "if no", "Web Purchase", false, "chooseExpressDelivery", ExpressionConstants.VARIABLE_TYPE);
+        SWTBotTestUtil.configureSequenceFlow(bot, "if no", "Web Purchase", false, "chooseExpressDelivery",
+                ExpressionConstants.VARIABLE_TYPE);
         SWTBotTestUtil.addSequenceFlow(bot, gmfEditor, "Reject", "Archive", PositionConstants.WEST);
         SWTBotTestUtil.configureSequenceFlow(bot, "sequenceFlow3", "Web Purchase", false, null, null);
         SWTBotTestUtil.addSequenceFlow(bot, gmfEditor, "Express Delivery", "Archive", PositionConstants.NORTH);
@@ -340,7 +352,8 @@ public class TestWebPurchase implements SWTBotConstants {
         final Point targetLocation = SWTBotTestUtil.computeTargetLocation(gmfEditor, "Archive", PositionConstants.EAST);
         gmfEditor.click(targetLocation.x, targetLocation.y);
         SWTBotTestUtil.addSequenceFlow(bot, gmfEditor, "Archive", "End1", PositionConstants.WEST);
-        SWTBotTestUtil.configureSequenceFlow(bot, "sequenceFlow4", "Web Purchase", false, null, ExpressionConstants.VARIABLE_TYPE);
+        SWTBotTestUtil.configureSequenceFlow(bot, "sequenceFlow4", "Web Purchase", false, null,
+                ExpressionConstants.VARIABLE_TYPE);
     }
 
     private void configureProcess(final SWTBotGefEditor gmfEditor) {

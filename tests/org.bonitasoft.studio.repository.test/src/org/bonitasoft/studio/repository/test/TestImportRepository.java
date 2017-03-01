@@ -18,8 +18,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
-import junit.framework.TestCase;
-
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
@@ -29,6 +27,8 @@ import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.eclipse.core.runtime.FileLocator;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mickael Istria
@@ -73,7 +73,8 @@ public class TestImportRepository extends TestCase {
         for (final GroovyFileStore artifact : gStore.getChildren()) {
             artifact.delete();
         }
-        final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+        final DocumentRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(DocumentRepositoryStore.class);
         for (final DocumentFileStore artifact : store.getChildren()) {
             artifact.delete();
         }
@@ -81,7 +82,8 @@ public class TestImportRepository extends TestCase {
 
     @Test
     public void testImportAttachments() throws Exception {
-        final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+        final DocumentRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(DocumentRepositoryStore.class);
         final DocumentFileStore fileStore = store.getChild(TEST_ATTACHMENT_ARTIFACT_ID);
 
         assertNotNull(fileStore);

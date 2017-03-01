@@ -41,10 +41,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class SWTBOTTestConditions  {
+public class SWTBOTTestConditions {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
@@ -56,7 +56,8 @@ public class SWTBOTTestConditions  {
         diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectPoolTab().editPool(poolName, "1.0");
 
         //add a data on pool
-        final BotAddDataWizardPage addDataBot = diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectPoolDataTab().addData();
+        final BotAddDataWizardPage addDataBot = diagramPerspective.getDiagramPropertiesPart().selectDataTab()
+                .selectPoolDataTab().addData();
         addDataBot.setName("myData");
         addDataBot.finish();
         //add a new task

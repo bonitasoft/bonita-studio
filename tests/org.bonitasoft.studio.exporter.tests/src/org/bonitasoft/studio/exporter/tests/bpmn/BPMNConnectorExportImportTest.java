@@ -42,7 +42,6 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ServiceTask;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -53,8 +52,11 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.omg.spec.bpmn.di.util.DiResourceFactoryImpl;
 import org.omg.spec.bpmn.model.DocumentRoot;
@@ -70,6 +72,11 @@ public class BPMNConnectorExportImportTest {
     private static Connector connectorAfterReimport;
     private static boolean isInitalized = false;
 
+    private Resource resource;
+
+    @Rule
+    public TemporaryFolder tmpFolder = new TemporaryFolder();
+
     @Before
     public void init() throws IOException {
         if (!isInitalized) {
@@ -79,7 +86,7 @@ public class BPMNConnectorExportImportTest {
     }
 
     @Test
-    public void testSingleConnectorOnServiceTask_version() throws IOException, ExecutionException {
+    public void testSingleConnectorOnServiceTask_version() {
         assertEquals("Connector definition version is not correct", connectorDefVersion,
                 connectorAfterReimport.getDefinitionVersion());
     }
@@ -206,7 +213,7 @@ public class BPMNConnectorExportImportTest {
         final SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
         final MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
-        final File bpmnFileExported = File.createTempFile("testSingleConnectorOnServiceTask", ".bpmn");
+        final File bpmnFileExported = tmpFolder.newFile("testSingleConnectorOnServiceTask.bpmn");
         final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
         assertTrue("Error during export", transformed);
 
@@ -215,20 +222,16 @@ public class BPMNConnectorExportImportTest {
                 .getExtensionToFactoryMap();
         final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
         extensionToFactoryMap.put("bpmn", diResourceFactoryImpl);
-        final Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
-        resource2.load(Collections.emptyMap());
+        resource = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
+        resource.load(Collections.emptyMap());
 
-        final DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
+        final DocumentRoot model2 = (DocumentRoot) resource.getContents().get(0);
 
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    mainProcessAfterReimport = BPMNTestUtil.importBPMNFile(model2);
-                } catch (final MalformedURLException e) {
-                    e.printStackTrace();
-                }
+        Display.getDefault().syncExec(() -> {
+            try {
+                mainProcessAfterReimport = BPMNTestUtil.importBPMNFile(model2);
+            } catch (final MalformedURLException e) {
+                e.printStackTrace();
             }
         });
 
@@ -239,6 +242,13 @@ public class BPMNConnectorExportImportTest {
                 connectorAfterReimport = serviceTask.getConnectors().get(0);
                 break;
             }
+        }
+    }
+
+    @After
+    public void clean() {
+        if (resource != null) {
+            resource.unload();
         }
     }
 

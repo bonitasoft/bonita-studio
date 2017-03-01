@@ -30,12 +30,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class RefactorWidgetIT  {
+public class RefactorWidgetIT {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
@@ -48,7 +47,8 @@ public class RefactorWidgetIT  {
 
         diagramPerspective.activeFormDiagramEditor().addWidget("Checkbox", 1, 1).save();
         diagramPerspective.activeFormDiagramEditor().selectElement("Checkbox1");
-        diagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab().getOutputOperation().editRightOperand().selectFormFieldType()
+        diagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab().getOutputOperation().editRightOperand()
+                .selectFormFieldType()
                 .selectFormField("Check Box Single Form Field Checkbox1").ok();
 
         diagramPerspective.getFormPropertiesPart().selectGeneralTab().selectGeneralTab().setName("ValidCheckbox");

@@ -35,10 +35,10 @@ import org.junit.runner.RunWith;
  * @author Aurelien Pupier
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class PageTemplateEditionIT  {
+public class PageTemplateEditionIT {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
@@ -47,10 +47,12 @@ public class PageTemplateEditionIT  {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
-        botProcessDiagramPerspective.getDiagramPropertiesPart().selectApplicationTab().selectPageflowTab().addForm().finish();
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectApplicationTab().selectPageflowTab().addForm()
+                .finish();
 
         botProcessDiagramPerspective.activeFormDiagramEditor().addWidget("Checkbox", 1, 1).save().selectForm();
-        final BotGeneralPropertySection botGeneralTab = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectGeneralTab();
+        final BotGeneralPropertySection botGeneralTab = botProcessDiagramPerspective.getFormPropertiesPart()
+                .selectGeneralTab().selectGeneralTab();
         botGeneralTab.useLayoutGeneratedFromDesign();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.Edit)), 20000, 100);
         assertThat(bot.button(Messages.Clear).isEnabled());

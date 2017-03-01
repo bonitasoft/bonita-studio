@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.tests.perspectives;
 
@@ -46,7 +43,6 @@ import junit.framework.TestCase;
 
 /**
  * @author Baptiste Mesta
- *
  */
 public class TestAutomaticSwitchPerspective extends TestCase {
 
@@ -58,18 +54,19 @@ public class TestAutomaticSwitchPerspective extends TestCase {
         fileStore.open();
         final MainProcess process = fileStore.getContent();
 
-        assertTrue("Wrong perspective when opening the form",new TestAsyncThread(10, 500) {
+        assertTrue("Wrong perspective when opening the form", new TestAsyncThread(10, 500) {
 
             @Override
             public boolean isTestGreen() throws Exception {
 
-                final RunnableWithResult<Boolean> runnable = new RunnableWithResult<Boolean>(){
+                final RunnableWithResult<Boolean> runnable = new RunnableWithResult<Boolean>() {
 
                     private boolean processPerspective = false;
 
                     @Override
                     public void run() {
-                        processPerspective  = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getPerspective().getId().equals(ProcessPerspective);
+                        processPerspective = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                                .getPerspective().getId().equals(ProcessPerspective);
                     }
 
                     @Override
@@ -92,35 +89,36 @@ public class TestAutomaticSwitchPerspective extends TestCase {
             }
         }.evaluate());
 
-
         PageFlow pageflow = null;
         for (final Iterator<?> iterator = process.eAllContents(); iterator.hasNext();) {
             final EObject type = (EObject) iterator.next();
-            if(type instanceof PageFlow){
+            if (type instanceof PageFlow) {
                 pageflow = (PageFlow) type;
                 break;
             }
         }
         IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        final TransactionalEditingDomain editingDomain = ((ProcessDiagramEditor)editor).getEditingDomain();
-        final CreateFormCommand formCommand = new CreateFormCommand(pageflow,ProcessPackage.Literals.PAGE_FLOW__FORM,"testForm","form to test perspectives", Collections.<WidgetMapping>emptyList(), editingDomain);
+        final TransactionalEditingDomain editingDomain = ((ProcessDiagramEditor) editor).getEditingDomain();
+        final CreateFormCommand formCommand = new CreateFormCommand(pageflow, ProcessPackage.Literals.PAGE_FLOW__FORM,
+                "testForm", "form to test perspectives", Collections.<WidgetMapping> emptyList(), editingDomain);
         formCommand.execute(new NullProgressMonitor(), null);
         final Form createdForm = (Form) formCommand.getCommandResult().getReturnValue();
         FormsUtils.createFormDiagram(createdForm, editingDomain);
         FormsUtils.openDiagram(createdForm, editingDomain);
 
-        assertTrue("Wrong perspective when opening the form",new TestAsyncThread(10, 500) {
+        assertTrue("Wrong perspective when opening the form", new TestAsyncThread(10, 500) {
 
             @Override
             public boolean isTestGreen() throws Exception {
 
-                final RunnableWithResult<Boolean> runnable = new RunnableWithResult<Boolean>(){
+                final RunnableWithResult<Boolean> runnable = new RunnableWithResult<Boolean>() {
 
                     private boolean editorIsForm = false;
 
                     @Override
                     public void run() {
-                        editorIsForm  = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getPerspective().getId().equals(FormPerspective);
+                        editorIsForm = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getPerspective()
+                                .getId().equals(FormPerspective);
                     }
 
                     @Override
@@ -143,21 +141,21 @@ public class TestAutomaticSwitchPerspective extends TestCase {
             }
         }.evaluate());
 
-
-
         editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        ((FormDiagramEditor)editor).doSave(new NullProgressMonitor());
-        ((FormDiagramEditor)editor).close(true);
+        ((FormDiagramEditor) editor).doSave(new NullProgressMonitor());
+        ((FormDiagramEditor) editor).close(true);
         assertTrue(new TestAsyncThread(10, 500) {
+
             @Override
             public boolean isTestGreen() throws Exception {
-                final RunnableWithResult<Boolean> runnable = new RunnableWithResult<Boolean>(){
+                final RunnableWithResult<Boolean> runnable = new RunnableWithResult<Boolean>() {
 
                     private boolean editorIsProcess = false;
 
                     @Override
                     public void run() {
-                        editorIsProcess  = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() instanceof ProcessDiagramEditor;
+                        editorIsProcess = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                                .getActiveEditor() instanceof ProcessDiagramEditor;
                     }
 
                     @Override
@@ -179,8 +177,8 @@ public class TestAutomaticSwitchPerspective extends TestCase {
                 return runnable.getResult();
             }
         }.evaluate());
-        assertTrue("Wrong perspective when closing the form",PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getPerspective().getId().equals(ProcessPerspective));
-
+        assertTrue("Wrong perspective when closing the form", PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                .getActivePage().getPerspective().getId().equals(ProcessPerspective));
 
     }
 

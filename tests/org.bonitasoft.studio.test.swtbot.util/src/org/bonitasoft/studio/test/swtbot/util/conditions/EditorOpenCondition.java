@@ -28,43 +28,43 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class EditorOpenCondition extends DefaultCondition {
 
-	private final IFile file;
+    private final IFile file;
 
-	public EditorOpenCondition(final IFile file) {
-		this.file = file;
-	}
+    public EditorOpenCondition(final IFile file) {
+        this.file = file;
+    }
 
-	@Override
+    @Override
     public String getFailureMessage() {
-		return String.format("Timed out waiting for editor on %s to open",file.getFullPath());
-	}
+        return String.format("Timed out waiting for editor on %s to open", file.getFullPath());
+    }
 
-	@Override
+    @Override
     public boolean test() throws Exception {
-		if (!file.exists()) {
-			return false;
-		}
-		return UIThreadRunnable.syncExec(new BoolResult() {
+        if (!file.exists()) {
+            return false;
+        }
+        return UIThreadRunnable.syncExec(new BoolResult() {
 
-			@Override
+            @Override
             public Boolean run() {
-				final IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
-				for (final IEditorReference reference: editorReferences) {
-					try {
-						final IEditorInput input = reference.getEditorInput();
+                final IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                        .getActivePage().getEditorReferences();
+                for (final IEditorReference reference : editorReferences) {
+                    try {
+                        final IEditorInput input = reference.getEditorInput();
                         final IResource resource = EditorUtil.retrieveResourceFromEditorInput(input);
                         return file.equals(resource);
-					} catch (final PartInitException e) {
-						BonitaStudioLog.error(e);
-					}
-				}
-				return false;
-			}
-		});
-	}
+                    } catch (final PartInitException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }
+                return false;
+            }
+        });
+    }
 
 }

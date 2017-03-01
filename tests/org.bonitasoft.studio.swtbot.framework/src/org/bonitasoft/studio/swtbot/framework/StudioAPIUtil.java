@@ -26,7 +26,8 @@ public class StudioAPIUtil {
         final File newFile = new File(pFilePath);
         FileInputStream inputStream = null;
         try {
-            final DocumentRepositoryStore ars = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+            final DocumentRepositoryStore ars = RepositoryManager.getInstance()
+                    .getRepositoryStore(DocumentRepositoryStore.class);
             inputStream = new FileInputStream(newFile);
             ars.importInputStream(newFile.getName(), inputStream);
         } catch (final FileNotFoundException e) {

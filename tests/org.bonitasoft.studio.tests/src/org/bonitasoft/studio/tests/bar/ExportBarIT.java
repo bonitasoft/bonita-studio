@@ -49,7 +49,8 @@ public class ExportBarIT {
     @Test
     public void should_import_a_process_with_new_form_mapping_export_it_as_a_bar_file() throws Exception {
         //Given
-        bosToImportFile = Paths.get(toFileURL(ExportBarIT.class.getResource("/DiagramWithNewFormMapping-1.0.bos")).toURI()).toFile();
+        bosToImportFile = Paths.get(toFileURL(ExportBarIT.class.getResource("/DiagramWithNewFormMapping-1.0.bos")).toURI())
+                .toFile();
         final File targetBarFolder = tmpFolder.newFolder("targetBarFolder");
 
         //When
@@ -60,7 +61,8 @@ public class ExportBarIT {
 
         //Then
         assertThat(importBosArchiveOperation.getStatus()).isOK();
-        assertThat(importBosArchiveOperation.getFileStoresToOpen()).extracting("name").containsOnly("DiagramWithNewFormMapping-1.0.proc");
+        assertThat(importBosArchiveOperation.getFileStoresToOpen()).extracting("name")
+                .containsOnly("DiagramWithNewFormMapping-1.0.proc");
 
         //When
         final ExportBarOperation exportBarOperation = new ExportBarOperation();
@@ -84,8 +86,7 @@ public class ExportBarIT {
                 tuple("custompage_overviewPage", FormMappingType.PROCESS_OVERVIEW, null, FormMappingTarget.INTERNAL),
                 tuple("custompage_stepForm", FormMappingType.TASK, "Step1", FormMappingTarget.INTERNAL),
                 tuple("http://www.google.com", FormMappingType.TASK, "Step2", FormMappingTarget.URL),
-                tuple("", FormMappingType.TASK, "Step3", FormMappingTarget.LEGACY)
-                );
+                tuple("", FormMappingType.TASK, "Step3", FormMappingTarget.LEGACY));
         assertThat(businessArchive.getResource("resources/customPages/custompage_instantiationForm.zip")).isNotEmpty();
         assertThat(businessArchive.getResource("resources/customPages/custompage_overviewPage.zip")).isNotEmpty();
         assertThat(businessArchive.getResource("resources/customPages/custompage_stepForm.zip")).isNotEmpty();

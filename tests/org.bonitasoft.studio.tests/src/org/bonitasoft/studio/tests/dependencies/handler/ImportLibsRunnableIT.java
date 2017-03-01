@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -49,9 +47,11 @@ public class ImportLibsRunnableIT {
         final File tmpFileWhichWillBeCopied2 = tmpFolder.newFile("test-2.zip");
         FileUtil.copy(this.getClass().getResourceAsStream("test-2.zip"), new FileOutputStream(tmpFileWhichWillBeCopied2));
 
-        final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied1.toString(), tmpFileWhichWillBeCopied2.toString(),
+        final String[] jarAndZips = new String[] { tmpFileWhichWillBeCopied1.toString(),
+                tmpFileWhichWillBeCopied2.toString(),
                 tmpJarFileWhichWillBeCopied1.toString(), tmpJarFileWhichWillBeCopied2.toString() };
-        final DependencyRepositoryStore libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+        final DependencyRepositoryStore libStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DependencyRepositoryStore.class);
         final ImportLibsOperation importLibsRunnable = new ImportLibsOperation(libStore, jarAndZips, "");
         importLibsRunnable.run(new NullProgressMonitor());
 

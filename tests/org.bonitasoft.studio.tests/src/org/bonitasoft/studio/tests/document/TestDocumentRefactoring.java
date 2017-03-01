@@ -62,7 +62,8 @@ public class TestDocumentRefactoring {
 
     private final String empty = "     ";
 
-    private final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+    private final DiagramRepositoryStore store = RepositoryManager.getInstance()
+            .getRepositoryStore(DiagramRepositoryStore.class);
 
     @Test
     public void testDocumentRefactoring() throws IOException, InvocationTargetException, InterruptedException {
@@ -92,7 +93,8 @@ public class TestDocumentRefactoring {
 
     }
 
-    private Document refactorDocumentTypeAndMultiplicity(final Pool pool, final Document document) throws InvocationTargetException, InterruptedException {
+    private Document refactorDocumentTypeAndMultiplicity(final Pool pool, final Document document)
+            throws InvocationTargetException, InterruptedException {
         final Document newDocument = EcoreUtil.copy(document);
         newDocument.setMultiple(true);
         newDocument.setDocumentType(DocumentType.EXTERNAL);
@@ -108,7 +110,8 @@ public class TestDocumentRefactoring {
 
     }
 
-    private void testDocumentInExpressionsRefactored(final Document document, final int numberOfExpression, final Pool pool) {
+    private void testDocumentInExpressionsRefactored(final Document document, final int numberOfExpression,
+            final Pool pool) {
         final List<Task> tasks = ModelHelper.getAllItemsOfType(pool, ProcessPackage.Literals.TASK);
         assertEquals(1, tasks.size());
         final Task task = tasks.get(0);
@@ -130,7 +133,8 @@ public class TestDocumentRefactoring {
         assertEquals(document.getDocumentType(), refDocument.getDocumentType());
     }
 
-    private void testRemoveDocumentRefactoring(final Document document, final Pool pool) throws InvocationTargetException, InterruptedException {
+    private void testRemoveDocumentRefactoring(final Document document, final Pool pool)
+            throws InvocationTargetException, InterruptedException {
         final RefactorDocumentOperation refactorOperation = new RefactorDocumentOperation(RefactoringOperationType.REMOVE);
         refactorOperation.setEditingDomain(TransactionUtil.getEditingDomain(pool));
         refactorOperation.addItemToRefactor(null, document);

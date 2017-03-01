@@ -33,7 +33,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 
 /**
  * Application workbench.
- *
+ * 
  * @author Joachim Segala
  */
 public class BotApplicationWorkbenchWindow extends AbstractBotMenu {

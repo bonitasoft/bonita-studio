@@ -138,7 +138,8 @@ public class ValidationTestBase {
         op.setArchiveFile(FileLocator.toFileURL(url).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
-        final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         final DiagramFileStore fStore = store.getDiagram(diagramName, diagramVersion);
         assertNotNull(fStore);
         return fStore.getContent();

@@ -32,9 +32,9 @@ public class TestResources implements SWTBotConstants {
 
     @Test
     public void testCorrectLabelProvider() throws Exception {
-        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
-                .setArchive(
-                        TestResources.class.getResource("TestExportToBPMNDiagram_1_0.bos"))
+        new BotApplicationWorkbenchWindow(bot)
+                .importBOSArchive()
+                .setArchive(TestResources.class.getResource("TestExportToBPMNDiagram_1_0.bos"))
                 .finish();
 
         final SWTBotGefEditor gefEditor = bot.gefEditor(bot.activeEditor().getTitle());

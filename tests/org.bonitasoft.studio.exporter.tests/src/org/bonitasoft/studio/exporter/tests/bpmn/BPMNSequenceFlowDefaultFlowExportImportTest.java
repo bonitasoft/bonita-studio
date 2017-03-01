@@ -44,8 +44,11 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.omg.spec.bpmn.di.util.DiResourceFactoryImpl;
 import org.omg.spec.bpmn.model.DocumentRoot;
@@ -54,17 +57,12 @@ import org.omg.spec.bpmn.model.DocumentRoot;
 public class BPMNSequenceFlowDefaultFlowExportImportTest {
 
     private final SWTGefBot bot = new SWTGefBot();
-    private static boolean isInitalized = false;
     private MainProcess mainProcessAfterReimport;
     List<SequenceFlow> sequenceFlows = new ArrayList<>();
+    Resource resource;
 
-    @Before
-    public void init() throws IOException {
-        if (!isInitalized) {
-            prepareTest();
-        }
-        isInitalized = true;
-    }
+    @Rule
+    public TemporaryFolder tmpFolder = new TemporaryFolder();
 
     @Test
     public void testDefaultFlow() {
@@ -77,17 +75,18 @@ public class BPMNSequenceFlowDefaultFlowExportImportTest {
         assertEquals("Default has not been exported/imported succesfully in BPMN2", 2, numberOfDefaultFlow);
     }
 
-    protected void prepareTest() throws IOException {
-        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
-                .setArchive(
-                        BPMNConnectorExportImportTest.class.getResource("MyDiagramToTestDefaultFlowInBPMN-1.0.bos"))
+    @Before
+    public void prepareTest() throws IOException {
+        new BotApplicationWorkbenchWindow(bot)
+                .importBOSArchive()
+                .setArchive(BPMNConnectorExportImportTest.class.getResource("MyDiagramToTestDefaultFlowInBPMN-1.0.bos"))
                 .finish();
 
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
         final SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
         final MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
-        final File bpmnFileExported = File.createTempFile("PoolToTestDefaultFlowInBPMN", ".bpmn");
+        final File bpmnFileExported = tmpFolder.newFile("PoolToTestDefaultFlowInBPMN.bpmn");
         final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
         assertTrue("Error during export", transformed);
 
@@ -96,20 +95,16 @@ public class BPMNSequenceFlowDefaultFlowExportImportTest {
                 .getExtensionToFactoryMap();
         final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
         extensionToFactoryMap.put("bpmn", diResourceFactoryImpl);
-        final Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
-        resource2.load(Collections.emptyMap());
+        resource = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
+        resource.load(Collections.emptyMap());
 
-        final DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
+        final DocumentRoot model2 = (DocumentRoot) resource.getContents().get(0);
 
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    mainProcessAfterReimport = BPMNTestUtil.importBPMNFile(model2);
-                } catch (final MalformedURLException e) {
-                    e.printStackTrace();
-                }
+        Display.getDefault().syncExec(() -> {
+            try {
+                mainProcessAfterReimport = BPMNTestUtil.importBPMNFile(model2);
+            } catch (final MalformedURLException e) {
+                e.printStackTrace();
             }
         });
 
@@ -117,6 +112,13 @@ public class BPMNSequenceFlowDefaultFlowExportImportTest {
             if (element instanceof SequenceFlow) {
                 sequenceFlows.add((SequenceFlow) element);
             }
+        }
+    }
+
+    @After
+    public void clean() {
+        if (resource != null) {
+            resource.unload();
         }
     }
 

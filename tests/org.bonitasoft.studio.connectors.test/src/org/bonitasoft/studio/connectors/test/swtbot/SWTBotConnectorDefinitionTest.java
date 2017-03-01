@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connectors.test.swtbot;
 
@@ -30,14 +27,12 @@ import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
-import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +41,7 @@ import org.junit.runner.RunWith;
 public class SWTBotConnectorDefinitionTest {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     @Test
     public void testCreate() throws Exception {
         final String id = "test";
@@ -59,8 +54,7 @@ public class SWTBotConnectorDefinitionTest {
                 .button(IDialogConstants.FINISH_LABEL).isEnabled());
         bot.button(IDialogConstants.FINISH_LABEL).click();
         ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager
-                .getInstance().getRepositoryStore(
-                        ConnectorDefRepositoryStore.class);
+                .getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         ConnectorDefinition connectorDef = store.getDefinition(id, version);
         assertNotNull("the connectorDef file was not created", connectorDef);
     }
@@ -99,23 +93,8 @@ public class SWTBotConnectorDefinitionTest {
         SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
         testButtonDisabled(id, textLabel);
         bot.textWithLabel(textLabelVersion).setText(version);
-        bot.waitUntil(new ICondition() {
-
-            public boolean test() throws Exception {
-                return bot.button(IDialogConstants.FINISH_LABEL).isEnabled();
-            }
-
-            public void init(SWTBot bot) {
-
-            }
-
-            public String getFailureMessage() {
-                return "changing version should enable finish button";
-            }
-        }, 5000);
-
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
         bot.button(IDialogConstants.CANCEL_LABEL).click();
-
     }
 
     @Test
@@ -127,67 +106,42 @@ public class SWTBotConnectorDefinitionTest {
         bot.treeWithLabel(Messages.categoryLabel).select(0);
         bot.button(IDialogConstants.FINISH_LABEL).click();
         ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager
-                .getInstance().getRepositoryStore(
-                        ConnectorDefRepositoryStore.class);
+                .getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         ConnectorDefinition connectorDef = store.getDefinition(id, version);
-        assertEquals("category size should be equal to 1", 1,connectorDef
-                .getCategory().size());
+        assertEquals("category size should be equal to 1", 1, connectorDef.getCategory().size());
     }
-
 
     @Test
     public void testNewCategory() throws Exception {
         final String id = "test3";
         final String version = "1.0.0";
-        final String categoryId="category1";
+        final String categoryId = "category1";
         SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
         SWTBotConnectorTestUtil.createConnectorDefinition(bot, id, version);
         SWTBotConnectorTestUtil.createNewCategory(bot, categoryId);
         bot.treeWithLabel(Messages.categoryLabel).select(categoryId);
         bot.button(IDialogConstants.FINISH_LABEL).click();
         ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager
-                .getInstance().getRepositoryStore(
-                        ConnectorDefRepositoryStore.class);
+                .getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         ConnectorDefinition connectorDef = store.getDefinition(id, version);
-        assertEquals("category list size should be equal to 1", connectorDef
-                .getCategory().size(), 1);
+        assertEquals("category list size should be equal to 1", connectorDef.getCategory().size(), 1);
     }
-
 
     @Test
     public void testCreateExistingCategory() throws Exception {
         final String id = "test7";
         final String version = "1.0.0";
-        final String categoryId="category3";
+        final String categoryId = "category3";
         SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
         SWTBotConnectorTestUtil.createConnectorDefinition(bot, id, version);
         SWTBotConnectorTestUtil.createNewCategory(bot, categoryId);
         bot.button("New...").click();
         bot.textWithLabel("Id").setText(categoryId);
-        assertFalse("Ok button should be disabled when trying to create an existing category",bot.button(IDialogConstants.OK_LABEL).isEnabled());
+        assertFalse("Ok button should be disabled when trying to create an existing category",
+                bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.button(IDialogConstants.CANCEL_LABEL).click();
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
-
-
-//    @Test
-//    public void testRemoveCategory() throws Exception {
-//        final String id = "test4";
-//        final String version = "1.0.0";
-//        final String categoryId="category2";
-//        SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
-//        SWTBotConnectorTestUtil.createConnectorDefinition(bot, id, version);
-//        SWTBotConnectorTestUtil.createNewCategory(bot, categoryId);
-//        bot.tableWithLabel("Categories").select(0);
-//        bot.button("Remove").click();
-//        bot.button(IDialogConstants.FINISH_LABEL).click();
-//        ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager
-//                .getInstance().getRepositoryStore(
-//                        ConnectorDefRepositoryStore.class);
-//        ConnectorDefinition connectorDef = store.getDefinition(id, version);
-//        assertEquals("category list size should be equal to 0", connectorDef
-//                .getCategory().size(), 0);
-//    }
 
     @Test
     public void testAddInputs() throws Exception {
@@ -218,11 +172,9 @@ public class SWTBotConnectorDefinitionTest {
         bot.text().setText("hello");
         bot.button(IDialogConstants.FINISH_LABEL).click();
         ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager
-                .getInstance().getRepositoryStore(
-                        ConnectorDefRepositoryStore.class);
+                .getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         ConnectorDefinition connectorDef = store.getDefinition(id, version);
-        assertEquals("wrong number of inputs", connectorDef.getInput().size(),
-                2);
+        assertEquals("wrong number of inputs", connectorDef.getInput().size(), 2);
         Input input = connectorDef.getInput().get(0);
         assertEquals("wrong input name", input.getName(), inputName);
         assertEquals("wrong input value", input.getDefaultValue(), value);
@@ -255,21 +207,16 @@ public class SWTBotConnectorDefinitionTest {
         key.pressShortcut(Keystrokes.CR);
         bot.button(IDialogConstants.FINISH_LABEL).click();
         ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager
-                .getInstance().getRepositoryStore(
-                        ConnectorDefRepositoryStore.class);
+                .getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         ConnectorDefinition connectorDef = store.getDefinition(id, version);
-        assertEquals("wrong number of outputs",
-                connectorDef.getOutput().size(), 2);
+        assertEquals("wrong number of outputs", connectorDef.getOutput().size(), 2);
         Output output = connectorDef.getOutput().get(0);
         assertEquals("wrong output name", output.getName(), outputName);
         assertEquals("wrong type of output", output.getType(), type);
     }
 
-
-
     private void testButtonDisabled(String id, String label) throws Exception {
         bot.textWithLabel(label).setText(id);
-        assertFalse("finish button should be disabled",
-                bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+        assertFalse("finish button should be disabled", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
     }
 }

@@ -142,7 +142,8 @@ public class TestLifeCycleWidget {
                     @Override
                     protected void configureShell(Shell newShell) {
                         super.configureShell(newShell);
-                        newShell.setText("Test Life cycle widget: " + eventType + eventTypeThatShouldBeselected + taskLifeCycle);
+                        newShell.setText(
+                                "Test Life cycle widget: " + eventType + eventTypeThatShouldBeselected + taskLifeCycle);
                     }
                 };
                 dialog.setBlockOnOpen(false);
@@ -151,16 +152,19 @@ public class TestLifeCycleWidget {
             }
         });
 
-        bot.waitUntil(Conditions.shellIsActive("Test Life cycle widget: " + eventType + eventTypeThatShouldBeselected + taskLifeCycle), 10000);
+        bot.waitUntil(Conditions.shellIsActive(
+                "Test Life cycle widget: " + eventType + eventTypeThatShouldBeselected + taskLifeCycle), 10000);
         bot.button(IDialogConstants.CANCEL_LABEL).click();
 
         final String eventTypeTheoric = eventTypeThatShouldBeselected.toString();
         for (final EventCircle eventCircle : lcw.getEventFigures()) {
             final String event = eventCircle.getEvent();
             if (event.equals(eventTypeTheoric)) {
-                assertEquals("The event circle" + event + " should be selected", eventCircle.getLocalForegroundColor().getRed(), 73);
+                assertEquals("The event circle" + event + " should be selected",
+                        eventCircle.getLocalForegroundColor().getRed(), 73);
             } else {
-                assertEquals("The event circle" + event + " should not be selected", eventCircle.getLocalForegroundColor().getRed(), 235);
+                assertEquals("The event circle" + event + " should not be selected",
+                        eventCircle.getLocalForegroundColor().getRed(), 235);
             }
         }
 

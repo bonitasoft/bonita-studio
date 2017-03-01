@@ -34,7 +34,7 @@ import org.junit.runner.RunWith;
 public class TestBugsSWTBot {
 
     private SWTGefBot bot = new SWTGefBot();
-    
+
     @Test
     public void testOpenHtmlEditor() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);

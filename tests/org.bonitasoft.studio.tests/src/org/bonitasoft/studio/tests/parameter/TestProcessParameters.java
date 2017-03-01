@@ -154,7 +154,8 @@ public class TestProcessParameters {
     public void testDeployProcessWithParameters() throws Exception {
         Assert.assertNotNull(pool);
         importParamters();
-        final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(pool, pool.getConfigurations().get(0).getName(), Collections.EMPTY_SET);
+        final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(pool,
+                pool.getConfigurations().get(0).getName(), Collections.EMPTY_SET);
         Assert.assertEquals("Missing parameter in bar", 3, bar.getParameters().size());
     }
 

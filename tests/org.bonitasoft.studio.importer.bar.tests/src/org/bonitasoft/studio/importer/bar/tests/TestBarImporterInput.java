@@ -67,6 +67,7 @@ public class TestBarImporterInput {
     public void testv59Bar() throws Exception {
         final URL url = TestBarImporterInput.class.getResource("v59Bar--1.0.bar");
         final File migratedProc = BarImporterTestUtil.migrateBar(url);
+        migratedProc.deleteOnExit();
         assertNotNull("Fail to migrate bar file", migratedProc);
         assertNotNull("Fail to migrate bar file", migratedProc.exists());
     }
@@ -75,6 +76,7 @@ public class TestBarImporterInput {
     public void testv59BarWithDecisionTable() throws Exception {
         final URL url = TestBarImporterInput.class.getResource("Maladie--1.5.bar");
         final File migratedProc = BarImporterTestUtil.migrateBar(url);
+        migratedProc.deleteOnExit();
         assertNotNull("Fail to migrate bar file", migratedProc);
         assertNotNull("Fail to migrate bar file", migratedProc.exists());
     }
@@ -83,6 +85,7 @@ public class TestBarImporterInput {
     public void testv59BarWithWidgetDependency() throws Exception {
         final URL url = TestBarImporterInput.class.getResource("RicezioneDocumento--1.1.bar");
         final File migratedProc = BarImporterTestUtil.migrateBar(url);
+        migratedProc.deleteOnExit();
         assertNotNull("Fail to migrate bar file", migratedProc);
         assertNotNull("Fail to migrate bar file", migratedProc.exists());
     }

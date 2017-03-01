@@ -18,7 +18,6 @@ import org.bonitasoft.studio.swtbot.framework.exception.ReadOnlyWidgetException;
 import org.bonitasoft.studio.swtbot.framework.widget.BotTableWidget;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
-
 public class BotContractInputExpressionEditor extends AbstractBotExpressionEditor {
 
     public BotContractInputExpressionEditor(final SWTGefBot bot, final BotExpressionEditorDialog botExpressionEditorDialog) {

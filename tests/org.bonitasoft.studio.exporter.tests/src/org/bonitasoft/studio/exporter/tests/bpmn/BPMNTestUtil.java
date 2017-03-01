@@ -46,6 +46,7 @@ public class BPMNTestUtil {
     protected static File importBPMNFile(final URL bpmnResource) {
         final BPMNToProc bpmnToProc = new BPMNToProc(new File(bpmnResource.getFile()).getAbsolutePath());
         final File destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
+        destFile.deleteOnExit();
         return destFile;
     }
 
@@ -58,21 +59,24 @@ public class BPMNTestUtil {
         final URI uri = EcoreUtil.getURI(diag);
 
         /* open the process editor */
-        final DiagramEditor processEditor = (DiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, diag.getName()));
+        final DiagramEditor processEditor = (DiagramEditor) EditorService.getInstance()
+                .openEditor(new URIEditorInput(uri, diag.getName()));
         return (MainProcessEditPart) processEditor.getDiagramEditPart();
     }
 
-    public static org.eclipse.emf.common.util.URI toEMFURI(final File file) throws MalformedURLException {
+    public static org.eclipse.emf.common.util.URI toEMFURI(final File file) {
         final org.eclipse.emf.common.util.URI res = URI.createURI(file.toURI().toString());
         return res;
     }
 
-    public static MainProcess importBPMNFile(final DocumentRoot model2)
-            throws MalformedURLException {
-        final File reImportedFile = BPMNTestUtil.importBPMNFile(new File(model2.eResource().getURI().toFileString()).toURI().toURL());
+    public static MainProcess importBPMNFile(final DocumentRoot model2) throws MalformedURLException {
+        final File reImportedFile = BPMNTestUtil
+                .importBPMNFile(new File(model2.eResource().getURI().toFileString()).toURI().toURL());
+        reImportedFile.deleteOnExit();
         final ResourceSet resourceSet = new ResourceSetImpl();
         CustomDiagramEditingDomainFactory.getInstance().createEditingDomain(resourceSet);
         final Resource resource = resourceSet.getResource(BPMNTestUtil.toEMFURI(reImportedFile), true);
+        new File(resource.getURI().toFileString()).deleteOnExit();
         final MainProcess mainProcess = (MainProcess) resource.getContents().get(0);
         return mainProcess;
     }
@@ -83,22 +87,27 @@ public class BPMNTestUtil {
         CustomDiagramEditingDomainFactory.getInstance().createEditingDomain(rSet);
         DiagramEditPart dep;
         try {
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, newDiagramFileStore.getOpenedEditor().getSite().getShell());
+            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,
+                    newDiagramFileStore.getOpenedEditor().getSite().getShell());
         } catch (final Exception ex) {
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, newDiagramFileStore.getOpenedEditor().getSite().getShell());
+            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,
+                    newDiagramFileStore.getOpenedEditor().getSite().getShell());
         }
         final MainProcessEditPart mped = (MainProcessEditPart) dep;
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
         final File bpmnFileExported = File.createTempFile("testBpmnExport", ".bpmn");
+        bpmnFileExported.deleteOnExit();
         final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
         Assert.assertTrue("Error during export", transformed);
 
         final ResourceSet resourceSet1 = new ResourceSetImpl();
-        final Map<String, Object> extensionToFactoryMap = resourceSet1.getResourceFactoryRegistry().getExtensionToFactoryMap();
+        final Map<String, Object> extensionToFactoryMap = resourceSet1.getResourceFactoryRegistry()
+                .getExtensionToFactoryMap();
         final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
         extensionToFactoryMap.put("bpmn", diResourceFactoryImpl);
         final Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
         resource2.load(Collections.emptyMap());
+        new File(resource2.getURI().toString()).deleteOnExit();
 
         final DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
         return model2;

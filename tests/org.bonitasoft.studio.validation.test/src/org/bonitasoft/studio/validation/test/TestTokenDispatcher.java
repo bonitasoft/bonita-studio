@@ -55,7 +55,8 @@ public class TestTokenDispatcher {
         final MainProcess mainProcess = (MainProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
 
         final Pool parentProcess = (Pool) mainProcess.getElements().get(0);
-        TransactionalEditingDomain domain = GMFEditingDomainFactory.getInstance().getEditingDomain(parentProcess.eResource().getResourceSet());
+        TransactionalEditingDomain domain = GMFEditingDomainFactory.getInstance()
+                .getEditingDomain(parentProcess.eResource().getResourceSet());
         if (domain == null) {
             domain = TransactionUtil.getEditingDomain(parentProcess);
         }

@@ -36,9 +36,9 @@ import org.junit.runner.RunWith;
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestDatabaseConnectorOutputMode implements SWTBotConstants {
-    
+
     private SWTGefBot bot = new SWTGefBot();
-    
+
     private static final String DATA_NAME_1 = "myData1";
     private static final String QUERY1 = "SELECT col1 from MyTable WHERE id='${" + DATA_NAME_1 + "}'";
     private static final String QUERY2 = "SELECT col1,col2,col3 from MyTable";
@@ -65,7 +65,6 @@ public class TestDatabaseConnectorOutputMode implements SWTBotConstants {
 
     private void addDBConnectorWithPatternExpression(final String connectorLabel,
             final String connectorVersion, final String[] dbCategoryLabel, final String connectorName) {
-        //SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorLabel,connectorVersion,dbCategoryLabel, connectorName);
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION).show();
         SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_IN);
         bot.button("Add...").click();
@@ -146,7 +145,8 @@ public class TestDatabaseConnectorOutputMode implements SWTBotConstants {
         final String[] res = new String[categoryIds.length];
         for (int i = 0; i < categoryIds.length; i++) {
             final String categoryIdToSearch = categoryIds[i];
-            final ConnectorDefRepositoryStore defSore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+            final ConnectorDefRepositoryStore defSore = RepositoryManager.getInstance()
+                    .getRepositoryStore(ConnectorDefRepositoryStore.class);
             for (final Category c : defSore.getResourceProvider().getAllCategories()) {
                 if (c.getId().equals(categoryIdToSearch)) {
                     res[i] = defSore.getResourceProvider().getCategoryLabel(c);
@@ -158,7 +158,8 @@ public class TestDatabaseConnectorOutputMode implements SWTBotConstants {
     }
 
     private String getConnectorVersion(final String connectorId) {
-        final ConnectorDefRepositoryStore defSore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorDefRepositoryStore defSore = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
         for (final ConnectorDefinition def : defSore.getDefinitions()) {
             if (def.getId().equals(connectorId)) {
                 return def.getVersion();
@@ -168,7 +169,8 @@ public class TestDatabaseConnectorOutputMode implements SWTBotConstants {
     }
 
     private String getConnectorLabel(final String connectorId) {
-        final ConnectorDefRepositoryStore defSore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorDefRepositoryStore defSore = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
         for (final ConnectorDefinition def : defSore.getDefinitions()) {
             if (def.getId().equals(connectorId)) {
                 return defSore.getResourceProvider().getConnectorDefinitionLabel(def);

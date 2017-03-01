@@ -68,7 +68,6 @@ public class TestAutoLogin {
                 t.getFormMapping().setType(FormMappingType.LEGACY);
             }
         }
-
     }
 
     @After
@@ -91,7 +90,8 @@ public class TestAutoLogin {
         assertNotNull("Configuration should not be null", conf);
 
         if (conf != null) {
-            final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(pool, conf.getName(), Collections.<EObject> emptySet());
+            final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(pool, conf.getName(),
+                    Collections.<EObject> emptySet());
             final Map<String, byte[]> map = bar.getResources();
             boolean hasSecurityFile = false;
             for (final String s : map.keySet()) {
@@ -101,7 +101,8 @@ public class TestAutoLogin {
                 }
             }
 
-            assertTrue("The " + securityFileName + " file was not generated in the path " + securityFilePath, hasSecurityFile);
+            assertTrue("The " + securityFileName + " file was not generated in the path " + securityFilePath,
+                    hasSecurityFile);
         }
 
     }

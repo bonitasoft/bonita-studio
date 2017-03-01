@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2011 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.xml.tests;
 
@@ -32,7 +29,6 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
 /**
  * @author Baptiste Mesta
- *
  */
 public class XMLUITests extends SWTBotGefTestCase implements SWTBotConstants {
 
@@ -46,9 +42,9 @@ public class XMLUITests extends SWTBotGefTestCase implements SWTBotConstants {
         menu.menu("New").click();
         SWTBotEditor botEditor = bot.activeEditor();
         gmfEditor = bot.gefEditor(botEditor.getTitle());
-        IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-        MainProcess model = (MainProcess)part.resolveSemanticElement();
-        pool = (Pool)model.getElements().get(0);
+        IGraphicalEditPart part = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
+        MainProcess model = (MainProcess) part.resolveSemanticElement();
+        pool = (Pool) model.getElements().get(0);
 
         gmfEditor.getEditPart(pool.getName()).parent().select();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
@@ -62,14 +58,12 @@ public class XMLUITests extends SWTBotGefTestCase implements SWTBotConstants {
         bot.button("Finish").click();
     };
 
-
     /**
      * test that the set variable connector have the right expression when using xml data
      */
     public void testUseSetVariableConnectorWithXmlData() {
         executeTestOnConnector("Set Variable -- Set a process or step variable");
     }
-
 
     /**
      * @param nodeText
@@ -95,10 +89,11 @@ public class XMLUITests extends SWTBotGefTestCase implements SWTBotConstants {
         bot.button("OK").click();
         final String result = comboBox.getText();
         bot.button("Cancel").click();
-        assertEquals("xmlData$/Body",result);
+        assertEquals("xmlData$/Body", result);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
     @Override

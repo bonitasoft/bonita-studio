@@ -59,17 +59,20 @@ public class UIDesignerWorkspaceIntegrationIT {
     @After
     public void clean_all_web_stores() throws Exception {
         final Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-        final WebPageRepositoryStore webPageRepositoryStore = currentRepository.getRepositoryStore(WebPageRepositoryStore.class);
+        final WebPageRepositoryStore webPageRepositoryStore = currentRepository
+                .getRepositoryStore(WebPageRepositoryStore.class);
         for (final WebPageFileStore fStore : webPageRepositoryStore.getChildren()) {
             fStore.delete();
         }
 
-        final WebFragmentRepositoryStore webFragRepositoryStore = currentRepository.getRepositoryStore(WebFragmentRepositoryStore.class);
+        final WebFragmentRepositoryStore webFragRepositoryStore = currentRepository
+                .getRepositoryStore(WebFragmentRepositoryStore.class);
         for (final WebFragmentFileStore fStore : webFragRepositoryStore.getChildren()) {
             fStore.delete();
         }
 
-        final WebWidgetRepositoryStore webWidgetRepositoryStore = currentRepository.getRepositoryStore(WebWidgetRepositoryStore.class);
+        final WebWidgetRepositoryStore webWidgetRepositoryStore = currentRepository
+                .getRepositoryStore(WebWidgetRepositoryStore.class);
         for (final WebWidgetFileStore fStore : webWidgetRepositoryStore.getChildren()) {
             fStore.delete();
         }
@@ -85,8 +88,10 @@ public class UIDesignerWorkspaceIntegrationIT {
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         service.run(true, false, createFormOperation);
 
-        final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(WebPageRepositoryStore.class);
-        newPageResource = repositoryStore.getChild(createFormOperation.getNewPageId()).getResource().getFile(createFormOperation.getNewPageId() + ".json");
+        final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance()
+                .getRepositoryStore(WebPageRepositoryStore.class);
+        newPageResource = repositoryStore.getChild(createFormOperation.getNewPageId()).getResource()
+                .getFile(createFormOperation.getNewPageId() + ".json");
         assertThat(newPageResource.exists()).overridingErrorMessage(
                 "Workspace should be in sync with new page file").isTrue();
     }
@@ -95,12 +100,16 @@ public class UIDesignerWorkspaceIntegrationIT {
     public void import_a_custom_page_trigger_a_refresh_on_the_workspace() throws Exception {
         waitForServer();
 
-        new ClientResource(String.format("http://localhost:%s/designer/import/page", tomcatPort())).post(formDataSetWithCustomPageZipFile());
+        new ClientResource(String.format("http://localhost:%s/designer/import/page", tomcatPort()))
+                .post(formDataSetWithCustomPageZipFile());
 
-        final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(WebPageRepositoryStore.class);
-        assertThat(repositoryStore.getChild("f3ae2099-6298-4b91-add3-bddb3af60b45").getResource().getFile("f3ae2099-6298-4b91-add3-bddb3af60b45.json").exists())
-                .overridingErrorMessage(
-                        "Workspace should be in sync with imported page file").isTrue();
+        final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance()
+                .getRepositoryStore(WebPageRepositoryStore.class);
+        assertThat(repositoryStore.getChild("f3ae2099-6298-4b91-add3-bddb3af60b45").getResource()
+                .getFile("f3ae2099-6298-4b91-add3-bddb3af60b45.json").exists())
+                        .overridingErrorMessage(
+                                "Workspace should be in sync with imported page file")
+                        .isTrue();
     }
 
     private FormDataSet formDataSetWithCustomPageZipFile() throws URISyntaxException, IOException {
@@ -111,11 +120,14 @@ public class UIDesignerWorkspaceIntegrationIT {
     }
 
     private int tomcatPort() {
-        return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getInt(BonitaPreferenceConstants.CONSOLE_PORT);
+        return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getInt(BonitaPreferenceConstants.CONSOLE_PORT);
     }
 
     private File customPageToImport() throws URISyntaxException, IOException {
-        return Paths.get(FileLocator.toFileURL(UIDesignerWorkspaceIntegrationIT.class.getResource("/page-APageToImport.zip")).toURI()).toFile();
+        return Paths.get(
+                FileLocator.toFileURL(UIDesignerWorkspaceIntegrationIT.class.getResource("/page-APageToImport.zip")).toURI())
+                .toFile();
     }
 
     private void waitForServer() {

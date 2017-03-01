@@ -39,12 +39,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestBonitaGroovyEditorDialog {
 
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
@@ -53,6 +52,7 @@ public class TestBonitaGroovyEditorDialog {
         final APISession apiSession = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
         BOSEngineManager.getInstance().logoutDefaultTenant(apiSession);
     }
+
     @Ignore("fails on master ci...")
     @Test
     public void testOpenBonitaGroovyEditorDialog() throws ExecutionException, CoreException, IOException {

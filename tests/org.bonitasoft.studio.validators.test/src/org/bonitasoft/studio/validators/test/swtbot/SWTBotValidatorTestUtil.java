@@ -49,15 +49,18 @@ public class SWTBotValidatorTestUtil {
      * @throws OperationCanceledException
      * @throws InterruptedException
      */
-    public static void createValidatorOnField(final SWTBot bot, final String displayName, final String className, final String packageName)
+    public static void createValidatorOnField(final SWTBot bot, final String displayName, final String className,
+            final String packageName)
             throws JavaModelException, OperationCanceledException, InterruptedException {
         openNewValidatorWizardDialog(bot);
         final SWTBotShell newShell = bot.activeShell();
         final SWTBot dialogBot = newShell.bot();
         dialogBot.textWithLabel("Display name *").setText(displayName);
-        org.junit.Assert.assertFalse("button Finish should be disabled", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+        org.junit.Assert.assertFalse("button Finish should be disabled",
+                bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         dialogBot.textWithLabel("Class *").setText(className);
-        org.junit.Assert.assertFalse("button Finish should be disabled", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+        org.junit.Assert.assertFalse("button Finish should be disabled",
+                bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         dialogBot.textWithLabel(Messages.createValidatorWizardPage_packageLabel + " *").setText(packageName);
         dialogBot.comboBox().setSelection("Field");
         dialogBot.button(IDialogConstants.FINISH_LABEL).click();
@@ -79,7 +82,8 @@ public class SWTBotValidatorTestUtil {
      * @throws OperationCanceledException
      * @throws InterruptedException
      */
-    public static void createValidatorOnPage(final SWTBot bot, final String className, final String packageName, final String displayName)
+    public static void createValidatorOnPage(final SWTBot bot, final String className, final String packageName,
+            final String displayName)
             throws JavaModelException, OperationCanceledException, InterruptedException {
         openNewValidatorWizardDialog(bot);
         final SWTBotShell newShell = bot.activeShell();
@@ -135,12 +139,16 @@ public class SWTBotValidatorTestUtil {
         bot.sleep(1000);
     }
 
-    private static void check(final String packageName, final String className, final String displayName, final String interfaceName)
-            throws JavaModelException, OperationCanceledException, InterruptedException {
-        final ValidatorDescriptorRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
-        assertNotNull("The validator descriptor is not created", store.getValidatorDescriptor(packageName + "." + className));
-        assertEquals("The displayName is not the good one", displayName, store.getValidatorDescriptor(packageName + "." + className).getName());
-        final ValidatorSourceRepositorySotre sourceStore = RepositoryManager.getInstance().getRepositoryStore(ValidatorSourceRepositorySotre.class);
+    private static void check(final String packageName, final String className, final String displayName,
+            final String interfaceName) throws OperationCanceledException {
+        final ValidatorDescriptorRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
+        assertNotNull("The validator descriptor is not created",
+                store.getValidatorDescriptor(packageName + "." + className));
+        assertEquals("The displayName is not the good one", displayName,
+                store.getValidatorDescriptor(packageName + "." + className).getName());
+        final ValidatorSourceRepositorySotre sourceStore = RepositoryManager.getInstance()
+                .getRepositoryStore(ValidatorSourceRepositorySotre.class);
         assertNotNull("The validator class is not created", sourceStore.getChild(packageName + "." + className));
     }
 }
