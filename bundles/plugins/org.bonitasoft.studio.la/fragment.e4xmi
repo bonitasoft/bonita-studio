@@ -2,6 +2,7 @@
 <fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_jKdtYNKdEeaEE_Umqe0dXA">
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_tWbyINKdEeaEE_Umqe0dXA" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Command" xmi:id="_0n838NKdEeaEE_Umqe0dXA" elementId="org.bonitasoft.studio.la.new.command" commandName="%newApplication"/>
+    <elements xsi:type="commands:Command" xmi:id="_pL3WsPnPEea-3Os5NcIV0g" elementId="org.bonitasoft.studio.la.deploy.command" commandName="%deployApplication"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_--2aUNKdEeaEE_Umqe0dXA" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_BKi10NKeEeaEE_Umqe0dXA" elementId="org.bonitasoft.studio.la.newHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.handler.NewApplicationHandler" command="_0n838NKdEeaEE_Umqe0dXA"/>

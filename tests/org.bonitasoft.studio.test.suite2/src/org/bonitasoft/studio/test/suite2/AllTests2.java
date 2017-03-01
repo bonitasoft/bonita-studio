@@ -39,6 +39,7 @@ import org.bonitasoft.studio.properties.test.TestLookAndFeel;
 import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.api.TestBonitaAPI;
+import org.bonitasoft.studio.tests.applicationDescriptor.ApplicationDescriptorDeploymentIT;
 import org.bonitasoft.studio.tests.bar.ExportBarIT;
 import org.bonitasoft.studio.tests.bug.TestBugs;
 import org.bonitasoft.studio.tests.businessobject.DeployBDROperationIT;
@@ -112,8 +113,10 @@ import junit.framework.TestSuite;
         TestParametersRefactoring.class,
         ExportBarIT.class,
         UIDesignerWorkspaceIntegrationIT.class,
+        ApplicationDescriptorDeploymentIT.class,
         CloseAllEditors.class
 })
+
 public class AllTests2 extends TestSuite {
 
     @BeforeClass

@@ -6,11 +6,7 @@ Bundle-Version: 7.5.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.la.LivingApplicationPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
-Require-Bundle: org.mockito;bundle-version="1.9.5";resolution:=optional,
- org.junit;bundle-version="4.11.0";resolution:=optional,
- assertj-core;bundle-version="3.6.1";resolution:=optional,
- org.bonitasoft.studio.tests-utils;bundle-version="6.4.1";resolution:=optional,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.common.repository;bundle-version="7.5.0",
  org.eclipse.ui.workbench,
  org.eclipse.ui;bundle-version="3.106.0",
@@ -28,9 +24,20 @@ Require-Bundle: org.mockito;bundle-version="1.9.5";resolution:=optional,
  org.eclipse.wst.common.ui;bundle-version="1.1.500",
  org.eclipse.ui.ide,
  org.eclipse.e4.core.commands,
- org.eclipse.e4.core.contexts;bundle-version="1.3.100"
+ org.eclipse.e4.core.contexts;bundle-version="1.3.100",
+ org.bonitasoft.studio.tests-utils;bundle-version="6.4.1";resolution:=optional,
+ org.junit;bundle-version="4.11.0";resolution:=optional,
+ assertj-core;bundle-version="3.6.1";resolution:=optional,
+ org.mockito;bundle-version="1.10.19";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: org.bonitasoft.engine.business.application,
+Import-Package: org.bonitasoft.engine.api,
+ org.bonitasoft.engine.bpm,
+ org.bonitasoft.engine.business.application,
  org.bonitasoft.engine.business.application.exporter,
- org.bonitasoft.engine.business.application.xml
+ org.bonitasoft.engine.business.application.xml,
+ org.bonitasoft.engine.exception,
+ org.bonitasoft.engine.search,
+ org.bonitasoft.engine.search.impl
 Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.la.core,
+ org.bonitasoft.studio.la.repository

@@ -31,6 +31,8 @@ public class Messages extends NLS {
     public static String required;
     public static String tokenValidatorMessage;
     public static String source;
+    public static String deployingLivingApplication;
+    public static String deletingApplication;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
