@@ -1,8 +1,5 @@
 Manifest-Version: 1.0
 Archiver-Version: Plexus Archiver
-Bnd-LastModified: 1483604120774
-Build-Jdk: 1.8.0_74
-Built-By: Romain
 Bundle-ClassPath: .,lib/bonita-client.jar,lib/httpclient.jar,lib/httpcor
  e.jar,lib/commons-logging.jar,lib/xstream.jar,lib/xmlpull.jar,lib/xpp3_
  min.jar,lib/httpmime.jar,lib/commons-codec.jar,lib/commons-lang3.jar,li
@@ -181,5 +178,3 @@ Ignore-Package: org.codehaus.jettison.json,org.apache.commons.beanutils,
  ,org.joda.time.format,java.io,org.scribe.builder.api,java.util.jar,org.
  bonitasoft.web.extension,org.restlet,javax.net.ssl,javax.swing,java.nio
  .file.attribute
-Originally-Created-By: Apache Maven Bundle Plugin
-Tool: Bnd-1.50.0

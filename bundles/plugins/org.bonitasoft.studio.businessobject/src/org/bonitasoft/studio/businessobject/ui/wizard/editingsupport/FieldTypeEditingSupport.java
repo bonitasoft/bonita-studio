@@ -84,7 +84,7 @@ public class FieldTypeEditingSupport extends EditingSupport {
 
         }).immutableSortedCopy(
                 newArrayList(FieldType.STRING, FieldType.TEXT, FieldType.BOOLEAN, FieldType.INTEGER, FieldType.LONG,
-                        FieldType.FLOAT, FieldType.DOUBLE, FieldType.DATE));
+                        FieldType.FLOAT, FieldType.DOUBLE, FieldType.LOCALDATE, FieldType.LOCALDATETIME, FieldType.DATE));
 
         result.addAll(sortedFieldTypes);
         result.addAll(bom.getBusinessObjects());
