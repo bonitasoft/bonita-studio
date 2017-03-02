@@ -3,8 +3,10 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_tWbyINKdEeaEE_Umqe0dXA" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Command" xmi:id="_0n838NKdEeaEE_Umqe0dXA" elementId="org.bonitasoft.studio.la.new.command" commandName="%newApplication"/>
     <elements xsi:type="commands:Command" xmi:id="_pL3WsPnPEea-3Os5NcIV0g" elementId="org.bonitasoft.studio.la.deploy.command" commandName="%deployApplication"/>
+    <elements xsi:type="commands:Command" xmi:id="_dHtcoP3SEeanhv23kWy-6w" elementId="org.bonitasoft.studio.la.open.command" commandName="%openApplication"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_--2aUNKdEeaEE_Umqe0dXA" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_BKi10NKeEeaEE_Umqe0dXA" elementId="org.bonitasoft.studio.la.newHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.handler.NewApplicationHandler" command="_0n838NKdEeaEE_Umqe0dXA"/>
+    <elements xsi:type="commands:Handler" xmi:id="_jUDDEP3SEeanhv23kWy-6w" elementId="org.bonitasoft.studio.la.openHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.handler.OpenApplicationHandler" command="_dHtcoP3SEeanhv23kWy-6w"/>
   </fragments>
 </fragment:ModelFragments>

@@ -36,9 +36,18 @@ public class ApplicationEditor extends FormEditor {
     protected void addPages() {
         try {
             setPageText(addPage(createSourceEditor(), getEditorInput()), Messages.source);
+
         } catch (final PartInitException e) {
             BonitaStudioLog.error(e);
         }
+    }
+
+    /**
+     * @see org.eclipse.ui.part.WorkbenchPart#getPartName()
+     */
+    @Override
+    public String getPartName() {
+        return getEditorInput().getName();
     }
 
     private IEditorPart createSourceEditor() {

@@ -119,4 +119,5 @@ Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.repository,
  org.bonitasoft.studio.tests.stress,
  org.bonitasoft.studio.tests.subprocess,
- org.bonitasoft.studio.tests.timer
+ org.bonitasoft.studio.tests.timer,
+ org.bonitasoft.studio.tests.applicationDescriptor

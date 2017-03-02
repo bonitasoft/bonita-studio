@@ -54,6 +54,7 @@ import org.bonitasoft.studio.properties.test.TestConditionExpression;
 import org.bonitasoft.studio.properties.test.TestDecisionTable;
 import org.bonitasoft.studio.properties.test.TestThrowCatchMessage;
 import org.bonitasoft.studio.tests.IHeapDumper;
+import org.bonitasoft.studio.tests.applicationDescriptor.OpenExistingApplicationIT;
 import org.bonitasoft.studio.tests.bug.TestBugsSWTBot;
 import org.bonitasoft.studio.tests.debug.TestDebugFeature;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
@@ -74,6 +75,7 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
+        OpenExistingApplicationIT.class,
         TestMenus.class,
         OpenNameAndVersionForDiagramDialogTest.class,
         TestBugsSWTBot.class,
@@ -113,6 +115,7 @@ import org.junit.runners.Suite;
         //WORKAROUND: put at the end otherwise when doing a new run after, it fails
         ConnectorDefinitionTranslationsTest.class
 })
+
 public class AllSWTBotTests {
 
     @BeforeClass

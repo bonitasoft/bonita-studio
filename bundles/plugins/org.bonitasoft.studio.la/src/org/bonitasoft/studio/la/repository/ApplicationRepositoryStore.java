@@ -72,5 +72,4 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
     public Set<String> getCompatibleExtensions() {
         return Collections.unmodifiableSet(newHashSet(XML_EXTENSION));
     }
-
 }
