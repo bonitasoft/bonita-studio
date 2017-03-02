@@ -333,6 +333,10 @@ public class Messages extends NLS {
     public static String lengthIsNotAPositiveNumber;
     public static String lengthIsNotANumber;
 
+    public static String dateDetails;
+    public static String dateOnlyDetails;
+    public static String dateTimeDetails;
+
     private Messages() {
     }
 

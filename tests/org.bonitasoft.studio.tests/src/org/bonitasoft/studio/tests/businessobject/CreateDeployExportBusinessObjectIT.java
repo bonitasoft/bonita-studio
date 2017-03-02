@@ -109,7 +109,7 @@ public class CreateDeployExportBusinessObjectIT {
         setMandatory("Employee", "firstName");
 
         addAttribute("Employee", "lastaNme", FieldType.STRING.name(), 1);
-        addAttribute("Employee", "birthDate", FieldType.DATE.name(), 2);
+        addAttribute("Employee", "birthDate", "DATE ONLY", 2);
         addAttribute("Employee", "age", FieldType.INTEGER.name(), 3);
         addAttribute("Employee", "married", FieldType.BOOLEAN.name(), 4);
         addAttribute("Employee", "resume", FieldType.TEXT.name(), 5);
@@ -179,7 +179,7 @@ public class CreateDeployExportBusinessObjectIT {
                 .extracting("name", "type")
                 .contains(tuple("firstName", FieldType.STRING),
                         tuple("lastName", FieldType.STRING),
-                        tuple("birthDate", FieldType.DATE),
+                        tuple("birthDate", FieldType.LOCALDATE),
                         tuple("age", FieldType.INTEGER),
                         tuple("married", FieldType.BOOLEAN),
                         tuple("resume", FieldType.TEXT),

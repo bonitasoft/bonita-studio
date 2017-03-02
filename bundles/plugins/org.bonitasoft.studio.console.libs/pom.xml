@@ -284,6 +284,12 @@
 						<supportedProjectType>eclipse-plugin</supportedProjectType>
 					</supportedProjectTypes>
 					<instructions>
+                        <_removeheaders>
+                            Bnd-LastModified,
+                            Build-Jdk,
+                            Built-By,
+                            Tool
+                        </_removeheaders>
 						<_exportcontents>
 							org.bonitasoft.console.common.server.preferences.constants;version="0.0.0",
 							org.bonitasoft.console.common.server.preferences.properties;version="0.0.0",
