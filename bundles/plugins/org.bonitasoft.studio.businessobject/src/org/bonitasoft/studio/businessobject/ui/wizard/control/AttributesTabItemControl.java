@@ -98,6 +98,9 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     private Composite stringFieldContent;
     private Composite emptyContent;
     private Composite textFieldContent;
+    private Composite dateFieldContent;
+    private Composite dateOnlyFieldContent;
+    private Composite datTimeFieldContent;
 
     public AttributesTabItemControl(final TabFolder parent, final DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue,
@@ -129,19 +132,21 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
 
         relationFieldContent = createRelationFieldDetailContent(detailGroup, ctx, viewerObservableValue);
         stringFieldContent = createStringFieldDetailContent(detailGroup, ctx);
+        dateFieldContent = createFieldDescriptionContent(detailGroup, Messages.dateDetails);
+        dateOnlyFieldContent = createFieldDescriptionContent(detailGroup, Messages.dateOnlyDetails);
+        datTimeFieldContent = createFieldDescriptionContent(detailGroup, Messages.dateTimeDetails);
         emptyContent = createNoDetailsContent(detailGroup);
-        textFieldContent = createTextFieldContent(detailGroup);
+        textFieldContent = createFieldDescriptionContent(detailGroup, Messages.textDetails);
         stackLayout.topControl = emptyContent;
         attributeSelectionObservable.addValueChangeListener(this::changeType);
     }
 
-    private Composite createTextFieldContent(Group detailGroup) {
+    private Composite createFieldDescriptionContent(Group detailGroup, String description) {
         final Composite composite = new Composite(detailGroup, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         final Label textLabel = new Label(composite, SWT.NONE);
-        textLabel.setText(Messages.textDetails);
-
+        textLabel.setText(description);
         return composite;
     }
 
@@ -156,15 +161,26 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         if (selectedField instanceof RelationField) {
             stackLayout.topControl = relationFieldContent;
         } else if (selectedField instanceof SimpleField) {
-            if (((SimpleField) selectedField).getType() == FieldType.STRING) {
-                stackLayout.topControl = stringFieldContent;
-            } else if (((SimpleField) selectedField).getType() == FieldType.TEXT) {
-                stackLayout.topControl = textFieldContent;
-            } else {
-                stackLayout.topControl = emptyContent;
-            }
+            stackLayout.topControl = getFieldContent((SimpleField) selectedField);
         }
         detailGroup.layout();
+    }
+
+    protected Composite getFieldContent(final SimpleField selectedField) {
+        switch (selectedField.getType()) {
+            case STRING:
+                return stringFieldContent;
+            case TEXT:
+                return textFieldContent;
+            case DATE:
+                return dateFieldContent;
+            case LOCALDATE:
+                return dateOnlyFieldContent;
+            case LOCALDATETIME:
+                return datTimeFieldContent;
+            default:
+                return emptyContent;
+        }
     }
 
     private Composite createNoDetailsContent(final Group detailGroup) {
@@ -202,6 +218,10 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     }
 
     private IStatus stringLengthValidator(final Object value) {
+        final Object selectedAttribute = attributeSelectionObservable.getValue();
+        if (selectedAttribute == null) {
+            return ValidationStatus.ok();
+        }
         if (value == null || value.toString().isEmpty()) {
             return ValidationStatus.error(Messages.lengthCannotBeEmpty);
         }
