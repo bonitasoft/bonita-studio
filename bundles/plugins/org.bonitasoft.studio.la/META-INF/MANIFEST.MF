@@ -37,7 +37,11 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.business.application.xml,
  org.bonitasoft.engine.exception,
  org.bonitasoft.engine.search,
- org.bonitasoft.engine.search.impl
+ org.bonitasoft.engine.search.impl,
+ org.eclipse.jface.databinding.viewers
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.la.core,
+ org.bonitasoft.studio.la.repository,
+Export-Package: org.bonitasoft.studio.la.core,
+ org.bonitasoft.studio.la.i18n,
  org.bonitasoft.studio.la.repository
