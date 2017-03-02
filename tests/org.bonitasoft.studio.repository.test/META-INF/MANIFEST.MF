@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tests for repository plugin
 Bundle-SymbolicName: org.bonitasoft.studio.repository.test
-Bundle-Version: 7.4.3.qualifier
+Bundle-Version: 7.4.4.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.bonitasoft.studio.engine,
