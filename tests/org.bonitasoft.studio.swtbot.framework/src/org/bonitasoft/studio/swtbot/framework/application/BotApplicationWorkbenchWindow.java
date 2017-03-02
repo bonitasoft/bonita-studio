@@ -11,6 +11,7 @@ package org.bonitasoft.studio.swtbot.framework.application;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.swtbot.framework.application.menu.AbstractBotMenu;
 import org.bonitasoft.studio.swtbot.framework.application.menu.BotEditMenu;
@@ -20,6 +21,8 @@ import org.bonitasoft.studio.swtbot.framework.diagram.configuration.BotConfigure
 import org.bonitasoft.studio.swtbot.framework.diagram.export.BotExportBOSDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportBOSDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportOtherDialog;
+import org.bonitasoft.studio.swtbot.framework.la.NewApplicationWizardBot;
+import org.bonitasoft.studio.swtbot.framework.la.OpenApplicationWizardBot;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -154,5 +157,16 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
                 RepositoryManager.getInstance().getCurrentRepository().getName());
         bot.menu("Diagram").menu("Import").menu("Other...").click();
         return new BotImportOtherDialog(bot);
+    }
+
+    public OpenApplicationWizardBot openApplication() {
+        bot.menu("Development").menu("Application").menu("Open...").click();
+
+        return new OpenApplicationWizardBot(bot, Messages.openExistingApplication);
+    }
+
+    public NewApplicationWizardBot newApplication() {
+        bot.menu("Development").menu("Application").menu("New...").click();
+        return new NewApplicationWizardBot(bot, Messages.createNewApplication);
     }
 }
