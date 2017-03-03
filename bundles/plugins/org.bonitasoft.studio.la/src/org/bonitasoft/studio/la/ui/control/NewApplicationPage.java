@@ -17,7 +17,10 @@ package org.bonitasoft.studio.la.ui.control;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
+import org.bonitasoft.studio.la.ui.validator.ApplicationNameUnicityValidator;
 import org.bonitasoft.studio.ui.validator.EmptyInputValidator;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.validator.RegExpValidator;
@@ -34,9 +37,11 @@ import org.eclipse.swt.widgets.Control;
 public class NewApplicationPage implements ControlSupplier {
 
     private final ApplicationNode applicationNode;
+    private final RepositoryAccessor repositoryAccessor;
 
-    public NewApplicationPage(ApplicationNode applicationNode) {
+    public NewApplicationPage(ApplicationNode applicationNode, RepositoryAccessor repositoryAccessor) {
         this.applicationNode = applicationNode;
+        this.repositoryAccessor = repositoryAccessor;
     }
 
     @Override
@@ -56,7 +61,9 @@ public class NewApplicationPage implements ControlSupplier {
                         .withValidator(new MultiValidator.Builder().havingValidators(
                                 new EmptyInputValidator.Builder().withMessage(Messages.required),
                                 new RegExpValidator.Builder().matches("^[a-zA-Z0-9]+$")
-                                        .withMessage(Messages.tokenValidatorMessage))))
+                                        .withMessage(Messages.tokenValidatorMessage),
+                                new ApplicationNameUnicityValidator().withApplicationDescriptors(repositoryAccessor
+                                        .getRepositoryStore(ApplicationRepositoryStore.class).getChildren()))))
                 .createIn(composite);
 
         new TextWidget.Builder()
