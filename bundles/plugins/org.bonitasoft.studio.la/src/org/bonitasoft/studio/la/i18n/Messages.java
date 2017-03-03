@@ -36,6 +36,7 @@ public class Messages extends NLS {
     public static String open;
     public static String openExistingApplication;
     public static String openExistingApplicationDescription;
+    public static String appNameUniqueness;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

@@ -50,7 +50,7 @@ public class NewApplicationHandler {
                 .havingPage(newPage()
                         .withTitle(Messages.newApplicationTitle)
                         .withDescription(Messages.newApplicationDescription)
-                        .withControl(new NewApplicationPage(applicationNode)))
+                        .withControl(new NewApplicationPage(applicationNode, repositoryAccessor)))
                 .onFinish(container -> createApplicationFileStore(applicationNode, repositoryAccessor));
     }
 
