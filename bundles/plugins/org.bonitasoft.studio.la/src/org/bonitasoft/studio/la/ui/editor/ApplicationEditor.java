@@ -28,10 +28,8 @@ public class ApplicationEditor extends FormEditor {
 
     public static final String EDITOR_ID = "org.bonitasoft.studio.la.editor";
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.forms.editor.FormEditor#addPages()
-     */
+    private StructuredTextEditor fSourceEditor;
+
     @Override
     protected void addPages() {
         try {
@@ -51,51 +49,34 @@ public class ApplicationEditor extends FormEditor {
     }
 
     private IEditorPart createSourceEditor() {
-        final StructuredTextEditor fSourceEditor = new StructuredTextEditor();
+        fSourceEditor = new StructuredTextEditor();
         fSourceEditor.setEditorPart(this);
         return fSourceEditor;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     public void doSave(IProgressMonitor monitor) {
-
+        fSourceEditor.doSave(monitor);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.part.EditorPart#doSaveAs()
-     */
     @Override
     public void doSaveAs() {
-        // TODO Auto-generated method stub
-
+        fSourceEditor.doSaveAs();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
-     */
+    @Override
+    public boolean isDirty() {
+        return fSourceEditor.isDirty();
+    }
+
     @Override
     public boolean isSaveAsAllowed() {
-        return true;
+        return fSourceEditor.isSaveAsAllowed();
     }
 
     @Override
     protected FormToolkit createToolkit(Display display) {
         return new FormToolkit(display);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.part.MultiPageEditorPart#setFocus()
-     */
-    @Override
-    public void setFocus() {
-        super.setFocus();
     }
 
 }
