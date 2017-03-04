@@ -29,19 +29,36 @@ public class FieldTypeColumnLabelProviderTest {
 
     @Test
     public void should_return_simple_field_type_name() {
-        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(SimpleFieldBuilder.aTextField("employee")
-                .withName("employee").build());
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.aTextField("employee").build());
         final FieldTypeColumnLabelProvider provider = new FieldTypeColumnLabelProvider();
         assertThat(provider.getText(mapping)).isEqualTo("TEXT");
     }
 
     @Test
     public void should_return_complex_field_type_name() {
-        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(RelationFieldBuilder.aCompositionField(
-                "employee",
-                BusinessObjectBuilder.aBO("com.company.Manager").build()));
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(
+                RelationFieldBuilder.aCompositionField(
+                        "employee",
+                        BusinessObjectBuilder.aBO("com.company.Manager").build()));
         final FieldTypeColumnLabelProvider provider = new FieldTypeColumnLabelProvider();
         assertThat(provider.getText(mapping)).isEqualTo("Manager");
+    }
+
+    @Test
+    public void should_return_date_only_field_type_name() {
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.aDateOnlyField("birthDate").build());
+        final FieldTypeColumnLabelProvider provider = new FieldTypeColumnLabelProvider();
+        assertThat(provider.getText(mapping)).isEqualTo("DATE ONLY");
+    }
+
+    @Test
+    public void should_return_date_and_time_field_type_name() {
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.aDateTimeField("time").build());
+        final FieldTypeColumnLabelProvider provider = new FieldTypeColumnLabelProvider();
+        assertThat(provider.getText(mapping)).isEqualTo("DATE AND TIME");
     }
 
     @Test
@@ -57,8 +74,9 @@ public class FieldTypeColumnLabelProviderTest {
 
     @Test
     public void should_return_simple_field_type_name_prepend_with_list_for_multiple_attributes() {
-        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping((SimpleField) SimpleFieldBuilder.aTextField("employee")
-                .withName("employee").multiple().build());
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+                (SimpleField) SimpleFieldBuilder.aTextField("employee")
+                        .withName("employee").multiple().build());
         final FieldTypeColumnLabelProvider provider = new FieldTypeColumnLabelProvider();
         assertThat(provider.getText(mapping)).isEqualTo("List<TEXT>");
     }

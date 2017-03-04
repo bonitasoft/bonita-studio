@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.contract.ui.wizard.labelProvider;
 
+import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.i18n.Messages;
@@ -43,26 +44,37 @@ public class InputTypeColumnLabelProvider extends ColumnLabelProvider {
     public String getText(final Object element) {
         if (element instanceof FieldToContractInputMapping) {
             final FieldToContractInputMapping mapping = (FieldToContractInputMapping) element;
-            return mapping.getContractInputType().name();
+            return typeLabel(mapping);
         }
 
         return super.getText(element);
     }
 
+    private String typeLabel(final FieldToContractInputMapping mapping) {
+        switch (mapping.getContractInputType()) {
+            case LOCALDATE:
+                return DateTypeLabels.DATE_ONLY;
+            case LOCALDATETIME:
+                return DateTypeLabels.DATE_AND_TIME;
+            default:
+                return mapping.getContractInputType().name();
+        }
+    }
+
     @Override
     public Image getImage(Object element) {
         if (!(contract.eContainer() instanceof Task) && element instanceof SimpleFieldToContractInputMapping) {
-            if(Long.class.getName().equals(((SimpleFieldToContractInputMapping) element).getFieldType())){
+            if (Long.class.getName().equals(((SimpleFieldToContractInputMapping) element).getFieldType())) {
                 return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
             }
         }
-         return null ;
+        return null;
     }
-    
+
     @Override
     public String getToolTipText(Object element) {
         if (!(contract.eContainer() instanceof Task) && element instanceof SimpleFieldToContractInputMapping) {
-            if(Long.class.getName().equals(((SimpleFieldToContractInputMapping) element).getFieldType())){
+            if (Long.class.getName().equals(((SimpleFieldToContractInputMapping) element).getFieldType())) {
                 return Messages.longConversionWarning;
             }
         }

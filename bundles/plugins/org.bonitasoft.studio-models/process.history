@@ -14384,5 +14384,38 @@
   <releases xmi:id="_NyHXsO3kEeafiZdzQoO6tA" date="2017-02-08T10:43:27.494+0100" label="7.5.0-001">
     <changes xsi:type="history:MigrationChange" xmi:id="_NyHXse3kEeafiZdzQoO6tA" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateWebServiceConnectorVersionTo110"/>
   </releases>
+  <releases xmi:id="_ubOl0P8lEeatdrlOd6ysSQ" date="2017-03-02T10:43:27.494+0100" label="7.5.0-002">
+    <changes xsi:type="history:CompositeChange" xmi:id="_0PfDcP8lEeatdrlOd6ysSQ">
+      <changes xsi:type="history:Create" xmi:id="_kBX2EP8lEeatdrlOd6ysSQ" referenceName="eLiterals">
+        <target href="process.ecore#//ContractInputType"/>
+        <element href="process.ecore#//ContractInputType/LOCALDATE"/>
+      </changes>
+      <changes xsi:type="history:Set" xmi:id="_lLUgsP8lEeatdrlOd6ysSQ" featureName="value" dataValue="8" oldDataValue="0">
+        <element href="process.ecore#//ContractInputType/LOCALDATE"/>
+      </changes>
+      <changes xsi:type="history:Set" xmi:id="_mUfIMP8lEeatdrlOd6ysSQ" featureName="literal" dataValue="LOCALDATE">
+        <element href="process.ecore#//ContractInputType/LOCALDATE"/>
+      </changes>
+      <changes xsi:type="history:Set" xmi:id="_nhhjEP8lEeatdrlOd6ysSQ" featureName="name" dataValue="LOCALDATE">
+        <element href="process.ecore#//ContractInputType/LOCALDATE"/>
+      </changes>
+      <changes xsi:type="history:Create" xmi:id="_oe38IP8lEeatdrlOd6ysSQ" referenceName="eLiterals">
+        <target href="process.ecore#//ContractInputType"/>
+        <element href="process.ecore#//ContractInputType/LOCALDATETIME"/>
+      </changes>
+      <changes xsi:type="history:Set" xmi:id="_pQJoEP8lEeatdrlOd6ysSQ" featureName="literal" dataValue="LOCALDATETIME">
+        <element href="process.ecore#//ContractInputType/LOCALDATETIME"/>
+      </changes>
+      <changes xsi:type="history:Set" xmi:id="_pif8UP8lEeatdrlOd6ysSQ" featureName="name" dataValue="LOCALDATETIME">
+        <element href="process.ecore#//ContractInputType/LOCALDATETIME"/>
+      </changes>
+      <changes xsi:type="history:Set" xmi:id="_pxgBoP8lEeatdrlOd6ysSQ" featureName="value" dataValue="9" oldDataValue="0">
+        <element href="process.ecore#//ContractInputType/LOCALDATETIME"/>
+      </changes>
+      <changes xsi:type="history:Set" xmi:id="_MGbDYP8mEeatdrlOd6ysSQ" featureName="value" dataValue="switch(getType()){&#xD;&#xA;case BOOLEAN:return java.lang.Boolean.class.getName();&#xD;&#xA;case DATE: return java.util.Date.class.getName();&#xD;&#xA;case LOCALDATE: return java.time.LocalDate.class.getName();&#xD;&#xA;case LOCALDATETIME: return java.time.LocalDateTime.class.getName();&#xD;&#xA;case INTEGER: return java.lang.Integer.class.getName();&#xA;case LONG: return java.lang.Long.class.getName();&#xD;&#xA;case DECIMAL: return java.lang.Double.class.getName();&#xD;&#xA;case FILE:return &quot;org.bonitasoft.engine.bpm.contract.FileInputValue&quot;;&#xD;&#xA;case COMPLEX:return java.util.Map.class.getName();&#xD;&#xA;case TEXT:&#xD;&#xA;default: return java.lang.String.class.getName();&#xD;&#xA;}" oldDataValue="switch(getType()){&#xD;&#xA;case BOOLEAN:return java.lang.Boolean.class.getName();&#xD;&#xA;case DATE: return java.util.Date.class.getName();&#xD;&#xA;case INTEGER: return java.lang.Integer.class.getName();&#xA;case LONG: return java.lang.Long.class.getName();&#xD;&#xA;case DECIMAL: return java.lang.Double.class.getName();&#xD;&#xA;case FILE:return &quot;org.bonitasoft.engine.bpm.contract.FileInputValue&quot;;&#xD;&#xA;case COMPLEX:return java.util.Map.class.getName();&#xD;&#xA;case TEXT:&#xD;&#xA;default: return java.lang.String.class.getName();&#xD;&#xA;}">
+        <element href="process.ecore#//ContractInput/getJavaType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+      </changes>
+    </changes>
+  </releases>
   <releases xmi:id="_15TmyGnREeaTLbmqFFisdA"/>
 </history:History>
