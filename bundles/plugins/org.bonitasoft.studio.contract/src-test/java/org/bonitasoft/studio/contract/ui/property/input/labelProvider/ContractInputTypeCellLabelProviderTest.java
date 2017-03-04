@@ -16,45 +16,43 @@ package org.bonitasoft.studio.contract.ui.property.input.labelProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.contract.ui.property.input.labelProvider.ContractInputTypeCellLabelProvider;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.eclipse.core.databinding.observable.set.WritableSet;
-import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.junit.After;
+import org.bonitasoft.studio.model.process.builders.ContractInputBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
-/**
- * @author Romain Bioteau
- */
-@RunWith(MockitoJUnitRunner.class)
 public class ContractInputTypeCellLabelProviderTest {
 
-    @Mock
-    private IPropertySourceProvider propertySourceProvider;
     private ContractInputTypeCellLabelProvider contractInputTypeCellLabelProvider;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
     public void setUp() throws Exception {
-        contractInputTypeCellLabelProvider = new ContractInputTypeCellLabelProvider(propertySourceProvider, new WritableSet());
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-
+        contractInputTypeCellLabelProvider = new ContractInputTypeCellLabelProvider();
     }
 
     @Test
     public void should_getImage_return_null() throws Exception {
         assertThat(contractInputTypeCellLabelProvider.getImage(ProcessFactory.eINSTANCE.createContractInput())).isNull();
+    }
+
+    @Test
+    public void should_return_type_name() throws Exception {
+        assertThat(contractInputTypeCellLabelProvider
+                .getText(ContractInputBuilder.aContractInput().withType(ContractInputType.TEXT).build())).isEqualTo("TEXT");
+    }
+
+    @Test
+    public void should_return_date_only() throws Exception {
+        assertThat(contractInputTypeCellLabelProvider
+                .getText(ContractInputBuilder.aContractInput().withType(ContractInputType.LOCALDATE).build()))
+                        .isEqualTo("DATE ONLY");
+    }
+
+    @Test
+    public void should_return_dateand_time() throws Exception {
+        assertThat(contractInputTypeCellLabelProvider
+                .getText(ContractInputBuilder.aContractInput().withType(ContractInputType.LOCALDATETIME).build()))
+                        .isEqualTo("DATE AND TIME");
     }
 }

@@ -20,6 +20,8 @@ import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
 
@@ -33,10 +35,12 @@ public class CustomContractInputItemProviderTest {
 
     @Test
     public void should_display_string_type_next_to_TEXT_contract_type() throws Exception {
-        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(new ProcessItemProviderAdapterFactory());
+        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(
+                new ProcessItemProviderAdapterFactory());
 
         final ContractInput contractInput = aContractInput().build();
-        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE).getLabelProvider(contractInput)
+        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE)
+                .getLabelProvider(contractInput)
                 .getText(contractInput.getType());
 
         assertThat(label).contains(String.class.getName());
@@ -44,10 +48,12 @@ public class CustomContractInputItemProviderTest {
 
     @Test
     public void should_display_integer_type_next_to_INTEGER_contract_type() throws Exception {
-        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(new ProcessItemProviderAdapterFactory());
+        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(
+                new ProcessItemProviderAdapterFactory());
 
         final ContractInput contractInput = aContractInput().withType(ContractInputType.INTEGER).build();
-        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE).getLabelProvider(contractInput)
+        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE)
+                .getLabelProvider(contractInput)
                 .getText(contractInput.getType());
 
         assertThat(label).contains(Integer.class.getName());
@@ -55,10 +61,12 @@ public class CustomContractInputItemProviderTest {
 
     @Test
     public void should_display_boolean_type_next_to_BOOLEAN_contract_type() throws Exception {
-        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(new ProcessItemProviderAdapterFactory());
+        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(
+                new ProcessItemProviderAdapterFactory());
 
         final ContractInput contractInput = aContractInput().withType(ContractInputType.BOOLEAN).build();
-        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE).getLabelProvider(contractInput)
+        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE)
+                .getLabelProvider(contractInput)
                 .getText(contractInput.getType());
 
         assertThat(label).contains(Boolean.class.getName());
@@ -66,21 +74,51 @@ public class CustomContractInputItemProviderTest {
 
     @Test
     public void should_display_double_type_next_to_DECIMAL_contract_type() throws Exception {
-        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(new ProcessItemProviderAdapterFactory());
+        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(
+                new ProcessItemProviderAdapterFactory());
 
         final ContractInput contractInput = aContractInput().withType(ContractInputType.DECIMAL).build();
-        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE).getLabelProvider(contractInput)
+        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE)
+                .getLabelProvider(contractInput)
                 .getText(contractInput.getType());
 
         assertThat(label).contains(Double.class.getName());
     }
 
     @Test
+    public void should_display_date_only_for_LOCALDATE_contract_type() throws Exception {
+        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(
+                new ProcessItemProviderAdapterFactory());
+
+        final ContractInput contractInput = aContractInput().withType(ContractInputType.LOCALDATE).build();
+        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE)
+                .getLabelProvider(contractInput)
+                .getText(contractInput.getType());
+
+        assertThat(label).isEqualTo(String.format("DATE ONLY (%s)", LocalDate.class.getName()));
+    }
+
+    @Test
+    public void should_display_date_and_time_for_LOCALDATE_contract_type() throws Exception {
+        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(
+                new ProcessItemProviderAdapterFactory());
+
+        final ContractInput contractInput = aContractInput().withType(ContractInputType.LOCALDATETIME).build();
+        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE)
+                .getLabelProvider(contractInput)
+                .getText(contractInput.getType());
+
+        assertThat(label).isEqualTo(String.format("DATE AND TIME (%s)", LocalDateTime.class.getName()));
+    }
+
+    @Test
     public void should_display_FileInputType_type_next_to_FILE_contract_type() throws Exception {
-        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(new ProcessItemProviderAdapterFactory());
+        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(
+                new ProcessItemProviderAdapterFactory());
 
         final ContractInput contractInput = aContractInput().withType(ContractInputType.FILE).build();
-        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE).getLabelProvider(contractInput)
+        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE)
+                .getLabelProvider(contractInput)
                 .getText(contractInput.getType());
 
         assertThat(label).contains("org.bonitasoft.engine.bpm.contract.FileInputValue");
@@ -88,10 +126,12 @@ public class CustomContractInputItemProviderTest {
 
     @Test
     public void should_display_Map_type_next_to_COMPLEX_contract_type() throws Exception {
-        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(new ProcessItemProviderAdapterFactory());
+        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(
+                new ProcessItemProviderAdapterFactory());
 
         final ContractInput contractInput = aContractInput().withType(ContractInputType.COMPLEX).build();
-        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE).getLabelProvider(contractInput)
+        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE)
+                .getLabelProvider(contractInput)
                 .getText(contractInput.getType());
 
         assertThat(label).contains(Map.class.getName());
@@ -99,7 +139,8 @@ public class CustomContractInputItemProviderTest {
 
     @Test
     public void should_remove_LONG_type_if_contract_is_on_a_Task() throws Exception {
-        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(new ProcessItemProviderAdapterFactory());
+        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(
+                new ProcessItemProviderAdapterFactory());
 
         final Collection<ContractInputType> choiceOfValues = (Collection<ContractInputType>) itemProvider
                 .getPropertyDescriptor(aContractInput().build(), ProcessPackage.Literals.CONTRACT_INPUT__TYPE)
@@ -110,7 +151,8 @@ public class CustomContractInputItemProviderTest {
 
     @Test
     public void should_haveLONG_type_if_contract_is_on_a_Pool() throws Exception {
-        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(new ProcessItemProviderAdapterFactory());
+        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(
+                new ProcessItemProviderAdapterFactory());
 
         final Collection<ContractInputType> choiceOfValues = (Collection<ContractInputType>) itemProvider
                 .getPropertyDescriptor(aContractInput().build(), ProcessPackage.Literals.CONTRACT_INPUT__TYPE)

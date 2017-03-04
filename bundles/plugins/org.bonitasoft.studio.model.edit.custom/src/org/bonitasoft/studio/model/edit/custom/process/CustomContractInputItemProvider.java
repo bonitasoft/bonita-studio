@@ -42,65 +42,79 @@ public class CustomContractInputItemProvider
      */
     @Override
     protected void addTypePropertyDescriptor(final Object object) {
-        itemPropertyDescriptors.add(new ItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-                getResourceLocator(),
-                getString("_UI_ContractInput_type_feature"), //$NON-NLS-1$
-                getString("_UI_PropertyDescriptor_description", "_UI_ContractInput_type_feature", "_UI_ContractInput_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                ProcessPackage.Literals.CONTRACT_INPUT__TYPE,
-                true,
-                false,
-                true,
-                ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-                null,
-                null) {
-
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.emf.edit.provider.ItemPropertyDescriptor#getLabelProvider(java.lang.Object)
-             */
-            @Override
-            public IItemLabelProvider getLabelProvider(final Object object) {
-                return new ItemDelegator(adapterFactory, resourceLocator) {
+        itemPropertyDescriptors
+                .add(new ItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+                        getResourceLocator(),
+                        getString("_UI_ContractInput_type_feature"), //$NON-NLS-1$
+                        getString("_UI_PropertyDescriptor_description", "_UI_ContractInput_type_feature", //$NON-NLS-1$//$NON-NLS-2$
+                                "_UI_ContractInput_type"), //$NON-NLS-1$
+                        ProcessPackage.Literals.CONTRACT_INPUT__TYPE,
+                        true,
+                        false,
+                        true,
+                        ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                        null,
+                        null) {
 
                     /*
                      * (non-Javadoc)
-                     * @see org.eclipse.emf.edit.provider.ItemPropertyDescriptor.ItemDelegator#getText(java.lang.Object)
+                     * @see org.eclipse.emf.edit.provider.ItemPropertyDescriptor#getLabelProvider(java.lang.Object)
                      */
                     @Override
-                    public String getText(final Object object) {
-                        if (object instanceof ContractInputType) {
-                            return String.format("%s (%s)", super.getText(object), javaType((ContractInputType) object));
-                        }
-                        return super.getText(object);
+                    public IItemLabelProvider getLabelProvider(final Object object) {
+                        return new ItemDelegator(adapterFactory, resourceLocator) {
+
+                            /*
+                             * (non-Javadoc)
+                             * @see org.eclipse.emf.edit.provider.ItemPropertyDescriptor.ItemDelegator#getText(java.lang.Object)
+                             */
+                            @Override
+                            public String getText(final Object object) {
+                                if (object instanceof ContractInputType) {
+                                    String label = getTypeLabel((ContractInputType) object);
+                                    return String.format("%s (%s)", label, javaType((ContractInputType) object));
+                                }
+                                return super.getText(object);
+                            }
+
+                            protected String getTypeLabel(final ContractInputType type) {
+                                switch (type) {
+                                    case LOCALDATE:
+                                        return "DATE ONLY";
+                                    case LOCALDATETIME:
+                                        return "DATE AND TIME";
+                                    default:
+                                        return super.getText(type);
+                                }
+                            }
+
+                        };
                     }
 
-                };
-            }
+                    /*
+                     * (non-Javadoc)
+                     * @see org.eclipse.emf.edit.provider.ItemPropertyDescriptor#getComboBoxObjects(java.lang.Object)
+                     */
+                    @Override
+                    protected Collection<?> getComboBoxObjects(Object object) {
+                        final Collection<?> comboBoxObjects = super.getComboBoxObjects(object);
+                        if (getContractContainer((EObject) object) instanceof Task) {
+                            comboBoxObjects.remove(ContractInputType.LONG);
+                        }
+                        return comboBoxObjects;
+                    }
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.emf.edit.provider.ItemPropertyDescriptor#getComboBoxObjects(java.lang.Object)
-             */
-            @Override
-            protected Collection<?> getComboBoxObjects(Object object) {
-                final Collection<?> comboBoxObjects = super.getComboBoxObjects(object);
-                if (getContractContainer((EObject) object) instanceof Task) {
-                    comboBoxObjects.remove(ContractInputType.LONG);
-                }
-                return comboBoxObjects;
-            }
-
-            private EObject getContractContainer(EObject object) {
-                EObject current = object;
-                while (!(current instanceof Contract)) {
-                    current = current.eContainer();
-                }
-                if (current != null) {
-                    current = current.eContainer();
-                }
-                return current;
-            }
-        });
+                    private EObject getContractContainer(EObject object) {
+                        EObject current = object;
+                        while (!(current instanceof Contract)) {
+                            current = current.eContainer();
+                        }
+                        if (current != null) {
+                            current = current.eContainer();
+                        }
+                        return current;
+                    }
+                });
     }
 
     private String javaType(final ContractInputType type) {

@@ -30,17 +30,34 @@ public class InputTypeColumnLabelProviderTest {
 
     @Test
     public void should_return_input_type_name() {
-        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(SimpleFieldBuilder.aTextField("employee")
-                .withName("employee").build());
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.aTextField("employee").build());
         final InputTypeColumnLabelProvider provider = new InputTypeColumnLabelProvider(aContract().in(aPool()).build());
         assertThat(provider.getText(mapping)).isEqualTo(ContractInputType.TEXT.name());
     }
 
     @Test
+    public void should_return_date_only_input_type_name() {
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.aDateOnlyField("birtDate").build());
+        final InputTypeColumnLabelProvider provider = new InputTypeColumnLabelProvider(aContract().in(aPool()).build());
+        assertThat(provider.getText(mapping)).isEqualTo("DATE ONLY");
+    }
+
+    @Test
+    public void should_return_date_and_time_input_type_name() {
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.aDateTimeField("time").build());
+        final InputTypeColumnLabelProvider provider = new InputTypeColumnLabelProvider(aContract().in(aPool()).build());
+        assertThat(provider.getText(mapping)).isEqualTo("DATE AND TIME");
+    }
+
+    @Test
     public void should_return_complex_input_type_name() {
-        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(RelationFieldBuilder.aCompositionField(
-                "employee",
-                BusinessObjectBuilder.aBO("com.company.Manager").build()));
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(
+                RelationFieldBuilder.aCompositionField(
+                        "employee",
+                        BusinessObjectBuilder.aBO("com.company.Manager").build()));
         final InputTypeColumnLabelProvider provider = new InputTypeColumnLabelProvider(aContract().in(aPool()).build());
         assertThat(provider.getText(mapping)).isEqualTo(ContractInputType.COMPLEX.name());
     }

@@ -96,7 +96,8 @@ public class ContractIT {
                 .setDescription("The amount of the expense VAT included in euros");
 
         childRow = inputTab.add();
-        childRow.setName("expenseDate").setType("DATE (java.util.Date)").setDescription("When the expense was done");
+        childRow.setName("expenseDate").setType("DATE ONLY (java.time.LocalDate)")
+                .setDescription("When the expense was done");
 
         bot.waitUntil(new AssertionCondition() {
 
@@ -156,7 +157,7 @@ public class ContractIT {
                 .isNotMultiple()
                 .hasDescription("The amount of the expense VAT included in euros");
         ContractInputAssert.assertThat(find(expenseLineInputs, withContractInputName("expenseDate")))
-                .hasType(ContractInputType.DATE)
+                .hasType(ContractInputType.LOCALDATE)
                 .isNotMultiple()
                 .hasDescription("When the expense was done");
     }

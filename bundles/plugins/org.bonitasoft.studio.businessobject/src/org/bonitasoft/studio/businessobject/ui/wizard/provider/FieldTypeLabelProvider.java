@@ -18,6 +18,7 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
@@ -35,13 +36,10 @@ public class FieldTypeLabelProvider extends StyledCellLabelProvider implements I
     public String getText(Object element) {
         if (element instanceof FieldType) {
             if (element == FieldType.LOCALDATE) {
-                return "DATE ONLY";
+                return DateTypeLabels.DATE_ONLY;
             }
             if (element == FieldType.LOCALDATETIME) {
-                return "DATE AND TIME";
-            }
-            if (element == FieldType.DATE) {
-                return "DATE (deprecated)";
+                return DateTypeLabels.DATE_AND_TIME;
             }
             return ((FieldType) element).name();
         }
@@ -66,21 +64,17 @@ public class FieldTypeLabelProvider extends StyledCellLabelProvider implements I
     @Override
     public void update(ViewerCell cell) {
         final Object cellElement = cell.getElement();
-        if (cellElement instanceof SimpleField && ((SimpleField) cellElement).getType() == FieldType.DATE) {
-            final StyledString styledString = new StyledString();
-            styledString.append(getText(cellElement), new StyledString.Styler() {
+        final StyledString styledString = new StyledString();
+        styledString.append(getText(cellElement), new StyledString.Styler() {
 
-                @Override
-                public void applyStyles(TextStyle textStyle) {
-                    textStyle.strikeout = true;
-                }
-            });
-            cell.setText(styledString.getString());
-            cell.setStyleRanges(styledString.getStyleRanges());
-        } else if (cellElement != null) {
-            cell.setText(getText(cellElement));
-            cell.setStyleRanges(null);
-        }
+            @Override
+            public void applyStyles(TextStyle textStyle) {
+                textStyle.strikeout = cellElement instanceof SimpleField
+                        && ((SimpleField) cellElement).getType() == FieldType.DATE;
+            }
+        });
+        cell.setText(styledString.getString());
+        cell.setStyleRanges(styledString.getStyleRanges());
     }
 
     /*
