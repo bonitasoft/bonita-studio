@@ -18,12 +18,9 @@ import org.bonitasoft.engine.bdm.BDMSimpleNameProvider;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
-import org.bonitasoft.studio.contract.i18n.Messages;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author aurelie
@@ -38,7 +35,6 @@ public class FieldTypeColumnLabelProvider extends ColumnLabelProvider {
         }
         return super.getText(element);
     }
-    
 
     private String typeLabel(final Field field) {
         final StringBuilder sb = new StringBuilder();
@@ -46,13 +42,25 @@ public class FieldTypeColumnLabelProvider extends ColumnLabelProvider {
             sb.append("List<");
         }
         if (field instanceof SimpleField) {
-            sb.append(((SimpleField) field).getType().name());
+            sb.append(simpleFieldTypeLabel((SimpleField) field));
         } else if (field instanceof RelationField) {
-            sb.append(BDMSimpleNameProvider.getSimpleBusinessObjectName(((RelationField) field).getReference().getQualifiedName()));
+            sb.append(BDMSimpleNameProvider
+                    .getSimpleBusinessObjectName(((RelationField) field).getReference().getQualifiedName()));
         }
         if (field.isCollection()) {
             sb.append(">");
         }
         return sb.toString();
+    }
+
+    private String simpleFieldTypeLabel(final SimpleField field) {
+        switch (field.getType()) {
+            case LOCALDATE:
+                return DateTypeLabels.DATE_ONLY;
+            case LOCALDATETIME:
+                return DateTypeLabels.DATE_AND_TIME;
+            default:
+                return field.getType().name();
+        }
     }
 }

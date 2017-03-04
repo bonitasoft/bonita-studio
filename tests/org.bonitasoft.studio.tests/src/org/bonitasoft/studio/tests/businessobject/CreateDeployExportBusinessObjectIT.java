@@ -25,6 +25,7 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.Platform;
@@ -109,7 +110,7 @@ public class CreateDeployExportBusinessObjectIT {
         setMandatory("Employee", "firstName");
 
         addAttribute("Employee", "lastaNme", FieldType.STRING.name(), 1);
-        addAttribute("Employee", "birthDate", "DATE ONLY", 2);
+        addAttribute("Employee", "birthDate", DateTypeLabels.DATE_ONLY, 2);
         addAttribute("Employee", "age", FieldType.INTEGER.name(), 3);
         addAttribute("Employee", "married", FieldType.BOOLEAN.name(), 4);
         addAttribute("Employee", "resume", FieldType.TEXT.name(), 5);

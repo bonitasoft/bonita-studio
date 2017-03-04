@@ -70,7 +70,8 @@ public class ContractInputTreeViewer extends TreeViewer {
     private IMessageManager messageManager;
     private final ISharedImages sharedImages;
 
-    public ContractInputTreeViewer(final Composite parent, final FormToolkit toolkit, final IProgressService progressService, final ISharedImages sharedImages) {
+    public ContractInputTreeViewer(final Composite parent, final FormToolkit toolkit, final IProgressService progressService,
+            final ISharedImages sharedImages) {
         super(toolkit.createTree(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI));
         getTree().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE);
         this.progressService = progressService;
@@ -112,23 +113,28 @@ public class ContractInputTreeViewer extends TreeViewer {
         this.messageManager = messageManager;
         this.inputController = inputController;
         this.emfDataBindingContext = emfDataBindingContext;
-        final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+        final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
+                ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         propertySourceProvider = new ContractInputTypePropertyDescriptor(adapterFactory);
         adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
         getTree().setHeaderVisible(true);
         getTree().setLinesVisible(true);
         addFilter(new ComplexTypeChildrenViewerFilter());
-        final ObservableListTreeContentProvider contentProvider = new ObservableListTreeContentProvider(new ContractInputObservableFactory(),
+        final ObservableListTreeContentProvider contentProvider = new ObservableListTreeContentProvider(
+                new ContractInputObservableFactory(),
                 new ContractInputTreeStructureAdvisor());
         setContentProvider(contentProvider);
         final CellNavigationStrategy cellNavigationStrategy = new AddRowOnEnterCellNavigationStrategy(this, inputController);
-        final TreeViewerFocusCellManager focusCellManager = new TreeViewerFocusCellManager(this, new FocusCellOwnerDrawHighlighter(
-                this), cellNavigationStrategy);
+        final TreeViewerFocusCellManager focusCellManager = new TreeViewerFocusCellManager(this,
+                new FocusCellOwnerDrawHighlighter(
+                        this),
+                cellNavigationStrategy);
 
-        TreeViewerEditor.create(this, focusCellManager, new CharriageColumnViewerEditorActivationStrategy(this), ColumnViewerEditor.TABBING_HORIZONTAL |
-                ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR |
-                ColumnViewerEditor.TABBING_VERTICAL |
-                ColumnViewerEditor.KEYBOARD_ACTIVATION);
+        TreeViewerEditor.create(this, focusCellManager, new CharriageColumnViewerEditorActivationStrategy(this),
+                ColumnViewerEditor.TABBING_HORIZONTAL |
+                        ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR |
+                        ColumnViewerEditor.TABBING_VERTICAL |
+                        ColumnViewerEditor.KEYBOARD_ACTIVATION);
 
         ColumnViewerToolTipSupport.enableFor(this);
 
@@ -184,13 +190,15 @@ public class ContractInputTreeViewer extends TreeViewer {
 
     protected void createInputTypeColumn() {
         final TreeViewerColumn typeColumnViewer = createColumnViewer(Messages.type, SWT.FILL);
-        typeColumnViewer.setLabelProvider(new ContractInputTypeCellLabelProvider(propertySourceProvider, knownElements()));
-        typeColumnViewer.setEditingSupport(new ContractInputTypeEditingSupport(this, propertySourceProvider, inputController));
+        typeColumnViewer.setLabelProvider(new ContractInputTypeCellLabelProvider());
+        typeColumnViewer
+                .setEditingSupport(new ContractInputTypeEditingSupport(this, propertySourceProvider, inputController));
     }
 
     protected void createMultipleColumn() {
         final TreeViewerColumn multipleColumnViewer = createColumnViewer(Messages.multiple, SWT.CENTER);
-        multipleColumnViewer.setLabelProvider(new MultipleInputCheckboxLabelProvider(multipleColumnViewer.getViewer(), knownElements()));
+        multipleColumnViewer
+                .setLabelProvider(new MultipleInputCheckboxLabelProvider(multipleColumnViewer.getViewer(), knownElements()));
         multipleColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, this,
                 ProcessPackage.Literals.CONTRACT_INPUT__MULTIPLE.getName()));
     }

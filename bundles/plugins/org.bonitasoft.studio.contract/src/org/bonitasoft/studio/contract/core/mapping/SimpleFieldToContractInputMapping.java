@@ -61,8 +61,13 @@ public class SimpleFieldToContractInputMapping extends FieldToContractInputMappi
                 return ContractInputType.BOOLEAN;
             case DATE:
                 return ContractInputType.DATE;
+            case LOCALDATE:
+                return ContractInputType.LOCALDATE;
+            case LOCALDATETIME:
+                return ContractInputType.LOCALDATETIME;
             default:
-                throw new IllegalStateException(String.format("Failed to convert field type %s to contract input type", fieldType));
+                throw new IllegalStateException(
+                        String.format("Failed to convert field type %s to contract input type", fieldType));
         }
     }
 }

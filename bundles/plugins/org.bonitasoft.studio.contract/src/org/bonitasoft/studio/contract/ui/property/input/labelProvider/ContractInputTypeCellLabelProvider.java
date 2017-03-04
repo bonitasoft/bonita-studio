@@ -14,24 +14,53 @@
  */
 package org.bonitasoft.studio.contract.ui.property.input.labelProvider;
 
-import org.bonitasoft.studio.common.jface.databinding.CustomPropertyColumnLabelProvider;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
+import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.views.properties.IPropertySourceProvider;
+import org.eclipse.swt.graphics.TextStyle;
 
 /**
  * @author Romain Bioteau
  */
-public class ContractInputTypeCellLabelProvider extends CustomPropertyColumnLabelProvider {
-
-    public ContractInputTypeCellLabelProvider(final IPropertySourceProvider propertySourceProvider, final IObservableSet knownElements) {
-        super(propertySourceProvider, ProcessPackage.Literals.CONTRACT_INPUT__TYPE, knownElements);
-    }
+public class ContractInputTypeCellLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
 
     @Override
     public Image getImage(final Object element) {
         return null;
+    }
+
+    @Override
+    public void update(ViewerCell cell) {
+        super.update(cell);
+        final ContractInput element = (ContractInput) cell.getElement();
+        final String text = getText(element);
+        final StyledString styledString = new StyledString(text, new StyledString.Styler() {
+
+            @Override
+            public void applyStyles(TextStyle textStyle) {
+                textStyle.strikeout = element.getType() == ContractInputType.DATE;
+            }
+        });
+        cell.setText(styledString.getString());
+        cell.setStyleRanges(styledString.getStyleRanges());
+    }
+
+    @Override
+    public String getText(Object element) {
+        final ContractInputType type = ((ContractInput) element).getType();
+        switch (type) {
+            case LOCALDATE:
+                return DateTypeLabels.DATE_ONLY;
+            case LOCALDATETIME:
+                return DateTypeLabels.DATE_AND_TIME;
+            default:
+                return type.name();
+        }
     }
 
 }
