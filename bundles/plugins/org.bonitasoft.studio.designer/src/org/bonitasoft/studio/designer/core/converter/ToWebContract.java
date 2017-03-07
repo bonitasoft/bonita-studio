@@ -18,6 +18,8 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.bonitasoft.studio.model.process.Contract;
@@ -52,6 +54,10 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
                         return createLeafContractInput(input, Double.class);
                     case DATE:
                         return createLeafContractInput(input, Date.class);
+                    case LOCALDATE:
+                        return createLeafContractInput(input, LocalDate.class);
+                    case LOCALDATETIME:
+                        return createLeafContractInput(input, LocalDateTime.class);
                     case BOOLEAN:
                         return createLeafContractInput(input, Boolean.class);
                     case FILE:
@@ -65,7 +71,8 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
         };
     }
 
-    private org.bonitasoft.web.designer.model.contract.ContractInput createLeafContractInput(final ContractInput input, final Class<?> type) {
+    private org.bonitasoft.web.designer.model.contract.ContractInput createLeafContractInput(final ContractInput input,
+            final Class<?> type) {
         return copyInputProperties(input, new LeafContractInput(input.getName(), type));
     }
 
@@ -77,7 +84,8 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
     }
 
     private org.bonitasoft.web.designer.model.contract.ContractInput createNodeContractInput(final ContractInput input) {
-        final org.bonitasoft.web.designer.model.contract.ContractInput nodeInput = copyInputProperties(input, new NodeContractInput(input.getName()));
+        final org.bonitasoft.web.designer.model.contract.ContractInput nodeInput = copyInputProperties(input,
+                new NodeContractInput(input.getName()));
         nodeInput.getInput().addAll(newArrayList(transform(input.getInputs(), toWebContractInput())));
         return nodeInput;
     }

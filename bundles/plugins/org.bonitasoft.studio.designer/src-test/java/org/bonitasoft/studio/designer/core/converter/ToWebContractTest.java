@@ -21,6 +21,8 @@ import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aCont
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -91,6 +93,26 @@ public class ToWebContractTest {
     }
 
     @Test
+    public void transform_an_emf_contract_into_a_designer_contract_with_LOCALDATE_input() throws Exception {
+        final ToWebContract contractConverter = new ToWebContract();
+
+        final Contract contract = contractConverter.apply(aContract()
+                .havingInput(aContractInput().withType(ContractInputType.LOCALDATE)).build());
+
+        assertThat(contract.getInput()).extracting("type").containsExactly(LocalDate.class.getName());
+    }
+
+    @Test
+    public void transform_an_emf_contract_into_a_designer_contract_with_LOCALDATETIME_input() throws Exception {
+        final ToWebContract contractConverter = new ToWebContract();
+
+        final Contract contract = contractConverter.apply(aContract()
+                .havingInput(aContractInput().withType(ContractInputType.LOCALDATETIME)).build());
+
+        assertThat(contract.getInput()).extracting("type").containsExactly(LocalDateTime.class.getName());
+    }
+
+    @Test
     public void transform_an_emf_contract_into_a_designer_contract_with_BOOLEAN_input() throws Exception {
         final ToWebContract contractConverter = new ToWebContract();
 
@@ -137,7 +159,8 @@ public class ToWebContractTest {
 
         final Contract contract = contractConverter.apply(aContract()
                 .havingInput(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)
-                        .havingInput(aContractInput().withName("firstName").withType(ContractInputType.TEXT))).build());
+                        .havingInput(aContractInput().withName("firstName").withType(ContractInputType.TEXT)))
+                .build());
 
         assertThat(contract.getInput()).hasSize(1);
         assertThat(contract.getInput().get(0).getInput()).extracting("name").containsExactly("firstName");
