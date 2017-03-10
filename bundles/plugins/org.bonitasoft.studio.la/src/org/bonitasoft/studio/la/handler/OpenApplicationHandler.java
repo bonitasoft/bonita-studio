@@ -18,13 +18,14 @@ import static org.bonitasoft.studio.ui.wizard.WizardBuilder.newWizard;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.repository.ApplicationFileStore;
-import org.bonitasoft.studio.la.ui.control.OpenApplicationPage;
+import org.bonitasoft.studio.la.ui.control.SelectApplicationDescriptorPage;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
-import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.swt.widgets.Shell;
 
@@ -34,18 +35,18 @@ public class OpenApplicationHandler {
     public void openExistingApplicationWizard(Shell activeShell, RepositoryAccessor repositoryAccessor) {
         createWizard(newWizard(), repositoryAccessor)
                 .open(activeShell, Messages.open)
-                .ifPresent(selectedApplications -> selectedApplications.stream()
-                        .forEach(appFileStore -> ((ApplicationFileStore) appFileStore).open()));
+                .ifPresent(selection -> selection.forEach(IRepositoryFileStore::open));
     }
 
-    private WizardBuilder<WritableList> createWizard(WizardBuilder<WritableList> builder,
+    private WizardBuilder<Stream<ApplicationFileStore>> createWizard(WizardBuilder<Stream<ApplicationFileStore>> builder,
             RepositoryAccessor repositoryAccessor) {
-        WritableList fileStoreObservable = new WritableList();
+        SelectApplicationDescriptorPage selectApplicationDescriptorPage = new SelectApplicationDescriptorPage(
+                repositoryAccessor);
         return builder.withTitle(Messages.openExistingApplication)
                 .havingPage(newPage()
                         .withTitle(Messages.openExistingApplication)
                         .withDescription(Messages.openExistingApplicationDescription)
-                        .withControl(new OpenApplicationPage(repositoryAccessor, fileStoreObservable)))
-                .onFinish(container -> Optional.ofNullable(fileStoreObservable));
+                        .withControl(selectApplicationDescriptorPage))
+                .onFinish(container -> Optional.ofNullable(selectApplicationDescriptorPage.getSelection()));
     }
 }

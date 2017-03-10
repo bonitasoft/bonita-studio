@@ -30,6 +30,10 @@
                   commandId="org.bonitasoft.studio.la.open.command"
                   style="push">
             </command>
+            <command
+                  commandId="org.bonitasoft.studio.la.delete.command"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>

@@ -37,6 +37,13 @@ public class Messages extends NLS {
     public static String openExistingApplication;
     public static String openExistingApplicationDescription;
     public static String appNameUniqueness;
+    public static String delete;
+    public static String deleteExistingApplication;
+    public static String deleteExistingApplicationDescription;
+    public static String deleteConfirmation;
+    public static String deleteConfirmationMessage;
+    public static String deleteDoneTitle;
+    public static String deleteDoneMessage;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

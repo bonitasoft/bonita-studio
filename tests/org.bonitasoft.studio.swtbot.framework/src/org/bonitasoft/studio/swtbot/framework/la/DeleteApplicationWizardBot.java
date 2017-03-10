@@ -15,32 +15,35 @@
 package org.bonitasoft.studio.swtbot.framework.la;
 
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
-public class OpenApplicationWizardBot extends SelectApplicationWizardEditorBot {
+public class DeleteApplicationWizardBot extends SelectApplicationWizardEditorBot {
 
-    public OpenApplicationWizardBot(SWTGefBot bot, String dialogTitle) {
+    public DeleteApplicationWizardBot(SWTGefBot bot, String dialogTitle) {
         super(bot, dialogTitle);
     }
 
     /**
-     * open a given set of applications
+     * delete a given set of applications
      */
-    public BotApplicationEditor open(String... appToOpen) {
-        select(appToOpen);
-        return new BotApplicationEditor(bot.activeEditor());
+    public void delete(String... appToDelete) {
+        select(appToDelete);
     }
 
     /**
-     * click on open
+     * click on delete
      */
     @Override
     public void finish() {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.open)));
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.delete)));
         SWTBotShell activeShell = bot.activeShell();
-        bot.button(Messages.open).click();
+        bot.button(Messages.delete).click();
+        bot.button(IDialogConstants.OK_LABEL).click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.deleteDoneTitle));
+        bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
     }
 }

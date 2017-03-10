@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.la.ui.providers;
 
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.la.repository.ApplicationFileStore;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
@@ -28,13 +29,27 @@ public class ApplicationLabelProvider extends StyledCellLabelProvider implements
         if (cell.getElement() instanceof ApplicationFileStore) {
             final ApplicationFileStore fileStore = (ApplicationFileStore) cell.getElement();
             final StyledString styledString = new StyledString();
-            styledString.append(fileStore.getDisplayName());
-            styledString.append("  ../apps/" + fileStore.getDisplayName(), StyledString.COUNTER_STYLER);
-
+            styledString.append(fileStore.getName());
             cell.setText(styledString.getString());
+            try {
+                if (!fileStore.getContent().getApplications().isEmpty()) {
+                    cell.setText(appendAppTokens(fileStore, styledString));
+                }
+            } catch (ReadFileStoreException e) {
+                throw new RuntimeException("Impossible to read application descriptor", e);
+            }
             cell.setImage(getImage(cell.getElement()));
             cell.setStyleRanges(styledString.getStyleRanges());
         }
+    }
+
+    private String appendAppTokens(final ApplicationFileStore fileStore, final StyledString styledString)
+            throws ReadFileStoreException {
+        styledString.append("  ");
+        fileStore.getContent().getApplications().stream()
+                .forEach(
+                        app -> styledString.append("../apps/" + app.getToken() + ", ", StyledString.COUNTER_STYLER));
+        return styledString.getString().substring(0, styledString.getString().length() - 2);
     }
 
     @Override
