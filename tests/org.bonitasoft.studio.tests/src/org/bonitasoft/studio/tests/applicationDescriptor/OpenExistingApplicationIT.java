@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.la.BotApplicationEditor;
+import org.bonitasoft.studio.swtbot.framework.la.DeleteApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -38,12 +39,19 @@ public class OpenExistingApplicationIT {
         BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
         createApplications(workBenchBot);
 
-        BotApplicationEditor app1Editor = workBenchBot.openApplication().open("app1  ../apps/app1");
+        BotApplicationEditor app1Editor = workBenchBot.openApplication().open("app1.xml  ../apps/app1");
         assertEquals("app1.xml", app1Editor.getTitle());
         app1Editor.close();
 
-        workBenchBot.openApplication().open("app1  ../apps/app1", "app2  ../apps/app2");
+        workBenchBot.openApplication().open("app1.xml  ../apps/app1", "app2.xml  ../apps/app2");
         assertEquals(2, bot.editors().size());
+
+        deleteApplications(workBenchBot);
+    }
+
+    private void deleteApplications(BotApplicationWorkbenchWindow workBenchBot) {
+        DeleteApplicationWizardBot deleteApplicationBot = workBenchBot.deleteApplicationDescriptor();
+        deleteApplicationBot.delete("app1.xml  ../apps/app1", "app2.xml  ../apps/app2");
     }
 
     private void createApplications(BotApplicationWorkbenchWindow workBenchBot) {

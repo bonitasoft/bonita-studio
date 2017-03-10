@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.stream.Stream;
 
 import javax.xml.bind.JAXBException;
 
@@ -36,6 +37,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
@@ -106,7 +108,19 @@ public class ApplicationFileStore extends AbstractFileStore {
      */
     @Override
     protected void doClose() {
-        //Nothing to do here
+        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        if (activeWorkbenchWindow != null && activeWorkbenchWindow.getActivePage() != null) {
+            IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+            Stream.of(activePage.getEditorReferences())
+                    .filter(editorRef -> {
+                        try {
+                            return getName().contentEquals(editorRef.getEditorInput().getName());
+                        } catch (PartInitException e) {
+                            throw new RuntimeException("an error occured while trying to close an application", e);
+                        }
+                    })
+                    .forEach(editorRef -> activePage.closeEditor(editorRef.getEditor(true), false));
+        }
     }
 
     /*

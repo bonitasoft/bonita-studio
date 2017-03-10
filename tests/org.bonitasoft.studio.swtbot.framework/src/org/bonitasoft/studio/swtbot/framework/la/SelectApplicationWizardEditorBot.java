@@ -14,33 +14,33 @@
  */
 package org.bonitasoft.studio.swtbot.framework.la;
 
-import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.swtbot.framework.BotDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 
-public class OpenApplicationWizardBot extends SelectApplicationWizardEditorBot {
+public abstract class SelectApplicationWizardEditorBot extends BotDialog {
 
-    public OpenApplicationWizardBot(SWTGefBot bot, String dialogTitle) {
+    public SelectApplicationWizardEditorBot(SWTGefBot bot, String dialogTitle) {
         super(bot, dialogTitle);
     }
 
     /**
-     * open a given set of applications
+     * select a given set of applications
      */
-    public BotApplicationEditor open(String... appToOpen) {
-        select(appToOpen);
-        return new BotApplicationEditor(bot.activeEditor());
+    public void select(String... appToSelect) {
+        table().select(appToSelect);
+        finish();
     }
 
     /**
-     * click on open
+     * click on delete
      */
-    @Override
-    public void finish() {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.open)));
-        SWTBotShell activeShell = bot.activeShell();
-        bot.button(Messages.open).click();
-        bot.waitUntil(Conditions.shellCloses(activeShell));
+    public abstract void finish();
+
+    public SWTBotTable table() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.table()));
+        SWTBotTable table = bot.table();
+        return table;
     }
 }

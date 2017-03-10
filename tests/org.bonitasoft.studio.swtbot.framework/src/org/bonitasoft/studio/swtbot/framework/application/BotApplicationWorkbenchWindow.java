@@ -1,11 +1,17 @@
-/*******************************************************************************
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- * BonitaSoft, 32 rue Gustave Eiffel 38000 Grenoble
- * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
+/**
+ * Copyright (C) 2014 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.swtbot.framework.application;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -21,6 +27,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.configuration.BotConfigure
 import org.bonitasoft.studio.swtbot.framework.diagram.export.BotExportBOSDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportBOSDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportOtherDialog;
+import org.bonitasoft.studio.swtbot.framework.la.DeleteApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.la.NewApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.la.OpenApplicationWizardBot;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
@@ -161,12 +168,16 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
 
     public OpenApplicationWizardBot openApplication() {
         bot.menu("Development").menu("Application").menu("Open...").click();
-
         return new OpenApplicationWizardBot(bot, Messages.openExistingApplication);
     }
 
     public NewApplicationWizardBot newApplication() {
         bot.menu("Development").menu("Application").menu("New...").click();
         return new NewApplicationWizardBot(bot, Messages.createNewApplication);
+    }
+
+    public DeleteApplicationWizardBot deleteApplicationDescriptor() {
+        bot.menu("Development").menu("Application").menu("Delete...").click();
+        return new DeleteApplicationWizardBot(bot, Messages.deleteExistingApplication);
     }
 }
