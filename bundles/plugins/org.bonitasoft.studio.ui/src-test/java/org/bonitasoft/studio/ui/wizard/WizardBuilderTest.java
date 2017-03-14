@@ -24,6 +24,7 @@ import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.bonitasoft.studio.ui.validator.EmptyInputValidator;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
+import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
@@ -44,6 +45,7 @@ public class WizardBuilderTest {
         private String name;
         private String title;
         private String manager;
+        private String description;
 
         public void setName(String name) {
             this.name = name;
@@ -67,6 +69,14 @@ public class WizardBuilderTest {
 
         public void setTitle(String title) {
             this.title = title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
         }
     }
 
@@ -117,6 +127,16 @@ public class WizardBuilderTest {
                                                             .withMessage("Title is mandatory").warningLevel().create()))
                                     .createIn(container);
 
+                            new TextAreaWidget.Builder()
+                                    .withLabel("Description")
+                                    .labelAbove()
+                                    .fill()
+                                    .heightHint(150)
+                                    .grabHorizontalSpace()
+                                    .bindTo(PojoObservables.observeValue(person, "description"))
+                                    .inContext(ctx)
+                                    .createIn(container);
+
                             new ComboWidget.Builder()
                                     .withLabel("Manager With Super long label")
                                     .withLabelWidth(100)
@@ -145,7 +165,8 @@ public class WizardBuilderTest {
                         }))
                 .onFinish(container -> Optional.of(MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
                         String.format("Create %s ?", person.getName()),
-                        "A new person will be added into the contact list.")))/* .open(rule.getShell()) */;
+                        "A new person will be added into the contact list.")))
+        /* .open(rule.getShell()) */;
 
     }
 

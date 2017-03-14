@@ -22,7 +22,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -38,6 +37,7 @@ public abstract class EditableControlWidget extends ControlWidget {
     private Color errorColor;
     private Color warningColor;
     private Binding valueBinding;
+    private WidgetMessageDecorator messageDecorator;
 
     protected EditableControlWidget(Composite parent, boolean labelAbove, int horizontalLabelAlignment,
             int verticalLabelAlignment, int labelHint,
@@ -61,13 +61,13 @@ public abstract class EditableControlWidget extends ControlWidget {
         this.resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
         errorColor = resourceManager.createColor(ColorConstants.ERROR_RGB);
         warningColor = resourceManager.createColor(ColorConstants.WARNING_RGB);
-
-        messageLabel = new CLabel(this, SWT.NONE);
-        messageLabel
+        messageDecorator = new WidgetMessageDecorator(this);
+        messageDecorator
                 .setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.TOP)
-                        .span(messageLabelHorizontalSpan(labelAbove), 1).create());
-        messageLabel.setForeground(getStatusColor(status));
-        messageLabel.setText(message);
+                        .span(messageLabelHorizontalSpan(labelAbove), 1).indent(0, -2).create());
+        messageDecorator.setColor(getStatusColor(status));
+        messageDecorator.setMessage(message);
+        messageDecorator.updateExpandState();
     }
 
     private int messageLabelHorizontalSpan(boolean labelAbove) {
@@ -128,14 +128,14 @@ public abstract class EditableControlWidget extends ControlWidget {
             protected void statusChanged(IStatus status) {
                 EditableControlWidget.this.status = status;
                 if (status == null || status.isOK()) {
-                    messageLabel.setText(message != null ? message : "");
+                    messageDecorator.setMessage(message.orElse(""));
                 } else {
-                    messageLabel.setText(status.getMessage());
+                    messageDecorator.setMessage(status.getMessage());
                 }
-                messageLabel.setImage(getStatusImage(status));
-                messageLabel.setForeground(getStatusColor(status));
-                redraw(control);
-                EditableControlWidget.this.layout();
+                messageDecorator.setImage(getStatusImage(status));
+                messageDecorator.setColor(getStatusColor(status));
+                messageDecorator.updateExpandState();
+                EditableControlWidget.this.getParent().layout();
             }
 
         };
@@ -146,11 +146,15 @@ public abstract class EditableControlWidget extends ControlWidget {
     }
 
     protected void redraw(final Control toRedraw) {
-        toRedraw.getDisplay().asyncExec(toRedraw::redraw);
+        toRedraw.getDisplay().asyncExec(() -> {
+            if (toRedraw != null & !toRedraw.isDisposed()) {
+                toRedraw.redraw();
+            }
+        });
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        this.message = Optional.ofNullable(message);
         getDisplay().asyncExec(this::layout);
     }
 }
