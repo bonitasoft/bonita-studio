@@ -25,18 +25,17 @@ import org.eclipse.swt.widgets.Control;
 
 public class WizardPageBuilder {
 
-    public static WizardPageBuilder newPage() {
-        return new WizardPageBuilder();
-    }
-
     private String title;
     private String description;
     private ControlSupplier controlSupplier;
     private Optional<DataBindingContext> context = Optional.empty();
-    private boolean disposeContext = true;
 
     private WizardPageBuilder() {
+        //PRIVATE
+    }
 
+    public static WizardPageBuilder newPage() {
+        return new WizardPageBuilder();
     }
 
     /**
@@ -74,39 +73,18 @@ public class WizardPageBuilder {
     }
 
     /**
-     * The {@link DataBindingContext} supplied will not be disposed by the {@link WizardPage}
-     */
-    public WizardPageBuilder keepDatabindingContextAlive() {
-        this.disposeContext = false;
-        return this;
-    }
-
-    /**
      * Create an instance of {@link WizardPage} for this {@link WizardPageBuilder}
      */
     public WizardPage asPage() {
         final WizardPage page = new WizardPage(title) {
 
-            private DataBindingContext ctx;
-
             @Override
             public void createControl(Composite parent) {
-                ctx = context.orElse(new DataBindingContext());
+                final DataBindingContext ctx = context.orElse(new DataBindingContext());
                 NoMessageWizardPageSupport.create(this, ctx);
                 setControl(controlSupplier.createControl(parent, getWizard().getContainer(), ctx));
             }
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.jface.dialogs.DialogPage#dispose()
-             */
-            @Override
-            public void dispose() {
-                if (ctx != null && disposeContext) {
-                    ctx.dispose();
-                }
-                super.dispose();
-            }
         };
         page.setTitle(title);
         page.setDescription(description);

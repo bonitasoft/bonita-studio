@@ -33,10 +33,10 @@ public class TextWidget extends EditableControlWidget {
 
     public static class Builder extends EditableControlWidgetBuilder<Builder, TextWidget> {
 
-        private Optional<String> placeholder = Optional.empty();
-        private Optional<String> labelButton = Optional.empty();
-        private Optional<Listener> buttonListner = Optional.empty();
-        private Optional<Integer> delay = Optional.empty();
+        protected Optional<String> placeholder = Optional.empty();
+        protected Optional<String> labelButton = Optional.empty();
+        protected Optional<Listener> buttonListner = Optional.empty();
+        protected Optional<Integer> delay = Optional.empty();
 
         /**
          * Adds a placeholder to the resulting {@link Text}
@@ -131,15 +131,14 @@ public class TextWidget extends EditableControlWidget {
     @Override
     protected Control createControl() {
         final Composite textContainer = new Composite(this, SWT.NONE);
-        textContainer.setLayout(GridLayoutFactory.fillDefaults().margins(1, 3).create());
+        textContainer.setLayout(GridLayoutFactory.fillDefaults().margins(1, 1).create());
         textContainer.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).span(labelAbove ? 2 : 1, 1).create());
         configureEnablement(textContainer);
 
         textContainer.addListener(SWT.Paint, e -> drawBorder(textContainer, e));
 
-        text = new Text(textContainer, SWT.SINGLE);
-        text.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.CENTER).create());
+        text = newText(textContainer);
         configureEnablement(text);
 
         text.addListener(SWT.FocusIn, event -> redraw(textContainer));
@@ -150,8 +149,14 @@ public class TextWidget extends EditableControlWidget {
             b.setText(label);
             return b;
         });
-        button.ifPresent(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL)::applyTo);
+        button.ifPresent(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER)::applyTo);
         return textContainer;
+    }
+
+    protected Text newText(final Composite textContainer) {
+        final Text newText = new Text(textContainer, SWT.SINGLE);
+        newText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.CENTER).create());
+        return newText;
     }
 
     public void addTextListener(int eventType, Listener listener) {

@@ -22,7 +22,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -30,10 +29,9 @@ import org.eclipse.swt.widgets.Label;
 public abstract class ControlWidget extends Composite {
 
     protected Label label;
-    protected CLabel messageLabel;
 
     protected IStatus status = ValidationStatus.ok();
-    protected String message;
+    protected Optional<String> message;
     protected boolean readOnly = false;
     protected boolean labelAbove = false;
     protected Control control;
@@ -71,7 +69,7 @@ public abstract class ControlWidget extends Composite {
             int labelHint,
             String labelValue,
             String message) {
-        this.message = message;
+        this.message = Optional.ofNullable(message);
         this.labelAbove = labelAbove;
         setLayout(GridLayoutFactory.fillDefaults()
                 .numColumns(buttonLabel.isPresent() ? 3 : 2)
