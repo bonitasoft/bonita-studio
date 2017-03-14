@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
@@ -51,12 +52,14 @@ public class ProjectManifestFactory {
         }
     }
 
-    protected void writeNewManifestFile(final IProject project, final IProgressMonitor monitor, final IFile projectManifest) throws CoreException {
+    protected void writeNewManifestFile(final IProject project, final IProgressMonitor monitor, final IFile projectManifest)
+            throws CoreException {
         try (PrintWriter writer = new PrintWriter(projectManifest.getLocation().toFile())) {
             ManifestUtils.writeManifest(createManifestHeaders(project.getName()), writer);
             projectManifest.refreshLocal(IResource.DEPTH_ONE, monitor);
         } catch (final IOException e) {
-            throw new CoreException(new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, "Failed to create MANIFEST.MF", e));
+            throw new CoreException(
+                    new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, "Failed to create MANIFEST.MF", e));
         }
     }
 
@@ -66,13 +69,13 @@ public class ProjectManifestFactory {
         headers.put(org.osgi.framework.Constants.BUNDLE_MANIFESTVERSION, "2");
         headers.put(org.osgi.framework.Constants.BUNDLE_NAME, projectName);
         String symbolicName = toJavaIdentifier(projectName, false);
-        if (symbolicName == null || symbolicName.isEmpty()) {
+        if (symbolicName == null || symbolicName.isEmpty() || !isValidBundleName(symbolicName)) {
             symbolicName = DEFAULT_SYMBOLIC_NAME;
         }
         headers.put(org.osgi.framework.Constants.BUNDLE_SYMBOLICNAME, symbolicName);
         headers.put(org.osgi.framework.Constants.BUNDLE_VERSION, "1.0.0.qualifier");
         headers.put(org.osgi.framework.Constants.BUNDLE_VENDOR, "Bonitasoft S.A.");
-        headers.put(org.osgi.framework.Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, "JavaSE-1.7");
+        headers.put(org.osgi.framework.Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, "JavaSE-1.8");
         headers.put(org.osgi.framework.Constants.REQUIRE_BUNDLE,
                 new StringBuilder()
                         .append("javax.persistence;bundle-version=\"2.0.3\"").append(",")
@@ -82,10 +85,13 @@ public class ProjectManifestFactory {
         return headers;
     }
 
+    protected boolean isValidBundleName(String symbolicName) {
+        return Pattern.matches("[a-zA-Z0-9\\-\\._]+", symbolicName);
+    }
+
     protected String engineBundleSymbolicName() {
         final BundleReference cl = (BundleReference) BusinessArchive.class.getClassLoader();
-        final String symbolicName = cl.getBundle().getSymbolicName();
-        return symbolicName;
+        return cl.getBundle().getSymbolicName();
     }
 
 }
