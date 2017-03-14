@@ -65,7 +65,7 @@ public class ComboWidget extends EditableControlWidget {
     @Override
     protected Control createControl() {
         final Composite container = new Composite(this, SWT.NONE);
-        container.setLayout(GridLayoutFactory.fillDefaults().margins(1, 3).create());
+        container.setLayout(GridLayoutFactory.fillDefaults().margins(1, 1).create());
         container.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(labelAbove ? 2 : 1, 1).create());
         container.setBackground(
                 readOnly ? Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND)
