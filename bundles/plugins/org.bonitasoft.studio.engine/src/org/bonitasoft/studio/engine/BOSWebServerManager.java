@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.IDebugUIConstants;
@@ -95,9 +96,10 @@ public class BOSWebServerManager {
 
     protected static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
     protected final String tomcatInstanceLocation = new File(new File(ResourcesPlugin
-            .getWorkspace().getRoot().getLocation().toFile(), "tomcat"),"server")
+            .getWorkspace().getRoot().getLocation().toFile(), "tomcat"), "server")
                     .getAbsolutePath();
-    protected final String bundleLocation = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(), "tomcat")
+    protected final String bundleLocation = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),
+            "tomcat")
                     .getAbsolutePath();
     private static final String TOMCAT_LOG_FILE = "tomcat.log";
 
@@ -116,7 +118,8 @@ public class BOSWebServerManager {
     }
 
     protected static BOSWebServerManager createInstance() {
-        for (final IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(WEBSERVERMANAGER_EXTENSION_D)) {
+        for (final IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(WEBSERVERMANAGER_EXTENSION_D)) {
             try {
                 return (BOSWebServerManager) element.createExecutableExtension("class");
             } catch (final CoreException e) {
@@ -220,7 +223,8 @@ public class BOSWebServerManager {
 
             @Override
             public void run() {
-                MessageDialog.openWarning(Display.getDefault().getActiveShell(), "Tomcat server startup error", e.getMessage());
+                MessageDialog.openWarning(Display.getDefault().getActiveShell(), "Tomcat server startup error",
+                        e.getMessage());
             }
         });
     }
@@ -236,7 +240,8 @@ public class BOSWebServerManager {
                 final File serverXmlFile = new File(tomcatInstanceLocation, "conf" + File.separatorChar + "server.xml");
                 try {
                     com.google.common.io.Files.write(
-                            com.google.common.io.Files.toString(serverXmlFile, UTF8_CHARSET).replace(oldLocation, tomcatInstanceLocation),
+                            com.google.common.io.Files.toString(serverXmlFile, UTF8_CHARSET).replace(oldLocation,
+                                    tomcatInstanceLocation),
                             serverXmlFile,
                             UTF8_CHARSET);
                 } catch (final IOException e1) {
@@ -256,7 +261,8 @@ public class BOSWebServerManager {
             BonitaStudioLog.debug("Tomcat server started.",
                     EnginePlugin.PLUGIN_ID);
         } else {
-            BonitaStudioLog.debug("Tomcat failed to start. Check the log file for more informations. (bonita.log or catalina.log)",
+            BonitaStudioLog.debug(
+                    "Tomcat failed to start. Check the log file for more informations. (bonita.log or catalina.log)",
                     EnginePlugin.PLUGIN_ID);
             if (!PlatformUtil.isHeadless()) {
                 Display.getDefault().syncExec(new Runnable() {
@@ -280,7 +286,8 @@ public class BOSWebServerManager {
         APISession session = null;
         while (session == null && loginTry < MAX_LOGGING_TRY) {
             try {
-                session = BOSEngineManager.getInstance().getLoginAPI().login(BOSEngineManager.BONITA_TECHNICAL_USER, BOSEngineManager.BONITA_TECHNICAL_USER);
+                session = BOSEngineManager.getInstance().getLoginAPI().login(BOSEngineManager.BONITA_TECHNICAL_USER,
+                        BOSEngineManager.BONITA_TECHNICAL_USER);
             } catch (final Exception e) {
                 loginTry++;
                 try {
@@ -301,7 +308,8 @@ public class BOSWebServerManager {
         }
     }
 
-    protected void createLaunchConfiguration(final IServer server, final IProgressMonitor monitor) throws CoreException {
+    protected void createLaunchConfiguration(final IServer server, final IProgressMonitor monitor)
+            throws CoreException {
         ILaunchConfiguration conf = server.getLaunchConfiguration(false, Repository.NULL_PROGRESS_MONITOR);
         if (conf == null) {
             conf = server.getLaunchConfiguration(true,
@@ -314,6 +322,11 @@ public class BOSWebServerManager {
                     Repository.NULL_PROGRESS_MONITOR);
             workingCopy = conf.getWorkingCopy();
         }
+        configureLaunchConfiguration(workingCopy);
+    }
+
+    protected ILaunchConfiguration configureLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy)
+            throws CoreException {
         final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
         workingCopy.setAttribute(
@@ -322,7 +335,8 @@ public class BOSWebServerManager {
         workingCopy.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_FILE,
                 getTomcatLogFile());
         workingCopy.setAttribute(IDebugUIConstants.ATTR_APPEND_TO_FILE, true);
-        workingCopy.doSave();
+        workingCopy.setAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, "UTF-8");
+        return workingCopy.doSave();
     }
 
     protected TomcatVmArgsBuilder getTomcatVMArgsBuilder(final RepositoryAccessor repositoryAccessor) {
@@ -334,7 +348,8 @@ public class BOSWebServerManager {
         return new File(parentDir, TOMCAT_LOG_FILE).getAbsolutePath();
     }
 
-    protected IServer createServer(final IProgressMonitor monitor, final IProject confProject, final IRuntime runtime) throws CoreException {
+    protected IServer createServer(final IProgressMonitor monitor, final IProject confProject, final IRuntime runtime)
+            throws CoreException {
         final IServerType sType = ServerCore.findServerType(TOMCAT_SERVER_TYPE);
         final IFile file = confProject.getFile("bonitaTomcatServerSerialization");
 
@@ -353,12 +368,14 @@ public class BOSWebServerManager {
     }
 
     private PortConfigurator newPortConfigurator(final IServer server) {
-        return new PortConfigurator(server, newClientBonitaHomeBuilder(), BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
+        return new PortConfigurator(server, newClientBonitaHomeBuilder(),
+                BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
     }
 
-    protected IServer configureServer(final IRuntime runtime, final IServerType sType, final IFile file, final IFolder configurationFolder,
+    protected IServer configureServer(final IRuntime runtime, final IServerType sType, final IFile file,
+            final IFolder configurationFolder,
             final IProgressMonitor monitor)
-                    throws CoreException {
+            throws CoreException {
         final IServer server = ServerCore.findServer(BONITA_TOMCAT_SERVER_ID);
         IServerWorkingCopy serverWC = null;
         if (server != null) {
@@ -470,7 +487,8 @@ public class BOSWebServerManager {
     public void cleanBeforeShutdown() throws IOException {
         final Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         final DatabaseHandler bonitaHomeHandler = currentRepository.getDatabaseHandler();
-        if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT)) {
+        if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT)) {
             bonitaHomeHandler.removeEngineDatabase();
         }
         if (dropBusinessDataDBOnExit()) {

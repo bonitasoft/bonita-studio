@@ -90,12 +90,14 @@ public class ProjectManifestFactoryTest {
                 entry("Bundle-SymbolicName", "myProject"),
                 entry("Bundle-Version", "1.0.0.qualifier"),
                 entry("Bundle-Vendor", "Bonitasoft S.A."),
-                entry("Require-Bundle", "javax.persistence;bundle-version=\"2.0.3\"," + System.lineSeparator() + " org.bonitasoft.studio.console.libs"),
-                entry("Bundle-RequiredExecutionEnvironment", "JavaSE-1.7"));
+                entry("Require-Bundle", "javax.persistence;bundle-version=\"2.0.3\"," + System.lineSeparator()
+                        + " org.bonitasoft.studio.console.libs"),
+                entry("Bundle-RequiredExecutionEnvironment", "JavaSE-1.8"));
     }
 
     @Test
-    public void should_use_a_fallback_symbolic_name_if_project_name_cannot_be_converted_to_a_valid_java_identifiers() throws Exception {
+    public void should_use_a_fallback_symbolic_name_if_project_name_cannot_be_converted_to_a_valid_java_identifiers()
+            throws Exception {
         //When
         final ProjectManifestFactory projectManifestFactory = spy(new ProjectManifestFactory());
         doReturn("org.bonitasoft.studio.console.libs").when(projectManifestFactory).engineBundleSymbolicName();
@@ -109,7 +111,8 @@ public class ProjectManifestFactoryTest {
                 entry("Bundle-SymbolicName", "org.bonitasoft.studio.myextensions"),
                 entry("Bundle-Version", "1.0.0.qualifier"),
                 entry("Bundle-Vendor", "Bonitasoft S.A."),
-                entry("Require-Bundle", "javax.persistence;bundle-version=\"2.0.3\"," + System.lineSeparator() + " org.bonitasoft.studio.console.libs"),
-                entry("Bundle-RequiredExecutionEnvironment", "JavaSE-1.7"));
+                entry("Require-Bundle", "javax.persistence;bundle-version=\"2.0.3\"," + System.lineSeparator()
+                        + " org.bonitasoft.studio.console.libs"),
+                entry("Bundle-RequiredExecutionEnvironment", "JavaSE-1.8"));
     }
 }
