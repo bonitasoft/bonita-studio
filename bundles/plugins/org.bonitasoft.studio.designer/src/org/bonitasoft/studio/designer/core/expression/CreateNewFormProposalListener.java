@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -28,6 +29,7 @@ import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateFormFromContractOperation;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.expression.editor.provider.IProposalAdapter;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.PageFlow;
@@ -36,7 +38,11 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.progress.IProgressService;
+
+import com.google.common.base.Objects;
 
 /**
  * @author Romain Bioteau
@@ -51,7 +57,8 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
     protected final RepositoryAccessor repositoryAccessor;
 
     @Inject
-    public CreateNewFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory, final IProgressService progressService,
+    public CreateNewFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory,
+            final IProgressService progressService,
             final RepositoryAccessor repositoryAccessor) {
         this.progressService = progressService;
         this.pageDesignerURLFactory = pageDesignerURLFactory;
@@ -66,7 +73,8 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
     public String handleEvent(final EObject context, final String fixedReturnType) {
         final PageFlow pageFlow = pageFlowFor(context);
         checkState(pageFlow != null);
-        final CreateFormFromContractOperation operation = doCreateFormOperation(pageDesignerURLFactory, "newForm", contractFor(context), formScopeFor(context));
+        final CreateFormFromContractOperation operation = doCreateFormOperation(pageDesignerURLFactory, "newForm",
+                contractFor(context), formScopeFor(context));
 
         try {
             progressService.busyCursorWhile(operation);
@@ -80,7 +88,8 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
     }
 
     private FormScope formScopeFor(final EObject context) {
-        return context.eContainingFeature().equals(ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING) ? FormScope.OVERVIEW
+        return context.eContainingFeature().equals(ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING)
+                ? FormScope.OVERVIEW
                 : context.eContainer() instanceof Pool ? FormScope.PROCESS : FormScope.TASK;
     }
 
@@ -99,7 +108,24 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
         throw new IllegalStateException("No contract found for context " + context);
     }
 
-    protected CreateFormFromContractOperation doCreateFormOperation(final PageDesignerURLFactory pageDesignerURLBuilder, final String formName,
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IProposalAdapter#isRelevant(org.eclipse.emf.ecore.EObject, org.eclipse.jface.viewers.ISelection)
+     */
+    @Override
+    public boolean isRelevant(EObject context, ISelection selection) {
+        return isSelectionAFormReference(selection);
+    }
+
+    protected boolean isSelectionAFormReference(ISelection selection) {
+        return selection instanceof IStructuredSelection
+                && ((IStructuredSelection) selection).getFirstElement() instanceof Expression
+                && Objects.equal(ExpressionConstants.FORM_REFERENCE_TYPE,
+                        ((Expression) ((IStructuredSelection) selection).getFirstElement()).getType());
+    }
+
+    protected CreateFormFromContractOperation doCreateFormOperation(final PageDesignerURLFactory pageDesignerURLBuilder,
+            final String formName,
             final Contract contract, final FormScope formScope) {
         return new CreateFormFromContractOperation(pageDesignerURLBuilder, formName, contract, formScope);
     }

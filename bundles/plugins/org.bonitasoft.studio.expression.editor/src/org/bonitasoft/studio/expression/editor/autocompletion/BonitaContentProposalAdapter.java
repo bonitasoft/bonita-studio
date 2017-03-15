@@ -142,7 +142,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                                 // the popup shell on the Mac.
                                 // Check the active shell.
                                 final Shell activeShell = e.display.getActiveShell();
-                                if (activeShell == getShell() || infoPopup != null && infoPopup.getShell() == activeShell || linkClicked) {
+                                if (activeShell == getShell() || infoPopup != null && infoPopup.getShell() == activeShell
+                                        || linkClicked) {
                                     return;
                                 }
                                 /*
@@ -729,7 +730,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                     final String expressionTypeLink = element.getAttribute("type");
                     if (!filteredExpressionType.contains(expressionTypeLink)) {
                         try {
-                            final IProposalListener listener = extensionContextInjectionFactory.make(element, "providerClass", IProposalListener.class);
+                            final IProposalListener listener = extensionContextInjectionFactory.make(element,
+                                    "providerClass", IProposalListener.class);
                             if (listener.isRelevant(context, selection)) {
                                 final Link createDataLink = new Link(creationZoneComposite, SWT.NONE);
                                 final String name = element.getAttribute("name");
@@ -773,9 +775,11 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
             final Set<String> expressionTypes = new HashSet<>();
             for (final IConfigurationElement e : configurationElements) {
                 final String type = e.getAttribute("type");
-                if (type.equals(ExpressionConstants.DOCUMENT_REF_TYPE) && expressionTypes.contains(ExpressionConstants.DOCUMENT_TYPE)) {
+                if (type.equals(ExpressionConstants.DOCUMENT_REF_TYPE)
+                        && expressionTypes.contains(ExpressionConstants.DOCUMENT_TYPE)) {
                     continue;
-                } else if (type.equals(ExpressionConstants.DOCUMENT_TYPE) && expressionTypes.contains(ExpressionConstants.DOCUMENT_REF_TYPE)) {
+                } else if (type.equals(ExpressionConstants.DOCUMENT_TYPE)
+                        && expressionTypes.contains(ExpressionConstants.DOCUMENT_REF_TYPE)) {
                     continue;
                 }
                 if (!filteredExpressionType.contains(type)) {
@@ -830,31 +834,36 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
             // If there is no specified size, force it by setting
             // up a layout on the table.
             if (popupSize == null) {
-                final GridData data = GridDataFactory.fillDefaults().create();
-                data.heightHint = this.proposalTable.getItemHeight() * POPUP_CHAR_HEIGHT;
-                data.widthHint = proposalTable.getParent().computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
+                final GridData data = new GridData(GridData.FILL_BOTH);
+                data.heightHint = proposalTable.getItemHeight()
+                        * POPUP_CHAR_HEIGHT;
+                
+               int tableSize = proposalTable.getParent().computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
+               int pupupSize = Math.max(control.getSize().x,
+                        POPUP_MINIMUM_WIDTH);
+                data.widthHint = Math.max(tableSize,pupupSize);
                 proposalTable.setLayoutData(data);
                 getShell().pack();
                 popupSize = getShell().getSize();
             }
 
             // Constrain to the display
-            final Rectangle constrainedBounds = getConstrainedShellBounds(new Rectangle(initialX, initialY, popupSize.x, popupSize.y));
+            final Rectangle constrainedBounds = getConstrainedShellBounds(
+                    new Rectangle(initialX, initialY, popupSize.x, popupSize.y));
 
-            // If there has been an adjustment causing the popup to overlap
+            // If there has been an adjustment causing the popup to overlap 
             // with the control, then put the popup above the control.
             initialX = initialX - (popupSize.x - control.getParent().getSize().x);
-            if (constrainedBounds.y < initialY) {
+            if (constrainedBounds.y < initialY)
                 getShell().setBounds(initialX, location.y - popupSize.y, popupSize.x, popupSize.y);
-            } else {
+            else
                 getShell().setBounds(initialX, initialY, popupSize.x, popupSize.y);
-            }
 
             // Now set up a listener to monitor any changes in size.
             getShell().addListener(SWT.Resize, new Listener() {
 
                 @Override
-                public void handleEvent(final Event e) {
+                public void handleEvent(Event e) {
                     popupSize = getShell().getSize();
                     if (infoPopup != null) {
                         infoPopup.adjustBounds();
@@ -1458,7 +1467,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
      *        auto-activate content proposal.
      */
     public BonitaContentProposalAdapter(final Control control, final IControlContentAdapter controlContentAdapter,
-            final IContentProposalProvider proposalProvider, final KeyStroke keyStroke, final char[] autoActivationCharacters) {
+            final IContentProposalProvider proposalProvider, final KeyStroke keyStroke,
+            final char[] autoActivationCharacters) {
         super();
         // We always assume the control and content adapter are valid.
         Assert.isNotNull(control);
@@ -1885,12 +1895,14 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                         if (triggerKeyStroke != null) {
                             // Either there are no modifiers for the trigger and we
                             // check the character field...
-                            if (triggerKeyStroke.getModifierKeys() == KeyStroke.NO_KEY && triggerKeyStroke.getNaturalKey() == e.character
+                            if (triggerKeyStroke.getModifierKeys() == KeyStroke.NO_KEY
+                                    && triggerKeyStroke.getNaturalKey() == e.character
                                     ||
                             // ...or there are modifiers, in which case the
                             // keycode and state must match
-                                    triggerKeyStroke.getNaturalKey() == e.keyCode && (triggerKeyStroke.getModifierKeys() & e.stateMask) == triggerKeyStroke
-                                            .getModifierKeys()) {
+                                    triggerKeyStroke.getNaturalKey() == e.keyCode
+                                            && (triggerKeyStroke.getModifierKeys() & e.stateMask) == triggerKeyStroke
+                                                    .getModifierKeys()) {
                                 // We never propagate the keystroke for an explicit
                                 // keystroke invocation of the popup
                                 e.doit = false;
