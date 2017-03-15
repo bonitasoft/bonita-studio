@@ -27,17 +27,20 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateFormFromContractOperation;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
+import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.progress.IProgressService;
 import org.junit.Before;
 import org.junit.Test;
@@ -115,6 +118,20 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
         //Then
         verify(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory), eq("newForm"), any(Contract.class),
                 any(FormScope.class));
+    }
+
+    @Test
+    public void should_be_relevant_for_form_reference_selection() throws Exception {
+        assertThat(createNewFormProposal.isRelevant(null, new StructuredSelection(
+                ExpressionBuilder.anExpression().withExpressionType(ExpressionConstants.FORM_REFERENCE_TYPE).build())))
+                        .isTrue();
+    }
+
+    @Test
+    public void should_not_be_relevant() throws Exception {
+        assertThat(createNewFormProposal.isRelevant(null, new StructuredSelection(
+                ExpressionBuilder.anExpression().withExpressionType(ExpressionConstants.CONSTANT_TYPE).build())))
+                        .isFalse();
     }
 
 }
