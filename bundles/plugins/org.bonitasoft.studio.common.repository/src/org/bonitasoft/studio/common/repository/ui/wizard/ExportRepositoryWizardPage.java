@@ -100,7 +100,8 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
     private Set<Object> defaultSelectedFiles = new HashSet<>();
 
-    public ExportRepositoryWizardPage(final List<IRepositoryStore<? extends IRepositoryFileStore>> stores, final boolean isZip, final String defaultFileName) {
+    public ExportRepositoryWizardPage(final List<IRepositoryStore<? extends IRepositoryFileStore>> stores,
+            final boolean isZip, final String defaultFileName) {
         super(ExportRepositoryWizardPage.class.getName());
         this.isZip = isZip;
         this.defaultFileName = defaultFileName;
@@ -137,7 +138,8 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
             @Override
             public void expansionStateChanged(final ExpansionEvent event) {
-                browseRepoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, browseRepoSection.isExpanded()).span(3, 1).create());
+                browseRepoSection.setLayoutData(
+                        GridDataFactory.fillDefaults().grab(true, browseRepoSection.isExpanded()).span(3, 1).create());
                 final Point defaultSize = getShell().getSize();
                 final Point size = getShell().computeSize(SWT.DEFAULT, 500, true);
                 getShell().setSize(defaultSize.x, size.y);
@@ -282,7 +284,8 @@ public class ExportRepositoryWizardPage extends WizardPage {
                     status);
             return false;
         } else {
-            MessageDialog.openInformation(getContainer().getShell(), Messages.exportLabel, Messages.bind(Messages.exportFinishMessage, getDetinationPath()));
+            MessageDialog.openInformation(getContainer().getShell(), Messages.exportLabel,
+                    Messages.bind(Messages.exportFinishMessage, getDetinationPath()));
         }
 
         return status.getSeverity() == IStatus.OK;
@@ -294,7 +297,8 @@ public class ExportRepositoryWizardPage extends WizardPage {
         final Set<IResource> resourcesToExport = computeResourcesToExport();
         try {
             final Set<IResource> toOpen = new HashSet<>();
-            for (final IEditorReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
+            for (final IEditorReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .getEditorReferences()) {
                 final IFile file = (IFile) EditorUtil.retrieveResourceFromEditorInput(ref.getEditorInput());
                 if (resourcesToExport.contains(file)) {
                     toOpen.add(file);
@@ -313,12 +317,12 @@ public class ExportRepositoryWizardPage extends WizardPage {
         final Set<IResource> resourcesToExport = new HashSet<>();
         for (final IRepositoryFileStore file : getSelectedFileStores()) {
             final IResource resource = file.getResource();
-			if (resource != null && resource.exists()) {
-            	try {
-					addChildrenFile(resource,resourcesToExport);
-				} catch (final CoreException e) {
-				BonitaStudioLog.error(e);
-				}
+            if (resource != null && resource.exists()) {
+                try {
+                    addChildrenFile(resource, resourcesToExport);
+                } catch (final CoreException e) {
+                    BonitaStudioLog.error(e);
+                }
                 resourcesToExport.addAll(file.getRelatedResources());
             }
         }
@@ -327,17 +331,20 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
     private void addChildrenFile(IResource resource, Set<IResource> resourcesToExport) throws CoreException {
         if (resource instanceof IFile) {
-    		resourcesToExport.add(resource);
-        } else if (resource instanceof IFolder && !isMetadataFolder(resource)) {
-    		for(final IResource r : ((IFolder) resource).members()){
-    			addChildrenFile(r,resourcesToExport);
-    		}
-    	}
-	}
+            resourcesToExport.add(resource);
+        } else if (resource instanceof IFolder && !isMetadataFolder(resource) && !isTargetFolder(resource)) {
+            for (final IResource r : ((IFolder) resource).members()) {
+                addChildrenFile(r, resourcesToExport);
+            }
+        }
+    }
+
+    private boolean isTargetFolder(IResource resource) {
+        return Pattern.matches("target", resource.getName());
+    }
 
     private boolean isMetadataFolder(IResource resource) {
-        final String resourceName = resource.getName();
-        return Pattern.matches(".metadata", resourceName);
+        return Pattern.matches(".metadata", resource.getName());
     }
 
     protected void createDestination(final Composite group) {
@@ -347,7 +354,8 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
         // destination name entry field
         destinationCombo = new Combo(group, SWT.SINGLE | SWT.BORDER);
-        destinationCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
+        destinationCombo
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
 
         restoreWidgetValues();
         final UpdateValueStrategy pathStrategy = new UpdateValueStrategy();
@@ -372,7 +380,8 @@ public class ExportRepositoryWizardPage extends WizardPage {
             }
         });
 
-        dbc.bindValue(SWTObservables.observeText(destinationCombo), PojoProperties.value(ExportRepositoryWizardPage.class, "detinationPath").observe(this),
+        dbc.bindValue(SWTObservables.observeText(destinationCombo),
+                PojoProperties.value(ExportRepositoryWizardPage.class, "detinationPath").observe(this),
                 pathStrategy, null);
 
         // destination browse button
