@@ -70,8 +70,8 @@ public abstract class AbstractFolderModel extends AbstractImportModel implements
 
     public void resetStatus() {
         this.status = ConflictStatus.NONE;
-        getFolders().stream().forEach(folder -> folder.resetStatus());
-        getFiles().stream().forEach(file -> file.resetStatus());
+        getFolders().stream().forEach(AbstractFolderModel::resetStatus);
+        getFiles().stream().forEach(AbstractFileModel::resetStatus);
     }
 
 }
