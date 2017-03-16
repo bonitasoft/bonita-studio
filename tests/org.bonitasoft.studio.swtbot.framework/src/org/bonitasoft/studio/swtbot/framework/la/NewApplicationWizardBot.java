@@ -33,6 +33,6 @@ public class NewApplicationWizardBot extends BotDialog {
         SWTBotShell activeShell = bot.activeShell();
         bot.button(Messages.create).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
-        return new BotApplicationEditor(bot.activeEditor());
+        return new BotApplicationEditor(bot, bot.activeEditor());
     }
 }

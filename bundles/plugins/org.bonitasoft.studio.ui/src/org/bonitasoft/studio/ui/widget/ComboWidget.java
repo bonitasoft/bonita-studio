@@ -23,6 +23,7 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class ComboWidget extends EditableControlWidget {
 
@@ -38,8 +39,7 @@ public class ComboWidget extends EditableControlWidget {
         @Override
         public ComboWidget createIn(Composite container) {
             final ComboWidget control = new ComboWidget(container, labelAbove, horizontalLabelAlignment,
-                    verticalLabelAlignment, labelWidth, readOnly, label,
-                    message);
+                    verticalLabelAlignment, labelWidth, readOnly, label, message);
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             control.setItems(items);
             if (ctx != null && modelObservable != null) {
@@ -53,13 +53,20 @@ public class ComboWidget extends EditableControlWidget {
     private CCombo combo;
 
     protected ComboWidget(Composite container, boolean topLabel, int horizontalLabelAlignment, int verticalLabelAlignment,
-            int labelWidth, boolean readOnly,
-            String label, String message) {
+            int labelWidth, boolean readOnly, String label, String message) {
         super(container, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label, message);
     }
 
     public ISWTObservableValue observeComboText() {
         return SWTObservables.observeText(combo);
+    }
+
+    @Override
+    public ComboWidget adapt(FormToolkit toolkit) {
+        super.adapt(toolkit);
+        toolkit.adapt(combo.getParent().getParent());
+        toolkit.adapt(combo, true, true);
+        return this;
     }
 
     @Override

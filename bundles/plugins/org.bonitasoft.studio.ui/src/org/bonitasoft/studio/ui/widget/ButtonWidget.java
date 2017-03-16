@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * API to create and parameterize a button
@@ -86,6 +87,11 @@ public class ButtonWidget extends ControlWidget {
     protected Control createControl() {
         button = new Button(this, SWT.PUSH);
         button.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        return this;
+    }
+
+    @Override
+    public ButtonWidget adapt(FormToolkit toolkit) {
         return this;
     }
 }

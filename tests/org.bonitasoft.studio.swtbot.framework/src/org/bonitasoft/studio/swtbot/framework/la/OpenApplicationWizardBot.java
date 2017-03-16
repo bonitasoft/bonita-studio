@@ -30,7 +30,7 @@ public class OpenApplicationWizardBot extends SelectApplicationWizardEditorBot {
      */
     public BotApplicationEditor open(String... appToOpen) {
         select(appToOpen);
-        return new BotApplicationEditor(bot.activeEditor());
+        return new BotApplicationEditor(bot, bot.activeEditor());
     }
 
     /**

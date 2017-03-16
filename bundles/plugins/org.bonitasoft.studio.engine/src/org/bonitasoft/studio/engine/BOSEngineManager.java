@@ -289,7 +289,7 @@ public class BOSEngineManager {
             BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
         if (!isRunning()) {
             if (monitor != null) {
-                monitor.setTaskName(Messages.waitingForEngineToStart);
+                monitor.beginTask(Messages.waitingForEngineToStart, IProgressMonitor.UNKNOWN);
             }
             start();
         }

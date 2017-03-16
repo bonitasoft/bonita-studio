@@ -26,16 +26,20 @@ import org.eclipse.swt.widgets.Text;
 
 public class TextAreaWidget extends TextWidget {
 
-    public static class Builder extends TextWidget.Builder {
+    public static class Builder extends EditableControlWidgetBuilder<Builder, TextWidget> {
+
+        protected Optional<Integer> delay = Optional.empty();
+
+        public Builder withDelay(int delay) {
+            this.delay = Optional.of(delay);
+            return this;
+        }
 
         @Override
         public TextAreaWidget createIn(Composite container) {
             final TextAreaWidget control = new TextAreaWidget(container, labelAbove, horizontalLabelAlignment,
-                    verticalLabelAlignment, labelWidth, readOnly, label,
-                    message, labelButton);
+                    verticalLabelAlignment, labelWidth, readOnly, label, message);
             control.setLayoutData(layoutData != null ? layoutData : gridData);
-            buttonListner.ifPresent(control::onCLickButton);
-            placeholder.ifPresent(control::setPlaceholder);
 
             if (ctx != null && modelObservable != null) {
                 control.bindControl(ctx,
@@ -47,24 +51,23 @@ public class TextAreaWidget extends TextWidget {
             }
             return control;
         }
-
     }
 
     protected TextAreaWidget(Composite container, boolean topLabel, int horizontalLabelAlignment, int verticalLabelAlignment,
-            int labelWidth, boolean readOnly, String label, String message, Optional<String> labelButton) {
+            int labelWidth, boolean readOnly, String label, String message) {
         super(container, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label, message,
-                labelButton);
+                Optional.empty());
     }
 
+    @Override
     protected Text newText(final Composite textContainer) {
-        final Text text = new Text(textContainer, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+        final Text text = new Text(textContainer, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
         text.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         final Listener scrollBarListener = event -> {
             final Text t = (Text) event.widget;
             final Rectangle r1 = t.getClientArea();
             final Rectangle r2 = t.computeTrim(r1.x, r1.y, r1.width, r1.height);
             final Point p = t.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-            t.getHorizontalBar().setVisible(r2.width <= p.x);
             t.getVerticalBar().setVisible(r2.height <= p.y);
             if (event.type == SWT.Modify) {
                 t.getParent().layout(true);

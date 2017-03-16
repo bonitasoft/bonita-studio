@@ -30,33 +30,35 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public abstract class EditableControlWidget extends ControlWidget {
+
+    public static final int MESSAGE_GRAY_STYLE = 1;
+    public static final int MESSAGE_DEFAULT_STYLE = 0;
 
     private LocalResourceManager resourceManager;
     private Color errorColor;
     private Color warningColor;
     private Binding valueBinding;
     private WidgetMessageDecorator messageDecorator;
+    private int messageStyle = MESSAGE_DEFAULT_STYLE;
 
     protected EditableControlWidget(Composite parent, boolean labelAbove, int horizontalLabelAlignment,
-            int verticalLabelAlignment, int labelHint,
-            boolean readOnly, String labelValue, String message) {
+            int verticalLabelAlignment, int labelHint, boolean readOnly, String labelValue, String message) {
         this(parent, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, readOnly, labelValue, message,
                 Optional.empty());
     }
 
     protected EditableControlWidget(Composite parent, boolean labelAbove, int horizontalLabelAlignment,
-            int verticalLabelAlignment, int labelHint,
-            boolean readOnly, String labelValue, String message, Optional<String> buttonLabel) {
+            int verticalLabelAlignment, int labelHint, boolean readOnly, String labelValue, String message,
+            Optional<String> buttonLabel) {
         super(parent, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, readOnly, labelValue, message,
                 buttonLabel);
-        initEditable(parent, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, readOnly, labelValue,
-                message);
+        initEditable(parent, labelAbove, readOnly, message);
     }
 
-    protected void initEditable(Composite parent, boolean labelAbove, int horizontalLabelAlignment,
-            int verticalLabelAlignment, int labelHint, boolean readOnly, String labelValue, String message) {
+    protected void initEditable(Composite parent, boolean labelAbove, boolean readOnly, String message) {
         this.readOnly = readOnly;
         this.resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
         errorColor = resourceManager.createColor(ColorConstants.ERROR_RGB);
@@ -65,7 +67,7 @@ public abstract class EditableControlWidget extends ControlWidget {
         messageDecorator
                 .setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.TOP)
                         .span(messageLabelHorizontalSpan(labelAbove), 1).indent(0, -2).create());
-        messageDecorator.setColor(getStatusColor(status));
+        setMessageColor();
         messageDecorator.setMessage(message);
         messageDecorator.updateExpandState();
     }
@@ -91,9 +93,8 @@ public abstract class EditableControlWidget extends ControlWidget {
         if (status.isOK() || status.getSeverity() == IStatus.INFO) {
             if (focused != null && focused.getParent() != null && focused.getParent().equals(container)) {
                 return container.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BORDER);
-            } else {
-                return container.getDisplay().getSystemColor(SWT.COLOR_GRAY);
             }
+            return container.getDisplay().getSystemColor(SWT.COLOR_GRAY);
         }
         return getStatusColor(status);
     }
@@ -116,6 +117,16 @@ public abstract class EditableControlWidget extends ControlWidget {
                 : status.getSeverity() == IStatus.ERROR ? JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR) : null;
     }
 
+    @Override
+    public Control adapt(FormToolkit toolkit) {
+        label.ifPresent(label -> toolkit.adapt(label, true, true));
+        filler.ifPresent(filler -> toolkit.adapt(filler, true, true));
+        messageDecorator.adapt(toolkit);
+        messageDecorator.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
+        messageStyle = MESSAGE_GRAY_STYLE;
+        return this;
+    }
+
     protected ControlMessageSupport bindControl(DataBindingContext ctx, IObservableValue controlObservable,
             IObservableValue modelObservable,
             UpdateValueStrategy targetToModel,
@@ -132,13 +143,26 @@ public abstract class EditableControlWidget extends ControlWidget {
                 } else {
                     messageDecorator.setMessage(status.getMessage());
                 }
+                setMessageColor();
                 messageDecorator.setImage(getStatusImage(status));
-                messageDecorator.setColor(getStatusColor(status));
                 messageDecorator.updateExpandState();
                 EditableControlWidget.this.getParent().layout();
             }
 
         };
+    }
+
+    protected void setMessageColor() {
+        if (status.isOK()) {
+            switch (messageStyle) {
+                case MESSAGE_GRAY_STYLE:
+                    messageDecorator.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
+                    return;
+                default:
+                    break;
+            }
+        }
+        messageDecorator.setColor(getStatusColor(status));
     }
 
     public Binding getValueBinding() {

@@ -14,35 +14,55 @@
  */
 package org.bonitasoft.studio.la.ui.editor;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import java.io.IOException;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.UnmarshalException;
+
+import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
+import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.xml.sax.SAXException;
 
 public class ApplicationEditor extends FormEditor {
 
     public static final String EDITOR_ID = "org.bonitasoft.studio.la.editor";
-
+    private final ApplicationNodeContainerConverter applicationNodeContainerConverter = new ApplicationNodeContainerConverter();
+    private ApplicationNodeContainer applicationWorkingCopy;
     private StructuredTextEditor fSourceEditor;
+    private ApplicationOverviewPage overviewPage;
 
     @Override
     protected void addPages() {
+        overviewPage = new ApplicationOverviewPage("overview", Messages.overview);
+        overviewPage.initialize(this);
+        overviewPage.setActive(true);
         try {
+            setPageText(addPage(overviewPage), Messages.overview);
             setPageText(addPage(createSourceEditor(), getEditorInput()), Messages.source);
-
+            initVariablesAndListeners();
+            addPageChangedListener(e -> overviewPage.reflow());
         } catch (final PartInitException e) {
-            BonitaStudioLog.error(e);
+            throw new RuntimeException("fail to create editor", e);
         }
     }
 
-    /**
-     * @see org.eclipse.ui.part.WorkbenchPart#getPartName()
-     */
+    private void initVariablesAndListeners() {
+        final IDocument document = fSourceEditor.getDocumentProvider().getDocument(getEditorInput());
+        try {
+            applicationWorkingCopy = applicationNodeContainerConverter.unmarshallFromXML(document.get().getBytes());
+        } catch (JAXBException | IOException | SAXException e) {
+            throw new RuntimeException("fail to read XML document", e);
+        }
+        overviewPage.init(applicationWorkingCopy, document);
+    }
+
     @Override
     public String getPartName() {
         return getEditorInput().getName();
@@ -75,8 +95,30 @@ public class ApplicationEditor extends FormEditor {
     }
 
     @Override
-    protected FormToolkit createToolkit(Display display) {
-        return new FormToolkit(display);
+    public Object getAdapter(Class adapter) {
+        return fSourceEditor.getAdapter(adapter);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.forms.editor.FormEditor#pageChange(int)
+     */
+    @Override
+    protected void pageChange(int newPageIndex) {
+        if (newPageIndex == overviewPage.getIndex()) {
+            try {
+                final ApplicationNodeContainer newAppNode = applicationNodeContainerConverter
+                        .unmarshallFromXML(
+                                fSourceEditor.getDocumentProvider().getDocument(getEditorInput()).get().getBytes());
+                applicationWorkingCopy.getApplications().clear();
+                applicationWorkingCopy.getApplications().addAll(newAppNode.getApplications());
+                overviewPage.update();
+            } catch (UnmarshalException unmarshalException) {
+                // let it be
+            } catch (JAXBException | IOException | SAXException e) {
+                throw new RuntimeException("Fail to update the applicationNodeContainer", e);
+            }
+        }
+        super.pageChange(newPageIndex);
+    }
 }

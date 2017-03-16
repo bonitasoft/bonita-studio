@@ -25,24 +25,24 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public abstract class ControlWidget extends Composite {
 
-    protected Label label;
+    protected Optional<Label> label = Optional.empty();
+    protected Optional<Label> filler = Optional.empty();
 
     protected IStatus status = ValidationStatus.ok();
-    protected Optional<String> message;
+    protected Optional<String> message = Optional.empty();
     protected boolean readOnly = false;
     protected boolean labelAbove = false;
     protected Control control;
-    protected Optional<String> buttonLabel;
+    protected Optional<String> buttonLabel = Optional.empty();
 
-    protected ControlWidget(Composite parent,
-            boolean labelAbove, int horizontalLabelAlignment, int verticalLabelAlignment, int labelHint, String labelValue,
-            String message) {
+    protected ControlWidget(Composite parent, boolean labelAbove, int horizontalLabelAlignment, int verticalLabelAlignment,
+            int labelHint, String labelValue, String message) {
         super(parent, SWT.NONE);
-        buttonLabel = Optional.empty();
-        init(parent, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, labelValue, message);
+        init(labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, labelValue, message);
     }
 
     protected ControlWidget(Composite parent, boolean labelAbove, int horizontalLabelAlignment, int verticalLabelAlignment,
@@ -50,7 +50,7 @@ public abstract class ControlWidget extends Composite {
         super(parent, SWT.NONE);
         this.buttonLabel = buttonLabel;
         this.readOnly = readOnly;
-        init(parent, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, labelValue, message);
+        init(labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, labelValue, message);
     }
 
     protected ControlWidget(Composite parent) {
@@ -62,13 +62,8 @@ public abstract class ControlWidget extends Composite {
         control = createControl();
     }
 
-    private void init(Composite parent,
-            boolean labelAbove,
-            int horizontalLabelAlignment,
-            int verticalLabelAlignment,
-            int labelHint,
-            String labelValue,
-            String message) {
+    private void init(boolean labelAbove, int horizontalLabelAlignment, int verticalLabelAlignment, int labelHint,
+            String labelValue, String message) {
         this.message = Optional.ofNullable(message);
         this.labelAbove = labelAbove;
         setLayout(GridLayoutFactory.fillDefaults()
@@ -78,19 +73,22 @@ public abstract class ControlWidget extends Composite {
 
         final Optional<String> labelText = Optional.ofNullable(labelValue);
         labelText.ifPresent(text -> {
-            label = new Label(this, SWT.NONE);
-            label.setLayoutData(GridDataFactory.swtDefaults()
+            Label lab = new Label(this, SWT.NONE);
+            lab.setLayoutData(GridDataFactory.swtDefaults()
                     .align(labelAbove ? SWT.LEFT : horizontalLabelAlignment, verticalLabelAlignment)
                     .span(labelAbove ? 2 : 1, 1).create());
-            label.setText(text);
+            lab.setText(text);
+            label = Optional.ofNullable(lab);
         });
 
         control = createControl();
 
         //Create a filler label
-        labelText.map(text -> new Label(this, SWT.NONE))
-                .ifPresent(GridDataFactory.swtDefaults().hint(labelHint, SWT.DEFAULT).exclude(labelAbove)::applyTo);
+        filler = labelText.map(text -> new Label(this, SWT.NONE));
+        filler.ifPresent((GridDataFactory.swtDefaults().hint(labelHint, SWT.DEFAULT).exclude(labelAbove)::applyTo));
     }
+
+    public abstract Control adapt(FormToolkit toolkit);
 
     public IStatus getStatus() {
         return status;

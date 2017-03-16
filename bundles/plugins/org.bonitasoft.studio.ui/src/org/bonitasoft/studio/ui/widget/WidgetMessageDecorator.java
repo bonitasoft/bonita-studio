@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class WidgetMessageDecorator extends ExpandableComposite {
 
@@ -49,5 +50,10 @@ public class WidgetMessageDecorator extends ExpandableComposite {
 
     public void updateExpandState() {
         setExpanded(messageLabel.getText() != null && !messageLabel.getText().isEmpty());
+    }
+
+    public void adapt(FormToolkit toolkit) {
+        toolkit.adapt(this);
+        toolkit.adapt(messageLabel, true, true);
     }
 }
