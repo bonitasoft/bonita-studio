@@ -35,6 +35,10 @@ import org.eclipse.swt.widgets.Shell;
 
 public class NewApplicationHandler {
 
+    private static final String DEFAULT_PROFILE = "User";
+    private static final String DEFAULT_LAYOUT = "custompage_defaultlayout";
+    private static final String DEFAULT_THEME = "custompage_bootstrapdefaulttheme";
+
     @Execute
     public void openNewApplicationWizard(Shell activeShell, RepositoryAccessor repositoryAccessor) {
         createWizard(newWizard(), repositoryAccessor)
@@ -45,10 +49,14 @@ public class NewApplicationHandler {
     protected WizardBuilder<ApplicationFileStore> createWizard(WizardBuilder<ApplicationFileStore> builder,
             RepositoryAccessor repositoryAccessor) {
         final ApplicationNode applicationNode = newApplication("myApp", "My App", "1.0").create();
+        applicationNode.setProfile(DEFAULT_PROFILE);
+        applicationNode.setLayout(DEFAULT_LAYOUT);
+        applicationNode.setTheme(DEFAULT_THEME);
+
         return builder
-                .withTitle(Messages.createNewApplication)
+                .withTitle(Messages.createNewApplicationDescriptor)
                 .havingPage(newPage()
-                        .withTitle(Messages.newApplicationTitle)
+                        .withTitle(Messages.newApplicationDescriptorTitle)
                         .withDescription(Messages.newApplicationDescription)
                         .withControl(new NewApplicationPage(applicationNode, repositoryAccessor)))
                 .onFinish(container -> createApplicationFileStore(applicationNode, repositoryAccessor));

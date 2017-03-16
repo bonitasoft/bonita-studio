@@ -35,6 +35,7 @@ Require-Bundle: org.eclipse.jface;bundle-version="3.10.1",
  org.mockito;bundle-version="1.10.19";resolution:=optional,
  org.eclipse.ui.forms
 Export-Package: org.bonitasoft.studio.ui,
+ org.bonitasoft.studio.ui.converter,
  org.bonitasoft.studio.ui.databinding,
  org.bonitasoft.studio.ui.dialog,
  org.bonitasoft.studio.ui.editors,

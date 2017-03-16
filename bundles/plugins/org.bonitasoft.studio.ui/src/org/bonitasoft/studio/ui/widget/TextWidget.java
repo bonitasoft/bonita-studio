@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class TextWidget extends EditableControlWidget {
 
@@ -128,6 +129,19 @@ public class TextWidget extends EditableControlWidget {
         return text.getText();
     }
 
+    public TextWidget setLabelColor(Color color) {
+        label.ifPresent(label -> label.setForeground(color));
+        return this;
+    }
+
+    @Override
+    public TextWidget adapt(FormToolkit toolkit) {
+        super.adapt(toolkit);
+        toolkit.adapt(text.getParent().getParent());
+        toolkit.adapt(text, true, true);
+        return this;
+    }
+
     @Override
     protected Control createControl() {
         final Composite textContainer = new Composite(this, SWT.NONE);
@@ -170,8 +184,9 @@ public class TextWidget extends EditableControlWidget {
         control.setEnabled(!readOnly);
     }
 
-    public void setText(String text) {
+    public TextWidget setText(String text) {
         this.text.setText(text);
+        return this;
     }
 
 }

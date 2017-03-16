@@ -24,8 +24,10 @@ import java.util.stream.Stream;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.repository.ApplicationFileStore;
+import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.ui.control.SelectApplicationDescriptorPage;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -68,6 +70,12 @@ public class DeleteApplicationHandler {
         return selectApplicationDescriptorPage.getSelection()
                 .map(application -> "\n" + application.getName())
                 .collect(Collectors.joining());
+    }
+
+    @CanExecute
+    public boolean canExecute(final RepositoryAccessor repositoryAccessor) {
+        return repositoryAccessor.getCurrentRepository().isLoaded()
+                && !repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getChildren().isEmpty();
     }
 
 }

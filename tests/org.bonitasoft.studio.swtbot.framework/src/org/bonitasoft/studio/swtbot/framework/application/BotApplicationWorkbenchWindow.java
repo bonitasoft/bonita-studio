@@ -173,7 +173,7 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
 
     public NewApplicationWizardBot newApplication() {
         bot.menu("Development").menu("Application").menu("New...").click();
-        return new NewApplicationWizardBot(bot, Messages.createNewApplication);
+        return new NewApplicationWizardBot(bot, Messages.createNewApplicationDescriptor);
     }
 
     public DeleteApplicationWizardBot deleteApplicationDescriptor() {
