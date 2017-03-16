@@ -34,9 +34,6 @@ public class ApplicationNameUnicityValidator implements ValidatorBuilder<UniqueV
         return this;
     }
 
-    /**
-     * @see org.bonitasoft.studio.ui.validator.ValidatorBuilder#create()
-     */
     @Override
     public UniqueValidator create() {
         return UniqueValidatorFactory.uniqueValidator().in(applicationDescriptorNames).create();

@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.ui.validator.ApplicationNameUnicityValidator;
+import org.bonitasoft.studio.la.ui.validator.ApplicationTokenUnicityValidator;
 import org.bonitasoft.studio.ui.validator.EmptyInputValidator;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.validator.RegExpValidator;
@@ -63,7 +64,8 @@ public class NewApplicationPage implements ControlSupplier {
                                 new RegExpValidator.Builder().matches("^[a-zA-Z0-9]+$")
                                         .withMessage(Messages.tokenValidatorMessage),
                                 new ApplicationNameUnicityValidator().withApplicationDescriptors(repositoryAccessor
-                                        .getRepositoryStore(ApplicationRepositoryStore.class).getChildren()))))
+                                        .getRepositoryStore(ApplicationRepositoryStore.class).getChildren()),
+                                new ApplicationTokenUnicityValidator.Builder(repositoryAccessor))))
                 .createIn(composite);
 
         new TextWidget.Builder()
@@ -92,5 +94,4 @@ public class NewApplicationPage implements ControlSupplier {
 
         return composite;
     }
-
 }

@@ -18,10 +18,11 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 
+    public static String url;
     public static String applicationStoreName;
-    public static String createNewApplication;
+    public static String createNewApplicationDescriptor;
     public static String create;
-    public static String newApplicationTitle;
+    public static String newApplicationDescriptorTitle;
     public static String newApplicationDescription;
     public static String applicationToken;
     public static String applicationTokenMessage;
@@ -37,13 +38,31 @@ public class Messages extends NLS {
     public static String openExistingApplication;
     public static String openExistingApplicationDescription;
     public static String appNameUniqueness;
-    public static String delete;
     public static String deleteExistingApplication;
     public static String deleteExistingApplicationDescription;
     public static String deleteConfirmation;
     public static String deleteConfirmationMessage;
+    public static String deleteSingleConfirmationMessage;
+    public static String deleteSingleDoneMessage;
     public static String deleteDoneTitle;
     public static String deleteDoneMessage;
+    public static String deployDoneTitle;
+    public static String deployDoneMessage;
+    public static String deployFailedTitle;
+    public static String deploy;
+    public static String fetchFromDatabase;
+    public static String delete;
+    public static String overview;
+    public static String description;
+    public static String profile;
+    public static String saveBeforeDeploy;
+    public static String saveBeforeDeployTitle;
+    public static String layout;
+    public static String theme;
+    public static String versionMessage;
+    public static String descriptionMessage;
+    public static String themeMessage;
+    public static String customProfile;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

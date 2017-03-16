@@ -64,7 +64,7 @@ public class NewApplicationHandlerTest {
         final WizardBuilder<ApplicationFileStore> builder = spy(WizardBuilder.newWizard());
         newApplicationHandler.createWizard(builder, repositoryAccessor);
 
-        verify(builder).withTitle(Messages.createNewApplication);
+        verify(builder).withTitle(Messages.createNewApplicationDescriptor);
         verify(builder).havingPage(notNull(WizardPageBuilder.class));
         verify(builder).onFinish(notNull(FinishHandler.class));
     }

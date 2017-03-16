@@ -14,14 +14,20 @@
  */
 package org.bonitasoft.studio.swtbot.framework.la;
 
+import org.bonitasoft.studio.la.i18n.Messages;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 
 public class BotApplicationEditor {
 
     private SWTBotEditor editor;
+    private SWTGefBot bot;
 
-    public BotApplicationEditor(SWTBotEditor editor) {
+    public BotApplicationEditor(SWTGefBot bot, SWTBotEditor editor) {
         this.editor = editor;
+        this.bot = bot;
     }
 
     public void close() {
@@ -30,5 +36,22 @@ public class BotApplicationEditor {
 
     public String getTitle() {
         return editor.getTitle();
+    }
+
+    /**
+     * save before deploy, else a pop up may appear
+     */
+    public void deploy() {
+        editor.save();
+        bot.toolbarButton(Messages.deploy).click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.deployDoneTitle));
+        bot.button(IDialogConstants.OK_LABEL).click();
+    }
+
+    public void delete() {
+        bot.toolbarButton(Messages.delete).click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.deleteConfirmation));
+        bot.button(IDialogConstants.YES_LABEL).click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.deleteDoneTitle));
     }
 }
