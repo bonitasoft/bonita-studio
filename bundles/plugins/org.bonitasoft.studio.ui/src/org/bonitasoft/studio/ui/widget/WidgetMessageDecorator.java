@@ -14,46 +14,91 @@
  */
 package org.bonitasoft.studio.ui.widget;
 
-import org.eclipse.jface.layout.GridDataFactory;
+import java.util.Optional;
+
+import org.bonitasoft.studio.ui.ColorConstants;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class WidgetMessageDecorator extends ExpandableComposite {
 
     private final CLabel messageLabel;
+    private Optional<String> defaultMessage;
+    private final LocalResourceManager resourceManager;
+    private final Color errorColor;
+    private final Color warningColor;
 
-    public WidgetMessageDecorator(Composite parent) {
+    public WidgetMessageDecorator(Composite parent, Optional<String> defaultMessage) {
         super(parent, SWT.NONE, ExpandableComposite.NO_TITLE);
+        this.resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
+        errorColor = resourceManager.createColor(ColorConstants.ERROR_RGB);
+        warningColor = resourceManager.createColor(ColorConstants.WARNING_RGB);
+        this.defaultMessage = defaultMessage;
         messageLabel = new CLabel(this, SWT.NONE);
+        messageLabel.setTopMargin(0);
         messageLabel.setLeftMargin(0);
-        messageLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.FILL).grab(true, true).create());
-        setClient(messageLabel);
-        setExpanded(false);
+        messageLabel.setText(defaultMessage.orElse(""));
+        updateExpandState();
     }
 
-    public void setColor(Color messageColor) {
-        messageLabel.setForeground(messageColor);
-    }
+    private void updateExpandState() {
+        final Composite parent = getParent().getParent();
+        if (messageLabel.getText() != null && !messageLabel.getText().isEmpty()) {
+            setClient(messageLabel);
+            setExpanded(true);
+            messageLabel.layout();
+        } else {
+            setExpanded(false);
+        }
+        parent.layout();
 
-    public void setMessage(String message) {
-        messageLabel.setText(message);
-    }
-
-    public void setImage(Image image) {
-        messageLabel.setImage(image);
-    }
-
-    public void updateExpandState() {
-        setExpanded(messageLabel.getText() != null && !messageLabel.getText().isEmpty());
     }
 
     public void adapt(FormToolkit toolkit) {
         toolkit.adapt(this);
         toolkit.adapt(messageLabel, true, true);
+        messageLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
+    }
+
+    public void setStatus(IStatus status) {
+        if (status == null || status.isOK()) {
+            messageLabel.setText(defaultMessage.orElse(""));
+        } else {
+            messageLabel.setText(status.getMessage());
+        }
+        messageLabel.setForeground(getStatusColor(status));
+        messageLabel.setImage(getStatusImage(status));
+        updateExpandState();
+    }
+
+    private Image getStatusImage(IStatus status) {
+        if (status == null) {
+            return null;
+        }
+        return status.getSeverity() == IStatus.WARNING ? JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING)
+                : status.getSeverity() == IStatus.ERROR ? JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR) : null;
+    }
+
+    private Color getStatusColor(IStatus status) {
+        if (status == null) {
+            return Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+        }
+        return status.getSeverity() == IStatus.WARNING ? warningColor
+                : status.getSeverity() == IStatus.ERROR ? errorColor
+                        : Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+    }
+
+    public void setMessage(Optional<String> message) {
+        this.defaultMessage = message;
     }
 }

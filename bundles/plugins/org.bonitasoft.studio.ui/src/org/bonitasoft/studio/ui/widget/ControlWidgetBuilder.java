@@ -40,6 +40,7 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
     protected Object layoutData;
     protected IObservableValue modelObservable;
     protected DataBindingContext ctx;
+    protected String id;
 
     /**
      * Adds a text label next to the control.
@@ -48,6 +49,11 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
      */
     public T withLabel(String label) {
         this.label = label;
+        return (T) this;
+    }
+
+    public T withId(String id) {
+        this.id = id;
         return (T) this;
     }
 

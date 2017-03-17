@@ -29,7 +29,6 @@ import org.bonitasoft.studio.diagram.test.ConvertActivityTypeWithBoundariesIT;
 import org.bonitasoft.studio.diagram.test.NewRunTest;
 import org.bonitasoft.studio.diagram.test.SharedEditingDomainTests;
 import org.bonitasoft.studio.diagram.test.TestBoundariesCreation;
-import org.bonitasoft.studio.diagram.test.TestBug1640;
 import org.bonitasoft.studio.diagram.test.TestConvertToMessage;
 import org.bonitasoft.studio.diagram.test.TestMoveBetweenLane;
 import org.bonitasoft.studio.diagram.test.TestSave;
@@ -75,7 +74,6 @@ import org.junit.runners.Suite;
         TestBonitaGroovyEditorDialog.class,
         CopyPasteTests.class,
         DeleteCommandTest.class,
-        TestBug1640.class,
         NewRunTest.class,
         DeleteWidgetWithContextMenuIT.class,
         DataWizardIT.class,

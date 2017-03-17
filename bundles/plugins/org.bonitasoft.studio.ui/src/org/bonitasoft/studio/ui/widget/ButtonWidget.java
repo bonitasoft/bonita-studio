@@ -40,6 +40,7 @@ public class ButtonWidget extends ControlWidget {
         @Override
         public ButtonWidget createIn(Composite container) {
             final ButtonWidget control = new ButtonWidget(container);
+            control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             if (this.label != null) {
                 control.setText(label);
@@ -55,6 +56,11 @@ public class ButtonWidget extends ControlWidget {
 
     protected ButtonWidget(Composite parent) {
         super(parent);
+    }
+
+    @Override
+    protected int numColumn() {
+        return 1;
     }
 
     /**

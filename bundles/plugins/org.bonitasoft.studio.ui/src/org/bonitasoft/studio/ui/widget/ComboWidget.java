@@ -38,8 +38,10 @@ public class ComboWidget extends EditableControlWidget {
 
         @Override
         public ComboWidget createIn(Composite container) {
-            final ComboWidget control = new ComboWidget(container, labelAbove, horizontalLabelAlignment,
-                    verticalLabelAlignment, labelWidth, readOnly, label, message);
+            final ComboWidget control = new ComboWidget(container, id, labelAbove, horizontalLabelAlignment,
+                    verticalLabelAlignment, labelWidth, readOnly, label,
+                    message);
+            control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             control.setItems(items);
             if (ctx != null && modelObservable != null) {
@@ -52,9 +54,12 @@ public class ComboWidget extends EditableControlWidget {
 
     private CCombo combo;
 
-    protected ComboWidget(Composite container, boolean topLabel, int horizontalLabelAlignment, int verticalLabelAlignment,
-            int labelWidth, boolean readOnly, String label, String message) {
-        super(container, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label, message);
+    protected ComboWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
+            int verticalLabelAlignment,
+            int labelWidth, boolean readOnly,
+            String label, String message) {
+        super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
+                message);
     }
 
     public ISWTObservableValue observeComboText() {
@@ -85,6 +90,7 @@ public class ComboWidget extends EditableControlWidget {
         }
 
         combo = new CCombo(container, SWT.SINGLE | textStyle);
+        combo.setData(SWTBOT_WIDGET_ID_KEY, id);
         combo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         combo.addListener(SWT.FocusIn, event -> redraw(container));
         combo.addListener(SWT.FocusOut, event -> redraw(container));

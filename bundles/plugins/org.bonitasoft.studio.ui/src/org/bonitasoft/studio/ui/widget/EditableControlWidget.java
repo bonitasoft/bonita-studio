@@ -1,11 +1,17 @@
-/*******************************************************************************
- * Copyright (C) 2016 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- * BonitaSoft, 32 rue Gustave Eiffel � 38000 Grenoble
- * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
+/**
+ * Copyright (C) 2017 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.ui.widget;
 
 import java.util.Optional;
@@ -17,14 +23,13 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -37,66 +42,62 @@ public abstract class EditableControlWidget extends ControlWidget {
     public static final int MESSAGE_GRAY_STYLE = 1;
     public static final int MESSAGE_DEFAULT_STYLE = 0;
 
-    private LocalResourceManager resourceManager;
-    private Color errorColor;
-    private Color warningColor;
+    protected final LocalResourceManager resourceManager;
+    private final Color errorColor;
+    private final Color warningColor;
     private Binding valueBinding;
     private WidgetMessageDecorator messageDecorator;
-    private int messageStyle = MESSAGE_DEFAULT_STYLE;
+    protected IStatus status = Status.OK_STATUS;
 
-    protected EditableControlWidget(Composite parent, boolean labelAbove, int horizontalLabelAlignment,
-            int verticalLabelAlignment, int labelHint, boolean readOnly, String labelValue, String message) {
-        this(parent, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, readOnly, labelValue, message,
-                Optional.empty());
+    protected EditableControlWidget(Composite parent, String id, boolean labelAbove, int horizontalLabelAlignment,
+            int verticalLabelAlignment, int labelHint,
+            boolean readOnly, String labelValue, String message) {
+        this(parent, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, readOnly, labelValue,
+                message, Optional.empty());
     }
 
-    protected EditableControlWidget(Composite parent, boolean labelAbove, int horizontalLabelAlignment,
+    protected EditableControlWidget(Composite parent, String id, boolean labelAbove, int horizontalLabelAlignment,
             int verticalLabelAlignment, int labelHint, boolean readOnly, String labelValue, String message,
             Optional<String> buttonLabel) {
-        super(parent, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, readOnly, labelValue, message,
-                buttonLabel);
-        initEditable(parent, labelAbove, readOnly, message);
-    }
-
-    protected void initEditable(Composite parent, boolean labelAbove, boolean readOnly, String message) {
-        this.readOnly = readOnly;
+        super(parent, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, readOnly, labelValue,
+                message, buttonLabel);
         this.resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
         errorColor = resourceManager.createColor(ColorConstants.ERROR_RGB);
         warningColor = resourceManager.createColor(ColorConstants.WARNING_RGB);
-        messageDecorator = new WidgetMessageDecorator(this);
-        messageDecorator
-                .setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.TOP)
-                        .span(messageLabelHorizontalSpan(labelAbove), 1).indent(0, -2).create());
-        setMessageColor();
-        messageDecorator.setMessage(message);
-        messageDecorator.updateExpandState();
     }
 
-    private int messageLabelHorizontalSpan(boolean labelAbove) {
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.ui.widget.ControlWidget#init()
+     */
+    @Override
+    protected void init() {
+        super.init();
+        messageDecorator = new WidgetMessageDecorator(this, message);
+        messageDecorator
+                .setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.FILL).grab(true, false)
+                        .span(messageLabelHorizontalSpan(labelAbove), 1).indent(0, messageDecoratorVerticalIndent())
+                        .create());
+        messageDecorator.setStatus(status);
+    }
+
+    protected int messageDecoratorVerticalIndent() {
+        return -2;
+    }
+
+    protected int messageLabelHorizontalSpan(boolean labelAbove) {
         return buttonLabel.isPresent() ? horizontalSpanWithButton(labelAbove) : 1;
     }
 
-    private int horizontalSpanWithButton(boolean labelAbove) {
+    protected int horizontalSpanWithButton(boolean labelAbove) {
         return labelAbove ? 3 : 2;
     }
 
     @Override
     protected abstract Control createControl();
 
-    protected Color getStatusColor(IStatus status) {
-        return status.getSeverity() == IStatus.WARNING ? warningColor
-                : status.getSeverity() == IStatus.ERROR ? errorColor
-                        : Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
-    }
-
-    protected Color getBorderColor(Control focused, Control container) {
-        if (status.isOK() || status.getSeverity() == IStatus.INFO) {
-            if (focused != null && focused.getParent() != null && focused.getParent().equals(container)) {
-                return container.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BORDER);
-            }
-            return container.getDisplay().getSystemColor(SWT.COLOR_GRAY);
-        }
-        return getStatusColor(status);
+    protected Color selectedBorderColor(Control container) {
+        return container.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BORDER);
     }
 
     protected void drawBorder(final Composite container, Event e) {
@@ -112,9 +113,23 @@ public abstract class EditableControlWidget extends ControlWidget {
         }
     }
 
-    private Image getStatusImage(IStatus status) {
-        return status.getSeverity() == IStatus.WARNING ? JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING)
-                : status.getSeverity() == IStatus.ERROR ? JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR) : null;
+    protected Color getStatusColor(IStatus status) {
+        if (status == null) {
+            return Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+        }
+        return status.getSeverity() == IStatus.WARNING ? warningColor
+                : status.getSeverity() == IStatus.ERROR ? errorColor
+                        : Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+    }
+
+    protected Color getBorderColor(Control focused, Control container) {
+        if (status.isOK() || status.getSeverity() == IStatus.INFO) {
+            if (focused != null && focused.getParent() != null && focused.getParent().equals(container)) {
+                return selectedBorderColor(container);
+            }
+            return container.getDisplay().getSystemColor(SWT.COLOR_GRAY);
+        }
+        return getStatusColor(status);
     }
 
     @Override
@@ -122,8 +137,6 @@ public abstract class EditableControlWidget extends ControlWidget {
         label.ifPresent(label -> toolkit.adapt(label, true, true));
         filler.ifPresent(filler -> toolkit.adapt(filler, true, true));
         messageDecorator.adapt(toolkit);
-        messageDecorator.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
-        messageStyle = MESSAGE_GRAY_STYLE;
         return this;
     }
 
@@ -138,31 +151,11 @@ public abstract class EditableControlWidget extends ControlWidget {
             @Override
             protected void statusChanged(IStatus status) {
                 EditableControlWidget.this.status = status;
-                if (status == null || status.isOK()) {
-                    messageDecorator.setMessage(message.orElse(""));
-                } else {
-                    messageDecorator.setMessage(status.getMessage());
-                }
-                setMessageColor();
-                messageDecorator.setImage(getStatusImage(status));
-                messageDecorator.updateExpandState();
-                EditableControlWidget.this.getParent().layout();
+                messageDecorator.setStatus(status);
+                redraw(control);
             }
 
         };
-    }
-
-    protected void setMessageColor() {
-        if (status.isOK()) {
-            switch (messageStyle) {
-                case MESSAGE_GRAY_STYLE:
-                    messageDecorator.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
-                    return;
-                default:
-                    break;
-            }
-        }
-        messageDecorator.setColor(getStatusColor(status));
     }
 
     public Binding getValueBinding() {
@@ -179,6 +172,11 @@ public abstract class EditableControlWidget extends ControlWidget {
 
     public void setMessage(String message) {
         this.message = Optional.ofNullable(message);
-        getDisplay().asyncExec(this::layout);
+        messageDecorator.setMessage(this.message);
+        messageDecorator.setStatus(null);
+    }
+
+    public IStatus getStatus() {
+        return status;
     }
 }

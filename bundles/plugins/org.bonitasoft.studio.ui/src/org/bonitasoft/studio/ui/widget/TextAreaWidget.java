@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Text;
 
 public class TextAreaWidget extends TextWidget {
 
-    public static class Builder extends EditableControlWidgetBuilder<Builder, TextWidget> {
+    public static class Builder extends TextWidget.Builder {
 
         protected Optional<Integer> delay = Optional.empty();
 
@@ -37,10 +37,10 @@ public class TextAreaWidget extends TextWidget {
 
         @Override
         public TextAreaWidget createIn(Composite container) {
-            final TextAreaWidget control = new TextAreaWidget(container, labelAbove, horizontalLabelAlignment,
-                    verticalLabelAlignment, labelWidth, readOnly, label, message);
+            final TextAreaWidget control = new TextAreaWidget(container, id, labelAbove, horizontalLabelAlignment,
+                    verticalLabelAlignment, labelWidth, readOnly, label, message,labelButton);
+            control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
-
             if (ctx != null && modelObservable != null) {
                 control.bindControl(ctx,
                         delay.map(time -> control.observeText(time, SWT.Modify))
@@ -53,10 +53,29 @@ public class TextAreaWidget extends TextWidget {
         }
     }
 
-    protected TextAreaWidget(Composite container, boolean topLabel, int horizontalLabelAlignment, int verticalLabelAlignment,
-            int labelWidth, boolean readOnly, String label, String message) {
-        super(container, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label, message,
-                Optional.empty());
+    protected TextAreaWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
+            int verticalLabelAlignment,
+            int labelWidth, boolean readOnly, String label, String message, Optional<String> labelButton) {
+        super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
+                message, labelButton, false, null);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.ui.widget.TextWidget#grabVerticalSpace()
+     */
+    @Override
+    protected boolean grabVerticalSpace() {
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.ui.widget.TextWidget#verticalAlignment()
+     */
+    @Override
+    protected int verticalAlignment() {
+        return SWT.FILL;
     }
 
     @Override
