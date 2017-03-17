@@ -66,6 +66,8 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class ImportBosArchiveControlSupplier implements ControlSupplier {
@@ -128,7 +130,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
         composite.setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 400).create());
+                GridDataFactory.fillDefaults().grab(true, true).create());
         createTreeHeader(composite, dbc);
         treeSection.setClient(createTree(treeSection));
     }
@@ -138,6 +140,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         treeSection.setLayout(GridLayoutFactory.fillDefaults().create());
         treeSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         treeSection.setText(Messages.importDetails);
+        treeSection.addExpansionListener(new UpdateLayoutListener(parent));
         treeSection.setExpanded(false);
         descriptionLabel = new Label(treeSection, SWT.WRAP);
         archiveStatusObservable = PojoObservables.observeValue(this, "archiveStatus");
@@ -167,7 +170,6 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     private Composite createTree(Composite parent) {
         final Composite fileTreeGroup = new Composite(parent, SWT.NONE);
         fileTreeGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 5).create());
-
         fileTreeGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         viewer = new TreeViewer(fileTreeGroup,
@@ -256,6 +258,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     private void updateFilePath(String filePath) {
         textWidget.setText(filePath);
+        textWidget.getParent().getParent().layout();
         if (new File(filePath).exists()) {
             savePath(filePath);
         } else {
@@ -307,7 +310,6 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     }
 
     protected void openTree() {
-        treeSection.setExpanded(true);
         archiveStatusObservable.setValue(archiveModel.getStatus());
         if (archiveModel.isConflicting()) {
             final TreeItem[] items = viewer.getTree().getItems();
@@ -328,11 +330,12 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
             keepAllButton.disable();
             overwriteButton.disable();
         } else {
+            descriptionLabel.setText(Messages.noConflictMessage);
             treeSection.getDescriptionControl().setForeground(successColor);
             keepAllButton.disable();
             overwriteButton.disable();
         }
-        descriptionLabel.getParent().layout();
+        treeSection.setExpanded(true);
     }
 
     protected String getAlreadyPresentMessage() {
@@ -395,5 +398,33 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     public void setArchiveStatus(ConflictStatus archiveStatus) {
         this.archiveStatus = archiveStatus;
+    }
+
+    protected class UpdateLayoutListener implements IExpansionListener {
+
+        private final Composite toLayout;
+
+        public UpdateLayoutListener(Composite toLayout) {
+            this.toLayout = toLayout;
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see org.eclipse.ui.forms.events.IExpansionListener#expansionStateChanging(org.eclipse.ui.forms.events.ExpansionEvent)
+         */
+        @Override
+        public void expansionStateChanging(ExpansionEvent e) {
+            //NOTHING TO DO
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see org.eclipse.ui.forms.events.IExpansionListener#expansionStateChanged(org.eclipse.ui.forms.events.ExpansionEvent)
+         */
+        @Override
+        public void expansionStateChanged(ExpansionEvent e) {
+            toLayout.layout();
+        }
+
     }
 }

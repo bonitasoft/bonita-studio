@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.ui.wizard;
 
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.convertUpdateValueStrategy;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.bonitasoft.studio.ui.wizard.WizardBuilder.newWizard;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
@@ -102,12 +103,14 @@ public class WizardBuilderTest {
                                     .withLabel("Name")
                                     .withLayoutData(GridDataFactory.fillDefaults().grab(true, false).create())
                                     .labelAbove()
-                                    .withButton("button")
-                                    .withMessage("Example: Jean, Marie ...")
+                                    //.withButton("button")
+                                    .transactionalEdit((a, b) -> System.out
+                                            .println(String.format("Old value: %s , New value: %s", a, b)))
+                                    //  .withMessage("Example: Jean, Marie ...")
                                     .bindTo(PojoObservables.observeValue(person, "name"))
                                     .inContext(ctx)
                                     .withTargetToModelStrategy(
-                                            updateValueStrategy().withValidator(new EmptyInputValidator.Builder()
+                                            convertUpdateValueStrategy().withValidator(new EmptyInputValidator.Builder()
                                                     .withMessage("Name is mandatory").create()))
                                     .createIn(container);
 
