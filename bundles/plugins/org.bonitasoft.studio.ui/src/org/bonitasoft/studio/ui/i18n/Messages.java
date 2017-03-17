@@ -24,5 +24,8 @@ public class Messages extends NLS {
 
     public static String errorOccuredDuringFinish;
     public static String errorTitle;
+    public static String revertEdit;
+    public static String applyEdit;
+    public static String edit;
 
 }

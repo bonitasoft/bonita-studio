@@ -22,6 +22,7 @@ import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 public class ImportBosHandler {
@@ -40,6 +41,7 @@ public class ImportBosHandler {
                                 Messages.bind(Messages.importFileDescription, new Object[] { bonitaStudioModuleName }))
                         .withControl(bosArchiveControlSupplier))
                 .onFinish(container -> onFinishOperation(bosArchiveControlSupplier, repositoryAccessor, container))
+                .withSize(SWT.DEFAULT, 700)
                 .open(activeShell, Messages.importButtonLabel);
 
         try {

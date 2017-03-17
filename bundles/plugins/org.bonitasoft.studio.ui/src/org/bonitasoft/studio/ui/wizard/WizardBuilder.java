@@ -26,6 +26,8 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -39,6 +41,8 @@ public class WizardBuilder<T> {
     private final ImageDescriptor imageDescriptor = ImageDescriptor.createFromFile(WizardBuilder.class, "defaultPage.png");//$NON-NLS-N$
     private Optional<T> finishResult = Optional.empty();
     private boolean needProgress = false;
+    private int width = SWT.DEFAULT;
+    private int height = SWT.DEFAULT;
 
     private WizardBuilder() {
     }
@@ -106,7 +110,15 @@ public class WizardBuilder<T> {
      * @param finishButton The label of the finish button
      */
     public Optional<T> open(Shell shell, String finishButton) {
-        new CustomLabelWizardDialog(shell, asWizard(), finishButton).open();
+        new CustomLabelWizardDialog(shell, asWizard(), finishButton) {
+
+            @Override
+            protected Point getInitialSize() {
+                final Point initialSize = super.getInitialSize();
+                return new Point(width == SWT.DEFAULT ? initialSize.x : width,
+                        height == SWT.DEFAULT ? initialSize.y : height);
+            }
+        }.open();
         return finishResult;
     }
 
@@ -116,5 +128,11 @@ public class WizardBuilder<T> {
     public Optional<T> open(Shell shell) {
         open(shell, IDialogConstants.FINISH_LABEL);
         return finishResult;
+    }
+
+    public WizardBuilder<T> withSize(int width, int height) {
+        this.width = width;
+        this.height = height;
+        return this;
     }
 }

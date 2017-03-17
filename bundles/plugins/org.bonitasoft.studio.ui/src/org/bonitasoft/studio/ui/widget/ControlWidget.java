@@ -16,8 +16,6 @@ package org.bonitasoft.studio.ui.widget;
 
 import java.util.Optional;
 
-import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -29,56 +27,75 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public abstract class ControlWidget extends Composite {
 
+    protected static final String SWTBOT_WIDGET_ID_KEY = "org.eclipse.swtbot.widget.key";
+
     protected Optional<Label> label = Optional.empty();
     protected Optional<Label> filler = Optional.empty();
-
-    protected IStatus status = ValidationStatus.ok();
+    //  protected IStatus status = ValidationStatus.ok();
     protected Optional<String> message = Optional.empty();
     protected boolean readOnly = false;
     protected boolean labelAbove = false;
     protected Control control;
     protected Optional<String> buttonLabel = Optional.empty();
+    private final int horizontalLabelAlignment;
+    private final int verticalLabelAlignment;
+    private final int labelHint;
+    private final String labelValue;
 
-    protected ControlWidget(Composite parent, boolean labelAbove, int horizontalLabelAlignment, int verticalLabelAlignment,
-            int labelHint, String labelValue, String message) {
-        super(parent, SWT.NONE);
-        init(labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, labelValue, message);
+    protected String id;
+
+    protected ControlWidget(Composite parent,
+            String id,
+            boolean labelAbove,
+            int horizontalLabelAlignment,
+            int verticalLabelAlignment,
+            int labelHint,
+            String labelValue,
+            String message) {
+        this(parent, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, false, labelValue, message,
+                Optional.empty());
     }
 
-    protected ControlWidget(Composite parent, boolean labelAbove, int horizontalLabelAlignment, int verticalLabelAlignment,
-            int labelHint, boolean readOnly, String labelValue, String message, Optional<String> buttonLabel) {
+    protected ControlWidget(Composite parent,
+            String id,
+            boolean labelAbove,
+            int horizontalLabelAlignment,
+            int verticalLabelAlignment,
+            int labelHint,
+            boolean readOnly,
+            String labelValue,
+            String message,
+            Optional<String> buttonLabel) {
         super(parent, SWT.NONE);
+        this.id = id;
         this.buttonLabel = buttonLabel;
         this.readOnly = readOnly;
-        init(labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, labelValue, message);
+        this.labelAbove = labelAbove;
+        this.horizontalLabelAlignment = horizontalLabelAlignment;
+        this.verticalLabelAlignment = verticalLabelAlignment;
+        this.labelHint = labelHint;
+        this.labelValue = labelValue;
+        this.message = Optional.ofNullable(message);
     }
 
     protected ControlWidget(Composite parent) {
-        super(parent, SWT.NONE);
-        setLayout(GridLayoutFactory.fillDefaults()
-                .numColumns(1)
-                .spacing(LayoutConstants.getSpacing().x, 1)
-                .create());
-        control = createControl();
+        this(parent, null, false, 0, 0, 0, false, null, null, Optional.empty());
     }
 
-    private void init(boolean labelAbove, int horizontalLabelAlignment, int verticalLabelAlignment, int labelHint,
-            String labelValue, String message) {
-        this.message = Optional.ofNullable(message);
-        this.labelAbove = labelAbove;
+    protected void init() {
         setLayout(GridLayoutFactory.fillDefaults()
-                .numColumns(buttonLabel.isPresent() ? 3 : 2)
-                .spacing(LayoutConstants.getSpacing().x, 1)
+                .numColumns(numColumn())
+                .spacing(horizontalSpacing(), 1)
                 .create());
 
         final Optional<String> labelText = Optional.ofNullable(labelValue);
         labelText.ifPresent(text -> {
-            Label lab = new Label(this, SWT.NONE);
+            final Label lab = new Label(this, SWT.NONE);
             lab.setLayoutData(GridDataFactory.swtDefaults()
                     .align(labelAbove ? SWT.LEFT : horizontalLabelAlignment, verticalLabelAlignment)
                     .span(labelAbove ? 2 : 1, 1).create());
             lab.setText(text);
-            label = Optional.ofNullable(lab);
+            label = Optional.of(lab);
         });
 
         control = createControl();
@@ -90,8 +107,12 @@ public abstract class ControlWidget extends Composite {
 
     public abstract Control adapt(FormToolkit toolkit);
 
-    public IStatus getStatus() {
-        return status;
+    protected int numColumn() {
+        return buttonLabel.isPresent() ? 3 : 2;
+    }
+
+    protected int horizontalSpacing() {
+        return LayoutConstants.getSpacing().x;
     }
 
     protected abstract Control createControl();

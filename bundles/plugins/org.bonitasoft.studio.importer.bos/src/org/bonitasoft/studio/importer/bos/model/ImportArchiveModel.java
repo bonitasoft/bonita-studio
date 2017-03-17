@@ -54,6 +54,6 @@ public class ImportArchiveModel {
      * set all the conflict status to none
      */
     public void resetStatus() {
-        stores.stream().forEach(store -> store.resetStatus());
+        stores.stream().forEach(ImportStoreModel::resetStatus);
     }
 }
