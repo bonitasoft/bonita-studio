@@ -337,6 +337,8 @@ public class Messages extends NLS {
     public static String dateOnlyDetails;
     public static String dateTimeDetails;
 
+    public static String dateTimeInTimezoneDetails;
+
     private Messages() {
     }
 

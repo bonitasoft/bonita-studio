@@ -49,7 +49,15 @@ public class InputTypeColumnLabelProviderTest {
         final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
                 SimpleFieldBuilder.aDateTimeField("time").build());
         final InputTypeColumnLabelProvider provider = new InputTypeColumnLabelProvider(aContract().in(aPool()).build());
-        assertThat(provider.getText(mapping)).isEqualTo("DATE AND TIME");
+        assertThat(provider.getText(mapping)).isEqualTo("DATE AND TIME (NO TZ)");
+    }
+
+    @Test
+    public void should_return_date_and_time_with_timezone_input_type_name() {
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.anOffsetDateTimeField("time").build());
+        final InputTypeColumnLabelProvider provider = new InputTypeColumnLabelProvider(aContract().in(aPool()).build());
+        assertThat(provider.getText(mapping)).isEqualTo("DATE AND TIME (TZ)");
     }
 
     @Test

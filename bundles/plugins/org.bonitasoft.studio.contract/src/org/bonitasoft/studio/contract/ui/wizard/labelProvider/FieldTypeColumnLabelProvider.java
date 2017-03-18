@@ -59,6 +59,8 @@ public class FieldTypeColumnLabelProvider extends ColumnLabelProvider {
                 return DateTypeLabels.DATE_ONLY;
             case LOCALDATETIME:
                 return DateTypeLabels.DATE_AND_TIME;
+            case OFFSETDATETIME:
+                return DateTypeLabels.DATE_TIME_WITH_TIMEZONE;
             default:
                 return field.getType().name();
         }

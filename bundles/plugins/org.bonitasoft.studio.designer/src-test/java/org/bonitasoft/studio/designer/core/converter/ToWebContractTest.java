@@ -23,6 +23,7 @@ import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -110,6 +111,16 @@ public class ToWebContractTest {
                 .havingInput(aContractInput().withType(ContractInputType.LOCALDATETIME)).build());
 
         assertThat(contract.getInput()).extracting("type").containsExactly(LocalDateTime.class.getName());
+    }
+
+    @Test
+    public void transform_an_emf_contract_into_a_designer_contract_with_OFFSETDATETIME_input() throws Exception {
+        final ToWebContract contractConverter = new ToWebContract();
+
+        final Contract contract = contractConverter.apply(aContract()
+                .havingInput(aContractInput().withType(ContractInputType.OFFSETDATETIME)).build());
+
+        assertThat(contract.getInput()).extracting("type").containsExactly(OffsetDateTime.class.getName());
     }
 
     @Test

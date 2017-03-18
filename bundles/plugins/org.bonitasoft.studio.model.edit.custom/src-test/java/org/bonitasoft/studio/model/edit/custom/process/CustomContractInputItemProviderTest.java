@@ -22,6 +22,7 @@ import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Map;
 
@@ -95,11 +96,11 @@ public class CustomContractInputItemProviderTest {
                 .getLabelProvider(contractInput)
                 .getText(contractInput.getType());
 
-        assertThat(label).isEqualTo(String.format("DATE ONLY (%s)", LocalDate.class.getName()));
+        assertThat(label).isEqualTo(String.format("DATE ONLY - %s", LocalDate.class.getName()));
     }
 
     @Test
-    public void should_display_date_and_time_for_LOCALDATE_contract_type() throws Exception {
+    public void should_display_date_and_time_for_LOCALDATETIME_contract_type() throws Exception {
         final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(
                 new ProcessItemProviderAdapterFactory());
 
@@ -108,7 +109,20 @@ public class CustomContractInputItemProviderTest {
                 .getLabelProvider(contractInput)
                 .getText(contractInput.getType());
 
-        assertThat(label).isEqualTo(String.format("DATE AND TIME (%s)", LocalDateTime.class.getName()));
+        assertThat(label).isEqualTo(String.format("DATE AND TIME (NO TZ) - %s", LocalDateTime.class.getName()));
+    }
+
+    @Test
+    public void should_display_date_and_time_for_OFFSETDATETIME_contract_type() throws Exception {
+        final CustomContractInputItemProvider itemProvider = new CustomContractInputItemProvider(
+                new ProcessItemProviderAdapterFactory());
+
+        final ContractInput contractInput = aContractInput().withType(ContractInputType.OFFSETDATETIME).build();
+        final String label = itemProvider.getPropertyDescriptor(contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE)
+                .getLabelProvider(contractInput)
+                .getText(contractInput.getType());
+
+        assertThat(label).isEqualTo(String.format("DATE AND TIME (TZ) - %s", OffsetDateTime.class.getName()));
     }
 
     @Test

@@ -53,6 +53,13 @@ public class ContractInputTypeCellLabelProviderTest {
     public void should_return_dateand_time() throws Exception {
         assertThat(contractInputTypeCellLabelProvider
                 .getText(ContractInputBuilder.aContractInput().withType(ContractInputType.LOCALDATETIME).build()))
-                        .isEqualTo("DATE AND TIME");
+                        .isEqualTo("DATE AND TIME (NO TZ)");
+    }
+
+    @Test
+    public void should_return_date_and_time_with_timezone() throws Exception {
+        assertThat(contractInputTypeCellLabelProvider
+                .getText(ContractInputBuilder.aContractInput().withType(ContractInputType.OFFSETDATETIME).build()))
+                        .isEqualTo("DATE AND TIME (TZ)");
     }
 }
