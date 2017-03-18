@@ -83,20 +83,20 @@ public class ContractIT {
         final BotContractInputTab inputTab = contractTabBot.selectInputTab();
         final BotContractInputRow contractInputRow = inputTab.add();
 
-        contractInputRow.setName("expenseReport").setType("COMPLEX (java.util.Map)").setDescription("An expense report");
+        contractInputRow.setName("expenseReport").setType("COMPLEX - java.util.Map").setDescription("An expense report");
 
         BotContractInputRow childRow = contractInputRow.getChildRow(0);
-        childRow.setName("expenseLines").setType("COMPLEX (java.util.Map)").clickMultiple();
+        childRow.setName("expenseLines").setType("COMPLEX - java.util.Map").clickMultiple();
 
         childRow = childRow.getChildRow(0);
         childRow.setName("nature").setDescription("The nature of the expense");
 
         childRow = inputTab.add();
-        childRow.setName("amount").setType("DECIMAL (java.lang.Double)")
+        childRow.setName("amount").setType("DECIMAL - java.lang.Double")
                 .setDescription("The amount of the expense VAT included in euros");
 
         childRow = inputTab.add();
-        childRow.setName("expenseDate").setType("DATE ONLY (java.time.LocalDate)")
+        childRow.setName("expenseDate").setType("DATE ONLY - java.time.LocalDate")
                 .setDescription("When the expense was done");
 
         bot.waitUntil(new AssertionCondition() {

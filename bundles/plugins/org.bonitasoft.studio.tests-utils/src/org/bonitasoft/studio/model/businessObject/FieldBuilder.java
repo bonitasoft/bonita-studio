@@ -20,6 +20,7 @@ import static org.bonitasoft.engine.bdm.model.field.FieldType.DOUBLE;
 import static org.bonitasoft.engine.bdm.model.field.FieldType.INTEGER;
 import static org.bonitasoft.engine.bdm.model.field.FieldType.LOCALDATE;
 import static org.bonitasoft.engine.bdm.model.field.FieldType.LOCALDATETIME;
+import static org.bonitasoft.engine.bdm.model.field.FieldType.OFFSETDATETIME;
 import static org.bonitasoft.engine.bdm.model.field.FieldType.STRING;
 import static org.bonitasoft.engine.bdm.model.field.FieldType.TEXT;
 import static org.bonitasoft.engine.bdm.model.field.RelationField.FetchType.LAZY;
@@ -61,6 +62,10 @@ public abstract class FieldBuilder {
 
     public static SimpleFieldBuilder aDateTimeField(final String name) {
         return aSimpleField().withName(name).ofType(LOCALDATETIME);
+    }
+
+    public static SimpleFieldBuilder anOffsetDateTimeField(String name) {
+        return aSimpleField().withName(name).ofType(OFFSETDATETIME);
     }
 
     public static SimpleFieldBuilder aDoubleField(final String name) {
@@ -173,6 +178,7 @@ public abstract class FieldBuilder {
         public SimpleField build() {
             return (SimpleField) super.build();
         }
+
     }
 
     public static class RelationFieldBuilder extends FieldBuilder {

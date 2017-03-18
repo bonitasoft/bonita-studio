@@ -65,6 +65,8 @@ public class SimpleFieldToContractInputMapping extends FieldToContractInputMappi
                 return ContractInputType.LOCALDATE;
             case LOCALDATETIME:
                 return ContractInputType.LOCALDATETIME;
+            case OFFSETDATETIME:
+                return ContractInputType.OFFSETDATETIME;
             default:
                 throw new IllegalStateException(
                         String.format("Failed to convert field type %s to contract input type", fieldType));

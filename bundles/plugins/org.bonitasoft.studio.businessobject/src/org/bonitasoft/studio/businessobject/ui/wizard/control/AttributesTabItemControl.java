@@ -29,6 +29,7 @@ import org.bonitasoft.engine.bdm.model.field.RelationField.FetchType;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.FieldNameEditingSupport;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.FieldTypeEditingSupport;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.MandatoryEditingSupport;
@@ -101,6 +102,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     private Composite dateFieldContent;
     private Composite dateOnlyFieldContent;
     private Composite datTimeFieldContent;
+    private Composite datTimeInTimezoneFieldContent;
 
     public AttributesTabItemControl(final TabFolder parent, final DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue,
@@ -133,8 +135,13 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         relationFieldContent = createRelationFieldDetailContent(detailGroup, ctx, viewerObservableValue);
         stringFieldContent = createStringFieldDetailContent(detailGroup, ctx);
         dateFieldContent = createFieldDescriptionContent(detailGroup, Messages.dateDetails);
-        dateOnlyFieldContent = createFieldDescriptionContent(detailGroup, Messages.dateOnlyDetails);
-        datTimeFieldContent = createFieldDescriptionContent(detailGroup, Messages.dateTimeDetails);
+        dateOnlyFieldContent = createFieldDescriptionContent(detailGroup,
+                String.format(Messages.dateOnlyDetails, DateTypeLabels.DATE_ONLY));
+        datTimeFieldContent = createFieldDescriptionContent(detailGroup,
+                String.format(Messages.dateTimeDetails, DateTypeLabels.DATE_AND_TIME,
+                        DateTypeLabels.DATE_TIME_WITH_TIMEZONE));
+        datTimeInTimezoneFieldContent = createFieldDescriptionContent(detailGroup,
+                String.format(Messages.dateTimeInTimezoneDetails, DateTypeLabels.DATE_TIME_WITH_TIMEZONE));
         emptyContent = createNoDetailsContent(detailGroup);
         textFieldContent = createFieldDescriptionContent(detailGroup, Messages.textDetails);
         stackLayout.topControl = emptyContent;
@@ -143,9 +150,10 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
 
     private Composite createFieldDescriptionContent(Group detailGroup, String description) {
         final Composite composite = new Composite(detailGroup, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 5).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        final Label textLabel = new Label(composite, SWT.NONE);
+        final Label textLabel = new Label(composite, SWT.WRAP);
+        textLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(380, SWT.DEFAULT).create());
         textLabel.setText(description);
         return composite;
     }
@@ -178,6 +186,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
                 return dateOnlyFieldContent;
             case LOCALDATETIME:
                 return datTimeFieldContent;
+            case OFFSETDATETIME:
+                return datTimeInTimezoneFieldContent;
             default:
                 return emptyContent;
         }
@@ -194,7 +204,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
 
     private Composite createStringFieldDetailContent(final Group detailGroup, final DataBindingContext ctx) {
         final Composite composite = new Composite(detailGroup, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 5).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         final ComboWidget stringFieldCombo = new ComboWidget.Builder()
@@ -249,7 +259,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
             final IViewerObservableValue viewerObservableValue) {
         final Composite composite = new Composite(detailGroup, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).spacing(15, 10).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 5).spacing(15, 10).create());
 
         final Label relationKindLabel = new Label(composite, SWT.NONE);
         relationKindLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
