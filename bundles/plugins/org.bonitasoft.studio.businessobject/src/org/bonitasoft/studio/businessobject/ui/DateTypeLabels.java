@@ -17,6 +17,7 @@ package org.bonitasoft.studio.businessobject.ui;
 public interface DateTypeLabels {
 
     public static final String DATE_ONLY = "DATE ONLY";
-    public static final String DATE_AND_TIME = "DATE AND TIME";
+    public static final String DATE_AND_TIME = "DATE AND TIME (NO TZ)";
+    public static final String DATE_TIME_WITH_TIMEZONE = "DATE AND TIME (TZ)";
 
 }

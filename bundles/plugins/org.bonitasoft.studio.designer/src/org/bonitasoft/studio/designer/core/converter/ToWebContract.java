@@ -20,6 +20,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 import org.bonitasoft.studio.model.process.Contract;
@@ -58,6 +59,8 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
                         return createLeafContractInput(input, LocalDate.class);
                     case LOCALDATETIME:
                         return createLeafContractInput(input, LocalDateTime.class);
+                    case OFFSETDATETIME:
+                        return createLeafContractInput(input, OffsetDateTime.class);
                     case BOOLEAN:
                         return createLeafContractInput(input, Boolean.class);
                     case FILE:

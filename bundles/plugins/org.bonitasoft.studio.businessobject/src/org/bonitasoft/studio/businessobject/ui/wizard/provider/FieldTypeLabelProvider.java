@@ -41,6 +41,9 @@ public class FieldTypeLabelProvider extends StyledCellLabelProvider implements I
             if (element == FieldType.LOCALDATETIME) {
                 return DateTypeLabels.DATE_AND_TIME;
             }
+            if (element == FieldType.OFFSETDATETIME) {
+                return DateTypeLabels.DATE_TIME_WITH_TIMEZONE;
+            }
             return ((FieldType) element).name();
         }
         if (element instanceof SimpleField) {

@@ -71,8 +71,8 @@ public class CustomContractInputItemProvider
                             @Override
                             public String getText(final Object object) {
                                 if (object instanceof ContractInputType) {
-                                    String label = getTypeLabel((ContractInputType) object);
-                                    return String.format("%s (%s)", label, javaType((ContractInputType) object));
+                                    final String label = getTypeLabel((ContractInputType) object);
+                                    return String.format("%s - %s", label, javaType((ContractInputType) object));
                                 }
                                 return super.getText(object);
                             }
@@ -82,7 +82,9 @@ public class CustomContractInputItemProvider
                                     case LOCALDATE:
                                         return "DATE ONLY";
                                     case LOCALDATETIME:
-                                        return "DATE AND TIME";
+                                        return "DATE AND TIME (NO TZ)";
+                                    case OFFSETDATETIME:
+                                        return "DATE AND TIME (TZ)";
                                     default:
                                         return super.getText(type);
                                 }

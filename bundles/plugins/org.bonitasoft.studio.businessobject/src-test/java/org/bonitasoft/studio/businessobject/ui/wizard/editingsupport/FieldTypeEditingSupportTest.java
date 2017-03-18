@@ -40,7 +40,7 @@ public class FieldTypeEditingSupportTest {
         final List<Object> input = editingSupport.getInput(new FieldTypeLabelProvider());
 
         assertThat(input).containsExactly(FieldType.BOOLEAN, FieldType.DATE,
-                FieldType.LOCALDATETIME, FieldType.LOCALDATE, FieldType.DOUBLE, FieldType.FLOAT,
+                FieldType.LOCALDATETIME, FieldType.OFFSETDATETIME, FieldType.LOCALDATE, FieldType.DOUBLE, FieldType.FLOAT,
                 FieldType.INTEGER, FieldType.LONG,
                 FieldType.STRING, FieldType.TEXT);
     }

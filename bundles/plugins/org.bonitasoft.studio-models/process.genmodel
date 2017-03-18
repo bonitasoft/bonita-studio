@@ -447,6 +447,7 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/LONG"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/LOCALDATE"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/LOCALDATETIME"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/OFFSETDATETIME"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//DocumentType">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/NONE"/>

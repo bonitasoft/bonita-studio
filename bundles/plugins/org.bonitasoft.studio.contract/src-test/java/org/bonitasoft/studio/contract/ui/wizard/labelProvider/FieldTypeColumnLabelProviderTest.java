@@ -58,7 +58,15 @@ public class FieldTypeColumnLabelProviderTest {
         final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
                 SimpleFieldBuilder.aDateTimeField("time").build());
         final FieldTypeColumnLabelProvider provider = new FieldTypeColumnLabelProvider();
-        assertThat(provider.getText(mapping)).isEqualTo("DATE AND TIME");
+        assertThat(provider.getText(mapping)).isEqualTo("DATE AND TIME (NO TZ)");
+    }
+
+    @Test
+    public void should_return_date_and_time_with_timezone_field_type_name() {
+        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.anOffsetDateTimeField("time").build());
+        final FieldTypeColumnLabelProvider provider = new FieldTypeColumnLabelProvider();
+        assertThat(provider.getText(mapping)).isEqualTo("DATE AND TIME (TZ)");
     }
 
     @Test
