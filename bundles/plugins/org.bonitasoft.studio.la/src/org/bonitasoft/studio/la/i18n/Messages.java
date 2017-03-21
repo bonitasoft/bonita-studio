@@ -71,6 +71,7 @@ public class Messages extends NLS {
     public static String destination;
     public static String exportDoneTitle;
     public static String exportDoneMessage;
+    public static String lookNFeel;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

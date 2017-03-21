@@ -14,11 +14,14 @@
  */
 package org.bonitasoft.studio.la.ui.validator;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.studio.common.jface.databinding.validator.UniqueValidator;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
@@ -29,7 +32,7 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
 
     public static class Builder implements ValidatorBuilder<UniqueValidator> {
 
-        private RepositoryAccessor repositoryAccessor;
+        private final RepositoryAccessor repositoryAccessor;
 
         public Builder(RepositoryAccessor repositoryAccessor) {
             this.repositoryAccessor = repositoryAccessor;
@@ -42,7 +45,7 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
 
     }
 
-    private RepositoryAccessor repositoryAccessor;
+    private final RepositoryAccessor repositoryAccessor;
     private Optional<String> currentToken;
 
     public ApplicationTokenUnicityValidator(RepositoryAccessor repositoryAccessor) {
@@ -55,29 +58,27 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
     }
 
     private List<String> getTokenList() {
-        List<String> existingTokens = new ArrayList<>();
-
-        repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getChildren()
+        final List<String> allTokens = repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getChildren()
                 .stream()
-                .forEach(applicationFileStore -> {
+                .map(fStore -> {
                     try {
-                        applicationFileStore.getContent().getApplications().stream()
-                                .map(application -> application.getToken())
-                                .forEach(existingTokens::add);
-                    } catch (ReadFileStoreException e) {
-                        throw new RuntimeException(e);
+                        return fStore.getContent();
+                    } catch (final ReadFileStoreException e) {
+                        BonitaStudioLog.error(String.format("Failed to parse application descriptor file '%s'",
+                                fStore.getName()), e);
+                        return null;
                     }
-                });
-        currentToken.ifPresent(currentToken -> existingTokens.remove(currentToken));
-        return existingTokens;
+                })
+                .filter(Objects::nonNull)
+                .flatMap(container -> container.getApplications().stream())
+                .map(ApplicationNode::getToken)
+                .collect(Collectors.toList());
+        currentToken.ifPresent(allTokens::remove);
+        return allTokens;
     }
 
     public void setCurrentToken(String currentToken) {
         this.currentToken = Optional.ofNullable(currentToken);
-    }
-
-    public String getCurrentToken() {
-        return currentToken.orElse("");
     }
 
     /**
@@ -85,7 +86,6 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
      */
     @Override
     public IStatus validate(Object value) {
-
         setIterable(getTokenList());
         return super.validate(value);
     }
