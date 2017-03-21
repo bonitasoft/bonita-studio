@@ -37,6 +37,7 @@ public class WidgetMessageDecorator extends ExpandableComposite {
     private final LocalResourceManager resourceManager;
     private final Color errorColor;
     private final Color warningColor;
+    private Optional<Color> defaultColor;
 
     public WidgetMessageDecorator(Composite parent, Optional<String> defaultMessage) {
         super(parent, SWT.NONE, ExpandableComposite.NO_TITLE);
@@ -48,6 +49,7 @@ public class WidgetMessageDecorator extends ExpandableComposite {
         messageLabel.setTopMargin(0);
         messageLabel.setLeftMargin(0);
         messageLabel.setText(defaultMessage.orElse(""));
+        defaultColor = Optional.empty();
         updateExpandState();
     }
 
@@ -67,7 +69,8 @@ public class WidgetMessageDecorator extends ExpandableComposite {
     public void adapt(FormToolkit toolkit) {
         toolkit.adapt(this);
         toolkit.adapt(messageLabel, true, true);
-        messageLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
+        defaultColor = Optional.ofNullable(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
+        messageLabel.setForeground(defaultColor.get());
     }
 
     public void setStatus(IStatus status) {
@@ -90,12 +93,12 @@ public class WidgetMessageDecorator extends ExpandableComposite {
     }
 
     private Color getStatusColor(IStatus status) {
-        if (status == null) {
-            return Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+        if (status == null || status.isOK()) {
+            return defaultColor.isPresent() ? defaultColor.get()
+                    : Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
         }
         return status.getSeverity() == IStatus.WARNING ? warningColor
-                : status.getSeverity() == IStatus.ERROR ? errorColor
-                        : Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+                : errorColor;
     }
 
     public void setMessage(Optional<String> message) {
