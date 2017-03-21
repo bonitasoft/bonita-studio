@@ -34,6 +34,14 @@
                   commandId="org.bonitasoft.studio.la.delete.command"
                   style="push">
             </command>
+            <separator
+                  name="org.bonitasoft.studio.la.separator.importExport"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.bonitasoft.studio.la.export.command"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
