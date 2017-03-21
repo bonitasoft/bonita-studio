@@ -20,14 +20,14 @@ import java.util.Objects;
 
 public class ThemeDescriptor {
 
-    public static final List<ThemeDescriptor> DEFAULT_THEME = new ArrayList<>();
+    public static final List<ThemeDescriptor> DEFAULT_THEMES = new ArrayList<>();
     static {
-        DEFAULT_THEME.add(new ThemeDescriptor("custompage_bootstrapdefaulttheme", "Bootstrap default theme"));
-        DEFAULT_THEME.add(new ThemeDescriptor("custompage_superherotheme", "Superhero theme"));
-        DEFAULT_THEME.add(new ThemeDescriptor("custompage_simplextheme", "Simplex theme"));
-        DEFAULT_THEME.add(new ThemeDescriptor("custompage_readabletheme", "Readable theme"));
-        DEFAULT_THEME.add(new ThemeDescriptor("custompage_flatlytheme", "Flatly theme"));
-        DEFAULT_THEME.add(new ThemeDescriptor("custompage_cosmotheme", "Cosmo theme"));
+        DEFAULT_THEMES.add(new ThemeDescriptor("custompage_bootstrapdefaulttheme", "Bootstrap default theme"));
+        DEFAULT_THEMES.add(new ThemeDescriptor("custompage_superherotheme", "Superhero theme"));
+        DEFAULT_THEMES.add(new ThemeDescriptor("custompage_simplextheme", "Simplex theme"));
+        DEFAULT_THEMES.add(new ThemeDescriptor("custompage_readabletheme", "Readable theme"));
+        DEFAULT_THEMES.add(new ThemeDescriptor("custompage_flatlytheme", "Flatly theme"));
+        DEFAULT_THEMES.add(new ThemeDescriptor("custompage_cosmotheme", "Cosmo theme"));
     }
 
     private String id;
@@ -47,14 +47,14 @@ public class ThemeDescriptor {
     }
 
     public static String fromIdToName(String id) {
-        return DEFAULT_THEME.stream()
+        return DEFAULT_THEMES.stream()
                 .filter(theme -> Objects.equals(theme.getId(), id))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Unknown theme")).getDisplayName();
     }
 
     public static String fromNameToId(String name) {
-        return DEFAULT_THEME.stream()
+        return DEFAULT_THEMES.stream()
                 .filter(theme -> Objects.equals(theme.getDisplayName(), name))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Unknown theme")).getId();
