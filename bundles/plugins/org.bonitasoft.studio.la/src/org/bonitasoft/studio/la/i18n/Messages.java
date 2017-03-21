@@ -63,6 +63,14 @@ public class Messages extends NLS {
     public static String descriptionMessage;
     public static String themeMessage;
     public static String customProfile;
+    public static String export;
+    public static String selectAppDescriptorToExport;
+    public static String exportApplicationDescriptor;
+    public static String selectDestination;
+    public static String browse;
+    public static String destination;
+    public static String exportDoneTitle;
+    public static String exportDoneMessage;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
