@@ -5,10 +5,12 @@
     <elements xsi:type="commands:Command" xmi:id="_pL3WsPnPEea-3Os5NcIV0g" elementId="org.bonitasoft.studio.la.deploy.command" commandName="%deployApplication"/>
     <elements xsi:type="commands:Command" xmi:id="_dHtcoP3SEeanhv23kWy-6w" elementId="org.bonitasoft.studio.la.open.command" commandName="%openApplication"/>
     <elements xsi:type="commands:Command" xmi:id="_2helYP6PEeaqYIbFhsSGFw" elementId="org.bonitasoft.studio.la.delete.command" commandName="%deleteApplication"/>
+    <elements xsi:type="commands:Command" xmi:id="_YHf6AAomEeekfeZYiUbzLg" elementId="org.bonitasoft.studio.la.export.command" commandName="%exportApplication"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_--2aUNKdEeaEE_Umqe0dXA" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_BKi10NKeEeaEE_Umqe0dXA" elementId="org.bonitasoft.studio.la.newHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.handler.NewApplicationHandler" command="_0n838NKdEeaEE_Umqe0dXA"/>
     <elements xsi:type="commands:Handler" xmi:id="_jUDDEP3SEeanhv23kWy-6w" elementId="org.bonitasoft.studio.la.openHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.handler.OpenApplicationHandler" command="_dHtcoP3SEeanhv23kWy-6w"/>
     <elements xsi:type="commands:Handler" xmi:id="_57EXYP6PEeaqYIbFhsSGFw" elementId="org.bonitasoft.studio.la.deleteHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.handler.DeleteApplicationHandler" command="_2helYP6PEeaqYIbFhsSGFw"/>
+    <elements xsi:type="commands:Handler" xmi:id="_cIN9cAomEeekfeZYiUbzLg" elementId="org.bonitasoft.studio.la.exportHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.handler.ExportApplicationHandler" command="_YHf6AAomEeekfeZYiUbzLg"/>
   </fragments>
 </fragment:ModelFragments>
