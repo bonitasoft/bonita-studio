@@ -19,7 +19,6 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.xml.bind.JAXBException;
@@ -73,7 +72,7 @@ public class ApplicationOverviewPage extends FormPage {
     private ApplicationNodeContainer applicationWorkingCopy;
     private IDocument document;
     private final ApplicationNodeContainerConverter applicationNodeContainerConverter;
-    private RepositoryAccessor repositoryAccessor;
+    private final RepositoryAccessor repositoryAccessor;
 
     public ApplicationOverviewPage(String id, String title) {
         super(id, title);
@@ -87,7 +86,7 @@ public class ApplicationOverviewPage extends FormPage {
     }
 
     protected RepositoryAccessor repositoryAccessor() {
-        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
         return repositoryAccessor;
     }
@@ -153,10 +152,10 @@ public class ApplicationOverviewPage extends FormPage {
     private Control createApplicationClient(Section applicationGroup, ApplicationNode application) {
         final DataBindingContext ctx = new DataBindingContext();
 
-        ApplicationTokenUnicityValidator applicationTokenUnicityValidator = new ApplicationTokenUnicityValidator(
+        final ApplicationTokenUnicityValidator applicationTokenUnicityValidator = new ApplicationTokenUnicityValidator(
                 repositoryAccessor, application.getToken());
 
-        Composite container = toolkit.createComposite(applicationGroup);
+        final Composite container = toolkit.createComposite(applicationGroup);
         container.setLayout(GridLayoutFactory.swtDefaults().create());
         container.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
@@ -172,7 +171,7 @@ public class ApplicationOverviewPage extends FormPage {
         final IObservableValue profileModelObservable = PojoObservables.observeValue(application, "profile");
         profileModelObservable.addValueChangeListener(this::updateFile);
 
-        IObservableValue urlModelObservable = PojoObservables.observeValue(application, "token");
+        final IObservableValue urlModelObservable = PojoObservables.observeValue(application, "token");
         urlModelObservable.addValueChangeListener(e -> {
             updateFile(e);
             applicationGroup.setText(application.getToken());
@@ -213,7 +212,6 @@ public class ApplicationOverviewPage extends FormPage {
                 .inContext(ctx)
                 .createIn(urlComposite)
                 .adapt(toolkit)
-                .setText(application.getToken())
                 .setLabelColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
 
         new TextWidget.Builder()
@@ -224,8 +222,7 @@ public class ApplicationOverviewPage extends FormPage {
                 .withDelay(500)
                 .inContext(ctx)
                 .createIn(container)
-                .adapt(toolkit)
-                .setText(application.getDisplayName());
+                .adapt(toolkit);
 
         new TextWidget.Builder()
                 .withLabel(Messages.version)
@@ -237,8 +234,7 @@ public class ApplicationOverviewPage extends FormPage {
                 .withDelay(500)
                 .inContext(ctx)
                 .createIn(container)
-                .adapt(toolkit)
-                .setText(application.getVersion());
+                .adapt(toolkit);
 
         final String[] profiles = { "Process manager", "User", "Administrator" };
 
@@ -260,16 +256,15 @@ public class ApplicationOverviewPage extends FormPage {
                 .widthHint(500)
                 .heightHint(100)
                 .bindTo(descriptionModelObservable)
-                .withDelay(2000)
+                .withDelay(500)
                 .inContext(ctx)
                 .createIn(container)
-                .adapt(toolkit)
-                .setText(application.getDescription() == null ? "" : application.getDescription());
+                .adapt(toolkit);
 
         final Group lookNFeelGroup = new Group(container, SWT.NONE);
         lookNFeelGroup.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).spacing(10, 10).create());
         lookNFeelGroup.setLayoutData(GridDataFactory.fillDefaults().create());
-        lookNFeelGroup.setText("Look'n'Feel");
+        lookNFeelGroup.setText(Messages.lookNFeel);
 
         final String[] layouts = { "custompage_defaultlayout" };
 
@@ -290,9 +285,7 @@ public class ApplicationOverviewPage extends FormPage {
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
-                .withItems(ThemeDescriptor.DEFAULT_THEME.stream().map(theme -> theme.getDisplayName())
-                        .collect(Collectors.toList())
-                        .toArray(new String[1]))
+                .withItems(availableThemes())
                 .bindTo(themeModelObservable)
                 .withModelToTargetStrategy(UpdateStrategyFactory.updateValueStrategy()
                         .withConverter(ConverterBuilder.<String, String> newConverter()
@@ -311,6 +304,12 @@ public class ApplicationOverviewPage extends FormPage {
                 .adapt(toolkit);
 
         return container;
+    }
+
+    private String[] availableThemes() {
+        return ThemeDescriptor.DEFAULT_THEMES.stream()
+                .map(ThemeDescriptor::getDisplayName)
+                .toArray(size -> new String[size]);
     }
 
     private void updateFile(ValueChangeEvent e) {
