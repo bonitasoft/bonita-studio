@@ -31,7 +31,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.mockito;bundle-version="1.10.19";resolution:=optional,
  org.eclipse.jface.databinding,
  org.bonitasoft.studio.importer,
- org.bonitasoft.studio.browser
+ org.bonitasoft.studio.browser,
+ org.bonitasoft.studio.engine
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,

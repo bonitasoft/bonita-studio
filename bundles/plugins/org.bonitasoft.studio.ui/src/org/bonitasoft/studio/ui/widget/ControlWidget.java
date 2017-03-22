@@ -31,7 +31,7 @@ public abstract class ControlWidget extends Composite {
 
     protected Optional<Label> label = Optional.empty();
     protected Optional<Label> filler = Optional.empty();
-    //  protected IStatus status = ValidationStatus.ok();
+    protected Optional<FormToolkit> toolkit = Optional.empty();
     protected Optional<String> message = Optional.empty();
     protected boolean readOnly = false;
     protected boolean labelAbove = false;
@@ -53,7 +53,7 @@ public abstract class ControlWidget extends Composite {
             String labelValue,
             String message) {
         this(parent, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, false, labelValue, message,
-                Optional.empty());
+                Optional.empty(), Optional.empty());
     }
 
     protected ControlWidget(Composite parent,
@@ -65,7 +65,8 @@ public abstract class ControlWidget extends Composite {
             boolean readOnly,
             String labelValue,
             String message,
-            Optional<String> buttonLabel) {
+            Optional<String> buttonLabel,
+            Optional<FormToolkit> toolkit) {
         super(parent, SWT.NONE);
         this.id = id;
         this.buttonLabel = buttonLabel;
@@ -76,10 +77,11 @@ public abstract class ControlWidget extends Composite {
         this.labelHint = labelHint;
         this.labelValue = labelValue;
         this.message = Optional.ofNullable(message);
+        this.toolkit = toolkit;
     }
 
     protected ControlWidget(Composite parent) {
-        this(parent, null, false, 0, 0, 0, false, null, null, Optional.empty());
+        this(parent, null, false, 0, 0, 0, false, null, null, Optional.empty(), Optional.empty());
     }
 
     protected void init() {
@@ -102,10 +104,11 @@ public abstract class ControlWidget extends Composite {
 
         //Create a filler label
         filler = labelText.map(text -> new Label(this, SWT.NONE));
-        filler.ifPresent((GridDataFactory.swtDefaults().hint(labelHint, SWT.DEFAULT).exclude(labelAbove)::applyTo));
+        filler.ifPresent(GridDataFactory.swtDefaults().hint(labelHint, SWT.DEFAULT).exclude(labelAbove)::applyTo);
+        toolkit.ifPresent(this::adapt);
     }
 
-    public abstract Control adapt(FormToolkit toolkit);
+    protected abstract void adapt(FormToolkit toolkit);
 
     protected int numColumn() {
         return buttonLabel.isPresent() ? 3 : 2;

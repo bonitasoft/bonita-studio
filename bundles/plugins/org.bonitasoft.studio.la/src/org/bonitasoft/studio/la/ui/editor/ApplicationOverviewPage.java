@@ -17,23 +17,42 @@ package org.bonitasoft.studio.la.ui.editor;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import javax.xml.bind.JAXBException;
 
+import org.bonitasoft.engine.api.ApplicationAPI;
+import org.bonitasoft.engine.business.application.Application;
+import org.bonitasoft.engine.business.application.ApplicationSearchDescriptor;
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
+import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.DeletionException;
+import org.bonitasoft.engine.exception.SearchException;
+import org.bonitasoft.engine.exception.ServerAPIException;
+import org.bonitasoft.engine.exception.UnknownAPITypeException;
+import org.bonitasoft.engine.search.SearchOptionsBuilder;
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
+import org.bonitasoft.studio.la.core.ApplicationDescriptorNotFoundException;
+import org.bonitasoft.studio.la.core.DeployApplicationRunnable;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.la.repository.ApplicationFileStore;
+import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.ui.editor.theme.ThemeDescriptor;
 import org.bonitasoft.studio.la.ui.validator.ApplicationTokenUnicityValidator;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
+import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.validator.EmptyInputValidator;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.validator.RegExpValidator;
@@ -44,6 +63,8 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.IDocument;
@@ -63,6 +84,7 @@ import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.xml.sax.SAXException;
 
 public class ApplicationOverviewPage extends FormPage {
@@ -195,8 +217,9 @@ public class ApplicationOverviewPage extends FormPage {
                 .withLabel("../apps/")
                 .withMessage(Messages.applicationTokenMessage)
                 .widthHint(500)
+                .transactionalEdit(this::deleteAndDeployOldApp)
                 .bindTo(urlModelObservable)
-                .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
+                .withTargetToModelStrategy(UpdateStrategyFactory.convertUpdateValueStrategy()
                         .withValidator(new MultiValidator.Builder().havingValidators(
                                 new EmptyInputValidator.Builder().withMessage(Messages.required).create(),
                                 new RegExpValidator.Builder().matches("^[a-zA-Z0-9]+$")
@@ -210,8 +233,8 @@ public class ApplicationOverviewPage extends FormPage {
                                                 .withMessage(Messages.tokenValidatorMessage).create(),
                                         applicationTokenUnicityValidator)))
                 .inContext(ctx)
-                .createIn(urlComposite)
                 .adapt(toolkit)
+                .createIn(urlComposite)
                 .setLabelColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
 
         new TextWidget.Builder()
@@ -221,8 +244,8 @@ public class ApplicationOverviewPage extends FormPage {
                 .bindTo(nameModelObservable)
                 .withDelay(500)
                 .inContext(ctx)
-                .createIn(container)
-                .adapt(toolkit);
+                .adapt(toolkit)
+                .createIn(container);
 
         new TextWidget.Builder()
                 .withLabel(Messages.version)
@@ -233,8 +256,8 @@ public class ApplicationOverviewPage extends FormPage {
                         .withValidator(new EmptyInputValidator.Builder().withMessage(Messages.required).create()))
                 .withDelay(500)
                 .inContext(ctx)
-                .createIn(container)
-                .adapt(toolkit);
+                .adapt(toolkit)
+                .createIn(container);
 
         final String[] profiles = { "Process manager", "User", "Administrator" };
 
@@ -247,8 +270,8 @@ public class ApplicationOverviewPage extends FormPage {
                 .withItems(profiles)
                 .bindTo(profileModelObservable)
                 .inContext(ctx)
-                .createIn(container)
-                .adapt(toolkit);
+                .adapt(toolkit)
+                .createIn(container);
 
         new TextAreaWidget.Builder()
                 .withLabel(Messages.description)
@@ -258,8 +281,8 @@ public class ApplicationOverviewPage extends FormPage {
                 .bindTo(descriptionModelObservable)
                 .withDelay(500)
                 .inContext(ctx)
-                .createIn(container)
-                .adapt(toolkit);
+                .adapt(toolkit)
+                .createIn(container);
 
         final Group lookNFeelGroup = new Group(container, SWT.NONE);
         lookNFeelGroup.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).spacing(10, 10).create());
@@ -276,8 +299,8 @@ public class ApplicationOverviewPage extends FormPage {
                 .withItems(layouts)
                 .bindTo(layoutModelObservable)
                 .inContext(ctx)
-                .createIn(lookNFeelGroup)
-                .adapt(toolkit);
+                .adapt(toolkit)
+                .createIn(lookNFeelGroup);
 
         new ComboWidget.Builder()
                 .withLabel(Messages.theme)
@@ -300,8 +323,8 @@ public class ApplicationOverviewPage extends FormPage {
                                 .withConvertFunction(ThemeDescriptor::fromNameToId)
                                 .create()))
                 .inContext(ctx)
-                .createIn(lookNFeelGroup)
-                .adapt(toolkit);
+                .adapt(toolkit)
+                .createIn(lookNFeelGroup);
 
         return container;
     }
@@ -322,6 +345,50 @@ public class ApplicationOverviewPage extends FormPage {
 
     public void reflow() {
         form.reflow(true);
+    }
+
+    private void deleteAndDeployOldApp(String oldToken, String newToken) {
+        if (!Objects.equals(oldToken, newToken)) {
+            final GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
+            try {
+                final APISession apiSession = apiSessionOperation.execute();
+                final ApplicationAPI applicationAPI = BOSEngineManager.getInstance().getApplicationAPI(apiSession);
+                final Application application = applicationAPI.searchApplications(
+                        new SearchOptionsBuilder(0, 1).filter(ApplicationSearchDescriptor.TOKEN, oldToken).done())
+                        .getResult().stream()
+                        .findFirst()
+                        .orElseThrow(ApplicationDescriptorNotFoundException::new);
+
+                if (MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), Messages.redeployAfterRenameTitle,
+                        String.format(Messages.redeployAfterRenameMessages, application.getDisplayName()))) {
+                    try {
+                        getEditor().doSave(new NullProgressMonitor());
+                        applicationAPI.deleteApplication(application.getId());
+                    } catch (final DeletionException e) {
+                        new ExceptionDialogHandler().openErrorDialog(Display.getCurrent().getActiveShell(),
+                                Messages.undeployFailed, e);
+                    }
+                    final ApplicationFileStore appFileStore = repositoryAccessor
+                            .getRepositoryStore(ApplicationRepositoryStore.class).getChild(getEditorInput().getName());
+                    final DeployApplicationRunnable deployOperation = new DeployApplicationRunnable(applicationAPI,
+                            appFileStore);
+                    try {
+                        new ProgressMonitorJobsDialog(Display.getCurrent().getActiveShell()).run(true, false,
+                                deployOperation);
+                        MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.redeployDoneTitle,
+                                String.format(Messages.redeployDoneMessage, application.getDisplayName()));
+                    } catch (InvocationTargetException | InterruptedException e) {
+                        new ExceptionDialogHandler().openErrorDialog(Display.getCurrent().getActiveShell(),
+                                Messages.deployFailedTitle, e);
+                    }
+                }
+            } catch (SearchException | ApplicationDescriptorNotFoundException | BonitaHomeNotSetException
+                    | ServerAPIException | UnknownAPITypeException e) {
+                // app not deployed yet, nothing to do
+            } finally {
+                apiSessionOperation.logout();
+            }
+        }
     }
 
 }

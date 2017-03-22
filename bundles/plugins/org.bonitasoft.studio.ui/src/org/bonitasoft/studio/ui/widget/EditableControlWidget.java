@@ -53,14 +53,14 @@ public abstract class EditableControlWidget extends ControlWidget {
             int verticalLabelAlignment, int labelHint,
             boolean readOnly, String labelValue, String message) {
         this(parent, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, readOnly, labelValue,
-                message, Optional.empty());
+                message, Optional.empty(), Optional.empty());
     }
 
     protected EditableControlWidget(Composite parent, String id, boolean labelAbove, int horizontalLabelAlignment,
             int verticalLabelAlignment, int labelHint, boolean readOnly, String labelValue, String message,
-            Optional<String> buttonLabel) {
+            Optional<String> buttonLabel, Optional<FormToolkit> toolkit) {
         super(parent, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, readOnly, labelValue,
-                message, buttonLabel);
+                message, buttonLabel, toolkit);
         this.resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
         errorColor = resourceManager.createColor(ColorConstants.ERROR_RGB);
         warningColor = resourceManager.createColor(ColorConstants.WARNING_RGB);
@@ -79,6 +79,9 @@ public abstract class EditableControlWidget extends ControlWidget {
                         .span(messageLabelHorizontalSpan(labelAbove), 1).indent(0, messageDecoratorVerticalIndent())
                         .create());
         messageDecorator.setStatus(status);
+        if (toolkit.isPresent()) {
+            messageDecorator.adapt(toolkit.get());
+        }
     }
 
     protected int messageDecoratorVerticalIndent() {
@@ -133,11 +136,9 @@ public abstract class EditableControlWidget extends ControlWidget {
     }
 
     @Override
-    public Control adapt(FormToolkit toolkit) {
+    protected void adapt(FormToolkit toolkit) {
         label.ifPresent(label -> toolkit.adapt(label, true, true));
         filler.ifPresent(filler -> toolkit.adapt(filler, true, true));
-        messageDecorator.adapt(toolkit);
-        return this;
     }
 
     protected ControlMessageSupport bindControl(DataBindingContext ctx, IObservableValue controlObservable,
@@ -150,12 +151,16 @@ public abstract class EditableControlWidget extends ControlWidget {
 
             @Override
             protected void statusChanged(IStatus status) {
-                EditableControlWidget.this.status = status;
-                messageDecorator.setStatus(status);
-                redraw(control);
+                EditableControlWidget.this.statusChanged(status);
             }
 
         };
+    }
+
+    protected void statusChanged(IStatus status) {
+        EditableControlWidget.this.status = status;
+        messageDecorator.setStatus(status);
+        redraw(control);
     }
 
     public Binding getValueBinding() {

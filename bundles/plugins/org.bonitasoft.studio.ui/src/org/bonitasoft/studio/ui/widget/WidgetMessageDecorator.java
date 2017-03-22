@@ -19,11 +19,14 @@ import java.util.Optional;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -46,11 +49,22 @@ public class WidgetMessageDecorator extends ExpandableComposite {
         warningColor = resourceManager.createColor(ColorConstants.WARNING_RGB);
         this.defaultMessage = defaultMessage;
         messageLabel = new CLabel(this, SWT.NONE);
-        messageLabel.setTopMargin(0);
+        messageLabel.setTopMargin(1);
         messageLabel.setLeftMargin(0);
+        messageLabel.setFont(getMessageFont());
         messageLabel.setText(defaultMessage.orElse(""));
         foregroundColor = Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
         updateExpandState();
+    }
+
+    private Font getMessageFont() {
+        final FontRegistry fontRegistry = JFaceResources.getFontRegistry();
+        if (fontRegistry.hasValueFor(WidgetMessageDecorator.class.getName())) {
+            return fontRegistry.get(WidgetMessageDecorator.class.getName());
+        }
+        fontRegistry.put(WidgetMessageDecorator.class.getName(),
+                new FontData[] { new FontData(WidgetMessageDecorator.class.getName(), 8, SWT.NORMAL) });
+        return fontRegistry.get(WidgetMessageDecorator.class.getName());
     }
 
     private void updateExpandState() {

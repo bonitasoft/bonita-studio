@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.ui.widget;
 
+import java.util.Optional;
+
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -40,7 +42,7 @@ public class ComboWidget extends EditableControlWidget {
         public ComboWidget createIn(Composite container) {
             final ComboWidget control = new ComboWidget(container, id, labelAbove, horizontalLabelAlignment,
                     verticalLabelAlignment, labelWidth, readOnly, label,
-                    message);
+                    message, toolkit);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             control.setItems(items);
@@ -57,9 +59,9 @@ public class ComboWidget extends EditableControlWidget {
     protected ComboWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment,
             int labelWidth, boolean readOnly,
-            String label, String message) {
+            String label, String message, Optional<FormToolkit> toolkit) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
-                message);
+                message, Optional.empty(), toolkit);
     }
 
     public ISWTObservableValue observeComboText() {
@@ -67,11 +69,10 @@ public class ComboWidget extends EditableControlWidget {
     }
 
     @Override
-    public ComboWidget adapt(FormToolkit toolkit) {
+    protected void adapt(FormToolkit toolkit) {
         super.adapt(toolkit);
         toolkit.adapt(combo.getParent().getParent());
         toolkit.adapt(combo, true, true);
-        return this;
     }
 
     @Override
