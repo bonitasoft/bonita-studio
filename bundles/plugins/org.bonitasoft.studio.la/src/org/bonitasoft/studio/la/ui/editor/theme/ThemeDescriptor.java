@@ -50,13 +50,19 @@ public class ThemeDescriptor {
         return DEFAULT_THEMES.stream()
                 .filter(theme -> Objects.equals(theme.getId(), id))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Unknown theme")).getDisplayName();
+                .orElse(new ThemeDescriptor(id, id)).getDisplayName();
     }
 
     public static String fromNameToId(String name) {
         return DEFAULT_THEMES.stream()
                 .filter(theme -> Objects.equals(theme.getDisplayName(), name))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Unknown theme")).getId();
+                .orElse(new ThemeDescriptor(name, name)).getId();
+    }
+
+    public static boolean isDefaultTheme(String nameOrId) {
+        return DEFAULT_THEMES.stream()
+                .anyMatch(theme -> Objects.equals(nameOrId, theme.getDisplayName())
+                        || Objects.equals(nameOrId, theme.getId()));
     }
 }

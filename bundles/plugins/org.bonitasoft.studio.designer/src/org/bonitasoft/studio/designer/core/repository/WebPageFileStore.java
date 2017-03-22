@@ -44,11 +44,14 @@ public class WebPageFileStore extends InFolderJSONFileStore {
 
     private static final String ID_TYPE = "type";
 
+    public static final String LAYOUT_TYPE = "layout";
+
     public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
     }
 
-    public void setWebFormBOSArchiveFileStoreProvider(final WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider) {
+    public void setWebFormBOSArchiveFileStoreProvider(
+            final WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider) {
         this.webFormBOSArchiveFileStoreProvider = webFormBOSArchiveFileStoreProvider;
     }
 
@@ -94,7 +97,9 @@ public class WebPageFileStore extends InFolderJSONFileStore {
         try {
             return getStringAttribute(ID_TYPE);
         } catch (final JSONException | ReadFileStoreException e) {
-            BonitaStudioLog.error(String.format("Failed to retrieve id in JSON file %s.json, with key %s.", getName(), ID_TYPE), UIDesignerPlugin.PLUGIN_ID);
+            BonitaStudioLog.error(
+                    String.format("Failed to retrieve id in JSON file %s.json, with key %s.", getName(), ID_TYPE),
+                    UIDesignerPlugin.PLUGIN_ID);
             return "page";
         }
     }
