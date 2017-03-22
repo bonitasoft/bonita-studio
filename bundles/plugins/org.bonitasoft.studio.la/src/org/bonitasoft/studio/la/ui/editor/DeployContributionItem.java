@@ -19,47 +19,38 @@ import java.util.Collection;
 
 import org.bonitasoft.engine.api.ApplicationAPI;
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
-import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
-import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.jface.dialog.ProblemsDialog;
 import org.bonitasoft.studio.common.jface.dialog.TypedLabelProvider;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.core.DeployApplicationRunnable;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.ContributionItem;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.progress.IProgressService;
 
-public class DeployContributionItem extends ContributionItem implements IRunnableWithProgress {
+public class DeployContributionItem extends ContributionItem {
 
     private static final String ID = "org.bonitasoft.studio.la.ui.editor.deploy";
-    private FormEditor formEditor;
-    private ApplicationAPI applicationAPI;
-    private APISession apiSession;
+    private final FormEditor formEditor;
 
     public DeployContributionItem(FormEditor formEditor) {
         super(ID);
@@ -75,53 +66,40 @@ public class DeployContributionItem extends ContributionItem implements IRunnabl
     }
 
     private void onClick(Shell shell) {
-        String name = formEditor.getEditorInput().getName();
+        final GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
+        final String name = formEditor.getEditorInput().getName();
         if (formEditor.isDirty() && MessageDialog.openQuestion(shell, Messages.saveBeforeDeployTitle,
                 String.format(Messages.saveBeforeDeploy, name))) {
             formEditor.doSave(new NullProgressMonitor());
         }
-        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-        try {
-            progressService.run(true, false, this);
-        } catch (InvocationTargetException | InterruptedException e) {
-            new ExceptionDialogHandler().openErrorDialog(shell, Messages.deployFailedTitle, e);
-        }
-        ApplicationRepositoryStore store = RepositoryManager.getInstance()
+        final ApplicationRepositoryStore store = RepositoryManager.getInstance()
                 .getRepositoryStore(ApplicationRepositoryStore.class);
-        ApplicationFileStore applicationFileStore = store.getChild(name);
-        DeployApplicationRunnable deployApplicationRunnable = new DeployApplicationRunnable(applicationAPI,
-                applicationFileStore);
+        final ApplicationFileStore applicationFileStore = store.getChild(name);
         try {
+            final APISession apiSession = apiSessionOperation.execute();
+            final ApplicationAPI applicationAPI = BOSEngineManager.getInstance().getApplicationAPI(apiSession);
+            final DeployApplicationRunnable deployApplicationRunnable = new DeployApplicationRunnable(applicationAPI,
+                    applicationFileStore);
             deployApplicationRunnable.run(new NullProgressMonitor());
-        } catch (InvocationTargetException | InterruptedException e) {
+            final IStatus status = deployApplicationRunnable.getStatus();
+            if (status.isOK()) {
+                new DeployedAppDialog(shell, applicationFileStore).open();
+            } else {
+                MessageDialog.openError(shell, Messages.deployFailedTitle,
+                        status.getMessage());
+            }
+        } catch (InvocationTargetException | InterruptedException | BonitaHomeNotSetException | ServerAPIException
+                | UnknownAPITypeException e) {
             new ExceptionDialogHandler().openErrorDialog(shell, Messages.deployFailedTitle, e);
         } finally {
-            if (apiSession != null) {
-                BOSEngineManager.getInstance().logoutDefaultTenant(apiSession);
-            }
+            apiSessionOperation.logout();
         }
-        IStatus status = deployApplicationRunnable.getStatus();
-        if (status.isOK()) {
-            new DeployedAppDialog(shell, applicationFileStore).open();
-        } else {
-            MessageDialog.openError(shell, Messages.deployFailedTitle,
-                    status.getMessage());
-        }
-    }
 
-    @Override
-    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        try {
-            apiSession = BOSEngineManager.getInstance().loginDefaultTenant(monitor);
-            applicationAPI = BOSEngineManager.getInstance().getApplicationAPI(apiSession);
-        } catch (LoginException | BonitaHomeNotSetException | ServerAPIException | UnknownAPITypeException e) {
-            throw new InvocationTargetException(e);
-        }
     }
 
     private class DeployedAppDialog extends ProblemsDialog<ApplicationNode> {
 
-        private ApplicationFileStore applicationFileStore;
+        private final ApplicationFileStore applicationFileStore;
 
         public DeployedAppDialog(Shell parentShell, ApplicationFileStore applicationFileStore) {
             super(parentShell, Messages.deployDoneTitle, Messages.deployDoneMessage, MessageDialog.INFORMATION,
@@ -150,7 +128,7 @@ public class DeployContributionItem extends ContributionItem implements IRunnabl
         protected Collection<ApplicationNode> getInput() {
             try {
                 return applicationFileStore.getContent().getApplications();
-            } catch (ReadFileStoreException e) {
+            } catch (final ReadFileStoreException e) {
                 throw new RuntimeException(e);
             }
         }

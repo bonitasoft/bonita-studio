@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.ui.widget;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.ui.databinding.UpdateValueStrategyFactory;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -24,6 +26,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * An abstract {@link ControlWidget} builder.
@@ -41,6 +44,7 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
     protected IObservableValue modelObservable;
     protected DataBindingContext ctx;
     protected String id;
+    protected Optional<FormToolkit> toolkit = Optional.empty();
 
     /**
      * Adds a text label next to the control.
@@ -62,6 +66,11 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
      */
     public T labelAbove() {
         this.labelAbove = true;
+        return (T) this;
+    }
+
+    public T adapt(FormToolkit toolkit) {
+        this.toolkit = Optional.ofNullable(toolkit);
         return (T) this;
     }
 

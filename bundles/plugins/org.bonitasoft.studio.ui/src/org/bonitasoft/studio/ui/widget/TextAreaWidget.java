@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class TextAreaWidget extends TextWidget {
 
@@ -30,6 +31,7 @@ public class TextAreaWidget extends TextWidget {
 
         protected Optional<Integer> delay = Optional.empty();
 
+        @Override
         public Builder withDelay(int delay) {
             this.delay = Optional.of(delay);
             return this;
@@ -38,7 +40,7 @@ public class TextAreaWidget extends TextWidget {
         @Override
         public TextAreaWidget createIn(Composite container) {
             final TextAreaWidget control = new TextAreaWidget(container, id, labelAbove, horizontalLabelAlignment,
-                    verticalLabelAlignment, labelWidth, readOnly, label, message,labelButton);
+                    verticalLabelAlignment, labelWidth, readOnly, label, message, labelButton, toolkit);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             if (ctx != null && modelObservable != null) {
@@ -55,9 +57,10 @@ public class TextAreaWidget extends TextWidget {
 
     protected TextAreaWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment,
-            int labelWidth, boolean readOnly, String label, String message, Optional<String> labelButton) {
+            int labelWidth, boolean readOnly, String label, String message, Optional<String> labelButton,
+            Optional<FormToolkit> toolkit) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
-                message, labelButton, false, null);
+                message, labelButton, false, null, toolkit);
     }
 
     /*

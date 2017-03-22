@@ -97,7 +97,7 @@ public class ButtonWidget extends ControlWidget {
     }
 
     @Override
-    public ButtonWidget adapt(FormToolkit toolkit) {
-        return this;
+    protected void adapt(FormToolkit toolkit) {
+        toolkit.adapt(button, true, true);
     }
 }

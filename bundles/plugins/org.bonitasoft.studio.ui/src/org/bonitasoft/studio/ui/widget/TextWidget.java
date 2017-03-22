@@ -24,6 +24,7 @@ import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -108,7 +109,7 @@ public class TextWidget extends EditableControlWidget {
             }
             final TextWidget control = new TextWidget(container, id, labelAbove, horizontalLabelAlignment,
                     verticalLabelAlignment, labelWidth, readOnly, label,
-                    message, labelButton, transactionalEdit, onEdit);
+                    message, labelButton, transactionalEdit, onEdit, toolkit);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             buttonListner.ifPresent(control::onCLickButton);
@@ -133,14 +134,16 @@ public class TextWidget extends EditableControlWidget {
     private final Optional<BiConsumer<String, String>> onEdit;
     private boolean editing = false;
     private final Color editingColor;
+    private ToolItem okButton;
 
     protected TextWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment,
             int labelWidth, boolean readOnly, String label, String message, Optional<String> labelButton,
-            boolean transactionalEdit, BiConsumer<String, String> onEdit) {
+            boolean transactionalEdit, BiConsumer<String, String> onEdit, Optional<FormToolkit> toolkit) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
                 message,
-                labelButton);
+                labelButton,
+                toolkit);
         this.transactionalEdit = transactionalEdit;
         this.onEdit = Optional.ofNullable(onEdit);
         editingColor = resourceManager.createColor(ColorConstants.EDITING_RGB);
@@ -188,14 +191,6 @@ public class TextWidget extends EditableControlWidget {
 
     public TextWidget setLabelColor(Color color) {
         label.ifPresent(label -> label.setForeground(color));
-        return this;
-    }
-
-    @Override
-    public TextWidget adapt(FormToolkit toolkit) {
-        super.adapt(toolkit);
-        toolkit.adapt(text.getParent().getParent());
-        toolkit.adapt(text, true, true);
         return this;
     }
 
@@ -306,7 +301,7 @@ public class TextWidget extends EditableControlWidget {
         cancelButton.addListener(SWT.Selection, cancelListener(toolBar));
         cancelButton.addListener(SWT.Dispose, event -> cancelButton.getImage().dispose());
 
-        final ToolItem okButton = new ToolItem(toolBar, SWT.FLAT);
+        okButton = new ToolItem(toolBar, SWT.FLAT);
         okButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "checked.png").createImage());
         okButton.setToolTipText(Messages.applyEdit);
         okButton.addListener(SWT.Selection, okListener(toolBar));
@@ -366,6 +361,18 @@ public class TextWidget extends EditableControlWidget {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.ui.widget.EditableControlWidget#statusChanged(org.eclipse.core.runtime.IStatus)
+     */
+    @Override
+    protected void statusChanged(IStatus status) {
+        super.statusChanged(status);
+        if (transactionalEdit && editing && okButton != null && !okButton.isDisposed()) {
+            okButton.setEnabled(status.isOK());
+        }
+    }
+
     private void updateEditableState(boolean editable) {
         readOnly = !editable;
         text.setEnabled(!readOnly);
@@ -388,7 +395,9 @@ public class TextWidget extends EditableControlWidget {
     private void configureBackground(Control control) {
         final Color backgroundColor = control.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
         final Color whiteColor = control.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-
+        if (toolkit.isPresent()) {
+            toolkit.get().adapt(control, true, true);
+        }
         if (!readOnly) {
             control.setEnabled(true);
             control.setBackground(whiteColor);
