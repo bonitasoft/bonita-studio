@@ -67,7 +67,6 @@ public class Messages extends NLS {
     public static String selectAppDescriptorToExport;
     public static String exportApplicationDescriptor;
     public static String selectDestination;
-    public static String browse;
     public static String destination;
     public static String exportDoneTitle;
     public static String exportDoneMessage;
@@ -77,6 +76,17 @@ public class Messages extends NLS {
     public static String undeployFailed;
     public static String redeployDoneTitle;
     public static String redeployDoneMessage;
+    public static String importApplicationDescriptorLabel;
+    public static String browse;
+    public static String importApplicationDescriptor;
+    public static String filePathNotEmpty;
+    public static String fileDoesntExist;
+    public static String importConflictWarning;
+    public static String overwriteConfirmationMessage;
+    public static String overwriteConfirmation;
+    public static String importLabel;
+    public static String notAnApplicationError;
+    public static String importApplicationDescriptorDesc;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
