@@ -72,6 +72,11 @@ public class Messages extends NLS {
     public static String exportDoneTitle;
     public static String exportDoneMessage;
     public static String lookNFeel;
+    public static String redeployAfterRenameTitle;
+    public static String redeployAfterRenameMessages;
+    public static String undeployFailed;
+    public static String redeployDoneTitle;
+    public static String redeployDoneMessage;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
