@@ -42,6 +42,10 @@
                   commandId="org.bonitasoft.studio.la.export.command"
                   style="push">
             </command>
+            <command
+                  commandId="org.bonitasoft.studio.la.import.command"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
