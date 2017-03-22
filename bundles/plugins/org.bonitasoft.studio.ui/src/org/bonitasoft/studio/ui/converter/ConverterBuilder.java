@@ -30,7 +30,7 @@ public class ConverterBuilder<F, T> {
     }
 
     public static <F, T> ConverterBuilder<F, T> newConverter() {
-        return new ConverterBuilder<F, T>();
+        return new ConverterBuilder<>();
     }
 
     public ConverterBuilder<F, T> fromType(Class<F> fromType) {
@@ -51,6 +51,7 @@ public class ConverterBuilder<F, T> {
     public IConverter create() {
         return new Converter(fromType, toType) {
 
+            @SuppressWarnings("unchecked")
             @Override
             public Object convert(Object fromObject) {
                 return converterFunction.apply((F) fromObject);

@@ -40,6 +40,7 @@ import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
@@ -48,8 +49,12 @@ import org.bonitasoft.studio.la.core.DeployApplicationRunnable;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
+import org.bonitasoft.studio.la.ui.editor.layout.LayoutDescriptor;
+import org.bonitasoft.studio.la.ui.editor.layout.LayoutProvider;
 import org.bonitasoft.studio.la.ui.editor.theme.ThemeDescriptor;
 import org.bonitasoft.studio.la.ui.validator.ApplicationTokenUnicityValidator;
+import org.bonitasoft.studio.la.ui.validator.CustomLayoutValidator;
+import org.bonitasoft.studio.la.ui.validator.CustomThemeValidator;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
@@ -61,19 +66,24 @@ import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -95,11 +105,14 @@ public class ApplicationOverviewPage extends FormPage {
     private IDocument document;
     private final ApplicationNodeContainerConverter applicationNodeContainerConverter;
     private final RepositoryAccessor repositoryAccessor;
+    private final LayoutProvider layoutProvider;
+    private LayoutPageListener layoutPageListener;
 
     public ApplicationOverviewPage(String id, String title) {
         super(id, title);
-        applicationNodeContainerConverter = new ApplicationNodeContainerConverter();
+        this.applicationNodeContainerConverter = new ApplicationNodeContainerConverter();
         this.repositoryAccessor = repositoryAccessor();
+        this.layoutProvider = new LayoutProvider(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class));
     }
 
     public void init(ApplicationNodeContainer applicationWorkingCopy, IDocument document) {
@@ -165,7 +178,7 @@ public class ApplicationOverviewPage extends FormPage {
 
     private URL toURL(ApplicationNode application) {
         try {
-            return new URL("http://localhost:8080/bonita/apps/" + application.getToken()); //TODO retireve host and port from preferences
+            return new URL("http://localhost:8080/bonita/apps/" + application.getToken()); //TODO retrieve host and port from preferences
         } catch (final MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -206,15 +219,9 @@ public class ApplicationOverviewPage extends FormPage {
         final IObservableValue themeModelObservable = PojoObservables.observeValue(application, "theme");
         themeModelObservable.addValueChangeListener(this::updateFile);
 
-        final Composite urlComposite = new Composite(container, SWT.NONE);
-        urlComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(0, 0).create());
-        urlComposite.setLayoutData(GridDataFactory.fillDefaults().create());
-
-        final Label urlLabel = toolkit.createLabel(urlComposite, Messages.url);
-        urlLabel.setLayoutData(GridDataFactory.fillDefaults().create());
-
         new TextWidget.Builder()
-                .withLabel("../apps/")
+                .withLabel(Messages.url)
+                .labelAbove()
                 .withMessage(Messages.applicationTokenMessage)
                 .widthHint(500)
                 .transactionalEdit(this::deleteAndDeployOldApp)
@@ -234,13 +241,12 @@ public class ApplicationOverviewPage extends FormPage {
                                         applicationTokenUnicityValidator)))
                 .inContext(ctx)
                 .adapt(toolkit)
-                .createIn(urlComposite)
-                .setLabelColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
+                .createIn(container);
 
         new TextWidget.Builder()
                 .withLabel(Messages.displayName)
                 .labelAbove()
-                .widthHint(500)
+                .widthHint(400)
                 .bindTo(nameModelObservable)
                 .withDelay(500)
                 .inContext(ctx)
@@ -276,7 +282,7 @@ public class ApplicationOverviewPage extends FormPage {
         new TextAreaWidget.Builder()
                 .withLabel(Messages.description)
                 .labelAbove()
-                .widthHint(500)
+                .widthHint(550)
                 .heightHint(100)
                 .bindTo(descriptionModelObservable)
                 .withDelay(500)
@@ -286,21 +292,54 @@ public class ApplicationOverviewPage extends FormPage {
 
         final Group lookNFeelGroup = new Group(container, SWT.NONE);
         lookNFeelGroup.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).spacing(10, 10).create());
-        lookNFeelGroup.setLayoutData(GridDataFactory.fillDefaults().create());
+        lookNFeelGroup.setLayoutData(GridDataFactory.fillDefaults().hint(550, SWT.DEFAULT).create());
         lookNFeelGroup.setText(Messages.lookNFeel);
 
-        final String[] layouts = { "custompage_defaultlayout" };
+        final MultiValidator layoutValidator = new MultiValidator.Builder().havingValidators(
+                new EmptyInputValidator.Builder()
+                        .withMessage(Messages.required).create(),
+                new CustomLayoutValidator(layoutProvider))
+                .create();
 
-        new ComboWidget.Builder()
+        final CCombo combo = new ComboWidget.Builder()
                 .withLabel(Messages.layout)
                 .labelAbove()
+                .withMessage(Messages.layoutMessage)
                 .grabHorizontalSpace()
                 .fill()
-                .withItems(layouts)
                 .bindTo(layoutModelObservable)
+                .withModelToTargetStrategy(UpdateStrategyFactory.convertUpdateValueStrategy()
+                        .withValidator(layoutValidator))
+                .withTargetToModelStrategy(UpdateStrategyFactory.convertUpdateValueStrategy()
+                        .withValidator(layoutValidator))
                 .inContext(ctx)
+
                 .adapt(toolkit)
-                .createIn(lookNFeelGroup);
+                .createIn(lookNFeelGroup)
+                .getCombo();
+
+        final ComboViewer comboViewer = new ComboViewer(combo);
+        comboViewer.setContentProvider(new ObservableListContentProvider());
+        comboViewer.setLabelProvider(new LabelProvider());
+        final WritableList inputLayoutObservable = new WritableList(layoutProvider.getLayouts(), LayoutDescriptor.class);
+
+        final WebPageRepositoryStore pageStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
+        layoutPageListener = new LayoutPageListener(inputLayoutObservable, pageStore);
+        pageStore.getResource().getWorkspace().addResourceChangeListener(layoutPageListener);
+
+        comboViewer.setInput(inputLayoutObservable);
+
+        ctx.bindValue(ViewersObservables.observeSingleSelection(comboViewer),
+                layoutModelObservable,
+                updateValueStrategy().withConverter(LayoutProvider.toLayoutId()).create(),
+                updateValueStrategy().withConverter(LayoutProvider.toLayoutDescriptor(inputLayoutObservable)).create());
+
+        final MultiValidator themeValidator = new MultiValidator.Builder().havingValidators(
+                new EmptyInputValidator.Builder()
+                        .withMessage(Messages.required),
+                new CustomThemeValidator.Builder()
+                        .withMessage(Messages.unknownCustomTheme))
+                .create();
 
         new ComboWidget.Builder()
                 .withLabel(Messages.theme)
@@ -315,16 +354,20 @@ public class ApplicationOverviewPage extends FormPage {
                                 .fromType(String.class)
                                 .toType(String.class)
                                 .withConvertFunction(ThemeDescriptor::fromIdToName)
-                                .create()))
+                                .create())
+                        .withValidator(themeValidator))
                 .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
                         .withConverter(ConverterBuilder.<String, String> newConverter()
                                 .fromType(String.class)
                                 .toType(String.class)
                                 .withConvertFunction(ThemeDescriptor::fromNameToId)
-                                .create()))
+                                .create())
+                        .withValidator(themeValidator))
                 .inContext(ctx)
                 .adapt(toolkit)
                 .createIn(lookNFeelGroup);
+
+        ctx.updateTargets();
 
         return container;
     }
@@ -389,6 +432,19 @@ public class ApplicationOverviewPage extends FormPage {
                 apiSessionOperation.logout();
             }
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.forms.editor.FormPage#dispose()
+     */
+    @Override
+    public void dispose() {
+        if (layoutPageListener != null) {
+            final WebPageRepositoryStore pageStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
+            pageStore.getResource().getWorkspace().removeResourceChangeListener(layoutPageListener);
+        }
+        super.dispose();
     }
 
 }

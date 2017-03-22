@@ -72,7 +72,7 @@ public class WidgetMessageDecorator extends ExpandableComposite {
         if (messageLabel.getText() != null && !messageLabel.getText().isEmpty()) {
             setClient(messageLabel);
             setExpanded(true);
-            messageLabel.layout();
+            pack();
         } else {
             setExpanded(false);
         }

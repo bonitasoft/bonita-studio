@@ -90,6 +90,9 @@ public class Messages extends NLS {
     public static String fileName;
     public static String invalidCharFileName;
     public static String invalidFileName;
+    public static String layoutMessage;
+    public static String unknownCustomLayout;
+    public static String unknownCustomTheme;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

@@ -45,7 +45,9 @@ public class ComboWidget extends EditableControlWidget {
                     message, toolkit);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
-            control.setItems(items);
+            if (items != null) {
+                control.setItems(items);
+            }
             if (ctx != null && modelObservable != null) {
                 control.bindControl(ctx, control.observeComboText(), modelObservable, targetToModelStrategy,
                         modelToTargetStrategy);
@@ -69,7 +71,7 @@ public class ComboWidget extends EditableControlWidget {
     }
 
     @Override
-    protected void adapt(FormToolkit toolkit) {
+    public void adapt(FormToolkit toolkit) {
         super.adapt(toolkit);
         toolkit.adapt(combo.getParent().getParent());
         toolkit.adapt(combo, true, true);
@@ -102,5 +104,9 @@ public class ComboWidget extends EditableControlWidget {
 
     public void setItems(String[] items) {
         combo.setItems(items);
+    }
+
+    public CCombo getCombo() {
+        return combo;
     }
 }
