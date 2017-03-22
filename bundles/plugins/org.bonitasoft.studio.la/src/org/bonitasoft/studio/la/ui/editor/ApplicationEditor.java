@@ -114,7 +114,7 @@ public class ApplicationEditor extends FormEditor {
                 applicationWorkingCopy.getApplications().addAll(newAppNode.getApplications());
                 overviewPage.update();
             } catch (UnmarshalException unmarshalException) {
-                // let it be
+                // let it be -> disable overview ? 
             } catch (JAXBException | IOException | SAXException e) {
                 throw new RuntimeException("Fail to update the applicationNodeContainer", e);
             }
