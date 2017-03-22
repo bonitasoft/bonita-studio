@@ -15,24 +15,47 @@
 package org.bonitasoft.studio.swtbot.framework.la;
 
 import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.studio.swtbot.framework.BotDialog;
+import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
-public class NewApplicationWizardBot extends BotDialog {
+public class NewApplicationWizardBot extends BotWizardDialog {
 
     public NewApplicationWizardBot(SWTGefBot bot, String dialogTitle) {
         super(bot, dialogTitle);
     }
 
-    public BotApplicationEditor createApplication(String token, String displayName) {
+    public NewApplicationWizardBot withFilename(String fileName) {
+        bot.textWithLabel(Messages.fileName).setText(fileName);
+        return this;
+    }
+
+    public NewApplicationWizardBot withToken(String token) {
         bot.textWithLabel(Messages.applicationToken).setText(token);
+        return this;
+    }
+
+    public NewApplicationWizardBot withDisplayName(String displayName) {
         bot.textWithLabel(Messages.displayName).setText(displayName);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.create)));
-        SWTBotShell activeShell = bot.activeShell();
-        bot.button(Messages.create).click();
-        bot.waitUntil(Conditions.shellCloses(activeShell));
+        return this;
+    }
+
+    public BotApplicationEditor create() {
+        finish();
         return new BotApplicationEditor(bot, bot.activeEditor());
     }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.swtbot.framework.BotWizardDialog#finish()
+     */
+    @Override
+    public void finish() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.create)));
+        final SWTBotShell activeShell = bot.activeShell();
+        bot.button(Messages.create).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
+    }
+
 }
