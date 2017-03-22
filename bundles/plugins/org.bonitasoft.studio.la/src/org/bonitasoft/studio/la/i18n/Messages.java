@@ -93,6 +93,11 @@ public class Messages extends NLS {
     public static String layoutMessage;
     public static String unknownCustomLayout;
     public static String unknownCustomTheme;
+    public static String exportSingleDoneMessage;
+    public static String exportFailedTitle;
+    public static String exportFailedMessage;
+    public static String exportOperation;
+    public static String exporting;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

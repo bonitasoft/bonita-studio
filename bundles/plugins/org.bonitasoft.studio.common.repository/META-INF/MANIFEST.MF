@@ -54,6 +54,7 @@ Export-Package: org.apache.xbean.classloader,
  org.bonitasoft.studio.common.repository.preferences,
  org.bonitasoft.studio.common.repository.provider,
  org.bonitasoft.studio.common.repository.store,
+ org.bonitasoft.studio.common.repository.ui,
  org.bonitasoft.studio.common.repository.ui.viewer,
  org.bonitasoft.studio.common.repository.ui.wizard
 Bundle-ClassPath: lib/nlcl.jar,

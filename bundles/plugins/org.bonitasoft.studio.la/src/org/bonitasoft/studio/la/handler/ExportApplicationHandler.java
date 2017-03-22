@@ -17,25 +17,24 @@ package org.bonitasoft.studio.la.handler;
 import static org.bonitasoft.studio.ui.wizard.WizardBuilder.newWizard;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
-import java.io.File;
-import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.ui.OverwriteFileFilter;
+import org.bonitasoft.studio.la.core.ExportApplicationRunnable;
 import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.studio.la.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.ui.control.SelectApplicationDescriptorPage;
+import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
@@ -43,44 +42,43 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ExportApplicationHandler {
 
-    private String path;
-
     @Execute
     public void exportApplicationWizard(Shell activeShell, RepositoryAccessor repositoryAccessor) {
         createWizard(newWizard(), repositoryAccessor)
-                .open(activeShell, Messages.export)
-                .ifPresent(selection -> {
-                    selection.forEach(applicationFileStore -> {
-                        try {
-                            applicationFileStore.export(path);
-                        } catch (IOException e) {
-                            throw new RuntimeException(
-                                    String.format("failed to export the application %s", applicationFileStore.getName()), e);
-                        }
-                    });
-                    MessageDialog.openInformation(activeShell, Messages.exportDoneTitle,
-                            String.format(Messages.exportDoneMessage));
-                });
+                .open(activeShell, Messages.export);
     }
 
-    private WizardBuilder<Stream<ApplicationFileStore>> createWizard(WizardBuilder<Stream<ApplicationFileStore>> builder,
+    private WizardBuilder<List<IRepositoryFileStore>> createWizard(WizardBuilder<List<IRepositoryFileStore>> builder,
             RepositoryAccessor repositoryAccessor) {
-        SelectApplicationDescriptorPage exportApplicationDescriptorPage = new SelectApplicationDescriptorPage(
+        final SelectApplicationDescriptorPage exportApplicationDescriptorPage = new SelectApplicationDescriptorPage(
                 repositoryAccessor);
         return builder.withTitle(Messages.exportApplicationDescriptor)
                 .havingPage(newPage()
                         .withTitle(Messages.exportApplicationDescriptor)
                         .withDescription(Messages.exportApplicationDescriptor)
                         .withControl(exportApplicationDescriptorPage))
-                .onFinish(container -> finish(exportApplicationDescriptorPage));
+                .onFinish(container -> finish(exportApplicationDescriptorPage, container));
     }
 
-    private Optional<Stream<ApplicationFileStore>> finish(SelectApplicationDescriptorPage exportApplicationDescriptorPage) {
-        Optional<String> optionalPath = getPath(Display.getCurrent().getActiveShell());
-
+    private Optional<List<IRepositoryFileStore>> finish(SelectApplicationDescriptorPage exportApplicationDescriptorPage,
+            IWizardContainer container) {
+        final Optional<String> optionalPath = getPath(Display.getCurrent().getActiveShell());
         if (optionalPath.isPresent()) {
-            this.path = optionalPath.get();
-            return manageConflicts(exportApplicationDescriptorPage.getSelection());
+            final List<IRepositoryFileStore> resolveConflicts = new OverwriteFileFilter(optionalPath.get())
+                    .resolveConflicts(exportApplicationDescriptorPage.getSelection().collect(Collectors.toList()));
+            if (resolveConflicts.isEmpty()) {
+                return Optional.empty();
+            }
+            final ExportApplicationRunnable operation = new ExportApplicationRunnable(optionalPath.get(), resolveConflicts);
+            try {
+                container.run(true, false, operation);
+                MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.exportDoneTitle,
+                        String.format(Messages.exportDoneMessage));
+                return Optional.of(resolveConflicts);
+            } catch (InvocationTargetException | InterruptedException e) {
+                new ExceptionDialogHandler().openErrorDialog(Display.getCurrent().getActiveShell(),
+                        Messages.exportFailedTitle, e);
+            }
         }
         return Optional.empty();
     }
@@ -89,28 +87,6 @@ public class ExportApplicationHandler {
         final DirectoryDialog fd = new DirectoryDialog(shell, SWT.SAVE | SWT.SHEET);
         fd.setText(Messages.exportApplicationDescriptor);
         return Optional.ofNullable(fd.open());
-    }
-
-    private Optional<Stream<ApplicationFileStore>> manageConflicts(Stream<ApplicationFileStore> selection) {
-        List<ApplicationFileStore> applicationFileStoreToImport = selection.filter(this::conflictFilter)
-                .collect(Collectors.toList());
-        return applicationFileStoreToImport.isEmpty() ? Optional.empty()
-                : Optional.ofNullable(applicationFileStoreToImport.stream());
-    }
-
-    /**
-     * Ask the user if he wants to overwrite conflicting file. A conflicting file not overwritten is not kept by the filter.
-     */
-    private boolean conflictFilter(ApplicationFileStore applicationFileStore) {
-        File target = new File(new File(path), applicationFileStore.getName());
-        if (target.exists()) {
-            if (FileActionDialog.overwriteQuestion(applicationFileStore.getName())) {
-                PlatformUtil.delete(target, Repository.NULL_PROGRESS_MONITOR);
-            } else {
-                return false;
-            }
-        }
-        return true;
     }
 
     @CanExecute

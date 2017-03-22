@@ -180,4 +180,5 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         bot.menu("Development").menu("Application").menu("Delete...").click();
         return new DeleteApplicationWizardBot(bot, Messages.deleteExistingApplication);
     }
+
 }
