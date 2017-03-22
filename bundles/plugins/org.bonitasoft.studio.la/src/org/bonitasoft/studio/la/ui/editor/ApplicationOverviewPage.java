@@ -135,6 +135,7 @@ public class ApplicationOverviewPage extends FormPage {
         form.getBody().setLayoutData(GridDataFactory.fillDefaults().create());
         form.setText(getEditorInput().getName());
         form.getToolBarManager().add(new DeployContributionItem(getEditor()));
+        form.getToolBarManager().add(new ExportContributionItem(getEditor()));
         form.getToolBarManager().add(new DeleteContributionItem(getEditor()));
         form.getToolBarManager().update(true);
 
