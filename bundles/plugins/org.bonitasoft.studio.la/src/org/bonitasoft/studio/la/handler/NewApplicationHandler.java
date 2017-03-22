@@ -31,6 +31,7 @@ import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.ui.control.NewApplicationPage;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 public class NewApplicationHandler {
@@ -38,6 +39,7 @@ public class NewApplicationHandler {
     private static final String DEFAULT_PROFILE = "User";
     private static final String DEFAULT_LAYOUT = "custompage_defaultlayout";
     private static final String DEFAULT_THEME = "custompage_bootstrapdefaulttheme";
+    public static final String XML_EXTENSION = ".xml";
 
     @Execute
     public void openNewApplicationWizard(Shell activeShell, RepositoryAccessor repositoryAccessor) {
@@ -53,21 +55,27 @@ public class NewApplicationHandler {
         applicationNode.setLayout(DEFAULT_LAYOUT);
         applicationNode.setTheme(DEFAULT_THEME);
 
+        final NewApplicationPage newApplicationPage = new NewApplicationPage(applicationNode, repositoryAccessor);
         return builder
                 .withTitle(Messages.createNewApplicationDescriptor)
+                .withSize(SWT.DEFAULT, 480)
                 .havingPage(newPage()
                         .withTitle(Messages.newApplicationDescriptorTitle)
                         .withDescription(Messages.newApplicationDescription)
-                        .withControl(new NewApplicationPage(applicationNode, repositoryAccessor)))
-                .onFinish(container -> createApplicationFileStore(applicationNode, repositoryAccessor));
+                        .withControl(newApplicationPage))
+                .onFinish(container -> createApplicationFileStore(applicationNode, repositoryAccessor,
+                        newApplicationPage.getFilename()));
     }
 
     protected Optional<ApplicationFileStore> createApplicationFileStore(ApplicationNode applicationNode,
-            RepositoryAccessor repositoryAccessor) {
+            RepositoryAccessor repositoryAccessor, String fileName) {
         final ApplicationRepositoryStore repositoryStore = repositoryAccessor
                 .getRepositoryStore(ApplicationRepositoryStore.class);
+
+        final String fileNameTrimed = fileName.endsWith(XML_EXTENSION)
+                ? fileName.substring(0, fileName.length() - XML_EXTENSION.length()) : fileName;
         final Optional<ApplicationFileStore> fileStore = Optional.ofNullable(repositoryStore
-                .createRepositoryFileStore(String.format("%s.xml", applicationNode.getToken())));
+                .createRepositoryFileStore(String.format("%s%s", fileNameTrimed, XML_EXTENSION)));
         final ApplicationNodeContainer nodeContainer = newApplicationContainer().create();
         nodeContainer.addApplication(applicationNode);
         fileStore.ifPresent(file -> file.save(nodeContainer));
