@@ -58,9 +58,9 @@ public class ApplicationDescriptorOverviewIT {
 
     @Test
     public void should_deploy_an_application_descriptor_from_overview() {
-        BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
+        final BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
         createApplication(workBenchBot);
-        BotApplicationEditor botApplicationEditor = workBenchBot.openApplication().open("app1.xml  ../apps/app1");
+        final BotApplicationEditor botApplicationEditor = workBenchBot.openApplication().open("app1.xml  ../apps/app1");
         botApplicationEditor.deploy();
 
         workBenchBot.deleteApplicationDescriptor().delete("app1.xml  ../apps/app1");
@@ -68,9 +68,9 @@ public class ApplicationDescriptorOverviewIT {
 
     @Test
     public void should_delete_an_application_descriptor_from_overview() {
-        BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
+        final BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
         createApplication(workBenchBot);
-        BotApplicationEditor botApplicationEditor = workBenchBot.openApplication().open("app1.xml  ../apps/app1");
+        final BotApplicationEditor botApplicationEditor = workBenchBot.openApplication().open("app1.xml  ../apps/app1");
         botApplicationEditor.delete();
         assertTrue(repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)
                 .getChildren().stream()
@@ -78,7 +78,12 @@ public class ApplicationDescriptorOverviewIT {
     }
 
     private void createApplication(BotApplicationWorkbenchWindow workBenchBot) {
-        workBenchBot.newApplication().createApplication("app1", "My App").close();
+        workBenchBot.newApplication()
+                .withFilename("file1")
+                .withToken("app1")
+                .withDisplayName("My App")
+                .create()
+                .close();
     }
 
 }

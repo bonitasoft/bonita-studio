@@ -223,14 +223,14 @@ public class ApplicationOverviewPage extends FormPage {
                         .withValidator(new MultiValidator.Builder().havingValidators(
                                 new EmptyInputValidator.Builder().withMessage(Messages.required).create(),
                                 new RegExpValidator.Builder().matches("^[a-zA-Z0-9]+$")
-                                        .withMessage(Messages.tokenValidatorMessage).create(),
+                                        .withMessage(Messages.alphaNumericOnly).create(),
                                 applicationTokenUnicityValidator)))
                 .withModelToTargetStrategy(UpdateStrategyFactory.updateValueStrategy()
                         .withValidator(
                                 new MultiValidator.Builder().havingValidators(
                                         new EmptyInputValidator.Builder().withMessage(Messages.required).create(),
                                         new RegExpValidator.Builder().matches("^[a-zA-Z0-9]+$")
-                                                .withMessage(Messages.tokenValidatorMessage).create(),
+                                                .withMessage(Messages.alphaNumericOnly).create(),
                                         applicationTokenUnicityValidator)))
                 .inContext(ctx)
                 .adapt(toolkit)

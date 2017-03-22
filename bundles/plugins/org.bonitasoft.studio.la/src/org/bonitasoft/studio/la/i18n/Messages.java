@@ -30,7 +30,7 @@ public class Messages extends NLS {
     public static String displayName;
     public static String displayNameMessage;
     public static String required;
-    public static String tokenValidatorMessage;
+    public static String alphaNumericOnly;
     public static String source;
     public static String deployingLivingApplication;
     public static String deletingApplication;
@@ -87,6 +87,9 @@ public class Messages extends NLS {
     public static String importLabel;
     public static String notAnApplicationError;
     public static String importApplicationDescriptorDesc;
+    public static String fileName;
+    public static String invalidCharFileName;
+    public static String invalidFileName;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

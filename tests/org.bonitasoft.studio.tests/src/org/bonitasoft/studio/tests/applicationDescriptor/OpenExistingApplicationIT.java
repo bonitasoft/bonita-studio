@@ -36,26 +36,37 @@ public class OpenExistingApplicationIT {
 
     @Test
     public void should_create_and_open_applications() {
-        BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
+        final BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
         createApplications(workBenchBot);
 
-        BotApplicationEditor app1Editor = workBenchBot.openApplication().open("app1.xml  ../apps/app1");
-        assertEquals("app1.xml", app1Editor.getTitle());
+        final BotApplicationEditor app1Editor = workBenchBot.openApplication().open("file1.xml  ../apps/app1");
+        assertEquals("file1.xml", app1Editor.getTitle());
         app1Editor.close();
 
-        workBenchBot.openApplication().open("app1.xml  ../apps/app1", "app2.xml  ../apps/app2");
+        workBenchBot.openApplication().open("file1.xml  ../apps/app1", "file2.xml  ../apps/app2");
         assertEquals(2, bot.editors().size());
 
         deleteApplications(workBenchBot);
     }
 
     private void deleteApplications(BotApplicationWorkbenchWindow workBenchBot) {
-        DeleteApplicationWizardBot deleteApplicationBot = workBenchBot.deleteApplicationDescriptor();
-        deleteApplicationBot.delete("app1.xml  ../apps/app1", "app2.xml  ../apps/app2");
+        final DeleteApplicationWizardBot deleteApplicationBot = workBenchBot.deleteApplicationDescriptor();
+        deleteApplicationBot.delete("file1.xml  ../apps/app1", "file2.xml  ../apps/app2");
     }
 
     private void createApplications(BotApplicationWorkbenchWindow workBenchBot) {
-        workBenchBot.newApplication().createApplication("app1", "My First App").close();
-        workBenchBot.newApplication().createApplication("app2", "My Second App").close();
+        workBenchBot.newApplication()
+                .withFilename("file1")
+                .withToken("app1")
+                .withDisplayName("My First App")
+                .create()
+                .close();
+
+        workBenchBot.newApplication()
+                .withFilename("file2")
+                .withToken("app2")
+                .withDisplayName("My Second App")
+                .create()
+                .close();
     }
 }

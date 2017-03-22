@@ -80,8 +80,7 @@ public class NewApplicationHandlerTest {
 
         final ApplicationNode applicationNode = newApplication("testAppToken", "My App Display Name", "0.1").create();
         final Optional<ApplicationFileStore> fileStore = newApplicationHandler.createApplicationFileStore(
-                applicationNode,
-                repositoryAccessor);
+                applicationNode, repositoryAccessor, "testAppToken");
 
         assertThat(fileStore).isPresent();
         final ArgumentCaptor<ApplicationNodeContainer> captor = ArgumentCaptor.forClass(ApplicationNodeContainer.class);
