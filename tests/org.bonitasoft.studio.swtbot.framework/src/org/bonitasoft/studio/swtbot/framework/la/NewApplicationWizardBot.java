@@ -41,11 +41,6 @@ public class NewApplicationWizardBot extends BotWizardDialog {
         return this;
     }
 
-    public BotApplicationEditor create() {
-        finish();
-        return new BotApplicationEditor(bot, bot.activeEditor());
-    }
-
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.swtbot.framework.BotWizardDialog#finish()

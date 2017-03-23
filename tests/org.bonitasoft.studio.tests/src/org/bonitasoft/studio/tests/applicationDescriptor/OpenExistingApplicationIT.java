@@ -17,9 +17,9 @@ package org.bonitasoft.studio.tests.applicationDescriptor;
 import static org.junit.Assert.assertEquals;
 
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
-import org.bonitasoft.studio.swtbot.framework.la.BotApplicationEditor;
 import org.bonitasoft.studio.swtbot.framework.la.DeleteApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Rule;
@@ -39,11 +39,14 @@ public class OpenExistingApplicationIT {
         final BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
         createApplications(workBenchBot);
 
-        final BotApplicationEditor app1Editor = workBenchBot.openApplication().open("file1.xml  ../apps/app1");
+        workBenchBot.openApplication().select("file1.xml  ../apps/app1").finish();
+        final SWTBotEditor app1Editor = bot.activeEditor();
         assertEquals("file1.xml", app1Editor.getTitle());
         app1Editor.close();
 
-        workBenchBot.openApplication().open("file1.xml  ../apps/app1", "file2.xml  ../apps/app2");
+        workBenchBot.openApplication()
+                .select("file1.xml  ../apps/app1", "file2.xml  ../apps/app2")
+                .finish();
         assertEquals(2, bot.editors().size());
 
         deleteApplications(workBenchBot);
@@ -51,7 +54,8 @@ public class OpenExistingApplicationIT {
 
     private void deleteApplications(BotApplicationWorkbenchWindow workBenchBot) {
         final DeleteApplicationWizardBot deleteApplicationBot = workBenchBot.deleteApplicationDescriptor();
-        deleteApplicationBot.delete("file1.xml  ../apps/app1", "file2.xml  ../apps/app2");
+        deleteApplicationBot.select("file1.xml  ../apps/app1", "file2.xml  ../apps/app2")
+                .delete();
     }
 
     private void createApplications(BotApplicationWorkbenchWindow workBenchBot) {
@@ -59,14 +63,14 @@ public class OpenExistingApplicationIT {
                 .withFilename("file1")
                 .withToken("app1")
                 .withDisplayName("My First App")
-                .create()
-                .close();
+                .finish();
+        bot.activeEditor().close();
 
         workBenchBot.newApplication()
                 .withFilename("file2")
                 .withToken("app2")
                 .withDisplayName("My Second App")
-                .create()
-                .close();
+                .finish();
+        bot.activeEditor().close();
     }
 }
