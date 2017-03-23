@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
 import org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder;
@@ -50,7 +51,7 @@ public class FieldTypeColumnLabelProviderTest {
         final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
                 SimpleFieldBuilder.aDateOnlyField("birthDate").build());
         final FieldTypeColumnLabelProvider provider = new FieldTypeColumnLabelProvider();
-        assertThat(provider.getText(mapping)).isEqualTo("DATE ONLY");
+        assertThat(provider.getText(mapping)).isEqualTo(DateTypeLabels.DATE_ONLY);
     }
 
     @Test
@@ -58,7 +59,7 @@ public class FieldTypeColumnLabelProviderTest {
         final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
                 SimpleFieldBuilder.aDateTimeField("time").build());
         final FieldTypeColumnLabelProvider provider = new FieldTypeColumnLabelProvider();
-        assertThat(provider.getText(mapping)).isEqualTo("DATE AND TIME (NO TZ)");
+        assertThat(provider.getText(mapping)).isEqualTo(DateTypeLabels.DATE_AND_TIME);
     }
 
     @Test
@@ -66,7 +67,7 @@ public class FieldTypeColumnLabelProviderTest {
         final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
                 SimpleFieldBuilder.anOffsetDateTimeField("time").build());
         final FieldTypeColumnLabelProvider provider = new FieldTypeColumnLabelProvider();
-        assertThat(provider.getText(mapping)).isEqualTo("DATE AND TIME (TZ)");
+        assertThat(provider.getText(mapping)).isEqualTo(DateTypeLabels.DATE_TIME_WITH_TIMEZONE);
     }
 
     @Test
