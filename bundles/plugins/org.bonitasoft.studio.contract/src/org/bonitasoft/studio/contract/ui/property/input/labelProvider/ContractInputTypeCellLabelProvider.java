@@ -21,8 +21,10 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.TextStyle;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
@@ -43,7 +45,9 @@ public class ContractInputTypeCellLabelProvider extends StyledCellLabelProvider 
 
             @Override
             public void applyStyles(TextStyle textStyle) {
-                textStyle.strikeout = element.getType() == ContractInputType.DATE;
+                if (element.getType() == ContractInputType.DATE) {
+                    textStyle.foreground = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY);
+                }
             }
         });
         cell.setText(styledString.getString());
@@ -54,6 +58,8 @@ public class ContractInputTypeCellLabelProvider extends StyledCellLabelProvider 
     public String getText(Object element) {
         final ContractInputType type = ((ContractInput) element).getType();
         switch (type) {
+            case DATE:
+                return DateTypeLabels.DATE_DEPRECATED;
             case LOCALDATE:
                 return DateTypeLabels.DATE_ONLY;
             case LOCALDATETIME:

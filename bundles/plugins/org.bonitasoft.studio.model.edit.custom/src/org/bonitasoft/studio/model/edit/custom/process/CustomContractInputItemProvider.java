@@ -79,12 +79,14 @@ public class CustomContractInputItemProvider
 
                             protected String getTypeLabel(final ContractInputType type) {
                                 switch (type) {
+                                    case DATE:
+                                        return "DATE (DEPRECATED)";
                                     case LOCALDATE:
                                         return "DATE ONLY";
                                     case LOCALDATETIME:
-                                        return "DATE AND TIME (NO TZ)";
+                                        return "DATE-TIME (NO TZ)";
                                     case OFFSETDATETIME:
-                                        return "DATE AND TIME (TZ)";
+                                        return "DATE-TIME (TZ)";
                                     default:
                                         return super.getText(type);
                                 }

@@ -84,6 +84,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
@@ -212,7 +213,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
                 .withItems(getStringLengthValues())
                 .labelAbove()
                 .alignMiddle()
-                .withMessage(Messages.stringLengthTooltip)
+                .widthHint(250)
                 .bindTo(PojoObservables.observeDetailValue(attributeSelectionObservable, "length", Integer.class))
                 .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
                         .withConverter(StringToNumberConverter.toInteger(false))
@@ -223,6 +224,11 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
                         .create())
                 .inContext(ctx)
                 .createIn(composite);
+
+        Label stringHelp = new Label(composite, SWT.NONE);
+        stringHelp.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 75).create());
+        stringHelp.setText(Messages.stringLengthTooltip);
+
         attributeSelectionObservable.addValueChangeListener(e -> stringFieldCombo.getValueBinding().updateModelToTarget());
         return composite;
     }

@@ -16,6 +16,7 @@ package org.bonitasoft.studio.contract.ui.property.input.labelProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.builders.ContractInputBuilder;
@@ -46,20 +47,20 @@ public class ContractInputTypeCellLabelProviderTest {
     public void should_return_date_only() throws Exception {
         assertThat(contractInputTypeCellLabelProvider
                 .getText(ContractInputBuilder.aContractInput().withType(ContractInputType.LOCALDATE).build()))
-                        .isEqualTo("DATE ONLY");
+                        .isEqualTo(DateTypeLabels.DATE_ONLY);
     }
 
     @Test
     public void should_return_dateand_time() throws Exception {
         assertThat(contractInputTypeCellLabelProvider
                 .getText(ContractInputBuilder.aContractInput().withType(ContractInputType.LOCALDATETIME).build()))
-                        .isEqualTo("DATE AND TIME (NO TZ)");
+                        .isEqualTo(DateTypeLabels.DATE_AND_TIME);
     }
 
     @Test
     public void should_return_date_and_time_with_timezone() throws Exception {
         assertThat(contractInputTypeCellLabelProvider
                 .getText(ContractInputBuilder.aContractInput().withType(ContractInputType.OFFSETDATETIME).build()))
-                        .isEqualTo("DATE AND TIME (TZ)");
+                        .isEqualTo(DateTypeLabels.DATE_TIME_WITH_TIMEZONE);
     }
 }

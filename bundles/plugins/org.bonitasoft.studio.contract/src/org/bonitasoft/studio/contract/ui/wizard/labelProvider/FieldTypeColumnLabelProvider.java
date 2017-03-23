@@ -55,6 +55,8 @@ public class FieldTypeColumnLabelProvider extends ColumnLabelProvider {
 
     private String simpleFieldTypeLabel(final SimpleField field) {
         switch (field.getType()) {
+            case DATE:
+                return DateTypeLabels.DATE_DEPRECATED;
             case LOCALDATE:
                 return DateTypeLabels.DATE_ONLY;
             case LOCALDATETIME:
