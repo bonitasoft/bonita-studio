@@ -23,9 +23,12 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.TextStyle;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
@@ -35,6 +38,9 @@ public class FieldTypeLabelProvider extends StyledCellLabelProvider implements I
     @Override
     public String getText(Object element) {
         if (element instanceof FieldType) {
+            if (element == FieldType.DATE) {
+                return DateTypeLabels.DATE_DEPRECATED;
+            }
             if (element == FieldType.LOCALDATE) {
                 return DateTypeLabels.DATE_ONLY;
             }
@@ -68,12 +74,14 @@ public class FieldTypeLabelProvider extends StyledCellLabelProvider implements I
     public void update(ViewerCell cell) {
         final Object cellElement = cell.getElement();
         final StyledString styledString = new StyledString();
-        styledString.append(getText(cellElement), new StyledString.Styler() {
+        styledString.append(getText(cellElement), new Styler() {
 
             @Override
             public void applyStyles(TextStyle textStyle) {
-                textStyle.strikeout = cellElement instanceof SimpleField
-                        && ((SimpleField) cellElement).getType() == FieldType.DATE;
+                if (cellElement instanceof SimpleField
+                        && ((SimpleField) cellElement).getType() == FieldType.DATE) {
+                    textStyle.foreground = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY);
+                }
             }
         });
         cell.setText(styledString.getString());

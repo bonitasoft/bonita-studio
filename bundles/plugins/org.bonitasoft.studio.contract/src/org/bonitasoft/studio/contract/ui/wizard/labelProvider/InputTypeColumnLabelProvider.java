@@ -52,6 +52,8 @@ public class InputTypeColumnLabelProvider extends ColumnLabelProvider {
 
     private String typeLabel(final FieldToContractInputMapping mapping) {
         switch (mapping.getContractInputType()) {
+            case DATE:
+                return DateTypeLabels.DATE_DEPRECATED;
             case LOCALDATE:
                 return DateTypeLabels.DATE_ONLY;
             case LOCALDATETIME:
