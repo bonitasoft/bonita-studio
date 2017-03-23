@@ -9,7 +9,7 @@
 package org.bonitasoft.studio.la.ui;
 
 import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
-import org.bonitasoft.studio.la.ui.editor.ApplicationEditor;
+import org.bonitasoft.studio.ui.editors.FilteredXMLEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -28,7 +28,7 @@ public class ApplicationPerspectiveFactory extends AbstractPerspectiveFactory {
 
     @Override
     public boolean isRelevantFor(final IEditorPart part) {
-        return part instanceof ApplicationEditor;
+        return part instanceof FilteredXMLEditor;
     }
 
     @Override

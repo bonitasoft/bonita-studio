@@ -28,9 +28,9 @@ public abstract class SelectApplicationWizardEditorBot extends BotDialog {
     /**
      * select a given set of applications
      */
-    public void select(String... appToSelect) {
+    public SelectApplicationWizardEditorBot select(String... appToSelect) {
         table().select(appToSelect);
-        finish();
+        return this;
     }
 
     /**
@@ -40,7 +40,7 @@ public abstract class SelectApplicationWizardEditorBot extends BotDialog {
 
     public SWTBotTable table() {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.table()));
-        SWTBotTable table = bot.table();
+        final SWTBotTable table = bot.table();
         return table;
     }
 }
