@@ -26,20 +26,12 @@ public class OpenApplicationWizardBot extends SelectApplicationWizardEditorBot {
     }
 
     /**
-     * open a given set of applications
-     */
-    public BotApplicationEditor open(String... appToOpen) {
-        select(appToOpen);
-        return new BotApplicationEditor(bot, bot.activeEditor());
-    }
-
-    /**
      * click on open
      */
     @Override
     public void finish() {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.open)));
-        SWTBotShell activeShell = bot.activeShell();
+        final SWTBotShell activeShell = bot.activeShell();
         bot.button(Messages.open).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
     }

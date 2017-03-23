@@ -26,11 +26,14 @@ public class DeleteApplicationWizardBot extends SelectApplicationWizardEditorBot
         super(bot, dialogTitle);
     }
 
-    /**
-     * delete a given set of applications
-     */
-    public void delete(String... appToDelete) {
-        select(appToDelete);
+    @Override
+    public DeleteApplicationWizardBot select(String... appToSelect) {
+        super.select(appToSelect);
+        return this;
+    }
+
+    public void delete() {
+        finish();
     }
 
     /**

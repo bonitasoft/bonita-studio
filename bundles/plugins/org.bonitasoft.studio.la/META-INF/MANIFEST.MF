@@ -43,10 +43,9 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.platform,
  org.bonitasoft.engine.search,
  org.bonitasoft.engine.search.impl,
- org.bonitasoft.engine.session,
- org.bonitasoft.studio.engine,
- org.bonitasoft.studio.engine.operation
+ org.bonitasoft.engine.session
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.la.core,
  org.bonitasoft.studio.la.i18n,
- org.bonitasoft.studio.la.repository
+ org.bonitasoft.studio.la.repository,
+ org.bonitasoft.studio.la.ui.validator

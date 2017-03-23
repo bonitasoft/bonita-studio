@@ -29,7 +29,6 @@ import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.ui.control.NewApplicationPage;
-import org.bonitasoft.studio.la.ui.editor.layout.LayoutDescriptor;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.swt.SWT;
@@ -39,6 +38,7 @@ public class NewApplicationHandler {
 
     private static final String DEFAULT_PROFILE = "User";
     private static final String DEFAULT_THEME = "custompage_bootstrapdefaulttheme";
+    private static final String DEFAULT_LAYOUT = "custompage_defaultlayout";
     public static final String XML_EXTENSION = ".xml";
 
     @Execute
@@ -52,7 +52,7 @@ public class NewApplicationHandler {
             RepositoryAccessor repositoryAccessor) {
         final ApplicationNode applicationNode = newApplication("myApp", "My App", "1.0").create();
         applicationNode.setProfile(DEFAULT_PROFILE);
-        applicationNode.setLayout(LayoutDescriptor.DEFAULT_LAYOUT.getId());
+        applicationNode.setLayout(DEFAULT_LAYOUT);
         applicationNode.setTheme(DEFAULT_THEME);
 
         final NewApplicationPage newApplicationPage = new NewApplicationPage(applicationNode, repositoryAccessor);
