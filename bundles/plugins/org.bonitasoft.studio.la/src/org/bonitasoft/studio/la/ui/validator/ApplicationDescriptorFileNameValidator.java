@@ -33,8 +33,15 @@ public class ApplicationDescriptorFileNameValidator extends TypedValidator<Strin
 
     private final ApplicationRepositoryStore store;
 
+    private final Optional<String> currentFileName;
+
     public ApplicationDescriptorFileNameValidator(ApplicationRepositoryStore store) {
+        this(store, null);
+    }
+
+    public ApplicationDescriptorFileNameValidator(ApplicationRepositoryStore store, String currentFileName) {
         this.store = store;
+        this.currentFileName = Optional.ofNullable(currentFileName);
     }
 
     /*
@@ -71,6 +78,7 @@ public class ApplicationDescriptorFileNameValidator extends TypedValidator<Strin
         return store.getChildren().stream()
                 .map(applicationDescriptor -> applicationDescriptor.getName().substring(0,
                         applicationDescriptor.getName().length() - NewApplicationHandler.XML_EXTENSION.length()))
+                .filter(filename -> !currentFileName.filter(filename::equals).isPresent())
                 .collect(Collectors.toList());
     }
 
