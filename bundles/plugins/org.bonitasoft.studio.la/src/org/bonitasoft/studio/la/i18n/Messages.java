@@ -45,9 +45,6 @@ public class Messages extends NLS {
     public static String deleteDoneTitle;
     public static String deleteDoneMessage;
     public static String delete;
-    public static String overview;
-    public static String description;
-    public static String profile;
     public static String export;
     public static String exportApplicationDescriptor;
     public static String exportDoneTitle;
