@@ -31,20 +31,6 @@ public class NewApplicationWizardBot extends BotWizardDialog {
         return this;
     }
 
-    public NewApplicationWizardBot withToken(String token) {
-        bot.textWithLabel(Messages.applicationToken).setText(token);
-        return this;
-    }
-
-    public NewApplicationWizardBot withDisplayName(String displayName) {
-        bot.textWithLabel(Messages.displayName).setText(displayName);
-        return this;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.swtbot.framework.BotWizardDialog#finish()
-     */
     @Override
     public void finish() {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.create)));

@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.la.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.engine.business.application.xml.ApplicationNodeBuilder.newApplication;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.notNull;
@@ -27,8 +26,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import org.bonitasoft.engine.business.application.xml.ApplicationNode;
-import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.repository.ApplicationFileStore;
@@ -38,7 +35,6 @@ import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.bonitasoft.studio.ui.wizard.WizardPageBuilder;
 import org.eclipse.swt.widgets.Shell;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 
 public class NewApplicationHandlerTest {
 
@@ -64,7 +60,7 @@ public class NewApplicationHandlerTest {
         final WizardBuilder<ApplicationFileStore> builder = spy(WizardBuilder.newWizard());
         newApplicationHandler.createWizard(builder, repositoryAccessor);
 
-        verify(builder).withTitle(Messages.createNewApplicationDescriptor);
+        verify(builder).withTitle(Messages.newApplicationDescriptorTitle);
         verify(builder).havingPage(notNull(WizardPageBuilder.class));
         verify(builder).onFinish(notNull(FinishHandler.class));
     }
@@ -78,14 +74,10 @@ public class NewApplicationHandlerTest {
         when(applicationStore.createRepositoryFileStore("testAppToken.xml")).thenReturn(applicationFileStore);
         when(repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)).thenReturn(applicationStore);
 
-        final ApplicationNode applicationNode = newApplication("testAppToken", "My App Display Name", "0.1").create();
-        final Optional<ApplicationFileStore> fileStore = newApplicationHandler.createApplicationFileStore(
-                applicationNode, repositoryAccessor, "testAppToken");
+        final Optional<ApplicationFileStore> fileStore = newApplicationHandler.createApplicationFileStore(repositoryAccessor,
+                "testAppToken");
 
         assertThat(fileStore).isPresent();
-        final ArgumentCaptor<ApplicationNodeContainer> captor = ArgumentCaptor.forClass(ApplicationNodeContainer.class);
-        verify(applicationFileStore).save(captor.capture());
-        assertThat(captor.getValue().getApplications()).extracting("token").contains("testAppToken");
     }
 
 }

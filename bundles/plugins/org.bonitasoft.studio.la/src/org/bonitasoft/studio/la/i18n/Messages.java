@@ -20,7 +20,6 @@ public class Messages extends NLS {
 
     public static String url;
     public static String applicationStoreName;
-    public static String createNewApplicationDescriptor;
     public static String create;
     public static String newApplicationDescriptorTitle;
     public static String newApplicationDescription;
@@ -64,6 +63,9 @@ public class Messages extends NLS {
     public static String exportFailedTitle;
     public static String exportOperation;
     public static String exporting;
+    public static String deleteDescriptor;
+    public static String deleteDescriptorDone;
+    public static String deleteContainer;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

@@ -220,7 +220,6 @@ public class TextWidget extends EditableControlWidget {
 
         text = newText(textContainer);
         text.setData(SWTBOT_WIDGET_ID_KEY, id);
-        text.setEnabled(!readOnly);
         configureBackground(text);
 
         text.addListener(SWT.FocusIn, event -> redraw(textContainer));
@@ -375,7 +374,6 @@ public class TextWidget extends EditableControlWidget {
 
     private void updateEditableState(boolean editable) {
         readOnly = !editable;
-        text.setEnabled(!readOnly);
         configureBackground(text);
         configureBackground(text.getParent());
         editing = editable;
@@ -398,13 +396,10 @@ public class TextWidget extends EditableControlWidget {
         if (toolkit.isPresent()) {
             toolkit.get().adapt(control, true, true);
         }
-        if (!readOnly) {
-            control.setEnabled(true);
-            control.setBackground(whiteColor);
-        } else {
-            control.setBackground(backgroundColor);
-            control.setEnabled(false);
-        }
+
+        control.setBackground(readOnly ? backgroundColor : whiteColor);
+        control.setEnabled(!readOnly);
+
     }
 
     public TextWidget setText(String text) {

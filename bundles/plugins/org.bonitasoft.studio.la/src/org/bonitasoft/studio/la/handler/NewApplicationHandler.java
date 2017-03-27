@@ -14,14 +14,12 @@
  */
 package org.bonitasoft.studio.la.handler;
 
-import static org.bonitasoft.engine.business.application.xml.ApplicationNodeBuilder.newApplication;
 import static org.bonitasoft.engine.business.application.xml.ApplicationNodeBuilder.newApplicationContainer;
 import static org.bonitasoft.studio.ui.wizard.WizardBuilder.newWizard;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import java.util.Optional;
 
-import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -36,9 +34,6 @@ import org.eclipse.swt.widgets.Shell;
 
 public class NewApplicationHandler {
 
-    private static final String DEFAULT_PROFILE = "User";
-    private static final String DEFAULT_THEME = "custompage_bootstrapdefaulttheme";
-    private static final String DEFAULT_LAYOUT = "custompage_defaultlayout";
     public static final String XML_EXTENSION = ".xml";
 
     @Execute
@@ -50,25 +45,20 @@ public class NewApplicationHandler {
 
     protected WizardBuilder<ApplicationFileStore> createWizard(WizardBuilder<ApplicationFileStore> builder,
             RepositoryAccessor repositoryAccessor) {
-        final ApplicationNode applicationNode = newApplication("myApp", "My App", "1.0").create();
-        applicationNode.setProfile(DEFAULT_PROFILE);
-        applicationNode.setLayout(DEFAULT_LAYOUT);
-        applicationNode.setTheme(DEFAULT_THEME);
 
-        final NewApplicationPage newApplicationPage = new NewApplicationPage(applicationNode, repositoryAccessor);
+        final NewApplicationPage newApplicationPage = new NewApplicationPage(repositoryAccessor);
         return builder
-                .withTitle(Messages.createNewApplicationDescriptor)
-                .withSize(SWT.DEFAULT, 480)
+                .withTitle(Messages.newApplicationDescriptorTitle)
+                .withSize(SWT.DEFAULT, 235)
                 .havingPage(newPage()
                         .withTitle(Messages.newApplicationDescriptorTitle)
                         .withDescription(Messages.newApplicationDescription)
                         .withControl(newApplicationPage))
-                .onFinish(container -> createApplicationFileStore(applicationNode, repositoryAccessor,
-                        newApplicationPage.getFilename()));
+                .onFinish(container -> createApplicationFileStore(repositoryAccessor, newApplicationPage.getFilename()));
     }
 
-    protected Optional<ApplicationFileStore> createApplicationFileStore(ApplicationNode applicationNode,
-            RepositoryAccessor repositoryAccessor, String fileName) {
+    protected Optional<ApplicationFileStore> createApplicationFileStore(RepositoryAccessor repositoryAccessor,
+            String fileName) {
         final ApplicationRepositoryStore repositoryStore = repositoryAccessor
                 .getRepositoryStore(ApplicationRepositoryStore.class);
 
@@ -77,7 +67,6 @@ public class NewApplicationHandler {
         final Optional<ApplicationFileStore> fileStore = Optional.ofNullable(repositoryStore
                 .createRepositoryFileStore(String.format("%s%s", fileNameTrimed, XML_EXTENSION)));
         final ApplicationNodeContainer nodeContainer = newApplicationContainer().create();
-        nodeContainer.addApplication(applicationNode);
         fileStore.ifPresent(file -> file.save(nodeContainer));
         return fileStore;
     }
