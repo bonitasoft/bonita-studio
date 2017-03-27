@@ -16,15 +16,10 @@ package org.bonitasoft.studio.la.ui.control;
 
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.ui.validator.ApplicationDescriptorFileNameValidator;
-import org.bonitasoft.studio.la.ui.validator.ApplicationTokenUnicityValidator;
-import org.bonitasoft.studio.ui.validator.EmptyInputValidator;
-import org.bonitasoft.studio.ui.validator.MultiValidator;
-import org.bonitasoft.studio.ui.validator.RegExpValidator;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -39,12 +34,10 @@ import org.eclipse.swt.widgets.Control;
 public class NewApplicationPage implements ControlSupplier {
 
     public static final String DEFAULT_FILE_NAME = "applicationDescriptor";
-    private final ApplicationNode applicationNode;
     private final RepositoryAccessor repositoryAccessor;
     private String filename = DEFAULT_FILE_NAME;
 
-    public NewApplicationPage(ApplicationNode applicationNode, RepositoryAccessor repositoryAccessor) {
-        this.applicationNode = applicationNode;
+    public NewApplicationPage(RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
     }
 
@@ -65,46 +58,6 @@ public class NewApplicationPage implements ControlSupplier {
                 .withTargetToModelStrategy(updateValueStrategy()
                         .withValidator(new ApplicationDescriptorFileNameValidator(
                                 repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class))))
-                .createIn(composite);
-
-        new TextWidget.Builder()
-                .withLabel(Messages.applicationToken)
-                .withMessage(Messages.applicationTokenMessage)
-                .labelAbove()
-                .fill()
-                .grabHorizontalSpace()
-                .bindTo(PojoObservables.observeValue(applicationNode, "token"))
-                .inContext(ctx)
-                .withTargetToModelStrategy(updateValueStrategy()
-                        .withValidator(new MultiValidator.Builder().havingValidators(
-                                new EmptyInputValidator.Builder().withMessage(Messages.required),
-                                new RegExpValidator.Builder().matches("^[a-zA-Z0-9]+$")
-                                        .withMessage(Messages.alphaNumericOnly),
-                                new ApplicationTokenUnicityValidator.Builder(repositoryAccessor))))
-                .createIn(composite);
-
-        new TextWidget.Builder()
-                .withLabel(Messages.displayName)
-                .withMessage(Messages.displayNameMessage)
-                .labelAbove()
-                .fill()
-                .grabHorizontalSpace()
-                .bindTo(PojoObservables.observeValue(applicationNode, "displayName"))
-                .inContext(ctx)
-                .withTargetToModelStrategy(updateValueStrategy()
-                        .withValidator(
-                                new EmptyInputValidator.Builder().withMessage(Messages.required).create()))
-                .createIn(composite);
-
-        new TextWidget.Builder()
-                .withLabel(Messages.version)
-                .labelAbove()
-                .widthHint(150)
-                .grabHorizontalSpace()
-                .bindTo(PojoObservables.observeValue(applicationNode, "version"))
-                .inContext(ctx)
-                .withTargetToModelStrategy(updateValueStrategy()
-                        .withValidator(new EmptyInputValidator.Builder().withMessage(Messages.required).create()))
                 .createIn(composite);
 
         return composite;

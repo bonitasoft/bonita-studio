@@ -39,13 +39,13 @@ public class OpenExistingApplicationIT {
         final BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
         createApplications(workBenchBot);
 
-        workBenchBot.openApplication().select("file1.xml  ../apps/app1").finish();
+        workBenchBot.openApplication().select("file1.xml").finish();
         final SWTBotEditor app1Editor = bot.activeEditor();
         assertEquals("file1.xml", app1Editor.getTitle());
         app1Editor.close();
 
         workBenchBot.openApplication()
-                .select("file1.xml  ../apps/app1", "file2.xml  ../apps/app2")
+                .select("file1.xml", "file2.xml")
                 .finish();
         assertEquals(2, bot.editors().size());
 
@@ -54,22 +54,18 @@ public class OpenExistingApplicationIT {
 
     private void deleteApplications(BotApplicationWorkbenchWindow workBenchBot) {
         final DeleteApplicationWizardBot deleteApplicationBot = workBenchBot.deleteApplicationDescriptor();
-        deleteApplicationBot.select("file1.xml  ../apps/app1", "file2.xml  ../apps/app2")
+        deleteApplicationBot.select("file1.xml", "file2.xml")
                 .delete();
     }
 
     private void createApplications(BotApplicationWorkbenchWindow workBenchBot) {
-        workBenchBot.newApplication()
+        workBenchBot.newApplicationContainer()
                 .withFilename("file1")
-                .withToken("app1")
-                .withDisplayName("My First App")
                 .finish();
         bot.activeEditor().close();
 
-        workBenchBot.newApplication()
+        workBenchBot.newApplicationContainer()
                 .withFilename("file2")
-                .withToken("app2")
-                .withDisplayName("My Second App")
                 .finish();
         bot.activeEditor().close();
     }
