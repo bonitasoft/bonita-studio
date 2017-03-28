@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.designer.core.repository;
 
 import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -32,7 +34,7 @@ import org.eclipse.swt.graphics.Image;
 public class WebPageRepositoryStore extends AbstractFolderRepositoryStore<WebPageFileStore> {
 
     private static final String PAGE_ICON_PATH = "page.png";
-    private final static Set<String> extensions = new HashSet<String>();
+    private final static Set<String> extensions = new HashSet<>();
     public static final String JSON_EXTENSION = "json";
     public static final String WEB_FORM_REPOSITORY_NAME = "web_page";
 
@@ -68,6 +70,12 @@ public class WebPageRepositoryStore extends AbstractFolderRepositoryStore<WebPag
         final WebPageFileStore webPageFileStore = new WebPageFileStore(fileName, this);
         webPageFileStore.setWebFormBOSArchiveFileStoreProvider(filseStoreProvider);
         return webPageFileStore;
+    }
+
+    public Optional<WebPageFileStore> findByPageId(String pageId) {
+        return getChildren().stream()
+                .filter(fStore -> Objects.equals(pageId, "custompage_" + fStore.getDisplayName()))
+                .findFirst();
     }
 
 }

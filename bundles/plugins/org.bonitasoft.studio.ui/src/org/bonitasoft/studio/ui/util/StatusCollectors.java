@@ -1,5 +1,6 @@
 package org.bonitasoft.studio.ui.util;
 
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
@@ -13,7 +14,7 @@ public class StatusCollectors {
 
     public static Collector<IStatus, ?, MultiStatus> toMultiStatus() {
         return Collector.of(multiStatusSupplier(),
-                MultiStatus::add,
+                multiStatusAccumulator(),
                 (left, right) -> {
                     left.addAll(right);
                     return left;
@@ -22,6 +23,16 @@ public class StatusCollectors {
 
     private static Supplier<MultiStatus> multiStatusSupplier() {
         return () -> new MultiStatus("unknownId", IStatus.OK, "", null);
+    }
+
+    private static BiConsumer<MultiStatus, IStatus> multiStatusAccumulator() {
+        return (multi, status) -> {
+            if (status.isMultiStatus()) {
+                multi.addAll(status);
+            } else {
+                multi.add(status);
+            }
+        };
     }
 
 }
