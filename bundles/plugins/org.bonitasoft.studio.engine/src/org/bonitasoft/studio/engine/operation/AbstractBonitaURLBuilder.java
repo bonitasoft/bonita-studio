@@ -22,7 +22,6 @@ import java.net.URLEncoder;
 
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
-import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -32,7 +31,8 @@ public abstract class AbstractBonitaURLBuilder {
 
     protected static final String ENCODING_UTF8 = "UTF-8";
 
-    protected abstract String getRedirectURL(final String locale, final IProgressMonitor monitor) throws UnsupportedEncodingException;
+    protected abstract String getRedirectURL(final String locale, final IProgressMonitor monitor)
+            throws UnsupportedEncodingException;
 
     protected abstract String getLocaleParameter(final String locale);
 
@@ -64,14 +64,16 @@ public abstract class AbstractBonitaURLBuilder {
         return getActiveOrganizationProvider().getDefaultUser();
     }
 
-    public URL toURL(final IProgressMonitor monitor) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
+    public URL toURL(final IProgressMonitor monitor)
+            throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
         final String locale = getWebLocale();
         final String loginURL = buildLoginUrl();
         return new URL(loginURL + "&redirectUrl="
                 + URLEncoder.encode(getRedirectURL(locale, monitor), ENCODING_UTF8));
     }
 
-    public URL toTechnicalUserLoginURL(final IProgressMonitor monitor) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
+    public URL toTechnicalUserLoginURL(final IProgressMonitor monitor)
+            throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
         final String locale = getWebLocale();
         final String loginURL = buildLoginUrl("install", "install");
         return new URL(loginURL + "&redirectUrl="
@@ -79,17 +81,9 @@ public abstract class AbstractBonitaURLBuilder {
     }
 
     protected String buildLoginUrl() {
-        String userName = getDefaultUsername();
-        String password = getDefaultPassword();
-
-        final Configuration conf = getConfiguration();
-        if (conf != null && conf.getUsername() != null) {
-            userName = conf.getUsername();
-            password = conf.getPassword();
-        }
-
+        final String userName = getDefaultUsername();
+        final String password = getDefaultPassword();
         return buildLoginUrl(userName, password);
     }
 
-    protected abstract Configuration getConfiguration();
 }
