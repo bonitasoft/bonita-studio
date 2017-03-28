@@ -18,7 +18,6 @@ import static com.google.common.io.ByteStreams.toByteArray;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 
 import javax.inject.Inject;
 
@@ -44,16 +43,18 @@ public class CustomPageBarResourceFactory {
         this.pageDesignerURLFactory = pageDesignerURLFactory;
     }
 
-    public BarResource newBarResource(final String targetFormCustomPageId, final String formPageTechnicalUUID) throws BarResourceCreationException {
+    public BarResource newBarResource(final String targetFormCustomPageId, final String formPageTechnicalUUID)
+            throws BarResourceCreationException {
         try {
             return new BarResource(BAR_CUSTOMPAGES_LOCATION + "/" + targetFormCustomPageId + ".zip",
                     export(formPageTechnicalUUID));
         } catch (ResourceException | IOException e) {
-            throw new BarResourceCreationException(String.format("Failed to create a BarResource for form %s", targetFormCustomPageId), e);
+            throw new BarResourceCreationException(
+                    String.format("Failed to create a BarResource for form %s", targetFormCustomPageId), e);
         }
     }
 
-    private byte[] export(final String formPageTechnicalUUID) throws IOException, MalformedURLException {
+    public byte[] export(final String formPageTechnicalUUID) throws IOException {
         try (final InputStream is = get(pageDesignerURLFactory.exportPage(formPageTechnicalUUID).toString());) {
             if (is == null) {
                 throw new IOException(String.format("Failed to export custom page for form %s", formPageTechnicalUUID));

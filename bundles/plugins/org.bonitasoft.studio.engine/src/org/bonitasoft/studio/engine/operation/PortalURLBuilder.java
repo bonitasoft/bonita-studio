@@ -16,28 +16,22 @@ package org.bonitasoft.studio.engine.operation;
 
 import java.io.UnsupportedEncodingException;
 
-import org.bonitasoft.studio.model.configuration.Configuration;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class PortalURLBuilder extends AbstractBonitaURLBuilder {
 
     @Override
-    protected String getRedirectURL(final String locale, final IProgressMonitor monitor) throws UnsupportedEncodingException {
+    protected String getRedirectURL(final String locale, final IProgressMonitor monitor)
+            throws UnsupportedEncodingException {
         return "portal/homepage?" + getLocaleParameter(locale);
     }
 
     @Override
     protected String getLocaleParameter(final String locale) {
         return "_l=" + locale;
-    }
-
-    @Override
-    protected Configuration getConfiguration() {
-        return null;
     }
 
 }

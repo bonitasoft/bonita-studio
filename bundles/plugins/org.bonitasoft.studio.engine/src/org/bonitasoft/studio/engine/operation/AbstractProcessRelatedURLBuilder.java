@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,7 +25,6 @@ import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepos
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 
-
 public abstract class AbstractProcessRelatedURLBuilder extends AbstractBonitaURLBuilder {
 
     protected final AbstractProcess process;
@@ -38,7 +35,6 @@ public abstract class AbstractProcessRelatedURLBuilder extends AbstractBonitaURL
         this.configurationId = configurationId;
     }
 
-    @Override
     protected Configuration getConfiguration() {
         if (process != null) {
             initConfigurationId();
@@ -49,6 +45,24 @@ public abstract class AbstractProcessRelatedURLBuilder extends AbstractBonitaURL
             }
         }
         return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.engine.operation.AbstractBonitaURLBuilder#buildLoginUrl()
+     */
+    @Override
+    protected String buildLoginUrl() {
+        String userName = getDefaultUsername();
+        String password = getDefaultPassword();
+
+        final Configuration conf = getConfiguration();
+        if (conf != null && conf.getUsername() != null) {
+            userName = conf.getUsername();
+            password = conf.getPassword();
+        }
+
+        return buildLoginUrl(userName, password);
     }
 
     protected void initConfigurationId() {
