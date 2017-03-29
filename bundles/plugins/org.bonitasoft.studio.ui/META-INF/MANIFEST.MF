@@ -41,6 +41,7 @@ Export-Package: org.bonitasoft.studio.ui,
  org.bonitasoft.studio.ui.editors,
  org.bonitasoft.studio.ui.util,
  org.bonitasoft.studio.ui.validator,
+ org.bonitasoft.studio.ui.viewer,
  org.bonitasoft.studio.ui.widget,
  org.bonitasoft.studio.ui.wizard,
  org.bonitasoft.studio.ui.wizard.listener
