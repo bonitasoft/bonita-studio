@@ -28,7 +28,6 @@ import java.util.List;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -49,13 +48,13 @@ import com.google.common.base.Predicate;
 
 public class OpenH2ConsoleHandler {
 
-    private static final String URL = "jdbc:h2:file:%s/business_data.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;AUTO_SERVER=TRUE;";
+    private static final String URL = "\"jdbc:h2:file:%s/business_data.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;AUTO_SERVER=TRUE;\"";
     private static final String DRIVER = "org.h2.Driver";
     private static final String USER = "sa";
     private static final int PORT = SocketUtil.findFreePort();
 
     @Execute
-    public void execute(final RepositoryAccessor repositoryAccessor) throws ExecutionException {
+    public void execute(final RepositoryAccessor repositoryAccessor) {
         final ILaunchManager manager = getLaunchManager();
         final ILaunchConfigurationType ltype = manager
                 .getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE);
@@ -85,7 +84,7 @@ public class OpenH2ConsoleHandler {
     protected List<String> buildCommand(final RepositoryAccessor repositoryAccessor) throws IOException {
         return Arrays.asList(
                 "-jar",
-                locateH2jar(repositoryAccessor),
+                "\"" + locateH2jar(repositoryAccessor) + "\"",
                 "-browser",
                 "-webPort",
                 String.valueOf(PORT),
