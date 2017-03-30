@@ -45,6 +45,7 @@ public class WebPageFileStore extends InFolderJSONFileStore {
     private static final String ID_TYPE = "type";
 
     public static final String LAYOUT_TYPE = "layout";
+    public static final String PAGE_TYPE = "page";
 
     public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
