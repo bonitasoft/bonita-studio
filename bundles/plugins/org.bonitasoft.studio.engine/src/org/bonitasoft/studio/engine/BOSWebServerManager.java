@@ -287,7 +287,7 @@ public class BOSWebServerManager {
         while (session == null && loginTry < MAX_LOGGING_TRY) {
             try {
                 session = BOSEngineManager.getInstance().getLoginAPI().login(BOSEngineManager.BONITA_TECHNICAL_USER,
-                        BOSEngineManager.BONITA_TECHNICAL_USER);
+                        BOSEngineManager.BONITA_TECHNICAL_USER_PASSWORD);
             } catch (final Exception e) {
                 loginTry++;
                 try {
