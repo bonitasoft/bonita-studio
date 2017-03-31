@@ -85,6 +85,8 @@ import org.eclipse.jdt.internal.core.ClasspathValidation;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.xml.sax.InputSource;
 
@@ -240,7 +242,9 @@ public class Repository implements IRepository, IJavaContainer {
 
     private void updateStudioShellText() {
         if (PlatformUI.isWorkbenchRunning()) {
-            Optional.ofNullable(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell())
+            Optional.ofNullable(PlatformUI.getWorkbench())
+                    .map(IWorkbench::getActiveWorkbenchWindow)
+                    .map(IWorkbenchWindow::getShell)
                     .map(ShellNameController::new)
                     .ifPresent(controller -> controller.update(RepositoryManager.getInstance().getCurrentRepository()));
         }
