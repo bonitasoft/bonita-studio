@@ -17,7 +17,6 @@ package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -37,9 +36,6 @@ import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Ordering;
 
 /**
  * @author Romain Bioteau
@@ -67,6 +63,7 @@ public class FieldTypeEditingSupport extends EditingSupport {
                 SWT.READ_ONLY);
         cellEditor.setContentProvider(ArrayContentProvider.getInstance());
         cellEditor.setActivationStyle(ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
+        cellEditor.getControl().addListener(SWT.Selection, e -> getViewer().getControl().getParent().setFocus());
         final FieldTypeLabelProvider labelProvider = new FieldTypeLabelProvider();
         cellEditor.setLabelProvider(labelProvider);
         cellEditor.setInput(getInput(labelProvider));
@@ -75,19 +72,17 @@ public class FieldTypeEditingSupport extends EditingSupport {
 
     protected List<Object> getInput(final FieldTypeLabelProvider labelProvider) {
         final List<Object> result = new ArrayList<>();
-        final ImmutableList<FieldType> sortedFieldTypes = Ordering.from(new Comparator<FieldType>() {
-
-            @Override
-            public int compare(final FieldType o1, final FieldType o2) {
-                return labelProvider.getText(o1).compareTo(labelProvider.getText(o2));
-            }
-
-        }).immutableSortedCopy(
-                newArrayList(FieldType.STRING, FieldType.TEXT, FieldType.BOOLEAN, FieldType.INTEGER, FieldType.LONG,
-                        FieldType.FLOAT, FieldType.DOUBLE, FieldType.LOCALDATE, FieldType.LOCALDATETIME,
-                        FieldType.OFFSETDATETIME, FieldType.DATE));
-
-        result.addAll(sortedFieldTypes);
+        result.addAll(newArrayList(FieldType.BOOLEAN,
+                FieldType.LOCALDATE,
+                FieldType.LOCALDATETIME,
+                FieldType.OFFSETDATETIME,
+                FieldType.DOUBLE,
+                FieldType.FLOAT,
+                FieldType.INTEGER,
+                FieldType.LONG,
+                FieldType.STRING,
+                FieldType.TEXT,
+                FieldType.DATE));
         result.addAll(bom.getBusinessObjects());
         return result;
     }

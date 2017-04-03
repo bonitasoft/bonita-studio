@@ -29,6 +29,8 @@ import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 
+import com.google.common.collect.Lists;
+
 public class CustomContractInputItemProvider
         extends ContractInputItemProvider {
 
@@ -80,7 +82,7 @@ public class CustomContractInputItemProvider
                             protected String getTypeLabel(final ContractInputType type) {
                                 switch (type) {
                                     case DATE:
-                                        return "DATE (DEPRECATED)";
+                                        return "DATE (NOT RECOMMENDED)";
                                     case LOCALDATE:
                                         return "DATE ONLY";
                                     case LOCALDATETIME:
@@ -101,7 +103,16 @@ public class CustomContractInputItemProvider
                      */
                     @Override
                     protected Collection<?> getComboBoxObjects(Object object) {
-                        final Collection<?> comboBoxObjects = super.getComboBoxObjects(object);
+                        final Collection<?> comboBoxObjects = Lists.newArrayList(ContractInputType.BOOLEAN,
+                                ContractInputType.COMPLEX,
+                                ContractInputType.LOCALDATE,
+                                ContractInputType.LOCALDATETIME,
+                                ContractInputType.OFFSETDATETIME,
+                                ContractInputType.DECIMAL,
+                                ContractInputType.FILE,
+                                ContractInputType.INTEGER,
+                                ContractInputType.LONG,
+                                ContractInputType.TEXT);
                         if (getContractContainer((EObject) object) instanceof Task) {
                             comboBoxObjects.remove(ContractInputType.LONG);
                         }
